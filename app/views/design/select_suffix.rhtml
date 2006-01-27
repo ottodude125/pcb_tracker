@@ -1,0 +1,61 @@
+<!-- View:    design                                            -->
+<!-- Purpose: Displays a form for the suffix when             -->
+<!--          adding a design.                                  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<table width="80%" 
+       align="center" 
+       border="0" 
+       cellspacing="2" 
+       cellpadding="2">
+  <tr>
+    <th align="left" width="60">Board:</th>
+    <td><%= flash[:details][:design_name] %></td>
+      
+    <th align="left" width="70">Platform:</th>
+    <td><%= flash[:details][:platform] %></td>
+
+    <th align="left" width="70">Project:</th>
+    <td><%= flash[:details][:project] %> </td>
+  </tr>
+
+</table>
+
+
+<br />
+
+<table width="80%"
+       align="center"
+       border="0"
+       cellspacing="2"
+       cellpadding="2">
+  <tr>
+    <th width="90" align="left">Designer:</th>
+    <td><%= flash[:details][:designer_name] %></td>
+    <th width="60" aligh="left">Peer:</th>
+    <td><%= flash[:details][:peer_name] %></td>
+  </tr>
+  <tr>
+    <th width="90" align="left">Type:</th>
+    <td><%= flash[:details][:design_type] %></td>
+  </tr>
+  <tr>
+    <th width="100" align="left">Suffix:</th>
+    <td><%= collection_select(:suffix,
+                              :name,
+                              @suffixes,
+                              :id,
+                              :name,
+                              {:prompt => 'Please Select the Suffix'}) %>
+        <%= observe_field('suffix_name',
+                             :update => :selections,
+                             :url => {:action => :select_complete},
+                             :with => "'suffix_id=' + escape(value)") %>
+    </td>
+  </tr>
+</table>
+
+<%# debug @suffixes %>
+<%# debug flash %>

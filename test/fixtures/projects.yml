@@ -1,0 +1,61 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+ac:
+  id: 1
+  name: "AC"
+  active: 1
+awg5000:
+  id: 2
+  name: "AWG5000"
+  active: 1
+awg6g:
+  id: 3
+  name: "AWG6G"
+  active: 1
+bbac:
+  id: 4
+  name: "BBAC"
+  active: 1
+camaro:
+  id: 5
+  name: "Camaro"
+  active: 0
+dc30:
+  id: 6
+  name: "DC30"
+  active: 1
+dc75:
+  id: 7
+  name: "DC75"
+  active: 1
+dc90:
+  id: 8
+  name: "DC90"
+  active: 1
+gigadig:
+  id: 9
+  name: "Gigadig"
+  active: 1
+miata:
+  id: 10
+  name: "MIATA"
+  active: 1
+other:
+  id: 11
+  name: "Other"
+  active: 1
+pool2:
+  id: 12
+  name: "POOL2"
+  active: 1
+tornado:
+  id: 13
+  name: "Tornado"
+  active: 1
+vhfac:
+  id: 14
+  name: "VHFAC"
+  active: 1
+viking:
+  id: 15
+  name: "Viking"
+  active: 1

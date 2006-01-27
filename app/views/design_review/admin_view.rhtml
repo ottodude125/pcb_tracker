@@ -1,0 +1,214 @@
+<!-- View:    designer_review                                   -->
+<!-- Purpose: Displays a design review for a designer.          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@design_review.review_name} Review::#{@design_review.design.name} - #{@design_review.design.board.platform.name} / #{@design_review.design.board.project.name}" %>
+
+<%= start_form_tag(:action => 'add_comment') %>
+
+  <hr class="div" />
+
+  <%= hidden_field "design_review", "id" %>
+
+  <table border="0"
+         width="100%">
+    <tr>
+      <td width="10%"
+          rowspan="5"
+          valign="top">
+        <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+
+
+      </td>
+      <td colspan="2">
+        <table border="0"
+               width="100%">
+          <tr>
+            <th align="left"
+                width="130">Design:</th>
+            <td width="250">
+              <%= @design.name %> -
+              <%= @design.board.platform.name %> /
+              <%= @design.board.project.name %>
+            </td>
+            <th align="left"
+                width="140">Design Center:</th>
+            <td>
+              <%= link_to(@design_review.design_center.name,
+                          "http://etg.teradyne.com/surfboards/" + @design_review.design_center.pcb_path + '/'+ @design.name) %>
+            </td>
+          </tr>
+          <tr>
+            <th align="left">Priority:</th>
+            <td>
+              <%= @design.priority.name %>
+            </td>
+            <th align="left">Review Type:</th>
+            <td>
+              <%= @design_review.review_name %>
+            </td>
+          </tr>
+          <tr>
+            <th align="left">Posting Number:</th>
+            <td>
+              <%= @design_review.posting_count %>
+            </td>
+            <th align="left">Originally Posted:</th>
+            <td>
+              <%= @design_review.created_on.strftime("%d-%b-%y, %I:%M %p") %>
+            </td>
+          </tr>
+          <tr valign="top">
+            <% if @design.fab_houses.size == 0 %>
+              <th align="left" colspan="2">No Fab House Selected</th>
+            <% else %>
+              <% if @design.fab_houses.size == 1 %>
+                <th align="left">Fab House:</th>
+              <% else %>
+                <th align="left">Fab Houses:</th>
+              <% end %>
+              <td>
+                <table>
+                  <% for fab_house in @design.fab_houses %>
+                    <tr>
+                      <td>
+                        <%=h fab_house.name %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </table>
+              </td>
+            <% end %>
+            <th align="left">Last Posted:</th>
+            <td>
+              <%= @design_review.reposted_on.strftime("%d-%b-%y, %I:%M %p") %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td width=530>
+        <label for="comment" >Comment:</label>
+        <%= text_area("post_comment",
+                      "comment",
+                      :cols => 60,
+                      :rows => 5) %>
+      </td>
+      <td valign="top"
+          align="left">
+        <table bgcolor="#ffffff">
+          <tr>
+            <td>
+              <input type="submit" value="Add Comment" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <%= link_to(image_tag('attachments'),
+                            {:action           => 'review_attachments',
+                             :design_review_id => @design_review.id}) %>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <%= link_to(image_tag('email'),
+                            {:action           => 'review_mail_list',
+                             :design_review_id => @design_review.id}) %>
+            </td>
+          </tr>
+          
+          <% if @session[:user].id == @design.designer_id %>
+          <tr>
+            <td>
+              <%= link_to(image_tag('repost'),
+                          {:action           => 'repost_review',
+                           :design_review_id => @design_review.id},
+                          :confirm => 'Reposting will reset all review results.  Are you sure you want to repost the review?') %>
+            </td>
+          </tr>
+          <% end %>
+          
+          <tr>
+            <td>
+              <%= link_to(image_tag('change_design_center'),
+                            {:action           => 'change_design_center',
+                             :design_review_id => @design_review.id}) %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        &nbsp;
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><hr class="div" /></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <table border="1"
+               width="80%"
+               cellspacing="1"
+               cellpadding="2">
+          <tr>
+            <th class="teraheader" colspan="4">
+              Review Results
+            </th>
+          </tr>
+
+	        <%= render_collection_of_partials("reviewer_list_stripes",
+                                            @review_results) %>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <br />
+  <div id="comments">
+
+  <% if @comments.size > 0 %>
+  <table border="0"
+         cellspacing="0"
+         width="100%"
+         align="center">
+    <tr>
+      <th class="teraheader" colspan="2">
+        Comments
+      </th>
+    </tr>
+    <% for comment in @comments %>
+      <tr bgcolor="#dddddd">
+        <td width="50%">
+          <font size="-2">
+            <b>Posted By:</b> <%= User.find(comment.user_id).name %>
+          </font>
+        </td>
+        <td width="50%">
+          <font size="-2">
+            <b>Date:</b> <%= comment.created_on.strftime("%d-%b-%y, %I:%M %p")%>
+          </font>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <%=h comment.comment %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <% end %>
+
+  </div>
+
+  <hr class="div" />
+
+  <%= end_form_tag %>
+
+<%# debug @design_review %>
+<%# debug @session %>
+<%# debug @design %>

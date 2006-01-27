@@ -1,0 +1,42 @@
+<!-- View:    board                                             -->
+<!-- Purpose: Displays the list of boards .                     -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "PCB Tracker - Designs" %>
+
+<%= start_form_tag(:action => 'add') %>
+
+  <hr class="div" />
+
+  <table width="80%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+    <tr>
+      <th>Board Number</th>
+      
+      <th width="25%">Platform</th>
+      <th width="25%">Project</th>
+    </tr>
+    <tr bgcolor="#9F9F9F">
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+
+    <%= render_collection_of_partials "design_list_stripes", @designs %>
+  </table>
+
+  <% pages = pagination_links @design_pages %>
+
+  <% if pages %>
+    <p><b>Pages:</b> <%= pages %>
+  <% end %>
+
+
+  <hr class="div" />
+
+  <input type="submit" value="New Design" />
+  <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
+
+<%= end_form_tag %>

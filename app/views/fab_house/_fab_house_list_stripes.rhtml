@@ -1,0 +1,12 @@
+<tr class="<%= fab_house_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% rid = fab_house_list_stripes.id %>
+    <%= link_to fab_house_list_stripes.name, { :action => 'edit', :id => rid } %> </td>
+  <td align="center">
+    <% if fab_house_list_stripes.active? %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  </td>
+</tr>

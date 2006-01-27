@@ -1,0 +1,25 @@
+# 
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+#
+catalyst:
+  id:     1
+  name:   Catalyst
+  active: 1
+flex:
+  id:     2
+  name:   FLEX
+  active: 1
+jaguar:
+  id:     3
+  name:   JAGUAR
+  active: 1
+panther:
+  id:     4
+  name:   PANTHER
+  active: 1
+j750:
+  id:     5
+  name:   J750
+  active: 1

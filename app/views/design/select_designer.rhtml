@@ -1,0 +1,30 @@
+<!-- View:    design                                            -->
+<!-- Purpose: Displays a form for the design name when          -->
+<!--          adding a design.                                  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<%= hidden_field "designer", "id" %>
+
+<table width="80%"
+       align="center"
+       border="4"
+       cellspacing="2"
+       cellpadding="2">
+  <tr>
+    <th width="90" align="left">Designer:</th>
+    <td><%= @designer[:name] %></td>
+  </tr>
+  <tr>
+    <th width="90" align="left">Peer:</th>
+    <td><%= collection_select(:peer, :name, @peers, :id, :name,
+                              {:prompt => 'Select the Designer' %>
+        <%= observe_field ('peer_name',
+                           :frequency => 1,
+                           :update => 'designer_peer',
+                           :url => {:action=>'select_peer'},
+                           :with => "'id=' + escape(value)") %>
+    </td>
+  </tr>
+</table>

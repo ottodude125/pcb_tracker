@@ -1,0 +1,50 @@
+<!-- View:    review_attachments                                -->
+<!-- Purpose: Displays a design review for a designer.          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Add Attachment - #{@design_review.design.name}" %>
+
+<%= error_messages_for("document") %>
+
+<%= form_tag({:action => 'save_attachment', :id => @board.id}, :multipart => true ) %>
+
+  <%= hidden_field "board", "id" %>
+  <%= hidden_field "design_review", "id" %>
+
+  <hr class="div" />
+
+  <%= error_messages_for("document") %>
+
+  <table border="0"
+         width="90%"
+         align="center">
+    <tr>
+      <th align="right">Filename:</th>
+      <td><%= file_field('document', 'document') %></td>
+    </tr>
+    <tr>
+      <th align="right">Type:</th>
+      <td>
+        <%= collection_select(:document_type,
+                              :id,
+                              @document_types,
+                              :id,
+                              :name,
+                              {:prompt => true}) %>
+      </td>
+    </tr>
+
+    
+  </table>
+
+  <hr class="div" />
+
+  <input type="submit" value="Upload File" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for(:action => 'review_attachments', :design_review_id => @design_review.id) %>'" />
+
+  <%= end_form_tag %>
+
+<%# debug @document %>
+

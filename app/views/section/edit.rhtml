@@ -1,0 +1,88 @@
+<!-- View:    section                                           -->
+<!-- Purpose: Displays section information for modification.    -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Peer Audit Checklist: Section Edit" %>
+
+<%= error_messages_for 'section' %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'update') %>
+
+  <%= hidden_field "section", "id" %>
+  <%= hidden_field "section", "checklist_id" %>
+  <table border="0" width="100%">
+    <tr>
+      <th align="right">
+	Name:
+      </th>
+      <td>
+        <%= text_field "section", "name", "size" => 60, "maxlength" => 60 %>
+      </td>
+    </tr>
+    <tr>
+      <th align="right">
+	Background Color:
+      </th>
+      <td>
+        <%= text_field "section", "background_color", "size" => 6, "maxlength" => 6 %>
+      </td>
+    </tr>
+    <tr>
+      <th align="right">
+        http://
+      </th>
+      <td>
+    	<%= text_field "section", "url", :size => 64, :maxlength => 250 %>
+      </td>
+    </tr>
+
+    <% if @section.url.size > 0 %>
+      <tr>
+        <td>&nbsp;</td>
+        <% url = @section.url %>
+        <td>
+          <a href="<%= url %>" target="_blank">Online Reference</a>
+          <% if @section.url.size < 25 %>
+            (<%= @section.url %>)
+          <% else %>
+            (<%= @section.url[0..24] %> ...)
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <td colspan="2">
+        <hr class="div">
+        <table>
+          <tr>
+            <td><%= check_box "section", "full_review" %> </td>
+            <th align="left">Include in Full Audits</th>
+          </tr>
+          <tr>
+            <td><%= check_box "section", "date_code_check" %> </td>
+            <th align="left">Include in Date Code Audits</th>
+          </tr>
+          <tr>
+            <td><%= check_box "section", "dot_rev_check" %> </td>
+            <th align="left">Include in Dot Rev Audits</th>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <% if not @checklist.released? %>
+    <input type="submit" value="Update" />
+  <% else %>
+    <input type="submit" disabled="disabled" value="LOCKED - Checklist Released" />
+  <% end %>
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @section.checklist_id )%>'">
+
+<%= end_form_tag %>

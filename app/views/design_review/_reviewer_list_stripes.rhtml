@@ -1,0 +1,26 @@
+
+<% if reviewer_list_stripes.result == "No Response" %>
+  <tr class="no_response">
+<% elsif reviewer_list_stripes.result == "APPROVED" %>
+  <tr class="approved">
+<% elsif reviewer_list_stripes.result == "WAIVED" %>
+  <tr class="approved">
+<% elsif reviewer_list_stripes.result == "REJECTED" %>
+  <tr class="rejected">
+<% else %>
+  <tr class="withdrawn">
+<% end %>
+
+  <td align="left">
+    <%= User.find(reviewer_list_stripes.reviewer_id).name %>
+  </td>
+  <td align="left">
+    <%= reviewer_list_stripes.role.name %>
+  </td>
+  <td align="left">
+    <%= reviewer_list_stripes.result %>
+  </td>
+  <td align="left">
+    <%= reviewer_list_stripes.reviewed_on.strftime("%d-%b-%y, %I:%M %p") %>
+  </td>
+</tr>

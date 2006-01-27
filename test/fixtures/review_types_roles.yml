@@ -1,0 +1,109 @@
+# 
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+hweng_pre_artwork:
+  role_id:        5
+  review_type_id: 3
+hweng_placement:
+  role_id:        5
+  review_type_id: 4
+hweng_routing:
+  role_id:        5
+  review_type_id: 2
+hweng_final:
+  role_id:        5
+  review_type_id: 1
+hweng_release:
+  role_id:        5
+  review_type_id: 5
+valor_final:
+  role_id:        6
+  review_type_id: 1
+valor_pre_artwork:
+  role_id:        6
+  review_type_id: 3
+cedft_final:
+  role_id:        7
+  review_type_id: 1
+cedft_routing:
+  role_id:        7
+  review_type_id: 2
+cedft_pre_artwork:
+  role_id:        7
+  review_type_id: 3
+cedft_placement:
+  role_id:        7
+  review_type_id: 4
+dfm_final:
+  role_id:        8
+  review_type_id: 1
+dfm_routing:
+  role_id:        8
+  review_type_id: 2
+dfm_pre_artwork:
+  role_id:        8
+  review_type_id: 3
+dfm_placement:
+  role_id:        8
+  review_type_id: 4
+tde_final:
+  role_id:        9
+  review_type_id: 1
+tde_pre_artwork:
+  role_id:        9
+  review_type_id: 3
+tde_placement:
+  role_id:        9
+  review_type_id: 4
+mech_final:
+  role_id:        10
+  review_type_id: 1
+mech_pre_artwork:
+  role_id:        10
+  review_type_id: 3
+mech_placement:
+  role_id:        10
+  review_type_id: 4
+mech_mfg_final:
+  role_id:        11
+  review_type_id: 1
+mech_mfg_routing:
+  role_id:        11
+  review_type_id: 2
+mech_mfg_pre_artwork:
+  role_id:        11
+  review_type_id: 3
+mech_mfg_placement:
+  role_id:        11
+  review_type_id: 4
+pcb_design_final:
+  role_id:        12
+  review_type_id: 1
+pcb_design_release:
+  role_id:        12
+  review_type_id: 5
+planning_final:
+  role_id:        13
+  review_type_id: 1
+planning_pre_artwork:
+  role_id:        13
+  review_type_id: 3
+pcb_input_gate_pre_artwork:
+  role_id:        14
+  review_type_id: 3
+library_pre_artwork:
+  role_id:        15
+  review_type_id: 3
+pcb_mechanical_pre_artwork:
+  role_id:        16
+  review_type_id: 3
+slm_bom_pre_artwork:
+  role_id:        17
+  review_type_id: 3
+slm_vendor_pre_artwork:
+  role_id:        18
+  review_type_id: 3
+ops_manager_release:
+  role_id:        19
+  review_type_id: 5

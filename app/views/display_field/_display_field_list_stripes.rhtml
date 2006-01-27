@@ -1,0 +1,5 @@
+<tr class="<%= display_field_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% rid = display_field_list_stripes.id %>
+    <%= link_to display_field_list_stripes.name, { :action => 'edit', :id => rid } %> </td>
+</tr>

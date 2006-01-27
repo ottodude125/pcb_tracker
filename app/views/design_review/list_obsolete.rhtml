@@ -1,0 +1,57 @@
+<!-- View:    list_obsolete                                     -->
+<!-- Purpose: Displays a list of obsolete documents.            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@design_review.design.name} - Obsolete #{@document_type_name} Documents" %>
+
+<%= start_form_tag(:action        => 'review_attachments',
+                     :design_review_id => @design_review.id ) %>
+                   
+<%= hidden_field "design_review", "id" %>
+
+  <table width="100%">
+    <tr>
+      <td align="left">
+        <input type="submit" value="Return" />
+      </td>
+      <td align="right">
+        <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <table border="0"
+         width="100%">
+    <tr>
+      <th align="left">Filename</th>
+      <th align="left">Attached By</th>
+      <th align="left">Date</th>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+
+    <%# List each of the design review documents. %>
+    <% for drd in @docs %>
+      <tr>
+	      <td>
+	        <%= link_to(drd.document.name,
+	                    :action => "get_attachment",
+		                  :id     => drd.document.id) %>
+        </td>
+        <td><%= User.find(drd.document.created_by).name %></td>
+        <td><%= drd.document.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
+      </tr>
+    <% end %>
+    
+  </table>
+
+  <hr class="div" />
+
+  <%= end_form_tag %>
+
+<%# debug @docs %>
+

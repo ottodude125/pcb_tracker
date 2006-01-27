@@ -1,0 +1,34 @@
+<!-- View:    design center                                     -->
+<!-- Purpose: Displays a list of design center.                 -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "PCB Tracker Design Centers - List" %>
+
+<%= start_form_tag(:action => 'add') %>
+
+  <hr class="div" />
+
+  <table width="60%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+    <tr>
+      <th>Design Center</th>
+      <th>PCB Path</th>
+      <th>HW Path</th>
+      <th>Active</th>
+    </tr>
+    <%= render_collection_of_partials "design_center_list_stripes", @design_centers %>
+  </table>
+
+  <% pages = pagination_links @design_center_pages %>
+
+  <% if pages %>
+    <p><b>Pages:</b> <%= pages %>
+  <% end %>
+
+  <hr class="div" />
+
+  <input type="submit" value="New Design Center" />
+  <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
+
+<%= end_form_tag %>

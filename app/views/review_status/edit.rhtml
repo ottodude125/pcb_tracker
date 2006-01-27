@@ -1,0 +1,38 @@
+<!-- View:    review status                                     -->
+<!-- Purpose: Displays a review status for editing.             -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Review Status" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'update') %>
+
+  <%= hidden_field "review_status", "id" %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="review_group_status">Review Status:</label>
+      </td>
+      <td>
+        <%= text_field "review_status", "name", "size" => 24, "maxlength" => 24 %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="review_status_active">Active:</label>
+      </td>
+      <td>
+        <%= check_box "review_status", "active" %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Review Status" />
+  <input type="button" value="Return to Review Status List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<%= end_form_tag %>

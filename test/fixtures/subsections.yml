@@ -1,0 +1,177 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+subsection_01_1_1:
+  id: 1
+  checklist_id: 1
+  section_id: 1
+  name: subsection_01_1_1
+  note: Subsection 1 Note
+  url: www.eds.com
+  sort_order: 1
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 1
+subsection_01_1_2:
+  id: 2
+  checklist_id: 1
+  section_id: 1
+  name: subsection_01_1_2
+  note: Subsection 2 Note
+  url: www.eds.com
+  sort_order: 2
+  date_code_check: 0
+  dot_rev_check: 0
+  full_review: 1
+subsection_01_2_1:
+  id: 3
+  checklist_id: 1
+  section_id: 2
+  name: subsection_01_2_1
+  note: Subsection 3 Note
+  url: www.google.com
+  sort_order: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  full_review: 1
+subsection_01_2_2:
+  id: 4
+  checklist_id: 1
+  section_id: 2
+  name: subsection_01_2_2
+  note: Subsection 4 Note
+  url: www.google.com
+  sort_order: 2
+  date_code_check: 0
+  dot_rev_check: 0
+  full_review: 1
+subsection_01_2_3:
+  id: 400
+  checklist_id: 1
+  section_id: 2
+  name: subsection_01_2_3
+  note: Subsection 400 Note
+  url: www.google.com
+  sort_order: 3
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 1
+subsection_10_1_1:
+  id: 5
+  checklist_id: 2
+  section_id: 3
+  name: subsection_10_1_1
+  note: id - 5
+  url: www.eds.com
+  sort_order: 1
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 1
+subsection_10_1_2:
+  id: 6
+  checklist_id: 2
+  section_id: 3
+  name: subsection_10_1_2
+  note: id - 6
+  url: www.eds.com
+  sort_order: 2
+  date_code_check: 0
+  dot_rev_check: 0
+  full_review: 1
+subsection_10_1_5_1:
+  id: 9
+  checklist_id: 1
+  section_id: 5
+  name: subsection_10_1_5_1
+  note: id - 9
+  url: www.google.com
+  sort_order: 1
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 0
+subsection_10_1_5_2:
+  id: 10
+  checklist_id: 1
+  section_id: 5
+  name: subsection_10_1_5_1
+  note: id - 9
+  url: www.google.com
+  sort_order: 2
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 0
+subsection_10_2_1:
+  id: 7
+  checklist_id: 2
+  section_id: 4
+  name: subsection_10_2_1
+  note: id - 7
+  url: www.google.com
+  sort_order: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  full_review: 1
+subsection_10_2_2:
+  id: 8
+  checklist_id: 2
+  section_id: 4
+  name: subsection_10_2_2
+  note: id - 8
+  url: www.google.com
+  sort_order: 2
+  date_code_check: 0
+  dot_rev_check: 0
+  full_review: 1
+subsect_30_000:
+  id: 30000
+  checklist_id: 2
+  section_id: 20000
+  name: subsect_30_000
+  note: id - 30,000
+  url: www.google.com
+  sort_order: 1
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 1
+subsect_30_001:
+  id: 30001
+  checklist_id: 2
+  section_id: 20000
+  name: subsect_30_001
+  note: id - 30,001
+  url: www.google.com
+  sort_order: 2
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 1
+subsect_30_002:
+  id: 30002
+  checklist_id: 2
+  section_id: 20001
+  name: subsect_30_002
+  note: id - 30,002
+  url: www.google.com
+  sort_order: 1
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 1
+subsect_30_003:
+  id: 30003
+  checklist_id: 2
+  section_id: 20001
+  name: subsect_30_003
+  note: id - 30,003
+  url: www.google.com
+  sort_order: 2
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 1
+subsect_30_004:
+  id: 30004
+  checklist_id: 2
+  section_id: 20001
+  name: subsect_30_004
+  note: id - 30,004
+  url: www.google.com
+  sort_order: 3
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 1

@@ -1,0 +1,55 @@
+<!-- View:    board                                             -->
+<!-- Purpose: Displays the list of boards .                     -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "PCB Tracker - Boards" %>
+
+<%= start_form_tag(:action => 'filtered_list') %>
+
+  <hr class="div" />
+
+  <table width="80%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+    <tr>
+      <th>Board</th>
+      <th width="10%">Active?</th>
+      <th>Platform</th>
+      <th>Project</th>
+      <th>Revisions</th>
+      <th width=100>&nbsp;</th>
+    </tr>
+    <tr bgcolor="#9F9F9F">
+      <td align="center"><%= select("filter",
+                                    "prefix_id", 
+                                    Prefix.find_all('active=1', 'pcb_mnemonic ASC').collect { |p| [ p.pcb_mnemonic, p.id ] }, 
+                                    { :include_blank => true}) %></td>
+      <td>&nbsp;</td>
+      <td align="center"><%= select("filter", 
+                                    "platform_id", 
+                                    Platform.find_all('active=1', 'name ASC').collect { |p| [ p.name, p.id ] }, 
+                                    { :include_blank => true}) %></td>
+      <td align="center"><%= select("filter", 
+                                    "project_id", 
+                                    Project.find_all('active=1', 'name ASC').collect { |p| [ p.name, p.id ] }, 
+                                    { :include_blank => true}) %></td>
+      <td>&nbsp;</td>
+      <td><input type="submit" value="Filter List" /></td>
+    </tr>
+
+    <%= render_collection_of_partials "board_list_stripes", @boards %>
+  </table>
+
+  <% pages = pagination_links @board_pages %>
+
+  <% if pages %>
+    <p><b>Pages:</b> <%= pages %>
+  <% end %>
+
+
+  <hr class="div" />
+
+  <input type="button" value="New Board" onClick="parent.location='<%= url_for( :action => 'add' ) %>'" />
+  <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
+
+<%= end_form_tag %>

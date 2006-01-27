@@ -1,0 +1,20 @@
+<tr class="<%= review_group_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% rid = review_group_list_stripes.id %>
+    <%= link_to review_group_list_stripes.name, { :action => 'edit', :id => rid } %> 
+  </td>
+  <td align="center">
+    <% if review_group_list_stripes.cc_peers? %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  </td>
+  <td align="center">
+    <% if review_group_list_stripes.active? %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  </td>
+</tr>

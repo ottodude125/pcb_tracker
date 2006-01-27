@@ -1,0 +1,50 @@
+<!-- View:    prefix                                            -->
+<!-- Purpose: Displays a form to add a new board prefix.        -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<% @heading = "Create a new board prefix" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'create') %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="prefix_pcb_mnemonic">PCB Mnemonic:</label>
+      </td>
+      <td>
+        <%= text_field "new_prefix", "pcb_mnemonic", "size" => 4, "maxlength" => 4 %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="prefix_loaded_prefix">Loaded Prefix:</label>
+      </td>
+      <td>
+        <%= text_field "new_prefix", "loaded_prefix", "size" => 4, "maxlength" => 4 %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="prefix_unloaded_prefix">Unloaded Prefix:</label>
+      </td>
+      <td>
+        <%= text_field "new_prefix", "unloaded_prefix", "size" => 4, "maxlength" => 4 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: 
+        <%= check_box "new_prefix", "active", { 'checked' => 'checked' } %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Create new board prefix" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<%= end_form_tag %>

@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+dfm:
+  id:       1
+  name:     DFM
+  cc_peers: 1
+valor:
+  id:       2
+  name:     Valor
+  cc_peers: 0
+planning:
+  id:       3
+  name:     Planning
+  cc_peers: 0

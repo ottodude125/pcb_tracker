@@ -1,0 +1,72 @@
+#
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+audit_mx234a:
+  id:           1001
+  design_id:    1
+  checklist_id: 2
+  complete:     0
+  designer_completed_checks: 0
+  auditor_completed_checks:  0
+audit_la453b:
+  id:           1002
+  design_id:    2
+  checklist_id: 2
+  complete:     0
+  designer_completed_checks: 0
+  auditor_completed_checks:  0
+#la453a_eco1
+audit_la453a_eco1:
+  id:           1003
+  design_id:    3
+  checklist_id: 2
+  complete:     0
+  designer_completed_checks: 0
+  auditor_completed_checks:  0
+# la453a1
+audit_la453a1:
+  id:           1004
+  design_id:    4
+  checklist_id: 222
+  complete:     0
+  designer_completed_checks: 0
+  auditor_completed_checks:  0
+# la453a2
+audit_la453a2:
+  id:           1005
+  design_id:    5
+  checklist_id: 222
+  complete:     0
+  designer_completed_checks: 0
+  auditor_completed_checks:  0
+# la453a2
+audit_la453b_eco2:
+  id:           1006
+  design_id:    6
+  checklist_id: 2
+  complete:     0
+  designer_completed_checks: 0
+  auditor_completed_checks:  0
+audit_mx234b:
+  id:           1007
+  design_id:    7
+  checklist_id: 222
+  complete:     0
+  designer_completed_checks: 0
+  auditor_completed_checks:  0
+audit_la454c3:
+  id:           1008
+  design_id:    8
+  checklist_id: 2
+  complete:     0
+  designer_completed_checks: 0
+  auditor_completed_checks:  0
+audit_mx234c:
+  id:           1009
+  design_id:    9
+  checklist_id: 2
+  complete:     0
+  designer_completed_checks: 0
+  auditor_completed_checks:  0

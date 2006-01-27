@@ -1,0 +1,324 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays the tracker home page.                   -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @title = "PCB Design Board/Data Tracker" %>
+<%# debug @session %>
+
+<table width="100%"
+       border="0" 
+       cellspacing="2"
+       align="center"
+       rules="cols">
+  <tr>
+    <td width="20%" valign="top">
+      <table width="90%"
+             align="center"
+             rules="rows"
+               cellpadding="5"
+               border="0">
+        <% if @session[:active_role] == "Admin" %>
+          <tr>
+            <td align="center">
+              <%= link_to("Admin Portal", 
+                            { :controller => "admin" }) %> <br />
+              Administrative functions
+            </td>
+          </tr>
+        <% end %>
+<!--        <tr>                           -->
+<!--          <td align="center">          -->
+<!--            <a href="">Preferences</a> -->
+<!--          </td>                        -->
+<!--        </tr>                          -->
+        <% if @session[:active_role] == "Designer" %>
+<!--          <tr>                          -->
+<!--            <td align="center">         -->
+<!--              <a href="">My Designs</a> -->
+<!--            </td>                       -->
+<!--          </tr>                         -->
+        <% end %>
+        <% if @session[:active_role] == "Designer" %>
+          <tr>
+            <td align="left">
+              <%= link_to("Tracker Settings (TBD)", 
+                          { :controller => "audit", 
+                            :action     => "designer_list" }) %>
+            </td>
+          </tr>
+        <% end %>
+<!--        <tr>                        -->
+<!--          <td align="center">       -->
+<!--            <a href ="">Reports</a> -->
+<!--          </td>                     -->
+<!--        </tr>                       -->
+        <tr>
+          <td align="center">
+            <%= link_to("Boards",
+                          { :controller => 'board',
+                            :action     => 'show_boards' }) %> <br />
+            Access to the Board data stored in the system.
+          </td>
+        </tr>
+        <% if @session[:active_role] == "Admin" ||
+	      @session[:active_role] == "Manager" %>
+        <% end %>
+      </table>
+    </td>
+    <% if @session[:user] == nil %>
+      <h1 align="center">Welcome to the PCB Design Board Tracker</h1>
+    <% elsif @session[:active_role] == "Designer" %>
+      <td>
+        <table width="100%"
+               border="0">
+          <tr>
+            <td>
+              <table width="100%" 
+                     align="left" 
+                     border="0">
+      	        <tr>
+                  <th colspan="2">
+                    My Designs
+                  </th>
+                </tr>
+                <tr>
+                  <td align="left"
+                      width="45">
+                    <font size="-2"><b>Priority</b></font>
+                  </td>
+                  <td>&nbsp;</td>
+                </tr>
+
+                <% for design in @design_list %>
+                  <tr>
+                    <td align="center"
+                        valign="top">
+                      <b><%= design[:design].priority %></b>
+                    </td>
+                    <td bgcolor="#000000">
+                      <font color="#ffffff">
+                        <b><%= design[:design].name %> - 
+                        <%= design[:design].board.platform.name %> / 
+                        <%= design[:design].board.project.name %></b>
+                      </font>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                      <table width="95%"
+                             align="right"
+                             border="0">
+                        <% if design[:reviews].size > 0 %>
+                          <tr>
+                            <td bgcolor="#ffffff">&nbsp;</td>
+                            <td>
+                              <font size="-2"><b>Posted</b></font>
+                            </td>
+                            <td>
+                              <font size="-2"><b>Status</b></font>
+                            </td>
+                            <td>
+                              <font size="-2"><b>Reviewers</b></font>
+                            </td>
+                            <td>
+                              <font size="-2"><b>Approvals</b></font>
+                            </td>
+                            <td>
+                              <font size="-2"><b>Completed</b></font>
+                            </td>
+                          </tr>
+                        <% end %>
+
+                        <% for review in design[:reviews] %>
+                          <tr>
+                            <td>
+                              <%= link_to(review[:review].review_type.name,
+                                          { :controller => 'design_review',
+                                            :action     => 'designer_view',
+                                            :id         => review[:review].id }) %>
+                            </td>
+                            <td>
+                              <font size="-1">
+                                <b><%= review[:review].created_on.strftime("%d-%b-%y") %></b>
+                              </font>
+                            </td>
+                            <td>
+                              <font size="-1">
+                                <b><%= review[:review].review_status.name %></b>
+                              </font>
+                            </td>
+                            <td>
+                              <font size="-1">
+                                <b><%= review[:reviewers] %></b>
+                              </font>
+                            </td>
+                            <td>
+                              <font size="-1">
+                                <b><%= review[:approvals] %></b>
+                              </font>
+                            </td>
+                            <% if review[:approvals] == review[:reviewers] %>
+                              <td>
+                                <font size="-1">
+
+                                  <b><%= review[:review].completed_on.strftime("%d-%b-%y") %></b>
+                                </font>
+                              </td>
+                            <% else %>
+                              <td><b>N/A</b></td>
+                            <% end %>
+                          </tr>
+                        <% end %>
+
+                        <% if design[:next_review] != nil %>
+                          <tr bgcolor="#dfdfdf">
+                            <td colspan="6">
+                              <%= link_to('POST ' +
+                                          design[:next_review].review_type.name +
+                                          ' Review',
+                                          { :controller     => 'design_review',
+                                            :action         => 'post_review',
+                                            :design_id      => design[:design].id,
+                                            :review_type_id => design[:next_review].review_type.id }) %>
+                            </td>
+                          </tr>
+                        <% end %>
+
+                      <tr>
+                        <td colspan="6">
+                          <table width="100%"
+                                 border="0">
+                            <tr>
+                              <td bgcolor="#ffffff"
+                                  width="100">&nbsp;</td>
+                              <td align="center">
+                                <font size="-2"><b>% Complete</b></font>
+                              </td>
+                              <td>
+                                <font size="-2"><b>Peer</b></font>
+                              </td>
+                              <td align="center">
+                                <font size="-2"><b>Peer % Complete</b></font>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <%= link_to("Design Audit",
+                                            { :controller => 'audit',
+                                              :action     => 'show_sections',
+                                              :id         =>  design[:audit].id}) %>
+                              </td>
+                              <td align="center">
+                                <b><%= sprintf("%4.1f",
+                                               design[:percent_complete]) %></b>
+                              </td>
+                              <td>
+                                <b><%= User.find(design[:design].peer_id).name %></b>
+                              </td>
+                              <td align="center">
+                                <b><%= sprintf("%4.1f",
+                                               design[:peer_percent_complete]) %></b>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+
+                      </table>
+                    </td>
+                  </tr>
+                <% end %>
+
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <hr class="div" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table width="100%" 
+                     align="center" 
+                     border="0">
+                <tr><th colspan="3">My Audits</th></tr>
+                <tr>
+                  <td align="left"
+                      width="45">
+                    <font size="-2"><b>Priority</b></font>
+                  </td>
+                  <td>&nbsp;</td>
+                </tr>
+
+                <% for audit in @audits %>
+                  <tr>
+                    <td align="center"
+                        valign="top">
+                      <b><%= audit.design.priority %></b>
+                    </td>
+                    <td bgcolor="#000000">
+                      <font color="#ffffff">
+                        <b><%= audit.design.name %> -
+                        <%= audit.design.board.platform.name %> /
+                        <%= audit.design.board.project.name %></b>
+                      </font>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                      <table width="95%"
+                             align="right"
+                             border="0">
+                        <tr>
+                          <td width="100">&nbsp;</td>
+                          <td align="center">
+                            <font size="-2"><b>% Complete</b></font>
+                          </td>
+                          <td>
+                            <font size="-2"><b>Designer</b></font>
+                          </td>
+                          <td align="center">
+                            <font size="-2"><b>Designer % Complete</b></font>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <%= link_to("Peer Audit",
+                                        { :controller => 'audit',
+                                          :action     => 'show_sections',
+                                          :id         => audit.id }) %>
+                          </td>
+                          <td align="center">
+                            <b><%= sprintf("%4.1f",
+                                           audit[:percent_complete]) %></b>
+                          </td>
+                          <td>
+                            <%= User.find(audit.design.designer_id).name %>
+                          </td>
+                          <td align="center">
+                            <b><%= sprintf("%4.1f",
+                                           audit[:designer_percent_complete]) %></b>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                <% end %>
+              </table>
+            </td>
+          </tr>
+        </table>
+      <% end %>
+    </td>
+  </tr>
+
+
+</table>
+
+<%# debug @design_list %>
+<%# debug @audits %>

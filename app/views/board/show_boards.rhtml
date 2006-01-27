@@ -1,0 +1,72 @@
+<!-- View:    board                                             -->
+<!-- Purpose: Displays the board list.                          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @title = "PCB Design Board/Data Tracker" %>
+
+<input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+<hr class="div" />
+
+<%= start_form_tag(:action => 'design_information') -%>
+
+  <b>Enter board number: </b>
+  <%= text_field_with_auto_complete(:board, 
+                                    :name, 
+                                    { :size => 8} ) -%>
+
+  <b> and </b>
+  <input type="submit" value="Get Design" />
+  
+  <br />
+  <br />
+  <b> or click on the board link below </b>
+  <br />
+  
+  <hr class="div" />
+  
+  <table width="90%" 
+         border="1" 
+         cellspacing="0" 
+         cellpadding="0"
+         align="center"
+         rules="cols">
+    <tr>
+      <% col = 0 %>
+      <% for board_list in @boards %>
+        <td valign="top"
+            width="10%"
+            align="center">
+          <table cellpadding="0"
+                 cellspacing="0"
+                 border="0"
+                 width="100%">
+            <tr class="teraheader">
+              <th>
+                <%= board_list[0] %>
+              </th>
+            </tr>
+            <% for board in board_list[1] %>
+              <tr>
+                <td align="center">
+                  <%= link_to(board.name,
+                              {:action => 'design_information',
+                               :board_id  => board}) %>
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        </td>
+      <% col += 1 %>
+      <% if col == 10 %>
+        </tr><tr>
+      <% end %>
+      <% end %>
+    </tr>
+  </table>
+
+<%= end_form_tag -%>
+
+<%# debug @boards %>
+<%# debug @session %>

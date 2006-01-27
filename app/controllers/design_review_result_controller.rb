@@ -1,0 +1,2 @@
+class DesignReviewResultController < ApplicationController
+end

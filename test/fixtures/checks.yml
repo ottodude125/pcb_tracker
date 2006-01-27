@@ -1,0 +1,532 @@
+#
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+check_01:
+  id: 1
+  section_id: 1
+  subsection_id: 1
+  title: check_01
+  check: First Check
+  url: www.yahoo.com
+  full_review: 0
+  date_code_check: 1
+  dot_rev_check: 1
+  sort_order: 1
+  check_type: designer_auditor
+check_02:
+  id: 2
+  section_id: 1
+  subsection_id: 1
+  title: check_02
+  check: Second Check
+  url: www.disney.com
+  full_review: 1
+  date_code_check: 1
+  dot_rev_check: 1
+  sort_order: 2
+  check_type: designer_auditor
+check_03:
+  id: 3
+  section_id: 1
+  subsection_id: 1
+  title: check_03
+  check: Third Check
+  url: www.disney.com
+  full_review: 1
+  date_code_check: 1
+  dot_rev_check: 1
+  sort_order: 3
+  check_type: designer_auditor
+check_04:
+  id: 4
+  section_id: 1
+  subsection_id: 2
+  title: check_04
+  check: Fourth Check
+  url: www.yahoo.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 1
+  check_type: yes_no
+check_05:
+  id: 5
+  section_id: 1
+  subsection_id: 2
+  title: check_05
+  check: Fifth Check
+  url: www.disney.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 2
+  check_type: yes_no
+check_06:
+  id: 6
+  section_id: 1
+  subsection_id: 2
+  title: check_06
+  check: Sixth Check
+  url: www.disney.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 3
+  check_type: yes_no
+check_07:
+  id: 7
+  section_id: 2
+  subsection_id: 3
+  title: check_07
+  check: 7th Check
+  url: www.yahoo.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 1
+  check_type: designer_only
+check_08:
+  id: 8
+  section_id: 2
+  subsection_id: 3
+  title: check_08
+  check: 8th Check
+  url: www.generaldynamics.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 2
+  check_type: designer_only
+check_09:
+  id: 9
+  section_id: 2
+  subsection_id: 3
+  title: check_09
+  check: 9th Check
+  url: www.ratheon.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 3
+  check_type: designer_only
+check_10:
+  id: 10
+  section_id: 2
+  subsection_id: 4
+  title: check_10
+  check: 10th Check
+  url: www.alphatech.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 1
+  check_type: designer_auditor
+check_11:
+  id: 11
+  section_id: 2
+  subsection_id: 4
+  title: check_11
+  check: 11th Check
+  url: www.eds.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 2
+  check_type: designer_auditor
+check_12:
+  id: 12
+  section_id: 2
+  subsection_id: 4
+  title: check_12
+  check: 12th Check
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 3
+  check_type: designer_auditor
+check_13:
+  id: 13
+  section_id: 3
+  subsection_id: 5
+  title: check_13
+  check: 13th Check
+  url: www.gte.com
+  full_review: 0
+  date_code_check: 1
+  dot_rev_check: 1
+  sort_order: 1
+  check_type: designer_auditor
+check_14:
+  id: 14
+  section_id: 3
+  subsection_id: 5
+  title: check_14
+  check: 14th Check
+  url: www.disney.com
+  full_review: 1
+  date_code_check: 1
+  dot_rev_check: 1
+  sort_order: 2
+  check_type: designer_auditor
+check_15:
+  id: 15
+  section_id: 3
+  subsection_id: 6
+  title: check_15
+  check: 15th Check
+  url: www.disney.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 1
+  check_type: yes_no
+check_16:
+  id: 16
+  section_id: 3
+  subsection_id: 6
+  title: check_16
+  check: 16th Check
+  url: www.disney.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 2
+  check_type: yes_no
+check_17:
+  id: 17
+  section_id: 3
+  subsection_id: 6
+  title: check_17
+  check: 17th Check
+  url: www.disney.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 3
+  check_type: yes_no
+check_24:
+  id: 24
+  section_id: 3
+  subsection_id: 6
+  title: check_24
+  check: 24th Check
+  url: www.disney.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 4
+  check_type: yes_no
+check_32:
+  id: 32
+  section_id: 5
+  subsection_id: 9
+  title: check_32
+  check: 32nd Check
+  url: www.disney.com
+  full_review: 0
+  date_code_check: 1
+  dot_rev_check: 1
+  sort_order: 1
+  check_type: designer_only
+check_25:
+  id: 25
+  section_id: 5
+  subsection_id: 9
+  title: check_25
+  check: 25th Check
+  url: www.generaldynamics.com
+  full_review: 0
+  date_code_check: 1
+  dot_rev_check: 1
+  sort_order: 2
+  check_type: designer_only
+check_26:
+  id: 26
+  section_id: 5
+  subsection_id: 10
+  title: check_26
+  check: 26th Check
+  url: www.alphatech.com
+  full_review: 1
+  date_code_check: 1
+  dot_rev_check: 1
+  sort_order: 1
+  check_type: designer_auditor
+check_27:
+  id: 27
+  section_id: 5
+  subsection_id: 10
+  title: check_27
+  check: 27th Check
+  url: www.eds.com
+  full_review: 0
+  date_code_check: 1
+  dot_rev_check: 1
+  sort_order: 2
+  check_type: designer_auditor
+check_28:
+  id: 28
+  section_id: 5
+  subsection_id: 10
+  title: check_28
+  check: 28th Check
+  url: www.teradyne.com
+  full_review: 0
+  date_code_check: 1
+  dot_rev_check: 1
+  sort_order: 3
+  check_type: designer_auditor
+check_18:
+  id: 18
+  section_id: 4
+  subsection_id: 7
+  title: check_18
+  check: 18th Check
+  url: www.yahoo.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 1
+  check_type: designer_only
+check_19:
+  id: 19
+  section_id: 4
+  subsection_id: 7
+  title: check_19
+  check: 19th Check
+  url: www.generaldynamics.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 2
+  check_type: designer_only
+check_20:
+  id: 20
+  section_id: 4
+  subsection_id: 7
+  title: check_20
+  check: 20th Check
+  url: www.raytheon.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 3
+  check_type: designer_only
+check_21:
+  id: 21
+  section_id: 4
+  subsection_id: 8
+  title: check_21
+  check: 21st Check
+  url: www.alphatech.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 1
+  check_type: designer_auditor
+check_22:
+  id: 22
+  section_id: 4
+  subsection_id: 8
+  title: check_22
+  check: 22nd Check
+  url: www.eds.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 2
+  check_type: designer_auditor
+check_23:
+  id: 23
+  section_id: 4
+  subsection_id: 8
+  title: check_23
+  check: 23rd Check
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 3
+  check_type: designer_auditor
+check_10_000:
+  id: 10000
+  section_id: 20000
+  subsection_id: 30000
+  title: check_10_000
+  check: Check 10,000
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 1
+  dot_rev_check: 0
+  sort_order: 1
+  check_type: designer_auditor
+check_10_001:
+  id: 10001
+  section_id: 20000
+  subsection_id: 30000
+  title: check_10_001
+  check: Check 10,001
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 1
+  dot_rev_check: 0
+  sort_order: 2
+  check_type: designer_auditor
+check_10_002:
+  id: 10002
+  section_id: 20000
+  subsection_id: 30000
+  title: check_10_002
+  check: Check 10,002
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 1
+  dot_rev_check: 0
+  sort_order: 3
+  check_type: designer_auditor
+check_10_003:
+  id: 10003
+  section_id: 20000
+  subsection_id: 30000
+  title: check_10_003
+  check: Check 10,003
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 4
+  check_type: designer_auditor
+check_10_004:
+  id: 10004
+  section_id: 20000
+  subsection_id: 30001
+  title: check_10_004
+  check: Check 10,004
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 1
+  check_type: yes_no
+check_10_005:
+  id: 10005
+  section_id: 20000
+  subsection_id: 30001
+  title: check_10_005
+  check: Check 10,005
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 2
+  check_type: yes_no
+check_10_006:
+  id: 10006
+  section_id: 20001
+  subsection_id: 30002
+  title: check_10_006
+  check: Check 10,006
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 1
+  check_type: designer_auditor
+check_10_007:
+  id: 10007
+  section_id: 20001
+  subsection_id: 30002
+  title: check_10_007
+  check: Check 10,007
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 2
+  check_type: designer_auditor
+check_10_008:
+  id: 10008
+  section_id: 20001
+  subsection_id: 30003
+  title: check_10_008
+  check: Check 10,008
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 1
+  check_type: designer_only
+check_10_009:
+  id: 10009
+  section_id: 20001
+  subsection_id: 30003
+  title: check_10_009
+  check: Check 10,009
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 2
+  check_type: designer_only
+check_10_010:
+  id: 10010
+  section_id: 20001
+  subsection_id: 30003
+  title: check_10_010
+  check: Check 10,010
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 3
+  check_type: designer_only
+check_10_011:
+  id: 10011
+  section_id: 20001
+  subsection_id: 30003
+  title: check_10_011
+  check: Check 10,011
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 4
+  check_type: designer_only
+check_10_012:
+  id: 10012
+  section_id: 20001
+  subsection_id: 30004
+  title: check_10_012
+  check: Check 10,012
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 1
+  check_type: designer_auditor
+check_10_013:
+  id: 10013
+  section_id: 20001
+  subsection_id: 30004
+  title: check_10_012
+  check: Check 10,012
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 2
+  check_type: designer_auditor
+check_10_014:
+  id: 10014
+  section_id: 20001
+  subsection_id: 30004
+  title: check_10_014
+  check: Check 10,014
+  url: www.teradyne.com
+  full_review: 1
+  date_code_check: 0
+  dot_rev_check: 0
+  sort_order: 3
+  check_type: designer_auditor

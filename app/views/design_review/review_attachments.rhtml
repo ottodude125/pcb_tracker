@@ -1,0 +1,83 @@
+<!-- View:    review_attachments                                -->
+<!-- Purpose: Displays a design review for a designer.          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@design_review.design.name} - #{@design_review.design.board.platform.name} / #{@design_review.design.board.project.name} Attachments" %>
+
+<%= start_form_tag(:action => 'add_attachment',
+                      :id     => @design_review.design.board_id ) %>
+                   
+<%= hidden_field "design_review", "id" %>
+
+  <table width="100%">
+    <tr>
+      <td align="left">
+        <input type="button" value="Return" onClick="parent.location='<%= url_for( :controller => 'design_review', :action => 'view', :id => @design_review.id ) %>'" />
+      </td>
+      <td align="right">
+        <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <table border="0"
+         width="100%">
+    <tr>
+      <th align="left">Filename</th>
+      <th align="left">Type</th>
+      <th align="left">Attached By</th>
+      <th align="left">Date</th>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+
+    <%# Loop through the design review documents and display. %>
+    <% for drd in @documents %>
+      <tr>
+	      <td>
+	        <%= link_to(drd.document.name,
+	                    :action => "get_attachment",
+		                  :id     => drd.document.id) %>
+        </td>
+        <td><%= DocumentType.find(drd.document_type_id).name %></td>
+        <td><%= User.find(drd.document.created_by).name %></td>
+        <td><%= drd.document.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
+        <td>
+          <% if drd.document_type.name != "Other" %>
+            <%= link_to("Update",
+                        {:action           => 'update_documents',
+                         :design_review_id => @design_review.id,
+                         :document_id      => drd.id},
+                        :confirm =>   "Do you want to replace the file " +
+                                      "#{drd.document.name} with a new file?") %>
+          <% else %>
+            &nbsp;
+          <% end %>
+        </td>
+	      <td>
+          <% if drd[:multiple_docs] %>
+            <%= link_to("Obsolete Documents",
+                        {:action           => 'list_obsolete',
+                         :id               => @design_review.id,
+                         :document_type_id => drd.document_type_id}) %>
+	        <% else %>
+	          &nbsp;
+          <% end %>
+	      </td>
+      </tr>
+    <% end %>
+    
+  </table>
+
+  <hr class="div" />
+
+  <input type="submit" value="New Attachment" />
+
+  <%= end_form_tag %>
+
+<%# debug @documents %>
+

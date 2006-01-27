@@ -1,0 +1,67 @@
+<!-- View:    audit                                             -->
+<!-- Purpose: Displays a form for the designer/auditor to       -->
+<!--          navigate to the checks.                           -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@board_name} - Peer Audit Sections" %>
+
+<%# debug @checklist_index %>
+
+  <%= start_form_tag(:controller => 'tracker', :action => 'index') %>
+
+  <hr class="div" />
+
+    <table border="0" align="center" width="80%">
+      <tr>
+        <th colspan="3">&nbsp;</th>
+	<th>Number of<br>Checks</th>
+	<th>%<br>Completed</th>
+      </tr>
+      <% for entry in @checklist_index %>
+        <tr>
+          <% color = '#' + entry["bg_color"] %>
+          <td width="10" bgcolor="<%= color %>">&nbsp;</td>
+          <td colspan="2">
+            <%= entry["section_name"] %>
+          </td>
+        </tr>
+        <% for subsection in entry["subsections"] %>
+          <% if subsection["checks"] > 0 %>
+            <% if subsection["questions"] == 0 %>
+            <tr>
+            <% else %>
+            <tr bgcolor="yellow">
+            <% end %>
+              <td width="10" bgcolor="<%= color %>">&nbsp;</td>
+              <td width="5" bgcolor="<%= color %>">&nbsp;</td>
+
+              <td>
+                <%= link_to(subsection["name"],
+                            { :action        => 'perform_checks',
+                              :subsection_id => subsection["id"],
+                              :audit_id      => @audit.id }) %>
+              </td>
+              <td align="center"><%= subsection["checks"] %></td>
+              <td align="center">
+                <%= sprintf("%3.f",
+                            subsection["percent_complete"]) %>%
+              </td>
+              <td>
+                <%= link_to('Perform Checks',
+                            { :action        => 'perform_checks',
+                              :subsection_id => subsection["id"],
+                              :audit_id      => @audit.id }) %>
+              </td>
+            </tr>
+          <% end %>
+        <% end %>
+      <% end %>
+    </table>
+ 
+  <hr class="div" />
+
+  <input type="submit" value="Return" />
+
+  <%= end_form_tag %>

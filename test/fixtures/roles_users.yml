@@ -1,0 +1,117 @@
+admin_bob:
+  role_id: 1
+  user_id: 1000001
+admin_cathy:
+  role_id: 1
+  user_id: 4000
+richm_role:
+  role_id: 2
+  user_id: 5002
+jiml_role:
+  role_id: 4
+  user_id: 4001
+bobg_role:
+  role_id: 2
+  user_id: 5000
+scott_role:
+  role_id: 2
+  user_id: 5001
+mily_role:
+  role_id: 2
+  user_id: 5003
+ben_b_hweng:
+  role_id: 5
+  user_id: 6000
+pat_a_dfm:
+  role_id: 8
+  user_id: 6001
+john_j_hweng:
+  role_id: 5
+  user_id: 7000
+lee_s_hweng:
+  role_id: 5
+  user_id: 7001
+lisa_a_valor:
+  role_id: 6
+  user_id: 7050
+scott_g_valor:
+  role_id: 6
+  user_id: 5001
+bob_g_valor:
+  role_id: 6
+  user_id: 5000
+rich_m_valor:
+  role_id: 6
+  user_id: 5002
+ted_dft:
+  role_id: 7
+  user_id: 7100
+espo_dft:
+  role_id: 7
+  user_id: 7101
+heng_k_dfm:
+  role_id: 8
+  user_id: 7150
+john_ju_dfm:
+  role_id: 8
+  user_id: 7151
+rich_a_hweng:
+  role_id: 5
+  user_id: 7200
+rich_a_tde:
+  role_id: 9
+  user_id: 7200
+man_c_tde:
+  role_id: 9
+  user_id: 7201
+dave_l_mech:
+  role_id: 10
+  user_id: 7250
+tom_t_mech:
+  role_id: 10
+  user_id: 7251
+anthony_g_mech_mfg:
+  role_id: 11
+  user_id: 7300
+tony_p_mech_mfg:
+  role_id: 11
+  user_id: 7301
+jan_k_pcb_ig:
+  role_id: 14
+  user_id: 7350
+cathy_pcb_ig:
+  role_id: 14
+  user_id: 4000
+dave_lib:
+  role_id: 15
+  user_id: 7400
+sheela_lib:
+  role_id: 15
+  user_id: 7401
+mary_t_pcb_mech:
+  role_id: 16
+  user_id: 7450
+john_g_pcb_mech:
+  role_id: 16
+  user_id: 7451
+art_slm_bom:
+  role_id: 17
+  user_id: 7500
+dan_slm_vendor:
+  role_id: 18
+  user_id: 7550
+alex_ops:
+  role_id: 19
+  user_id: 7600
+eileen_ops:
+  role_id: 19
+  user_id: 7601
+matt_planning:
+  role_id: 13
+  user_id: 7650
+tina_planning:
+  role_id: 13
+  user_id: 7651
+jim_l_pcb:
+  role_id: 12
+  user_id: 4001

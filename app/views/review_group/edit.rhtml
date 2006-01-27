@@ -1,0 +1,46 @@
+<!-- View:    review_group                                      -->
+<!-- Purpose: Displays a review group for editing.              -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Review Group" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'update') %>
+
+  <%= hidden_field "review_group", "id" %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="review_group_name">Review Group:</label>
+      </td>
+      <td>
+        <%= text_field "review_group", "name", "size" => 16, "maxlength" => 16 %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="review_group_cc_peers">CC Peers:</label>
+      </td>
+      <td>
+        <%= check_box "review_group", "cc_peers" %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="review_group_active">Active:</label>
+      </td>
+      <td>
+        <%= check_box "review_group", "active" %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Review Group" />
+  <input type="button" value="Return to Review Group List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<%= end_form_tag %>

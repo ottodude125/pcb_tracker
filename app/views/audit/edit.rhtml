@@ -1,0 +1,70 @@
+<!-- View:    audit                                             -->
+<!-- Purpose: Displays a form to edit an audit.                 -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Peer Review Audit" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'update') %>
+
+  <%= hidden_field "audit", "id" %>
+
+  <table align="center" border="1" rules="all" width="80%">
+
+    <tr>
+      <td width="10%">
+        <label for="board">Board:</label>
+      </td>
+      <td width="81%" align="left">
+        <%= @audit.design.name %>
+      </td>
+    </tr>
+
+    <tr>
+      <td>Type:</td>
+      <td>
+        <% if @audit.design.design_type == 'New' %>
+          New Board/Revision
+        <% else %>
+          <%= @audit.design.design_type %>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <label for="board_designer">Designer:</label>
+      </td>
+      <td>
+        <select id="audit_designer" name="audit[designer_id]">
+          <%= options_from_collection_for_select(@designers,
+                                                 "id",
+                                                 :name,
+                                                 @audit.design.designer_id) %>
+        </select>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <label for="board_auditor">Auditor:</label>
+      </td>
+      <td>
+        <select id="audit_auditor" name="audit[auditor_id]" >
+          <%= options_from_collection_for_select(@designers,
+                                                 "id",
+                                                 :name,
+                                                 @audit.design.peer_id) %>
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Audit" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list', :page => @session[:page] ) %>'" />
+
+<%= end_form_tag %>

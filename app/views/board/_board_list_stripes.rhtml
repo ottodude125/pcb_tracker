@@ -1,0 +1,30 @@
+<tr class="<%= board_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% bid = board_list_stripes.id %>
+    <% name = board_list_stripes.prefix.pcb_mnemonic + board_list_stripes.number.to_s %>
+    <%= link_to(name,
+                { :action => 'edit', 
+                  :id     => bid }) %> </td>
+  <td align="center">
+    <% if board_list_stripes.active? %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  </td>
+  <td>
+    <%= board_list_stripes.platform.name %>
+  </td>
+  <td>
+    <%= board_list_stripes.project.name %>
+  </td>
+  <td>
+    <%= list_revisions(bid) %>
+  </td>
+  <td>
+    <%= link_to('Add Revision',
+                  { :controller => 'design',
+                    :action     => 'add',
+                    :board_id   => bid }) %>
+  </td>
+</tr>

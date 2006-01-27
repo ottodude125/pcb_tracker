@@ -1,0 +1,10 @@
+# 
+# $Id$
+#
+# Read About Fixtures At Http://Ar.Rubyonrails.Org/Classes/Fixtures.Html
+board_ibm:
+  board_id:     2
+  fab_house_id: 2
+board_coretec:
+  board_id:     2
+  fab_house_id: 4

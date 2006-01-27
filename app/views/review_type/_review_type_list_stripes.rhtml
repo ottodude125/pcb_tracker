@@ -1,0 +1,23 @@
+<tr class="<%= review_type_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% rid = review_type_list_stripes.id %>
+    <%= link_to review_type_list_stripes.name, { :action => 'edit', :id => rid } %> 
+  </td>
+  <td align="center">
+    <%= review_type_list_stripes.sort_order %>
+  </td>
+  <td align="center">
+    <% if review_type_list_stripes.required? %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  </td>
+  <td align="center">
+    <% if review_type_list_stripes.active? %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  </td>
+</tr>

@@ -1,0 +1,82 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: design_center_manager_controller.rb
+#
+# $Id$
+#
+########################################################################
+
+class DesignCenterManagerController < ApplicationController
+
+
+  before_filter :verify_admin_role
+
+
+  ######################################################################
+  #
+  # design_center_assignment
+  #
+  # Description:
+  # This method retrieves the designers and design centers for the 
+  # form to make the designer/designer center assignments.
+  #
+  # Parameters from @params
+  # None
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def design_center_assignment
+    
+    # Get all of the active designers.
+    @designers = Role.find_by_name("Designer").users
+    @designers.delete_if { |designer| ! designer.active? }
+    
+    # Get all of the active design centers.
+    @design_centers = DesignCenter.find_all('active=1')
+    @design_centers.delete_if { |dc| dc.name.include? "Archive" }
+
+  end
+
+  
+  ######################################################################
+  #
+  # assign_designers_to_centers
+  #
+  # Description:
+  # This method updates designer records with their design center ids.
+  #
+  # Parameters from @params
+  # None
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def assign_designers_to_centers
+
+    # Go through the parameters passed back and assign the users to the
+    # design centers.
+    @params.each { |designer_id, design_center_id|
+
+      next if ( designer_id == "action" or designer_id == "controller" )
+
+      designer = User.find(designer_id)
+      designer.update_attribute('design_center_id', design_center_id['id'])
+    }
+
+    flash['notice'] = 'The Designer/Design Center assignments have been recorded'
+    redirect_to(:action => 'design_center_assignment')
+    
+  end
+
+end

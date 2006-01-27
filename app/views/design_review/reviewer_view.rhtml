@@ -1,0 +1,286 @@
+<!-- View:    designer_review                                   -->
+<!-- Purpose: Displays a design review for a designer.          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @title = "#{@design_review.review_name} Review::#{@design_review.design.name} - #{@design_review.design.board.platform.name} / #{@design_review.design.board.project.name}" %>
+
+<%= start_form_tag(:action => 'reviewer_results') %>
+
+  <hr class="div" />
+
+  <%= hidden_field "design_review", "id" %>
+
+  <table width="100%">
+    <tr>
+      <td width="10%" rowspan="5" valign="top">
+
+        <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+
+      </td>
+      <td colspan="2">
+        <table class="review_summary">
+          <tr>
+            <th align="left"
+                width="130">Design:</th>
+            <td width="250">
+              <%= @design.name %> -
+              <%= @design.board.platform.name %> /
+              <%= @design.board.project.name %>
+            </td>
+            <th align="left"
+                width="140">Design Center:</th>
+            <td>
+              <%= link_to(@design_review.design_center.name,
+                          "http://etg.teradyne.com/surfboards/" + @design_review.design_center.pcb_path + '/'+ @design.name) %>
+            </td>
+          </tr>
+          <tr>
+            <th align="left">Priority:</th>
+            <td>
+              <%= @design_review.priority.name %>
+            </td>
+            <th align="left">Review Type:</th>
+            <td>
+              <%= @design_review.review_name %>
+            </td>
+          </tr>
+          <tr>
+            <th align="left">Posting Number:</th>
+            <td>
+              <%= @design_review.posting_count %>
+            </td>
+            <th align="left">Originally Posted:</th>
+            <td>
+              <%= @design_review.created_on.strftime("%d-%b-%y, %I:%M %p") %>
+            </td>
+          </tr>
+          <tr valign="top">
+            <% if @design.fab_houses.size == 0 %>
+              <th align="left" colspan="2">No Fab House Selected</th>
+            <% else %>
+              <% if @design.fab_houses.size == 1 %>
+                <th align="left">Fab House:</th>
+              <% else %>
+                <th align="left">Fab Houses:</th>
+              <% end %>
+              <td>
+                <table>
+                  <% for fab_house in @design.fab_houses %>
+                    <tr>
+                      <td>
+                        <%=h fab_house.name %>
+                      </td>
+                    </tr>
+                  <% end %>
+                </table>
+              </td>
+            <% end %>
+            <th align="left">Last Posted:</th>
+            <td>
+              <%= @design_review.reposted_on.strftime("%d-%b-%y, %I:%M %p") %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td width=530>
+        <table class="actiontable" rules="rows">
+          <% if display_approval_options(@design_review.review_status_id) %>
+            <tr>
+              <td>
+                <% if not pending_repost(@design_review.review_status_id) %>
+                  <table width="100%"
+                         rules="all">
+                    <tr>
+                      <th width="20%">Role</th>
+                      <th>APPROVE</th>
+                      <th>WAIVE</th>
+                      <th>REJECT</th>
+                      <th>COMMENT ONLY</th>
+                    </tr>
+                    <% for review_result in @my_review_results %>
+                      <% if display_role(review_result) %>
+                        <tr>
+                          <th><%= review_result.role.name %></th>
+                          <td align="center">
+                            <%= radio_button("role_id_#{review_result.role.id}",
+                                             "#{review_result.id}",
+                                             "APPROVED") %>
+                          </td>
+                          <td align="center">
+                            <%= radio_button("role_id_#{review_result.role.id}",
+                                             "#{review_result.id}",
+                                             "WAIVED") %>
+                          </td>
+                          <td align="center">
+                            <%= radio_button("role_id_#{review_result.role.id}",
+                                             "#{review_result.id}",
+                                             "REJECTED") %>
+                          </td>
+                          <td align="center">
+                            <%= radio_button("role_id_#{review_result.role.id}",
+                                             "#{review_result.id}",
+                                             "COMMENT") %>
+                          </td>
+                        </tr>
+                      <% end %>
+                    <% end %>
+                  </table>
+                <% else %>
+                  <b>
+                    Not accepting results until the designer reposts.<br />
+                    Please submit comments to provide any additional 
+                    feedback.
+                  </b>
+                <% end %>
+              </td>
+            </tr>
+            
+            <% if pre_art_pcb(@design_review, @my_review_results) %>
+              <tr>
+                <td>
+                  <table border="0">
+                    <tr>
+                      <th align="left"> Verify Priority:</th>
+                      <td align="left">
+                        <select id="priority" name="priority[id]">
+                        <%= options_from_collection_for_select(@priorities,
+                                                               :id, 
+                                                               :name,
+                                                               @design.priority_id) %>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th align="left"> Select Designer:</th>
+                      <td align="left">
+                        <select id="designer" name="designer[id]">
+                        <%= options_from_collection_for_select(@designers,
+                                                               :id, 
+                                                               :name,
+                                                               @design.designer_id) %>
+                        </select>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+          <tr>
+            <td>
+              <label for="comment" ><b>Comments:</b></label>
+              <%= text_area("post_comment",
+                            "comment",
+                            :cols => 60,
+                            :rows => 5) %>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center">
+              <input type="submit" class="buttonPost" value="Submit Comments and/or Review Results" />
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td valign="top"
+          align="left">
+        <table>
+          <tr>
+            <td>
+              <%= link_to(image_tag('attachments'),
+                            {:action           => 'review_attachments',
+                             :design_review_id => @design_review.id}) %>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <%= link_to(image_tag('email'),
+                            {:action           => 'review_mail_list',
+                             :design_review_id => @design_review.id}) %>
+            </td>
+          </tr>
+          <%# if not @design_review.review_status.name == "Pending Repost" %>
+          <% if reviewer_peer(@review_results) %>
+            <tr>
+              <td>
+                <%= link_to(image_tag('reassign_reviewer'),
+                              {:action           => 'reassign_reviewer',
+                               :design_review_id => @design_review.id}) %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        &nbsp;
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><hr class="div" /></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <table class="review_results_table">
+          <tr>
+            <th colspan="4"
+                class="teraheader">
+              Review Results
+            </th>
+          </tr>
+	          <%= render_collection_of_partials("reviewer_list_stripes",
+                                              @review_results) %>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <br />
+  <div id="comments">
+
+  <% if @comments.size > 0 %>
+  <table class="comment_table">
+    <tr>
+      <th colspan="2"
+          class="teraheader">
+        Comments
+      </th>
+    </tr>
+    <% for comment in @comments %>
+      <tr bgcolor="#dddddd">
+        <td width="50%">
+          <font size="-2">
+            <b>Posted By:</b> <%= User.find(comment.user_id).name %>
+          </font>
+        </td>
+        <td width="50%">
+          <font size="-2">
+            <b>Date:</b> <%= comment.created_on.strftime("%d-%b-%y, %I:%M %p")%>
+          </font>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <%=h comment.comment %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  <% end %>
+
+  </div>
+
+  <%= end_form_tag %>
+
+<%# debug @session %>
+<%# debug @design_review %>
+<%# debug @design %>
+<%# debug @my_review_results %>
+<%# debug @designers %>
+<%# debug @priorities %>

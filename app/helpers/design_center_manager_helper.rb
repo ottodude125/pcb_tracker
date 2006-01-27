@@ -1,0 +1,2 @@
+module DesignCenterManagerHelper
+end

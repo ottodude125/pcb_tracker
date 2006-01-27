@@ -1,0 +1,22 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+suffix_1:
+  id:   1
+  name: 1
+suffix_2:
+  id:   2
+  name: 2
+suffix_3:
+  id:   3
+  name: 3
+suffix_4:
+  id:   4
+  name: 4
+suffix_5:
+  id:   5
+  name: 5
+suffix_6:
+  id:   6
+  name: 6
+suffix_7:
+  id:   7
+  name: 7

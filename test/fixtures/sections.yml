@@ -1,0 +1,81 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+section_01_1:
+  id: 1
+  checklist_id: 1
+  name: section_01_1
+  url: www.google.com
+  background_color: f3f3f3
+  sort_order: 1
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 1
+section_01_2:
+  id: 2
+  checklist_id: 1
+  name: section_01_2
+  url: www.boston.com
+  background_color: 030303
+  sort_order: 2
+  date_code_check: 0
+  dot_rev_check: 0
+  full_review: 1
+section_01_3:
+  id: 300
+  checklist_id: 1
+  name: section_01_3
+  url: www.boston.com
+  background_color: 131313
+  sort_order: 3
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 1
+section_10_1:
+  id: 3
+  checklist_id: 2
+  name: section_10_1
+  url: www.dogpile.com
+  background_color: 000000
+  sort_order: 1
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 1
+section_10_1_5:
+  id: 5
+  checklist_id: 1
+  name: section_10_1_5
+  url: www.dogpile.com
+  background_color: 030303
+  sort_order: 4
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 0
+section_10_2:
+  id: 4
+  checklist_id: 2
+  name: section_10_2
+  url: www.dogpile.com
+  background_color: 343434
+  sort_order: 3
+  date_code_check: 0
+  dot_rev_check: 0
+  full_review: 1
+section_20_000:
+  id: 20000
+  checklist_id: 222
+  name: section_20_000
+  url: www.dogpile.com
+  background_color: 343434
+  sort_order: 1
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 1
+section_20_001:
+  id: 20001
+  checklist_id: 222
+  name: section_20_001
+  url: www.dogpile.com
+  background_color: 343434
+  sort_order: 2
+  date_code_check: 1
+  dot_rev_check: 1
+  full_review: 1

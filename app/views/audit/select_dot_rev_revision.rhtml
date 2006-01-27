@@ -1,0 +1,102 @@
+<!-- View: audit                                                -->
+<!-- Purpose: Provides a form to select the board revision      -->
+<!-- for the board audit.                                       -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Select the revision " %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'create') %>
+
+  <%= hidden_field_tag "new_audit[board_id]",    @board_id %>
+  <%= hidden_field_tag "new_audit[designer_id]", @designer_id %>
+  <%= hidden_field_tag "new_audit[auditor_id]",  @auditor_id %>
+  <%= hidden_field_tag "new_audit[board_type]",  @board_type %>
+
+  <table border="0" width="80%">
+
+    <tr>
+      <td>
+        <label for="board">Board:</label>
+        <%= @board_name %>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <label for="board">Platform:</label>
+        <%= @platform %>
+      </td>
+
+      <td>
+        <label for="board">Project:</label>
+        <%= @project %>
+      </td>
+    </tr>
+
+    <tr>
+      <td>
+        <label for="board_designer">Designer:</label>
+        <%= @designer %>
+      </td>
+
+      <td>
+        <label for="board_auditor">Auditor:</label>
+	<%= @auditor %>
+      </td>
+    </tr>
+
+  </table>
+
+  <hr class="div" />
+
+  <table border="0">
+    <tr>
+      <th>Existing Audits:</th>
+      <% for rev in @dot_rev_audit_revs %>
+        <td>
+          <%= rev %>
+        </td>
+      <% end %>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <table border="0">
+    <tr>
+      <td>
+	<label for="board_revision">Select Revision:</label>
+      </td>
+      <td>
+	<select id="new_audit_revision" name="new_audit[revision_id]">
+          <%= options_from_collection_for_select(@revisions,
+                                                 "id",
+                                                 "name",
+                                                 "revision_id") %>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>
+	<label for="board_suffix">Select Suffix:</label>
+      </td>
+      <td>
+	<select id="new_audit_suffix" name="new_audit[suffix_id]">
+          <%= options_from_collection_for_select(@suffixes,
+                                                 "id",
+                                                 "name",
+                                                 "suffix_id") %>
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Create Audit" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list' ) %>'">
+
+<%= end_form_tag %>

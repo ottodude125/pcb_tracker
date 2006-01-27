@@ -1,0 +1,22 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+rev_a:
+  id: 1
+  name: a
+rev_b:
+  id: 2
+  name: b
+rev_c:
+  id: 3
+  name: c
+rev_d:
+  id: 4
+  name: d
+rev_e:
+  id: 5
+  name: e
+rev_f:
+  id: 6
+  name: f
+rev_g:
+  id: 7
+  name: g

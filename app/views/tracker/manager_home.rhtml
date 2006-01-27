@@ -1,0 +1,100 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays the tracker home page.                   -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @title = "PCB Design Board/Data Tracker" %>
+<%# debug @session %>
+
+<table width="100%"
+       border="0" 
+       cellspacing="2"
+       align="center"
+       rules="cols">
+  <tr>
+    <td width="20%" valign="top">
+      <table width="90%"
+             align="center"
+             rules="rows"
+             cellpadding="5"
+             border="0">
+        <tr>
+          <td align="center">
+            <%= link_to("Tracker Settings (TBD)", 
+                        { :controller => "audit", 
+                          :action     => "designer_list" }) %>
+          </td>
+        </tr>
+        <tr>
+          <td align="center">
+            <%= link_to("View boards",
+                          { :controller => 'board',
+                            :action     => 'show_boards' }) %>
+          </td>
+        </tr>
+      </table>
+    </td>
+
+    <td>
+      <table width="100%"
+             border="0">
+        <tr>
+          <td>
+            <table width="100%" 
+                   align="left" 
+                   border="0"
+                   cellspacing="0">
+    	        <tr>
+                <th colspan="9"
+                    bgcolor="#000000">
+                  <font color="#ffffff">Active Reviews</font>
+                </th>
+              </tr>
+              <tr>
+                <th align="left"
+                    width="45">
+                  <%= link_to('Priority',
+                              :action => 'manager_list_by_priority',
+                              :order  => @sort_order[:priority]) %>
+                </th>
+                <th align="left">
+                  <%= link_to('Design',
+                              :action => 'manager_list_by_design',
+                              :order  => @sort_order[:design]) %>
+                </th>
+                <th align="left">
+                  <%= link_to('Type',
+                              :action => 'manager_list_by_type',
+                              :order  => @sort_order[:type]) %>
+                </th>
+                <th align="left">
+                  <%= link_to('Designer',
+                              :action => 'manager_list_by_designer',
+                              :order  => @sort_order[:designer]) %>
+                </th>
+                <th align="left">
+                  <%= link_to('Last Posted',
+                              :action => 'manager_list_by_date',
+                              :order  => @sort_order[:date]) %>
+                </th>
+                <th align="right">Reviewers</th>
+                <th width="1">/</th>
+                <th align="left">Approvals</th>
+                <th align="left">Status</th>
+              </tr>
+              
+              <%= render_collection_of_partials("manager_home_list_stripes",
+                                                @design_reviews) %>
+
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<%# debug @design_reviews %>
+<%# debug @sort_order %>
+<%# debug flash %>

@@ -1,0 +1,12 @@
+<tr class="<%= reviewer_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+   <%= debug reviewer_list_stripes %>
+   <%= debug reviewer_list_stripes_counter %>
+    <% check_box('reviewer',
+                  reviewer_list_stripes.group,
+                  { 'checked' => 'checked' }) %>
+  </td>
+  <td>
+    TEST
+  </td>
+</tr>

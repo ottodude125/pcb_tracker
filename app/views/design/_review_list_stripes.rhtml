@@ -1,0 +1,10 @@
+<tr class="<%= review_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <%= check_box('review_type',
+                  review_list_stripes.name,
+                  { 'checked' => 'checked' }) %>
+  </td>
+  <td>
+    <%= review_list_stripes.name %>
+  </td>
+</tr>

@@ -1,0 +1,120 @@
+<!-- View:    subsection                                        -->
+<!-- Purpose: Displays a form for appending a subsection.  .    -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Append: Peer Audit Subsection" %>
+
+<%= start_form_tag(:action => 'append_subsection') %>
+
+<%= hidden_field "subsection", "id" %>
+
+  <hr class="div" />
+
+  <table border="0" cellpadding="1" width="80%">
+
+    <tr>
+      <td colspan="3">&nbsp;</td>
+      <th>Include in: </th>
+    </tr>
+    <tr>
+      <td align="right"><b>Section:</b></td>
+      <td><%= @subsection.section.name %></td>
+      <th align="left">Full Audits:</th>
+
+      <td align="center">
+        <% if @subsection.section.full_review == 1 %>
+          Yes
+        <% else %>
+          No
+        <% end %>
+      </td>
+
+    </tr>
+    <tr>
+      <td colspan="2">&nbsp;</td>
+      <th align="left">Date Code Audits:</th>
+
+      <td align="center">
+        <% if @subsection.section.date_code_check == 1 %>
+          Yes
+        <% else %>
+          No
+        <% end %>
+      </td>
+
+    </tr>
+    <tr>
+      <td colspan="2">&nbsp;</td>
+      <th align="left">Dot Rev Audits:</th>
+
+      <td align="center">
+        <% if @subsection.section.dot_rev_check == 1 %>
+          Yes
+        <% else %>
+          No
+        <% end %>
+      </td>
+
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <table>
+    <tr>
+      <th align="right">
+        Name:
+      </th>
+      <td>
+        <%= text_field "new_subsection", "name", "size" => 60, "maxlength" => 60 %>
+      </td>
+    </tr>
+    <tr>
+      <th align="right">
+        Note: 
+      </th>
+      <td>
+        <%= text_field "new_subsection", "note", "size" => 60, "maxlenth" => 6 %>
+      </td>
+    </tr>
+    <tr>
+      <th align="right">
+        http://
+      </th>
+      <td>
+        <%= text_field "new_subsection", "url", "maxlength" => 60 %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <hr class="div">
+        <table border="0">
+          <tr>
+            <td><%= check_box "new_subsection", "full_review" %> </td>
+            <th align="left">Include in Full Audits</th>
+          </tr>
+          <tr>
+            <td><%= check_box "new_subsection", "date_code_check" %> </td>
+            <th align="left">Include in Date Code Audits</th>
+          </tr>
+          <tr>
+            <td><%= check_box "new_subsection", "dot_rev_check" %> </td>
+            <th align="left">Include in Dot Rev Audits</th>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+<% if @subsection.checklist.released == 0 %>
+    <input type="submit" value="Append" />
+  <% else %>
+    <input type="submit" disabled="disabled" value="LOCKED - Checklist Released" />
+  <% end %>
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @new_subsection.checklist_id ) %>'">
+
+<%= end_form_tag %>

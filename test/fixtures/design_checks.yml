@@ -1,0 +1,436 @@
+#
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first_design_check:
+  id: 1
+  audit_id: 1
+  check_id: 1
+  auditor_id: 1
+  auditor_result:      None
+  auditor_checked_on: 
+  designer_id: 2
+  designer_result:     None
+  designer_checked_on: 
+another_design_check:
+  id: 2
+  audit_id: 2
+  check_id: 1
+  auditor_id: 2
+  auditor_result:      None
+  auditor_checked_on:
+  designer_id: 1
+  designer_result:     None
+  designer_checked_on:
+design_check_1:
+  id: 3
+  audit_id: 1001
+  check_id: 14
+  auditor_id: 5001
+  auditor_result:      None
+  auditor_checked_on:
+  designer_id: 5002
+  designer_result:     None
+  designer_checked_on:
+design_check_2:
+  id: 4
+  audit_id: 1001
+  check_id: 15
+  auditor_id: 5001
+  auditor_result:      None
+  auditor_checked_on:
+  designer_id: 5002
+  designer_result:     None
+  designer_checked_on:
+design_check_3:
+  id: 5
+  audit_id: 1001
+  check_id: 16
+  auditor_id: 5001
+  auditor_result:      None
+  auditor_checked_on:
+  designer_id: 5002
+  designer_result:     None
+  designer_checked_on:
+design_check_4:
+  id: 6
+  audit_id: 1001
+  check_id: 17
+  auditor_id: 5001
+  auditor_result:      None
+  auditor_checked_on:
+  designer_id: 5002
+  designer_result:     None
+  designer_checked_on:
+design_check_5:
+  id: 7
+  audit_id: 1001
+  check_id: 24
+  auditor_id: 5001
+  auditor_result:      None
+  auditor_checked_on:
+  designer_id: 5002
+  designer_result:     None
+  designer_checked_on:
+design_check_6:
+  id: 8
+  audit_id: 1001
+  check_id: 18
+  auditor_id: 5001
+  auditor_result:      None
+  auditor_checked_on:
+  designer_id: 5002
+  designer_result:     None
+  designer_checked_on:
+design_check_7:
+  id:                  9
+  audit_id:            1001
+  check_id:            19
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on:
+design_check_8:
+  id:                  10
+  audit_id: 1001
+  check_id:            20
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:  
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on:
+design_check_9:
+  id:                  11
+  audit_id:            1001
+  check_id:            21
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on:
+design_check_10:
+  id:                  12
+  audit_id:            1001
+  check_id:            22
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on:
+design_check_11:
+  id:                  13
+  audit_id:            1001
+  check_id:            23
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on:
+# la453b_eco2 - date code
+design_check_12:
+  id:                  14
+  audit_id:            1002
+  check_id:            13
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5001
+  designer_result:     None
+  designer_checked_on: 
+design_check_13:
+  id:                  15
+  audit_id:            1002
+  check_id:            14
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5001
+  designer_result:     None
+  designer_checked_on: 
+design_check_14:
+  id:                  16
+  audit_id:            1002
+  check_id:            32
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5001
+  designer_result:     None
+  designer_checked_on: 
+design_check_15:
+  id:                  17
+  audit_id:            1002
+  check_id:            25
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5001
+  designer_result:     None
+  designer_checked_on: 
+design_check_16:
+  id:                  18
+  audit_id:            1006
+  check_id:            13
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5001
+  designer_result:     None
+  designer_checked_on: 
+design_check_17:
+  id:                  19
+  audit_id:            1006
+  check_id:            14
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5001
+  designer_result:     None
+  designer_checked_on: 
+design_check_18:
+  id:                  20
+  audit_id:            1002
+  check_id:            28
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5001
+  designer_result:     None
+  designer_checked_on: 
+design_check_19:
+  id:                  21
+  audit_id:            1002
+  check_id:            20
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5001
+  designer_result:     None
+  designer_checked_on: 
+# la454c3 - dot rev
+design_check_20:
+  id:                  22
+  audit_id:            1008
+  check_id:            13
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_21:
+  id:                  23
+  audit_id:            1008
+  check_id:            14
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_22:
+  id:                  24
+  audit_id:            1008
+  check_id:            32
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_23:
+  id:                  25
+  audit_id:            1008
+  check_id:            25
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_24:
+  id:                  26
+  audit_id:            1008
+  check_id:            26
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_25:
+  id:                  27
+  audit_id:            1008
+  check_id:            27
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_26:
+  id:                  28
+  audit_id:            1008
+  check_id:            28
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_2000:
+  id:                  20000
+  audit_id:            1007
+  check_id:            10000
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_2001:
+  id:                  20001
+  audit_id:            1007
+  check_id:            10001
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_2002:
+  id:                  20002
+  audit_id:            1007
+  check_id:            10002
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_2003:
+  id:                  20003
+  audit_id:            1007
+  check_id:            10003
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_2004:
+  id:                  20004
+  audit_id:            1007
+  check_id:            10004
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_2005:
+  id:                  20005
+  audit_id:            1007
+  check_id:            10005
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_2006:
+  id:                  20006
+  audit_id:            1007
+  check_id:            10006
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_2007:
+  id:                  20007
+  audit_id:            1007
+  check_id:            10007
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_2008:
+  id:                  20008
+  audit_id:            1007
+  check_id:            10008
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_2009:
+  id:                  20009
+  audit_id:            1007
+  check_id:            10009
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_2010:
+  id:                  20010
+  audit_id:            1007
+  check_id:            10010
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_2011:
+  id:                  20011
+  audit_id:            1007
+  check_id:            10011
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_20012:
+  id:                  20012
+  audit_id:            1007
+  check_id:            10012
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_20013:
+  id:                  20013
+  audit_id:            1007
+  check_id:            10013
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_20_2014:
+  id:                  20014
+  audit_id:            1007
+  check_id:            10014
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 

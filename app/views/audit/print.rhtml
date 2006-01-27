@@ -1,0 +1,127 @@
+<% @heading = "PCB Tracker - Peer Audit Checklist Results" %>
+<%# debug @session %>
+
+<hr class="div" />
+
+  <table width="80%" align="center" border="0">
+    <tr>
+      <th align="left" width="30%">Board Number: </th>
+      <td width="20%"><%= @summary[:board_number] %></td>
+      <th align="left" width="30%">Checklist Revision: </th>
+      <td width="20%"><%= @summary[:checklist_rev] %></td>
+    </tr>
+    <tr>
+      <th align="left" width="30%">Current Designer: </th>
+      <td width="20%"><%= @summary[:designer] %></td>
+      <th align="left" width="30%">Current Peer Auditor: </th>
+      <td width="20%"><%= @summary[:auditor] %></td>
+
+    </tr>
+  </table>
+
+<hr class="div" />
+
+  <% for box in @display %>
+    <% color = '#' + box[:section].background_color %>
+
+    <table rules="rows" class="peer_check_outer_box">
+      <tr>
+        <td colspan="2">
+          <% if box[:section].name != '' %>
+            <font size="+1"><b><%= h box[:section].name %><br/></b></font>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td align="left">
+	  <% if box[:subsect].name != '' %>
+            <b><%= h box[:subsect].name %><br/></b>
+          <% end %>
+          <% if box[:subsect].note != '' %>
+            <b>Note:</b> <%= h box[:subsect].note %><br/>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <table align="right" class="peer_check_inner_box" rules="all">
+            <% for check_info in box[:check_info] %>
+            <%# debug check_info %>
+              <% check = check_info[:check] %>
+              <tr>
+                <td width="60%" valign="top" rowspan="2">
+                  <% if check.title != '' %>
+                    <b><%= h check.title %></b>
+                  <% end %>
+                  <% if check.check != '' %>
+                    <%= h check.check %>
+                  <% end %>
+                </td>
+                <% if check_info[:design_check].designer_result != 'None' %>
+                  <td align="center" width="40%">
+                    <b><font size="-2">
+                      <%= check_info[:design_check].designer_result %>
+                      by 
+                      <%= check_info[:designer] %>
+                      <br/>
+                      <%= check_info[:design_check].designer_checked_on.strftime("%a %b %d, %Y @ %I:%M %p") %>
+                    </font></b></td>
+                <% else %>
+                  <td width="40%" bgcolor="<%= color %>">&nbsp;</td>
+                <% end %>
+              </tr>
+              <% if check.check_type == 'designer_auditor' %>
+                <tr>
+                  <% if check_info[:design_check].auditor_result != 'None' %>
+                    <td align="center" width="30%">
+                      <b><font size="-2">
+                        <%= check_info[:design_check].auditor_result %>
+                        by
+                        <%= check_info[:auditor] %>
+                        <br/>
+                        <%= check_info[:design_check].auditor_checked_on.strftime("%a %b %d, %Y @ %I:%M %p") %>
+                    </font></b></td>
+                  <% else %>
+                    <td width="30%" bgcolor="<%= color %>">&nbsp;</td>
+                  <% end %>
+                </tr>
+              <% else %>
+                <tr>
+                  <td width="30%" bgcolor="#000000">&nbsp;</td>
+                </tr>
+              <% end %>
+              <% if check_info[:comments].size > 0 %>
+                <tr>
+                  <td colspan="2">
+                    <table width="100%" border="0">
+                      <tr>
+                        <td><b><u>Comments</u></b></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <table width="95%" align="right" rules="all">
+                            <% for comment in check_info[:comments] %>
+                              <tr>
+                                <td>
+                                  <b><%= User.find(comment.user_id).name %> [<%= comment.created_on.strftime("%a %b %d, %Y @ %I:%M %p") %>] </b>
+                                  <br/>
+                                  <%=h comment.comment %>
+                                </td>
+                              </tr>
+                            <% end %>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+  <% end %>
+<hr class="div" />
+

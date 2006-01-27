@@ -1,0 +1,94 @@
+#
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+admin:
+  id:       1
+  name:     Admin
+  active:   1
+  reviewer: 0
+designer:
+  id:       2
+  name:     Designer
+  active:   1
+  reviewer: 0
+manager:
+  id:       4
+  name:     Manager
+  active:   1
+  reviewer: 0
+hweng:
+  id:       5
+  name:     HWENG
+  active:   1
+  reviewer: 1
+valor:
+  id:       6
+  name:     Valor
+  active:   1
+  reviewer: 1
+ce_dft:
+  id:       7
+  name:     CE-DFT
+  active:   1
+  reviewer: 1
+dfm:
+  id:       8
+  name:     DFM
+  active:   1
+  reviewer: 1
+tde:
+  id:       9
+  name:     TDE
+  active:   1
+  reviewer: 1
+mechanical:
+  id:       10
+  name:     Mechanical
+  active:   1
+  reviewer: 1
+mechanical_manufacturing:
+  id:       11
+  name:     Mechanical-MFG
+  active:   1
+  reviewer: 1
+pcb_design:
+  id:       12
+  name:     PCB Design
+  active:   1
+  reviewer: 1
+planning:
+  id:       13
+  name:     Planning
+  active:   1
+  reviewer: 1
+pcb_input_gate:
+  id:       14
+  name:     PCB Input Gate
+  active:   1
+  reviewer: 1
+library:
+  id:       15
+  name:     Library
+  active:   1
+  reviewer: 1
+pcb_mechanical:
+  id:       16
+  name:     PCB Mechanical
+  active:   1
+  reviewer: 1
+slm_bom:
+  id:       17
+  name:     SLM BOM
+  active:   1
+  reviewer: 1
+slm_vendor:
+  id:       18
+  name:     SLM Vendor
+  active:   1
+  reviewer: 1
+operations_manager:
+  id:       19
+  name:     Operations Manager
+  active:   1
+  reviewer: 1

@@ -1,0 +1,10 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first_audit_comment:
+  id: 3
+  design_check_id: 1
+  user_id: 5001
+  comment: Testing
+#audit_comment:
+#  design_check_id: 3
+#  user_id: 5001
+#  comment: This is an audit comment.

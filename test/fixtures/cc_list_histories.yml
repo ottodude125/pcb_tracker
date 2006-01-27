@@ -1,0 +1,5 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+first_cc_list_history:
+  id: 1
+another_cc_list_history:
+  id: 2

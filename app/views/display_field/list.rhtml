@@ -1,0 +1,33 @@
+<!-- View:    display_field                                     -->
+<!-- Purpose: Displays a list of display fields.                -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "PCB Tracker - Display Fields" %>
+
+<%= start_form_tag( :action => 'add') %>
+
+  <hr class="div" />
+
+  <table width="40%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+    <tr>
+      <th width="70%">Display Field</th>
+    </tr>
+
+    <%= render_collection_of_partials "display_field_list_stripes", @display_fields %>
+  </table>
+
+  <% pages = pagination_links @display_field_pages %>
+
+  <% if pages %>
+    <p><b>Pages:</b> <%= pages %>
+  <% end %>
+
+
+  <hr class="div" />
+
+  <input type="submit" value="New Display Field" />
+  <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
+
+<%= end_form_tag %>

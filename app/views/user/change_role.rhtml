@@ -1,0 +1,26 @@
+<% @heading = "Change Role" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'set_role') %>
+
+  <table width="45%" border="0" >
+    <tr>
+      <th width="50%" align="right">Current Role: </th>
+      <td> <%= @session[:active_role] %></td>
+    </tr>
+    <tr>
+      <th align="right">New Role: </th>
+      <td>
+        <select id="role_id" name="role[id]">
+          <%= options_from_collection_for_select @session[:roles], "id", "name", "role_id" %>
+        </select>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <input type="submit" value="Update My Role" />
+
+<%= end_form_tag %>

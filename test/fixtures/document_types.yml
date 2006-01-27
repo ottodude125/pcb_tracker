@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+stackup:
+  id:     1
+  name:   Stackup
+  active: 1
+doc_one:
+  id:     2
+  name:   Document_One
+  active: 0

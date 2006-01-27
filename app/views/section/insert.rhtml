@@ -1,0 +1,69 @@
+<!-- View:    section                                           -->
+<!-- Purpose: Displays a form for inserting a new section. .    -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Insert: Peer Audit Section" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'insert_section') %>
+
+<%= hidden_field "section", "id" %>
+  <table border="0">
+    <tr>
+      <th valign="top" align="right">
+        Name:
+      </th>
+      <td>
+        <%= text_field "new_section", "name", "size" => 60, "maxlength" => 60 %>
+      </td>
+    </tr>
+    <tr>
+      <th align="right">
+	Background Color:
+      </th>
+      <td>
+        <%= text_field "new_section", "background_color", "size" => 6, "maxlength" => 6 %>
+      </td>
+    </tr>
+    <tr>
+      <th align="right">
+	http://
+      </th>
+      <td>
+        <%= text_field "new_section", "url", "size" => 60, "maxlength" => 60 %>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <hr class="div">
+        <table>
+          <tr>
+            <td><%= check_box "new_section", "full_review" %> </td>
+            <th align="left">Include in Full Audits</th>
+          </tr>
+          <tr>
+            <td><%= check_box "new_section", "date_code_check" %> </td>
+            <th align="left">Include in Date Code Audits</th>
+          </tr>
+          <tr>
+            <td><%= check_box "new_section", "dot_rev_check" %> </td>
+            <th align="left">Include in Dot Rev Audits</th>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <% if not @checklist.released? %>
+    <input type="submit" value="Insert" />
+  <% else %>
+    <input type="submit" disabled="disabled" value="LOCKED - Checklist Released" />
+  <% end %>
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @new_section.checklist_id ) %>'">
+
+<%= end_form_tag %>

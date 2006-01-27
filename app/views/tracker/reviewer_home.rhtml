@@ -1,0 +1,131 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays the tracker home page.                   -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @title = "PCB Design Board/Data Tracker" %>
+<%# debug @session %>
+
+<table width="100%"
+       border="0" 
+       cellspacing="2"
+       align="center"
+       rules="cols">
+  <tr>
+    <td width="20%" 
+        valign="top"
+        rowspan="2">
+      <table width="90%"
+             align="center"
+             rules="rows"
+               cellpadding="5"
+               border="0">
+        <tr>
+          <td align="center">
+            <%= link_to("Tracker Settings (TBD)", 
+                        { :controller => "audit", 
+                          :action     => "designer_list" }) %>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="center">
+            <%= link_to("Boards",
+                        { :controller => 'board',
+                          :action     => 'show_boards' }) %>
+          </td>
+        </tr>
+      </table>
+    </td>
+
+    <td>
+      <table width="100%"
+             border="0">
+        <tr>
+          <td>
+            <table width="100%" 
+                   align="left"
+                   border="0"
+                   cellspacing="0">
+      	      <tr>
+                <th colspan="6" class="teraheader">
+                  My Reviews
+                </th>
+              </tr>
+              
+              <% if @my_reviews.size > 0 %>
+              <tr class="subheading">
+                <th align="left">Priority</th>
+                <th align="left">Status</th>
+                <th align="left">Design</th>
+                <th align="left">Review Type</th>
+                <th align="left">Designer</th>
+                <th align="left">Posted</th>
+              </tr>
+              <%= render_collection_of_partials("reviewer_home_list_stripes",
+                                                @my_reviews,
+                                                nil,
+                                                "my_reviews" => true) %>
+              <% else %>
+                <tr>
+                  <th>
+                    You have no active reviews.
+                  </th>
+                </tr>
+              <% end %>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <table width="100%"
+             border="0">
+        <tr>
+          <td>
+            <table width="100%" 
+                   align="left"
+                   border="0"
+                   cellspacing="0">
+      	      <tr>
+                <th colspan="7" class="teraheader">
+                  Other Reviews
+                </th>
+              </tr>
+              
+              <% if @other_reviews.size > 0 %>
+              <tr class="subheading">
+                <th align="left">Priority</th>
+                <th align="left">Status</th>
+                <th align="left">Design</th>
+                <th align="left">Review Type</th>
+                <th align="left">Designer</th>
+                <th align="left">Posted</th>
+                <th align="left">Reviewer(s)</th>
+              </tr>
+              <%= render_collection_of_partials("reviewer_home_list_stripes",
+                                                @other_reviews,
+                                                nil,
+                                                "my_reviews" => false) %>
+              <% else %>
+                <tr>
+                  <th>
+                    There are no active reviews.
+                  </th>
+                </tr>
+              <% end %>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<%# debug @session %>
+<%# debug @my_reviews %>
+<%# debug @other_reviews %>

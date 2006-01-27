@@ -1,0 +1,34 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: board.rb
+#
+# This file maintains the state for boards.
+#
+# $Id$
+#
+########################################################################
+
+class Board < ActiveRecord::Base
+
+  belongs_to :platform
+  belongs_to :project
+  belongs_to :prefix
+
+  has_many   :designs
+  has_one    :audit
+
+  has_and_belongs_to_many :fab_houses
+  has_and_belongs_to_many :users
+
+  validates_presence_of :number
+  validates_presence_of :platform_id
+  validates_presence_of :prefix_id
+  validates_presence_of :project_id
+
+  validates_numericality_of :number
+
+  validates_uniqueness_of(:name, :message => 'for board already exists')
+
+end

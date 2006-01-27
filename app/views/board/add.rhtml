@@ -1,0 +1,121 @@
+<!-- View:    board                                             -->
+<!-- Purpose: Allows the user to add a board.                   -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Create a new board" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'create') %>
+
+  <table border="0"
+         width="100%">
+    <tr>
+      <td width="30%" 
+          valign="top">
+        <table border="0">
+          <tr>
+            <td align="left">
+              <label for="board_active">Active:</label>
+            </td>
+            <td>
+              <%= check_box "new_board", "active", { 'checked' => 'checked' } %>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="board_prefix">Prefix:</label>
+            </td>
+            <td>
+              <%= collection_select(:new_board, 
+                                       :prefix_id, 
+                                       @prefixes,
+                                       "id", 
+                                       :pcb_mnemonic, 
+                                       {:prompt=>true}) %>
+              <select id="prefix_id" name="board[prefix_id]">
+                <%= options_from_collection_for_select(@prefixes,
+	                                                         "id",
+                                                             "pcb_mnemonic",
+                                                             4) %>
+              </select>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="board_number">Number:</label>
+            </td>
+            <td>
+              <%= text_field("new_board", 
+                               "number", 
+                               "size" => 3, 
+                               "maxlength" => 3) %>
+            </td>
+          </tr>
+          <tr>
+            <td align="left">
+              <label for="board_platform">Platform:</label>
+            </td>
+            <td>
+              <%= collection_select(:new_board,
+                                       :platform_id,
+                                       @platforms, 
+                                       "id",
+                                       :name,
+                                       {:prompt=>true}) %>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="board_project">Project:</label>
+            </td>
+            <td>
+              <%= collection_select(:new_board,
+                                       :project_id,
+                                       @projects,
+                                       "id", 
+                                       :name,
+                                       {:prompt=>true}) %>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td valign="top">
+        <table border="0"
+               width="80%"
+               align="center">
+          <tr>
+            <th colspan="4" bgcolor="#000000">
+              <font color="#ffffff">Reviewers</font>
+            </th>
+          </tr>
+          <% for reviewer in @reviewers %>
+            <tr>
+              <td width="40">&nbsp;</td>
+              <th align="right"> <%= reviewer[:group] %>: </th>
+              <td>
+                <%= collection_select(:new_board_reviewers,
+                                         :"#{reviewer[:group]}",
+                                         reviewer[:reviewers],
+                                         "id", 
+                                         :name,
+                                         {:prompt=>true}) %>
+              </td>
+              <td width="40">&nbsp;</td>
+            </tr>
+          <% end %>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Create new board" />
+  <input type="button" value="Return to Board List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<%= end_form_tag %>
+
+<%# debug @review_roles %>
+<%# debug @reviewers %>

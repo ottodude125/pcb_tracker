@@ -1,0 +1,86 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+la454_dfm_reviewer:
+  id:          1
+  board_id:    3
+  reviewer_id: 6001
+  role_id:     8
+la454_hweng_reviewer:
+  id:          2
+  board_id:    3
+  reviewer_id: 6000
+  role_id:     5
+la453_hweng_reviewer:
+  id:          3
+  board_id:    2
+  reviewer_id: 6000
+  role_id:     5
+la453_valor:
+  id:          4
+  board_id:    2
+  reviewer_id: 7050
+  role_id:     6
+la453_ce_dft:
+  id:          5
+  board_id:    2
+  reviewer_id: 7100
+  role_id:     7
+la453_dfm:
+  id:          6
+  board_id:    2
+  reviewer_id: 7151
+  role_id:     8
+la453_tde:
+  id:          7
+  board_id:    2
+  reviewer_id: 7200
+  role_id:     9
+la453_mech:
+  id:          8
+  board_id:    2
+  reviewer_id: 7250
+  role_id:     10
+la453_mech_mfg:
+  id:          9
+  board_id:    2
+  reviewer_id: 7300
+  role_id:     11
+la453_pcb_design:
+  id:          10
+  board_id:    2
+  reviewer_id: 4001
+  role_id:     12
+la453_planning:
+  id:          11
+  board_id:    2
+  reviewer_id: 7651
+  role_id:     13
+la453_pcb_ig:
+  id:          12
+  board_id:    2
+  reviewer_id: 7350
+  role_id:     14
+la453_lib:
+  id:          13
+  board_id:    2
+  reviewer_id: 7401
+  role_id:     15
+la453_pcb_mech:
+  id:          14
+  board_id:    2
+  reviewer_id: 7451
+  role_id:     16
+la453_slm_bom:
+  id:          15
+  board_id:    2
+  reviewer_id: 7500
+  role_id:     17
+la453_slm_vendor:
+  id:          16
+  board_id:    2
+  reviewer_id: 7550
+  role_id:     18
+la453_ops_mgr:
+  id:          17
+  board_id:    2
+  reviewer_id: 7600
+  role_id:     19

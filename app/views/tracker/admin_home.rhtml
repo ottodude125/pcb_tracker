@@ -1,0 +1,48 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays the tracker admin home page.             -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @title = "PCB Design Board/Data Tracker - PCB Traker Administrator" %>
+<%# debug @session %>
+
+<table width="100%"
+       border="0" 
+       cellspacing="2"
+       align="center"
+       rules="cols">
+  <tr>
+    <td width="20%" valign="top">
+      <table width="90%"
+              align="center"
+              rules="all"
+              cellpadding="5"
+              border="0">
+
+        <tr>
+          <td align="center">
+            <%= link_to("Admin Portal", { :controller => "admin" }) %>
+          </td>
+          <td align="left">
+            Tracker administration
+          </td>
+        </tr>
+
+        <tr>
+          <td align="center">
+            <%= link_to("Boards",
+                          { :controller => 'board',
+                            :action     => 'show_boards' }) %>
+          </td>
+          <td align="left">
+            View board data stored in the system.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<%# debug @design_list %>
+<%# debug @audits %>

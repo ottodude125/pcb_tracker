@@ -1,0 +1,13 @@
+<tr class="<%= fab_house_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td align="left">
+    <% if @fab_house_ids.include?(fab_house_list_stripes.id) %>
+      <%= check_box('fab_house',
+                    fab_house_list_stripes.id,
+                    { 'checked' => 'checked' }) %>
+    <% else %>
+      <%= check_box('fab_house',
+                    fab_house_list_stripes.id) %>
+    <% end %>
+    <%= fab_house_list_stripes.name %>
+  </td>
+</tr>

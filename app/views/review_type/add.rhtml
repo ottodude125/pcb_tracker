@@ -1,0 +1,53 @@
+<!-- View:    review type                                       -->
+<!-- Purpose: Displays a form to add a new review type.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<% @heading = "Create a new review type" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'create') %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="review_type_name">Review Type:</label>
+      </td>
+      <td>
+        <%= text_field "new_review_type", "name", "size" => 16, "maxlength" => 16 %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="review_type_order">Order:</label>
+      </td>
+      <td>
+        <%= text_field "new_review_type", "sort_order", "size" => 3, "maxlength" => 3 %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="review_type_required">Required:</label>
+      </td>
+      <td>
+        <%= check_box "new_review_type", "required", { 'checked' => 'checked' } %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="review_type_active">Active:</label>
+      </td>
+      <td>
+        <%= check_box "new_review_type", "active", { 'checked' => 'checked' } %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Create a new review type" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<%= end_form_tag %>

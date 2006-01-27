@@ -1,0 +1,33 @@
+<!-- View:    review group                                      -->
+<!-- Purpose: Displays a list of review groups.                 -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "PCB Tracker Review Groups - List" %>
+
+<%= start_form_tag(:action => 'add') %>
+
+  <hr class="div" />
+
+  <table width="40%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+    <tr>
+      <th>Review Group</th>
+      <th>CC Peers?</th>
+      <th>Active</th>
+    </tr>
+    <%= render_collection_of_partials "review_group_list_stripes", @review_groups %>
+  </table>
+
+  <% pages = pagination_links @review_group_pages %>
+
+  <% if pages %>
+    <p><b>Pages:</b> <%= pages %>
+  <% end %>
+
+  <hr class="div" />
+
+  <input type="submit" value="New Review Group" />
+  <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
+
+<%= end_form_tag %>

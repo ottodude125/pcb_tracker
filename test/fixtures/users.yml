@@ -1,0 +1,467 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+bob:
+  id:         1000001
+  login:      bob
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  login:      bob
+  first_name: Bob
+  last_name:  New
+  email:      bob@icl.com
+  active:     1
+  
+existingbob:
+  id:       1000002
+  login:    existingbob
+  password: 9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:   1
+  
+longbob:
+  id: 1000003
+  login: longbob
+  password: 8e9b1a9a38e66ca572a5e8fdac8e256848842dfa # longtest
+
+cathy_m:
+  id:         4000
+  login:      cathy_m
+  first_name: Cathy
+  last_name:  McLaren
+  email:      Cathy_McLaren@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+jim_l:
+  id:         4001
+  login:      jim_l
+  first_name: James
+  last_name:  Light
+  email:      James_Light@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+bob_g:
+  id:         5000
+  login:      bob_g
+  first_name: Robert 
+  last_name:  Goldin
+  design_center_id: 1
+  email:      Robert_Goldin@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+scott_g:
+  id:         5001
+  login:      scott
+  first_name: Scott
+  last_name:  Glover
+  design_center_id: 1
+  email:      Scott_Glover@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+rich_m:
+  id:         5002
+  login:      richm
+  first_name: Rich
+  last_name:  Miller
+  design_center_id: 1
+  email:      Rich_Miller@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+mila_p:
+  id:         5003
+  login:      mila_p
+  first_name: Mila
+  last_name:  Pinsky
+  design_center_id: 1
+  email:      Mila_Pinsky@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     0
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+ben_b:
+  id:         6000
+  login:      ben_b
+  first_name: Ben
+  last_name:  Bina
+  email:      Ben_Bina@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+pat_a:
+  id:         6001
+  login:      patrick_a
+  first_name: Patrick
+  last_name:  Audinet
+  email:      Patrick_Audinet@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## HWENG
+##
+
+john_j:
+  id:         7000
+  login:      john_j
+  first_name: John
+  last_name:  Joyce
+  email:      john_joyce@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+lee_s:
+  id:         7001
+  login:      lee_s
+  first_name: Lee
+  last_name:  Schaff
+  email:      lee_schaff@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## Valor
+##
+
+lisa_a:
+  id:         7050
+  login:      lisa_a
+  first_name: Lisa
+  last_name:  Austin
+  email:      lisa_austin@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## CE-DFT
+##
+
+ted_p:
+  id:         7100
+  login:      ted_p
+  first_name: Ted
+  last_name:  Pham
+  email:      ted_pham@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+espo:
+  id:         7101
+  login:      espo_p
+  first_name: Espo
+  last_name:  Espedicto
+  email:      espedicto_pichardo@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## DFM
+##
+
+heng_k:
+  id:         7150
+  login:      heng_k
+  first_name: Heng Kit
+  last_name:  Too
+  email:      heng_kit_too@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+john_ju:
+  id:         7151
+  login:      john_ju
+  first_name: John
+  last_name:  Jurnak
+  email:      john_jurnak@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## TDE
+##
+
+rich_a:
+  id:         7200
+  login:      rich_a
+  first_name: Rich
+  last_name:  Ahamed
+  email:      rich_ahamed@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+man_c:
+  id:         7201
+  login:      man_c
+  first_name: Man
+  last_name:  Chan
+  email:      man_chan@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## Mechanical
+##
+
+dave_l:
+  id:         7250
+  login:      dave_l
+  first_name: Dave
+  last_name:  Lewinnek
+  email:      dave_lewinnek@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+tom_f:
+  id:         7251
+  login:      tom_f
+  first_name: Tom
+  last_name:  Flack
+  email:      tom_flack@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## Mech-MFG
+##
+
+anthony_g:
+  id:         7300
+  login:      anthony_g
+  first_name: Anthony
+  last_name:  Gentile
+  email:      anthony_gentile@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+tony_p:
+  id:         7301
+  login:      tony_p
+  first_name: Tony
+  last_name:  Perez
+  email:      tony_perez@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## PCB IG
+##
+
+jan_k:
+  id:         7350
+  login:      jan_k
+  first_name: Jan
+  last_name:  Kasting
+  email:      jan_kasting@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## Lib
+##
+
+dave_m:
+  id:         7400
+  login:      dave_m
+  first_name: Dave
+  last_name:  Macioce
+  email:      dave_macioce@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+sheela_p:
+  id:         7401
+  login:      sheela_p
+  first_name: Sheela
+  last_name:  Patel
+  email:      sheela_patel@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## PCB Mech
+##
+
+mary_t:
+  id:         7450
+  login:      mary_t
+  first_name: Mary
+  last_name:  Tucker
+  email:      mary_tucker@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+john_g:
+  id:         7451
+  login:      john_g
+  first_name: John
+  last_name:  Godin
+  email:      john_godin@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## SLM BOM
+##
+
+art_d:
+  id:         7500
+  login:      art_d
+  first_name: Arthur
+  last_name:  Davis
+  email:      arthur_davis@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## SLM VENDOR
+##
+
+dan_g:
+  id:         7550
+  login:      dan_g
+  first_name: Dan
+  last_name:  Gough
+  email:      dan_gough@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## OPS MGR
+##
+
+alex_b:
+  id:         7600
+  login:      alex_b
+  first_name: Alex
+  last_name:  Brook
+  email:      alex_brook@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+eileen_c:
+  id:         7601
+  login:      eileen_c
+  first_name: Eileen
+  last_name:  Curran
+  email:      eileen_corran@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## PLANNING
+##
+
+matt_d:
+  id:         7650
+  login:      matt_d
+  first_name: Matt
+  last_name:  Disanzo
+  email:      matt_disanzo@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+tina_d:
+  id:         7651
+  login:      tina_d
+  first_name: Tina
+  last_name:  Delacuesta
+  email:      tina_delacuesta@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+

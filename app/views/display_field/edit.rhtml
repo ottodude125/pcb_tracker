@@ -1,0 +1,28 @@
+<!-- View:    display_field                                     -->
+<!-- Purpose: Displays a display field for modification.        -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Display Field" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'update') %>
+
+  <%= hidden_field "display_field", "id" %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="display_field_name">Display Field:</label>
+        <%= text_field "display_field", "name", "size" => 30, "maxlength" => 30 %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Display Field Name" />
+  <input type="button" value="Return to Display Field List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<%= end_form_tag %>

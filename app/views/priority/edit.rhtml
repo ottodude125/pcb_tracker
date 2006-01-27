@@ -1,0 +1,38 @@
+<!-- View:    priority                                          -->
+<!-- Purpose: Displays a priority for editing.                  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Priority" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'update') %>
+
+  <%= hidden_field "priority", "id" %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="priority_name">Priority:</label>
+      </td>
+      <td>
+        <%= text_field "priority", "name", "size" => 16, "maxlength" => 16 %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="priority_value">Value:</label>
+      </td>
+      <td>
+        <%= text_field "priority", "value", "size" => 3, "maxlength" => 3 %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Priority" />
+  <input type="button" value="Return to Priority List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<%= end_form_tag %>

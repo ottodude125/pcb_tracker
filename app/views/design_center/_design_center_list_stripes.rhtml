@@ -1,0 +1,19 @@
+<tr class="<%= design_center_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% rid = design_center_list_stripes.id %>
+    <%= link_to design_center_list_stripes.name, { :action => 'edit', :id => rid } %> 
+  </td>
+  <td>
+    <%= h design_center_list_stripes.pcb_path %>
+  </td>
+  <td>
+    <%= h design_center_list_stripes.hw_path %>
+  </td>
+  <td align="center">
+    <% if design_center_list_stripes.active? %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  </td>
+</tr>

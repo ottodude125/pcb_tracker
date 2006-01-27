@@ -1,0 +1,81 @@
+<!-- View:    design_review                                     -->
+<!-- Purpose: Allows the user to change the design center.      -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<% @heading = "#{@design_review.design.name} - Modify Design Center" %>
+
+<%= start_form_tag(:action => 'update_design_center') %>
+  <%= hidden_field "design_review", "id" %>
+
+<hr class="div" />
+
+<table width="100%"
+       border='0'>
+  <tr>
+    <th bgcolor="#000000"
+         colspan="2">
+      <font color="#ffffff">Design Centers</font>
+    </th>
+  </tr>
+  <tr>
+    <td valign="top"
+         width="50%">
+      <% ranges = split_into_cols(@design_centers, 2) %>
+      <table align="center"
+              border="0">
+        <% for design_center in @design_centers[ranges[1][:start]..ranges[1][:stop]] %>
+          <tr>
+            <td align="left">
+              <% if @design_review.design_center_id == design_center.id %>
+                <%= radio_button(:design_center,
+                                 'location',
+                                 design_center.id,
+                                 {'checked' => 'checked'} ) %>
+              <% else %>
+                <%= radio_button(:design_center,
+                                 'location',
+                                 design_center.id) %>
+              <% end %>
+              <%= design_center.name %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </td>
+
+    <td valign="top">
+      <% ranges = split_into_cols(@design_centers, 2) %>
+      <table align="center"
+              border="0">
+        <% for design_center in @design_centers[ranges[2][:start]..ranges[2][:stop]] %>
+          <tr>
+            <td align="left">
+              <% if @design_review.design_center_id == design_center.id %>
+                <%= radio_button(:design_center,
+                                 'location',
+                                 design_center.id,
+                                 {'checked' => 'checked'} ) %>
+              <% else %>
+                <%= radio_button(:design_center,
+                                 'location',
+                                 design_center.id) %>
+              <% end %>
+              <%= design_center.name %>
+            </td>
+          </tr>
+        <% end %>
+      </table>
+    </td>
+  </tr>
+</table>
+
+  <hr class="div" />
+
+  <input type="submit" value="Update Design Center" />
+
+  <input type="button" value="Return to Design Review" onClick="parent.location='<%= url_for( :action => 'designer_view', :id => @design_review.id ) %>'" />
+
+<%= end_form_tag %>

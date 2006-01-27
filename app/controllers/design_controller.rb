@@ -1,0 +1,499 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: design_controller.rb
+#
+# This contains the logic that handles events from the outside world
+# (user input), interacts with the design model, and displays the 
+# appropriate view to the user.
+#
+# $Id$
+#
+########################################################################
+
+class DesignController < ApplicationController
+
+  before_filter :verify_admin_role
+
+  auto_complete_for :design, :name
+
+
+  ######################################################################
+  #
+  # list
+  #
+  # Description:
+  # This method retrieves a list of designs from the database for
+  # display.  The list is paginated and is limited to the number 
+  # passed to the ":per_page" argument.
+  #
+  # Parameters from @params
+  # None
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def list
+
+    @design_pages, @designs = paginate(:designs,
+                                       :per_page => 15,
+                                       :order_by => 'name')
+  end
+
+
+
+  ######################################################################
+  #
+  # add
+  #
+  # Description:
+  # This form is used to initiate a revision of a design.  add() is the first
+  # call in a series of calls that create a menu that is built based on the
+  # previous entries in the form.  The list of designers is built to provide
+  # a selection box for the lead designer.  The list of designers is saved 
+  # for to provide a list to select the peers from.  Once the user has 
+  # selected the lead designer, select_peers() is called.
+  #
+  # Parameters from @params
+  # None
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def add
+
+    @board     = Board.find(@params[:board_id])
+    @designs   = Design.find_all("board_id=#{@board.id}")
+
+    details = Hash.new
+    details[:board_id]    = @board.id
+    details[:design_name] = @board.name
+    details[:platform]    = @board.platform.name
+    details[:project]     = @board.project.name
+    flash[:details] = details
+
+    # Retrieve the active designers.
+    @designers = User.find_all("active=1", "last_name ASC")
+    designer_role = Role.find_all("name='Designer'").pop
+    @designers.delete_if { |d| not d.roles.include?(designer_role) }
+
+    # Save the list for the peer selection
+    details[:peers] = @designers
+
+  end
+
+
+  ######################################################################
+  #
+  # select_peer
+  #
+  # Description:
+  # select_peer() follows add() in a series of calls that create a menu 
+  # that is built based on the previous entries in the form.  
+  #
+  # The list of designers passed from add() in the flash is used to build
+  # a selection box for the peer after the lead designer is removed from
+  # the list.  Once the user has selected the peer, select_type() is called.
+  #
+  # Parameters from @params
+  # None
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def select_peer
+
+    @designer        = User.find(@params[:id])
+
+    # Retrieve the list of peers that was saved when the list of 
+    # designers was built.
+    @peers = flash[:details][:peers].dup
+    @peers.delete(@designer)
+
+    # Refresh the details in flash for the next call in the sequence.
+    flash[:details] = flash[:details]
+
+    # Add the new details from the last screen.
+    flash[:details][:designer_id]   = @designer.id
+    flash[:details][:designer_name] = @designer.name
+
+    render(:layout => false)
+
+  end
+
+
+  ######################################################################
+  #
+  # select_type
+  #
+  # Description:
+  # select_type() follows select_peer() in a series of calls that create 
+  # a menu that is built based on the previous entries in the form.  
+  #
+  # A selection box is displayed to provide the user with the type of
+  # revisions that are available [ 'New' | 'Date Code' | 'Dot Rev' ].
+  # Once the user has selected the type, select_revision() is called.
+  #
+  # Parameters from @params
+  # None
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def select_type
+
+    @peer        = User.find(@params[:id])
+
+    # Refresh the details in flash for the next call in the sequence.
+    flash[:details] = flash[:details]
+
+    # Add the new details from the last screen.
+    flash[:details][:peer_id]   = @peer.id
+    flash[:details][:peer_name] = @peer.name
+
+    render(:layout => false)
+
+  end
+
+
+  ######################################################################
+  #
+  # select_revision
+  #
+  # Description:
+  # select_revision() follows select_type() in a series of calls that create 
+  # a menu that is built based on the previous entries in the form.  
+  #
+  # The list of revisions is built based on the type that was selected in
+  # in the previous step.  If new, then the list of revisions starts with
+  # the next available revision.  The list is displayed in ascending order.
+  # If the type is either Date Code or Dot Rev then the list of revisions 
+  # represents only those boards that are already in the system.  The list
+  # is displayed in descending order.
+  #
+  # NOTE: If there are no revisions in the system, then the entire list of
+  #       of revisions is displayed in ascending order.
+  #
+  # Once the user has selected the revision, then select_complete() is called
+  # if the type is 'New'.  Otherwise, selcect_suffix() is called.
+  #
+  # Parameters from @params
+  # None
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def select_revision
+
+    designs = Design.find_all("board_id='#{flash[:details][:board_id]}' ", 
+                              'revision_id ASC')
+
+    if designs.size > 0
+      
+      design = designs.pop
+      revision = Revision.find(design.revision_id)
+      
+      if @params[:type] == 'New'
+        # If a new design was selected, then eliminate all of the revisions
+        # that are already in the system as a possibility for selection.
+        @revisions = Revision.find_all("name>'#{revision.name}'",
+                                       'name ASC')
+      else
+        # Only allow the user to select revisions of boards that are already
+        # in the system.
+        @revisions = Revision.find_all("name<='#{revision.name}'",
+                                       'name DESC')
+      end
+    else
+      @revisions = Revision.find_all(nil, 'name ASC')
+    end
+
+    # Refresh the details in flash for the next call in the sequence.
+    flash[:details] = flash[:details]
+
+    # Add the new details from the last screen.
+    flash[:details][:design_type] = @params[:type]
+
+    render(:layout => false)
+
+  end
+
+
+  ######################################################################
+  #
+  # select_suffix
+  #
+  # Description:
+  # select_suffix() follows select_revision() in a series of calls that create 
+  # a menu that is built based on the previous entries in the form.  
+  #
+  # The list of suffixes is built for display.  The list of suffixes starts 
+  # with the next available suffix.  The list is displayed in ascending order.
+  #
+  # NOTE: If there are no existing revisions in the system, then the entire 
+  #       list of of suffixes is displayed in ascending order.
+  #
+  # Once the user has selected the suffix, then select_complete() is called.
+  #
+  # Parameters from @params
+  # None
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def select_suffix
+
+    designs = Design.find_all("board_id='#{flash[:details][:board_id]}' and design_type='#{flash[:details][:design_type]}' and revision_id='#{@params[:id]}'", 
+                              'created_on DESC')
+
+    # If a new design was selected, then eliminate all of the revisions
+    # that are already in the system as a possibility for selection.
+    if designs.size > 0
+      
+      design = designs.pop
+      suffix = Suffix.find(design.suffix_id)
+      
+      @suffixes = Suffix.find_all("name>'#{suffix.name}'",
+                                  'name ASC')
+    else
+      @suffixes = Suffix.find_all(nil, 'name ASC')
+    end
+
+    # Refresh the details in flash for the next call in the sequence.
+    flash[:details] = flash[:details]
+
+    # Add the new details from the last screen.
+    flash[:details][:revision_id] = @params[:id]
+    flash[:details][:design_name] += Revision.find(@params[:id]).name
+
+    # If setting up a "New" revision then get the review and reviewer
+    # information - the suffix will be skipped.
+    if flash[:details][:design_type] == 'New'
+      @review_types = ReviewType.find_all('active=1', 'sort_order ASC')
+      @reviewers    = Design.get_reviewers(flash[:details][:board_id])
+    end
+
+    render(:layout => false)
+
+  end
+
+
+  ######################################################################
+  #
+  # select_complete
+  #
+  # Description:
+  # select_complete() follows either select_revision() when the type is 
+  # 'New' or select_suffix().  select_complete is the final call to build
+  # a menu that is built based on the previous entries in the form.  
+  #
+  # The review_type and reviewer lists are built for display.  
+  # Once the user has selected/verified these entries on the menu (by 
+  # opting to add the revision) the create() method is called to process
+  # all of the information.
+  #
+  # Parameters from @params
+  # None
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def select_complete
+
+    # Refresh the details in flash for the next call in the sequence.
+    flash[:details] = flash[:details]
+
+    # Add the new details from the last screen.
+    if flash[:details][:design_type] == 'New'
+      flash[:details][:revision_id] = @params[:id]
+      flash[:details][:design_name] += Revision.find(@params[:id]).name
+    end
+
+    flash[:details][:suffix_id] = 
+      @params[:suffix_id] if @params[:suffix_id] != nil
+
+    if flash[:details][:design_type] == 'Date Code'
+      flash[:details][:design_name] += '_eco' +
+        Suffix.find(flash[:details][:suffix_id]).name
+    elsif flash[:details][:design_type] == 'Dot Rev'
+      flash[:details][:design_name] += 
+        Suffix.find(flash[:details][:suffix_id]).name
+    end
+
+    @review_types  = ReviewType.find_all('active=1', 'sort_order ASC')
+    @reviewers     = Design.get_reviewers(flash[:details][:board_id])
+    @priority_list = Priority.find_all(nil, 'value ASC')
+
+    board_fab_houses = Board.find(flash[:details][:board_id]).fab_houses
+
+    @fab_house_ids = Array.new
+    for fab_house in board_fab_houses
+      @fab_house_ids.push(fab_house.id)
+    end
+    @fab_houses = FabHouse.find_all('active=1', 'name ASC')
+
+    render(:layout => false)
+
+  end
+
+
+  ######################################################################
+  #
+  # create
+  #
+  # Description:
+  # Called after all of the design revision information is entered.
+  # Creates the following
+  # 
+  #    - 1 design revision
+  #    - a design_review table entry for each of the review types
+  #      including the associated design review results
+  #    - an entry in the audit table for the peer audit review.
+  #
+  # Parameters from @params
+  # None
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def create
+
+    details = flash[:details]
+
+    design = Design.new
+    design.name        = details[:design_name]
+    design.board_id    = details[:board_id]
+    design.revision_id = details[:revision_id]
+    design.suffix_id   = details[:suffix_id]
+    design.design_type = details[:design_type]
+    design.designer_id = details[:designer_id]
+    design.peer_id     = details[:peer_id]
+    design.priority_id = @params[:priority][:id].to_s
+    design.save 
+
+    if design.errors.empty?
+
+      flash['notice'] = "Revision was created"
+      designer_home_id = User.find(design.designer_id).design_center_id
+      if designer_home_id == 0
+        flash['notice'] += " - [WARNING] Used the default design center - Please set the designer's design center"
+      end
+
+      # Go through each of the review types and set up a review.
+      @params[:review_type].each { |review, active|
+
+        review_type = ReviewType.find_by_name(review)
+
+        design_review = DesignReview.new
+        
+        design_review.design_id        = design.id
+        design_review.designer_id      = design.designer_id
+        design_review.priority_id      = design.priority_id
+
+        if designer_home_id > 0
+          design_review.design_center_id = designer_home_id 
+        else
+          design_review.design_center_id = 1
+        end
+
+        if active == '1'
+          design_review.review_status_id =
+            ReviewStatus.find_by_name('Not Started').id
+        else
+          design_review.review_status_id = 
+            ReviewStatus.find_by_name('Review Skipped').id
+        end
+        design_review.review_type_id   = review_type.id
+        design_review.creator_id       = @session[:user][:id]
+
+        design_review.save
+
+        # Check to make sure the review is going to happen before 
+        # creating the entries for the design reviewers.
+        # JPA: This is going to require some logic to set the reviewers 
+        # up if the review does get added in.
+        next if not active
+
+        # Go through the board reviewers and create entries for the 
+        # design reviewers
+        @params[:board_reviewers].each { |reviewer_role, reviewer_id|
+
+          next if @params[:reviewer][reviewer_role] == '0'
+
+          role = Role.find_by_name(reviewer_role)
+
+          if role.review_types.include?(review_type)
+            design_review_result = DesignReviewResult.new
+            
+            design_review_result.design_review_id = design_review.id
+            design_review_result.reviewer_id      = reviewer_id
+            design_review_result.role_id          = role.id
+            
+            design_review_result.save
+          end
+        }  # each board reviewer
+      }  # each review type
+
+      # Create a peer audit.
+      checklist = Checklist.find(:first,
+                                  :conditions => ['released=1'],
+                                  :order      => 'major_rev_number DESC')
+
+      peer_audit = Audit.new
+      peer_audit.design_id    = design.id
+      peer_audit.checklist_id = checklist.id
+      peer_audit.complete     = 0
+      peer_audit.designer_completed_checks = 0
+      peer_audit.auditor_completed_checks  = 0
+      peer_audit.save
+      Audit.create_checklist(peer_audit.id)
+
+      # Set the fab house information
+      @params['fab_house'].each { |fab_house_id, selected|
+        design.fab_houses << FabHouse.find(fab_house_id) if selected == '1'
+      }
+
+    else
+      flash['notice'] = "Revision was NOT created"
+    end
+
+    redirect_to(:controller => 'board',
+                :action     => 'list')
+
+  end
+
+
+end

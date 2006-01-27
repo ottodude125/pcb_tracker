@@ -1,0 +1,15 @@
+<tr class="<%= review_role_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <%= review_role_list_stripes.name %>
+  </td>
+  <td align="center">
+    <% if review_role_list_stripes.cc_peers? %>
+      <%= check_box('review_role',
+                    review_role_list_stripes.id,
+                    {'checked' => 'checked'}) %>
+    <% else %>
+      <%= check_box('review_role',
+                    review_role_list_stripes.id) %>
+    <% end %>
+  </td>
+</tr>

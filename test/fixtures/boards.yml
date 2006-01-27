@@ -1,0 +1,33 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+mx234:
+  id:          1
+  name:        mx234
+  prefix_id:   1
+  number:      234
+  platform_id: 1
+  project_id:  1
+  active:      1
+la453:
+  id:          2
+  name:        la453
+  prefix_id:   6
+  number:      453
+  platform_id: 2
+  project_id:  2
+  active:      1
+la454:
+  id:          3
+  name:        la454
+  prefix_id:   6
+  number:      454
+  platform_id: 2
+  project_id:  2
+  active:      0
+la455:
+  id:          4
+  name:        la455
+  prefix_id:   6
+  number:      455
+  platform_id: 2
+  project_id:  2
+  active:      1

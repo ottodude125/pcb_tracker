@@ -1,0 +1,58 @@
+<% @heading = "VIEW: Peer Audit Review Checklist - Revision {@checklist.revision}" %>
+
+<form action="/checklist/list" method="post">
+
+  <hr class="div" />
+
+  <table border="0" cellpadding="1">
+
+    <tr>
+      <td><b>Revision:</b></td>
+      <td><%= @checklist["revision"] %></td>
+    </tr>
+    <tr>
+      <td><b>Released:</b></td>
+      <% if @checklist["released"] != 1 %>
+        <td>No</td>
+      <% else %>
+        <td>Yes</td>
+        </tr>
+        <tr>
+          <td><b>Released On:</b></td>
+          <td><%= @checklist["released_on"].strftime("%d-%b-%y") %></td>
+        </tr>
+      <% end %>
+
+  </table>
+  
+  <hr class="div" />
+
+  <table border="0">
+    <% for displaySection in @displaySections %>
+      <% color = '#'+ displaySection[0]["background_color"] %>
+      <tr bgcolor=<%= color %>>
+        <td colspan="2"> <%= displaySection[0]["name"] %></td>
+      </tr>
+
+      <% for subsection in displaySection[1] %>
+        <% if subsection["name"] != '' %>
+          <tr>
+            <td bgcolor=<%= color %>><i><b>subsection: </></i></td>
+            <td> <b><%= subsection["name"] %></b></td>
+          </tr>
+        <% end %>
+        <% if subsection["note"] != '' %>
+          <tr>
+            <td align="right" bgcolor=<%= color %>><i><b>note: </b></i></td>
+            <td> <%= subsection["note"] %></i> </td>
+          </tr>
+        <% end %>
+      <% end %>
+
+    <% end %>
+  </table>
+
+  <hr class="div" />
+
+  <input type="button" value="Return to checklists view" onClick="parent.location='<%= url_for( :action => 'list' ) %>'">
+</form> 

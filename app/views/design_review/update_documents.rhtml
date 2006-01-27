@@ -1,0 +1,41 @@
+<!-- View:    review_attachments                                -->
+<!-- Purpose: Displays a design review for a designer.          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% doc_type = DocumentType.find(@existing_drd.document_type_id).name %>
+<% @heading = "Update #{doc_type} Document - #{@design_review.design.name}" %>
+
+<%= error_messages_for("drd") %>
+
+<%= form_tag({:action => 'save_update', 
+              :id     => @design_review.design.board.id, 
+              :doc_id => @existing_drd.id},
+             :multipart => true ) %>
+
+  <%= hidden_field "board",         "id" %>
+  <%= hidden_field "design_review", "id" %>
+  <%= hidden_field "document_type", "id" %>
+
+  <hr class="div" />
+
+
+  <table border="0"
+         width="90%"
+         align="center">
+    <tr>
+      <th align="right">Filename:</th>
+      <td><%= file_field('document', 'document') %></td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <input type="submit" value="Upload File" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for(:action => 'review_attachments', :design_review_id => @design_review.id) %>'" />
+
+  <%= end_form_tag %>
+
+<%# debug @document %>
+<%# debug @design_review %>

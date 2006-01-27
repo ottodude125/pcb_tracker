@@ -1,0 +1,27 @@
+<% @heading = "PCB Tracker - Add a Platform" %>
+
+<form action="/platform/create">
+
+  <hr class="div">
+
+  <table  border="1" cellspacing="2" cellpadding="2" rules="all">
+    <tr>
+      <th width="15%">ID</th>
+      <td></td>
+    </tr>
+    <tr>
+      <th width="20%">Platform</th>
+      <td></td>
+    </tr>
+    </tr>
+      <th width="15%">Active</th>
+    </tr>
+  </table>
+ 
+  <br />
+  <hr class="div">
+
+  <input type="submit" value="Add New Platform" />
+  <input type="button" value="Return to Platform List" onClick="parent.location='<%= url_for( :controller => 'platform', :action => 'list' ) %>'">
+
+</form>

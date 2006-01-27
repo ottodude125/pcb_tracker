@@ -1,0 +1,21 @@
+<% if @result_update %>
+RESULTS:
+
+  <% @result_update.each { |role, result| %>
+    <%= @user.name %> <%= result %> for <%= role %>
+  <% } %>
+<% end %>
+
+<% if @comments %>
+COMMENTS:
+
+  <% for comment in @comments %>
+=================================================================
+Entered by: <%= comment[:user]%> on <%= comment[:date].strftime("%d-%b-%y")%> at <%= comment[:date].strftime("%I:%M %p %Z")%>
+<%=h comment[:comment] %>
+  <% end %>
+
+<% end %>
+
+
+The design information is located at <%= Pcbtr::PCBTR_BASE_URL %>design_review/view/<%= @design_review_id%>

@@ -1,0 +1,33 @@
+<!-- View:    prefix                                             -->
+<!-- Purpose: Displays a list of board prefixes.                         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "PCB Tracker Board Prefix - List" %>
+
+<%= start_form_tag(:action => 'add') %>
+
+  <hr class="div" />
+
+  <table width="80%" 
+          align="center" 
+          border="1" 
+          cellspacing="2" 
+          cellpadding="2" 
+          rules="all">
+    <tr>
+      <th>PCB Mnemonic</th>
+      <th>Loaded Prefix</th>
+      <th>Unloaded Prefix</th>
+      <th>Active</th>
+    </tr>
+    <%= render_collection_of_partials "prefix_list_stripes", @prefixes %>
+  </table>
+
+  <hr class="div" />
+
+  <input type="submit" value="New Prefix" />
+  <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
+
+<%= end_form_tag %>

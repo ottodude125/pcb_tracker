@@ -1,0 +1,69 @@
+
+<% @heading = "Reassign Reviewer" %>
+
+<%= start_form_tag(:action => 'update_review_assignments',
+                      :id => @design_review_id) %>
+
+  <% for match in @matching_roles %>
+
+    <table align="center" width="80%" border="0">
+      <tr>
+        <th class="teraheader" colspan="4">
+          <%= match[:design_review].role.name %>
+        </th>
+      </tr>
+      <tr valign="top">
+        <td align="right" width="25%">
+          <b>Current Reviewer: </b>
+        </td>
+        <td width="25%">
+          <%= User.find(match[:design_review].reviewer_id).name %>
+        </td>
+
+        <% if match[:peers] %>
+          <td align="right">
+            <b>Assign To: </b>
+          </td>
+          <td>
+            <%= collection_select(:user,
+                                     match[:design_review].role.name,
+                                     match[:peers],
+                                     "id", 
+                                     'name',
+                                     {:prompt=>true}) %>
+          </td>
+        <% else %>
+          <td align="right">
+            <b>Reassign to myself: </b>
+          </td>
+          <td>
+            <%= check_box("#{match[:design_review].role.id}_assign_to_self",
+                          @session[:user].id,
+                          {},
+                          'yes',
+                          'no') %> 
+          </td>
+        <% end %>
+      </tr>
+    </table>
+
+    <br />
+
+  <% end %>
+
+  <table width="80%" align="center">
+    <tr>
+      <td align="left">
+        <input type="submit" value="Reassign" />
+      </td>
+      <td align="right">
+        <input type="button" value="Return" onClick="parent.location='<%= url_for( :action => 'reviewer_view', :id => @design_review_id ) %>'" />
+      </td>
+    </tr>
+  </table>
+
+<%= end_form_tag %>
+
+<%# debug @matching_roles %>
+
+

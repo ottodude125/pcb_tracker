@@ -1,0 +1,136 @@
+<!-- View:    user                                              -->
+<!-- Purpose: Displays a form for creating a user.              -->
+<!--                                                            -->
+<!-- $Id$ -->
+<!--                                                            -->
+
+<% @heading = "ADMIN: Add a new user" %>
+
+<hr class="div" />
+
+<%= start_form_tag :action=> "create" %>
+
+  <table align="center" width="90%" border="0" rules="cols">
+    <tr>
+      <td width="40%">
+        <table border="0" cellspacing="5">
+          <tr>
+            <td align="left">Active: 
+              <%= check_box "new_user", "active", { 'checked' => 'checked' } %>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="user_first_name">First name:</label><br />
+              <%= text_field "new_user", "first_name", :size => 20 %>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="user_last_name">Last name:</label<br />
+              <%= text_field "new_user", "last_name", :size => 30 %>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <label for="user_login">Desired login:</label><br />
+              <%= text_field "new_user", "login", :size => 15 %>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <label for="user_email">Email:</label<br />
+              <%= text_field "new_user", "email", :size=> 30 %>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <label for="user_password">Choose password:</label><br />
+              <%= password_field "new_user", "password", :size => 30 %>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <label for="user_password_confirmation">Confirm password:</label><br/>
+              <%= password_field "new_user", "password_confirmation", :size => 30 %>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td valign="top">
+        <table width="100%" border="0" rules="rows">
+	  <tr> <th colspan="4">Roles</th> </tr>
+          <tr>
+            <td valign="top">
+	      <% ranges = split_into_cols(@roles, 2) %>
+              <table align="center"
+                      border="0">
+                <% for role in @roles[ranges[1][:start]..ranges[1][:stop]] %>
+                  <tr>
+                    <td align="left"
+                         valign="top">
+                      <%= check_box "role", role.id %>
+                    </td>
+                     <td align="left">
+                      <label for="role_name"><%= role['name'] %></label>
+                      <% if role.reviewer? %>
+                        Reviewer
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </table>
+            </td>
+            <td valign="top">
+              <table align="center"
+                      border="0">
+                <% for role in @roles[ranges[2][:start]..ranges[2][:stop]] %>
+                  <tr>
+                    <td align="left"
+                         valign="top">
+                      <%= check_box "role", role.id %> 
+                    </td>
+                    <td align="left">
+                      <label for="role_name"><%= role['name'] %></label>
+                      <% if role.reviewer? %>
+                        Reviewer
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </table>
+            </td>
+          </tr>
+	</table>
+      </td>
+    </tr>
+  </table>
+  
+  
+<hr class="div" />
+
+<input type="submit" value="Signup" />
+<input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list' )%>'" />
+
+<%= end_form_tag %>
+
+<table border="1" rules="all">
+  <tr>
+    <td valign="top"><font size="-1"><b>Notes:</b></font></td>
+    <td>
+      <ol>
+        <li>
+	  Leave email blank for default
+	  (i.e. Firstname_Lastname@notes.teradyne.com)
+	</li>
+	<li>
+	  Leave login blank and the tracker will use the default name.
+	  (i.e. Charlie Brown's default login name is "cbrown".)
+	</li>
+      </ol>
+    </td>
+  </tr>
+</table>
+
+<%# debug @user %>
+<%# debug @session %>

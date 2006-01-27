@@ -1,0 +1,19 @@
+<tr class="<%= prefix_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% rid = prefix_list_stripes.id %>
+    <%= link_to prefix_list_stripes.pcb_mnemonic, { :action => 'edit', :id => rid } %> 
+  </td>
+  <td>
+    <%= prefix_list_stripes.loaded_prefix %>
+  </td>
+  <td>
+    <%= prefix_list_stripes.unloaded_prefix %>
+  </td>
+  <td align="center">
+    <% if prefix_list_stripes.active? %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  </td>
+</tr>

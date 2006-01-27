@@ -1,0 +1,51 @@
+<!-- View:    prefix                                            -->
+<!-- Purpose: Displays a prefix for editing.                    -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Board Prefix" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'update') %>
+
+  <%= hidden_field "prefix", "id" %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="prefix_pcb_mnemonic">PCB Mnemonic:</label>
+      </td>
+      <td>
+        <%= text_field "prefix", "pcb_mnemonic", "size" => 4, "maxlength" => 4 %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="prefix_loaded_prefix">Loaded Prefix:</label>
+      </td>
+      <td>
+        <%= text_field "prefix", "loaded_prefix", "size" => 4, "maxlength" => 4 %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="prefix_unloaded_prefix">Unloaded Prefix:</label>
+      </td>
+      <td>
+        <%= text_field "prefix", "unloaded_prefix", "size" => 4, "maxlength" => 4 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: 
+        <%= check_box "prefix", "active" %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Board Prefix" />
+  <input type="button" value="Return to Board Prefix List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<%= end_form_tag %>

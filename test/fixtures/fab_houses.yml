@@ -1,0 +1,36 @@
+# 
+# $Id$
+#
+# Read About Fixtures At Http://Ar.Rubyonrails.Org/Classes/Fixtures.Html
+merix:
+  id:   1
+  name: Merix
+  active: 1
+ibm:
+  id:     2
+  name:   IBM
+  active: 1
+advantech:
+  id:   3
+  name: AdvantechPWB
+  active: 1
+coretec:
+  id:   4
+  name: Coretec
+  active: 1
+ddi_ca:
+  id:   5
+  name: DDI Anaheim
+  active: 1
+ddi_va:
+  id:   6
+  name: DDI Virginia
+  active: 1
+mei:
+  id:   7
+  name: MEI
+  active: 1
+opc:
+  id:   8
+  name: OPC
+  active: 1

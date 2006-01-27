@@ -1,0 +1,40 @@
+#
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+mx:
+  id:              1
+  pcb_mnemonic:    mx
+  loaded_prefix:   259
+  unloaded_prefix: 252
+  active:          1
+bt:
+  id:              2
+  pcb_mnemonic:    bt
+  loaded_prefix:   289
+  unloaded_prefix: 282
+  active:          1
+av:
+  id:              3
+  pcb_mnemonic:    av
+  loaded_prefix:   956
+  unloaded_prefix: 959
+  active:          1
+xx:
+  id:              4
+  pcb_mnemonic:    xx
+  loaded_prefix:   x
+  unloaded_prefix: x
+  active:          1
+ld:
+  id:              5
+  pcb_mnemonic:    ld
+  loaded_prefix:   899
+  unloaded_prefix: 892
+  active: 1
+la:
+  id:              6
+  pcb_mnemonic:    la
+  loaded_prefix:   949
+  unloaded_prefix: 942
+  active:          1

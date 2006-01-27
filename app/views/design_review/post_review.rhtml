@@ -1,0 +1,144 @@
+<!-- View:    post_review                                       -->
+<!-- Purpose: Displays a design review for a designer.          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% mode = @params[:action] == 'post_review' ? 'POST' : 'REPOST' %>
+
+<% @heading = "#{mode} #{@design_review.review_name} Review::#{@design_review.design.name} - #{@design_review.design.board.platform.name} / #{@design_review.design.board.project.name}" %>
+
+
+<% if mode == 'POST' %>
+  <%= start_form_tag(:action => 'post') %>
+<% else %>
+  <%= start_form_tag(:action => 'repost') %>
+<% end %>
+
+  <hr class="div" />
+
+  <%= hidden_field "design_review", "id" %>
+
+  <table border="0"
+         width="100%">
+    <tr>
+      <td width="10%">&nbsp;</td>
+      <td>
+        <table border="0"
+               width="100%">
+          <tr>
+            <th align="left"
+                width="60">Design:</th>
+            <td width="40%">
+              <%= @design.name %> -
+              <%= @design.board.platform.name %> /
+              <%= @design.board.project.name %>
+            </td>
+            <th align="left"
+                width="140">Location of Data:</th>
+            <td>
+              <%= @design_review.design_center.name %>
+            </td>
+          </tr>
+          <tr>
+            <th align="left">Priority:</th>
+            <td>
+              <%= @design.priority.name %>
+            </td>
+            <th align="left">Review Type:</th>
+            <td>
+              <%= @design_review.review_name %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <th>STEP</th>
+      <td>&nbsp;</td>
+    </tr>
+    <tr>
+      <th valign="top">1</th>
+      <td>
+        <font size="+1"><b>Verify the Reviewers</b></font><br />
+        <table border="0"
+               width="100%">
+          <tr>
+            <% ranges = split_into_cols(@reviewers, 2) %>
+            <td width="50%"
+                valign="top">
+              <table border="0"
+                     width="100%">
+                <% for reviewer_list in @reviewers[ranges[1][:start]..ranges[1][:stop]] %>
+                  <tr>
+                    <th align="right"> <%= reviewer_list[:group] %>: </th>
+                    <td>
+                      <select id="<%= "board_reviewers_#{reviewer_list[:group_id]}" %>" 
+                      name="<%= "board_reviewers[#{reviewer_list[:group_id]}]" %>">
+                      <%=  options_from_collection_for_select(reviewer_list[:reviewers],
+                                                              "id",
+                                                              "name",
+                                                              reviewer_list[:reviewer_id]) %>
+                      </select>
+                    </td>
+                  </tr>
+                <% end %>
+
+              </table>
+            </td>
+            <td width="50%"
+                valign="top">
+              <table border="0"
+                     width="100%">
+                <% for reviewer_list in @reviewers[ranges[2][:start]..ranges[2][:stop]] %>
+                  <tr>
+                    <th align="right"> <%= reviewer_list[:group] %>: </th>
+                    <td>
+                      <select id="<%= "board_reviewers_#{reviewer_list[:group_id]}" %>" 
+                      name="<%= "board_reviewers[#{reviewer_list[:group_id]}]" %>">
+                      <%=  options_from_collection_for_select(reviewer_list[:reviewers],
+                                                              "id",
+                                                              "name",
+                                                              reviewer_list[:reviewer_id]) %>
+                      </select>
+                    </td>
+                  </tr>
+                <% end %>
+
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <th valign="top">2</th>
+      <td valign="top">
+        <font size="+1"><b>Add Comment (optional)</b></font><br />
+        <%= text_area("post_comment",
+                      "comment",
+                      :cols => 60,
+                      :rows => 5) %>
+      </td>
+    </tr>
+    <tr>
+      <th valign="top">3</th>
+      <td valign="top">
+        <% if mode == 'POST' %>
+          <input type="submit" class="buttonPost" value="Post <%= @design_review.review_type.name %> Review" />
+        <% else %>
+          <input type="submit" class="buttonPost" value="Repost <%= @design_review.review_type.name %> Review" />
+        <% end %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <input type="button" value="Cancel Posting" class="buttonStop" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+
+<%= end_form_tag %>
+
+<%# debug @design_review %>
+<%# debug @design %>
+<%# debug @reviewers %>

@@ -1,0 +1,38 @@
+<!-- View:    role                                              -->
+<!-- Purpose: Displays a role for modification.                 -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit role" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'update') %>
+
+  <%= hidden_field "role", "id" %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="role_name">Role:</label>
+        <%= text_field "role", "name", "size" => 30, "maxlength" => 30 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Reviewer: 
+        <%= check_box "role", "reviewer" %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: 
+        <%= check_box "role", "active" %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update role" />
+  <input type="button" value="Return to Role List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<%= end_form_tag %>

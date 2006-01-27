@@ -1,0 +1,26 @@
+<!-- View:    display_field                                     -->
+<!-- Purpose: Displays a form to add a display field.           -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Create a Display Field" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'create') %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="display_field_name">Display Field:</label>
+        <%= text_field "new_display_field", "name", "size" => 30, "maxlength" => 30 %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Create new project" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<%= end_form_tag %>
