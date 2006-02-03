@@ -458,7 +458,7 @@ class DesignReviewController < ApplicationController
 
     # Let everybody know that the design has been posted.
     DesignReviewMailer::deliver_posting_notification(design_review,
-                                                     dr_comment.comment)
+                                                     @params[:post_comment][:comment])
 
     redirect_to(:action     => 'index',
                 :controller => 'tracker')
@@ -527,7 +527,7 @@ class DesignReviewController < ApplicationController
 
     # Let everybody know that the design has been posted.
     DesignReviewMailer::deliver_posting_notification(design_review,
-                                                     dr_comment.comment,
+                                                     @params[:post_comment][:comment],
                                                      true)
 
 
@@ -812,6 +812,7 @@ class DesignReviewController < ApplicationController
     # Eliminate document types that are already attached.
     documents = DesignReviewDocument.find_all("design_id='#{@design_review.design_id}'")
     other = DocumentType.find_by_name('Other')
+
     for doc in documents
       next if doc.document_type_id == other.id
       @document_types.delete_if { |dt| dt.id == doc.document_type_id }
@@ -840,11 +841,18 @@ class DesignReviewController < ApplicationController
   #
   def save_attachment
 
+    @document = Document.new(params[:document])
+    
     if @params[:document_type][:id] == ''
       save_failed = true
-      flash['notice'] = 'Please select the document type.'
+      flash['notice'] = 'Please select the document type'
+    elsif @document.name == ''
+      save_failed = true
+      flash['notice'] = 'No name provided - Please specify a document'
+    elsif @document.data.size == 0
+      save_failed = true
+      flash['notice'] = 'Empty file - The document was not stored'
     else
-      @document = Document.new(params[:document])
       
       if @document.data.size < Document::MAX_FILE_SIZE
       
@@ -906,6 +914,8 @@ class DesignReviewController < ApplicationController
   #
   def get_attachment
     document = Document.find(params[:id])
+#breakpoint
+
     send_data(document.data,
               :filename    => document.name,
               :type        => document.content_type,
@@ -1232,6 +1242,7 @@ class DesignReviewController < ApplicationController
 
     results_recorded  = 0
     rejection_entered = false
+    result_update     = {}
     for review_result in review_results[:roles]
 
       review_record = review_result_list.find { |rr| 
@@ -1244,7 +1255,6 @@ class DesignReviewController < ApplicationController
         review_record.update
         results_recorded += 1
 
-        result_update = {}
         result_update[review_record.role.name] = review_result[:result]
 
         rejection_entered = review_result[:result] == "REJECTED" || rejection_entered
@@ -1257,25 +1267,38 @@ class DesignReviewController < ApplicationController
     if (review_results[:priority] && review_results[:designer])
       design = design_review.design
 
-      designer_update = design.designer_id.to_s != review_results[:designer]["id"]
-      priority_update = design.priority_id.to_s != review_results[:priority]["id"]
+      # Get any review but a Pre-Artwork review to determin the existing
+      # priority and designer.
+      pre_art = ReviewType.find_by_name("Pre-Artwork")
+      rev_i = 0
+      0.upto(design.design_reviews.size-1) { |i|
+        rev_i = i
+        break if design.design_reviews[i].review_type_id != pre_art.id
+      }
+
+      designer_id     = design.design_reviews[rev_i].designer_id
+      priority_id     = design.design_reviews[rev_i].priority_id
+      designer_update = designer_id != review_results[:designer]["id"]
+      priority_update = priority_id != review_results[:priority]["id"]
 
       if designer_update || priority_update
-        design_review_list = DesignReview.find_all_by_design_id(design.id)
-        for review in design_review_list
+        for review in design.design_reviews
           next if review.id == design_review.id
-          review.designer_id = review_results[:designer]["id"] if designer_update
+          if designer_update
+            review.designer_id      = review_results[:designer]["id"]
+            review.design_center_id = User.find(review.designer_id).design_center.id
+          end
           review.priority_id = review_results[:priority]["id"] if priority_update
           review.update
         end
       end
 
       if designer_update && priority_update
-        alternate_msg = "- Updated priority and designer for the remaining reviews "
+        alternate_msg = "Updated priority and designer for the remaining reviews "
       elsif designer_update
-        alternate_msg = "- Updated designer for the remaining reviews "
+        alternate_msg = "Updated designer for the remaining reviews "
       elsif priority_update
-        alternate_msg = "- Updated priority for the remaining reviews "
+        alternate_msg = "Updated priority for the remaining reviews "
       end
       
     end
@@ -1330,8 +1353,8 @@ class DesignReviewController < ApplicationController
       end
 
     end
- 
-    if comment_update || result_update
+
+    if comment_update || result_update.size > 0
       DesignReviewMailer::deliver_update(@session[:user], 
                                          design_review,
                                          comment_update,
