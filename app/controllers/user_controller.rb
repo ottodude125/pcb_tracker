@@ -14,9 +14,9 @@ class UserController < ApplicationController
 
   before_filter(:verify_admin_role,
                 :except => [:change_role,
-                  :login, 
-                  :logout,
-                  :set_role])
+                            :set_role,
+                            :login, 
+                            :logout])
 
   ######################################################################
   #
@@ -27,22 +27,13 @@ class UserController < ApplicationController
   # display.  The list is paginated and is limited to the number 
   # passed to the ":per_page" argument.
   #
-  # Parameters from @params
-  # None
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
   ######################################################################
   #
   def list
 
-    #@users = User.find_all
     @user_pages, @users = paginate(:users,
-				   :per_page => 15,
-				   :order_by => 'last_name ASC')
+		                           :per_page => 15,
+		                           :order_by => 'last_name ASC')
   end
   
 
@@ -53,14 +44,6 @@ class UserController < ApplicationController
   # Description:
   # This method retrieves a list of roles from the database for
   # for the signup form.
-  #
-  # Parameters from @params
-  # None
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
   #
   ######################################################################
   #
@@ -74,16 +57,11 @@ class UserController < ApplicationController
   # edit
   #
   # Description:
-  # This method retrieves a information from the database for
+  # This method retrieves information from the database for
   # for the edit form.
   #
   # Parameters from @params
-  # id - the id of the use information that will be edited.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
+  # id - the id of the user information that will be edited.
   #
   ######################################################################
   #
@@ -101,11 +79,42 @@ class UserController < ApplicationController
   end
 
 
+  ######################################################################
+  #
+  # change_password
+  #
+  # Description:
+  # This method retrieves a user record from the database for the 
+  # person identified in the 'id' parameter for display on the 
+  # change password form.
+  #
+  # Parameters from @params
+  # id - the id of the user
+  #
+  ######################################################################
+  #
   def change_password
     @user = User.find(@params['id'])
   end
 
 
+  ######################################################################
+  #
+  # reset_password
+  #
+  # Description:
+  # This method is called in response to the user submitting the form
+  # from the Change Password form.  The password and the confirmation
+  # are compared, if they are the same then the user's record is 
+  # updated with the new password.
+  #
+  # Parameters from @params
+  # new_password - the new password for the user.
+  # new_password_confirmation - used to verify that the user did not typo
+  # user['id'] - the id number of the user record to be updated.
+  #
+  ######################################################################
+  #
   def reset_password
   
     updated = false
@@ -144,34 +153,17 @@ class UserController < ApplicationController
   # Parameters from @params
   # user - the user data from the edit form
   #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
   ######################################################################
   #
   def update
 
     user_form = @params['user']
     @user = User.find(user_form['id'])
-    ##    logger.info "STORE PASSWORD::: #{@user.password}"
 
     if user_form['email'] == ''
-      user_form['email'] = user_form['first_name'].downcase +
-	'_' +
-	user_form['last_name'].downcase +
-	'@notes.teradyne.com'
+      user_form['email'] = user_form['first_name'].downcase + '_' +
+        user_form['last_name'].downcase + '@notes.teradyne.com'
     end
-
-    ##    logger.info "DUMPING the form data ......................"
-    ##    user_form.each { |key, value|
-    ##      logger.info "#{key} ==> #{value} / #{@user[key]}"
-    ##    }
-    ##    logger.info "DUMPING the stored record prior to the update ......................"
-    ##    @user.attributes.each { |key, value|
-    ##      logger.info "#{key} ==> #{value}"
-    ##    }
 
     # Go through the data on the form and update any attribute that was
     # modified
@@ -182,7 +174,7 @@ class UserController < ApplicationController
       @user.password = ''
       
       if @user[key] != user_form[key]
-	update_good = @user.update_attribute(key, value)
+        update_good = @user.update_attribute(key, value)
       end
       break if !update_good
     }
@@ -191,11 +183,8 @@ class UserController < ApplicationController
     if update_good
       @params['role'].each { | role_id, value |
         role = Role.find(role_id)
-	@user.remove_roles(role)
-	if  value == '1'
-	  #@user.add_roles(role)
-	  @user.roles << role
-	end
+	      @user.remove_roles(role)
+	      @user.roles << role if  value == '1'
       }
     end
 
@@ -220,11 +209,6 @@ class UserController < ApplicationController
   # Parameters from @params
   # user_login    - the user's name 
   # user_password - the user's password
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
   #
   ######################################################################
   #
@@ -267,18 +251,13 @@ class UserController < ApplicationController
   # Parameters from @params
   # role id - identifies the role that the use selected 
   #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
   ######################################################################
   #
   def set_role
 
     @session[:active_role] = @session[:roles].find(@params['role']['id']).name
     redirect_back_or_default(:controller => "tracker",
-			     :action     => "index")
+                             :action     => "index")
   end
   
 
@@ -293,17 +272,11 @@ class UserController < ApplicationController
   # user - information passed back from the view - goes into the 
   #        database.
   #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
   ######################################################################
   #
   def create
 
-    logger.info " ############ create "
-    @user = User.new(@params[:new_user])
+    @user = User.new(@params[:user])
     
     # If the user left the login and/or email fields blank, set
     # to the default
@@ -311,6 +284,7 @@ class UserController < ApplicationController
       @user.login = @user.first_name[0..0].downcase + 
         @user.last_name.downcase
     end
+
     if @user.email == ''
       @user.email = @user.first_name.downcase + 
         '_' +
@@ -325,7 +299,7 @@ class UserController < ApplicationController
         @user.roles << role if value == '1'
       }
 
-      flash['notice']  = "Account created for #{@user.name} "
+      flash['notice']  = "Account created for #{@user.name}"
       redirect_back_or_default :action => "list"
     end      
   end  
@@ -337,14 +311,6 @@ class UserController < ApplicationController
   #
   # Description:
   # Ends the user's session
-  #
-  # Parameters from @params
-  # None.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
   #
   ######################################################################
   #
@@ -358,9 +324,21 @@ class UserController < ApplicationController
 		:action     => 'index')
   end
     
+
+
+  ######################################################################
+  #
+  # welcome
+  #
+  # Description:
+  # A default redirect used on the user library.
+  #
+  ######################################################################
+  #
   def welcome
     redirect_back_or_default(:controller => "tracker",
                              :action     => "index")
   end
   
+
 end
