@@ -39,8 +39,17 @@ class UserControllerTest < Test::Unit::TestCase
   end
 
 
-  ## Verify that the tracker will not allow a user that is not logged in to 
-  ## edit a user record.
+  ######################################################################
+  #
+  # test_edit
+  #
+  # Description:
+  # Verify that the tracker will not allow a user that is not logged in to 
+  # edit a user record.
+  #
+  #
+  ######################################################################
+  #
   def test_edit_without_user
 
     post(:edit, :id => users(:cathy_m).id)
@@ -48,8 +57,18 @@ class UserControllerTest < Test::Unit::TestCase
     assert_equal("Please log in", flash[:notice])
   end
 
-  ## Verify that the tracker limits the user record edit function to an 
-  ## admin account
+
+  ######################################################################
+  #
+  # test_edit
+  #
+  # Description:
+  # Verify that the tracker limits the user record edit function to an 
+  # admin account
+  #
+  #
+  ######################################################################
+  #
   def test_auth_to_edit
 
     @request.session[:return_to] = "/bogus/location"
@@ -81,6 +100,16 @@ class UserControllerTest < Test::Unit::TestCase
   end
 
 
+  ######################################################################
+  #
+  # test_admin_user_edit
+  #
+  # Description:
+  # Verify that the admin an edit user accounts.
+  #
+  #
+  ######################################################################
+  #
   def test_admin_user_edit
 
     post(:login,
@@ -93,7 +122,18 @@ class UserControllerTest < Test::Unit::TestCase
     assert_template "user/edit"
 
   end
+
   
+  ######################################################################
+  #
+  # test_auth_bob
+  #
+  # Description:
+  # Verify that bob can login.
+  #
+  #
+  ######################################################################
+  #
   def test_auth_bob
 
     @request.session[:return_to] = "/bogus/location"
@@ -109,15 +149,25 @@ class UserControllerTest < Test::Unit::TestCase
     assert_equal 'Admin', @response.session[:active_role]
 
     assert_session_has :roles
-    
     assert_redirect_url "http://localhost/bogus/location"
   end
 
  
+  ######################################################################
+  #
+  # test_signup
+  #
+  # Description:
+  # Verify that the admin an edit user accounts.
+  #
+  #
+  ######################################################################
+  #
   def test_signup
 
     @request.session[:return_to] = "http://www.yahoo.com"
 
+    # Make sure that a non-admin can not create a new user.
     post(:create,
          :user => {
            :login                 => "newbob", 
@@ -132,7 +182,8 @@ class UserControllerTest < Test::Unit::TestCase
 
     assert_equal("Administrators only!  Check your role.", flash['notice'])
     assert_redirect_url "http://localhost/tracker"
-    
+
+    # Make sure that an admin can create a new user.
     set_admin
     post(:create,
          :user => {
@@ -148,16 +199,45 @@ class UserControllerTest < Test::Unit::TestCase
 
     assert_equal("Account created for Bob Squarepants", flash['notice'])
     assert_redirect_url "http://www.yahoo.com"
+
+    new_user = User.find_by_last_name "Squarepants"
+    assert_equal('newbob', new_user.login)
+
+    # Make sure that the defaults are loaded properly.
+    post(:create,
+         :user => {
+           :login                 => "", 
+           :password              => "newpassword", 
+           :password_confirmation => "newpassword",
+           :first_name            => "Roberto",
+           :last_name             => "Clemente",
+           :email                 => "",
+           :active                => "1"},
+         :role => {"1"=>"1", "2"=>"0", "4"=>"1"})
+
+
+    assert_equal("Account created for Roberto Clemente", flash['notice'])
+    assert_redirected_to(:controller => 'user', :action => 'list')
     
+    new_user = User.find_by_last_name "Clemente"
+    assert_equal('rclemente',                           new_user.login)
+    assert_equal('roberto_clemente@notes.teradyne.com', new_user.email)
+
   end
 
+
+  ######################################################################
+  #
+  # test_bad_signup
+  #
+  # Description:
+  # Verify that the admin an edit user accounts.
+  #
+  #
+  ######################################################################
+  #
   def test_bad_signup
 
-    print ("user::bad_signup - test is incomplete")
-    
-    @request.session[:return_to] = "/bogus/location"
-
-    return
     post(:create,
          :user => {
            :first_name => "Abe",
@@ -173,43 +253,44 @@ class UserControllerTest < Test::Unit::TestCase
 
     
     set_admin
-    post(:create,
-         :user => {
-           :first_name => "Abe",
-           :last_name  => "Lincoln",
-           :login      => "",
-           :email      => "",
-           :active     => "1",
-           :password   => "newpassword", 
-           :password_confirmation => "wrongpassword" },
-         :role => {})
-           
-    assert_redirected_to :action => "index"
-    assert_equal("The password and the confirmation do not match.", 
-		             flash['notice'])
-    
     post :signup, 
          :user => { 
             :login                 => "yo",
             :password              => "newpassword", 
             :password_confirmation => "newpassword" }
-    assert_invalid_column_on_record "user", :login
     assert_success
 
-    post :signup, :user => { :login => "yo", :password => "newpassword", :password_confirmation => "wrong" }
-    assert_invalid_column_on_record "user", [:login, :password]
-    assert_success
   end
 
+  ######################################################################
+  #
+  # test_invalid_login
+  #
+  # Description:
+  # Verify the actions for an invalid login.
+  #
+  #
+  ######################################################################
+  #
   def test_invalid_login
 
     post :login, :user_login => "bob", :user_password => "not_correct"
      
     assert_session_has_no :user
-    
     assert_template_has "login"
   end
   
+
+  ######################################################################
+  #
+  # test_invalid_login
+  #
+  # Description:
+  # Verify the behavior when a users logs in and then logs out.
+  #
+  #
+  ######################################################################
+  #
   def test_login_logoff
 
     post :login, :user_login => "bob", :user_password => "test"
@@ -219,5 +300,162 @@ class UserControllerTest < Test::Unit::TestCase
     assert_session_has_no :user
 
   end
+
+
+  ######################################################################
+  #
+  # test_invalid_login
+  #
+  # Description:
+  # Verify the list of users is provided when the user list screen is
+  # displayed.
+  #
+  #
+  ######################################################################
+  #
+  def test_list
+
+    set_admin
+    post :list
+
+    assert_response 200
+    assert_equal(15, assigns(:users).size)
+    
+  end
+
+
+  ######################################################################
+  #
+  # test_change_password
+  #
+  # Description:
+  # Verify the user record is provided when the 'change password' link
+  # is clicked.
+  #
+  #
+  ######################################################################
+  #
+  def test_change_password
+
+    post(:change_password, :id => users(:rich_m).id)
+    assert_redirected_to :action => "index"
+    assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
+
+    set_admin
+    post(:change_password, :id => users(:rich_m).id)
+
+    assert_response 200
+    assert_session_has :user
+    assert_equal(users(:rich_m).last_name, assigns(:user).last_name)
+    assert_template "change_password"
+    
+  end
+
+
+  ######################################################################
+  #
+  # test_reset_password
+  #
+  # Description:
+  # Verify the behavior of the reset password method
+  #
+  #
+  ######################################################################
+  #
+  def test_reset_password
+
+    post(:reset_password, 
+         :user                      => {:id => users(:rich_m).id},
+         :new_password              => 'Go_Red_Sox',
+         :new_password_confirmation => 'Go_Red_Sox')
+    assert_redirected_to :action => "index"
+    assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
+
+    set_admin
+    post(:reset_password, 
+         :user                      => {:id => users(:rich_m).id},
+         :new_password              => 'Go_Red_Sox',
+         :new_password_confirmation => 'Go_Red_Sox')
+
+    assert_redirected_to :action => :list
+    assert_equal('The password for Rich Miller was updated',
+                 flash['notice'])
+
+        post(:reset_password, 
+         :user                      => {:id => users(:rich_m).id},
+         :new_password              => 'Go_Red_Sox',
+         :new_password_confirmation => 'Go_Yankees')
+
+    assert_redirected_to :action => :change_password, :id => users(:rich_m).id
+    assert_equal('No Update - the new password and the confirmation do not match',
+                 flash['notice'])
+
+  end
+
   
+  ######################################################################
+  #
+  # test_update
+  #
+  # Description:
+  # Verify the behavior of the update method.
+  #
+  #
+  ######################################################################
+  #
+  def test_update
+
+    post(:update, 
+         :user                      => {:id => users(:rich_m).id})
+    assert_redirected_to :action => "index"
+    assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
+
+    set_admin
+    rich_roles = users(:rich_m).roles
+    assert_equal(2, rich_roles.size)
+    
+    post(:update, 
+         :user => {:id         => users(:rich_m).id,
+                   :first_name => 'Richard',
+                   :last_name  => 'Miller',
+                   :email      => ''},
+         :role => {'1' => '1',
+                   '2' => '1',
+                   '6' => '0',
+                   '9' => '1',
+                   '8' => '0'})
+
+    assert_redirected_to(:controller => 'user',
+                         :action     => 'edit',
+                         :id         => users(:rich_m).id)
+    assert_equal('The user information for Richard Miller was updated',
+                 flash['notice'])
+    rich_roles = User.find(users(:rich_m).id).roles
+    assert_equal(3, rich_roles.size)
+
+  end
+
+  
+  ######################################################################
+  #
+  # test_set_role
+  #
+  # Description:
+  # Verify the session information is updated with the selected role.
+  #
+  #
+  ######################################################################
+  #
+  def test_set_role
+
+    set_admin
+    post(:set_role, :role => {'id' => '14'})
+
+    assert_equal('PCB Input Gate', session[:active_role])
+    assert_redirected_to(:controller => 'tracker',
+                         :action     => 'index')
+
+  end
+
+
 end
