@@ -57,7 +57,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     
     post :view
     
-    assert_redirecited_to()
+    assert_redirected_to()
     print('?')
   end
 
