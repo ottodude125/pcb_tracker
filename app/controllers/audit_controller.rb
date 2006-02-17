@@ -12,6 +12,9 @@
 
 class AuditController < ApplicationController
 
+#  before_filter(:verify_admin_role,
+#                :except => [:designer_list]}
+
 
   ######################################################################
   #
@@ -339,8 +342,15 @@ class AuditController < ApplicationController
   #
   def update_design_checks
 
+    logger.info "############################# UPDATE_DESIGN_CHECKS"
     audit = Audit.find(@params[:audit][:id])
     is_designer = @session[:user][:id] == audit.design.designer_id
+    logger.info "  #### AUDIT: #{audit.id}"
+    logger.info "  ####  DESIGNER COMPLETED CHECKS: #{audit.designer_completed_checks}"
+    logger.info "  ####  DESIGNER COMPLETE: #{audit.designer_complete}"
+    logger.info "  ####  AUDITOR COMPLETED CHECKS: #{audit.auditor_completed_checks}"
+    logger.info "  ####  AUDITOR COMPLETE: #{audit.auditor_complete}"
+    logger.info "  #### IS_DESIGNER: #{is_designer}"
 
     # Go through the paramater list and pull out the checks.
     @params.keys.grep(/^check_/).each { |params_key|
@@ -355,10 +365,13 @@ class AuditController < ApplicationController
         result        = design_check.auditor_result
         result_update = design_check_update[:auditor_result]
       end
+      logger.info "  #### EXISTING RESULT: #{result}"
+      logger.info "  #### NEW RESULT: #{result_update}"
 
       if result_update != nil and 
           result_update != result
 
+        logger.info "  #### IN UPDATE BRANCH"
         # Make sure that the required comment has been added.
         if (design_check_update[:comment].strip.size == 0 and 
 
@@ -381,11 +394,13 @@ class AuditController < ApplicationController
             " response."
           end
           flash['notice'] = 'Not all checks were updated - please review the form for errors.'
+          logger.info flash['notice']
           next
         end
 
         check_count = Audit.check_count(audit.id)
         if is_designer and !audit.designer_complete?
+          logger.info "  #### UPDATING DESIGNER INFO"
           if result == "None"
            completed_checks = audit.designer_completed_checks + 1
            total_checks     = check_count[:designer]
@@ -403,6 +418,7 @@ class AuditController < ApplicationController
                      
         elsif !is_designer and !audit.auditor_complete?
 
+          logger.info "  #### UPDATING AUDITOR INFO"
           complete   = ['Verified', 'N/A', 'Waived']
           incomplete = ['None', 'Comment']
 
@@ -423,13 +439,13 @@ class AuditController < ApplicationController
 
             AuditMailer.deliver_alert_designer(audit) if audit.auditor_complete?
           end
+
+          result = design_check.update_attributes(
+                     :auditor_result     => result_update,
+                     :auditor_checked_on => Time.now,
+                     :auditor_id         => @session[:user].id)
         end
 
-        result =
-          design_check.update_attributes(:auditor_result     => result_update,
-                                         :auditor_checked_on => Time.now,
-                                         :auditor_id         => @session[:user].id)
-        
       end
 
       # If the user entered a comment, update the database.
