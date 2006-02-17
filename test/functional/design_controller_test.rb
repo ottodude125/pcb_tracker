@@ -140,10 +140,9 @@ class DesignControllerTest < Test::Unit::TestCase
 
     details = flash[:details]
 
-    assert_equal(5, 
-                 Design.find_all("board_id='#{details[:board_id]}'").size)
-    assert_equal(2,  DesignReview.find_all.size)
-    assert_equal(2,  DesignReviewResult.find_all.size)
+    assert_equal(5,  Design.find_all("board_id='#{details[:board_id]}'").size)
+    assert_equal(5,  DesignReview.find_all.size)
+    assert_equal(37, DesignReviewResult.find_all.size)
     assert_equal(9,  Audit.find_all.size)
     assert_equal(43, DesignCheck.find_all.size)
 
@@ -324,10 +323,10 @@ return
     details = flash[:details]
 
     assert_equal(la453.id,         details[:board_id])
-    assert_equal(bob_g.id,         details[:designer_id])
-    assert_equal("Robert Goldin",  details[:designer_name])
-    assert_equal(scott_g.id,       details[:peer_id])
-    assert_equal("Scott Glover",   details[:peer_name])
+    assert_equal(bob_g.id,         details[:designer].id)
+    assert_equal("Robert Goldin",  details[:designer].name)
+    assert_equal(scott_g.id,       details[:peer].id)
+    assert_equal("Scott Glover",   details[:peer].name)
     assert_equal("Date Code",      details[:design_type])
     assert_equal(rev_a.id.to_s,    details[:revision_id])
     assert_equal(suffix_2.id.to_s, details[:suffix_id])
@@ -464,8 +463,8 @@ return
     details = flash[:details]
 
     assert_equal(la453.id,        details[:board_id])
-    assert_equal(bob_g.id,        details[:designer_id])
-    assert_equal("Robert Goldin", details[:designer_name])
+    assert_equal(bob_g.id,        details[:designer].id)
+    assert_equal("Robert Goldin", details[:designer].name)
 
     
     expected_peers = ["Scott Glover", "Rich Miller"]
@@ -519,10 +518,10 @@ return
     details = flash[:details]
 
     assert_equal(la453.id,        details[:board_id])
-    assert_equal(bob_g.id,        details[:designer_id])
-    assert_equal("Robert Goldin", details[:designer_name])
-    assert_equal(scott_g.id,      details[:peer_id])
-    assert_equal("Scott Glover",  details[:peer_name])
+    assert_equal(bob_g.id,        details[:designer].id)
+    assert_equal("Robert Goldin", details[:designer].name)
+    assert_equal(scott_g.id,      details[:peer].id)
+    assert_equal("Scott Glover",  details[:peer].name)
     assert_equal("Date Code",     details[:design_type])
 
     revisions = assigns(:revisions)
@@ -593,10 +592,10 @@ return
     details = flash[:details]
 
     assert_equal(la453.id,        details[:board_id])
-    assert_equal(bob_g.id,        details[:designer_id])
-    assert_equal("Robert Goldin", details[:designer_name])
-    assert_equal(scott_g.id,      details[:peer_id])
-    assert_equal("Scott Glover",  details[:peer_name])
+    assert_equal(bob_g.id,        details[:designer].id)
+    assert_equal("Robert Goldin", details[:designer].name)
+    assert_equal(scott_g.id,      details[:peer].id)
+    assert_equal("Scott Glover",  details[:peer].name)
     assert_equal("Date Code",     details[:design_type])
     assert_equal(rev_a.id.to_s,   details[:revision_id])
 
@@ -649,10 +648,10 @@ return
     details = flash[:details]
 
     assert_equal(la453.id,        details[:board_id])
-    assert_equal(bob_g.id,        details[:designer_id])
-    assert_equal("Robert Goldin", details[:designer_name])
-    assert_equal(scott_g.id,      details[:peer_id])
-    assert_equal("Scott Glover",  details[:peer_name])
+    assert_equal(bob_g.id,        details[:designer].id)
+    assert_equal("Robert Goldin", details[:designer].name)
+    assert_equal(scott_g.id,      details[:peer].id)
+    assert_equal("Scott Glover",  details[:peer].name)
 
   end
 
