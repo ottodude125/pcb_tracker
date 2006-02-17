@@ -238,10 +238,15 @@ class AuditControllerTest < Test::Unit::TestCase
   def test_update_design_checks
 
     # Log in as a designer and get the audit listing.
-    user = User.find(users(:rich_m).id)
-    @request.session[:user]        = user
+    designer = User.find(users(:rich_m).id)
+    @request.session[:user]        = designer
     @request.session[:active_role] = 'Designer'
-    @request.session[:roles]       = user.roles
+    @request.session[:roles]       = designer.roles
+
+    audit = Audit.find(audits(:audit_mx234b).id)
+    assert_equal(designer.id, audit.design.designer_id)
+    assert(!audit.designer_complete?)
+    assert(!audit.auditor_complete?)
 
     # This check should fail to update because no comment is included.
     post(:update_design_checks,
@@ -510,7 +515,6 @@ class AuditControllerTest < Test::Unit::TestCase
     @request.session[:active_role] = 'Designer'
     @request.session[:roles]       = user.roles
 
-
     post(:update_design_checks,
          :audit         => {:id => audits(:audit_mx234b).id},
          :subsection    => {:id => subsections(:subsect_30_000).id},
@@ -534,7 +538,7 @@ class AuditControllerTest < Test::Unit::TestCase
     post(:perform_checks,
          :audit_id      => audits(:audit_mx234b).id,
          :subsection_id => subsections(:subsect_30_000).id)
-
+       
     assert_equal(15, assigns(:audit).designer_completed_checks)
     assert_equal(2,  assigns(:audit).auditor_completed_checks)
 
@@ -548,7 +552,6 @@ class AuditControllerTest < Test::Unit::TestCase
         assert_equal(1, check[:comments].size)
       end
     end 
-
 
     post(:update_design_checks,
          :audit         => {:id => audits(:audit_mx234b).id},
@@ -566,7 +569,7 @@ class AuditControllerTest < Test::Unit::TestCase
            :design_check_id => '20002',
            :comment         => 'Comment Three'},
          :check_10003   => {
-           :auditor_result  => 'Comment',
+           :auditor_result  => 'Verified',
            :design_check_id => '20003',
            :comment         => 'Comment Four'})
 
@@ -577,7 +580,7 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(15, assigns(:audit).designer_completed_checks)
     assert_equal(4,  assigns(:audit).auditor_completed_checks)
 
-    results = %w{N/A Verified Waived Comment} 
+    results = %w{N/A Verified Waived Verified} 
     checks = assigns(:checks)
     for check in checks
       assert_equal(results.shift, check[:design_check].auditor_result)
@@ -637,6 +640,8 @@ class AuditControllerTest < Test::Unit::TestCase
 
     assert_equal(15, assigns(:audit).designer_completed_checks)
     assert_equal(9,  assigns(:audit).auditor_completed_checks)
+    assert(assigns(:audit).designer_complete?)
+    assert(assigns(:audit).auditor_complete?)
 
     results = %w{N/A Verified Waived} 
     checks = assigns(:checks)
@@ -1220,7 +1225,90 @@ class AuditControllerTest < Test::Unit::TestCase
 
   private
 
-  def dump_audit
+
+  def dump_audit(audit_id,
+                 msg     = '',
+                 details = false)
+
+    print "\n#################### DUMP AUDIT ####################\n"
+    print msg + "\n"
+
+    designer_results = {}
+    auditor_results  = {}
+
+    audit           = Audit.find(audit_id)
+    design_checks   = DesignCheck.find_all_by_audit_id(audit_id)
+    design_check_list = {}
+    for design_check in design_checks
+      design_check_list[design_check.check_id] = design_check
+    end
+
+    print "\n### DUMP AUDIT for #{audit.design.name}   AUDIT ID: #{audit_id}\n"
+    print "    DESIGNER COMPLETE: #{audit.designer_complete?}\n"
+    designer = User.find(audit.design.designer_id).name
+    auditor  = User.find(audit.design.peer_id).name
+    print "    DESIGNER: #{designer}\n"
+    print "    DESIGNER COMPLETED CHECKS: #{audit.designer_completed_checks}\n"
+    print "    AUDITOR: #{auditor}\n"
+    print "    AUDITOR COMPLETE: #{audit.auditor_complete?}\n"
+    print "    AUDITOR COMPLETED CHECKS: #{audit.auditor_completed_checks}\n"
+    print "    CHECKLIST [#{audit.checklist_id}]\n"
+
+    sections = Section.find_all_by_checklist_id(audit.checklist_id, 
+                                                "sort_order ASC")
+    print "    NUMBER OF SECTIONS: #{sections.size}\n" if details
+    for section in sections
+      subsections = Subsection.find_all_by_section_id(section.id,
+                                                      "sort_order ASC")
+      if details
+        print "\n    SECTION ID: #{section.id}\n"
+        print "    NUMBER OF SUBSECTIONS: #{subsections.size}\n"     
+      end
+
+      for subsection in subsections
+        checks = Check.find_all_by_subsection_id(subsection.id,
+                                                 "sort_order ASC")
+        if details
+          print "\n    SUBSECTION ID: #{subsection.id}\n"
+          print "    NUMBER OF DESIGN CHECKS: [#{checks.size}]\n"
+        end
+
+        for check in checks
+
+          design_check = design_check_list[check.id]
+
+          if details
+            print "      DESIGN_CHECK ID: #{design_check.id}\n"
+            print "      AUDIT ID: #{design_check.audit_id}\n"
+            print "      CHECK ID: #{design_check.check_id}\n"
+            auditor  = User.find(design_check.auditor_id).name
+            designer = User.find(design_check.designer_id).name
+            print "      AUDITOR: #{auditor}\n"
+            print "      DESIGNER: #{designer}\n"
+            print "      AUDITOR RESULT #{design_check.auditor_result}\n"
+            print "      DESIGNER RESULT #{design_check.designer_result}\n\n"
+          end
+
+          designer_results[design_check.designer_result] = 0 if !designer_results[design_check.designer_result]
+          auditor_results[design_check.auditor_result]   = 0 if !auditor_results[design_check.auditor_result]
+
+          designer_results[design_check.designer_result] += 1
+          auditor_results[design_check.auditor_result]   += 1
+
+        end
+      end
+    end
+
+    print "*********************** DESIGNER RESULTS \n"
+    designer_results.each { |k,v| print "   #{k} => #{v}\n" }
+
+    print "*********************** AUDITOR RESULTS \n"
+    auditor_results.each { |k,v| print "   #{k} => #{v}\n" }
+
+  end
+ 
+
+  def dump_audits
 
     audit_list      = Audit.find_all(nil, 'id ASC')
     section_list    = Section.find_all
