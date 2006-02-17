@@ -42,5 +42,38 @@ class Test::Unit::TestCase
     @request.session[:roles]       = user.roles
   end
 
+  
+  def set_designer
+    user = User.find(users(:rich_m).id)
+    @request.session[:user]        = user
+    @request.session[:active_role] = 'Designer'
+    @request.session[:roles]       = user.roles
+  end
+
+
+  def set_manager
+    user = User.find(users(:jim_l).id)
+    @request.session[:user]        = user
+    @request.session[:active_role] = 'Manager'
+    @request.session[:roles]       = user.roles
+  end
+
+
+  def set_reviewer
+    user = User.find(users(:pat_a).id)
+    @request.session[:user]        = user
+    @request.session[:active_role] = 'Reviewer'
+    @request.session[:roles]       = user.roles
+  end
+
+
+  def set_user(user_id, role)
+    user = User.find(user_id)
+    @request.session[:user]        = user
+    @request.session[:active_role] = role
+    @request.session[:roles]       = user.roles
+  end
+
+
 
 end
