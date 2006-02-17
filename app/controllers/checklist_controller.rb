@@ -194,7 +194,7 @@ class ChecklistController < ApplicationController
   def list
 
     @checklist_pages, @checklists = paginate(:checklists,
-                                             :per_page   => 5,
+                                             :per_page   => 15,
                                              :order_by   => 'released_on DESC')
   end
 
