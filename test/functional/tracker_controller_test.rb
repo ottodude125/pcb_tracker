@@ -25,6 +25,9 @@ class TrackerControllerTest < Test::Unit::TestCase
   end
 
 
+  fixtures(:users)
+
+
   def test_1_id
     print ("\n*** Tracker Controller Test - NEEDS WORK!!!\n")
     print ("*** $Id$\n")
@@ -55,9 +58,34 @@ class TrackerControllerTest < Test::Unit::TestCase
   #
   ######################################################################
   #
-  def test index
-    print '?'
-    assert true
+  def test_index
+
+    # First verify the screen when not logged in.
+    get :index
+    assert_response 200
+    assert_template 'tracker/index'
+
+    set_admin()
+    get :index
+    assert_response 302
+    assert_redirected_to :action => :admin_home
+
+    set_designer()
+    get :index
+    assert_response 302
+    assert_redirected_to :action => :designer_home
+
+    set_manager()
+    get :index
+    assert_response 302
+    assert_redirected_to :action => :manager_home
+
+    set_reviewer()
+    get :index
+    assert_response 302
+    assert_redirected_to :action => :reviewer_home
+
+    
   end
   
   
