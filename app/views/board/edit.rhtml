@@ -133,10 +133,12 @@
                                            reviewer[:reviewers],
                                            "id", 
                                            :name,
-                                           {:prompt=>true}) %>
+                                           {:include_blank => true},
+                                           "class" => 'name_select') %>
                 <% elsif mode == "edit" %>
                   <select id="<%= "board_reviewers_#{reviewer[:id]}" %>" 
-                           name="<%= "board_reviewers[#{reviewer[:id]}]" %>">
+                           name="<%= "board_reviewers[#{reviewer[:id]}]" %>"
+                           class="name_select">
                     <%=  options_from_collection_for_select(reviewer[:reviewers],
                                                             "id",
                                                             "name",

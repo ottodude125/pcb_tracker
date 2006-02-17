@@ -13,7 +13,7 @@
        align="center"
        rules="cols">
   <tr>
-    <td width="20%" 
+    <td width="100" 
         valign="top"
         rowspan="2">
       <table width="90%"
@@ -44,8 +44,7 @@
              border="0">
         <tr>
           <td>
-            <table width="100%" 
-                   align="left"
+            <table align="left"
                    border="0"
                    cellspacing="0">
       	      <tr>
@@ -56,12 +55,12 @@
               
               <% if @my_reviews.size > 0 %>
               <tr class="subheading">
-                <th align="left">Priority</th>
-                <th align="left">Status</th>
-                <th align="left">Design</th>
-                <th align="left">Review Type</th>
-                <th align="left">Designer</th>
-                <th align="left">Posted</th>
+                <th align="left" width="60">Priority</th>
+                <th align="left" width="60">Design</th>
+                <th align="left" width="140">Review Type</th>
+                <th align="left" width="200">Designer</th>
+                <th align="left" width="80">Posted</th>
+                <th align="left" width="160">Results</th>
               </tr>
               <%= render_collection_of_partials("reviewer_home_list_stripes",
                                                 @my_reviews,
@@ -87,8 +86,7 @@
              border="0">
         <tr>
           <td>
-            <table width="100%" 
-                   align="left"
+            <table align="left"
                    border="0"
                    cellspacing="0">
       	      <tr>
@@ -99,13 +97,14 @@
               
               <% if @other_reviews.size > 0 %>
               <tr class="subheading">
-                <th align="left">Priority</th>
-                <th align="left">Status</th>
-                <th align="left">Design</th>
-                <th align="left">Review Type</th>
-                <th align="left">Designer</th>
-                <th align="left">Posted</th>
-                <th align="left">Reviewer(s)</th>
+                <th align="left" width="60">Priority</th>
+                <th align="left" width="60">Design</th>
+                <th align="left" width="140">Review Type</th>
+                <th align="left" width="200">Designer</th>
+                <th align="left" width="80">Posted</th>
+                <th align="left" width="100">Results</th>
+                <th align="left" width="250">Reviewer(s)</th>
+
               </tr>
               <%= render_collection_of_partials("reviewer_home_list_stripes",
                                                 @other_reviews,

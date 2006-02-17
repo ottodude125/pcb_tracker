@@ -6,7 +6,8 @@
 
 <% @heading = "Insert: Peer Audit Check" %>
 
-<form action="/check/insert_check" method="post">
+<%= start_form_tag(:action => 'insert_check') %>
+
   <%= hidden_field "check", "id" %>
 
   <hr class="div" />
@@ -102,7 +103,7 @@
 
   <table>
     <tr>
-      <th valign="top" align="right">Title phrase: <br><font size="-2">(Optional displays in bold)  </font></th>
+      <th valign="top" align="right">Title phrase: <br /><font size="-2">(Optional displays in bold)  </font></th>
       <td><%= text_field "new_check", "title", "maxlength" => 86 %></td>
     </tr>
     <tr>
@@ -115,7 +116,7 @@
     </tr>
     <tr>
       <td colspan="2">
-        <hr class="div">
+        <hr class="div" />
         <table border="0">
           <tr>
             <td><%= check_box "new_check", "full_review" %> </td>
@@ -130,17 +131,17 @@
             <th align="left">Include in Dot Rev Audits</th>
           </tr>
         </table>
-        <hr class="div">
+        <hr class="div" />
         <table>
           <tr>
             <th valign="top" align="right">Check Type: </th>
 
             <td>
               <%= radio_button "new_check", "check_type", "yes_no"  %>
-              <b>Yes/No</b>&nbsp;<br>
+              <b>Yes/No</b>&nbsp;<br />
 
               <%= radio_button "new_check", "check_type", "designer_auditor" %>
-              <b>Designer/Auditor</b>&nbsp;<br>
+              <b>Designer/Auditor</b>&nbsp;<br />
 
               <%= radio_button "new_check", "check_type", "designer_only" %>
               <b>Designer Only</b>&nbsp;
@@ -154,12 +155,12 @@
   <hr class="div" />
 
   <% if @check.section.checklist.released == 0 %>
-    <input type="submit" value="Insert" />
+    <input type="submit" value="insert" />
   <% else %>
     <input type="submit" disabled="disabled" value="LOCKED - Checklist Released" />
   <% end %>
 
-  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'check', :action => 'modify_checks', :id => @check.subsection_id ) %>'">
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'check', :action => 'modify_checks', :id => @check.subsection_id ) %>'" />
 </form>
 
 

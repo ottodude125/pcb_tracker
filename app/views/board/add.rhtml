@@ -97,11 +97,12 @@
               <th align="right"> <%= reviewer[:group] %>: </th>
               <td>
                 <%= collection_select(:new_board_reviewers,
-                                         :"#{reviewer[:group]}",
-                                         reviewer[:reviewers],
-                                         "id", 
-                                         :name,
-                                         {:prompt=>true}) %>
+                                      :"#{reviewer[:group]}",
+                                      reviewer[:reviewers],
+                                      "id", 
+                                      :name,
+                                      {:prompt=>true},
+                                      "class" => 'name_select') %>
               </td>
               <td width="40">&nbsp;</td>
             </tr>

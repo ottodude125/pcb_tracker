@@ -5,7 +5,7 @@ Posting number: <%= @design_review.posting_count %>
 <%= @user.name %> has posted the <%= @design_review.review_name %> review.
 <% end %>
 
-<% if @comments %>
+<% if @comments.size > 0 %>
 COMMENTS:
   <%=h @comments %>
 <% end %>

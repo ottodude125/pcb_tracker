@@ -2,7 +2,7 @@
 RESULTS:
 
   <% @result_update.each { |role, result| %>
-    <%= @user.name %> <%= result %> for <%= role %>
+    <%= @user.name %> (<%= role %>) <%= result %>
   <% } %>
 <% end %>
 

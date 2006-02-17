@@ -14,10 +14,10 @@
 
 <hr class="div" />
 
-<table align="center" border="1" cellpadding="2" cellspacing="2" width="90%" rules="all">
+<table align="center" border="1" cellpadding="2" cellspacing="2" rules="all">
 
   <tr bgcolor="#dfdfdf">
-    <th colspan="5" align="center" valign="middle">Peer Audit Review Checklists</th>
+    <th colspan="8" align="center" valign="middle">Peer Audit Review Checklists</th>
     <th rowspan="2" align="center" valign="top" width="25"><font size="-2">V<br />i<br />e<br />w</font></th>
     <th rowspan="2" align="center" valign="top" width="25"><font size="-2">E<br />d<br />i<br />t</font></th>
     <th rowspan="2" align="center" valign="top" width="25"><font size="-2">D<br />e<br />l<br />e<br />t<br />e</font></th>
@@ -30,6 +30,9 @@
     <th width="120">Times Used</th>
     <th width="150">Release Date</th>
     <th width="150">Created Date</th>
+    <th width="80">Sections</th>
+    <th width="100">Subsections</th>
+    <th width="80">Checks</th>
   </tr>
 
   <% for checklist in @checklists %>
@@ -47,6 +50,10 @@
         <td>N/A</td>
       <% end %>
       <td><%= checklist.created_on.strftime("%d-%b-%y") %></td>
+      <td><%= checklist.sections.size %></td>
+      <% subsection_count, check_count = get_summary_data(checklist) %>
+      <td><%= subsection_count %></td>
+      <td><%= check_count %></td>
       <td>
         <%= link_to(image_tag('view'),
                     { :action => 'select_view',
