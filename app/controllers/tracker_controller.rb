@@ -114,6 +114,8 @@ class TrackerController < ApplicationController
 
 	    if reviews_started == 0
 	      design_summary[:next_review] = reviews[0]
+	    elsif reviews.size == review_list.size
+        design_summary[:next_review] = nil
 	    elsif last_status == "Review Completed"
 	      design_summary[:next_review] = next_review
       else
@@ -196,12 +198,19 @@ class TrackerController < ApplicationController
       else
 
         # Capture the reviewer's peer names for display.
-        design_review[:peer_list] = Array.new
+        design_review[:peer_list]   = []
+        design_review[:peer_result] = []
         for role in @session[:roles]
           if role.reviewer?
             for review_result in review_results
+
+              peer_info = {}
               if role.id == review_result.role_id
-                design_review[:peer_list].push review_result.reviewer_id
+                peer_info[:name]   = User.find(review_result.reviewer_id).name
+                peer_info[:role]   = role.name
+                design_review[:peer_list].push(peer_info)
+                
+                design_review[:peer_result].push(review_result.result)
               end
             end
           end
