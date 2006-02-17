@@ -216,6 +216,21 @@ class DesignReviewController < ApplicationController
   end
 
 
+  ######################################################################
+  #
+  # posting_filter
+  #
+  # Description:
+  # This method redirects to the next method depending on the review type
+  # that the user is posting.
+  #
+  # Parameters from @params
+  # ['design_id']      - Used to identify the design that the user is posting
+  #                      the review for.
+  # ['review_type_id'] - Used to identify the review type.
+  #
+  ######################################################################
+  #
   def posting_filter
 
     review = ReviewType.find(@params["review_type_id"])
@@ -233,12 +248,38 @@ class DesignReviewController < ApplicationController
   end
 
 
+  ######################################################################
+  #
+  # placement_routing_post
+  #
+  # Description:
+  # This method refreshes the information in the flash prior to displaying the
+  # Plaement Routing Review Posting form.
+  #
+  # Parameters from @params
+  # None
+  #
+  ######################################################################
+  #
   def placement_routing_post
     flash[:design_id]      = flash[:design_id]
     flash[:review_type_id] = flash[:review_type_id]
   end
 
 
+  ######################################################################
+  #
+  # process_placement_routing
+  #
+  # Description:
+  # This method refreshes the information in the flash prior to displaying the
+  # Plaement Routing Review Posting form.
+  #
+  # Parameters from @params
+  # None
+  #
+  ######################################################################
+  #
   def process_placement_routing
 
     if @params["combine"]["reviews"] == '1'
@@ -248,11 +289,13 @@ class DesignReviewController < ApplicationController
       placement_review = design_reviews.find { |dr| dr.review_type.name == 'Placement' }
       routing_review   = design_reviews.find { |dr| dr.review_type.name == 'Routing' }
 
-      placement_results = DesignReviewResult.find_all_by_design_review_id(placement_review.id)
-      routing_results   = DesignReviewResult.find_all_by_design_review_id(routing_review.id)
+      placement_results = DesignReviewResult.find_all_by_design_review_id(
+                            placement_review.id)
+      routing_results   = DesignReviewResult.find_all_by_design_review_id(
+                            routing_review.id)
 
       for routing_result in routing_results
-       if not placement_results.find { |pr| pr.role_id == routing_result.role_id }
+       if !placement_results.find { |pr| pr.role_id == routing_result.role_id }
          new_placement_result = DesignReviewResult.new
          new_placement_result.design_review_id = placement_results[0].design_review_id
          new_placement_result.reviewer_id      = routing_result.reviewer_id
@@ -296,15 +339,12 @@ class DesignReviewController < ApplicationController
     design_reviews = DesignReview.find_all_by_design_id(@design.id)
     review_type    = ReviewType.find(@params[:review_type_id])
     @design_review = design_reviews.find { |dr|  dr.review_type_id == review_type.id }
-    logger.info " #### PARAM: design_id      - #{@params[:design_id]}"
-    logger.info " #### PARAM: review_type_id - #{@params[:review_type_id]}"
-    logger.info " #### DESIGN: #{@design.id}"
-    logger.info " #### DESIGN REVIEWS: #{design_reviews.size}"
-    logger.info " #### DESIGN REVIEW: #{@design_review.id}"
-
+    
     # Handle the combined Placement/Routing reviews
-    routing_review = ReviewType.find_by_name 'Routing'
     if @params[:combine_placement_routing] == '1'
+
+      routing_review = ReviewType.find_by_name 'Routing'
+      
       @design_review.review_type_id_2 = routing_review.id
       @design_review.update
 
@@ -665,11 +705,9 @@ class DesignReviewController < ApplicationController
     
     @documents = Array.new
     for doc_type in document_types
-      logger.info " #### CHECKING FOR #{doc_type.name} DOCUMENTS #############"
       docs = DesignReviewDocument.find_all("board_id='#{@design_review.design.board_id}' " +
                                            "and document_type_id='#{doc_type.id}'")
       next if docs.size == 0
-      logger.info " ++++++++ ADDING A DOCUMENT FOR DISPLAY ++++++++++++++++++++"
       
       if doc_type.name != "Other"
         display_doc = docs.pop
@@ -799,10 +837,8 @@ class DesignReviewController < ApplicationController
     
     if @params[:design_review] != nil
       design_review_id = @params[:design_review][:id]
-      logger.info "  ### add_attachment()  BOARD_ID: #{@params[:id]}  DESIGN REVIEW: #{design_review_id}"
     else
       design_review_id = @params[:design_review_id]
-      logger.info "  ### add_attachment()  BOARD_ID: #{@params[:id]}  DESIGN REVIEW: #{design_review_id}"
     end
    
    
@@ -913,12 +949,11 @@ class DesignReviewController < ApplicationController
   ######################################################################
   #
   def get_attachment
-    document = Document.find(params[:id])
-#breakpoint
+    @document = Document.find(params[:id])
 
-    send_data(document.data,
-              :filename    => document.name,
-              :type        => document.content_type,
+    send_data(@document.data.to_a.pack("H*"),
+              :filename    => @document.name,
+              :type        => @document.content_type,
               :disposition => "inline")
   end
   
@@ -1401,10 +1436,7 @@ class DesignReviewController < ApplicationController
   #
   def confirm_rejection
   
-    review_results = flash[:review_results]
-    logger.info "-----------------------------------------------------"
-    logger.info "CONFIRM REJECTION"
-    
+    review_results = flash[:review_results]    
     review_results.each { |k,v|
       if k != :roles
         logger.info "  #{k} -> #{v}"
