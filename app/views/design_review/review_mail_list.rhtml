@@ -91,6 +91,7 @@
                                       :id,
                                       :name,
                                       {:include_blank => true},
+                                      "class" => 'name_select',
                                       "size" => 10) %>
                 <%= observe_field('remove_name',
                                   :update => 'selections',
@@ -145,7 +146,8 @@
                                       :id,
                                       :name,
                                       {:include_blank => true},
-                                      "size" => 10) %>
+                                      "class" => 'name_select',
+                                       "size"  => '10') %>
                 <%= observe_field('add_name',
                                   :update => 'selections',
                                   :url    => {:action =>'add_to_list'},
@@ -157,7 +159,7 @@
               <td>No users remain to be added.</td>
             </tr>
           <% end %>
-          <% elsif permitted_to_add_self_to_cc_list %>
+          <% elsif permitted_to_add_self_to_cc_list(@reviewers) %>
           <tr>
             <th class="teraheader" colspan="2">
               <font size="+1">
