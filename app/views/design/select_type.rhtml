@@ -33,18 +33,18 @@
        cellpadding="2">
   <tr>
     <th width="90" align="left">Designer:</th>
-    <td><%= flash[:details][:designer_name] %></td>
+    <td><%= flash[:details][:designer].name %></td>
     <th width="60" aligh="left">Peer:</th>
-    <td><%= flash[:details][:peer_name] %></td>
+    <td><%= flash[:details][:peer].name %></td>
   </tr>
   <tr>
     <th width="90" align="left">Type:</th>
     <td>
-      <select id="design_type" name="design[type]" class="pleaseSelect">
+      <select id="design_type" name="design[type]">
         <option value="">Please Select the Design Type</option>
-        <option value="New" class="selectOption">New</option>
-        <option value="Date Code" class="selectOption">Date Code</option>
-        <option value="Dot Rev" class="selectOption">Dot Rev</option>
+        <option value="New">New</option>
+        <option value="Date Code">Date Code</option>
+        <option value="Dot Rev">Dot Rev</option>
       </select>
       <%= observe_field('design_type',
                           :update => :selections,
