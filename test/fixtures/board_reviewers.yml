@@ -84,3 +84,8 @@ la453_ops_mgr:
   board_id:    2
   reviewer_id: 7600
   role_id:     19
+mx234a_ce_dft:
+  id:          18
+  board_id:    1
+  reviewer_id: 7101
+  role_id:     7

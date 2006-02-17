@@ -11,6 +11,7 @@ mx234a:
   design_type: New
   designer_id: 5000
   peer_id:     5001
+  priority_id: 1
 la453b:
   id:          2
   name:        la453b
@@ -20,6 +21,7 @@ la453b:
   design_type: New
   designer_id: 5001
   peer_id:     5002
+  priority_id: 2
 la453a_eco1:
   id:          3
   name:        la453a_eco1
@@ -29,6 +31,7 @@ la453a_eco1:
   design_type: Date Code
   designer_id: 5001
   peer_id:     5002
+  priority_id: 2
 la453a1:
   id:          4
   name:        la453a1
@@ -38,6 +41,7 @@ la453a1:
   design_type: Dot Rev
   designer_id: 5001
   peer_id:     5000
+  priority_id: 1
 la453a2:
   id:          5
   name:        la453a2
@@ -47,6 +51,7 @@ la453a2:
   design_type: Dot Rev
   designer_id: 5001
   peer_id:     5002
+  priority_id: 2
 la453b_eco2:
   id:          6
   name:        la453b_eco2
@@ -56,6 +61,7 @@ la453b_eco2:
   design_type: Date Code
   designer_id: 5001
   peer_id:     5002
+  priority_id: 1
 mx234b:
   id:          7
   name:        mx234b
@@ -65,6 +71,7 @@ mx234b:
   design_type: New
   designer_id: 5002
   peer_id:     5001
+  priority_id: 2
 la454c3:
   id:          8
   name:        la454c3
@@ -74,6 +81,7 @@ la454c3:
   design_type: Dot Rev
   designer_id: 5002
   peer_id:     5001
+  priority_id: 2
 mx234c:
   id:          9
   name:        mx234c
@@ -83,3 +91,5 @@ mx234c:
   design_type: New
   designer_id: 5002
   peer_id:     5001
+  priority_id: 2
+

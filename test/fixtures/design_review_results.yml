@@ -1,5 +1,224 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-first_design_review_result:
-  id: 1
-another_design_review_result:
-  id: 2
+mx234a_pre_artwork_ce_dft:
+  id:               1
+  design_review_id: 1
+  reviewer_id:      7101
+  role_id:          7
+  result:           None
+mx234a_pre_artwork_dfm:
+  id:               2
+  design_review_id: 1
+  reviewer_id:      7150
+  role_id:          8
+  result:           None
+mx234a_pre_artwork_hw:
+  id:               3
+  design_review_id: 1
+  reviewer_id:      7001
+  role_id:          5
+  result:           None
+mx234a_pre_artwork_lib:
+  id:               4
+  design_review_id: 1
+  reviewer_id:      7400
+  role_id:          15
+  result:           None
+mx234a_pre_artwork_mech:
+  id:               5
+  design_review_id: 1
+  reviewer_id:      7251
+  role_id:          10
+  result:           None
+mx234a_pre_artwork_mech_mfg:
+  id:               6
+  design_review_id: 1
+  reviewer_id:      7300
+  role_id:          11
+  result:           None
+mx234a_pre_artwork_pcb_ig:
+  id:               7
+  design_review_id: 1
+  reviewer_id:      4000
+  role_id:          14
+  result:           None
+mx234a_pre_artwork_pcb_mech:
+  id:               8
+  design_review_id: 1
+  reviewer_id:      7451
+  role_id:          16
+  result:           None
+mx234a_pre_artwork_plan:
+  id:               9
+  design_review_id: 1
+  reviewer_id:      7650
+  role_id:          13
+  result:           None
+mx234a_pre_artwork_slm_bom:
+  id:               10
+  design_review_id: 1
+  reviewer_id:      7500
+  role_id:          17
+  result:           None
+mx234a_pre_artwork_pcb_design:
+  id:               100
+  design_review_id: 1
+  reviewer_id:      4001
+  role_id:          12
+  result:           None
+mx234a_pre_artwork_slm_v:
+  id:               11
+  design_review_id: 1
+  reviewer_id:      7550
+  role_id:          18
+  result:           None
+mx234a_pre_artwork_tde:
+  id:               12
+  design_review_id: 1
+  reviewer_id:      7200
+  role_id:          9
+  result:           None
+mx234a_pre_artwork_valor:
+  id:               13
+  design_review_id: 1
+  reviewer_id:      7050
+  role_id:          6
+  result:           None
+mx234a_placement_ce_dft:
+  id:               14
+  design_review_id: 2
+  reviewer_id:      7101
+  role_id:          7
+  result:           None
+mx234a_placement_dfm:
+  id:               15
+  design_review_id: 2
+  reviewer_id:      7150
+  role_id:          8
+  result:           None
+mx234a_placement_hw:
+  id:               16
+  design_review_id: 2
+  reviewer_id:      7001
+  role_id:          5
+  result:           None
+mx234a_placement_mech:
+  id:               17
+  design_review_id: 2
+  reviewer_id:      7251
+  role_id:          10
+  result:           None
+mx234a_placement_mech_mfg:
+  id:               18
+  design_review_id: 2
+  reviewer_id:      7300
+  role_id:          11
+  result:           None
+mx234a_routing_slm_v:
+  id:               36
+  design_review_id: 3
+  reviewer_id:      7550
+  role_id:          18
+  result:           None
+mx234a_placement_tde:
+  id:               19
+  design_review_id: 2
+  reviewer_id:      7200
+  role_id:          9
+  result:           None
+mx234a_route_ce_dft:
+  id:               20
+  design_review_id: 3
+  reviewer_id:      7101
+  role_id:          7
+  result:           None
+mx234a_route_dfm:
+  id:               21
+  design_review_id: 3
+  reviewer_id:      7150
+  role_id:          8
+  result:           None
+mx234a_route_hw:
+  id:               22
+  design_review_id: 3
+  reviewer_id:      7001
+  role_id:          5
+  result:           None
+mx234a_route_mech_mfg:
+  id:               23
+  design_review_id: 3
+  reviewer_id:      7300
+  role_id:          11
+  result:           None
+mx234a_final_ce_dft:
+  id:               24
+  design_review_id: 4
+  reviewer_id:      7101
+  role_id:          7
+  result:           None
+mx234a_final_dfm:
+  id:               25
+  design_review_id: 4
+  reviewer_id:      7150
+  role_id:          8
+  result:           None
+mx234a_final_hw:
+  id:               26
+  design_review_id: 4
+  reviewer_id:      7001
+  role_id:          5
+  result:           None
+mx234a_final_mech:
+  id:               27
+  design_review_id: 4
+  reviewer_id:      7251
+  role_id:          10
+  result:           None
+mx234a_final_mech_mfg:
+  id:               28
+  design_review_id: 4
+  reviewer_id:      7300
+  role_id:          11
+  result:           None
+mx234a_final_pcb_design:
+  id:               29
+  design_review_id: 4
+  reviewer_id:      4001
+  role_id:          12
+  result:           None
+mx234a_final_plan:
+  id:               30
+  design_review_id: 4
+  reviewer_id:      7650
+  role_id:          13
+  result:           None
+mx234a_final_tde:
+  id:               31
+  design_review_id: 4
+  reviewer_id:      7200
+  role_id:          9
+  result:           None
+mx234a_final_valor:
+  id:               32
+  design_review_id: 4
+  reviewer_id:      7050
+  role_id:          6
+  result:           None
+mx234a_release_hw:
+  id:               33
+  design_review_id: 5
+  reviewer_id:      7001
+  role_id:          5
+  result:           None
+mx234a_release_ops:
+  id:               34
+  design_review_id: 5
+  reviewer_id:      7601
+  role_id:          19
+  result:           None
+mx234a_release_pcb_design:
+  id:               35
+  design_review_id: 5
+  reviewer_id:      4001
+  role_id:          12
+  result:           None
+
