@@ -33,9 +33,9 @@
        cellpadding="2">
   <tr>
     <th width="90" align="left">Designer:</th>
-    <td><%= flash[:details][:designer_name] %></td>
+    <td><%= flash[:details][:designer].name %></td>
     <th width="60" aligh="left">Peer:</th>
-    <td><%= flash[:details][:peer_name] %></td>
+    <td><%= flash[:details][:peer].name %></td>
   </tr>
   <tr>
     <th width="90" align="left">Type:</th>
@@ -82,7 +82,7 @@
         </tr>
       </table>
     </td>
-    <td rowspan="3"
+    <td rowspan="4"
          valign="top">
       <table border="0"
               width="100%">
@@ -108,7 +108,8 @@
             <th align="left"><%= reviewer[:group] %>: </th>
             <td>
               <select id="<%= "board_reviewers_#{reviewer[:group]}" %>" 
-                       name="<%= "board_reviewers[#{reviewer[:group]}]" %>">
+                      name="<%= "board_reviewers[#{reviewer[:group]}]" %>"
+                      class="name_select">
                 <%=  options_from_collection_for_select(reviewer[:reviewers],
                                                         "id",
                                                         "name",
@@ -125,15 +126,41 @@
       <table border="0" width="100%">
         <tr>
           <th class="teraheader">
+            Design Center
+          </th>
+        </tr>
+        <tr>
+          <td>
+            <% if flash[:details][:designer].design_center_id > 0 %>
+              <select id='design_center[id]' name='design_center[id]'>
+                <%= options_from_collection_for_select(@design_centers,
+                                                       "id",
+                                                       "name",
+                                                       @session[:user].design_center_id) %>
+              </select>
+            <% else %>
+              <%= collection_select(:design_center,
+                                    :id,
+                                    @design_centers,
+                                    :id,
+                                    :name) %>
+            <% end %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table border="0" width="100%">
+        <tr>
+          <th class="teraheader">
             Priority
           </th>
         </tr>
         <tr>
-          <td>&nbsp;</td>
-        </tr>
-        <tr>
           <td>
-            <%= collection_select(:priority, :id, @priority_list, :id, :name ) %>
+            <%= collection_select(:priority, :id, @priority_list, :id, :name) %>
           </td>
         </tr>
       </table>
