@@ -35,12 +35,28 @@ class DesignReviewMailer < ActionMailer::Base
   #
   def update(user, design_review, comment_update, result_update)
 
-    updates  = ''
-    updates  = 'Comments '      if comment_update
-    updates += 'and '           if updates != '' && result_update
-    updates += 'Review Results' if result_update
+    review_results = ''
+    subject        = "#{design_review.design.name}::#{design_review.review_name}"
 
-    @subject    = "#{design_review.design.name}: #{design_review.review_name} Review updated with #{updates}"
+    if comment_update && !result_update
+      @subject    = "#{subject} - Comments added"
+    elsif result_update
+      
+      results = DesignReviewResult.find_all(
+        "design_review_id=#{design_review.id} and reviewer_id='#{user.id}'")
+
+      0.upto(results.size-1) { |i|
+        review_results += "#{results[i].role.name} - #{results[i].result}"
+        review_results += ', ' if results.size > 1 && i < (results.size-1)
+        }
+
+        if comment_update
+          @subject    = "#{subject}  #{review_results} - See comments"
+        else
+          @subject    = "#{subject}  #{review_results} - No comments"
+        end
+
+    end
 
     @recipients = reviewer_list(design_review)
     @from       = Pcbtr::SENDER
@@ -135,16 +151,13 @@ class DesignReviewMailer < ActionMailer::Base
 
   def reviewer_list(design_review)
 
-    logger.info "######################## reviewer_list(#{design_review.id})"
     reviewers = []
     design_review_results = 
       DesignReviewResult.find_all_by_design_review_id(design_review.id)
-    logger.info "### FOUND #{design_review_results.size} REVIEWERS"
-      
+
     for dr_result in design_review_results
       reviewer = User.find(dr_result.reviewer_id)
       reviewers << reviewer.email if reviewer.active?
-      logger.info "### ADDED #{reviewer.name} TO THE ADDRESSEE LIST"
     end
 
     return reviewers.uniq

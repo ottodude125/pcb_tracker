@@ -17,14 +17,15 @@ class Document < ActiveRecord::Base
   has_many :design_review_documents
   
   
-  MAX_FILE_SIZE = 167772
+  MAX_FILE_SIZE = 16777216
   
   def document=(document_field)
-    self.name = base_part_of(document_field.original_filename)
-    self.content_type = document_field.content_type
-    self.data = document_field.read
-    logger.info " #### NAME: #{self.name}  CONTENT TYPE: #{self.content_type}"
-    #logger.info " #### DATA: #{self.data}"
+    self.name         = base_part_of(document_field.original_filename)
+    self.content_type = document_field.content_type.chomp
+    self.data         = document_field.read
+#breakpoint
+    #logger.info " #### NAME: #{self.name}  CONTENT TYPE: #{self.content_type}"
+    #logger.info " #### DATA SIZE: #{self.data.size}"
   end
 
   def base_part_of(file_name)

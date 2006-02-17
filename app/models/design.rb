@@ -30,7 +30,7 @@ class Design < ActiveRecord::Base
 
     reviewers = BoardReviewers.find_all("board_id=#{board_id}")
 
-      board_reviewers = Hash.new
+    board_reviewers = Hash.new
     for reviewer in reviewers
       board_reviewers[Role.find(reviewer.role_id).name] = reviewer.reviewer_id
     end

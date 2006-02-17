@@ -45,8 +45,8 @@ class ReviewReassignment < ActionMailer::Base
     
     peers     = role.users.sort_by { |u| user.last_name }
     peer_list = Array.new
-    for peer in peers
-      peer_list << peer.email
+    for reviewer_peer in peers
+      peer_list << reviewer_peer.email
     end
 
     cc_list = peer_list + [designer.email]
@@ -95,8 +95,8 @@ class ReviewReassignment < ActionMailer::Base
 
     peers     = role.users.sort_by { |u| user.last_name }
     peer_list = Array.new
-    for peer in peers
-      peer_list << peer.email
+    for reviewer_peer in peers
+      peer_list << reviewer_peer.email
     end
 
     cc_list = peer_list + [designer.email]
