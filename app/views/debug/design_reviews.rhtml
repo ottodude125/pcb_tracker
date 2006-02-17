@@ -1,0 +1,144 @@
+<h1>Designs</h1>
+
+
+<h3>Board</h3>
+
+<table border="1">
+
+  <tr align="left">
+    <th>ID</th>
+    <th>NAME</th>
+    <th>PREFIX</th>
+    <th>NUMBER</th>
+    <th>PLATFORM</th>
+    <th>PROJECT</th>
+    <th>ACTIVE?</th>
+    <th>DESIGNS</th>
+  </tr>
+
+  <tr align="left">
+    <td><%= @board.id %></td>
+    <td><%= @board.name %></td>
+    <td><%= @board.prefix.pcb_mnemonic %></td>
+    <td><%= @board.number %></td>
+    <td><%= @board.platform.name %></td>
+    <td><%= @board.project.name %></td>
+    <td><%= @board.active? %></td>
+    <td align="center"><%= @board.designs.size%></td>
+  </tr>
+
+</table>
+
+<h3>Designs</h3>
+
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>NAME</th>
+    <th>PRIORITY</th>
+    <th>REVISION</th>
+    <th>SUFFIX</th>
+    <th>TYPE</th>
+    <th>DESIGNER</th>
+    <th>PEER</th>
+    <th>CREATED</th>
+  </tr>
+  
+
+  <tr>
+    <td><%= @design.id %></td>
+    <td><%= @design.name %></td>
+    <td><%= @design.priority.name %></td>
+    <td><%= Revision.find(@design.revision_id).name %></td>
+    <% if @design.suffix_id %>
+      <td><%= Suffix.find(@design.suffix_id).name %></td>
+    <% else %>
+      <td>&nbsp;</td>
+    <% end %>
+    <td><%= @design.design_type %></td>
+    <td><%= User.find(@design.designer_id).name %></td>
+    <td><%= User.find(@design.peer_id).name %></td>
+    <td><%= @design.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
+  </tr>
+
+</table>
+
+
+<h3>Design Reviews</h3>
+
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>POSTING</th>
+    <th>DESIGNER</th>
+    <th>DESIGN CENTER</th>
+    <th>STATUS</th>
+    <th>REVIEW TYPE</th>
+    <th>REVIEW TYPE</th>
+    <th>PRIORITY</th>
+    <th>CREATOR</th>
+    <th>CREATED</th>
+    <th>REPOSTED</th>
+    <th>COMPLETED</th>
+  </tr>
+  
+  <% for dr in @design_reviews %>
+  
+    <tr>
+    
+      <td><%= dr.id %></td>
+      <td><%= dr.posting_count %></td>
+      <td><%= User.find(dr.designer_id).name %></td>
+      <td><%= dr.design_center.name %></td>
+      <td><%= dr.review_status.name %></td>
+      <td><%= dr.review_type.name %></td>
+      <td>
+        <% if dr.review_type_id_2 > 0 %>
+          <% ReviewType.find(dr.review_type_id_2) %>
+        <% else %>
+          &nbsp;
+        <% end %>
+      </td>
+      <td><%= dr.priority.name %></td>
+      <td><%= User.find(dr.creator_id).name %>
+      <td><%= dr.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
+      <td><%= dr.reposted_on.strftime("%d-%b-%y, %I:%M %p") %></td>
+      <td><%= dr.completed_on.strftime("%d-%b-%y, %I:%M %p") %></td>
+    
+    </tr>
+    
+    <tr>
+      <td>&nbsp;</td>
+      <td colspan="11">
+      
+        <table border="1" width="100%">
+          <tr>
+            <th colspan="5">Review Results</th>
+          </tr>
+          
+          <tr>
+            <th>ID</th>
+            <th>REVIEWER</th>
+            <th>ROLE</th>
+            <th>RESULT</th>
+            <th>REVIEWED</th>
+          </tr>
+          
+          <% for result in design_reviews(dr.id) %>
+            <tr>
+              <td><%= result.id %></td>
+              <td><%= User.find(result.reviewer_id).name %></td>
+              <td><%= result.role.name %></td>
+              <td><%= result.result %></td>
+              <td><%= result.reviewed_on.strftime("%d-%b-%y, %I:%M %p") %></td>
+            </tr>
+          <% end %>
+          
+        </table>
+      
+      </td>
+    </tr>
+  
+  <% end %>
+  
+</table>

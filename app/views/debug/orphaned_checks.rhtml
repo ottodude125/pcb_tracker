@@ -1,0 +1,19 @@
+<p>
+Orphaned Checks - Section
+</p>
+
+<% @section_list.each { |check_id, section_id| %>
+
+  <p><%= check_id %> -> <%= section_id %></p>
+
+<% } %>
+
+<p>
+Orphaned Checks - Subsection
+</p>
+
+<% @subsection_list.each { |check_id, subsection_id| %>
+
+  <p><%= check_id %> -> <%= subsection_id %></p>
+
+<% } %>

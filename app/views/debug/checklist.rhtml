@@ -1,0 +1,71 @@
+<p>
+  checklist: <%= @checklist.major_rev_number %>.<%= @checklist.minor_rev_number %>
+</p>
+
+<table>
+  <tr>
+    <th width='30'>ID</th>
+    <th>Rel?</th>
+    <th>Used?</th>
+    <th>Sections</th>
+    <th>Subsections</th>
+    <th>Checks</th>
+  </tr>
+  
+  <tr>
+    <td><%= @checklist.id %></td>
+    <td><%= @checklist.released? %></td>
+    <td><%= @checklist.used? %></td>
+    <td><%= @checklist.sections.size %></td>
+    <td><%= @subsection_count %></td>
+    <td><%= @check_count %></td>
+  </tr>
+  
+  <% sections = @checklist.sections.sort_by { |s| s.sort_order } %>
+  
+  <% for section in sections %>
+    <% subsections = section.subsections.sort_by { |s| s.sort_order } %>
+    
+    <table border='0'>
+      <tr>
+        <th width='150' align='left'>Section ID: </th>
+        <td><%= section.id %></td>
+        <th>Sort Order: </th>
+        <td><%= section.sort_order %></td>
+        <th># of Subsections: </th>
+        <td><%= subsections.size %></td>
+      </tr>
+      
+      <% for subsect in subsections %>
+        <% checks = subsect.checks.sort_by { |c| c.sort_order } %>
+        <tr>
+          <th align='right'>Subsection ID:</th>
+          <td><%= subsect.id %></td>
+          <th>Sort Order: </th>
+          <td><%= subsect.sort_order %></td>
+          <th align='right'># of Checks: </th>
+          <td><%= checks.size %></td>
+        </tr>
+        
+        <% for check in checks %>
+          <tr>
+            <th align='right'>Check ID:</th>
+            <td><%= check.id %></td>
+            <th>Sort Order: </th>
+            <td><%= check.sort_order %></td>
+          </tr>
+        <% end %>
+        
+      <% end %>
+      
+    </table>
+  <% end %>
+  
+  
+  <% for message in @messages %>
+    <p>
+      <%= message %>
+    </p>
+  <% end %>
+  
+</table>

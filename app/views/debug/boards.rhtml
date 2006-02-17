@@ -1,0 +1,38 @@
+<h1>Boards</h1>
+
+<table border="1">
+
+  <tr>
+    <th>#</th>
+    <th>ID</th>
+    <th>NAME</th>
+    <th>PREFIX</th>
+    <th>NUMBER</th>
+    <th>PLATFORM</th>
+    <th>PROJECT</th>
+    <th>ACTIVE?</th>
+    <th>DESIGNS</th>
+  </tr>
+
+  <% line_number = 0 %>
+  <% for board in @boards %>
+
+    <tr>
+      <td><%= line_number += 1 %></td>
+      <td><%= board.id %></td>
+      <td><%= board.name %></td>
+      <td><%= board.prefix.pcb_mnemonic %></td>
+      <td><%= board.number %></td>
+      <td><%= board.platform.name %></td>
+      <td><%= board.project.name %></td>
+      <td><%= board.active? %></td>
+      <td align="center">
+          <%= link_to(board.designs.size.to_s,
+                      { :action => 'designs',
+                        :id     => board.id}) %>
+      </td>
+    </tr>
+
+  <% end %>
+  
+</table>
