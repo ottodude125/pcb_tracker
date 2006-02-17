@@ -24,10 +24,16 @@
           <tr>
             <th align="left"
                 width="130">Design:</th>
-            <td width="250">
+            <td colspan="3">
               <%= @design.name %> -
               <%= @design.board.platform.name %> /
               <%= @design.board.project.name %>
+            </td>
+          <tr>
+          </tr>
+            <th align="left">Designer:</th>
+            <td width="250">
+              <%= User.find(@design_review.designer_id).name %>
             </td>
             <th align="left"
                 width="140">Design Center:</th>
@@ -140,6 +146,7 @@
             </tr>
             
             <% if pre_art_pcb(@design_review, @my_review_results) %>
+            <% design_info = get_design_info(@design) %>
               <tr>
                 <td>
                   <table border="0">
@@ -150,7 +157,7 @@
                         <%= options_from_collection_for_select(@priorities,
                                                                :id, 
                                                                :name,
-                                                               @design.priority_id) %>
+                                                               design_info[:priority_id]) %>
                         </select>
                       </td>
                     </tr>
@@ -161,7 +168,7 @@
                         <%= options_from_collection_for_select(@designers,
                                                                :id, 
                                                                :name,
-                                                               @design.designer_id) %>
+                                                               design_info[:designer_id]) %>
                         </select>
                       </td>
                     </tr>
@@ -204,8 +211,7 @@
                              :design_review_id => @design_review.id}) %>
             </td>
           </tr>
-          <%# if not @design_review.review_status.name == "Pending Repost" %>
-          <% if reviewer_peer(@review_results) %>
+          <% if design_review_reassignable(@design_review) %>
             <tr>
               <td>
                 <%= link_to(image_tag('reassign_reviewer'),
