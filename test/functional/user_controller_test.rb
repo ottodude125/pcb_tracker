@@ -186,7 +186,7 @@ class UserControllerTest < Test::Unit::TestCase
     # Make sure that an admin can create a new user.
     set_admin
     post(:create,
-         :user => {
+         :new_user => {
            :login                 => "newbob", 
            :password              => "newpassword", 
            :password_confirmation => "newpassword",
@@ -205,7 +205,7 @@ class UserControllerTest < Test::Unit::TestCase
 
     # Make sure that the defaults are loaded properly.
     post(:create,
-         :user => {
+         :new_user => {
            :login                 => "", 
            :password              => "newpassword", 
            :password_confirmation => "newpassword",
