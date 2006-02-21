@@ -335,7 +335,7 @@ class DesignReviewController < ApplicationController
   #
   def post_review
 
-    @design = Design.find(@params[:design_id])
+    @design        = Design.find(@params[:design_id])
     design_reviews = DesignReview.find_all_by_design_id(@design.id)
     review_type    = ReviewType.find(@params[:review_type_id])
     @design_review = design_reviews.find { |dr|  dr.review_type_id == review_type.id }
@@ -440,8 +440,9 @@ class DesignReviewController < ApplicationController
   ######################################################################
   #
   def post
-    
-    design_review  = DesignReview.find(@params[:design_review][:id])
+
+
+    design_review = DesignReview.find(@params[:design_review][:id])
 
     # Set the status for the design review.
     in_review = ReviewStatus.find_by_name('In Review')
@@ -1320,8 +1321,10 @@ class DesignReviewController < ApplicationController
         for review in design.design_reviews
           next if review.id == design_review.id
           if designer_update
-            review.designer_id      = review_results[:designer]["id"]
-            review.design_center_id = User.find(review.designer_id).design_center.id
+            if review.review_type.name != "Release"
+              review.designer_id      = review_results[:designer]["id"]
+              review.design_center_id = User.find(review.designer_id).design_center.id
+            end            
           end
           review.priority_id = review_results[:priority]["id"] if priority_update
           review.update
@@ -1367,24 +1370,27 @@ class DesignReviewController < ApplicationController
         # Check the design's designer and priority information against the 
         # next review, if there is one, and update the design record, if they
         # do not match.
-        reviews = ReviewType.find_all('active=1', 'sort_order ASC')
-        current_i = 0
-        0.upto(reviews.size-1) { |i|
-          current_i = i
-          break if reviews[i].id == design_review.review_type_id
-        }
+        not_started = ReviewStatus.find_by_name("Not Started")
+        design = Design.find(design_review.design_id)
 
-        if current_i < (reviews.size-1)
-          next_review = reviews[current_i+1]
-          design_reviews = DesignReview.find_all_by_design_id(design_review.design_id)
-          next_design_review = design_reviews.find { |dr| 
-            dr.review_type_id == next_review.id
-          }
-          design = Design.find(next_design_review.design_id)
+        design_reviews = DesignReview.find_all_by_design_id(design.id)
+        design_reviews = design_reviews.sort_by { |dr| dr.review_type.sort_order}
+
+        for design_review in design_reviews
+          if design_review.review_status.id == not_started.id
+            next_design_review = design_review
+            break
+          end
+        end
+        
+        if next_design_review
           design.designer_id = next_design_review.designer_id
           design.priority_id = next_design_review.priority_id
-          design.update
+          design.phase_id    = next_design_review.review_type_id
+        else
+          design.phase_id = Design::COMPLETE
         end
+        design.update
       end
 
     end

@@ -44,10 +44,100 @@ class TrackerController < ApplicationController
         redirect_to :action => :manager_home
       when "Admin"      
         redirect_to :action => :admin_home
+      when "PCB Admin"
+        redirect_to :action => :pcb_admin_home
       else
         redirect_to :action => :reviewer_home
       end
     end
+  end
+
+
+  ######################################################################
+  #
+  # pcb_admin_home
+  #
+  # Description:
+  # This method gathers the information to display the PCB Admin's 
+  # home page.
+  #
+  # Parameters from @params
+  # None
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def pcb_admin_home
+  
+    @designer = Hash.new
+
+    release_review = ReviewType.find_by_name('Release')
+    designs = Design.find_all_by_phase_id(release_review.id,
+                                          'created_on ASC')
+    designs = designs.sort_by { |dr| dr.priority.value }
+        
+    @design_list = Array.new
+    for design in designs
+      
+      design_summary = Hash.new
+      design_summary[:design] = design
+
+      design_reviews = DesignReview.find_all("design_id='#{design.id}'")
+      reviews = design_reviews.sort_by{ |r| r.review_type.sort_order }
+
+      # Go through the reviews until the first review that has not been
+      # started is found.
+      review_list = Array.new
+	    reviews_started = 0
+
+      for review in reviews
+
+        next_review = review
+        
+        break if review.review_status.name == 'Not Started'
+        last_status = review.review_status.name
+        
+        reviews_started += 1
+
+        review_rec = Hash.new
+        review_rec[:review]    = review
+        review_results = DesignReviewResult.find_all("design_review_id='#{review.id}'")
+        review_rec[:reviewers] = review_results.size
+        review_results.delete_if { |dr| dr.result != 'APPROVED' && dr.result != 'WAIVED' }
+        review_rec[:approvals] = review_results.size
+        review_list.push(review_rec)
+
+      end
+
+      design_summary[:reviews]     = review_list
+
+	    if reviews_started == 0
+	      design_summary[:next_review] = reviews[0]
+	    elsif reviews.size == review_list.size
+        design_summary[:next_review] = nil
+	    elsif last_status == "Review Completed"
+	      design_summary[:next_review] = next_review
+      else
+	      design_summary[:next_review] = nil
+	    end
+
+      audit = Audit.find_all("design_id='#{design.id}'").pop
+      design_summary[:audit] = audit
+
+      num_checks = Audit.check_count(audit.id)
+	
+      design_summary[:percent_complete]      = 
+        audit.designer_completed_checks * 100.0 / num_checks[:designer]
+      design_summary[:peer_percent_complete] = 
+        audit.auditor_completed_checks * 100.0 / num_checks[:peer]
+
+      @design_list.push(design_summary)
+    end
+
   end
 
 
@@ -116,7 +206,7 @@ class TrackerController < ApplicationController
 	      design_summary[:next_review] = reviews[0]
 	    elsif reviews.size == review_list.size
         design_summary[:next_review] = nil
-	    elsif last_status == "Review Completed"
+	    elsif next_review && next_review.review_status.name == "Not Started"
 	      design_summary[:next_review] = next_review
       else
 	      design_summary[:next_review] = nil
