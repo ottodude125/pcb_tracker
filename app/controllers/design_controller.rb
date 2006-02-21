@@ -392,8 +392,22 @@ class DesignController < ApplicationController
 
     details = flash[:details]
 
+    # Determine the first review in the cycle
+    phase_id   = Design::COMPLETE
+    sort_order = Design::COMPLETE
+    @params[:review_type].each { |review, active|
+      next if active == '0'
+
+      review_type = ReviewType.find_by_name(review)
+      if review_type.sort_order < sort_order
+        phase_id   = review_type.id
+        sort_order = review_type.sort_order
+      end
+    }
+
     design = Design.new
     design.name        = details[:design_name]
+    design.phase_id    = phase_id
     design.board_id    = details[:board_id]
     design.revision_id = details[:revision_id]
     design.suffix_id   = details[:suffix_id]
@@ -419,6 +433,10 @@ class DesignController < ApplicationController
 
         if review_type.name == "Pre-Artwork"
           design_review.designer_id      = design.designer_id
+          design_review.design_center_id = @params[:design_center][:id]
+        elsif review_type.name == "Release"
+          # NOTE: This assumes that there is only one PCB Admin.
+          design_review.designer_id = Role.find_by_name("PCB Admin").users.pop.id
           design_review.design_center_id = @params[:design_center][:id]
         else
           designer = User.find(design.designer_id)
@@ -464,6 +482,20 @@ class DesignController < ApplicationController
             design_review_result.role_id          = role.id
             
             design_review_result.save
+
+            # Check the role (group) to see if the reviewer's peers should
+            # get copied on the mail.
+            if design_review_result.role.cc_peers?
+              cc_list = design_review_result.role.users
+              for peer in cc_list
+                if (peer.id == design_review_result.reviewer_id or
+                    ! peer.active?                              or
+                    design_review.design.board.users.include?(peer))
+                  next
+                end
+                  design_review.design.board.users << peer
+              end
+            end
           end
         }  # each board reviewer
       }  # each review type
@@ -512,12 +544,9 @@ class DesignController < ApplicationController
 
       for review_result in review_results
 
-        # Check to see if the reviewer is already in the list before
-        # adding.
-        next if reviewers.find { |r| r[:id] == review_result.reviewer_id }
-
+        next if reviewers.find{ |r| r[:group] == review_result.role.name }
+        
         reviewer = User.find(review_result.reviewer_id)
-
         reviewer = {
           :name      => reviewer.name,
           :group     => review_result.role.name,
@@ -526,31 +555,31 @@ class DesignController < ApplicationController
         }
 
         reviewers.push(reviewer)
+      end
+    end
+    
+    @reviewers = reviewers.sort_by { |reviewer| reviewer[:last_name] }
+      
+    # Get all of the users who are on the CC list for the board
+    users_on_cc_list = []
+    for user in @design.board.users
+      users_on_cc_list.push(user.id)
+    end
 
-        @reviewers = reviewers.sort_by { |reviewer| reviewer[:last_name] }
+    # Get all of the active users.
+    users = User.find_all('active=1', 'last_name ASC')
+    for reviewer in @reviewers
+      users.delete_if { |user| user.id == reviewer[:id] }
+    end
 
-        # Get all of the users who are on the CC list for the board
-        users_on_cc_list = []
-        for user in @design.board.users
-          users_on_cc_list.push(user.id)
-        end
-
-        # Get all of the active users.
-        users = User.find_all('active=1', 'last_name ASC')
-        for reviewer in @reviewers
-          users.delete_if { |user| user.id == reviewer[:id] }
-        end
-
-        @users_copied     = []
-        @users_not_copied = []
-        for user in users
-          next if user.id == @design.designer_id
-          if users_on_cc_list.include?(user.id)
-            @users_copied.push(user)
-          else
-            @users_not_copied.push(user)
-          end
-        end
+    @users_copied     = []
+    @users_not_copied = []
+    for user in users
+      next if user.id == @design.designer_id
+      if users_on_cc_list.include?(user.id)
+        @users_copied.push(user)
+      else
+        @users_not_copied.push(user)
       end
     end
 
@@ -633,8 +662,9 @@ class DesignController < ApplicationController
 
   def initial_attachments
 
-    @design         = Design.find(@params[:design_id])
+    @design        = Design.find(@params[:design_id])
     document_types = DocumentType.find_all(nil, 'name ASC')
+    @pre_art        = ReviewType.find_by_name("Pre-Artwork")
 
     @documents = []
     for doc_type in document_types
