@@ -22,6 +22,9 @@ class Design < ActiveRecord::Base
   has_one   :audit
 
 
+  COMPLETE = 999
+  
+
   private
 
   def self.get_reviewers(board_id, role_list=nil)
