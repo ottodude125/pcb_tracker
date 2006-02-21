@@ -35,6 +35,7 @@
   <tr>
     <th>ID</th>
     <th>NAME</th>
+    <th>PHASE</th>
     <th>PRIORITY</th>
     <th>REVISION</th>
     <th>SUFFIX</th>
@@ -48,6 +49,15 @@
   <tr>
     <td><%= @design.id %></td>
     <td><%= @design.name %></td>
+    <td>
+      <% if @design.phase_id == 0 %>
+        NOT SET
+      <% elseif @design.phase_id == Design::COMPLETE %>
+        COMPLETE
+      <% else %>
+        <%= ReviewType.find(@design.phase_id).name %>
+      <% end %>
+    </td>
     <td><%= @design.priority.name %></td>
     <td><%= Revision.find(@design.revision_id).name %></td>
     <% if @design.suffix_id %>
