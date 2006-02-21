@@ -276,7 +276,7 @@ class UserController < ApplicationController
   #
   def create
 
-    @user = User.new(@params[:user])
+    @user = User.new(@params[:new_user])
     
     # If the user left the login and/or email fields blank, set
     # to the default
