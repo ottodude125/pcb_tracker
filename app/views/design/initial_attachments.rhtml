@@ -15,7 +15,7 @@
   <table width="100%">
     <tr>
       <td align="left">
-        <input type="button" value="Post Pre-Artwork Review" onClick="parent.location='<%= url_for( :controller => 'board', :action => 'list' ) %>'" />
+        <input type="button" value="Post Pre-Artwork Review" onClick="parent.location='<%= url_for( :controller => 'design_review', :action => 'post_review', :design_id => @design.id, :review_type_id => @pre_art.id) %>'" />
       </td>
       <td align="right">
         <input type="button" value="Done" onClick="parent.location='<%= url_for( :controller => 'board', :action => 'list' ) %>'" />
@@ -76,7 +76,7 @@
 
   <hr class="div" />
 
-  <input type="submit" value="New Attachment" />
+  <input type="submit" value="New Attachment - Not Working" />
 
   <%= end_form_tag %>
 
