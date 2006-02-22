@@ -52,7 +52,7 @@
     <td>
       <% if @design.phase_id == 0 %>
         NOT SET
-      <% elseif @design.phase_id == Design::COMPLETE %>
+      <% elsif @design.phase_id == Design::COMPLETE %>
         COMPLETE
       <% else %>
         <%= ReviewType.find(@design.phase_id).name %>
