@@ -1,5 +1,28 @@
+#
+# $Id$
+#
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-first_design_review_document:
-  id: 1
-another_design_review_document:
-  id: 2
+mx234a_stackup_doc:
+  id:               1
+  board_id:         1
+  design_id:        1
+  document_type_id: 1
+  document_id:      1
+mx234a_eng_notes_doc:
+  id:               2
+  board_id:         1
+  design_id:        1
+  document_type_id: 4
+  document_id:      3
+mx234a_other_1_doc:
+  id:               3
+  board_id:         1
+  design_id:        1
+  document_type_id: 3
+  document_id:      2
+mx234a_other_2_doc:
+  id:               4
+  board_id:         1
+  design_id:        1
+  document_type_id: 3
+  document_id:      4
