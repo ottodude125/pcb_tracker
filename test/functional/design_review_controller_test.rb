@@ -28,9 +28,12 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   fixtures(:board_reviewers,
            :boards,
            :design_centers,
+           :design_review_documents,
            :design_review_results,
            :design_reviews,
            :designs,
+           :documents,
+           :document_types,
            :priorities,
            :review_statuses,
            :users)
@@ -952,9 +955,43 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #
   ######################################################################
   #
-  def ntest_review_attachments
-    assert true
-    print('?')
+  def test_review_attachments
+
+  set_user(users(:scott_g).id, 'Designer')
+
+    mx234a = design_reviews(:mx234a_pre_artwork)
+    post(:review_attachments,
+         :design_review_id => mx234a.id)
+
+    assert_equal(mx234a.id,           assigns(:design_review).id)
+    assert_equal(designs(:mx234a).id, assigns(:design_review).design_id)
+
+    documents = assigns(:documents)
+    assert_equal(4, documents.size)
+
+    expected_documents = [
+      {:document_type_id => 1,
+       :document_name    => 'mx234a_stackup.doc',
+       :creator          => 'Cathy McLaren'},
+      {:document_type_id => 3,
+       :document_name    => 'go_pirates.xls',
+       :creator          => 'Scott Glover'},
+      {:document_type_id => 3,
+       :document_name    => 'go_red_sox.xls',
+       :creator          => 'Scott Glover'},
+      {:document_type_id => 4,
+       :document_name    => 'eng_notes.xls',
+       :creator          => 'Lee Schaff'}
+    ]
+
+    for document in documents
+      expected_doc = expected_documents.pop
+      assert_equal(expected_doc[:document_type_id], document["document_type_id"])
+      assert_equal(expected_doc[:document_name],    document.document.name)
+      assert_equal(expected_doc[:creator],          
+                   User.find(document.document.created_by).name)
+    end
+    
   end
 
 
