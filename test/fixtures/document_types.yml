@@ -1,3 +1,6 @@
+#
+# $Id$
+#
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 stackup:
   id:     1
@@ -7,3 +10,11 @@ doc_one:
   id:     2
   name:   Document_One
   active: 0
+other:
+  id:     3
+  name:   Other
+  active: 1
+eng_inst:
+  id:     4
+  name:   Eng Notes
+  active: 1
