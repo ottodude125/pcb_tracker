@@ -1,5 +1,25 @@
+#
+# $Id$
+#
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-first_document:
-  id: 1
-another_document:
-  id: 2
+mx234a_stackup_document:
+  id:         1
+  name:       mx234a_stackup.doc
+  created_on: 20060222114526
+  created_by: 4000
+mx234a_other_document_1:
+  id:         2
+  name:       go_pirates.xls
+  created_on: 20060222114526
+  created_by: 5001
+mx234a_eng_notes_document:
+  id:         3
+  name:       eng_notes.xls
+  created_on: 20060222114526
+  created_by: 7001
+mx234a_other_document_2:
+  id:         4
+  name:       go_red_sox.xls
+  created_on: 20060222114526
+  created_by: 5001
+
