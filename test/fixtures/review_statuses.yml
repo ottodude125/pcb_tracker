@@ -1,14 +1,20 @@
+#
+# $Id$
+#
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 in_review:
   id:   1
   name: In Review
 review_complete:
   id:   2
-  name: Review Complete
+  name: Review Completed
 not_started:
   id:   3
   name: Not Started
 review_skipped:
   id:   4
   name: Review Skipped
+pending_repost:
+  id:   5
+  name: Pending Repost
 
