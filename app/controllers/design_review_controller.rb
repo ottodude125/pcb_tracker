@@ -703,7 +703,7 @@ class DesignReviewController < ApplicationController
  
     @design_review = DesignReview.find(@params[:design_review_id])
     document_types = DocumentType.find_all(nil, 'name ASC')
-    
+
     @documents = Array.new
     for doc_type in document_types
       docs = DesignReviewDocument.find_all("board_id='#{@design_review.design.board_id}' " +
@@ -1319,8 +1319,13 @@ class DesignReviewController < ApplicationController
 
       if designer_update || priority_update
         for review in design.design_reviews
-          next if review.id == design_review.id
-          if designer_update
+          
+          if review.id == design_review.id
+            design_review.priority_id = review_results[:priority]["id"] if priority_update
+            next
+          end
+          
+          if designer_update && review.id != design_review.id
             if review.review_type.name != "Release"
               review.designer_id      = review_results[:designer]["id"]
               review.design_center_id = User.find(review.designer_id).design_center.id
@@ -1382,7 +1387,7 @@ class DesignReviewController < ApplicationController
             break
           end
         end
-        
+
         if next_design_review
           design.designer_id = next_design_review.designer_id
           design.priority_id = next_design_review.priority_id
