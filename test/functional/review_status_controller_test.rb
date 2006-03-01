@@ -70,7 +70,7 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
     post(:list,
          :page => 1)
 
-    assert_equal(4, @review_statuses.size)
+    assert_equal(5, @review_statuses.size)
   end
 
 
@@ -150,7 +150,7 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
   #
   def test_create
 
-    assert_equal(4, ReviewStatus.find_all.size)
+    assert_equal(5, ReviewStatus.find_all.size)
 
     new_review_status = {
       'active' => '1',
@@ -160,13 +160,13 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
     post(:create,
          :new_review_status => new_review_status)
 
-    assert_equal(5,              ReviewStatus.find_all.size)
+    assert_equal(6,              ReviewStatus.find_all.size)
     assert_equal("Yankee added", flash['notice'])
     assert_redirected_to :action => 'list'
 
     post(:create,
          :new_review_status => new_review_status)
-    assert_equal(5, ReviewStatus.find_all.size)
+    assert_equal(6, ReviewStatus.find_all.size)
     assert_equal("Name already exists in the database",
                  flash['notice'])
     assert_redirected_to :action => 'add'
