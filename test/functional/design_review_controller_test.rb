@@ -957,7 +957,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #
   def test_review_attachments
 
-  set_user(users(:scott_g).id, 'Designer')
+    set_user(users(:scott_g).id, 'Designer')
 
     mx234a = design_reviews(:mx234a_pre_artwork)
     post(:review_attachments,
@@ -1015,9 +1015,21 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #   - The information needed for the display is loaded.
   #
   ######################################################################
-  def ntest_update_documents
-    assert true
-    print('?')
+  def test_update_documents
+
+    mx234a           = design_reviews(:mx234a_pre_artwork)
+    mx234a_eng_notes = design_review_documents(:mx234a_eng_notes_doc)
+  
+    set_user(users(:scott_g).id, 'Designer')
+    post(:update_documents,
+         :design_review_id => mx234a.id,
+         :document_id      => mx234a_eng_notes.id)
+
+    assert_equal(0,                         assigns(:drd).document_id)
+    assert_equal(mx234a.id,                 assigns(:design_review).id)
+    assert_equal(mx234a_eng_notes.id,       assigns(:existing_drd).id)
+    assert_equal(document_types(:eng_inst), assigns(:document_type))
+    
   end
 
 
@@ -1092,15 +1104,353 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   end
 
 
-  def ntest_review_results
-    assert true
-    print('?')
-  end
+  #
+  ######################################################################
+  #
+  # test_post_results
+  #
+  # Description:
+  # This method does the functional testing of the post results and
+  # reviewer_results methods from the Design Review class
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  # None
+  #
+  ######################################################################
+  #
+  def test_post_results
 
+    expected_results = {
+      '7'  => "No Response",
+      '8'  => "No Response",
+      '5'  => "No Response",
+      '15' => "No Response",
+      '10' => "No Response",
+      '11' => "No Response",
+      '14' => "No Response",
+      '16' => "No Response",
+      '13' => "No Response",
+      '17' => "No Response",
+      '18' => "No Response",
+      '9'  => "No Response",
+      '6'  => "No Response",
+      '12' => "No Response"
+    }
 
-  def ntest_post_results
-    assert true
-    print('?')
+    in_review      = ReviewStatus.find_by_name("In Review")
+    pending_repost = ReviewStatus.find_by_name("Pending Repost")
+    reviewer_result_list= [
+      # 1) Espo - CE-DFT Reviewer
+      {:user_id   => users(:espo).id,
+       :role_id   => 7,
+       :comment   => 'This is good!',
+       :result    => 'APPROVED',
+       :review_result_id => '1',
+       :role_id_tag      => 'role_id_7',
+       :expected_results => {
+         :comments_count   => 1,
+         :review_status_id => in_review.id
+       }
+      },
+      # 2) Heng Kit Too - DFM Reviewer
+      {:user_id   => users(:heng_k).id,
+       :role_id   => 8,
+       :comment   => 'This is good enough to waive.',
+       :result    => 'WAIVED',
+       :review_result_id => '2',
+       :role_id_tag      => ':role_id_8',
+       :expected_results => {
+         :comments_count => 2,
+         :review_status_id => in_review.id
+       }
+      },
+      # 3) Dave Macioce - Library Reviewer
+      {:user_id   => users(:dave_m).id,
+       :role_id   => 15,
+       :comment   => 'Yankees Suck!!!',
+       :result    => 'REJECTED',
+       :review_result_id => '4',
+       :role_id_tag      => ':role_id_15',
+       :expected_results => {
+         :comments_count => 3,
+         :review_status_id => pending_repost.id
+       }
+      },
+      # 4) Lee Shaff- HW Reviewer
+      {:user_id   => users(:lee_s).id,
+       :role_id   => 5,
+       :comment   => 'No Comment',
+       :result    => 'APPROVED',
+       :review_result_id => '3',
+       :role_id_tag      => ':role_id_5',
+       :expected_results => {
+         :comments_count => 4,
+         :review_status_id => in_review.id
+       }
+      },
+      # 5) Dave Macioce - Library Reviewer
+      {:user_id   => users(:dave_m).id,
+       :role_id   => 15,
+       :comment   => '',
+       :result    => 'APPROVED',
+       :review_result_id => '4',
+       :role_id_tag      => ':role_id_15',
+       :expected_results => {
+         :comments_count => 4,
+         :review_status_id => in_review.id
+       }
+      },
+      # 6) Espo - CE-DFT Reviewer
+      {:user_id   => users(:espo).id,
+       :role_id   => 7,
+       :comment   => 'This is good!',
+       :result    => 'APPROVED',
+       :review_result_id => '1',
+       :role_id_tag      => 'role_id_7',
+       :expected_results => {
+         :comments_count => 5,
+         :review_status_id => in_review.id
+       }
+      },
+      # 7) Tom Flak - Mehanical
+      {:user_id   => users(:tom_f).id,
+       :role_id   => 10,
+       :comment   => 'This is good!',
+       :result    => 'APPROVED',
+       :review_result_id => '5',
+       :role_id_tag      => 'role_id_10',
+       :expected_results => {
+         :comments_count => 6,
+         :review_status_id => in_review.id
+       }
+      },
+      # 8) Anthony Gentile - Mechanical MFG
+      {:user_id   => users(:anthony_g).id,
+       :role_id   => 11,
+       :comment   => '',
+       :result    => 'APPROVED',
+       :review_result_id => '6',
+       :role_id_tag      => 'role_id_11',
+       :expected_results => {
+         :comments_count => 6,
+         :review_status_id => in_review.id
+       }
+      },
+      # 9) Cathy McLaren - PCB Input Gate
+      {:user_id   => users(:cathy_m).id,
+       :role_id   => 14,
+       :comment   => 'I always have something to say.',
+       :result    => 'APPROVED',
+       :review_result_id => '7',
+       :role_id_tag      => 'role_id_14',
+       :expected_results => {
+         :comments_count => 7,
+         :review_status_id => in_review.id
+       }
+      },
+      # 10) John Godin - PCB Mehanical
+      {:user_id   => users(:john_g).id,
+       :role_id   => 16,
+       :comment   => '',
+       :result    => 'APPROVED',
+       :review_result_id => '8',
+       :role_id_tag      => 'role_id_16',
+       :expected_results => {
+         :comments_count => 7,
+         :review_status_id => in_review.id
+       }
+      },
+      # 11) Matt Disanzo - Planning
+      {:user_id   => users(:matt_d).id,
+       :role_id   => 13,
+       :comment   => 'Testing.',
+       :result    => 'APPROVED',
+       :review_result_id => '9',
+       :role_id_tag      => 'role_id_13',
+       :expected_results => {
+         :comments_count => 8,
+         :review_status_id => in_review.id
+       }
+      },
+      # 12) Arthur Davis - SLM BOM
+      {:user_id   => users(:art_d).id,
+       :role_id   => 17,
+       :comment   => '',
+       :result    => 'APPROVED',
+       :review_result_id => '10',
+       :role_id_tag      => 'role_id_17',
+       :expected_results => {
+         :comments_count => 8,
+         :review_status_id => in_review.id
+       }
+      },
+      # 13) Dan Gough - SLM Vendor
+      {:user_id   => users(:dan_g).id,
+       :role_id   => 18,
+       :comment   => '',
+       :result    => 'APPROVED',
+       :review_result_id => '11',
+       :role_id_tag      => 'role_id_18',
+       :expected_results => {
+         :comments_count => 8,
+         :review_status_id => in_review.id
+       }
+      },
+      # 14) Rich Ahamed - TDE
+      {:user_id   => users(:rich_a).id,
+       :role_id   => 9,
+       :comment   => '',
+       :result    => 'APPROVED',
+       :review_result_id => '12',
+       :role_id_tag      => 'role_id_9',
+       :expected_results => {
+         :comments_count => 8,
+         :review_status_id => in_review.id
+       }
+      },
+      # 15) Lisa Austin - Valor
+      {:user_id   => users(:lisa_a).id,
+       :role_id   => 6,
+       :comment   => '',
+       :result    => 'APPROVED',
+       :review_result_id => '13',
+       :role_id_tag      => 'role_id_6',
+       :expected_results => {
+         :comments_count => 8,
+         :review_status_id => in_review.id
+       }
+      },
+
+     ]
+
+    mx234a = design_reviews(:mx234a_pre_artwork)
+
+    update_mx234a = DesignReview.find(mx234a.id)
+    update_mx234a.review_status_id = ReviewStatus.find_by_name('In Review').id
+    update_mx234a.update
+
+    mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+    for mx234a_review_result in mx234a_review_results
+      mx234a_review_result.result = 'No Response'
+      mx234a_review_result.update
+    end
+
+    mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+
+    assert_equal(14, mx234a_review_results.size)
+    assert_equal(0, 
+                 DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
+    for review_result in mx234a_review_results
+      assert_equal("No Response", review_result.result)
+    end
+
+    print "\n"
+    repost = false
+    for reviewer_result in reviewer_result_list
+
+      if repost
+        update_mx234a = DesignReview.find(mx234a.id)
+        update_mx234a.review_status_id = ReviewStatus.find_by_name('In Review').id
+        update_mx234a.update
+      end
+      
+      rev = User.find(reviewer_result[:user_id]).name
+      print "\nProcessing #{rev} - #{reviewer_result[:result]}"
+      set_user(reviewer_result[:user_id], Role.find(reviewer_result[:role_id]))
+
+      post(:reviewer_results,
+           :post_comment  => {"comment"                          => reviewer_result[:comment]},
+           reviewer_result[:role_id_tag] => {reviewer_result[:review_result_id] => reviewer_result[:result]},
+           :design_review => {"id"                               => mx234a.id})
+
+      expected_results[reviewer_result[:role_id].to_s] = reviewer_result[:result]
+
+      if reviewer_result[:result] != 'REJECTED'
+        assert_redirected_to(:action => :post_results)
+      else
+        expected_results.each { |k,v| 
+          expected_results[k] = 'WITHDRAWN' if v == 'APPROVED'
+        }
+        assert_redirected_to(:action => :confirm_rejection)
+        post(:confirm_rejection)
+        repost = true
+      end
+
+      post(:post_results)
+
+      assert_equal(reviewer_result[:expected_results][:comments_count], 
+                   DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
+
+      review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+
+      for review_result in review_results
+        assert_equal(expected_results[review_result.role_id.to_s],
+                     review_result.result)
+      end
+
+      pre_art_design_review = DesignReview.find(mx234a.id)
+      assert_equal(reviewer_result[:expected_results][:review_status_id],
+                   pre_art_design_review.review_status_id)
+    end
+    print "\n"
+
+    #Verify the existing priority and designer.
+    mx234a_pre_art_dr = DesignReview.find(mx234a.id)
+    mx234a_design     = mx234a_pre_art_dr.design
+    high              = Priority.find_by_name('High')
+    low               = Priority.find_by_name('Low')
+    bob_g             = User.find_by_last_name("Goldin")
+    scott_g           = User.find_by_last_name("Glover")
+
+    assert_equal(high.id,  mx234a_design.priority_id)
+    assert_equal(bob_g.id, mx234a_design.designer_id)
+
+    for mx234a_dr in mx234a_design.design_reviews
+      assert_equal(high.id,  mx234a_dr.priority_id)
+      assert_equal(bob_g.id, mx234a_dr.designer_id)
+    end
+
+    assert_equal(ReviewType.find_by_name("Pre-Artwork").id,
+                 mx234a_design.phase_id)
+
+                 # Handle special processing cases
+    set_user(users(:jim_l).id, Role.find(12))
+    post(:reviewer_results,
+         :post_comment  => {"comment" => 'Absolutely!'},
+         :role_id_12    => {'100'     => reviewer_result[:result]},
+         :design_review => {"id"      => mx234a.id},
+         :designer      => {:id       => scott_g.id},
+         :priority      => {:id       => low.id})
+    post(:post_results)
+
+    mx234a_pre_art_dr = DesignReview.find(mx234a.id)
+    mx234a_design     = Design.find(mx234a_pre_art_dr.design_id)
+
+    assert_equal(low.id,     mx234a_design.priority_id)
+    assert_equal(scott_g.id, mx234a_design.designer_id)
+
+    for mx234a_dr in mx234a_design.design_reviews
+      assert_equal(low.name, Priority.find(mx234a_dr.priority_id).name)
+      case ReviewType.find(mx234a_dr.review_type_id).name
+      when 'Pre-Artwork'
+        assert_equal(bob_g.name, User.find(mx234a_dr.designer_id).name)
+      when 'Release'
+        assert_equal(bob_g.name, User.find(mx234a_dr.designer_id).name)
+      else
+        assert_equal(scott_g.name, User.find(mx234a_dr.designer_id).name)
+      end
+    end
+
+    assert_equal(ReviewType.find_by_name("Placement").id,
+                 mx234a_design.phase_id)
+    assert_equal('Review Completed', mx234a_pre_art_dr.review_status.name)
+
   end
 
 
