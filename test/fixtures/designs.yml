@@ -5,6 +5,7 @@
 mx234a:
   id:          1
   name:        mx234a
+  phase_id:    3
   board_id:    1
   revision_id: 1
   suffix_id:   0
