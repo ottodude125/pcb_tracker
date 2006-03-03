@@ -1,3 +1,16 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: review_manager_controller_test.rb
+#
+# This file contains the functional tests for the review manager controller
+#
+# $Id$
+#
+########################################################################
+#
+
 require File.dirname(__FILE__) + '/../test_helper'
 require 'review_manager_controller'
 
@@ -100,7 +113,7 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
         :review_types => ['Final', 'Pre-Artwork']},
       {:name => 'SLM BOM',
         :review_types => ['Pre-Artwork']},
-      {:name => 'SLM Vendor',
+      {:name => 'SLM-Vendor',
         :review_types => ['Pre-Artwork']},
       {:name => 'TDE',
         :review_types => ['Final', 'Pre-Artwork', 'Placement']},
@@ -122,7 +135,7 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
 
     expected_values = Array[
       {:name => 'Pre-Artwork',
-        :role_names => ['HWENG', 'Valor', 'CE-DFT', 'DFM', 'TDE', 'Mechanical', 'Mechanical-MFG', 'Planning', 'PCB Input Gate', 'Library', 'PCB Mechanical', 'SLM BOM', 'SLM Vendor']},
+        :role_names => ['HWENG', 'Valor', 'CE-DFT', 'DFM', 'TDE', 'Mechanical', 'Mechanical-MFG', 'Planning', 'PCB Input Gate', 'Library', 'PCB Mechanical', 'SLM BOM', 'SLM-Vendor']},
       {:name => 'Placement',
         :role_names => ['HWENG', 'CE-DFT', 'DFM', 'TDE', 'Mechanical', 'Mechanical-MFG']},
       {:name => 'Routing',
@@ -186,7 +199,7 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
            '15_1'=>'1', '15_2'=>'0', '15_3'=>'0', '15_4'=>'0', '15_5'=>'0', #LIBRARY
            '16_1'=>'0', '16_2'=>'0', '16_3'=>'1', '16_4'=>'1', '16_5'=>'1', #PCB MECH
            '17_1'=>'1', '17_2'=>'1', '17_3'=>'1', '17_4'=>'1', '17_5'=>'1', #SLM BOM
-           '18_1'=>'0', '18_2'=>'1', '18_3'=>'1', '18_4'=>'1', '18_5'=>'0', #SLM VENDOR
+           '18_1'=>'0', '18_2'=>'1', '18_3'=>'1', '18_4'=>'1', '18_5'=>'0', #SLM-Vendor
            '19_1'=>'1', '19_2'=>'0', '19_3'=>'0', '19_4'=>'0', '19_5'=>'1'  #OPS MGR
          })
 
@@ -225,7 +238,7 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
         :review_types => ['Final', 'Pre-Artwork']},
       {:name => 'SLM BOM',
         :review_types => ['Final', 'Placement', 'Pre-Artwork', 'Release', 'Routing']},
-      {:name => 'SLM Vendor',
+      {:name => 'SLM-Vendor',
         :review_types => ['Placement', 'Pre-Artwork', 'Routing']},
       {:name => 'TDE',
         :review_types => ['Final', 'Placement', 'Pre-Artwork']},
@@ -250,11 +263,11 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
 
     expected_values = Array[
       {:name => 'Pre-Artwork',
-        :role_names => ['DFM', 'HWENG', 'Mechanical', 'Mechanical-MFG', 'PCB Mechanical', 'Planning', 'SLM BOM', 'SLM Vendor', 'TDE', 'Valor']},
+        :role_names => ['DFM', 'HWENG', 'Mechanical', 'Mechanical-MFG', 'PCB Mechanical', 'Planning', 'SLM BOM', 'SLM-Vendor', 'TDE', 'Valor']},
       {:name => 'Placement', 
-        :role_names => ['CE-DFT', 'Mechanical', 'Mechanical-MFG', 'PCB Mechanical', 'SLM BOM', 'SLM Vendor', 'TDE']},
+        :role_names => ['CE-DFT', 'Mechanical', 'Mechanical-MFG', 'PCB Mechanical', 'SLM BOM', 'SLM-Vendor', 'TDE']},
       {:name => 'Routing', 
-        :role_names => ['CE-DFT', 'Mechanical-MFG', 'SLM BOM', 'SLM Vendor', 'Valor']},
+        :role_names => ['CE-DFT', 'Mechanical-MFG', 'SLM BOM', 'SLM-Vendor', 'Valor']},
       {:name => 'Final',
         :role_names => ['CE-DFT', 'HWENG', 'Library', 'Mechanical', 'Operations Manager', 'PCB Design', 'PCB Input Gate', 'Planning', 'SLM BOM', 'TDE', 'Valor']},
       {:name => 'Release', 
