@@ -4,7 +4,7 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% @heading = "PCB Tracker Priorities - List" %>
+<% @heading = "PCB Tracker Criticality Values" %>
 
 <%= start_form_tag(:action => 'add') %>
 
@@ -12,7 +12,7 @@
 
   <table width="40%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
     <tr>
-      <th>Review Priority</th>
+      <th>Review Criticality</th>
       <th>Value</th>
     </tr>
     <%= render_collection_of_partials "priority_list_stripes", @priorities %>
@@ -26,7 +26,7 @@
 
   <hr class="div" />
 
-  <input type="submit" value="New Priority" />
+  <input type="submit" value="New Criticality" />
   <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
 
 <%= end_form_tag %>

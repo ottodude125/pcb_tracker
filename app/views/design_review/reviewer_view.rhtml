@@ -43,7 +43,7 @@
             </td>
           </tr>
           <tr>
-            <th align="left">Priority:</th>
+            <th align="left">Criticality:</th>
             <td>
               <%= @design_review.priority.name %>
             </td>
@@ -151,7 +151,7 @@
                 <td>
                   <table border="0">
                     <tr>
-                      <th align="left"> Verify Priority:</th>
+                      <th align="left"> Verify Criticality:</th>
                       <td align="left">
                         <select id="priority" name="priority[id]">
                         <%= options_from_collection_for_select(@priorities,
