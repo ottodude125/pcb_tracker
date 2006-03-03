@@ -100,7 +100,7 @@ slm_bom:
   cc_peers: 0
 slm_vendor:
   id:       18
-  name:     SLM Vendor
+  name:     SLM-Vendor
   active:   1
   reviewer: 1
   cc_peers: 0
