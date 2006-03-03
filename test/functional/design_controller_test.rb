@@ -159,7 +159,7 @@ class DesignControllerTest < Test::Unit::TestCase
       'PCB Mechanical'     => '7451',
       'Planning'           => '7651',
       'SLM BOM'            => '7500',
-      'SLM Vendor'         => '7550',
+      'SLM-Vendor'         => '7550',
       'TDE'                => '7201',
       'Valor'              => '5002'}
 
@@ -395,7 +395,7 @@ return
        :reviewer_count => 1,
        :selected       => 7500,
        :group_list     => [7500]},
-      {:group          => 'SLM Vendor',
+      {:group          => 'SLM-Vendor',
        :reviewer_count => 1,
        :selected       => 7550,
        :group_list     => [7550]},
