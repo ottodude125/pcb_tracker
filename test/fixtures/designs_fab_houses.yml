@@ -1,0 +1,13 @@
+# 
+# $Id$
+#
+# Read About Fixtures At Http://Ar.Rubyonrails.Org/Classes/Fixtures.Html
+mx234a_ibm:
+  design_id:    1
+  fab_house_id: 2
+mx234a_opc:
+  design_id:    1
+  fab_house_id: 8
+mx234a_merix:
+  design_id:    1
+  fab_house_id: 1
