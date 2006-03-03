@@ -29,8 +29,8 @@
               <%= @design.board.platform.name %> /
               <%= @design.board.project.name %>
             </td>
-          <tr>
           </tr>
+          <tr>
             <th align="left">Posted By:</th>
             <td width="250">
               <%= User.find(@design_review.designer_id).name %>
@@ -146,7 +146,7 @@
             </tr>
             
             <% if pre_art_pcb(@design_review, @my_review_results) %>
-            <% design_info = get_design_info(@design) %>
+              <% design_info = get_design_info(@design) %>
               <tr>
                 <td>
                   <table border="0">
@@ -176,6 +176,77 @@
                 </td>
               </tr>
             <% end %>
+            
+            <% if (@my_review_results.find { |rr| rr.role.name == "SLM-Vendor"}) %>
+              <% design_info = get_design_info(@design) %>
+              <tr>
+                <td>
+                  <table border="0" width="100%">
+                    <tr>
+                      <th colspan="3">Fab Houses</th>
+                    </tr>
+                    <tr>
+                      <% ranges = split_into_cols(@fab_houses, 3) %>
+                      <td>
+                        <table align="center">
+                          <% for fab_house in @fab_houses[ranges[1][:start]..ranges[1][:stop]] %>
+                            <tr>
+                              <td align="left" valign="top">
+                                <% if fab_house[:selected] %>
+                                  <%= check_box "fab_house", fab_house.id, {'checked' => 'checked'} %>
+                                <% else %>
+                                  <%= check_box "fab_house", fab_house.id %>
+                                <% end %>
+                              </td>
+                              <td align="left">
+                                <label for="fab_house_name"><%= fab_house.name %></label>
+                              </td>
+                            </tr>
+                          <% end %>
+                        </table>
+                      </td>
+                      <td>
+                        <table align="center">
+                          <% for fab_house in @fab_houses[ranges[2][:start]..ranges[2][:stop]] %>
+                            <tr>
+                              <td align="left" valign="top">
+                                <% if fab_house[:selected] %>
+                                  <%= check_box "fab_house", fab_house.id, {'checked' => 'checked'} %>
+                                <% else %>
+                                  <%= check_box "fab_house", fab_house.id %>
+                                <% end %>
+                              </td>
+                              <td align="left">
+                                <label for="fab_house_name"><%= fab_house.name %></label>
+                              </td>
+                            </tr>
+                          <% end %>
+                        </table>
+                      </td>
+                      <td>
+                        <table align="center">
+                          <% for fab_house in @fab_houses[ranges[3][:start]..ranges[3][:stop]] %>
+                            <tr>
+                              <td align="left" valign="top">
+                                <% if fab_house[:selected] %>
+                                  <%= check_box "fab_house", fab_house.id, {'checked' => 'checked'} %>
+                                <% else %>
+                                  <%= check_box "fab_house", fab_house.id %>
+                                <% end %>
+                              </td>
+                              <td align="left">
+                                <label for="fab_house_name"><%= fab_house.name %></label>
+                              </td>
+                            </tr>
+                          <% end %>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            <% end %>
+            
           <% end %>
           <tr>
             <td>
@@ -290,3 +361,4 @@
 <%# debug @my_review_results %>
 <%# debug @designers %>
 <%# debug @priorities %>
+<%# debug @fab_houses %>
