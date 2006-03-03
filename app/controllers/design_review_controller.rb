@@ -211,6 +211,24 @@ class DesignReviewController < ApplicationController
       designers   = Role.find_by_name("Designer").users
       @designers  = designers.delete_if { |d| not d.active? }
       @priorities = Priority.find_all(nil, 'value ASC')
+    else
+      @designers  = nil
+      @priorities = nil
+    end
+
+    if (@my_review_results.find { |rr| rr.role.name == "SLM-Vendor"})
+      design_fab_house_list = @design.fab_houses
+      design_fab_houses = {}
+      for dfh in design_fab_house_list
+        design_fab_houses[dfh.id] = dfh
+      end
+      @fab_houses = FabHouse.find_all(nil, 'name ASC')
+
+      for fab_house in @fab_houses
+        fab_house[:selected] = design_fab_houses[fab_house.id] != nil
+      end
+    else
+      @fab_houses = nil
     end
 
   end
@@ -1207,6 +1225,7 @@ class DesignReviewController < ApplicationController
     rejected = false
     roles    = Array.new
     @params.each { |key, value|
+
       if key.include?("role_id")
         result = value.to_a
         rejected = ((result[0][1] == "REJECTED") || rejected)
@@ -1224,10 +1243,11 @@ class DesignReviewController < ApplicationController
       :design_review_id => @params["design_review"]["id"],
       :roles            => roles,
       :priority         => @params["priority"],
-      :designer         => @params["designer"]
+      :designer         => @params["designer"],
+      :fab_houses       => @params["fab_house"]
     }
     flash[:review_results] = review_results
-    
+
     if not rejected
       redirect_to(:action => :post_results)
     else
@@ -1344,6 +1364,59 @@ class DesignReviewController < ApplicationController
         alternate_msg = "Updated priority for the remaining reviews "
       end
       
+    end
+
+    # Check to see if the reviewer is an SLM-Vendor reviewer.
+    # review_results[:fab_houses] will be non-nil.
+    added   = ''
+    removed = ''
+    if (review_results[:fab_houses])
+      review_results[:fab_houses].each { |id, selected|
+
+        fab_house = FabHouse.find(id)
+        # Update the design
+        design = design_review.design
+        if selected == '0' && design.fab_houses.include?(fab_house)
+          design.remove_fab_houses(fab_house)
+          if removed == ''
+            removed = fab_house.name
+          else
+            removed += ', ' + fab_house.name
+          end
+        elsif selected == '1' && !design.fab_houses.include?(fab_house)
+          design.fab_houses << fab_house
+          if added == ''
+            added = fab_house.name
+          else
+            added += ', ' + fab_house.name
+          end
+        end
+        
+        # Update the board
+        board = design.board
+        if selected == '0' && board.fab_houses.include?(fab_house)
+          board.remove_fab_houses(fab_house)
+        elsif selected == '1' && !board.fab_houses.include?(fab_house)
+          board.fab_houses << fab_house
+        end
+      }
+
+      if added !=  '' || removed != ''
+        alternate_msg = 'Updated the fab houses '
+      else
+        alternate_msg = ''
+      end
+
+      alternate_msg += " - Added: #{added}"     if added   != ''
+      alternate_msg += " - Removed: #{removed}" if removed != ''
+      
+      dr_comment = DesignReviewComment.new
+      dr_comment.comment          = alternate_msg
+      dr_comment.user_id          = @session[:user].id
+      dr_comment.design_review_id = review_results[:design_review_id]
+      dr_comment.create
+      comment_update = true
+
     end
 
     # Go through the design review list and withdraw the approvals and set the 
@@ -1621,10 +1694,8 @@ class DesignReviewController < ApplicationController
 
 
   def pre_art_pcb(design_review, review_results)
-      
     return (review_results.find { |rr| rr.role.name == "PCB Design" } &&
             design_review.review_type.name == "Pre-Artwork")
-    
   end
   
   
