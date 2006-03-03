@@ -32,10 +32,13 @@ class DesignReviewControllerTest < Test::Unit::TestCase
            :design_review_results,
            :design_reviews,
            :designs,
+           :designs_fab_houses,
            :documents,
            :document_types,
+           :fab_houses,
            :priorities,
            :review_statuses,
+           :roles,
            :users)
 
   def test_1_id
@@ -168,8 +171,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(0,                 assigns(:comments).size)
     assert_equal(nil,               assigns(:designers))
     assert_equal(nil,               assigns(:priorities))
+    assert_equal(nil,               assigns(:fab_houses))
     
-    # Verify information for PCB during a placement review.
+    # Verify information for PCB during a pre-artwork review.
     set_user(users(:jim_l).id, 'PCB Design')
     mx234a           = designs(:mx234a)
     get(:view, :id => mx234a_pre_art.id)
@@ -185,6 +189,33 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(0,                 assigns(:comments).size)
     assert_equal(3,                 assigns(:designers).size)
     assert_equal(2,                 assigns(:priorities).size)
+    assert_equal(nil,               assigns(:fab_houses))
+    
+    # Verify information for SLM Vendor during a pre-artwork review.
+    set_user(users(:dan_g).id, 'SLM-Vendor')
+    mx234a           = designs(:mx234a)
+    get(:view, :id => mx234a_pre_art.id)
+
+    assert_response 302
+    assert_redirected_to(:action => :reviewer_view,
+                         :id     => mx234a_pre_art.id.to_s)
+
+    get(:reviewer_view, :id => mx234a_pre_art.id)
+    assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
+    assert_equal(mx234a.id,         assigns(:design).id)
+    assert_equal(14,                assigns(:review_results).size)
+    assert_equal(0,                 assigns(:comments).size)
+    assert_equal(nil,               assigns(:designers))
+    assert_equal(nil,               assigns(:priorities))
+
+    fab_houses = assigns(:fab_houses)
+    assert_equal(8, fab_houses.size)
+
+    selected_fab_houses = %w(IBM Merix OPC)
+    for fab_house in fab_houses
+      assert_equal(selected_fab_houses.include?(fab_house.name), 
+                   fab_house[:selected])
+    end
     
   end
 
@@ -428,7 +459,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       {:group          => 'SLM BOM',
        :group_id       => 17,
        :reviewer_count => 1},
-      {:group    => 'SLM Vendor',
+      {:group    => 'SLM-Vendor',
        :group_id       => 18,
        :reviewer_count => 1},
       {:group          => 'TDE',
@@ -658,7 +689,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       {:group          => 'SLM BOM',
        :group_id       => 17,
        :reviewer_count => 1},
-      {:group    => 'SLM Vendor',
+      {:group    => 'SLM-Vendor',
        :group_id       => 18,
        :reviewer_count => 1},
       {:group          => 'TDE',
@@ -1055,9 +1086,20 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #
   ######################################################################
   #
-  def ntest_save_update
-    assert true
-    print('?')
+  def test_save_update
+
+    mx234a_pre_art = design_reviews(:mx234a_pre_artwork)
+
+    post(:save_update,
+         :document      => {:name => ''},
+         :design_review => {:id => mx234a_pre_art.id})
+
+    assert_redirected_to(:action           => :update_documents,
+                         :design_review_id => mx234a_pre_art.id)
+    assert_equal('No file was specified', flash['notice'])
+ 
+    ### TO DO - FIGURE OUT HOW TO LOAD A DOC FOR TESTING.
+
   end
 
 
@@ -1146,180 +1188,168 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     in_review      = ReviewStatus.find_by_name("In Review")
     pending_repost = ReviewStatus.find_by_name("Pending Repost")
     reviewer_result_list= [
-      # 1) Espo - CE-DFT Reviewer
-      {:user_id   => users(:espo).id,
-       :role_id   => 7,
-       :comment   => 'This is good!',
-       :result    => 'APPROVED',
-       :review_result_id => '1',
+      # Espo - CE-DFT Reviewer
+      {:user_id          => users(:espo).id,
+       :role_id          => roles(:ce_dft).id,
+       :comment          => 'This is good!',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_ce_dft).id,
        :role_id_tag      => 'role_id_7',
        :expected_results => {
          :comments_count   => 1,
          :review_status_id => in_review.id
        }
       },
-      # 2) Heng Kit Too - DFM Reviewer
-      {:user_id   => users(:heng_k).id,
-       :role_id   => 8,
-       :comment   => 'This is good enough to waive.',
-       :result    => 'WAIVED',
-       :review_result_id => '2',
+      # Heng Kit Too - DFM Reviewer
+      {:user_id          => users(:heng_k).id,
+       :role_id          => roles(:dfm).id,
+       :comment          => 'This is good enough to waive.',
+       :result           => 'WAIVED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_dfm).id,
        :role_id_tag      => ':role_id_8',
        :expected_results => {
          :comments_count => 2,
          :review_status_id => in_review.id
        }
       },
-      # 3) Dave Macioce - Library Reviewer
-      {:user_id   => users(:dave_m).id,
-       :role_id   => 15,
-       :comment   => 'Yankees Suck!!!',
-       :result    => 'REJECTED',
-       :review_result_id => '4',
+      # Dave Macioce - Library Reviewer
+      {:user_id          => users(:dave_m).id,
+       :role_id          => roles(:library).id,
+       :comment          => 'Yankees Suck!!!',
+       :result           => 'REJECTED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_lib),
        :role_id_tag      => ':role_id_15',
        :expected_results => {
          :comments_count => 3,
          :review_status_id => pending_repost.id
        }
       },
-      # 4) Lee Shaff- HW Reviewer
-      {:user_id   => users(:lee_s).id,
-       :role_id   => 5,
-       :comment   => 'No Comment',
-       :result    => 'APPROVED',
-       :review_result_id => '3',
+      # Lee Shaff- HW Reviewer
+      {:user_id          => users(:lee_s).id,
+       :role_id          => roles(:hweng).id,
+       :comment          => 'No Comment',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_hw).id,
        :role_id_tag      => ':role_id_5',
        :expected_results => {
          :comments_count => 4,
          :review_status_id => in_review.id
        }
       },
-      # 5) Dave Macioce - Library Reviewer
-      {:user_id   => users(:dave_m).id,
-       :role_id   => 15,
-       :comment   => '',
-       :result    => 'APPROVED',
-       :review_result_id => '4',
+      # Dave Macioce - Library Reviewer
+      {:user_id          => users(:dave_m).id,
+       :role_id          => roles(:library).id,
+       :comment          => '',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_lib).id,
        :role_id_tag      => ':role_id_15',
        :expected_results => {
          :comments_count => 4,
          :review_status_id => in_review.id
        }
       },
-      # 6) Espo - CE-DFT Reviewer
-      {:user_id   => users(:espo).id,
-       :role_id   => 7,
-       :comment   => 'This is good!',
-       :result    => 'APPROVED',
-       :review_result_id => '1',
+      # Espo - CE-DFT Reviewer
+      {:user_id          => users(:espo).id,
+       :role_id          => roles(:ce_dft).id,
+       :comment          => 'This is good!',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_ce_dft).id,
        :role_id_tag      => 'role_id_7',
        :expected_results => {
          :comments_count => 5,
          :review_status_id => in_review.id
        }
       },
-      # 7) Tom Flak - Mehanical
-      {:user_id   => users(:tom_f).id,
-       :role_id   => 10,
-       :comment   => 'This is good!',
-       :result    => 'APPROVED',
-       :review_result_id => '5',
+      # Tom Flak - Mehanical
+      {:user_id          => users(:tom_f).id,
+       :role_id          => roles(:mechanical).id,
+       :comment          => 'This is good!',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_mech).id,
        :role_id_tag      => 'role_id_10',
        :expected_results => {
          :comments_count => 6,
          :review_status_id => in_review.id
        }
       },
-      # 8) Anthony Gentile - Mechanical MFG
-      {:user_id   => users(:anthony_g).id,
-       :role_id   => 11,
-       :comment   => '',
-       :result    => 'APPROVED',
-       :review_result_id => '6',
+      # Anthony Gentile - Mechanical MFG
+      {:user_id          => users(:anthony_g).id,
+       :role_id          => roles(:mechanical_manufacturing).id,
+       :comment          => '',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_mech_mfg).id,
        :role_id_tag      => 'role_id_11',
        :expected_results => {
          :comments_count => 6,
          :review_status_id => in_review.id
        }
       },
-      # 9) Cathy McLaren - PCB Input Gate
-      {:user_id   => users(:cathy_m).id,
-       :role_id   => 14,
-       :comment   => 'I always have something to say.',
-       :result    => 'APPROVED',
-       :review_result_id => '7',
+      # Cathy McLaren - PCB Input Gate
+      {:user_id          => users(:cathy_m).id,
+       :role_id          => roles(:pcb_input_gate).id,
+       :comment          => 'I always have something to say.',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_pcb_ig).id,
        :role_id_tag      => 'role_id_14',
        :expected_results => {
          :comments_count => 7,
          :review_status_id => in_review.id
        }
       },
-      # 10) John Godin - PCB Mehanical
-      {:user_id   => users(:john_g).id,
-       :role_id   => 16,
-       :comment   => '',
-       :result    => 'APPROVED',
-       :review_result_id => '8',
+      # John Godin - PCB Mehanical
+      {:user_id          => users(:john_g).id,
+       :role_id          => roles(:pcb_mechanical).id,
+       :comment          => '',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_pcb_mech).id,
        :role_id_tag      => 'role_id_16',
        :expected_results => {
          :comments_count => 7,
          :review_status_id => in_review.id
        }
       },
-      # 11) Matt Disanzo - Planning
-      {:user_id   => users(:matt_d).id,
-       :role_id   => 13,
-       :comment   => 'Testing.',
-       :result    => 'APPROVED',
-       :review_result_id => '9',
+      # Matt Disanzo - Planning
+      {:user_id          => users(:matt_d).id,
+       :role_id          => roles(:planning).id,
+       :comment          => 'Testing.',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_plan).id,
        :role_id_tag      => 'role_id_13',
        :expected_results => {
          :comments_count => 8,
          :review_status_id => in_review.id
        }
       },
-      # 12) Arthur Davis - SLM BOM
-      {:user_id   => users(:art_d).id,
-       :role_id   => 17,
-       :comment   => '',
-       :result    => 'APPROVED',
-       :review_result_id => '10',
+      # Arthur Davis - SLM BOM
+      {:user_id          => users(:art_d).id,
+       :role_id          => roles(:slm_bom).id,
+       :comment          => '',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_slm_bom).id,
        :role_id_tag      => 'role_id_17',
        :expected_results => {
          :comments_count => 8,
          :review_status_id => in_review.id
        }
       },
-      # 13) Dan Gough - SLM Vendor
-      {:user_id   => users(:dan_g).id,
-       :role_id   => 18,
-       :comment   => '',
-       :result    => 'APPROVED',
-       :review_result_id => '11',
-       :role_id_tag      => 'role_id_18',
-       :expected_results => {
-         :comments_count => 8,
-         :review_status_id => in_review.id
-       }
-      },
-      # 14) Rich Ahamed - TDE
-      {:user_id   => users(:rich_a).id,
-       :role_id   => 9,
-       :comment   => '',
-       :result    => 'APPROVED',
-       :review_result_id => '12',
+      # Rich Ahamed - TDE
+      {:user_id          => users(:rich_a).id,
+       :role_id          => roles(:tde).id,
+       :comment          => '',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_tde).id,
        :role_id_tag      => 'role_id_9',
        :expected_results => {
          :comments_count => 8,
          :review_status_id => in_review.id
        }
       },
-      # 15) Lisa Austin - Valor
-      {:user_id   => users(:lisa_a).id,
-       :role_id   => 6,
-       :comment   => '',
-       :result    => 'APPROVED',
-       :review_result_id => '13',
+      # Lisa Austin - Valor
+      {:user_id          => users(:lisa_a).id,
+       :role_id          => roles(:valor).id,
+       :comment          => '',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_pre_artwork_valor).id,
        :role_id_tag      => 'role_id_6',
        :expected_results => {
          :comments_count => 8,
@@ -1365,9 +1395,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       set_user(reviewer_result[:user_id], Role.find(reviewer_result[:role_id]))
 
       post(:reviewer_results,
-           :post_comment  => {"comment"                          => reviewer_result[:comment]},
+           :post_comment                 => {"comment" => reviewer_result[:comment]},
            reviewer_result[:role_id_tag] => {reviewer_result[:review_result_id] => reviewer_result[:result]},
-           :design_review => {"id"                               => mx234a.id})
+           :design_review                => {"id"      => mx234a.id})
 
       expected_results[reviewer_result[:role_id].to_s] = reviewer_result[:result]
 
@@ -1384,8 +1414,13 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
       post(:post_results)
 
+      design_review_comments = DesignReviewComment.find_all_by_design_review_id(mx234a.id)
       assert_equal(reviewer_result[:expected_results][:comments_count], 
-                   DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
+                   design_review_comments.size)
+      if reviewer_result[:comment] != ''
+        assert_equal(reviewer_result[:comment],
+                     design_review_comments.pop.comment)
+      end
 
       review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
 
@@ -1419,8 +1454,55 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(ReviewType.find_by_name("Pre-Artwork").id,
                  mx234a_design.phase_id)
 
-                 # Handle special processing cases
-    set_user(users(:jim_l).id, Role.find(12))
+    # Handle special processing cases
+    assert_equal(0, mx234a_design.board.fab_houses.size)
+    assert_equal(3, mx234a_design.fab_houses.size)
+    fab_houses = mx234a_design.fab_houses.sort_by { |fh| fh.name }
+    assert_equal(fab_houses(:ibm).id,   fab_houses[0].fab_house_id.to_i)
+    assert_equal(fab_houses(:merix).id, fab_houses[1].fab_house_id.to_i)
+    assert_equal(fab_houses(:opc).id,   fab_houses[2].fab_house_id.to_i)
+    
+    set_user(users(:dan_g).id, Role.find(roles(:slm_vendor).id))
+    post(:reviewer_results,
+         :post_comment  => {"comment" => ''},
+         :role_id_18    => {11        => 'APPROVED'},
+         :design_review => {"id"      => mx234a.id},
+                            :fab_house   => {'1' => '0',        '2' => '0',
+                                             '3' => '1',        '4' => '1',
+                                             '5' => '0',        '6' => '0',
+                                             '7' => '0',        '8' => '0'})
+                                             
+    assert_redirected_to(:action => :post_results)
+    post(:post_results)
+
+    design_update = Design.find(mx234a_design.id)
+    assert_equal(2, design_update.board.fab_houses.size)
+    assert_equal(2, design_update.fab_houses.size)
+    fab_houses = design_update.fab_houses.sort_by { |fh| fh.name }
+    assert_equal(fab_houses(:advantech).id, fab_houses[0].fab_house_id.to_i)
+    assert_equal(fab_houses(:coretec).id,   fab_houses[1].fab_house_id.to_i)
+    fab_houses = design_update.board.fab_houses.sort_by { |fh| fh.name }
+    assert_equal(fab_houses(:advantech).id, fab_houses[0].fab_house_id.to_i)
+    assert_equal(fab_houses(:coretec).id,   fab_houses[1].fab_house_id.to_i)
+
+    comments = DesignReviewComment.find_all_by_design_review_id(mx234a.id)
+    assert_equal(9, comments.size)
+    assert_equal('Updated the fab houses  - Added: AdvantechPWB, Coretec - Removed: OPC, Merix, IBM', 
+                 comments.pop.comment)
+
+    expected_results["18"] = 'APPROVED'
+    review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+    for review_result in review_results
+      assert_equal(expected_results[review_result.role_id.to_s],
+                   review_result.result)
+    end
+
+    pre_art_design_review = DesignReview.find(mx234a.id)
+    assert_equal(in_review.id, pre_art_design_review.review_status_id)
+
+
+    # Handle special proessing for PCB Design Manager
+    set_user(users(:jim_l).id, Role.find(roles(:pcb_design).id))
     post(:reviewer_results,
          :post_comment  => {"comment" => 'Absolutely!'},
          :role_id_12    => {'100'     => reviewer_result[:result]},
@@ -1450,6 +1532,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(ReviewType.find_by_name("Placement").id,
                  mx234a_design.phase_id)
     assert_equal('Review Completed', mx234a_pre_art_dr.review_status.name)
+    assert_equal(10, 
+                 DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
 
   end
 
