@@ -1397,25 +1397,25 @@ class DesignReviewController < ApplicationController
         if selected == '0' && board.fab_houses.include?(fab_house)
           board.remove_fab_houses(fab_house)
         elsif selected == '1' && !board.fab_houses.include?(fab_house)
-          board.fab_houses << fab_house
+          board.fab_houses << fab_house                                      
         end
       }
 
       if added !=  '' || removed != ''
         alternate_msg = 'Updated the fab houses '
+        
+        alternate_msg += " - Added: #{added}"     if added   != ''
+        alternate_msg += " - Removed: #{removed}" if removed != ''
+      
+        dr_comment = DesignReviewComment.new
+        dr_comment.comment          = alternate_msg
+        dr_comment.user_id          = @session[:user].id
+        dr_comment.design_review_id = review_results[:design_review_id]
+        dr_comment.create
+        comment_update = true
       else
         alternate_msg = ''
       end
-
-      alternate_msg += " - Added: #{added}"     if added   != ''
-      alternate_msg += " - Removed: #{removed}" if removed != ''
-      
-      dr_comment = DesignReviewComment.new
-      dr_comment.comment          = alternate_msg
-      dr_comment.user_id          = @session[:user].id
-      dr_comment.design_review_id = review_results[:design_review_id]
-      dr_comment.create
-      comment_update = true
 
     end
 
