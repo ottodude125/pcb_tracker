@@ -625,8 +625,7 @@ class DesignReviewController < ApplicationController
 
       DesignReviewMailer::deliver_update(@session[:user],
                                          DesignReview.find(@params[:design_review][:id]),
-                                         true,
-                                         false)
+                                         true)
     end
 
     flash['notice'] = "Comment added - mail has been sent"
@@ -1278,7 +1277,6 @@ class DesignReviewController < ApplicationController
     review_results  = flash[:review_results]
     flash_msg       = ''
     comment_update  = false
-    result_update   = false
     review_complete = false
     design_review   = DesignReview.find(review_results[:design_review_id])
     
