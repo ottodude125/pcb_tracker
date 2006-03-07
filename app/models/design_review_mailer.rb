@@ -33,12 +33,15 @@ class DesignReviewMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def update(user, design_review, comment_update, result_update)
+  def update(user, 
+             design_review, 
+             comment_update, 
+             result_update   = {})
 
     review_results = ''
     subject        = "#{design_review.design.name}::#{design_review.review_name}"
 
-    if comment_update && !result_update
+    if comment_update && result_update == {}
       @subject    = "#{subject} - Comments added"
     elsif result_update
       
