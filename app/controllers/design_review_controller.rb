@@ -1452,9 +1452,9 @@ class DesignReviewController < ApplicationController
         design_reviews = DesignReview.find_all_by_design_id(design.id)
         design_reviews = design_reviews.sort_by { |dr| dr.review_type.sort_order}
 
-        for design_review in design_reviews
-          if design_review.review_status.id == not_started.id
-            next_design_review = design_review
+        for design_rvw in design_reviews
+          if design_rvw.review_status.id == not_started.id
+            next_design_review = design_rvw
             break
           end
         end
