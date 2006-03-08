@@ -1190,7 +1190,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     in_review      = ReviewStatus.find_by_name("In Review")
     pending_repost = ReviewStatus.find_by_name("Pending Repost")
 
-    mail_subject = 'mx234a::Pre-Artwork  '
+    mail_subject = 'mx234a::Pre-Artwork '
     reviewer_result_list= [
       # Espo - CE-DFT Reviewer
       {:user_id          => users(:espo).id,
@@ -1202,7 +1202,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :expected_results => {
          :comments_count   => 1,
          :review_status_id => in_review.id,
-         :mail_subject     => mail_subject + 'CE-DFT - APPROVED - See comments'
+         :mail_subject     => mail_subject + ' CE-DFT - APPROVED - See comments'
        }
       },
       # Heng Kit Too - DFM Reviewer
@@ -1215,7 +1215,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :expected_results => {
          :comments_count => 2,
          :review_status_id => in_review.id,
-         :mail_subject     => mail_subject + 'DFM - WAIVED - See comments'
+         :mail_subject     => mail_subject + ' DFM - WAIVED - See comments'
        }
       },
       # Dave Macioce - Library Reviewer
@@ -1228,7 +1228,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :expected_results => {
          :comments_count => 3,
          :review_status_id => pending_repost.id,
-         :mail_subject     => mail_subject + 'Library - REJECTED - See comments'
+         :mail_subject     => mail_subject + ' Library - REJECTED - See comments'
        }
       },
       # Lee Shaff- HW Reviewer
@@ -1241,7 +1241,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :expected_results => {
          :comments_count => 4,
          :review_status_id => in_review.id,
-         :mail_subject     => mail_subject + 'HWENG - APPROVED - See comments'
+         :mail_subject     => mail_subject + ' HWENG - APPROVED - See comments'
        }
       },
       # Dave Macioce - Library Reviewer
@@ -1254,7 +1254,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :expected_results => {
          :comments_count => 4,
          :review_status_id => in_review.id,
-         :mail_subject     => mail_subject + 'Library - APPROVED - No comments'
+         :mail_subject     => mail_subject + ' Library - APPROVED - No comments'
        }
       },
       # Espo - CE-DFT Reviewer
@@ -1267,7 +1267,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :expected_results => {
          :comments_count => 5,
          :review_status_id => in_review.id,
-         :mail_subject     => mail_subject + 'CE-DFT - APPROVED - See comments'
+         :mail_subject     => mail_subject + ' CE-DFT - APPROVED - See comments'
        }
       },
       # Tom Flak - Mehanical
@@ -1280,7 +1280,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :expected_results => {
          :comments_count => 6,
          :review_status_id => in_review.id,
-         :mail_subject     => mail_subject + 'Mechanical - APPROVED - See comments'
+         :mail_subject     => mail_subject + ' Mechanical - APPROVED - See comments'
        }
       },
       # Anthony Gentile - Mechanical MFG
@@ -1293,7 +1293,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :expected_results => {
          :comments_count => 6,
          :review_status_id => in_review.id,
-         :mail_subject     => mail_subject + 'Mechanical-MFG - APPROVED - No comments'
+         :mail_subject     => mail_subject + ' Mechanical-MFG - APPROVED - No comments'
        }
       },
       # Cathy McLaren - PCB Input Gate
@@ -1306,7 +1306,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :expected_results => {
          :comments_count => 7,
          :review_status_id => in_review.id,
-         :mail_subject     => mail_subject + 'PCB Input Gate - APPROVED - See comments'
+         :mail_subject     => mail_subject + ' PCB Input Gate - APPROVED - See comments'
        }
       },
       # John Godin - PCB Mehanical
@@ -1319,7 +1319,20 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :expected_results => {
          :comments_count => 7,
          :review_status_id => in_review.id,
-         :mail_subject     => mail_subject + 'PCB Mechanical - APPROVED - No comments'
+         :mail_subject     => mail_subject + ' PCB Mechanical - APPROVED - No comments'
+       }
+      },
+      # Matt Disanzo - Planning
+      {:user_id          => users(:matt_d).id,
+       :role_id          => roles(:planning).id,
+       :comment          => 'Comment before entering result.',
+       :result           => nil,
+       :review_result_id => design_review_results(:mx234a_pre_artwork_plan).id,
+       :role_id_tag      => 'role_id_13',
+       :expected_results => {
+         :comments_count => 8,
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + '- Comments added'
        }
       },
       # Matt Disanzo - Planning
@@ -1330,9 +1343,22 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_plan).id,
        :role_id_tag      => 'role_id_13',
        :expected_results => {
-         :comments_count => 8,
+         :comments_count => 9,
          :review_status_id => in_review.id,
-         :mail_subject     => mail_subject + 'Planning - APPROVED - See comments'
+         :mail_subject     => mail_subject + ' Planning - APPROVED - See comments'
+       }
+      },
+      # Matt Disanzo - Planning
+      {:user_id          => users(:matt_d).id,
+       :role_id          => roles(:planning).id,
+       :comment          => 'Comment after entering result.',
+       :result           => nil,
+       :review_result_id => design_review_results(:mx234a_pre_artwork_plan).id,
+       :role_id_tag      => 'role_id_13',
+       :expected_results => {
+         :comments_count => 10,
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + '- Comments added'
        }
       },
       # Arthur Davis - SLM BOM
@@ -1343,9 +1369,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_slm_bom).id,
        :role_id_tag      => 'role_id_17',
        :expected_results => {
-         :comments_count => 8,
+         :comments_count => 10,
          :review_status_id => in_review.id,
-         :mail_subject     => mail_subject + 'SLM BOM - APPROVED - No comments'
+         :mail_subject     => mail_subject + ' SLM BOM - APPROVED - No comments'
        }
       },
       # Rich Ahamed - TDE
@@ -1356,9 +1382,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_tde).id,
        :role_id_tag      => 'role_id_9',
        :expected_results => {
-         :comments_count => 8,
+         :comments_count => 10,
          :review_status_id => in_review.id,
-         :mail_subject     => mail_subject + 'TDE - APPROVED - No comments'
+         :mail_subject     => mail_subject + ' TDE - APPROVED - No comments'
        }
       },
       # Lisa Austin - Valor
@@ -1369,9 +1395,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_valor).id,
        :role_id_tag      => 'role_id_6',
        :expected_results => {
-         :comments_count => 8,
+         :comments_count => 10,
          :review_status_id => in_review.id,
-         :mail_subject     => mail_subject + 'Valor - APPROVED - No comments'
+         :mail_subject     => mail_subject + ' Valor - APPROVED - No comments'
        }
       },
 
@@ -1412,12 +1438,17 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       print "\nProcessing #{rev} - #{reviewer_result[:result]}"
       set_user(reviewer_result[:user_id], Role.find(reviewer_result[:role_id]))
 
-      post(:reviewer_results,
-           :post_comment                 => {"comment" => reviewer_result[:comment]},
-           reviewer_result[:role_id_tag] => {reviewer_result[:review_result_id] => reviewer_result[:result]},
-           :design_review                => {"id"      => mx234a.id})
-
-      expected_results[reviewer_result[:role_id].to_s] = reviewer_result[:result]
+      if reviewer_result[:result]
+        post(:reviewer_results,
+             :post_comment                 => {"comment" => reviewer_result[:comment]},
+             reviewer_result[:role_id_tag] => {reviewer_result[:review_result_id] => reviewer_result[:result]},
+             :design_review                => {"id"      => mx234a.id})
+        expected_results[reviewer_result[:role_id].to_s] = reviewer_result[:result]
+      else
+        post(:reviewer_results,
+             :post_comment  => {"comment" => reviewer_result[:comment]},
+             :design_review => {"id"      => mx234a.id})
+      end
 
       if reviewer_result[:result] != 'REJECTED'
         assert_redirected_to(:action => :post_results)
@@ -1501,7 +1532,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     email = @emails.pop
     assert_equal(0, @emails.size)
     # Expect comments - the fab houses changed
-    assert_equal(mail_subject + 'SLM-Vendor - APPROVED - See comments',
+    assert_equal(mail_subject + ' SLM-Vendor - APPROVED - See comments',
                  email.subject)
                    
 
@@ -1516,7 +1547,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(fab_houses(:coretec).id,   fab_houses[1].fab_house_id.to_i)
 
     comments = DesignReviewComment.find_all_by_design_review_id(mx234a.id)
-    assert_equal(9, comments.size)
+    assert_equal(11, comments.size)
     assert_equal('Updated the fab houses  - Added: AdvantechPWB, Coretec - Removed: OPC, Merix, IBM', 
                  comments.pop.comment)
 
@@ -1544,7 +1575,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     email = @emails.shift
     assert_equal(1, @emails.size)
     # Expect comments - the fab houses changed
-    assert_equal(mail_subject + 'PCB Design - APPROVED - See comments',
+    assert_equal(mail_subject + ' PCB Design - APPROVED - See comments',
                  email.subject)
     email = @emails.shift
     assert_equal(0, @emails.size)
@@ -1573,7 +1604,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(ReviewType.find_by_name("Placement").id,
                  mx234a_design.phase_id)
     assert_equal('Review Completed', mx234a_pre_art_dr.review_status.name)
-    assert_equal(10, 
+    assert_equal(12, 
                  DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
 
   end
