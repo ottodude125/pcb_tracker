@@ -22,8 +22,10 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     @controller = DesignReviewController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+    
+    @emails     = ActionMailer::Base.deliveries
+    @emails.clear
   end
-
 
   fixtures(:board_reviewers,
            :boards,
@@ -1187,6 +1189,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     in_review      = ReviewStatus.find_by_name("In Review")
     pending_repost = ReviewStatus.find_by_name("Pending Repost")
+
+    mail_subject = 'mx234a::Pre-Artwork  '
     reviewer_result_list= [
       # Espo - CE-DFT Reviewer
       {:user_id          => users(:espo).id,
@@ -1197,7 +1201,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => 'role_id_7',
        :expected_results => {
          :comments_count   => 1,
-         :review_status_id => in_review.id
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + 'CE-DFT - APPROVED - See comments'
        }
       },
       # Heng Kit Too - DFM Reviewer
@@ -1209,7 +1214,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => ':role_id_8',
        :expected_results => {
          :comments_count => 2,
-         :review_status_id => in_review.id
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + 'DFM - WAIVED - See comments'
        }
       },
       # Dave Macioce - Library Reviewer
@@ -1221,7 +1227,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => ':role_id_15',
        :expected_results => {
          :comments_count => 3,
-         :review_status_id => pending_repost.id
+         :review_status_id => pending_repost.id,
+         :mail_subject     => mail_subject + 'Library - REJECTED - See comments'
        }
       },
       # Lee Shaff- HW Reviewer
@@ -1233,7 +1240,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => ':role_id_5',
        :expected_results => {
          :comments_count => 4,
-         :review_status_id => in_review.id
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + 'HWENG - APPROVED - See comments'
        }
       },
       # Dave Macioce - Library Reviewer
@@ -1245,7 +1253,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => ':role_id_15',
        :expected_results => {
          :comments_count => 4,
-         :review_status_id => in_review.id
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + 'Library - APPROVED - No comments'
        }
       },
       # Espo - CE-DFT Reviewer
@@ -1257,7 +1266,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => 'role_id_7',
        :expected_results => {
          :comments_count => 5,
-         :review_status_id => in_review.id
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + 'CE-DFT - APPROVED - See comments'
        }
       },
       # Tom Flak - Mehanical
@@ -1269,7 +1279,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => 'role_id_10',
        :expected_results => {
          :comments_count => 6,
-         :review_status_id => in_review.id
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + 'Mechanical - APPROVED - See comments'
        }
       },
       # Anthony Gentile - Mechanical MFG
@@ -1281,7 +1292,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => 'role_id_11',
        :expected_results => {
          :comments_count => 6,
-         :review_status_id => in_review.id
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + 'Mechanical-MFG - APPROVED - No comments'
        }
       },
       # Cathy McLaren - PCB Input Gate
@@ -1293,7 +1305,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => 'role_id_14',
        :expected_results => {
          :comments_count => 7,
-         :review_status_id => in_review.id
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + 'PCB Input Gate - APPROVED - See comments'
        }
       },
       # John Godin - PCB Mehanical
@@ -1305,7 +1318,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => 'role_id_16',
        :expected_results => {
          :comments_count => 7,
-         :review_status_id => in_review.id
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + 'PCB Mechanical - APPROVED - No comments'
        }
       },
       # Matt Disanzo - Planning
@@ -1317,7 +1331,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => 'role_id_13',
        :expected_results => {
          :comments_count => 8,
-         :review_status_id => in_review.id
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + 'Planning - APPROVED - See comments'
        }
       },
       # Arthur Davis - SLM BOM
@@ -1329,7 +1344,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => 'role_id_17',
        :expected_results => {
          :comments_count => 8,
-         :review_status_id => in_review.id
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + 'SLM BOM - APPROVED - No comments'
        }
       },
       # Rich Ahamed - TDE
@@ -1341,7 +1357,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => 'role_id_9',
        :expected_results => {
          :comments_count => 8,
-         :review_status_id => in_review.id
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + 'TDE - APPROVED - No comments'
        }
       },
       # Lisa Austin - Valor
@@ -1353,7 +1370,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id_tag      => 'role_id_6',
        :expected_results => {
          :comments_count => 8,
-         :review_status_id => in_review.id
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + 'Valor - APPROVED - No comments'
        }
       },
 
@@ -1414,6 +1432,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
       post(:post_results)
 
+      email = @emails.pop
+      assert_equal(0, @emails.size)
+      assert_equal(reviewer_result[:expected_results][:mail_subject],
+                   email.subject)
+                   
       design_review_comments = DesignReviewComment.find_all_by_design_review_id(mx234a.id)
       assert_equal(reviewer_result[:expected_results][:comments_count], 
                    design_review_comments.size)
@@ -1475,6 +1498,13 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_redirected_to(:action => :post_results)
     post(:post_results)
 
+    email = @emails.pop
+    assert_equal(0, @emails.size)
+    # Expect comments - the fab houses changed
+    assert_equal(mail_subject + 'SLM-Vendor - APPROVED - See comments',
+                 email.subject)
+                   
+
     design_update = Design.find(mx234a_design.id)
     assert_equal(2, design_update.board.fab_houses.size)
     assert_equal(2, design_update.fab_houses.size)
@@ -1510,6 +1540,17 @@ class DesignReviewControllerTest < Test::Unit::TestCase
          :designer      => {:id       => scott_g.id},
          :priority      => {:id       => low.id})
     post(:post_results)
+
+    email = @emails.shift
+    assert_equal(1, @emails.size)
+    # Expect comments - the fab houses changed
+    assert_equal(mail_subject + 'PCB Design - APPROVED - See comments',
+                 email.subject)
+    email = @emails.shift
+    assert_equal(0, @emails.size)
+    # Expect comments - the fab houses changed
+    assert_equal('mx234a: Pre-Artwork Review is complete',
+                 email.subject)
 
     mx234a_pre_art_dr = DesignReview.find(mx234a.id)
     mx234a_design     = Design.find(mx234a_pre_art_dr.design_id)
