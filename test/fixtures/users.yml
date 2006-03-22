@@ -464,4 +464,20 @@ tina_d:
   created_on: 20050510104114
   updated_on: 20050510104114
   access:     20050510104114
+  
+##
+## PCB Admin
+##
+
+patrice_m:
+  id:         8000
+  login:      pmichaels
+  first_name: Patrice
+  last_name:  Michaels
+  email:      patrice_michaels@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
 
