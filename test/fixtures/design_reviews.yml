@@ -11,6 +11,7 @@ mx234a_pre_artwork:
   priority_id:      1
   creator_id:       0
   reposted_on:      2006-01-26 00:00:00
+  completed_on:     2000-04-09 00:00:00
 mx234a_placement:
   id:               2
   posting_count:    0
@@ -51,7 +52,7 @@ mx234a_release:
   id:               5
   posting_count:    0
   design_id:        1
-  designer_id:      5000
+  designer_id:      8000
   design_center_id: 1
   review_status_id: 3
   review_type_id:   5
