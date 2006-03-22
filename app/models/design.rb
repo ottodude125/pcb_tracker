@@ -22,7 +22,7 @@ class Design < ActiveRecord::Base
   has_one   :audit
 
 
-  COMPLETE = 999
+  COMPLETE = 255
   
 
   private
