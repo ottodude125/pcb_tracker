@@ -4,7 +4,7 @@ in_review:
   name: In Review
 review_complete:
   id:   2
-  name: Review Complete
+  name: Review Completed
 not_started:
   id:   3
   name: Not Started
