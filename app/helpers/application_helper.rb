@@ -1,4 +1,16 @@
-# The methods added to this helper will be available to all templates in the application.
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: application_helper.rb
+#
+# The methods added to this helper will be available to all 
+# templates in the application.
+#
+# $Id$
+#
+########################################################################
+
 module ApplicationHelper
 
   def split_into_cols(list, columns)
@@ -37,5 +49,29 @@ module ApplicationHelper
     return cols
     
   end
+
+
+  def is_manager
+    session[:roles].include?(Role.find_by_name("Manager"))
+  end
+
+
+  def is_admin
+    session[:roles].include?(Role.find_by_name("Admin"))
+  end
+
+
+  def pre_artwork_complete(design)
+
+    pre_art_review_type = ReviewType.find_by_name('Pre-Artwork')
+    pre_art_design_review = design.design_reviews.detect { |dr| 
+      dr.review_type_id == pre_art_review_type.id
+    }
+
+    done = ReviewStatus.find_by_name('Review Completed')
+    done.id == pre_art_design_review.review_status_id
+    
+  end
+
 
 end
