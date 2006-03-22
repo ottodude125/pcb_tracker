@@ -14,6 +14,8 @@
 
 class DesignReviewController < ApplicationController
 
+  before_filter(:verify_manager_admin_privs,
+                :only => [:process_admin_update])
 
   def view
 
@@ -92,6 +94,9 @@ class DesignReviewController < ApplicationController
   #
   def manager_view
 
+    session[:return_to] = {:controller => 'design_review',
+                           :action     => 'view',
+                           :id         => @params[:id]}
     @design_review = DesignReview.find(@params[:id])
     @design        = Design.find(@design_review.design_id)
     review_results = DesignReviewResult.find_all("design_review_id='#{@design_review.id}'")
@@ -191,6 +196,9 @@ class DesignReviewController < ApplicationController
   #
   def reviewer_view
 
+    session[:return_to] = {:controller => 'design_review',
+                           :action     => 'view',
+                           :id         => @params[:id]}
     @design_review = DesignReview.find(@params[:id])
     @design        = Design.find(@design_review.design_id)
     review_results = DesignReviewResult.find_all("design_review_id='#{@design_review.id}'")
@@ -851,7 +859,7 @@ class DesignReviewController < ApplicationController
   def add_attachment
 
     @document = Document.new
-    @document_types = DocumentType.find_all(nil, 'name ASC')
+    @document_types = DocumentType.find_all('active=1', 'name ASC')
     
     if @params[:design_review] != nil
       design_review_id = @params[:design_review][:id]
@@ -1440,6 +1448,7 @@ class DesignReviewController < ApplicationController
       if not outstanding_result
         review_completed = ReviewStatus.find_by_name('Review Completed')
         design_review.review_status_id = review_completed.id
+        design_review.completed_on     = Time.now
         design_review.update
         review_complete = true
 
@@ -1672,6 +1681,147 @@ class DesignReviewController < ApplicationController
     redirect_to(:action => :reviewer_view,
                 :id     => design_review_id)
 
+  end
+
+
+  ######################################################################
+  #
+  # admin_update
+  #
+  # Description:
+  # Gathers the data for the admin/manager update screen.
+  #
+  # Parameters from @params
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def admin_update
+    
+    if @session['flash'][:sort_order]
+      @session['flash'][:sort_order] = @session['flash'][:sort_order]
+    end
+    
+    @design_review = DesignReview.find(@params[:id])
+    
+    designer_role        = Role.find_by_name("Designer")
+    @designers           = designer_role.users.delete_if { |d| !d.active }
+    @peer_list           = @designers
+    @pcb_input_gate_list = Role.find_by_name('PCB Input Gate').users.delete_if { |u| !u.active }
+    @priorities          = Priority.find_all(nil, 'value ASC')
+    @design_centers      = DesignCenter.find_all('active=1', 'name ASC')
+
+    pre_art_review_type = ReviewType.find_by_name('Pre-Artwork')
+    design_reviews      = @design_review.design.design_reviews
+
+    pre_art_review = 
+      design_reviews.detect { |dr| dr.review_type_id == pre_art_review_type.id}
+
+    @pcb_input_gate = User.find(pre_art_review.designer_id).name
+    @pcb_input_gate_id = pre_art_review.designer_id
+
+    if @design_review.design.phase_id != Design::COMPLETE
+
+      # Determine the phase
+      phase = ReviewType.find(@design_review.design.phase_id)
+
+      if 'Pre-Artwork' != phase.name
+        @designer = User.find(@design_review.designer_id)
+      else
+        reviews = design_reviews.sort_by { |dr| dr.review_type.sort_order }
+        for review in reviews
+          next if review.review_type.name == 'Pre-Artwork'
+          break if review.review_status.name != 'Review_Completed'
+        end
+        @designer = User.find(review.designer_id)
+      end
+    end 
+  end
+
+
+  ######################################################################
+  #
+  # process_admin_update
+  #
+  # Description:
+  # Updates the based on user input on the admin update screen.
+  #
+  # Parameters from @params
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def process_admin_update
+
+    if @session['flash'][:sort_order]
+      @session['flash'][:sort_order] = @session['flash'][:sort_order]
+    end
+    
+    design_review = DesignReview.find(params[:id])
+
+    if !params[:designer]
+
+      for dsg_review in design_review.design.design_reviews
+        dsg_review.design_center_id = params[:design_center][:id]
+        dsg_review.update
+      end
+
+      flash['notice'] = "#{design_review.design.name} has been updated"
+      if @session[:return_to]
+        redirect_to(@session[:return_to])
+      else
+        redirect_to(:action => "index", :controller => "tracker" )
+      end
+    elsif params[:designer][:id] != params[:peer][:id]
+      
+      # Update the design reord
+      design = design_review.design
+      design.designer_id = params[:designer][:id]
+      design.peer_id     = params[:peer][:id]
+      design.priority_id = params[:priority][:id]
+      design.update
+
+      # Update all design reviews that are not complete
+      pre_art_review = ReviewType.find_by_name('Pre-Artwork')
+      release_review = ReviewType.find_by_name('Release')
+      for design_review in design.design_reviews
+        if design_review.review_status.name != 'Review Completed'
+          if design_review.review_type_id != pre_art_review.id
+            if design_review.review_type_id != release_review.id
+              design_review.designer_id = params[:designer][:id]
+            end
+          else
+            design_review.designer_id = params[:pcb_input_gate][:id]
+          end
+          design_review.priority_id      = params[:priority][:id]
+        end
+        design_review.design_center_id = params[:design_center][:id]
+        design_review.update
+
+        if design.phase_id == design_review.review_type_id
+          design.designer_id = design_review.designer_id
+          design.update
+        end
+      end
+
+      flash['notice'] = "#{design.name} has been updated"
+      if @session[:return_to]
+        redirect_to(@session[:return_to])
+      else
+        redirect_to(:action => "index", :controller => "tracker" )
+      end
+    else
+      flash['notice'] = "The peer and the designer must be different - update not recorded"
+      redirect_to(:action => "admin_update", :id => params[:id])
+    end
   end
 
 
