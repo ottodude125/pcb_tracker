@@ -18,16 +18,21 @@
     <%= User.find(manager_home_list_stripes.design.designer_id).name %>
   </td>
   <td>
+    <%= User.find(manager_home_list_stripes.design.peer_id).name %>
+  </td>
+  <td>
     <%= manager_home_list_stripes.reposted_on.strftime('%d-%b-%y') %>
   </td>
-  <td align="right">
+  <td align="center">
+    <%= manager_home_list_stripes[:approvals] %> of
     <%= manager_home_list_stripes[:reviewers] %>&nbsp;
-  </td>
-  <td>/</td>
-  <td align="left">
-    <%= manager_home_list_stripes[:approvals] %>
   </td>
   <td>
     <%= manager_home_list_stripes.review_status.name %>
+  </td>
+  <td>
+    <%= button_to "Update", { :controller => "design_review",
+                              :action     => "admin_update",
+                              :id         => manager_home_list_stripes.id } %>
   </td>
 </tr>
