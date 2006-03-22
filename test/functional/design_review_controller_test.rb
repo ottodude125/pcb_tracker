@@ -1048,6 +1048,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #   - The information needed for the display is loaded.
   #
   ######################################################################
+  #
   def test_update_documents
 
     mx234a           = design_reviews(:mx234a_pre_artwork)
@@ -1075,12 +1076,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   # This method does the functional testing of the save_update method
   # from the Design Review class
   #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
-  #
   # Additional information:
   # Verifies the following
   #   - User can not update unless logged in
@@ -1105,9 +1100,48 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   end
 
 
-  def ntest_add_attachment
-    assert true
-    print('?')
+  #
+  ######################################################################
+  #
+  # test_add_attachment
+  #
+  # Description:
+  # This method does the functional testing of the add_attachment method
+  # from the Design Review class
+  #
+  # Additional information:
+  # Verifies the following
+  #   - User can not update unless logged in
+  #   - The information entered on the form is processed correctly.
+  #
+  ######################################################################
+  #
+  def test_add_attachment
+    
+    mx234a_pre_art = design_reviews(:mx234a_pre_artwork)
+
+    post(:add_attachment,
+         :id            => mx234a_pre_art.design.board.id,
+         :design_review => {:id => mx234a_pre_art.id})
+
+    assert_equal(mx234a_pre_art.id,              assigns(:design_review).id)
+    assert_equal(mx234a_pre_art.design.board.id, assigns(:board).id)
+    assert_kind_of(Document, assigns(:document))
+    doc_type = assigns(:document_types)
+    assert_equal(1, doc_type.size)
+    assert_equal("Other", doc_type[0].name)
+    
+    post(:add_attachment,
+         :id               => mx234a_pre_art.design.board.id,
+         :design_review_id => mx234a_pre_art.id)
+
+    assert_equal(mx234a_pre_art.id,              assigns(:design_review).id)
+    assert_equal(mx234a_pre_art.design.board.id, assigns(:board).id)
+    assert_kind_of(Document, assigns(:document))
+    doc_type = assigns(:document_types)
+    assert_equal(1, doc_type.size)
+    assert_equal("Other", doc_type[0].name)
+    
   end
 
 
