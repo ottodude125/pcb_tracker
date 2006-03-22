@@ -1496,13 +1496,21 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     low               = Priority.find_by_name('Low')
     bob_g             = User.find_by_last_name("Goldin")
     scott_g           = User.find_by_last_name("Glover")
+    patrice_m         = User.find_by_last_name("Michaels")
 
     assert_equal(high.id,  mx234a_design.priority_id)
     assert_equal(bob_g.id, mx234a_design.designer_id)
 
+    release_review = ReviewType.find_by_name('Release')
     for mx234a_dr in mx234a_design.design_reviews
       assert_equal(high.id,  mx234a_dr.priority_id)
-      assert_equal(bob_g.id, mx234a_dr.designer_id)
+      if release_review.id != mx234a_dr.review_type_id
+        assert_equal(User.find(bob_g.id).name,
+                     User.find(mx234a_dr.designer_id).name)
+      else
+        assert_equal(User.find(patrice_m.id).name,
+                     User.find(mx234a_dr.designer_id).name)
+      end
     end
 
     assert_equal(ReviewType.find_by_name("Pre-Artwork").id,
@@ -1560,6 +1568,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     pre_art_design_review = DesignReview.find(mx234a.id)
     assert_equal(in_review.id, pre_art_design_review.review_status_id)
+    assert_equal('09-04-00',
+                 pre_art_design_review.completed_on.strftime('%d-%m-%y'))
 
 
     # Handle special proessing for PCB Design Manager
@@ -1593,17 +1603,19 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal(low.name, Priority.find(mx234a_dr.priority_id).name)
       case ReviewType.find(mx234a_dr.review_type_id).name
       when 'Pre-Artwork'
-        assert_equal(bob_g.name, User.find(mx234a_dr.designer_id).name)
+        assert_equal(bob_g.name,     User.find(mx234a_dr.designer_id).name)
       when 'Release'
-        assert_equal(bob_g.name, User.find(mx234a_dr.designer_id).name)
+        assert_equal(patrice_m.name, User.find(mx234a_dr.designer_id).name)
       else
-        assert_equal(scott_g.name, User.find(mx234a_dr.designer_id).name)
+        assert_equal(scott_g.name,   User.find(mx234a_dr.designer_id).name)
       end
     end
 
     assert_equal(ReviewType.find_by_name("Placement").id,
                  mx234a_design.phase_id)
     assert_equal('Review Completed', mx234a_pre_art_dr.review_status.name)
+    assert_equal(Time.now.strftime('%d-%m-%y'),
+                 mx234a_pre_art_dr.completed_on.strftime('%d-%m-%y'))
     assert_equal(12, 
                  DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
 
@@ -1616,18 +1628,223 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   end
 
 
-  def ntest_reassign_reviewer
-    assert true
-    print('?')
+  def test_reassign_reviewer
+
+    set_user(users(:matt_d).id, 'Reviewer')
+    post(:reassign_reviewer,
+         :design_review_id => design_reviews(:mx234a_pre_artwork).id)
+
+    peer_list = assigns(:matching_roles)
+
+    assert_equal(1, peer_list.size)
+    assert_equal('Planning', 
+                 Role.find(peer_list[0][:design_review].role_id).name)
+    assert_equal(1, peer_list[0][:peers].size)
+    peer = peer_list[0][:peers].pop
+    assert_equal('Tina Delacuesta', peer.name)
+
+    set_user(users(:rich_a).id, 'Reviewer')
+    post(:reassign_reviewer,
+         :design_review_id => design_reviews(:mx234a_pre_artwork).id)
+
+    peer_list = assigns(:matching_roles).sort_by { |match|
+      Role.find(match[:design_review].role_id).name
+    }
+
+    assert_equal(2, peer_list.size)
+
+    assert_equal('HWENG', 
+                 Role.find(peer_list[0][:design_review].role_id).name)
+    assert_equal(nil, peer_list[0][:peers])
+
+    assert_equal('TDE',
+                 Role.find(peer_list[1][:design_review].role_id).name)
+    assert_equal(1, peer_list[1][:peers].size)
+    peer = peer_list[1][:peers].pop
+    assert_equal('Man Chan', peer.name)
+
+    end
+
+
+  def test_update_review_assignments
+
+  hw_review_result = 
+    DesignReviewResult.find(design_review_results(:mx234a_pre_artwork_hw).id)
+  tde_review_result =
+    DesignReviewResult.find(design_review_results(:mx234a_pre_artwork_tde).id)
+
+    assert_equal('Lee Schaff', User.find(hw_review_result.reviewer_id).name)
+
+    set_user(users(:rich_a).id, 'Reviewer')
+    post(:update_review_assignments,
+         :id               => design_reviews(:mx234a_pre_artwork).id,
+         '5_assign_to_self' => 'yes')
+
+    email = @emails.pop
+    assert_equal(0, @emails.size)
+    assert_equal('mx234a: The HWENG review has been reassigned to Rich Ahamed',
+                 email.subject)
+
+    hw_review_result.reload
+    assert_equal('Rich Ahamed', User.find(hw_review_result.reviewer_id).name)
+    assert_equal('Rich Ahamed', User.find(tde_review_result.reviewer_id).name)
+
+    post(:update_review_assignments,
+         :id     => design_reviews(:mx234a_pre_artwork).id,
+         :user   => {'TDE'   => '7201',
+                     'HWENG' => '6000'})
+    email = @emails.pop
+    assert_equal(1, @emails.size)
+    assert_equal('mx234a: You have been assigned to perform the TDE review',
+                 email.subject)
+    email = @emails.pop
+    assert_equal(0, @emails.size)
+    assert_equal('mx234a: You have been assigned to perform the HWENG review',
+                 email.subject)
+
+    hw_review_result.reload
+    assert_equal('Ben Bina', User.find(hw_review_result.reviewer_id).name)
+    tde_review_result.reload
+    assert_equal('Man Chan', User.find(tde_review_result.reviewer_id).name)
+
   end
 
 
-  def ntest_update_review_assignments
-    assert true
-    dump_design
+  #
+  ######################################################################
+  #
+  # test_admin_update
+  #
+  # Description:
+  # This method does the functional testing of the admin_update method
+  # from the Design Review class
+  #
+  ######################################################################
+  #
+  def test_admin_update
+
+    mx234a_pre_artwork = 
+      DesignReview.find(design_reviews(:mx234a_pre_artwork).id)
+
+    post(:admin_update, :id => mx234a_pre_artwork.id)
+
+    assert_equal(4, assigns(:designers).size)
+    assert_equal(4, assigns(:peer_list).size)
+    assert_equal(2, assigns(:priorities).size)
+    assert_equal(2, assigns(:design_centers).size)
+    
   end
 
 
+  #
+  ######################################################################
+  #
+  # test_proces_admin_update
+  #
+  # Description:
+  # This method does the functional testing of the process_admin_update 
+  # method from the Design Review class
+  #
+  ######################################################################
+  #
+  def test_process_admin_update
+
+    mx234a_pre_artwork = 
+      DesignReview.find(design_reviews(:mx234a_pre_artwork).id)
+    bob_g   = User.find_by_last_name("Goldin")
+    scott_g = User.find_by_last_name("Glover")
+    rich_m  = User.find_by_last_name("Miller")
+    jan_k   = User.find_by_last_name("Kasting")
+
+    post(:process_admin_update,
+         :id       => mx234a_pre_artwork.id,
+         :designer => {:id => scott_g.id},
+         :peer     => {:id => scott_g.id})
+
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    assert_equal('Update not allowed - Must be admin or manager',
+                 flash['notice'])
+
+    set_user(users(:jim_l).id, 'Manager')
+    post(:process_admin_update,
+         :id       => mx234a_pre_artwork.id,
+         :designer => {:id => scott_g.id},
+         :peer     => {:id => scott_g.id})
+
+    assert_redirected_to(:action => "admin_update",
+                         :id     => mx234a_pre_artwork.id.to_s)
+    assert_equal('The peer and the designer must be different - update not recorded',
+                 flash['notice'])
+
+    mx234a = Design.find(designs(:mx234a).id)
+    assert_equal(User.find(users(:bob_g).id).name,
+                 User.find(mx234a.designer_id).name)
+    assert_equal(User.find(users(:scott_g).id).name,
+                 User.find(mx234a.peer_id).name)
+    assert_equal(Priority.find(priorities(:high).id).name,
+                 Priority.find(mx234a.priority_id).name)
+
+    expected_reviews = {
+      'Release' => {:designer      => 'Patrice Michaels',
+                    :priority      => 'High',
+                    :design_center => 'Boston (Harrison)'}
+    }
+    expected_reviews.default = {
+      :designer      => 'Robert Goldin',
+      :priority      => 'High',
+      :design_center => 'Boston (Harrison)'
+    }
+    for design_review in mx234a.design_reviews
+      assert_equal(expected_reviews[design_review.review_type.name][:designer],
+                   User.find(design_review.designer_id).name)
+      assert_equal(expected_reviews[design_review.review_type.name][:priority],
+                   Priority.find(design_review.priority_id).name)
+      assert_equal(expected_reviews[design_review.review_type.name][:design_center],
+                   DesignCenter.find(design_review.design_center_id).name)
+    end
+
+    post(:process_admin_update,
+         :id             => mx234a_pre_artwork.id,
+         :designer       => {:id => rich_m.id},
+         :pcb_input_gate => {:id => jan_k.id},
+         :peer           => {:id => scott_g.id},
+         :priority       => {:id => priorities(:low).id},
+         :design_center  => {:id => design_centers(:fridley).id})
+
+    assert_equal(User.find(users(:bob_g).id).name,
+                 User.find(mx234a.designer_id).name)
+    assert_equal(User.find(users(:scott_g).id).name,
+                 User.find(mx234a.peer_id).name)
+    assert_equal(Priority.find(priorities(:high).id).name,
+                 Priority.find(mx234a.priority_id).name)
+
+    mx234a.reload
+
+    expected_reviews = {
+      'Release'     => {:designer      => 'Patrice Michaels',
+                        :priority      => 'Low',
+                        :design_center => 'Fridley'},
+      'Pre-Artwork' => {:designer      => 'Jan Kasting',
+                        :priority      => 'Low',
+                        :design_center => 'Fridley'}
+    }
+    expected_reviews.default = {
+      :designer      => 'Rich Miller',
+      :priority      => 'Low',
+      :design_center => 'Fridley'
+    }
+    for design_review in mx234a.design_reviews
+      assert_equal(expected_reviews[design_review.review_type.name][:designer],
+                   User.find(design_review.designer_id).name)
+      assert_equal(expected_reviews[design_review.review_type.name][:priority],
+                   Priority.find(design_review.priority_id).name)
+      assert_equal(expected_reviews[design_review.review_type.name][:design_center],
+                   DesignCenter.find(design_review.design_center_id).name)
+    end
+   
+  end
+
+  
   def dump_design
 
     print "\n************** DUMP DESIGN *****************\n"
