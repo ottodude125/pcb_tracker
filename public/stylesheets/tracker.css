@@ -72,7 +72,7 @@ a:hover { color: #fff; background-color:#000; }
 	}
 
 .div { background-color: #023a94; 
-       height: 10px
+       height: 6px;
      }
 
 .confirm {
@@ -118,7 +118,25 @@ a:hover { color: #fff; background-color:#000; }
   width:          100%;
   border:         0px solid;
 }
-  
+
+.form_submit{
+  color: green;
+  font-weight: bold;
+}
+
+.form_return{
+  color: red;
+  font-weight: bold;
+}
+
+.nav_table{
+  margin-top:  10px;
+  border: 0px solid #dfdfdf;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .teraheader {
   background: #023a94;
   font-size: 14px;
