@@ -267,26 +267,44 @@
       <td valign="top"
           align="left">
         <table>
+          <tr><th>Other Actions</th></tr>
           <tr>
             <td>
-              <%= link_to(image_tag('attachments'),
-                            {:action           => 'review_attachments',
-                             :design_review_id => @design_review.id}) %>
+             <input type="button" 
+                    value="Attachments" 
+                    onClick="parent.location='<%= url_for(:controller => 'design_review', 
+                                                          :action => 'review_attachments',
+                                                          :design_review_id => @design_review.id) %>'" />
             </td>
           </tr>
+
           <tr>
             <td>
-              <%= link_to(image_tag('email'),
-                            {:action           => 'review_mail_list',
-                             :design_review_id => @design_review.id}) %>
+             <input type="button" 
+                    value="Email" 
+                    onClick="parent.location='<%= url_for(:controller => 'design_review', 
+                                                          :action => 'review_mail_list',
+                                                          :design_review_id => @design_review.id) %>'" />
             </td>
           </tr>
+
           <% if design_review_reassignable(@design_review) %>
             <tr>
               <td>
-                <%= link_to(image_tag('reassign_reviewer'),
-                              {:action           => 'reassign_reviewer',
-                               :design_review_id => @design_review.id}) %>
+             <input type="button" 
+                    value="Reassign" 
+                    onClick="parent.location='<%= url_for(:controller => 'design_review', 
+                                                          :action => 'reassign_reviewer',
+                                                          :design_review_id => @design_review.id) %>'" />
+              </td>
+            </tr>
+          <% end %>
+          <% if is_manager || is_admin %>
+            <tr>
+              <td>
+                <%= link_to(image_tag('update'),
+                              {:action => 'admin_update',
+                               :id     => @design_review.id}) %>
               </td>
             </tr>
           <% end %>
@@ -361,3 +379,4 @@
 <%# debug @designers %>
 <%# debug @priorities %>
 <%# debug @fab_houses %>
+<%# debug session[:roles] %>
