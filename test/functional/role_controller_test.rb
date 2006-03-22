@@ -66,7 +66,7 @@ class RoleControllerTest < Test::Unit::TestCase
     post(:list, 
          :page => 1)
 
-    assert_equal(18, assigns(:roles).size)
+    assert_equal(19, assigns(:roles).size)
 
   end
 
@@ -89,7 +89,7 @@ class RoleControllerTest < Test::Unit::TestCase
   #
   def test_create
 
-   assert_equal(18, Role.find_all.size)
+   assert_equal(19, Role.find_all.size)
 
     new_role = {
       'active' => '1',
@@ -100,14 +100,14 @@ class RoleControllerTest < Test::Unit::TestCase
     post(:create,
          :new_role  => new_role);
 
-    assert_equal(19, Role.find_all.size)
+    assert_equal(20, Role.find_all.size)
     assert_equal("Role #{new_role['name']} added", flash['notice'])
     assert_redirected_to(:action => 'list')
 
     post(:create,
          :new_role => new_role);
 
-    assert_equal(19, Role.find_all.size)
+    assert_equal(20, Role.find_all.size)
     assert_equal("Name has already been taken", flash['notice'])
     assert_redirected_to(:action => 'add')
 
