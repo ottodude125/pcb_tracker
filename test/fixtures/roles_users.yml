@@ -115,3 +115,6 @@ tina_planning:
 jim_l_pcb:
   role_id: 12
   user_id: 4001
+patrice_m_pcb_admin:
+  role_id: 20
+  user_id: 8000
