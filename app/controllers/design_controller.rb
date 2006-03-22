@@ -664,8 +664,9 @@ class DesignController < ApplicationController
 
     @design        = Design.find(@params[:design_id])
     document_types = DocumentType.find_all(nil, 'name ASC')
-    @pre_art        = ReviewType.find_by_name("Pre-Artwork")
-
+    @pre_art       = ReviewType.find_by_name("Pre-Artwork")
+    @design_review = @design.design_reviews { |dr| dr.review_type_id == @pre_art.id }
+    
     @documents = []
     for doc_type in document_types
 
