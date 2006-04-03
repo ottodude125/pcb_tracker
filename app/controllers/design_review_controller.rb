@@ -1440,7 +1440,8 @@ class DesignReviewController < ApplicationController
       design_review.review_status_id = pending_repost.id
       design_review.update
 
-    else
+    elsif review_results[:roles].size > 0
+
       # If all of the reviews have a positive response, the review is complete
       response = ['WITHDRAWN', 'No Response', 'REJECTED']
       outstanding_result = review_result_list.find { |rr| response.include?(rr.result) }
