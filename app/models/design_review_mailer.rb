@@ -103,6 +103,11 @@ class DesignReviewMailer < ActionMailer::Base
     
     if design_review.review_type.name == "Release"
       @cc.push("STD_DC_ECO_Inbox@notes.teradyne.com")
+    elsif design_review.review_type.name == "Final"
+      pcb_admin = Role.find_by_name("PCB Admin")
+      for user in pcb_admin.users
+        @cc.push(user.email)
+      end
     end
     
     @body['design_review_id'] = design_review.id
@@ -140,6 +145,13 @@ class DesignReviewMailer < ActionMailer::Base
     @sent_on    = Time.now
     @headers    = {}
     @cc         = copy_to(design_review)
+
+    if design_review.review_type.name == "Final"
+      pcb_admin = Role.find_by_name("PCB Admin")
+      for user in pcb_admin.users
+        @cc.push(user.email)
+      end
+    end
 
     @body['user']          = User.find(design_review.designer_id)
     @body['comments']      = comment
