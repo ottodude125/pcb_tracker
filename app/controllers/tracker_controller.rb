@@ -272,6 +272,7 @@ class TrackerController < ApplicationController
       DesignReview.find_all("review_status_id='#{pending_repost.id}'")
 
     design_reviews = design_reviews.sort_by { |dr| dr.priority.value }
+    design_reviews.reverse!
     
     @my_reviews    = Array.new
     @other_reviews = Array.new
