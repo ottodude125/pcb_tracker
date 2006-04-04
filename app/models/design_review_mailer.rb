@@ -106,7 +106,7 @@ class DesignReviewMailer < ActionMailer::Base
     elsif design_review.review_type.name == "Final"
       pcb_admin = Role.find_by_name("PCB Admin")
       for user in pcb_admin.users
-        @cc.push(user.email)
+        @cc.push(user.email) if user.active?
       end
     end
     
@@ -149,7 +149,7 @@ class DesignReviewMailer < ActionMailer::Base
     if design_review.review_type.name == "Final"
       pcb_admin = Role.find_by_name("PCB Admin")
       for user in pcb_admin.users
-        @cc.push(user.email)
+        @cc.push(user.email) if user.active?
       end
     end
 
