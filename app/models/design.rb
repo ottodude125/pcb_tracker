@@ -18,6 +18,7 @@ class Design < ActiveRecord::Base
   has_and_belongs_to_many :fab_houses
 
   has_many  :design_reviews
+  has_many  :ipd_posts
 
   has_one   :audit
 
