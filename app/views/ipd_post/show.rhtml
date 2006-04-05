@@ -1,0 +1,82 @@
+<% @heading = "#{@root_post.design.name} - #{@root_post.subject}"%>
+
+<%= start_form_tag(:action    => 'create_reply',
+                   :id        => @root_post,
+                   :design_id => @root_post.design_id) %>
+<table border='0' cellspacing="0" width="80%" align="center">
+  <tr>
+    <td align="right" colspan="2">
+      <input class="form_return" type="button" value="Back"
+             onClick="parent.location='<%= url_for(:action => 'list',
+                                                   :design_id => @root_post.design_id) %>'" />
+    </td>
+  </tr>
+  <tr bgcolor="#dfdfdf">
+    <td colspan="2"><b>Posted By:</b>
+        <%= @root_post.user.name %> <b>On:</b>
+        <%= @root_post.created_at.strftime('%d-%b-%y at %I:%M %p') %>
+    </td>
+  </tr>
+  <tr bgcolor="#efefef">
+    <td colspan="2" valign="top">
+      <%= auto_link simple_format(h(@root_post.body)), 
+                    :all,
+                    :target => '_blank' %>
+    </td>
+  </tr>
+  <tr>
+    <th colspan="2" class="teraheader">Attachments</th>
+  </tr>
+  <% if @root_post.children_count > 0 %>
+    <tr>
+      <th colspan="2" class="teraheader">
+        Replies
+      </th>
+    </tr>
+    
+    <tr>
+      <td>
+        <table cellspacing="0" width="95%" align="right">
+          <% for child_post in @root_post.direct_children %>
+            <tr bgcolor="#dfdfdf">
+              <td colspan="2"><b>Posted By:</b>
+                <%= child_post.user.name %> <b>On:</b>
+                <%= child_post.created_at.strftime('%d-%b-%y at %I:%M %p') %>
+              </td>
+            </tr>
+            <tr bgcolor="#efefef">
+              <td colspan="2" valign="top">
+                <%= auto_link simple_format(h(child_post.body)), 
+                              :all,
+                              :target => '_blank' %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </td>
+    </tr>
+  <% end %>
+  <tr>
+    <td colspan="2">
+      <p><label for="reply_post_body">Reply</label><br/>
+      <%= text_area('reply_post', 
+                    'body',
+                    :cols => "65",
+                    :rows => "10")  %></p>
+    </td>
+  </tr>
+  <tr>
+    <td align="left">
+      <%= submit_tag('Reply', 
+                     :class => 'form_submit') %>
+    </td>
+    <td align="right">
+      <input class="form_return" type="button" value="Back"
+             onClick="parent.location='<%= url_for(:action => 'list',
+                                                   :design_id => @root_post.design_id) %>'" />
+    </td>
+  </tr>
+</table>
+
+<%= end_form_tag %>
+<%# debug @ipd_post %>

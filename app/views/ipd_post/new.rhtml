@@ -1,0 +1,22 @@
+<h1><%= @ipd_post.design.name %> - New In-Process Dialogue Post</h1>
+
+<%= start_form_tag :action => 'create' %>
+  <%= render :partial => 'form' %>
+  
+  <table border='0' width='550'>
+    <tr>
+      <td align="left">
+        <%= submit_tag "Create New Post", :class => 'form_submit' %>
+      </td>
+      <td align="right">
+        <input class="form_return" type="button" value="Return"
+               onClick="parent.location='<%= url_for(:action => 'list',
+                                                     :design_id => @ipd_post.design_id) %>'" />
+      </td>
+    </tr>
+  </table>
+<%= end_form_tag %>
+
+<%= link_to 'Back', :action => 'list' %>
+
+<%= debug @ipd_post %>
