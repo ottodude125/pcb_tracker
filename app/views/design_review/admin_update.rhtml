@@ -1,0 +1,140 @@
+
+<% @heading = "Update #{@design_review.design.name} " %>
+
+<%= start_form_tag(:action => 'process_admin_update',
+                   :id => @design_review.id) %>
+
+  <hr class='div' />
+  
+  <table class="nav_table">
+    <tr>
+      <td align="left">
+        <% if @session[:return_to] %>
+          <input class="form_return" type="button" value="Return - No Changes" 
+                 onClick="parent.location='<%= url_for(@session[:return_to]) %>'" />
+        <% else %>
+          <input class="form_return" type="button" value="Return - No Changes" 
+                 onClick="parent.location='<%= url_for( :action => 'index', :controller => 'tracker' ) %>'" />
+        <% end %>
+      </td>
+      <td align="right">
+        <input class="form_submit" type="submit" value="Update" />
+      </td>
+    </tr>
+  </table>
+  
+
+  <table width="60%"
+         align="center"
+         border="0">
+    <tr>
+      <td>&nbsp;</td>
+      <th align="left">Current<br />Value</th>
+      <th align="left">New<br />Value</th>
+    </tr>
+    
+    <% if @designer %>
+      <tr>
+        <th align="left" width="140">Pre-Artwork:</th>
+        <td align="left">
+          <%= @pcb_input_gate %>
+        </td>
+        <% if !pre_artwork_complete(@design_review.design) %>
+          <td>
+            <select id="pcb_input_gate"
+                    name="pcb_input_gate[id]"
+                    class="name_select">
+            <%= options_from_collection_for_select(@pcb_input_gate_list,
+                                                   "id",
+                                                   "name",
+                                                   @pcb_input_gate_id) %>
+            </select>
+          </td>
+        <% else %>
+          <td>Pre-Artwork Design Review is complete</td>
+        <% end %>
+      </tr>
+    
+      <tr>
+        <th align="left" width="140">Designer:</th>
+        <td align="left">
+          <%= @designer.name %>
+        </td>
+        <td>
+          <select id="designer"
+                  name="designer[id]"
+                  class="name_select">
+          <%= options_from_collection_for_select(@designers,
+                                                 "id",
+                                                 "name",
+                                                 @designer.id) %>
+          </select>
+        </td>
+      </tr>
+      <tr>
+        <th align="left">Peer Reviewer:</th>
+        <td align="left">
+          <% begin %>
+            <%= User.find(@design_review.design.peer_id).name %>
+          <% rescue %>
+            Not Set
+          <% end %>
+        </td>
+        <td>
+          <select id="peer"
+                  name="peer[id]"
+                  class="name_select">
+          <%= options_from_collection_for_select(@peer_list,
+                                                 "id",
+                                                 "name",
+                                                 @design_review.design.peer_id) %>
+          </select>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <th align="left">Design Center:</th>
+      <td align="left"><%= @design_review.design_center.name %></td>
+      <td>
+        <select id="design_center"
+                name="design_center[id]"
+                class="name_select">
+        <%= options_from_collection_for_select(@design_centers,
+                                               "id",
+                                               "name",
+                                               @design_review.design_center_id) %>
+        </select>
+      </td>
+    </tr>
+    
+    <% if @designer %>
+      <tr>
+        <th align="left">Criticality:</th>
+        <td align="left"><%= @design_review.design.priority.name %></td>
+        <td>
+          <select id="priority"
+                  name="priority[id]"
+                  class="name_select">
+          <%= options_from_collection_for_select(@priorities,
+                                                 "id",
+                                                 "name",
+                                                 @design_review.design.priority_id) %>
+          </select>
+        </td>
+      </tr>
+    <% end %>
+    
+  </table>
+
+  
+  <hr class='div' />
+
+<%= end_form_tag %>
+
+<%# debug @matching_roles %>
+<%# debug @design_review %>
+<%# debug @design_centers %>
+<%# debug request.parameters %>
+<%# debug request.session %>
+<%# debug request %>
+<%# debug session %>
