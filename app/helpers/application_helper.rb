@@ -13,6 +13,25 @@
 
 module ApplicationHelper
 
+
+  ######################################################################
+  #
+  # split_into_cols
+  #
+  # Description:
+  # This method uses the list and column number passed in to compute 
+  # the slices of the list that will be displayed into each column.
+  #
+  # Parameters:
+  # list    - the list that will be divided into columns
+  # columns - the number of columns to split the list into for display
+  #
+  # Returns:
+  # An array of slices that define the range of the list that are
+  # to be displayed in each column.
+  #
+  ######################################################################
+  #
   def split_into_cols(list, columns)
 
     cols = [{:empty => true}]
@@ -51,16 +70,65 @@ module ApplicationHelper
   end
 
 
+  ######################################################################
+  #
+  # is_manager
+  #
+  # Description:
+  # This method determines if the user is a manager.  The information
+  # stored in the session data is used to make the determination.
+  #
+  # Parameters:
+  # None
+  #
+  # Returns:
+  # True if the user is a manager, false otherwise.
+  #
+  ######################################################################
+  #
   def is_manager
     session[:roles].include?(Role.find_by_name("Manager"))
   end
 
 
+  ######################################################################
+  #
+  # is_admin
+  #
+  # Description:
+  # This method determines if the user is a tracker admin.  The information
+  # stored in the session data is used to make the determination.
+  #
+  # Parameters:
+  # None
+  #
+  # Returns:
+  # True if the user is a tracker admin, false otherwise.
+  #
+  ######################################################################
+  #
   def is_admin
     session[:roles].include?(Role.find_by_name("Admin"))
   end
 
 
+  ######################################################################
+  #
+  # pre_artwork_complete
+  #
+  # Description:
+  # This method determines if a design's pre-artwork design review
+  # is complete.
+  #
+  # Parameters:
+  # design - provides access to the pre-artwork design review that the
+  #          caller is interested in.
+  #
+  # Returns:
+  # True if the pre-artwork design review is complete, false otherwise.
+  #
+  ######################################################################
+  #
   def pre_artwork_complete(design)
 
     pre_art_review_type = ReviewType.find_by_name('Pre-Artwork')
@@ -71,6 +139,59 @@ module ApplicationHelper
     done = ReviewStatus.find_by_name('Review Completed')
     done.id == pre_art_design_review.review_status_id
     
+  end
+
+
+  ######################################################################
+  #
+  # workdays
+  #
+  # Description:
+  # Given a start and stop time, this method computes the work days 
+  # between the 2 times.
+  #
+  # Parameters:
+  # start_time - the beginning of the time slice
+  # end_time   - the end of the time slice
+  #
+  # Returns:
+  # The number of days between the 2 time stamps.
+  #
+  ######################################################################
+  #
+  def workdays (start_time, end_time)
+    workdays = 0
+    while start_time <= end_time
+      day = start_time.strftime("%w").to_i
+      workdays += 1 if day > 0 && day < 6
+      # Add a day.
+      start_time += 86400
+    end
+    workdays
+  end
+
+
+  ######################################################################
+  #
+  # design_center_path
+  #
+  # Description:
+  # Given a design review, creates the url to access the design.
+  #
+  # Parameters:
+  # design_review - provides access to the design to create the url.
+  #
+  # Returns:
+  # The url to get to the design data.
+  #
+  ######################################################################
+  #
+  def design_center_path(design_review)
+    'http://etg.teradyne.com/surfboards/'  +
+      design_review.design_center.pcb_path +
+      '/'
+      design_review.design.name            +
+      '/public'
   end
 
 
