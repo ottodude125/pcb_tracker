@@ -17,16 +17,21 @@
   <td>
     <%= User.find(reviewer_home_list_stripes.design.designer_id).name %>
   </td>
-  <td>
-    <%= reviewer_home_list_stripes.reposted_on.strftime('%d-%b-%y') %>
+  <td title="Age in work days">
+    <%= workdays(reviewer_home_list_stripes.reposted_on,
+                 Time.now) %>
   </td>
   
   <% if my_reviews %>
   <td>
+    <%= button_to('In-Process Dialogue',
+                  { :controller => 'ipd_post',
+                    :action     => 'list',
+                    :design_id  => reviewer_home_list_stripes.design.id },
+                  :title => "Initiate and discuss all in-process changes for the #{reviewer_home_list_stripes.design.name}") %>
     <table cellpadding="0" cellspacing="1">
       <% for result in get_my_results(reviewer_home_list_stripes.id) %>
         <tr>
-          <td><%= result[0] %></td>
           <% if result.size > 1 %>
             <td><%= result[1] %></td>
           <% else %>
