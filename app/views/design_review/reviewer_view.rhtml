@@ -39,7 +39,7 @@
                 width="140">Design Center:</th>
             <td>
               <%= link_to(@design_review.design_center.name,
-                          "http://etg.teradyne.com/surfboards/" + @design_review.design_center.pcb_path + '/'+ @design.name) %>
+                          design_center_path(@design_review)) %>
             </td>
           </tr>
           <tr>
