@@ -100,14 +100,17 @@ class DesignReviewMailer < ActionMailer::Base
     @sent_on    = Time.now
     @headers    = {}
     @cc         = copy_to(design_review)
-    
-    if design_review.review_type.name == "Release"
+
+    case design_review.review_type.name
+    when "Release"
       @cc.push("STD_DC_ECO_Inbox@notes.teradyne.com")
-    elsif design_review.review_type.name == "Final"
+    when "Final"
       pcb_admin = Role.find_by_name("PCB Admin")
       for user in pcb_admin.users
         @cc.push(user.email) if user.active?
       end
+    when 'Pre-Artwork'
+      @cc.push(User.find(design_review.design.designer_id).email)
     end
     
     @body['design_review_id'] = design_review.id
