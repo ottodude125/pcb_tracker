@@ -563,6 +563,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #
   def test_post
 
+    admin_email = users(:patrice_m).email
+
     set_user(users(:scott_g).id, 'Designer')
     mx234a_pre_artwork = design_reviews(:mx234a_pre_artwork)
 
@@ -612,13 +614,78 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     for review_result in mx234a_pre_art_results
       assert_equal('No Response', review_result.result)
     end
+    
     comments = DesignReviewComment.find_all_by_design_review_id(mx234a_pre_artwork.id)
     assert_equal(1, comments.size)
     dr_comment = comments.pop
     assert_equal('Test Comment',     dr_comment.comment)
     assert_equal(users(:scott_g).id, dr_comment.user_id)
 
+    email = @emails.pop
+    assert_equal(0, @emails.size)
+    assert_equal("mx234a: The Pre-Artwork review has been posted", 
+                 email.subject)
+    found_email = email.cc.detect { |addr| addr == admin_email }
+    assert_equal(nil, found_email)
+
+
+    mx234a_final = design_reviews(:mx234a_final)
+
+    # Verify the state before posting.
+    assert_equal(ReviewStatus.find_by_name('Not Started').id,
+                 mx234a_final.review_status_id)
+    assert_equal(0, mx234a_final.posting_count)
+
+    mx234a_final_results = DesignReviewResult.find_all_by_design_review_id(
+                             mx234a_final.id)
+    assert_equal(9, mx234a_final_results.size)
+    for review_result in mx234a_final_results
+      assert_equal('None', review_result.result)
+    end
+    comments = DesignReviewComment.find_all_by_design_review_id(mx234a_final.id)
+    assert_equal(0, comments.size)
+                 
+    post(:post,
+         :design_review   => {:id => mx234a_final.id},
+         :board_reviewers => {'7'  => '7101',
+                              '8'  => '7150',
+                              '5'  => '7001',
+                              '10' => '7251',
+                              '11' => '7300',
+                              '12' => '4001',
+                              '9'  => '7200',
+                              '6'  => '7050',
+                              '13' => '7650'},
+         :post_comment    => {:comment => 'Test Comment'})
+
+    design_review_update = DesignReview.find(mx234a_final.id)
+
+    # Verify the state after posting.
+    assert_equal(ReviewStatus.find_by_name('Not Started').id,
+                 mx234a_final.review_status_id)
+    design_review = DesignReview.find(mx234a_final.id)
+    assert_equal(1, design_review.posting_count)
+
+    mx234a_final_results = DesignReviewResult.find_all_by_design_review_id(
+                             mx234a_final.id)
+    assert_equal(9, mx234a_final_results.size)
+    for review_result in mx234a_final_results
+      assert_equal('No Response', review_result.result)
+    end
     
+    comments = DesignReviewComment.find_all_by_design_review_id(mx234a_final.id)
+    assert_equal(1, comments.size)
+    dr_comment = comments.pop
+    assert_equal('Test Comment',     dr_comment.comment)
+    assert_equal(users(:scott_g).id, dr_comment.user_id)
+
+    email = @emails.pop
+    assert_equal(0, @emails.size)
+    assert_equal("mx234a: The Final review has been posted", 
+                 email.subject)
+    found_email = email.cc.detect { |addr| addr == admin_email }
+    assert_equal(admin_email, found_email)
+
   end
 
 
@@ -1145,9 +1212,10 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   end
 
 
-  def ntest_save_attachment
-    assert true
-    print('?')
+  def test_save_attachment
+    
+    #post(:save_attahment,
+    #    :document_type => {:id => ''})
   end
 
 
@@ -1204,6 +1272,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #
   def test_post_results
 
+    #
+    # THE PRE-ARTWORK REVIEW
+    #
     expected_results = {
       '7'  => "No Response",
       '8'  => "No Response",
@@ -1221,8 +1292,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       '12' => "No Response"
     }
 
-    in_review      = ReviewStatus.find_by_name("In Review")
-    pending_repost = ReviewStatus.find_by_name("Pending Repost")
+    in_review       = ReviewStatus.find_by_name("In Review")
+    pending_repost  = ReviewStatus.find_by_name("Pending Repost")
+    review_complete = ReviewStatus.find_by_name("Review Completed")
 
     mail_subject = 'mx234a::Pre-Artwork '
     reviewer_result_list= [
@@ -1458,7 +1530,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal("No Response", review_result.result)
     end
 
-    print "\n"
     repost = false
     for reviewer_result in reviewer_result_list
 
@@ -1469,7 +1540,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       end
       
       rev = User.find(reviewer_result[:user_id]).name
-      print "\nProcessing #{rev} - #{reviewer_result[:result]}"
       set_user(reviewer_result[:user_id], Role.find(reviewer_result[:role_id]))
 
       if reviewer_result[:result]
@@ -1521,7 +1591,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal(reviewer_result[:expected_results][:review_status_id],
                    pre_art_design_review.review_status_id)
     end
-    print "\n"
 
     #Verify the existing priority and designer.
     mx234a_pre_art_dr = DesignReview.find(mx234a.id)
@@ -1531,19 +1600,21 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     bob_g             = User.find_by_last_name("Goldin")
     scott_g           = User.find_by_last_name("Glover")
     patrice_m         = User.find_by_last_name("Michaels")
+    cathy_m           = User.find_by_last_name("McLaren")
 
     assert_equal(high.id,  mx234a_design.priority_id)
     assert_equal(bob_g.id, mx234a_design.designer_id)
 
     release_review = ReviewType.find_by_name('Release')
+    pre_art_review = ReviewType.find_by_name('Pre-Artwork')
     for mx234a_dr in mx234a_design.design_reviews
       assert_equal(high.id,  mx234a_dr.priority_id)
-      if release_review.id != mx234a_dr.review_type_id
-        assert_equal(User.find(bob_g.id).name,
-                     User.find(mx234a_dr.designer_id).name)
+      if release_review.id === mx234a_dr.review_type_id
+        assert_equal(patrice_m.name, User.find(mx234a_dr.designer_id).name)
+      elsif pre_art_review.id == mx234a_dr.review_type_id
+        assert_equal(cathy_m.name, User.find(mx234a_dr.designer_id).name)
       else
-        assert_equal(User.find(patrice_m.id).name,
-                     User.find(mx234a_dr.designer_id).name)
+        assert_equal(bob_g.name, User.find(mx234a_dr.designer_id).name)
       end
     end
 
@@ -1618,15 +1689,19 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     email = @emails.shift
     assert_equal(1, @emails.size)
-    # Expect comments - the fab houses changed
+
     assert_equal(mail_subject + ' PCB Design - APPROVED - See comments',
                  email.subject)
     email = @emails.shift
     assert_equal(0, @emails.size)
-    # Expect comments - the fab houses changed
+
     assert_equal('mx234a: Pre-Artwork Review is complete',
                  email.subject)
 
+    designer_email = User.find(mx234a_pre_art_dr.design.designer_id).email
+    found_email = email.cc.detect { |addr| addr == designer_email }
+    assert_equal(designer_email, found_email)
+    
     mx234a_pre_art_dr = DesignReview.find(mx234a.id)
     mx234a_design     = Design.find(mx234a_pre_art_dr.design_id)
 
@@ -1637,7 +1712,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal(low.name, Priority.find(mx234a_dr.priority_id).name)
       case ReviewType.find(mx234a_dr.review_type_id).name
       when 'Pre-Artwork'
-        assert_equal(bob_g.name,     User.find(mx234a_dr.designer_id).name)
+        assert_equal(cathy_m.name,   User.find(mx234a_dr.designer_id).name)
       when 'Release'
         assert_equal(patrice_m.name, User.find(mx234a_dr.designer_id).name)
       else
@@ -1652,6 +1727,827 @@ class DesignReviewControllerTest < Test::Unit::TestCase
                  mx234a_pre_art_dr.completed_on.strftime('%d-%m-%y'))
     assert_equal(12, 
                  DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
+
+                 
+    set_user(users(:dan_g).id, Role.find(roles(:slm_vendor).id))
+    post(:reviewer_results,
+         :post_comment  => {"comment" => 'This is a test.'},
+         :design_review => {"id"      => mx234a.id},
+                            :fab_house   => {'1' => '0',        '2' => '0',
+                                             '3' => '1',        '4' => '1',
+                                             '5' => '0',        '6' => '0',
+                                             '7' => '0',        '8' => '0'})
+                                             
+    assert_redirected_to(:action => :post_results)
+    post(:post_results)
+    
+    email = @emails.pop
+    assert_equal(0, @emails.size)
+    # Expect comments - the fab houses changed
+    assert_equal(mail_subject + '- Comments added',
+                 email.subject)
+
+    #
+    # THE PLACEMENT REVIEW
+    #
+    expected_results = {
+      '7'  => "No Response",
+      '8'  => "No Response",
+      '5'  => "No Response",
+      '10' => "No Response",
+      '11' => "No Response",
+      '9'  => "No Response"
+    }
+
+    mail_subject = 'mx234a::Placement '
+    reviewer_result_list= [
+      # Espo - CE-DFT Reviewer
+      {:user_id          => users(:espo).id,
+       :role_id          => roles(:ce_dft).id,
+       :comment          => 'This is good!',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_placement_ce_dft).id,
+       :role_id_tag      => 'role_id_7',
+       :expected_results => {
+         :comments_count   => 1,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' CE-DFT - APPROVED - See comments'
+       }
+      },
+      # Heng Kit Too - DFM Reviewer
+      {:user_id          => users(:heng_k).id,
+       :role_id          => roles(:dfm).id,
+       :comment          => 'This is good enough to waive.',
+       :result           => 'WAIVED',
+       :review_result_id => design_review_results(:mx234a_placement_dfm).id,
+       :role_id_tag      => ':role_id_8',
+       :expected_results => {
+         :comments_count => 2,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' DFM - WAIVED - See comments'
+       }
+      },
+      # Lee Shaff- HW Reviewer
+      {:user_id          => users(:lee_s).id,
+       :role_id          => roles(:hweng).id,
+       :comment          => 'No Comment',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_placement_hw).id,
+       :role_id_tag      => ':role_id_5',
+       :expected_results => {
+         :comments_count => 3,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' HWENG - APPROVED - See comments'
+       }
+      },
+      # Tom Flak - Mehanical
+      {:user_id          => users(:tom_f).id,
+       :role_id          => roles(:mechanical).id,
+       :comment          => 'This is good!',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_placement_mech).id,
+       :role_id_tag      => 'role_id_10',
+       :expected_results => {
+         :comments_count => 4,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' Mechanical - APPROVED - See comments'
+       }
+      },
+      # Anthony Gentile - Mechanical MFG
+      {:user_id          => users(:anthony_g).id,
+       :role_id          => roles(:mechanical_manufacturing).id,
+       :comment          => '',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_placement_mech_mfg).id,
+       :role_id_tag      => 'role_id_11',
+       :expected_results => {
+         :comments_count => 4,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' Mechanical-MFG - APPROVED - No comments'
+       }
+      },
+      # Rich Ahamed - TDE
+      {:user_id          => users(:rich_a).id,
+       :role_id          => roles(:tde).id,
+       :comment          => '',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_placement_tde).id,
+       :role_id_tag      => 'role_id_9',
+       :expected_results => {
+         :comments_count => 4,
+         :review_status_id => review_complete.id,
+         :mail_count       => 2,
+         :mail_subject     => mail_subject + ' TDE - APPROVED - No comments'
+       }
+      }
+    ]
+
+    mx234a = design_reviews(:mx234a_placement)
+
+    update_mx234a = DesignReview.find(mx234a.id)
+    update_mx234a.review_status_id = ReviewStatus.find_by_name('In Review').id
+    update_mx234a.update
+
+    mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+    for mx234a_review_result in mx234a_review_results
+      mx234a_review_result.result = 'No Response'
+      mx234a_review_result.update
+    end
+
+    mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+
+    assert_equal(reviewer_result_list.size,
+                 mx234a_review_results.size)
+    assert_equal(0, 
+                 DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
+    for review_result in mx234a_review_results
+      assert_equal("No Response", review_result.result)
+    end
+
+    repost = false
+    for reviewer_result in reviewer_result_list
+
+      if repost
+        update_mx234a = DesignReview.find(mx234a.id)
+        update_mx234a.review_status_id = ReviewStatus.find_by_name('In Review').id
+        update_mx234a.update
+      end
+      
+      rev = User.find(reviewer_result[:user_id]).name
+      set_user(reviewer_result[:user_id], Role.find(reviewer_result[:role_id]))
+
+      if reviewer_result[:result]
+        post(:reviewer_results,
+             :post_comment                 => {"comment" => reviewer_result[:comment]},
+             reviewer_result[:role_id_tag] => {reviewer_result[:review_result_id] => reviewer_result[:result]},
+             :design_review                => {"id"      => mx234a.id})
+        expected_results[reviewer_result[:role_id].to_s] = reviewer_result[:result]
+      else
+        post(:reviewer_results,
+             :post_comment  => {"comment" => reviewer_result[:comment]},
+             :design_review => {"id"      => mx234a.id})
+      end
+
+      if reviewer_result[:result] != 'REJECTED'
+        assert_redirected_to(:action => :post_results)
+      else
+        expected_results.each { |k,v| 
+          expected_results[k] = 'WITHDRAWN' if v == 'APPROVED'
+        }
+        assert_redirected_to(:action => :confirm_rejection)
+        post(:confirm_rejection)
+        repost = true
+      end
+
+      post(:post_results)
+
+      assert_equal(reviewer_result[:expected_results][:mail_count], 
+                   @emails.size)
+      email = @emails.pop
+
+      if @emails.size > 0
+        assert_equal("mx234a: Placement Review is complete",
+                     email.subject)
+        email = @emails.pop
+      end
+      
+      assert_equal(reviewer_result[:expected_results][:mail_subject],
+                   email.subject)
+                   
+      design_review_comments = DesignReviewComment.find_all_by_design_review_id(mx234a.id)
+      assert_equal(reviewer_result[:expected_results][:comments_count], 
+                   design_review_comments.size)
+      if reviewer_result[:comment] != ''
+        assert_equal(reviewer_result[:comment],
+                     design_review_comments.pop.comment)
+      end
+
+      review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+
+      for review_result in review_results
+        assert_equal(expected_results[review_result.role_id.to_s],
+                     review_result.result)
+      end
+
+      placement_design_review = DesignReview.find(mx234a.id)
+      assert_equal(reviewer_result[:expected_results][:review_status_id],
+                   placement_design_review.review_status_id)
+    end
+
+    mx234a_design.reload
+    mx234a_placement_dr = DesignReview.find(mx234a.id)
+    assert_equal(ReviewType.find_by_name("Routing").id,
+                 mx234a_design.phase_id)
+    assert_equal('Review Completed', 
+                 mx234a_placement_dr.review_status.name)
+    assert_equal(Time.now.strftime('%d-%m-%y'),
+                 mx234a_placement_dr.completed_on.strftime('%d-%m-%y'))
+
+    #
+    # THE ROUTING REVIEW
+    #
+    expected_results = {
+      '7'  => "No Response",
+      '8'  => "No Response",
+      '5'  => "No Response",
+      '18' => "No Response",
+      '11' => "No Response"
+    }
+
+    mail_subject = 'mx234a::Routing '
+    reviewer_result_list= [
+      # Espo - CE-DFT Reviewer
+      {:user_id          => users(:espo).id,
+       :role_id          => roles(:ce_dft).id,
+       :comment          => 'This is good!',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_route_ce_dft).id,
+       :role_id_tag      => 'role_id_7',
+       :expected_results => {
+         :comments_count   => 1,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' CE-DFT - APPROVED - See comments'
+       }
+      },
+      # Dan Gough - SLM - Vendor
+      {:user_id          => users(:dan_g).id,
+       :role_id          => roles(:slm_vendor).id,
+       :comment          => 'I am stressed and I am going to pull a nutty!!!!',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_routing_slm_v),
+       :role_id_tag      => 'role_id_18',
+       :expected_results => {
+         :comments_count   => 2,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' SLM-Vendor - APPROVED - See comments'
+       }
+      },
+      # Heng Kit Too - DFM Reviewer
+      {:user_id          => users(:heng_k).id,
+       :role_id          => roles(:dfm).id,
+       :comment          => 'This is good enough to waive.',
+       :result           => 'WAIVED',
+       :review_result_id => design_review_results(:mx234a_route_dfm).id,
+       :role_id_tag      => ':role_id_8',
+       :expected_results => {
+         :comments_count => 3,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' DFM - WAIVED - See comments'
+       }
+      },
+      # Lee Shaff- HW Reviewer
+      {:user_id          => users(:lee_s).id,
+       :role_id          => roles(:hweng).id,
+       :comment          => 'No Comment',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_route_hw).id,
+       :role_id_tag      => ':role_id_5',
+       :expected_results => {
+         :comments_count => 4,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' HWENG - APPROVED - See comments'
+       }
+      },
+      # Anthony Gentile - Mechanical MFG
+      {:user_id          => users(:anthony_g).id,
+       :role_id          => roles(:mechanical_manufacturing).id,
+       :comment          => '',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_placement_mech_mfg).id,
+       :role_id_tag      => 'role_id_11',
+       :expected_results => {
+         :comments_count => 4,
+         :review_status_id => review_complete.id,
+         :mail_count       => 2,
+         :mail_subject     => mail_subject + ' Mechanical-MFG - APPROVED - No comments'
+       }
+      }
+    ]
+
+    mx234a = design_reviews(:mx234a_routing)
+
+    update_mx234a = DesignReview.find(mx234a.id)
+    update_mx234a.review_status_id = ReviewStatus.find_by_name('In Review').id
+    update_mx234a.update
+
+    mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+    for mx234a_review_result in mx234a_review_results
+      mx234a_review_result.result = 'No Response'
+      mx234a_review_result.update
+    end
+
+    mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+
+    assert_equal(reviewer_result_list.size,
+                 mx234a_review_results.size)
+    assert_equal(0, 
+                 DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
+    for review_result in mx234a_review_results
+      assert_equal("No Response", review_result.result)
+    end
+
+    repost = false
+    for reviewer_result in reviewer_result_list
+
+      if repost
+        update_mx234a = DesignReview.find(mx234a.id)
+        update_mx234a.review_status_id = ReviewStatus.find_by_name('In Review').id
+        update_mx234a.update
+      end
+      
+      rev = User.find(reviewer_result[:user_id]).name
+      set_user(reviewer_result[:user_id], Role.find(reviewer_result[:role_id]))
+
+      if reviewer_result[:result]
+        post(:reviewer_results,
+             :post_comment                 => {"comment" => reviewer_result[:comment]},
+             reviewer_result[:role_id_tag] => {reviewer_result[:review_result_id] => reviewer_result[:result]},
+             :design_review                => {"id"      => mx234a.id})
+        expected_results[reviewer_result[:role_id].to_s] = reviewer_result[:result]
+      else
+        post(:reviewer_results,
+             :post_comment  => {"comment" => reviewer_result[:comment]},
+             :design_review => {"id"      => mx234a.id})
+      end
+
+      if reviewer_result[:result] != 'REJECTED'
+        assert_redirected_to(:action => :post_results)
+      else
+        expected_results.each { |k,v| 
+          expected_results[k] = 'WITHDRAWN' if v == 'APPROVED'
+        }
+        assert_redirected_to(:action => :confirm_rejection)
+        post(:confirm_rejection)
+        repost = true
+      end
+
+      post(:post_results)
+
+      assert_equal(reviewer_result[:expected_results][:mail_count], 
+                   @emails.size)
+      email = @emails.pop
+
+      if @emails.size > 0
+        assert_equal("mx234a: Routing Review is complete",
+                     email.subject)
+        email = @emails.pop
+      end
+      
+      assert_equal(reviewer_result[:expected_results][:mail_subject],
+                   email.subject)
+                   
+      design_review_comments = DesignReviewComment.find_all_by_design_review_id(mx234a.id)
+      assert_equal(reviewer_result[:expected_results][:comments_count], 
+                   design_review_comments.size)
+      if reviewer_result[:comment] != ''
+        assert_equal(reviewer_result[:comment],
+                     design_review_comments.pop.comment)
+      end
+
+      review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+
+      for review_result in review_results
+        assert_equal(expected_results[review_result.role_id.to_s],
+                     review_result.result)
+      end
+
+      routing_design_review = DesignReview.find(mx234a.id)
+      assert_equal(reviewer_result[:expected_results][:review_status_id],
+                   routing_design_review.review_status_id)
+    end
+
+    mx234a_design.reload
+    mx234a_routing_dr = DesignReview.find(mx234a.id)
+    assert_equal(ReviewType.find_by_name("Final").id,
+                 mx234a_design.phase_id)
+    assert_equal('Review Completed', 
+                 mx234a_routing_dr.review_status.name)
+    assert_equal(Time.now.strftime('%d-%m-%y'),
+                 mx234a_routing_dr.completed_on.strftime('%d-%m-%y'))
+
+    #
+    # THE FINAL REVIEW
+    #
+    expected_results = {
+      '7'  => "No Response",
+      '8'  => "No Response",
+      '5'  => "No Response",
+      '11' => "No Response",
+      '10' => "No Response",
+      '12' => "No Response",
+      '13' => "No Response",
+      '9'  => "No Response",
+      '6'  => "No Response"
+    }
+
+    mail_subject = 'mx234a::Final '
+    reviewer_result_list= [
+      # Espo - CE-DFT Reviewer
+      {:user_id          => users(:espo).id,
+       :role_id          => roles(:ce_dft).id,
+       :comment          => 'This is good!',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_final_ce_dft).id,
+       :role_id_tag      => 'role_id_7',
+       :expected_results => {
+         :comments_count   => 1,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' CE-DFT - APPROVED - See comments'
+       }
+      },
+      # Heng Kit Too - DFM Reviewer
+      {:user_id          => users(:heng_k).id,
+       :role_id          => roles(:dfm).id,
+       :comment          => 'This is good enough to waive.',
+       :result           => 'WAIVED',
+       :review_result_id => design_review_results(:mx234a_final_dfm).id,
+       :role_id_tag      => ':role_id_8',
+       :expected_results => {
+         :comments_count => 2,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' DFM - WAIVED - See comments'
+       }
+      },
+      # Lee Shaff- HW Reviewer
+      {:user_id          => users(:lee_s).id,
+       :role_id          => roles(:hweng).id,
+       :comment          => 'No Comment',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_final_hw).id,
+       :role_id_tag      => ':role_id_5',
+       :expected_results => {
+         :comments_count => 3,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' HWENG - APPROVED - See comments'
+       }
+      },
+      # Anthony Gentile - Mechanical MFG
+      {:user_id          => users(:anthony_g).id,
+       :role_id          => roles(:mechanical_manufacturing).id,
+       :comment          => '',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_final_mech_mfg).id,
+       :role_id_tag      => 'role_id_11',
+       :expected_results => {
+         :comments_count => 3,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' Mechanical-MFG - APPROVED - No comments'
+       }
+      },
+      # Tom Flak - Mehanical
+      {:user_id          => users(:tom_f).id,
+       :role_id          => roles(:mechanical).id,
+       :comment          => 'This is good!',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_final_mech).id,
+       :role_id_tag      => 'role_id_10',
+       :expected_results => {
+         :comments_count => 4,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' Mechanical - APPROVED - See comments'
+       }
+      },
+      # Jim Light - PCB Manager
+      {:user_id          => users(:jim_l).id,
+       :role_id          => roles(:pcb_design).id,
+       :comment          => 'This is good!',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_final_pcb_design).id,
+       :role_id_tag      => 'role_id_12',
+       :expected_results => {
+         :comments_count => 5,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' PCB Design - APPROVED - See comments'
+       }
+      },
+      # Matt Disanzo - Planner
+      {:user_id          => users(:matt_d).id,
+       :role_id          => roles(:planning).id,
+       :comment          => 'This is a test.',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_final_plan).id,
+       :role_id_tag      => 'role_id_13',
+       :expected_results => {
+         :comments_count => 6,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' Planning - APPROVED - See comments'
+       }
+      },
+      # Rich Ahamed - Planner
+      {:user_id          => users(:rich_a).id,
+       :role_id          => roles(:tde).id,
+       :comment          => 'TDE Rules!  Planning Drools!',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_final_tde).id,
+       :role_id_tag      => 'role_id_9',
+       :expected_results => {
+         :comments_count => 7,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' TDE - APPROVED - See comments'
+       }
+      },
+      # Lisa Austin - Valor
+      {:user_id          => users(:lisa_a).id,
+       :role_id          => roles(:valor).id,
+       :comment          => '',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_final_valor).id,
+       :role_id_tag      => 'role_id_6',
+       :expected_results => {
+         :comments_count => 7,
+         :review_status_id => review_complete.id,
+         :mail_count       => 2,
+         :mail_subject     => mail_subject + ' Valor - APPROVED - No comments'
+       }
+      }
+    ]
+
+    mx234a = design_reviews(:mx234a_final)
+    admin_email = users(:patrice_m).email
+
+
+    update_mx234a = DesignReview.find(mx234a.id)
+    update_mx234a.review_status_id = ReviewStatus.find_by_name('In Review').id
+    update_mx234a.update
+
+    mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+    for mx234a_review_result in mx234a_review_results
+      mx234a_review_result.result = 'No Response'
+      mx234a_review_result.update
+    end
+
+    mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+
+    assert_equal(reviewer_result_list.size,
+                 mx234a_review_results.size)
+    assert_equal(0, 
+                 DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
+    for review_result in mx234a_review_results
+      assert_equal("No Response", review_result.result)
+    end
+
+    repost = false
+    for reviewer_result in reviewer_result_list
+
+      if repost
+        update_mx234a = DesignReview.find(mx234a.id)
+        update_mx234a.review_status_id = ReviewStatus.find_by_name('In Review').id
+        update_mx234a.update
+      end
+      
+      rev = User.find(reviewer_result[:user_id]).name
+      set_user(reviewer_result[:user_id], Role.find(reviewer_result[:role_id]))
+
+      if reviewer_result[:result]
+        post(:reviewer_results,
+             :post_comment                 => {"comment" => reviewer_result[:comment]},
+             reviewer_result[:role_id_tag] => {reviewer_result[:review_result_id] => reviewer_result[:result]},
+             :design_review                => {"id"      => mx234a.id})
+        expected_results[reviewer_result[:role_id].to_s] = reviewer_result[:result]
+      else
+        post(:reviewer_results,
+             :post_comment  => {"comment" => reviewer_result[:comment]},
+             :design_review => {"id"      => mx234a.id})
+      end
+
+      if reviewer_result[:result] != 'REJECTED'
+        assert_redirected_to(:action => :post_results)
+      else
+        expected_results.each { |k,v| 
+          expected_results[k] = 'WITHDRAWN' if v == 'APPROVED'
+        }
+        assert_redirected_to(:action => :confirm_rejection)
+        post(:confirm_rejection)
+        repost = true
+      end
+
+      post(:post_results)
+
+      assert_equal(reviewer_result[:expected_results][:mail_count], 
+                   @emails.size)
+      email = @emails.pop
+
+      if @emails.size > 0
+        assert_equal("mx234a: Final Review is complete",
+                     email.subject)
+
+        found_email = email.cc.detect { |addr| addr == admin_email }
+        assert_equal(admin_email, found_email)
+        
+        email = @emails.pop
+      end
+
+      found_email = email.cc.detect { |addr| addr == admin_email }
+      assert_equal(nil, found_email)
+      
+      assert_equal(reviewer_result[:expected_results][:mail_subject],
+                   email.subject)
+                   
+      design_review_comments = DesignReviewComment.find_all_by_design_review_id(mx234a.id)
+      assert_equal(reviewer_result[:expected_results][:comments_count], 
+                   design_review_comments.size)
+      if reviewer_result[:comment] != ''
+        assert_equal(reviewer_result[:comment],
+                     design_review_comments.pop.comment)
+      end
+
+      review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+
+      for review_result in review_results
+        assert_equal(expected_results[review_result.role_id.to_s],
+                     review_result.result)
+      end
+
+      routing_design_review = DesignReview.find(mx234a.id)
+      assert_equal(reviewer_result[:expected_results][:review_status_id],
+                   routing_design_review.review_status_id)
+    end
+
+    mx234a_design.reload
+    mx234a_final_dr = DesignReview.find(mx234a.id)
+    assert_equal(ReviewType.find_by_name("Release").id,
+                 mx234a_design.phase_id)
+    assert_equal('Review Completed', 
+                 mx234a_final_dr.review_status.name)
+    assert_equal(Time.now.strftime('%d-%m-%y'),
+                 mx234a_final_dr.completed_on.strftime('%d-%m-%y'))
+
+    #
+    # THE RELEASE REVIEW
+    #
+    expected_results = {
+      '5'  => "No Response",
+      '12' => "No Response",
+      '19' => "No Response"
+    }
+
+    mail_subject = 'mx234a::Release '
+    reviewer_result_list= [
+      # Lee Shaff- HW Reviewer
+      {:user_id          => users(:lee_s).id,
+       :role_id          => roles(:hweng).id,
+       :comment          => 'No Comment',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_release_hw).id,
+       :role_id_tag      => ':role_id_5',
+       :expected_results => {
+         :comments_count => 1,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' HWENG - APPROVED - See comments'
+       }
+      },
+      # Jim Light - PCB Manager
+      {:user_id          => users(:jim_l).id,
+       :role_id          => roles(:pcb_design).id,
+       :comment          => 'This is good!',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_release_pcb_design).id,
+       :role_id_tag      => 'role_id_12',
+       :expected_results => {
+         :comments_count => 2,
+         :review_status_id => in_review.id,
+         :mail_count       => 1,
+         :mail_subject     => mail_subject + ' PCB Design - APPROVED - See comments'
+       }
+      },
+      # Eileen Corran - Operations Manager
+      {:user_id          => users(:eileen_c).id,
+       :role_id          => roles(:operations_manager).id,
+       :comment          => '',
+       :result           => 'APPROVED',
+       :review_result_id => design_review_results(:mx234a_release_ops).id,
+       :role_id_tag      => 'role_id_19',
+       :expected_results => {
+         :comments_count => 2,
+         :review_status_id => review_complete.id,
+         :mail_count       => 2,
+         :mail_subject     => mail_subject + ' Operations Manager - APPROVED - No comments'
+       }
+      }
+    ]
+
+    mx234a = design_reviews(:mx234a_release)
+
+    update_mx234a = DesignReview.find(mx234a.id)
+    update_mx234a.review_status_id = ReviewStatus.find_by_name('In Review').id
+    update_mx234a.update
+
+    mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+    for mx234a_review_result in mx234a_review_results
+      mx234a_review_result.result = 'No Response'
+      mx234a_review_result.update
+    end
+
+    mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+
+    assert_equal(reviewer_result_list.size,
+                 mx234a_review_results.size)
+    assert_equal(0, 
+                 DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
+    for review_result in mx234a_review_results
+      assert_equal("No Response", review_result.result)
+    end
+
+    repost = false
+    for reviewer_result in reviewer_result_list
+
+      if repost
+        update_mx234a = DesignReview.find(mx234a.id)
+        update_mx234a.review_status_id = ReviewStatus.find_by_name('In Review').id
+        update_mx234a.update
+      end
+      
+      rev = User.find(reviewer_result[:user_id]).name
+      set_user(reviewer_result[:user_id], Role.find(reviewer_result[:role_id]))
+
+      if reviewer_result[:result]
+        post(:reviewer_results,
+             :post_comment                 => {"comment" => reviewer_result[:comment]},
+             reviewer_result[:role_id_tag] => {reviewer_result[:review_result_id] => reviewer_result[:result]},
+             :design_review                => {"id"      => mx234a.id})
+        expected_results[reviewer_result[:role_id].to_s] = reviewer_result[:result]
+      else
+        post(:reviewer_results,
+             :post_comment  => {"comment" => reviewer_result[:comment]},
+             :design_review => {"id"      => mx234a.id})
+      end
+
+      if reviewer_result[:result] != 'REJECTED'
+        assert_redirected_to(:action => :post_results)
+      else
+        expected_results.each { |k,v| 
+          expected_results[k] = 'WITHDRAWN' if v == 'APPROVED'
+        }
+        assert_redirected_to(:action => :confirm_rejection)
+        post(:confirm_rejection)
+        repost = true
+      end
+
+      post(:post_results)
+
+      assert_equal(reviewer_result[:expected_results][:mail_count], 
+                   @emails.size)
+      email = @emails.pop
+
+      if @emails.size > 0
+        assert_equal("mx234a: Release Review is complete",
+                     email.subject)
+
+        doc_control_email = 'STD_DC_ECO_Inbox@notes.teradyne.com'
+        found_email = email.cc.detect { |addr| addr == doc_control_email }
+        assert_equal(doc_control_email, found_email)
+
+        email = @emails.pop
+      end
+
+      assert_equal(reviewer_result[:expected_results][:mail_subject],
+                   email.subject)
+                   
+      design_review_comments = DesignReviewComment.find_all_by_design_review_id(mx234a.id)
+      assert_equal(reviewer_result[:expected_results][:comments_count], 
+                   design_review_comments.size)
+      if reviewer_result[:comment] != ''
+        assert_equal(reviewer_result[:comment],
+                     design_review_comments.pop.comment)
+      end
+
+      review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+
+      for review_result in review_results
+        assert_equal(expected_results[review_result.role_id.to_s],
+                     review_result.result)
+      end
+
+      release_design_review = DesignReview.find(mx234a.id)
+      assert_equal(reviewer_result[:expected_results][:review_status_id],
+                   release_design_review.review_status_id)
+    end
+
+    mx234a_design.reload
+    mx234a_release_dr = DesignReview.find(mx234a.id)
+    assert_equal(Design::COMPLETE, mx234a_design.phase_id)
+    assert_equal('Review Completed', 
+                 mx234a_release_dr.review_status.name)
+    assert_equal(Time.now.strftime('%d-%m-%y'),
+                 mx234a_release_dr.completed_on.strftime('%d-%m-%y'))
 
   end
 
@@ -1819,9 +2715,12 @@ class DesignReviewControllerTest < Test::Unit::TestCase
                  Priority.find(mx234a.priority_id).name)
 
     expected_reviews = {
-      'Release' => {:designer      => 'Patrice Michaels',
-                    :priority      => 'High',
-                    :design_center => 'Boston (Harrison)'}
+      'Release'     => {:designer      => 'Patrice Michaels',
+                        :priority      => 'High',
+                        :design_center => 'Boston (Harrison)'},
+      'Pre-Artwork' => {:designer      => 'Cathy McLaren',
+                        :priority      => 'High',
+                        :design_center => 'Boston (Harrison)'}
     }
     expected_reviews.default = {
       :designer      => 'Robert Goldin',
