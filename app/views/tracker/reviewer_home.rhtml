@@ -23,7 +23,7 @@
                border="0">
         <tr>
           <td align="center">
-            <%= link_to("Tracker Settings (TBD)", 
+            <%# link_to("Tracker Settings (TBD)", 
                         { :controller => "audit", 
                           :action     => "designer_list" }) %>
           </td>
@@ -33,7 +33,8 @@
           <td align="center">
             <%= link_to("Boards",
                         { :controller => 'board',
-                          :action     => 'show_boards' }) %>
+                          :action     => 'show_boards' },
+                        :title => 'Access to all boards') %>
           </td>
         </tr>
       </table>
@@ -58,9 +59,11 @@
                 <th align="left" width="60">Criticality</th>
                 <th align="left" width="60">Design</th>
                 <th align="left" width="140">Review Type</th>
-                <th align="left" width="200">Posted By</th>
-                <th align="left" width="80">Posted</th>
-                <th align="left" width="160">Results</th>
+                <th align="left" width="180">Posted By</th>
+                <th align="left" width="35" title="Age in work days">
+                  Age
+                </th>
+                <td width="160">&nbsp;</td>
               </tr>
               <%= render_collection_of_partials("reviewer_home_list_stripes",
                                                 @my_reviews,
@@ -100,10 +103,11 @@
                 <th align="left" width="60">Criticality</th>
                 <th align="left" width="60">Design</th>
                 <th align="left" width="140">Review Type</th>
-                <th align="left" width="200">Posted By</th>
-                <th align="left" width="80">Posted</th>
+                <th align="left" width="180">Posted By</th>
+                <th align="left" width="35" title="Age in work days">
+                  Age</th>
                 <th align="left" width="100">Results</th>
-                <th align="left" width="250">Reviewer(s)</th>
+                <th align="left" width="140">Reviewer(s)</th>
 
               </tr>
               <%= render_collection_of_partials("reviewer_home_list_stripes",
