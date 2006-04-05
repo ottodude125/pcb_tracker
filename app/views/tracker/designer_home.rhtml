@@ -194,12 +194,14 @@
                                   <%= link_to("Design Audit",
                                               { :controller => 'audit',
                                                 :action     => 'print',
-                                                :id         =>  design[:audit].id}) %>
+                                                :id         =>  design[:audit].id},
+                                               :title => "Access to the completed #{design[:design].name} Peer Audit Review") %>
                                 <% else %>
                                   <%= link_to("Design Audit",
                                               { :controller => 'audit',
                                                 :action     => 'show_sections',
-                                                :id         =>  design[:audit].id}) %>
+                                                :id         =>  design[:audit].id},
+                                               :title => "Access to the #{design[:design].name} Peer Audit Review")  %>
                                 <% end %>
                               </td>
                               <td align="center">
@@ -212,6 +214,15 @@
                               <td align="center">
                                 <b><%= sprintf("%4.1f",
                                                design[:peer_percent_complete]) %></b>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan="4">
+                                <%= button_to(design[:design].name + " In-Process Dialogue",
+                                              { :controller => 'ipd_post',
+                                                :action     => 'list',
+                                                :design_id  => design[:design].id },
+                                              :title => 'Initiate and discuss all in-process changes.')%>
                               </td>
                             </tr>
                           </table>
@@ -289,12 +300,14 @@
                               <%= link_to("Peer Audit",
                                           { :controller => 'audit',
                                             :action     => 'print',
-                                            :id         => audit.id }) %>
+                                            :id         => audit.id },
+                                          :title => "Access to the #{audit.design.name} Peer Audit Review") %>
                             <% else %>
                               <%= link_to("Peer Audit",
                                           { :controller => 'audit',
                                             :action     => 'show_sections',
-                                            :id         => audit.id }) %>
+                                            :id         => audit.id },
+                                          :title => "Access to the #{audit.design.name} Peer Audit Review") %>
                             <% end %>
                           </td>
                           <td align="center">
