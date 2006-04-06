@@ -164,11 +164,26 @@
                     <tr>
                       <th align="left"> Select Designer:</th>
                       <td align="left">
-                        <select id="designer" name="designer[id]">
+                        <select id="designer" 
+                                name="designer[id]" 
+                                class="name_select">
                         <%= options_from_collection_for_select(@designers,
                                                                :id, 
                                                                :name,
-                                                               design_info[:designer_id]) %>
+                                                               @designer.id) %>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th align="left"> Select Peer:</th>
+                      <td align="left">
+                        <select id="peer" 
+                                name="peer[id]" 
+                                class="name_select">
+                        <%= options_from_collection_for_select(@designers,
+                                                               "id", 
+                                                               "name",
+                                                               @design.peer_id) %>
                         </select>
                       </td>
                     </tr>
@@ -302,9 +317,11 @@
           <% if is_manager || is_admin %>
             <tr>
               <td>
-                <%= link_to(image_tag('update'),
-                              {:action => 'admin_update',
-                               :id     => @design_review.id}) %>
+             <input type="button" 
+                    value="Update" 
+                    onClick="parent.location='<%= url_for(:controller => 'design_review', 
+                                                          :action => 'admin_update',
+                                                          :id => @design_review.id) %>'" />
               </td>
             </tr>
           <% end %>
@@ -380,3 +397,4 @@
 <%# debug @priorities %>
 <%# debug @fab_houses %>
 <%# debug session[:roles] %>
+<%# debug @designer %>
