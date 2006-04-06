@@ -44,7 +44,6 @@
     <th>DESIGNER</th>
     <th>PEER</th>
     <th>CREATED</th>
-    <th>CREATOR</th>
     <th>REVIEWS</th>
   </tr>
   
@@ -73,11 +72,6 @@
       <td><%= User.find(design.designer_id).name %></td>
       <td><%= User.find(design.peer_id).name %></td>
       <td><%= design.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
-      <% if design.created_by != 0 %>
-        <td><%= User.find(design.created_by).name %></td>
-      <% else %>
-        <td align="center">-</td>
-      <% end %>
       <td align="center">
         <%= link_to(design.design_reviews.size,
                     { :action => 'design_reviews',
