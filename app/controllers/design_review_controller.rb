@@ -239,6 +239,19 @@ class DesignReviewController < ApplicationController
       @fab_houses = nil
     end
 
+    # If the review is a Pre-Artwork, get the designer's name for the PCB
+    # manager.
+    if @design_review.review_type.name == "Pre-Artwork"
+      for design_review in @design.design_reviews
+        next if (design_review.review_type.name == "Pre-Artwork" ||
+                 design_review.review_type.name == "Release")
+        if design_review.review_status.name == 'Not Started'
+          @designer = User.find(design_review.designer_id)
+          break
+        end
+      end
+    end
+
   end
 
 
@@ -1251,6 +1264,7 @@ class DesignReviewController < ApplicationController
       :roles            => roles,
       :priority         => @params["priority"],
       :designer         => @params["designer"],
+      :peer             => @params["peer"],
       :fab_houses       => @params["fab_house"]
     }
     flash[:review_results] = review_results
@@ -1329,7 +1343,7 @@ class DesignReviewController < ApplicationController
     if (review_results[:priority] && review_results[:designer])
       design = design_review.design
 
-      # Get any review but a Pre-Artwork review to determin the existing
+      # Get any review but a Pre-Artwork review to determine the existing
       # priority and designer.
       pre_art = ReviewType.find_by_name("Pre-Artwork")
       rev_i = 0
@@ -1338,36 +1352,50 @@ class DesignReviewController < ApplicationController
         break if design.design_reviews[i].review_type_id != pre_art.id
       }
 
-      designer_id     = design.design_reviews[rev_i].designer_id
-      priority_id     = design.design_reviews[rev_i].priority_id
-      designer_update = designer_id != review_results[:designer]["id"]
-      priority_update = priority_id != review_results[:priority]["id"]
+      if review_results[:designer]["id"] != review_results[:peer]["id"]
 
-      if designer_update || priority_update
-        for review in design.design_reviews
-          
-          if review.id == design_review.id
-            design_review.priority_id = review_results[:priority]["id"] if priority_update
-            next
-          end
-          
-          if designer_update && review.id != design_review.id
-            if review.review_type.name != "Release"
-              review.designer_id      = review_results[:designer]["id"]
-              review.design_center_id = User.find(review.designer_id).design_center.id
-            end            
-          end
-          review.priority_id = review_results[:priority]["id"] if priority_update
-          review.update
+        designer_id     = design.design_reviews[rev_i].designer_id
+        peer_id         = design.peer_id
+        priority_id     = design.design_reviews[rev_i].priority_id
+        designer_update = designer_id != review_results[:designer]["id"]
+        peer_update     = peer_id     != review_results[:peer]["id"]
+        priority_update = priority_id != review_results[:priority]["id"]
+
+        if peer_update
+          design.peer_id = review_results[:peer]["id"]
+          design.update
         end
-      end
 
-      if designer_update && priority_update
-        alternate_msg = "Updated priority and designer for the remaining reviews "
-      elsif designer_update
-        alternate_msg = "Updated designer for the remaining reviews "
-      elsif priority_update
-        alternate_msg = "Updated priority for the remaining reviews "
+        if priority_update
+          design.priority_id = review_results[:priority]["id"]
+          design.update
+        end
+      
+        if designer_update || priority_update
+          for review in design.design_reviews
+            if review.id == design_review.id
+              design_review.priority_id = review_results[:priority]["id"] if priority_update
+            end
+          
+            if designer_update && review.id != design_review.id
+              if review.review_type.name != "Release"
+                review.designer_id      = review_results[:designer]["id"]
+                review.design_center_id = User.find(review.designer_id).design_center.id
+              end            
+            end
+            review.priority_id = review_results[:priority]["id"] if priority_update
+            review.update
+          end
+        end
+
+        priority = Priority.find(review_results[:priority]["id"])
+        designer = User.find(review_results[:designer]["id"])
+        peer     = User.find(review_results[:peer]["id"])
+        alternate_msg = "Criticality is #{priority.name}, the Designer is #{designer.name}" +
+        ", and the Peer is #{peer.name}"
+
+      else
+        alternate_msg = 'The peer and the designer must be different '
       end
       
     end
@@ -1498,7 +1526,11 @@ class DesignReviewController < ApplicationController
     flash_msg += 's'                  if results_recorded > 1
     
     if flash_msg != ''
-      flash_msg = 'Design Review updated with ' + flash_msg + alternate_msg + '- mail has been sent'
+      flash_msg = 'Design Review updated with ' + 
+        flash_msg + 
+        '.  ' +
+        alternate_msg + 
+        '- mail has been sent'
     elsif alternate_msg != ''
       flash_msg = alternate_msg
     else
