@@ -32,12 +32,6 @@
        cellspacing="2"
        cellpadding="2">
   <tr>
-    <th width="90" align="left">Designer:</th>
-    <td><%= flash[:details][:designer].name %></td>
-    <th width="60" aligh="left">Peer:</th>
-    <td><%= flash[:details][:peer].name %></td>
-  </tr>
-  <tr>
     <th width="90" align="left">Type:</th>
     <td><%= flash[:details][:design_type] %></td>
   </tr>
@@ -118,35 +112,6 @@
             </td>
           </tr>
         <% end %>
-      </table>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <table border="0" width="100%">
-        <tr>
-          <th class="teraheader">
-            Design Center
-          </th>
-        </tr>
-        <tr>
-          <td>
-            <% if flash[:details][:designer].design_center_id > 0 %>
-              <select id='design_center[id]' name='design_center[id]'>
-                <%= options_from_collection_for_select(@design_centers,
-                                                       "id",
-                                                       "name",
-                                                       @session[:user].design_center_id) %>
-              </select>
-            <% else %>
-              <%= collection_select(:design_center,
-                                    :id,
-                                    @design_centers,
-                                    :id,
-                                    :name) %>
-            <% end %>
-          </td>
-        </tr>
       </table>
     </td>
   </tr>
