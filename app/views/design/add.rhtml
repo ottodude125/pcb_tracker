@@ -38,14 +38,19 @@
            cellspacing="2" 
            cellpadding="2">
       <tr>
-        <th width="90" align="left">Designer:</th>
-        <td><%= collection_select(:designer, :name, @designers, :id, :name,
-                                  {:prompt => 'Please Select the Designer'}) %>
-            <%= observe_field('designer_name',
-                                 :update => 'selections',
-                                 :url => {:action=>'select_peer'},
-                                 :with => "'id=' + escape(value)") %>
-        </td>
+    <th width="90" align="left">Type:</th>
+    <td>
+      <select id="design_type" name="design[type]">
+        <option value="">Please Select the Design Type</option>
+        <option value="New">New</option>
+        <option value="Date Code">Date Code</option>
+        <option value="Dot Rev">Dot Rev</option>
+      </select>
+      <%= observe_field('design_type',
+                          :update => :selections,
+                          :url => {:action => :select_revision},
+                          :with => "'type=' + escape(value)") %>
+    </td>
       </tr>    
     </table>
   </div>
