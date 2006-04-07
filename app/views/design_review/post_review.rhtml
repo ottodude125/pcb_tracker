@@ -74,7 +74,8 @@
                     <th align="right"> <%= reviewer_list[:group] %>: </th>
                     <td>
                       <select id="<%= "board_reviewers_#{reviewer_list[:group_id]}" %>" 
-                      name="<%= "board_reviewers[#{reviewer_list[:group_id]}]" %>">
+                              name="<%= "board_reviewers[#{reviewer_list[:group_id]}]" %>"
+                              class="name_select">
                       <%=  options_from_collection_for_select(reviewer_list[:reviewers],
                                                               "id",
                                                               "name",
@@ -95,7 +96,8 @@
                     <th align="right"> <%= reviewer_list[:group] %>: </th>
                     <td>
                       <select id="<%= "board_reviewers_#{reviewer_list[:group_id]}" %>" 
-                      name="<%= "board_reviewers[#{reviewer_list[:group_id]}]" %>">
+                              name="<%= "board_reviewers[#{reviewer_list[:group_id]}]" %>"
+                              class="name_select">
                       <%=  options_from_collection_for_select(reviewer_list[:reviewers],
                                                               "id",
                                                               "name",
