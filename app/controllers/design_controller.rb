@@ -81,93 +81,6 @@ class DesignController < ApplicationController
     details[:project]     = @board.project.name
     flash[:details] = details
 
-    # Retrieve the active designers.
-    @designers = User.find_all("active=1", "last_name ASC")
-    designer_role = Role.find_all("name='Designer'").pop
-    @designers.delete_if { |d| not d.roles.include?(designer_role) }
-
-    # Save the list for the peer selection
-    details[:peers] = @designers
-
-  end
-
-
-  ######################################################################
-  #
-  # select_peer
-  #
-  # Description:
-  # select_peer() follows add() in a series of calls that create a menu 
-  # that is built based on the previous entries in the form.  
-  #
-  # The list of designers passed from add() in the flash is used to build
-  # a selection box for the peer after the lead designer is removed from
-  # the list.  Once the user has selected the peer, select_type() is called.
-  #
-  # Parameters from @params
-  # None
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def select_peer
-
-    @designer        = User.find(@params[:id])
-
-    # Retrieve the list of peers that was saved when the list of 
-    # designers was built.
-    @peers = flash[:details][:peers].dup
-    @peers.delete(@designer)
-
-    # Refresh the details in flash for the next call in the sequence.
-    flash[:details] = flash[:details]
-
-    # Add the new details from the last screen.
-    flash[:details][:designer] = @designer
-
-    render(:layout => false)
-
-  end
-
-
-  ######################################################################
-  #
-  # select_type
-  #
-  # Description:
-  # select_type() follows select_peer() in a series of calls that create 
-  # a menu that is built based on the previous entries in the form.  
-  #
-  # A selection box is displayed to provide the user with the type of
-  # revisions that are available [ 'New' | 'Date Code' | 'Dot Rev' ].
-  # Once the user has selected the type, select_revision() is called.
-  #
-  # Parameters from @params
-  # None
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def select_type
-
-    @peer        = User.find(@params[:id])
-
-    # Refresh the details in flash for the next call in the sequence.
-    flash[:details] = flash[:details]
-
-    # Add the new details from the last screen.
-    flash[:details][:peer] = @peer
-
-    render(:layout => false)
-
   end
 
 
@@ -350,7 +263,6 @@ class DesignController < ApplicationController
     @review_types   = ReviewType.find_all('active=1', 'sort_order ASC')
     @reviewers      = Design.get_reviewers(flash[:details][:board_id])
     @priority_list  = Priority.find_all(nil, 'value ASC')
-    @design_centers = DesignCenter.find_all(nil, 'name ASC')
 
     board_fab_houses = Board.find(flash[:details][:board_id]).fab_houses
 
@@ -413,7 +325,6 @@ class DesignController < ApplicationController
     design.suffix_id   = details[:suffix_id]
     design.design_type = details[:design_type]
     design.designer_id = @session[:user].id
-    design.peer_id     = details[:peer].id
     design.priority_id = @params[:priority][:id].to_s
     design.save 
 
@@ -433,19 +344,12 @@ class DesignController < ApplicationController
 
         if review_type.name == "Pre-Artwork"
           design_review.designer_id      = design.designer_id
-          design_review.design_center_id = @params[:design_center][:id]
+          design_review.design_center_id = User.find(design.designer_id).design_center_id
         elsif review_type.name == "Release"
           # NOTE: This assumes that there is only one PCB Admin.
-          design_review.designer_id = Role.find_by_name("PCB Admin").users.pop.id
-          design_review.design_center_id = @params[:design_center][:id]
-        else
-          designer = User.find(design.designer_id)
-          design_review.designer_id = details[:designer].id
-          if designer.design_center_id > 0
-            design_review.design_center_id = designer.design_center_id
-          else
-            design_review.design_center_id = 1
-          end
+          pcb_admin = Role.find_by_name("PCB Admin").users.pop
+          design_review.designer_id      = pcb_admin.id
+          design_review.design_center_id = pcb_admin.design_center_id
         end
         
         if active == '1'
