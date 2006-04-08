@@ -18,7 +18,11 @@
     <%= User.find(manager_home_list_stripes.design.designer_id).name %>
   </td>
   <td>
-    <%= User.find(manager_home_list_stripes.design.peer_id).name %>
+    <% if manager_home_list_stripes.design.peer_id > 0 %>
+      <%= User.find(manager_home_list_stripes.design.peer_id).name %>
+    <% else %>
+      <b>Not Set</b>
+    <% end %>
   </td>
   <td>
     <%= manager_home_list_stripes.reposted_on.strftime('%d-%b-%y') %>
