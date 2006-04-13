@@ -686,28 +686,30 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_not_nil assigns(:my_audits)
 
     expected = [
-      designs(:la453a_eco1).id,
-      designs(:la453a1).id,
-      designs(:la453a2).id,
-      designs(:la453b).id,
-      designs(:la453b_eco2).id
+      designs(:la453a_eco1).name,
+      designs(:la453a1).name,
+      designs(:la453a2).name,
+      designs(:la453b).name,
+      designs(:la455b).name,
+      designs(:la453b_eco2).name
     ]
     my_designs = assigns(:my_designs)
     my_designs.sort_by{ |audit| audit.design_id }
     assert_equal(expected.size, assigns(:my_designs).size)
     for audit in my_designs
-      assert_equal(expected.shift, audit.design_id)
+      assert_equal(expected.shift, audit.design.name)
     end
 
     expected = [
-      designs(:mx234a).id,
-      designs(:mx234b).id,
-      designs(:mx234c).id,
-      designs(:la454c3).id
+      designs(:mx234a).name,
+      designs(:mx600a).name,
+      designs(:mx234b).name,
+      designs(:mx234c).name,
+      designs(:la454c3).name
     ]
     assert_equal(expected.size, assigns(:my_audits).size)
     for audit in assigns(:my_audits)
-      assert_equal(expected.shift, audit.design_id)
+      assert_equal(expected.shift, audit.design.name)
     end
     
   end
