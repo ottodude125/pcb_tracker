@@ -15,7 +15,11 @@
     <%= reviewer_home_list_stripes.review_name %>
   </td>
   <td>
-    <%= User.find(reviewer_home_list_stripes.design.designer_id).name %>
+    <% if reviewer_home_list_stripes.review_name == "Pre-Artwork" %>
+      <%= User.find(reviewer_home_list_stripes.design.pcb_input_id).name %>
+    <% else %>
+      <%= User.find(reviewer_home_list_stripes.design.designer_id).name %>
+    <% end %>
   </td>
   <td title="Age in work days">
     <%= workdays(reviewer_home_list_stripes.reposted_on,
@@ -74,3 +78,5 @@
   <% end %>
   
 </tr>
+
+

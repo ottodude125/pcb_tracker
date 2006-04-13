@@ -209,7 +209,11 @@
                                                design[:percent_complete]) %></b>
                               </td>
                               <td>
-                                <b><%= User.find(design[:design].peer_id).name %></b>
+                                <% if design[:design].peer_id > 0 %>
+                                  <b><%= User.find(design[:design].peer_id).name %></b>
+                                <% else %>
+                                  <b>Not Set</b>
+                                <% end %>
                               </td>
                               <td align="center">
                                 <b><%= sprintf("%4.1f",

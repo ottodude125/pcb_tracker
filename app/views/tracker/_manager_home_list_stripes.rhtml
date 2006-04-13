@@ -15,7 +15,7 @@
     <%= manager_home_list_stripes.review_name %>
   </td>
   <td>
-    <%= User.find(manager_home_list_stripes.design.designer_id).name %>
+    <%= User.find(manager_home_list_stripes.designer_id).name %>
   </td>
   <td>
     <% if manager_home_list_stripes.design.peer_id > 0 %>
