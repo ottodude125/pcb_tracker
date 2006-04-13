@@ -160,7 +160,11 @@ module ApplicationHelper
   ######################################################################
   #
   def workdays (start_time, end_time)
-    workdays = 0
+    if end_time - start_time > 43200
+      workdays = 0
+    else
+      workdays = -1
+    end
     while start_time <= end_time
       day = start_time.strftime("%w").to_i
       workdays += 1 if day > 0 && day < 6
@@ -192,6 +196,33 @@ module ApplicationHelper
       '/'                                  +
       design_review.design.name            +
       '/public'
+  end
+
+
+  ######################################################################
+  #
+  # poster_name
+  #
+  # Description:
+  # Returns the name that should be displayed in the "Poster" field.  If the
+  # review is a Pre-Artwork review then the name of the person who created the 
+  # design should be displayed.  Otherwise the name of the designer assigned to
+  # the review should be displayed.
+  #
+  # Parameters:
+  # design_review - provides access to the design review.
+  #
+  # Returns:
+  # The name of the poster
+  #
+  ######################################################################
+  #
+  def poster_name(design_review)
+    if design_review.review_type.name == "Pre-Artwork"
+      User.find(design_review.design.pcb_input_id).name
+    else
+      User.find(design_review.designer_id).name
+    end
   end
 
 
