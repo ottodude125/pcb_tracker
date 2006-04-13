@@ -66,30 +66,16 @@ class DesignControllerTest < Test::Unit::TestCase
   #
   def test_add
     
-    la453 = boards(:la453)
+    la453 = Board.find(boards(:la453).id)
     set_admin
     post(:add,
          :board_id => la453.id)
 
     details = flash[:details]
-    peers   = details[:peers]
-    
-    expected_peers = ["Scott Glover", "Robert Goldin", "Rich Miller"]
-
-    assert_equal(la453.id,            details[:board_id])
-    assert_equal(expected_peers.size, peers.size)
-
-    peer_list = expected_peers.dup
-    for peer in peers
-      assert_equal(peer.name, peer_list.shift)
-    end
-    
-    # Validate the list of designers
-    designers = assigns(:designers)
-    assert_equal(expected_peers.size, designers.size)
-    for designer in designers
-      assert_equal(designer.name, expected_peers.shift)
-    end
+    assert_equal(la453.id,  details[:board_id])
+    assert_equal("la453",   details[:design_name])
+    assert_equal("FLEX",    details[:platform])
+    assert_equal("AWG5000", details[:project])
 
   end
 
@@ -123,12 +109,6 @@ class DesignControllerTest < Test::Unit::TestCase
     post(:add,
          :board_id => la453.id)
 
-    post(:select_peer,
-         :id => bob_g.id)
-
-    post(:select_type,
-         :id => scott_g.id)
-
     post(:select_revision,
          :type => 'Date Code')
 
@@ -141,9 +121,9 @@ class DesignControllerTest < Test::Unit::TestCase
     details = flash[:details]
 
     assert_equal(5,  Design.find_all("board_id='#{details[:board_id]}'").size)
-    assert_equal(5,  DesignReview.find_all.size)
+    assert_equal(20, DesignReview.find_all.size)
     assert_equal(37, DesignReviewResult.find_all.size)
-    assert_equal(9,  Audit.find_all.size)
+    assert_equal(12, Audit.find_all.size)
     assert_equal(43, DesignCheck.find_all.size)
 
     board_reviewers = {
@@ -305,12 +285,6 @@ return
     post(:add,
          :board_id => la453.id)
 
-    post(:select_peer,
-         :id => bob_g.id)
-
-    post(:select_type,
-         :id => scott_g.id)
-
     post(:select_revision,
          :type => 'Date Code')
 
@@ -321,15 +295,13 @@ return
          :suffix_id => suffix_2.id)
 
     details = flash[:details]
-
     assert_equal(la453.id,         details[:board_id])
-    assert_equal(bob_g.id,         details[:designer].id)
-    assert_equal("Robert Goldin",  details[:designer].name)
-    assert_equal(scott_g.id,       details[:peer].id)
-    assert_equal("Scott Glover",   details[:peer].name)
     assert_equal("Date Code",      details[:design_type])
     assert_equal(rev_a.id.to_s,    details[:revision_id])
     assert_equal(suffix_2.id.to_s, details[:suffix_id])
+    assert_equal('la453a_eco2',    details[:design_name])
+    assert_equal('FLEX',           details[:platform])
+    assert_equal('AWG5000',        details[:project])
 
     review_types = assigns(:review_types)
 
@@ -433,54 +405,6 @@ return
 
   ######################################################################
   #
-  # test_select_peer
-  #
-  # Description:
-  # This method does the functional testing of the select_peer method
-  # from the Design class
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
-  #
-  # To Do: Test for duplicate board entry.
-  #
-  ######################################################################
-  #
-  def test_select_peer
-    
-    la453 = boards(:la453)
-    bob_g = users(:bob_g)
-    set_admin
-    post(:add,
-         :board_id => la453.id)
-
-    post(:select_peer,
-         :id => bob_g.id)
-
-    details = flash[:details]
-
-    assert_equal(la453.id,        details[:board_id])
-    assert_equal(bob_g.id,        details[:designer].id)
-    assert_equal("Robert Goldin", details[:designer].name)
-
-    
-    expected_peers = ["Scott Glover", "Rich Miller"]
-
-    peers = assigns(:peers)
-    assert_equal(expected_peers.size, peers.size)
-    for peer in peers
-      assert_equal(peer.name, expected_peers.shift)
-    end
-
-
-  end
-
-
-  ######################################################################
-  #
   # test_select_revision
   #
   # Description:
@@ -506,23 +430,14 @@ return
     post(:add,
          :board_id => la453.id)
 
-    post(:select_peer,
-         :id => bob_g.id)
-
-    post(:select_type,
-         :id => scott_g.id)
-
     post(:select_revision,
          :type => 'Date Code')
 
     details = flash[:details]
-
-    assert_equal(la453.id,        details[:board_id])
-    assert_equal(bob_g.id,        details[:designer].id)
-    assert_equal("Robert Goldin", details[:designer].name)
-    assert_equal(scott_g.id,      details[:peer].id)
-    assert_equal("Scott Glover",  details[:peer].name)
-    assert_equal("Date Code",     details[:design_type])
+    assert_equal(la453.id,    details[:board_id])
+    assert_equal("Date Code", details[:design_type])
+    assert_equal("la453",     details[:design_name])
+    assert_equal("FLEX",      details[:platform])
 
     revisions = assigns(:revisions)
     assert_equal(2,   revisions.size)
@@ -577,12 +492,6 @@ return
     post(:add,
          :board_id => la453.id)
 
-    post(:select_peer,
-         :id => bob_g.id)
-
-    post(:select_type,
-         :id => scott_g.id)
-
     post(:select_revision,
          :type => 'Date Code')
 
@@ -590,14 +499,12 @@ return
          :id => rev_a.id)
 
     details = flash[:details]
-
-    assert_equal(la453.id,        details[:board_id])
-    assert_equal(bob_g.id,        details[:designer].id)
-    assert_equal("Robert Goldin", details[:designer].name)
-    assert_equal(scott_g.id,      details[:peer].id)
-    assert_equal("Scott Glover",  details[:peer].name)
-    assert_equal("Date Code",     details[:design_type])
-    assert_equal(rev_a.id.to_s,   details[:revision_id])
+    assert_equal(la453.id,      details[:board_id])
+    assert_equal("Date Code",   details[:design_type])
+    assert_equal(rev_a.id.to_s, details[:revision_id])
+    assert_equal('la453a',      details[:design_name])
+    assert_equal('FLEX',        details[:platform])
+    assert_equal('AWG5000',     details[:project])
 
     suffixes = assigns(:suffixes)
     assert_equal(6, suffixes.size)
@@ -608,50 +515,6 @@ return
     assert_equal(suffixes(:suffix_6).name, suffixes.shift.name)
     assert_equal(suffixes(:suffix_7).name, suffixes.shift.name)
     assert_equal(0, suffixes.size)
-
-  end
-
-
-  ######################################################################
-  #
-  # test_select_type
-  #
-  # Description:
-  # This method does the functional testing of the select_type method
-  # from the Design class
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
-  #
-  # To Do: Test for duplicate board entry.
-  #
-  ######################################################################
-  #
-  def test_select_type
-    
-    la453   = boards(:la453)
-    bob_g   = users(:bob_g)
-    scott_g = users(:scott_g)
-    set_admin
-    post(:add,
-         :board_id => la453.id)
-
-    post(:select_peer,
-         :id => bob_g.id)
-
-    post(:select_type,
-         :id => scott_g.id)
-
-    details = flash[:details]
-
-    assert_equal(la453.id,        details[:board_id])
-    assert_equal(bob_g.id,        details[:designer].id)
-    assert_equal("Robert Goldin", details[:designer].name)
-    assert_equal(scott_g.id,      details[:peer].id)
-    assert_equal("Scott Glover",  details[:peer].name)
 
   end
 
