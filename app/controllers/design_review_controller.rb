@@ -239,19 +239,6 @@ class DesignReviewController < ApplicationController
       @fab_houses = nil
     end
 
-    # If the review is a Pre-Artwork, get the designer's name for the PCB
-    # manager.
-    if @design_review.review_type.name == "Pre-Artwork"
-      for design_review in @design.design_reviews
-        next if (design_review.review_type.name == "Pre-Artwork" ||
-                 design_review.review_type.name == "Release")
-        if design_review.review_status.name == 'Not Started'
-          @designer = User.find(design_review.designer_id)
-          break
-        end
-      end
-    end
-
   end
 
 
@@ -1296,11 +1283,14 @@ class DesignReviewController < ApplicationController
 
     # TO be handled: an approval coming in after a rejection was received.
   
-    review_results  = flash[:review_results]
-    flash_msg       = ''
-    comment_update  = false
-    review_complete = false
-    design_review   = DesignReview.find(review_results[:design_review_id])
+    review_results    = flash[:review_results]
+    flash_msg         = ''
+    fab_msg           = ''
+    comment_update    = false
+    review_complete   = false
+    results_recorded  = 0
+    result_update     = {}
+    design_review     = DesignReview.find(review_results[:design_review_id])
     
     if review_results[:comments].size > 0
       dr_comment = DesignReviewComment.new
@@ -1309,207 +1299,151 @@ class DesignReviewController < ApplicationController
       dr_comment.design_review_id = review_results[:design_review_id]
       dr_comment.create
       
-      flash_msg = "comments"
       comment_update = true
     end
     
-    review_result_list = 
-      DesignReviewResult.find_all("design_review_id='#{review_results[:design_review_id]}'")
-
-    results_recorded  = 0
-    rejection_entered = false
-    result_update     = {}
-    for review_result in review_results[:roles]
-
-      review_record = review_result_list.find { |rr| 
-        rr.role_id.to_s == review_result[:id]
-      }
-      
-      if review_result[:result] != 'COMMENT' && review_record
-        review_record.result      = review_result[:result]
-        review_record.reviewed_on = Time.now
-        review_record.update
-        results_recorded += 1
-
-        result_update[review_record.role.name] = review_result[:result]
-
-        rejection_entered = review_result[:result] == "REJECTED" || rejection_entered
-      end
-      
-    end
-
     # Check to see if the reviewer is PCB Design performing a Pre_Artwork review
-    alternate_msg = ''
-    if (review_results[:priority] && review_results[:designer])
-      design = design_review.design
-
-      # Get any review but a Pre-Artwork review to determine the existing
-      # priority and designer.
-      pre_art = ReviewType.find_by_name("Pre-Artwork")
-      rev_i = 0
-      0.upto(design.design_reviews.size-1) { |i|
-        rev_i = i
-        break if design.design_reviews[i].review_type_id != pre_art.id
-      }
-
-      if review_results[:designer]["id"] != review_results[:peer]["id"]
-
-        designer_id     = design.design_reviews[rev_i].designer_id
-        peer_id         = design.peer_id
-        priority_id     = design.design_reviews[rev_i].priority_id
-        designer_update = designer_id != review_results[:designer]["id"]
-        peer_update     = peer_id     != review_results[:peer]["id"]
-        priority_update = priority_id != review_results[:priority]["id"]
-
-        if peer_update
-          design.peer_id = review_results[:peer]["id"]
-          design.update
-        end
-
-        if priority_update
-          design.priority_id = review_results[:priority]["id"]
-          design.update
-        end
-      
-        if designer_update || priority_update
-          for review in design.design_reviews
-            if review.id == design_review.id
-              design_review.priority_id = review_results[:priority]["id"] if priority_update
-            end
-          
-            if designer_update && review.id != design_review.id
-              if review.review_type.name != "Release"
-                review.designer_id      = review_results[:designer]["id"]
-                review.design_center_id = User.find(review.designer_id).design_center.id
-              end            
-            end
-            review.priority_id = review_results[:priority]["id"] if priority_update
-            review.update
-          end
-        end
-
-        priority = Priority.find(review_results[:priority]["id"])
-        designer = User.find(review_results[:designer]["id"])
-        peer     = User.find(review_results[:peer]["id"])
-        alternate_msg = "Criticality is #{priority.name}, the Designer is #{designer.name}" +
-        ", and the Peer is #{peer.name}"
-
-      else
-        alternate_msg = 'The peer and the designer must be different '
-      end
-      
+    # Only the PCB Design Approval screen returns a non-nil value in
+    # review_results[:priority].
+    if (design_review.review_type.name == "Pre-Artwork &&"
+        review_results[:priority])
+      results = post_pcb_design_results(design_review, review_results)
+      design_review.reload
     end
 
-    # Check to see if the reviewer is an SLM-Vendor reviewer.
-    # review_results[:fab_houses] will be non-nil.
-    added   = ''
-    removed = ''
-    if (review_results[:fab_houses])
-      review_results[:fab_houses].each { |id, selected|
-
-        fab_house = FabHouse.find(id)
-        # Update the design
-        design = design_review.design
-        if selected == '0' && design.fab_houses.include?(fab_house)
-          design.remove_fab_houses(fab_house)
-          if removed == ''
-            removed = fab_house.name
-          else
-            removed += ', ' + fab_house.name
-          end
-        elsif selected == '1' && !design.fab_houses.include?(fab_house)
-          design.fab_houses << fab_house
-          if added == ''
-            added = fab_house.name
-          else
-            added += ', ' + fab_house.name
-          end
-        end
-        
-        # Update the board
-        board = design.board
-        if selected == '0' && board.fab_houses.include?(fab_house)
-          board.remove_fab_houses(fab_house)
-        elsif selected == '1' && !board.fab_houses.include?(fab_house)
-          board.fab_houses << fab_house                                      
-        end
-      }
-
-      if added !=  '' || removed != ''
-        alternate_msg = 'Updated the fab houses '
-        
-        alternate_msg += " - Added: #{added}"     if added   != ''
-        alternate_msg += " - Removed: #{removed}" if removed != ''
+    if review_results[:priority] == nil || results[:success]
       
-        dr_comment = DesignReviewComment.new
-        dr_comment.comment          = alternate_msg
-        dr_comment.user_id          = @session[:user].id
-        dr_comment.design_review_id = review_results[:design_review_id]
-        dr_comment.create
-        comment_update = true
-      else
-        alternate_msg = ''
-      end
 
-    end
+      review_result_list = 
+        DesignReviewResult.find_all("design_review_id='#{review_results[:design_review_id]}'")
 
-    # Go through the design review list and withdraw the approvals and set the 
-    # status to "Pending Repost"
-    if rejection_entered
+      rejection_entered = false
+      for review_result in review_results[:roles]
 
-      for review_result in review_result_list
-        if review_result.result == "APPROVED"
-          review_result.result = "WITHDRAWN"
-          review_result.update
+        review_record = review_result_list.find { |rr| 
+          rr.role_id.to_s == review_result[:id]
+        }
+      
+        if review_result[:result] != 'COMMENT' && review_record
+          review_record.result      = review_result[:result]
+          review_record.reviewed_on = Time.now
+          review_record.update
+          results_recorded += 1
+
+          result_update[review_record.role.name] = review_result[:result]
+
+          rejection_entered = review_result[:result] == "REJECTED" || rejection_entered
         end
       end
 
-      pending_repost = ReviewStatus.find_by_name('Pending Repost')
-      design_review.review_status_id = pending_repost.id
-      design_review.update
 
-    elsif review_results[:roles].size > 0
+      # Check to see if the reviewer is an SLM-Vendor reviewer.
+      # review_results[:fab_houses] will be non-nil.
+      added   = ''
+      removed = ''
+      if (review_results[:fab_houses])
+        review_results[:fab_houses].each { |id, selected|
 
-      # If all of the reviews have a positive response, the review is complete
-      response = ['WITHDRAWN', 'No Response', 'REJECTED']
-      outstanding_result = review_result_list.find { |rr| response.include?(rr.result) }
+          fab_house = FabHouse.find(id)
+          # Update the design
+          design = design_review.design
+          if selected == '0' && design.fab_houses.include?(fab_house)
+            design.remove_fab_houses(fab_house)
+            if removed == ''
+              removed = fab_house.name
+            else
+              removed += ', ' + fab_house.name
+            end
+          elsif selected == '1' && !design.fab_houses.include?(fab_house)
+            design.fab_houses << fab_house
+            if added == ''
+              added = fab_house.name
+            else
+              added += ', ' + fab_house.name
+            end
+          end
+        
+          # Update the board
+          board = design.board
+          if selected == '0' && board.fab_houses.include?(fab_house)
+            board.remove_fab_houses(fab_house)
+          elsif selected == '1' && !board.fab_houses.include?(fab_house)
+            board.fab_houses << fab_house                                      
+          end
+        }
 
-      if not outstanding_result
-        review_completed = ReviewStatus.find_by_name('Review Completed')
-        design_review.review_status_id = review_completed.id
-        design_review.completed_on     = Time.now
+        if added !=  '' || removed != ''
+          fab_msg = 'Updated the fab houses '
+        
+          fab_msg += " - Added: #{added}"     if added   != ''
+          fab_msg += " - Removed: #{removed}" if removed != ''
+      
+          dr_comment = DesignReviewComment.new
+          dr_comment.comment          = fab_msg
+          dr_comment.user_id          = @session[:user].id
+          dr_comment.design_review_id = review_results[:design_review_id]
+          dr_comment.create
+          comment_update = true
+        end
+      end
+
+      # Go through the design review list and withdraw the approvals and set the 
+      # status to "Pending Repost"
+      if rejection_entered
+
+        for review_result in review_result_list
+          if review_result.result == "APPROVED"
+            review_result.result = "WITHDRAWN"
+            review_result.update
+          end
+        end
+
+        pending_repost = ReviewStatus.find_by_name('Pending Repost')
+        design_review.review_status_id = pending_repost.id
         design_review.update
-        review_complete = true
 
-        # Check the design's designer and priority information against the 
-        # next review, if there is one, and update the design record, if they
-        # do not match.
-        not_started = ReviewStatus.find_by_name("Not Started")
-        design = Design.find(design_review.design_id)
+      elsif review_results[:roles].size > 0
 
-        design_reviews = DesignReview.find_all_by_design_id(design.id)
-        design_reviews = design_reviews.sort_by { |dr| dr.review_type.sort_order}
+        # If all of the reviews have a positive response, the review is complete
+        response = ['WITHDRAWN', 'No Response', 'REJECTED']
+        outstanding_result = review_result_list.find { |rr| response.include?(rr.result) }
 
-        for design_rvw in design_reviews
-          if design_rvw.review_status.id == not_started.id
-            next_design_review = design_rvw
-            break
+        if not outstanding_result
+          review_completed = ReviewStatus.find_by_name('Review Completed')
+          design_review.review_status_id = review_completed.id
+          design_review.completed_on     = Time.now
+          design_review.update
+          review_complete = true
+
+          # Check the design's designer and priority information against the 
+          # next review, if there is one, and update the design record, if they
+          # do not match.
+          not_started = ReviewStatus.find_by_name("Not Started")
+          design = Design.find(design_review.design_id)
+
+          design_reviews = DesignReview.find_all_by_design_id(design.id)
+          design_reviews = design_reviews.sort_by { |dr| dr.review_type.sort_order}
+
+          for design_rvw in design_reviews
+            if design_rvw.review_status.id == not_started.id
+              next_design_review = design_rvw
+              break
+            end
           end
-        end
 
-        if next_design_review
-          design.designer_id = next_design_review.designer_id
-          design.priority_id = next_design_review.priority_id
-          design.phase_id    = next_design_review.review_type_id
-        else
-          design.phase_id = Design::COMPLETE
+          if next_design_review
+            design.designer_id = next_design_review.designer_id
+            design.priority_id = next_design_review.priority_id
+            design.phase_id    = next_design_review.review_type_id
+          else
+            design.phase_id = Design::COMPLETE
+          end
+          design.update
         end
-        design.update
       end
-
     end
-
-    if comment_update || result_update.size > 0
+    
+    if comment_update || (result_update && result_update.size > 0)
       DesignReviewMailer::deliver_update(@session[:user], 
                                          design_review,
                                          comment_update,
@@ -1521,20 +1455,20 @@ class DesignReviewController < ApplicationController
                                                                design_review)
     end
 
-    flash_msg += ' and the '          if flash_msg != '' && results_recorded > 0
-    flash_msg += ' the review result' if results_recorded > 0
-    flash_msg += 's'                  if results_recorded > 1
-    
-    if flash_msg != ''
-      flash_msg = 'Design Review updated with ' + 
-        flash_msg + 
-        '.  ' +
-        alternate_msg + 
-        '- mail has been sent'
-    elsif alternate_msg != ''
-      flash_msg = alternate_msg
+    if results && !results[:success]
+      flash_msg = results[:alternate_msg]
+      flash_msg += " - Your comments have been recorded" if comment_update
     else
-      flash_msg = 'No information provided - database was not updated'
+      updated    = comment_update || results || results_recorded > 0
+      flash_msg  = 'Design Review updated'  if updated
+      flash_msg += ' with comments'         if comment_update
+      flash_msg += ' and' if comment_update && results_recorded > 0
+      flash_msg += ' the review result'     if results_recorded > 0
+      flash_msg += 's'                      if results_recorded > 1
+      flash_msg += '.'                      if updated
+      flash_msg += ' ' + results[:alternate_msg]  if results
+      flash_msg += ' ' + fab_msg                  if fab_msg != ''
+    
     end
     flash['notice'] = flash_msg
     
@@ -1561,17 +1495,7 @@ class DesignReviewController < ApplicationController
   def confirm_rejection
   
     review_results = flash[:review_results]    
-    review_results.each { |k,v|
-      if k != :roles
-        logger.info "  #{k} -> #{v}"
-      else
-        for role in v
-        logger.info "  ROLE ID: #{role[:id]}  DESIGN REVIEW RESULT ID: #{role[:design_review_result_id]}  RESULT: #{role[:result]}}" 
-        end
-      end
-    }
     
-    logger.info "-----------------------------------------------------"
     flash[:review_results] = review_results
     
     @design_review_id = review_results[:design_review_id]
@@ -1748,31 +1672,13 @@ class DesignReviewController < ApplicationController
     @priorities          = Priority.find_all(nil, 'value ASC')
     @design_centers      = DesignCenter.find_all('active=1', 'name ASC')
 
-    pre_art_review_type = ReviewType.find_by_name('Pre-Artwork')
-    design_reviews      = @design_review.design.design_reviews
+    @pcb_input_gate    = User.find(@design_review.design.pcb_input_id).name
+    @pcb_input_gate_id = @design_review.design.pcb_input_id
+    
+    if @design_review.design.designer_id > 0
+      @designer = User.find(@design_review.design.designer_id)
+    end
 
-    pre_art_review = 
-      design_reviews.detect { |dr| dr.review_type_id == pre_art_review_type.id}
-
-    @pcb_input_gate = User.find(pre_art_review.designer_id).name
-    @pcb_input_gate_id = pre_art_review.designer_id
-
-    if @design_review.design.phase_id != Design::COMPLETE
-
-      # Determine the phase
-      phase = ReviewType.find(@design_review.design.phase_id)
-
-      if 'Pre-Artwork' != phase.name
-        @designer = User.find(@design_review.designer_id)
-      else
-        reviews = design_reviews.sort_by { |dr| dr.review_type.sort_order }
-        for review in reviews
-          next if review.review_type.name == 'Pre-Artwork'
-          break if review.review_status.name != 'Review_Completed'
-        end
-        @designer = User.find(review.designer_id)
-      end
-    end 
   end
 
 
@@ -1813,7 +1719,9 @@ class DesignReviewController < ApplicationController
       else
         redirect_to(:action => "index", :controller => "tracker" )
       end
-    elsif params[:designer][:id] != params[:peer][:id]
+    elsif (params[:designer][:id] != params[:peer][:id]  ||
+           (params[:designer][:id] == '' &&
+            params[:peer][:id]     == ''))
       
       # Update the design reord
       design = design_review.design
@@ -1839,10 +1747,6 @@ class DesignReviewController < ApplicationController
         design_review.design_center_id = params[:design_center][:id]
         design_review.update
 
-        if design.phase_id == design_review.review_type_id
-          design.designer_id = design_review.designer_id
-          design.update
-        end
       end
 
       flash['notice'] = "#{design.name} has been updated"
@@ -1877,6 +1781,51 @@ class DesignReviewController < ApplicationController
   def pre_art_pcb(design_review, review_results)
     return (review_results.find { |rr| rr.role.name == "PCB Design" } &&
             design_review.review_type.name == "Pre-Artwork")
+  end
+
+
+  def post_pcb_design_results(design_review, review_results)
+
+    results = {:success       => true,
+               :alternate_msg => 'The following updates have been made - '}
+
+    if review_results[:designer]["id"] == '' || review_results[:peer]["id"] == ''
+      results[:success]       = false
+      results[:alternate_msg] = 'The Designer and Peer must be specified - results not recorded'
+    elsif review_results[:designer]["id"] == review_results[:peer]["id"]
+      results[:success]       = false
+      results[:alternate_msg] = 'The Designer and Peer must be different - results not recorded'
+    else
+
+      designer = User.find(review_results[:designer]["id"])
+      peer     = User.find(review_results[:peer]["id"])
+      priority = Priority.find(review_results[:priority]["id"])
+
+      design = design_review.design
+      priority_update = design.priority_id != priority.id
+      
+      design.peer_id     = peer.id
+      design.designer_id = designer.id
+      design.priority_id = priority.id
+      design.update
+
+      for design_review in design.design_reviews
+        design_review.priority_id = priority.id
+        if (design_review.review_type.name != 'Release' &&
+            design_review.review_type.name != 'Pre-Artwork')
+          design_review.designer_id = designer.id
+        end
+        design_review.update
+      end
+
+      results[:alternate_msg] += "Criticality is #{priority.name}, " if priority_update
+      results[:alternate_msg] += "the Designer is #{designer.name} and "
+      results[:alternate_msg] += "the Peer is #{peer.name}"
+      
+    end
+
+    return results
+    
   end
   
   
