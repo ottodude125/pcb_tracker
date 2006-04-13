@@ -42,6 +42,7 @@
     <th>TYPE</th>
     <th>DESIGNER</th>
     <th>PEER</th>
+    <th>PCB INPUT</th>
     <th>CREATED</th>
   </tr>
   
@@ -66,8 +67,17 @@
       <td>&nbsp;</td>
     <% end %>
     <td><%= @design.design_type %></td>
-    <td><%= User.find(@design.designer_id).name %></td>
-    <td><%= User.find(@design.peer_id).name %></td>
+    <% if @design.designer_id > 0 %>
+      <td><%= User.find(@design.designer_id).name %></td>
+    <% else %>
+      <td><b>Not Set</b></td>
+    <% end %>
+    <% if @design.peer_id > 0 %>
+      <td><%= User.find(@design.peer_id).name %></td>
+    <% else %>
+      <td><b>Not Set</b></td>
+    <% end %>
+    <td><%= User.find(@design.pcb_input_id).name %></td>
     <td><%= @design.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
   </tr>
 
@@ -98,8 +108,16 @@
     
       <td><%= dr.id %></td>
       <td><%= dr.posting_count %></td>
-      <td><%= User.find(dr.designer_id).name %></td>
-      <td><%= dr.design_center.name %></td>
+      <% if dr.designer_id > 0 %>
+        <td><%= User.find(dr.designer_id).name %></td>
+      <% else %>
+        <td><b>Not Set</td></b>
+      <% end %>
+      <% if dr.design_center_id > 0 %>
+        <td><%= dr.design_center.name %></td>
+      <% else %>
+        <td><b>Not Set</b></td>
+      <% end %>
       <td><%= dr.review_status.name %></td>
       <td><%= dr.review_type.name %></td>
       <td>

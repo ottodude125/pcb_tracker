@@ -69,8 +69,16 @@
         <td>&nbsp;</td>
       <% end %>
       <td><%= design.design_type %></td>
-      <td><%= User.find(design.designer_id).name %></td>
-      <td><%= User.find(design.peer_id).name %></td>
+      <% if design.designer_id > 0 %>
+        <td><%= User.find(design.designer_id).name %>
+      <% else %>
+        <td><b>Not Set</b></td>
+      <% end %>
+      <% if design.peer_id > 0 %>
+        <td><%= User.find(design.peer_id).name %></td>
+      <% else %>
+        <td><b>Not Set</b></td>
+      <% end %>
       <td><%= design.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
       <td align="center">
         <%= link_to(design.design_reviews.size,
