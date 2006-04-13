@@ -24,16 +24,28 @@ class UserController < ApplicationController
   #
   # Description:
   # This method retrieves a list of users from the database for
-  # display.  The list is paginated and is limited to the number 
-  # passed to the ":per_page" argument.
+  # display.  If the 'alpha' param is passed in the value is used to
+  # determine which uses to display, otherwise users whose name begins
+  # with 'A' are displayed by default.
   #
   ######################################################################
   #
   def list
 
-    @user_pages, @users = paginate(:users,
-		                           :per_page => 15,
-		                           :order_by => 'last_name ASC')
+    alpha = @params['alpha']
+    alpha = 'A' if !alpha
+
+    @users = User.find_all(nil, 'last_name ASC')
+
+    @alpha_list = {}
+    for user in @users
+      index = user.last_name.slice(0..0)
+      @alpha_list[index] = 0 if !@alpha_list[index]
+      @alpha_list[index] += 1
+    end
+    
+    @users = @users.delete_if { |u| u.last_name.slice(0..0) != alpha }
+
   end
   
 
@@ -225,7 +237,7 @@ class UserController < ApplicationController
           @session[:active_role] = admin.name
         elsif @session[:roles].include?(manager)
           @session[:active_role] = manager.name
-        else
+        elsif @session[:roles].size > 0
           @session[:active_role] = @session[:roles].first.name
         end
 
