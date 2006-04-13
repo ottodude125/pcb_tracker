@@ -1,0 +1,20 @@
+<table>
+  <% for user in @users %>
+    <tr>
+      <td><%= user.name %></td>
+      <td><%= user.email %></td>
+      <% if user.active %>
+        <td>Yes</td>
+      <% else %>
+        <td>No</td>
+      <% end %>
+      
+      <td>
+        <% for role in user.roles %>
+          <%= role.name %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
+<%# debug @users %>
