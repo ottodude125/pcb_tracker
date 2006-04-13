@@ -22,15 +22,24 @@
     </tr>
     <%= render_collection_of_partials "user_list_stripes", @users %>
   </table>
-
-  <% pages = pagination_links @user_pages %>
-
-  <% if pages %>
-    <p><b>Pages:</b> <%= pages %>
-  <% end %>
-
+  
+  <p align="center">
+    Last Name: 
+    <% "A".upto("Z") { |char|  %>
+      <% if @alpha_list[char] %>
+        <%= link_to(char,
+                    {:action => 'list',
+                     :alpha  => char},
+                    :title  => "#{@alpha_list[char]} Users")%>
+      <% else %>
+        <%= char %>
+      <% end %>
+    <% } %>
+  </p>
+  
   <hr class="div" />
 
   <input type="submit" value="New User" />
   <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
 </form>
+
