@@ -219,4 +219,11 @@ class DebugController < ApplicationController
     end
   end
 
+
+  def users
+
+    @users = User.find_all(nil, 'last_name ASC')
+  
+  end
+
 end
