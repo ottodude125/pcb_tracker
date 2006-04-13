@@ -25,7 +25,13 @@ class TrackerControllerTest < Test::Unit::TestCase
   end
 
 
-  fixtures(:users)
+  fixtures(:audits,
+           :designs,
+           :design_review_results,
+           :design_reviews,
+           :review_statuses,
+           :roles,
+           :users)
 
 
   def test_1_id
@@ -44,8 +50,15 @@ class TrackerControllerTest < Test::Unit::TestCase
   ######################################################################
   #
   def test_manager_home
-    print '?'
-    assert true
+    
+    set_user(users(:jim_l).id, 'Manager')
+    post('manager_home')
+
+    assert_equal('DESC', assigns(:sort_order)[:priority])
+
+    design_reviews = assigns(:design_reviews)
+    assert_equal(3, design_reviews.size)
+
   end
   
   
@@ -85,6 +98,11 @@ class TrackerControllerTest < Test::Unit::TestCase
     assert_response 302
     assert_redirected_to :action => :reviewer_home
 
+    set_user(users(:patrice_m).id, 'PCB Admin')
+    get :index
+    assert_response 302
+    assert_redirected_to :action => :pcb_admin_home
+
     
   end
   
@@ -99,8 +117,12 @@ class TrackerControllerTest < Test::Unit::TestCase
   ######################################################################
   #
   def test_designer_home
-    print '?'
-    assert true
+    
+    set_user(users(:bob_g).id, 'Designer')
+    get :index
+    assert_response 302
+
+    #breakpoint
   end
   
 
