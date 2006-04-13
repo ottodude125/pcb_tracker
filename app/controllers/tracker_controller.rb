@@ -165,7 +165,10 @@ class TrackerController < ApplicationController
 
     designs = Design.find_all_by_designer_id(@session[:user].id,
                                              'created_on ASC')
+    designs += Design.find_all_by_pcb_input_id(@session[:user].id,
+                                             'created_on ASC')
     designs = designs.sort_by { |dr| dr.priority.value }
+    designs.reverse!
         
     @design_list = Array.new
     for design in designs
@@ -339,7 +342,6 @@ class TrackerController < ApplicationController
     flash[:sort_order] = @sort_order
       
     @design_reviews = get_design_reviews
-    
     @design_reviews = @design_reviews.sort_by { |dr| dr.priority.value }
     @design_reviews.reverse!
 
