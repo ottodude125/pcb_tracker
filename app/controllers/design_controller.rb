@@ -57,7 +57,7 @@ class DesignController < ApplicationController
   # previous entries in the form.  The list of designers is built to provide
   # a selection box for the lead designer.  The list of designers is saved 
   # for to provide a list to select the peers from.  Once the user has 
-  # selected the lead designer, select_peers() is called.
+  # selected the lead designer, select_revision() is called.
   #
   # Parameters from @params
   # None
@@ -89,7 +89,7 @@ class DesignController < ApplicationController
   # select_revision
   #
   # Description:
-  # select_revision() follows select_type() in a series of calls that create 
+  # select_revision() follows add() in a series of calls that create 
   # a menu that is built based on the previous entries in the form.  
   #
   # The list of revisions is built based on the type that was selected in
@@ -318,14 +318,14 @@ class DesignController < ApplicationController
     }
 
     design = Design.new
-    design.name        = details[:design_name]
-    design.phase_id    = phase_id
-    design.board_id    = details[:board_id]
-    design.revision_id = details[:revision_id]
-    design.suffix_id   = details[:suffix_id]
-    design.design_type = details[:design_type]
-    design.designer_id = @session[:user].id
-    design.priority_id = @params[:priority][:id].to_s
+    design.name         = details[:design_name]
+    design.phase_id     = phase_id
+    design.board_id     = details[:board_id]
+    design.revision_id  = details[:revision_id]
+    design.suffix_id    = details[:suffix_id]
+    design.design_type  = details[:design_type]
+    design.pcb_input_id = @session[:user].id
+    design.priority_id  = @params[:priority][:id].to_s
     design.save 
 
     if design.errors.empty?
@@ -343,8 +343,8 @@ class DesignController < ApplicationController
         design_review.priority_id      = design.priority_id
 
         if review_type.name == "Pre-Artwork"
-          design_review.designer_id      = design.designer_id
-          design_review.design_center_id = User.find(design.designer_id).design_center_id
+          design_review.designer_id      = design.pcb_input_id
+          design_review.design_center_id = User.find(design.pcb_input_id).design_center_id
         elsif review_type.name == "Release"
           # NOTE: This assumes that there is only one PCB Admin.
           pcb_admin = Role.find_by_name("PCB Admin").users.pop
