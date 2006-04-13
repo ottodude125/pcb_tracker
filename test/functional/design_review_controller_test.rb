@@ -1603,7 +1603,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     cathy_m           = User.find_by_last_name("McLaren")
 
     assert_equal(high.id,  mx234a_design.priority_id)
-    assert_equal(bob_g.id, mx234a_design.designer_id)
+    assert_equal(5000,     mx234a_design.designer_id)
+    assert_equal(5001,     mx234a_design.peer_id)
 
     release_review = ReviewType.find_by_name('Release')
     pre_art_review = ReviewType.find_by_name('Pre-Artwork')
@@ -1684,6 +1685,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
          :role_id_12    => {'100'     => reviewer_result[:result]},
          :design_review => {"id"      => mx234a.id},
          :designer      => {:id       => scott_g.id},
+         :peer          => {:id       => bob_g.id},
          :priority      => {:id       => low.id})
     post(:post_results)
 
@@ -1698,7 +1700,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal('mx234a: Pre-Artwork Review is complete',
                  email.subject)
 
-    designer_email = User.find(mx234a_pre_art_dr.design.designer_id).email
+    designer_email = User.find(mx234a_pre_art_dr.design.pcb_input_id).email
     found_email = email.cc.detect { |addr| addr == designer_email }
     assert_equal(designer_email, found_email)
     
@@ -2707,10 +2709,10 @@ class DesignReviewControllerTest < Test::Unit::TestCase
                  flash['notice'])
 
     mx234a = Design.find(designs(:mx234a).id)
-    assert_equal(User.find(users(:bob_g).id).name,
-                 User.find(mx234a.designer_id).name)
-    assert_equal(User.find(users(:scott_g).id).name,
-                 User.find(mx234a.peer_id).name)
+    assert_equal(5000, mx234a.designer_id)
+    assert_equal(5001, mx234a.peer_id)
+    assert_equal(User.find(users(:cathy_m).id).name,
+                 User.find(mx234a.pcb_input_id).name)
     assert_equal(Priority.find(priorities(:high).id).name,
                  Priority.find(mx234a.priority_id).name)
 
@@ -2744,10 +2746,10 @@ class DesignReviewControllerTest < Test::Unit::TestCase
          :priority       => {:id => priorities(:low).id},
          :design_center  => {:id => design_centers(:fridley).id})
 
-    assert_equal(User.find(users(:bob_g).id).name,
-                 User.find(mx234a.designer_id).name)
-    assert_equal(User.find(users(:scott_g).id).name,
-                 User.find(mx234a.peer_id).name)
+    assert_equal(5000, mx234a.designer_id)
+    assert_equal(5001, mx234a.peer_id)
+    assert_equal(User.find(users(:cathy_m).id).name,
+                 User.find(mx234a.pcb_input_id).name)
     assert_equal(Priority.find(priorities(:high).id).name,
                  Priority.find(mx234a.priority_id).name)
 
