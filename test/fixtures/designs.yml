@@ -3,94 +3,135 @@
 #
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 mx234a:
-  id:          1
-  name:        mx234a
-  phase_id:    3
-  board_id:    1
-  revision_id: 1
-  suffix_id:   0
-  design_type: New
-  designer_id: 5000
-  peer_id:     5001
-  priority_id: 1
+  id:           1
+  name:         mx234a
+  phase_id:     3
+  board_id:     1
+  revision_id:  1
+  suffix_id:    0
+  design_type:  New
+  designer_id:  5000
+  peer_id:      5001
+  pcb_input_id: 4000
+  priority_id:  1
 la453b:
-  id:          2
-  name:        la453b
-  board_id:    2
-  revision_id: 2
-  suffix_id:   0
-  design_type: New
-  designer_id: 5001
-  peer_id:     5002
-  priority_id: 2
+  id:           2
+  name:         la453b
+  board_id:     2
+  revision_id:  2
+  suffix_id:    0
+  design_type:  New
+  designer_id:  5001
+  peer_id:      5002
+  pcb_input_id: 4000
+  priority_id:  2
 la453a_eco1:
-  id:          3
-  name:        la453a_eco1
-  board_id:    2
-  revision_id: 1
-  suffix_id:   1
-  design_type: Date Code
-  designer_id: 5001
-  peer_id:     5002
-  priority_id: 2
+  id:           3
+  name:         la453a_eco1
+  board_id:     2
+  revision_id:  1
+  suffix_id:    1
+  design_type:  Date Code
+  designer_id:  5001
+  peer_id:      5002
+  pcb_input_id: 4000
+  priority_id:  2
 la453a1:
-  id:          4
-  name:        la453a1
-  board_id:    2
-  revision_id: 1
-  suffix_id:   1
-  design_type: Dot Rev
-  designer_id: 5001
-  peer_id:     5000
-  priority_id: 1
+  id:           4
+  name:         la453a1
+  board_id:     2
+  revision_id:  1
+  suffix_id:    1
+  design_type:  Dot Rev
+  designer_id:  5001
+  peer_id:      5000
+  pcb_input_id: 4000
+  priority_id:  1
 la453a2:
-  id:          5
-  name:        la453a2
-  board_id:    2
-  revision_id: 1
-  suffix_id:   2
-  design_type: Dot Rev
-  designer_id: 5001
-  peer_id:     5002
-  priority_id: 2
+  id:           5
+  name:         la453a2
+  board_id:     2
+  revision_id:  1
+  suffix_id:    2
+  design_type:  Dot Rev
+  designer_id:  5001
+  peer_id:      5002
+  pcb_input_id: 4000
+  priority_id:  2
 la453b_eco2:
-  id:          6
-  name:        la453b_eco2
-  board_id:    2
-  revision_id: 2
-  suffix_id:   2
-  design_type: Date Code
-  designer_id: 5001
-  peer_id:     5002
-  priority_id: 1
+  id:           6
+  name:         la453b_eco2
+  board_id:     2
+  revision_id:  2
+  suffix_id:    2
+  design_type:  Date Code
+  designer_id:  5001
+  peer_id:      5002
+  pcb_input_id: 4000
+  priority_id:  1
 mx234b:
-  id:          7
-  name:        mx234b
-  board_id:    1
-  revision_id: 2
-  suffix_id:   0
-  design_type: New
-  designer_id: 5002
-  peer_id:     5001
-  priority_id: 2
+  id:           7
+  name:         mx234b
+  board_id:     1
+  revision_id:  2
+  suffix_id:    0
+  design_type:  New
+  designer_id:  5002
+  peer_id:      5001
+  pcb_input_id: 4000
+  priority_id:  2
 la454c3:
-  id:          8
-  name:        la454c3
-  board_id:    3
-  revision_id: 3
-  suffix_id:   3
-  design_type: Dot Rev
-  designer_id: 5002
-  peer_id:     5001
-  priority_id: 2
+  id:           8
+  name:         la454c3
+  board_id:     3
+  revision_id:  3
+  suffix_id:    3
+  design_type:  Dot Rev
+  designer_id:  5002
+  peer_id:      5001
+  pcb_input_id: 4000
+  priority_id:  2
 mx234c:
-  id:          9
-  name:        mx234c
-  board_id:    1
-  revision_id: 3
-  suffix_id:   0
-  design_type: New
-  designer_id: 5002
-  peer_id:     5001
-  priority_id: 2
-
+  id:           9
+  name:         mx234c
+  board_id:     1
+  revision_id:  3
+  suffix_id:    0
+  design_type:  New
+  designer_id:  5002
+  peer_id:      5001
+  pcb_input_id: 4000
+  priority_id:  2
+la455b:
+  id:           10
+  name:         la455b
+  board_id:     4
+  revision_id:  2
+  suffix_id:    0
+  design_type:  New
+  designer_id:  5001
+  peer_id:      5002
+  pcb_input_id: 4000
+  priority_id:  1
+mx600a:
+  id:           11
+  name:         mx600a
+  board_id:     5
+  revision_id:  1
+  suffix_id:    0
+  design_type:  New
+  designer_id:  5000
+  peer_id:      5001
+  pcb_input_id: 4000
+  priority_id:  2
+mx700b:
+  id:           12
+  name:         mx700b
+  board_id:     6
+  revision_id:  2
+  suffix_id:    0
+  design_type:  New
+  designer_id:  5002
+  peer_id:      5000
+  pcb_input_id: 4000
+  priority_id:  3

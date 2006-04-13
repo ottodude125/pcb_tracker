@@ -31,3 +31,20 @@ la455:
   platform_id: 2
   project_id:  2
   active:      1
+mx600:
+  id:          5
+  name:        mx600
+  prefix_id:   1
+  number:      600
+  platform_id: 1
+  project_id:  1
+  active:      1
+mx700:
+  id:          6
+  name:        mx700
+  prefix_id:   1
+  number:      700
+  platform_id: 1
+  project_id:  1
+  active:      1
+

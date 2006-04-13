@@ -79,3 +79,28 @@ audit_mx234c:
   auditor_complete:          0
   designer_completed_checks: 0
   auditor_completed_checks:  0
+audit_la455b:
+  id:                        1010
+  design_id:                 10
+  checklist_id:              2
+  designer_complete:         0
+  auditor_complete:          0
+  designer_completed_checks: 0
+  auditor_completed_checks:  0
+audit_mx600a:
+  id:                        1011
+  design_id:                 11
+  checklist_id:              2
+  designer_complete:         0
+  auditor_complete:          0
+  designer_completed_checks: 0
+  auditor_completed_checks:  0
+audit_mx700b:
+  id:                        1012
+  design_id:                 12
+  checklist_id:              2
+  designer_complete:         0
+  auditor_complete:          0
+  designer_completed_checks: 0
+  auditor_completed_checks:  0
+

@@ -60,4 +60,184 @@ mx234a_release:
   priority_id:      1
   creator_id:       0
   reposted_on:      2006-01-26 00:00:00
+la455b_pre_artwork:
+  id:               6
+  posting_count:    1
+  design_id:        10
+  designer_id:      4000
+  design_center_id: 1
+  review_status_id: 2
+  review_type_id:   3
+  review_type_id_2: 0
+  priority_id:      1
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+la455b_placement:
+  id:               7
+  posting_count:    2
+  design_id:        10
+  designer_id:      5001
+  design_center_id: 1
+  review_status_id: 1
+  review_type_id:   4
+  review_type_id_2: 0
+  priority_id:      1
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+la455b_routing:
+  id:               8
+  posting_count:    0
+  design_id:        10
+  designer_id:      5001
+  review_status_id: 3
+  review_type_id:   2
+  review_type_id_2: 0
+  priority_id:      1
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+la455b_final:
+  id:               9
+  posting_count:    0
+  design_id:        10
+  designer_id:      5001
+  review_status_id: 3
+  review_type_id:   1
+  review_type_id_2: 0
+  priority_id:      1
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+la455b_release:
+  id:               10
+  posting_count:    0
+  design_id:        10
+  designer_id:      8000
+  review_status_id: 3
+  priority_id:      1
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+mx600a_pre_artwork:
+  id:               11
+  posting_count:    2
+  design_id:        11
+  designer_id:      4000
+  review_status_id: 1
+  review_type_id:   3
+  review_type_id_2: 0
+  priority_id:      2
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+mx600a_placement:
+  id:               12
+  posting_count:    0
+  design_id:        11
+  designer_id:      5000
+  review_status_id: 3
+  review_type_id:   4
+  review_type_id_2: 0
+  priority_id:      2
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+mx600a_routing:
+  id:               13
+  posting_count:    0
+  design_id:        11
+  designer_id:      5000
+  review_status_id: 3
+  review_type_id:   2
+  review_type_id_2: 0
+  priority_id:      2
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+mx600a_final:
+  id:               14
+  posting_count:    0
+  design_id:        11
+  designer_id:      5000
+  review_status_id: 3
+  review_type_id:   1
+  review_type_id_2: 0
+  priority_id:      2
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+mx600a_release:
+  id:               15
+  posting_count:    0
+  design_id:        11
+  designer_id:      8000
+  review_status_id: 3
+  review_type_id:   5
+  review_type_id_2: 0
+  priority_id:      2
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+mx700b_pre_artwork:
+  id:               16
+  posting_count:    1
+  design_id:        12
+  designer_id:      4000
+  review_status_id: 3
+  review_type_id:   3
+  review_type_id_2: 0
+  priority_id:      1
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+mx700b_placement:
+  id:               17
+  posting_count:    2
+  design_id:        12
+  designer_id:      5002
+  review_status_id: 3
+  review_type_id:   4
+  review_type_id_2: 0
+  priority_id:      1
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+mx700b_routing:
+  id:               18
+  posting_count:    1
+  design_id:        12
+  designer_id:      5002
+  review_status_id: 3
+  review_type_id:   2
+  review_type_id_2: 0
+  priority_id:      1
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+mx700b_final:
+  id:               19
+  posting_count:    2
+  design_id:        12
+  designer_id:      5002
+  review_status_id: 3
+  review_type_id:   1
+  review_type_id_2: 0
+  priority_id:      1
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
+mx700b_release:
+  id:               20
+  posting_count:    1
+  design_id:        12
+  designer_id:      8000
+  review_status_id: 1
+  review_type_id:   5
+  review_type_id_2: 0
+  priority_id:      1
+  creator_id:       0
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2004-04-09 00:00:00
 
