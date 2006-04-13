@@ -110,7 +110,7 @@ class DesignReviewMailer < ActionMailer::Base
         @cc.push(user.email) if user.active?
       end
     when 'Pre-Artwork'
-      @cc.push(User.find(design_review.design.designer_id).email)
+      @cc.push(User.find(design_review.design.pcb_input_id).email)
     end
     
     @body['design_review_id'] = design_review.id
