@@ -10,11 +10,7 @@
   <tr>
     <th align="left">Posted By:</th>
     <td width="250">
-      <% if @design_review.designer_id > 0 %>
-        <%= User.find(@design_review.designer_id).name %>
-      <% else %>
-        <b>Not Set</b>
-      <% end %>
+      <%= poster_name(@design_review) %>
     </td>
     <th align="left" width="140">Design Center:</th>
     <td>
