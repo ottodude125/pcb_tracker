@@ -64,7 +64,9 @@
             </td>
           </tr>
           
-          <% if @session[:user].id == @design.designer_id %>
+          <% if (@session[:user].id == @design.designer_id || 
+                 (@session[:user].id == @design.pcb_input_id &&
+                  @design_review.review_type.name == 'Pre-Artwork'))%>
           <tr>
             <td>
               <%= link_to(image_tag('repost'),
