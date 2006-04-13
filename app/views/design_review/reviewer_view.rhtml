@@ -96,24 +96,26 @@
                       </td>
                     </tr>
                     <tr>
-                      <th align="left"> Select Designer:</th>
+                      <th align="right">Designer:</th>
                       <td align="left">
                         <select id="designer" 
                                 name="designer[id]" 
                                 class="name_select">
+                        <option value="">Please select</option>
                         <%= options_from_collection_for_select(@designers,
                                                                :id, 
                                                                :name,
-                                                               @designer.id) %>
+                                                               @design.designer_id) %>
                         </select>
                       </td>
                     </tr>
                     <tr>
-                      <th align="left"> Select Peer:</th>
+                      <th align="right">Peer:</th>
                       <td align="left">
                         <select id="peer" 
                                 name="peer[id]" 
                                 class="name_select">
+                        <option value="">Please select</option>
                         <%= options_from_collection_for_select(@designers,
                                                                "id", 
                                                                "name",
