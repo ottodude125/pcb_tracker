@@ -319,7 +319,7 @@ class UserControllerTest < Test::Unit::TestCase
     post :list
 
     assert_response 200
-    assert_equal(15, assigns(:users).size)
+    assert_equal(3, assigns(:users).size)
     
   end
 
