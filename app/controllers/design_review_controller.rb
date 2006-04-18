@@ -1460,8 +1460,8 @@ class DesignReviewController < ApplicationController
       flash_msg += " - Your comments have been recorded" if comment_update
     else
       updated    = comment_update || results || results_recorded > 0
-      flash_msg  = 'Design Review updated'  if updated
-      flash_msg += ' with comments'         if comment_update
+      flash_msg  = 'Design Review updated with'  if updated
+      flash_msg += ' comments'                   if comment_update
       flash_msg += ' and' if comment_update && results_recorded > 0
       flash_msg += ' the review result'     if results_recorded > 0
       flash_msg += 's'                      if results_recorded > 1
@@ -1814,6 +1814,7 @@ class DesignReviewController < ApplicationController
         if (design_review.review_type.name != 'Release' &&
             design_review.review_type.name != 'Pre-Artwork')
           design_review.designer_id = designer.id
+          design_review.design_center_id = designer.design_center_id
         end
         design_review.update
       end
