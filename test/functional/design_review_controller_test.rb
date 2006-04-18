@@ -1219,32 +1219,32 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   end
 
 
-  def ntest_get_attachment
+  def test_get_attachment
     assert true
     print('?')
   end
 
 
-  def ntest_list_obsolete
+  def test_list_obsolete
     assert true
     print('?')
   end
 
 
   
-  def ntest_review_mail_list
+  def test_review_mail_list
     assert true
     print('?')
   end
 
 
-  def ntest_add_to_list
+  def test_add_to_list
     assert true
     print('?')
   end
 
 
-  def ntest_remove_from_list
+  def test_remove_from_list
     assert true
     print('?')
   end
@@ -2554,7 +2554,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   end
 
 
-  def ntest_confirm_rejection
+  def test_confirm_rejection
     assert true
     print('?')
   end
@@ -2780,10 +2780,4 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   end
 
   
-  def dump_design
-
-    print "\n************** DUMP DESIGN *****************\n"
-  end
-
-
 end
