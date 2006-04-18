@@ -11,14 +11,18 @@ bob:
   active:     1
   
 existingbob:
-  id:       1000002
-  login:    existingbob
+  id:         1000002
+  login:      existingbob
+  first_name: Bob
+  last_name:  Smith
   password: 9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
   active:   1
   
 longbob:
-  id: 1000003
-  login: longbob
+  id:         1000003
+  login:      longbob
+  first_name: Bob
+  last_name:  Smith
   password: 8e9b1a9a38e66ca572a5e8fdac8e256848842dfa # longtest
 
 cathy_m:
