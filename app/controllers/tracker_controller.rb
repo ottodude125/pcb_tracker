@@ -33,10 +33,10 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def index
-  
+
     if @session[:active_role] != nil
       case @session[:active_role]
-      when "Designer"   
+      when "Designer"
         redirect_to :action => :designer_home
       when "Reviewer"   
         redirect_to :action => :reviewer_home
@@ -160,7 +160,7 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def designer_home
-  
+
     @designer = Hash.new
 
     designs = Design.find_all_by_designer_id(@session[:user].id,
@@ -172,11 +172,11 @@ class TrackerController < ApplicationController
         
     @design_list = Array.new
     for design in designs
-      
+
       design_summary = Hash.new
       design_summary[:design] = design
 
-      design_reviews = DesignReview.find_all("design_id='#{design.id}'")
+      design_reviews = design.design_reviews
       reviews = design_reviews.sort_by{ |r| r.review_type.sort_order }
 
       # Go through the reviews until the first review that has not been
@@ -244,6 +244,7 @@ class TrackerController < ApplicationController
         100.0 / num_checks[:designer]
       @audits.push(audit)
     end
+
   end
   
   
