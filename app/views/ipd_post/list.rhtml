@@ -17,10 +17,11 @@
                     :title => "Use to initiate a new in-process change request/discussion thread") %>
     </td>
     <td align="right">
-      <%= button_to('Return',
-                    {:controller => 'tracker',
-                     :action => 'index'},
+      <%= button_to('Return', 
+                    session[:return_to],
                     :class => 'form_return') %>
     </td>
   </tr>
 </table>
+
+<%# debug session %>
