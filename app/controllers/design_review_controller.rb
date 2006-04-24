@@ -19,6 +19,10 @@ class DesignReviewController < ApplicationController
 
   def view
 
+    session[:return_to] = {:controller => 'design_review',
+                           :action     => 'view',
+                           :id         => @params[:id]}
+
     case @session[:active_role]
       when 'Designer'
         redirect_to(:action => :designer_view,  :id => @params[:id])
@@ -94,9 +98,6 @@ class DesignReviewController < ApplicationController
   #
   def manager_view
 
-    session[:return_to] = {:controller => 'design_review',
-                           :action     => 'view',
-                           :id         => @params[:id]}
     @design_review = DesignReview.find(@params[:id])
     @design        = Design.find(@design_review.design_id)
     review_results = DesignReviewResult.find_all("design_review_id='#{@design_review.id}'")
