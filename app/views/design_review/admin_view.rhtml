@@ -40,14 +40,17 @@
         <table bgcolor="#ffffff">
           <tr>
             <td>
-              <input type="submit" value="Add Comment" />
+              <input type="submit" 
+               value="Add Comment" 
+               title="Add a comment to the design review" />
             </td>
           </tr>
           <tr><th>Other Actions</th></tr>
           <tr>
             <td>
-             <input type="button" 
-                    value="Attachments" 
+             <input type="button"
+                    value="Attachments"
+                    title="Add or view attachments"
                     onClick="parent.location='<%= url_for(:controller => 'design_review', 
                                                           :action => 'review_attachments',
                                                           :design_review_id => @design_review.id) %>'" />
@@ -55,8 +58,9 @@
           </tr>
           <tr>
             <td>
-             <input type="button" 
-                    value="Email" 
+             <input type="button"
+                    value="Email"
+                    title="Use to review the list of people on the mail list as well as to modify the CC list"
                     onClick="parent.location='<%= url_for(:controller => 'design_review', 
                                                           :action => 'review_mail_list',
                                                           :design_review_id => @design_review.id) %>'" />
@@ -65,13 +69,26 @@
           
           <tr>
             <td>
-             <input type="button" 
-                    value="Update" 
+             <input type="button"
+                    value="Update"
+                    title="Use to update Pre-Artwork, Designer, Peer, Design Center, and Criticality"
                     onClick="parent.location='<%= url_for(:controller => 'design_review', 
                                                           :action => 'admin_update',
                                                           :id => @design_review.id) %>'" />
             </td>
           </tr>
+
+          <tr>
+            <td>
+              <input type="button" 
+                     value="In-Process Dialogue"
+                     title="Hardware/Designer communication log"
+                     onClick="parent.location='<%= url_for(:controller => 'ipd_post', 
+                                                           :action => 'list',
+                                                           :design_id => @design.id) %>'" />
+            </td>
+          </tr>
+
         </table>
       </td>
     </tr>
