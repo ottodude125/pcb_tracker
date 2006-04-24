@@ -34,6 +34,9 @@ class TrackerController < ApplicationController
   #
   def index
 
+    session[:return_to] = {:controller => 'tracker',
+                           :action     => 'index'}
+
     if @session[:active_role] != nil
       case @session[:active_role]
       when "Designer"
