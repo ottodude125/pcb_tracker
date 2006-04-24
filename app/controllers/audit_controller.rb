@@ -59,8 +59,12 @@ class AuditController < ApplicationController
         audit[:display_name] = audit.design.name
         audit[:platform] = Platform.find(board.platform_id).name
         audit[:project]  = Project.find(board.project_id).name
-        audit[:designer] = User.find(audit.design.designer_id).name
-        audit[:auditor]  = User.find(audit.design.peer_id).name
+        audit[:designer] = (audit.design.designer_id > 0) \
+                             ? User.find(audit.design.designer_id).name \
+                             : 'Not Set'
+        audit[:auditor]  = (audit.design.peer_id > 0) \
+                             ? User.find(audit.design.peer_id).name \
+                             : 'Not Set'
       end
 
 
@@ -324,7 +328,7 @@ class AuditController < ApplicationController
   # update_design_checks
   #
   # Description:
-  # This method takes in a list of design checks and processes each on
+  # This method takes in a list of design checks and processes each one
   # to determine if the check was updated and if it was then the database
   # is updated.
   #
