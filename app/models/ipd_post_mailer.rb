@@ -40,13 +40,13 @@ class IpdPostMailer < ActionMailer::Base
     end
 
     pre_artwork = ReviewType.find_by_name("Pre-Artwork")
-    pre_artwork_design_review = DesignReview.find_by_design_id(
-                                  root_post.design_id,
-                                  "review_type_id=#{pre_artwork.id}")
+    pre_artwork_design_review = 
+      DesignReview.find_by_design_id_and_review_type_id(root_post.design_id,
+                                                        pre_artwork.id)
     hweng_role = Role.find_by_name("HWENG")
-    hweng_pre_art_review_result = DesignReviewResult.find_by_design_review_id(
-                                    pre_artwork_design_review.id,
-                                    "role_id=#{hweng_role.id}")
+    hweng_pre_art_review_result = 
+      DesignReviewResult.find_by_design_review_id_and_role_id(pre_artwork_design_review.id,
+                                                              hweng_role.id)
     if hweng_pre_art_review_result.reviewer_id != poster.id
       hweng = User.find(hweng_pre_art_review_result.reviewer_id)
       recipients.push(hweng.email)
