@@ -193,11 +193,16 @@ class UserController < ApplicationController
    
     # If no errors so far, update the roles for the user.
     if update_good
+
       @params['role'].each { | role_id, value |
         role = Role.find(role_id)
-	      @user.remove_roles(role)
-	      @user.roles << role if  value == '1'
+	      @user.remove_roles(role) if value == '0' && @user.roles.include?(role)
+	      @user.roles << role if value == '1'
       }
+
+      role_count = @user.roles.size
+      @user.roles << Role.find_by_name("Basic User") if role_count == 0
+      
     end
 
     if update_good
@@ -306,10 +311,14 @@ class UserController < ApplicationController
 
     if @request.post? and @user.save
 
+      role_count = 0
       @params['role'].each { | role_id, value |
-        role = Role.find(role_id)
-        @user.roles << role if value == '1'
+        next if value == '0'
+        @user.roles << Role.find(role_id)
+        role_count += 1
       }
+
+      @user.roles << Role.find_by_name("Basic User") if role_count == 0
 
       flash['notice']  = "Account created for #{@user.name}"
       redirect_back_or_default :action => "list"
