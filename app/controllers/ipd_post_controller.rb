@@ -71,6 +71,7 @@ class IpdPostController < ApplicationController
         reply_post.user_id   = @session[:user].id
         reply_post.body      = body
         if reply_post.save
+          IpdPostMailer::deliver_update(root_post)
           flash["notice"] = "Reply post sucessfully created"
         end
       end
@@ -111,8 +112,8 @@ class IpdPostController < ApplicationController
   # new
   #
   # Description:
-  # This method creates a root level in-process dialogue post
-  # for a the design identified by params[:design_id]
+  # This method creates a form to create aroot level in-process dialogue 
+  # post for a the design identified by params[:design_id]
   #
   # Parameters from @params
   # design_id - identifies the design.
@@ -125,10 +126,23 @@ class IpdPostController < ApplicationController
   end
 
 
+  ######################################################################
+  #
+  # create
+  #
+  # Description:
+  # This method creates a root level in-process dialogue post.
+  #
+  # Parameters from @params
+  # design_id - identifies the design.
+  #
+  ######################################################################
+  #
   def create
     @ipd_post = IpdPost.new(params[:ipd_post])
     @ipd_post.user_id = @session[:user].id
     if @ipd_post.save
+      IpdPostMailer::deliver_update(@ipd_post)
       flash[:notice] = 'Post was successfully created'
       redirect_to(:action => 'show', :id => @ipd_post.id)
     else
