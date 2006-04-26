@@ -29,7 +29,8 @@ class IpdPostMailer < ActionMailer::Base
   def update(root_post)
     poster = User.find(root_post.user_id)
     
-    @subject    = root_post.subject
+    @subject    = root_post.design.name + ' [IPD] - ' +
+                   root_post.subject
     @body       = {:root_post => root_post}
 
     recipients = []
