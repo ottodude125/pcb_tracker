@@ -36,6 +36,7 @@ class TrackerController < ApplicationController
 
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'index'}
+    flash['notice'] = flash['notice']
 
     if @session[:active_role] != nil
       case @session[:active_role]
