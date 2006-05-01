@@ -169,8 +169,12 @@ class TrackerController < ApplicationController
 
     designs = Design.find_all_by_designer_id(@session[:user].id,
                                              'created_on ASC')
-    designs += Design.find_all_by_pcb_input_id(@session[:user].id,
-                                             'created_on ASC')
+    pre_art_phase_id = ReviewType.find_by_name('Pre-Artwork').id
+    designs += Design.find_all_by_pcb_input_id_and_phase_id(@session[:user].id,
+                                                             pre_art_phase_id,
+                                                             'created_on ASC')
+    designs = designs.uniq
+
     designs = designs.sort_by { |dr| dr.priority.value }
     designs.reverse!
         
