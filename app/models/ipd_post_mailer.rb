@@ -63,10 +63,16 @@ class IpdPostMailer < ActionMailer::Base
     for manager in manager_role.users
       cc.push(manager.email)
     end
+    
+    pcb_input_gate_role = Role.find_by_name("PCB Input Gate")
+    for pcb_input_gate in pcb_input_gate_role.users
+      cc.push(pcb_input_gate.email)
+    end
 
     for child in root_post.direct_children
       cc.push(child.user.email)
     end
+    
     @cc = cc.uniq
   end
 
