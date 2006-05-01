@@ -13,10 +13,18 @@
 class UserController < ApplicationController
 
   before_filter(:verify_admin_role,
-                :except => [:change_role,
+                :except => [:auto_complete_for_user_last_name,
+                            :change_role,
+                            :login,
+                            :login_information, 
+                            :logout,
+                            :send_password,
                             :set_role,
-                            :login, 
-                            :logout])
+                            :show_users,
+                            :user_set_password,
+                            :user_store_password])
+                            
+  auto_complete_for :user, :last_name
 
   ######################################################################
   #
@@ -35,17 +43,81 @@ class UserController < ApplicationController
     alpha = @params['alpha']
     alpha = 'A' if !alpha
 
-    @users = User.find_all(nil, 'last_name ASC')
+    
+    users = User.find_all(nil, 'last_name ASC')
 
     @alpha_list = {}
-    for user in @users
-      index = user.last_name.slice(0..0)
+    for user in users
+      index = user.last_name.slice(0..0).upcase
       @alpha_list[index] = 0 if !@alpha_list[index]
       @alpha_list[index] += 1
     end
     
-    @users = @users.delete_if { |u| u.last_name.slice(0..0) != alpha }
+    @users = User.find(:all,
+                       :conditions => "LOWER(last_name) LIKE '#{alpha.downcase}%'",
+                       :order      => 'last_name ASC')
 
+  end
+  
+
+  ######################################################################
+  #
+  # send_password
+  #
+  # Description:
+  # This method is called in response the the users clicking the
+  # "Send Password" button.  The user's record is retrieve and 
+  # the password is emailed to the user.
+  #
+  ######################################################################
+  #
+  def send_password
+  
+    user = User.find(@params['id'])
+    PasswordMailer::deliver_send_password(user)
+  
+    redirect_to(:action  => 'login_information',
+                :user_id => user.id)
+  end
+  
+  
+  ######################################################################
+  #
+  # login_information
+  #
+  # Description:
+  # This method is called under two conditions.
+  # 1) the user has clicked the "Login Help" button to retrieve 
+  #    user information based on the last name provided by the user.
+  #    All user records with that match the last name are displayed
+  #    along with a button to request the password be emailed to the
+  #    user.
+  # 2) the user has requested the password via email.  The user's
+  #    record will be displayed along with a message indicating that
+  #    the password has been emailed.
+  #
+  ######################################################################
+  #
+  def login_information
+  
+    if @params['user_id']
+      @user_list = [User.find(@params['user_id'])]
+      flash['notice'] = 'Your password has been sent to the email address listed below'
+    else
+      last_name  = @params['user']['last_name']
+      @user_list = User.find_all_by_last_name(last_name)
+    end
+
+    
+    if @user_list.size > 0
+    elsif last_name == ''
+      flash['notice'] = "Please provide a last name"
+      redirect_to(:action => 'show_users')
+    else
+      flash['notice'] = "#{last_name} was not found"
+      redirect_to(:action => 'show_users')
+    end
+  
   end
   
 
@@ -61,7 +133,7 @@ class UserController < ApplicationController
   #
   def signup
     @roles = Role.find_all(nil, 'name ASC')
-  end
+  end 
 
 
   ######################################################################
@@ -133,6 +205,7 @@ class UserController < ApplicationController
     if @params['new_password'] == @params['new_password_confirmation']
       user = User.find(@params['user']['id'])
       user.password = @params['new_password']
+      user.passwd   = @params['new_password']
      
       if user.update
         flash['notice'] = "The password for #{user.name} was updated"
@@ -151,6 +224,49 @@ class UserController < ApplicationController
                   :id     => @params['user']['id'])
     end
  
+  end
+  
+  
+  ######################################################################
+  #
+  # user_store_password
+  #
+  # Description:
+  # This method updates the user's password.
+  #
+  ######################################################################
+  #
+  def user_store_password
+
+    updated = false
+    if @params['new_password'].size < 5
+      flash['notice'] = 'No Update - the password must be at least 5 characters'
+    elsif @params['new_password'] == @params['new_password_confirmation']
+      user = User.find(@session[:user].id)
+      user.password = @params['new_password']
+      user.passwd   = @params['new_password'] if not @params['new_password'].empty?
+
+      if user.update
+        if not @params['new_password'].empty?
+          flash['notice'] = "The password for #{user.name} was updated"
+          updated = true
+        else
+          flash['notice'] = 'No Update - no password was entered'
+        end
+      else
+        flash['notice'] = "The password for #{user.name} was not updated"
+      end
+    else
+      flash['notice'] = 'No Update - the new password and the confirmation do not match'
+    end
+    
+    if updated
+      redirect_to(:controller => 'tracker',
+                  :action     => 'index')
+    else
+      redirect_to(:action => :user_set_password)
+    end
+    
   end
 
 
@@ -196,8 +312,11 @@ class UserController < ApplicationController
 
       @params['role'].each { | role_id, value |
         role = Role.find(role_id)
-	      @user.remove_roles(role) if value == '0' && @user.roles.include?(role)
-	      @user.roles << role if value == '1'
+        if @user.roles.include?(role)
+	      @user.remove_roles(role) if value == '0'
+	    else
+	      @user.roles << role      if value == '1'
+	    end
       }
 
       role_count = @user.roles.size
@@ -294,6 +413,7 @@ class UserController < ApplicationController
   def create
 
     @user = User.new(@params[:new_user])
+    @user.passwd = @user.password
     
     # If the user left the login and/or email fields blank, set
     # to the default
