@@ -25,6 +25,8 @@ class IpdPostControllerTest < Test::Unit::TestCase
   end
 
   fixtures(:designs,
+           :design_review_results,
+           :design_reviews,
            :ipd_posts,
            :users)
 
