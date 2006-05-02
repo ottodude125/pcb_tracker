@@ -1,0 +1,25 @@
+<!-- View: login                                                -->
+<!-- Purpose: Prompts the user for a last name.                 -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @title = "Login Help" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'login_information') -%>
+
+  <b>Enter last name: </b>
+  <%= text_field_with_auto_complete(:user, 
+                                    :last_name, 
+                                    {:size => 20} ) -%>
+
+  <b> and </b>
+  <input type="submit" value="Get Login Information" />
+  
+  
+  <hr class="div" />
+  
+
+<%= end_form_tag -%>

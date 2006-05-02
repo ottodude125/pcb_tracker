@@ -1,0 +1,72 @@
+<!-- View: login                                                -->
+<!-- Purpose: Displays the login information for the            -->
+<!--          user specified on the Show Users screen.			-->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @title = "Login Information" %>
+
+<hr class="div" />
+
+<% for user in @user_list %>
+
+  <table width="80%" align="center" border="0">
+  
+    <tr>
+      <th align="right"><font size="+2">Login:</font></th>
+      <td> <b><font size="+2"><%= user.login %></font></b> </td>
+    </tr>
+
+    <tr>
+      <th width="140" align="right">Name:</th>
+      <td> <%= user.name %> </td>
+    </tr>
+
+    <% if user.design_center_id > 0 %>
+      <tr>
+        <th align="right">Design Center:</th>
+        <td> <%= user.design_center.name %> </td>
+      </tr>
+    <% end %>
+    
+    <tr>
+      <th align="right">Active:</th>
+      <td> <%= user.active? ? 'Yes' : 'No' %> </td>
+    </tr>
+    
+    <tr>
+      <th align="right">Email:</th>
+      <td> <%= user.email %> </td>
+    </tr>
+    
+    <tr>
+      <th align="right" valign="top">Roles:</th>
+      <td>
+        <table>
+          <% for role in user.roles %>
+            <tr>
+              <td>
+                <%= role.name %>
+                <% if role.reviewer? %>
+                Reviewer
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      </td>
+    </tr>
+    
+    <tr>
+      <td colspan="2">
+        <%= button_to("Send my password",
+                      :action => 'send_password',
+                      :id     => user.id) %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+<% end %>
+
