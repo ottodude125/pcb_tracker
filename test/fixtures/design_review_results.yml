@@ -221,4 +221,88 @@ mx234a_release_pcb_design:
   reviewer_id:      4001
   role_id:          12
   result:           None
+mx234c_pre_artwork_ce_dft:
+  id:               536
+  design_review_id: 21
+  reviewer_id:      7101
+  role_id:          7
+  result:           None
+mx234c_pre_artwork_dfm:
+  id:               537
+  design_review_id: 21
+  reviewer_id:      7150
+  role_id:          8
+  result:           None
+mx234c_pre_artwork_hw:
+  id:               538
+  design_review_id: 21
+  reviewer_id:      7001
+  role_id:          5
+  result:           None
+mx234c_pre_artwork_lib:
+  id:               539
+  design_review_id: 21
+  reviewer_id:      7400
+  role_id:          15
+  result:           None
+mx234c_pre_artwork_mech:
+  id:               540
+  design_review_id: 21
+  reviewer_id:      7251
+  role_id:          10
+  result:           None
+mx234c_pre_artwork_mech_mfg:
+  id:               541
+  design_review_id: 21
+  reviewer_id:      7300
+  role_id:          11
+  result:           None
+mx234c_pre_artwork_pcb_ig:
+  id:               542
+  design_review_id: 21
+  reviewer_id:      4000
+  role_id:          14
+  result:           None
+mx234c_pre_artwork_pcb_mech:
+  id:               543
+  design_review_id: 21
+  reviewer_id:      7451
+  role_id:          16
+  result:           None
+mx234c_pre_artwork_plan:
+  id:               544
+  design_review_id: 21
+  reviewer_id:      7650
+  role_id:          13
+  result:           None
+mx234c_pre_artwork_slm_bom:
+  id:               545
+  design_review_id: 21
+  reviewer_id:      7500
+  role_id:          17
+  result:           None
+mx234c_pre_artwork_pcb_design:
+  id:               546
+  design_review_id: 21
+  reviewer_id:      4001
+  role_id:          12
+  result:           None
+mx234c_pre_artwork_slm_v:
+  id:               547
+  design_review_id: 21
+  reviewer_id:      7550
+  role_id:          18
+  result:           None
+mx234c_pre_artwork_tde:
+  id:               548
+  design_review_id: 21
+  reviewer_id:      7200
+  role_id:          9
+  result:           None
+mx234c_pre_artwork_valor:
+  id:               549
+  design_review_id: 21
+  reviewer_id:      7050
+  role_id:          6
+  result:           None
 
