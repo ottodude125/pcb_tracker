@@ -61,8 +61,8 @@ function setFocus() {
       <% if @session[:user] == nil %>
         <td>
           <%= form_tag(:controller => "user", :action => "login") %>
-            Login: <input id="user_login" name="user_login" size="30" type="text" value="" />
-            Password: <input id="user_password" name="user_password" size="30" type="password" value="" />
+            Login: <input id="user_login" name="user_login" size="20" type="text" value="" />
+            Password: <input id="user_password" name="user_password" size="20" type="password" value="" />
             <input type="submit" value="Login" />
           <%= end_form_tag %>
         </td>
@@ -93,6 +93,15 @@ function setFocus() {
         </td>
       <% end %>
     </tr>
+    <% if @session[:user] == nil %>
+    <tr>
+        <td colspan="3" align="left" bgcolor="#ffffff">
+          <%= link_to('Login Help',
+                      {:controller => 'user',
+                       :action     => 'show_users'}) %>
+        </td>
+    </tr>
+    <% end %>
     <% if @flash["notice"] %>
       <tr bgcolor="#f6f792">
         <td colspan="3">
@@ -104,14 +113,24 @@ function setFocus() {
     <% end %>
     <% if @session[:user] != nil %>
       <tr bgcolor="#ffffff">
-        <td colspan="3">
-          <%= link_to "&nbsp;Logout #{@session[:user][:first_name]} #{@session[:user][:last_name]}", { :controller => "user", :action => "logout" } %>
+        <td colspan="1">
+          <%= link_to("&nbsp;Logout #{@session[:user].name}",
+                      { :controller => "user",
+                        :action     => "logout" }) %>
+        </td>
+        <td align = 'right'>
+          <%= link_to("Change Password", 
+          			  { :controller => "user",
+          			    :action     => "user_set_password",
+          			    :id         => @session[:user].id }) %>
         </td>
       </tr>
     <% end %>
   </table>
 
-  <h1><%=h @heading %></h1>
+  <% if @heading %>
+    <h1><%=h @heading %></h1>
+  <% end %>
 
   <%= @content_for_layout %>
 
