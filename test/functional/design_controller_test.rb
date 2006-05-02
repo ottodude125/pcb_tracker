@@ -121,8 +121,8 @@ class DesignControllerTest < Test::Unit::TestCase
     details = flash[:details]
 
     assert_equal(5,  Design.find_all("board_id='#{details[:board_id]}'").size)
-    assert_equal(20, DesignReview.find_all.size)
-    assert_equal(37, DesignReviewResult.find_all.size)
+    assert_equal(25, DesignReview.find_all.size)
+    assert_equal(51, DesignReviewResult.find_all.size)
     assert_equal(12, Audit.find_all.size)
     assert_equal(43, DesignCheck.find_all.size)
 
