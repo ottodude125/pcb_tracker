@@ -35,8 +35,9 @@
     <%= manager_home_list_stripes.review_status.name %>
   </td>
   <td>
-    <%= button_to "Update", { :controller => "design_review",
-                              :action     => "admin_update",
-                              :id         => manager_home_list_stripes.id } %>
+    <%= button_to("Update Assignments", 
+                  { :controller => "design_review",
+                    :action     => "admin_update",
+                    :id         => manager_home_list_stripes.id }) %>
   </td>
 </tr>
