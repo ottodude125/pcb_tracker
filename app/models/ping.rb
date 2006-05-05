@@ -93,11 +93,11 @@ class Ping < ActiveRecord::Base
       review_result_list[:review_list] =
         review_result_list[:review_list].sort_by{ |rr| rr[:age] }.reverse
       reviewer_list.push(review_result_list)
-      PingMailer::deliver_ping(review_result_list)
+      TrackerMailer::deliver_reviewer_ping(review_result_list)
     }
 
     reviewer_list = reviewer_list.sort_by { |rr| rr[:reviewer].last_name }
-    PingMailer::deliver_summary(reviewer_list)
+    TrackerMailer::deliver_ping_summary(reviewer_list)
 
   end
 

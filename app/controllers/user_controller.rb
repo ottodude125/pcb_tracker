@@ -74,7 +74,7 @@ class UserController < ApplicationController
   def send_password
   
     user = User.find(@params['id'])
-    PasswordMailer::deliver_send_password(user)
+    TrackerMailer::deliver_user_password(user)
   
     redirect_to(:action  => 'login_information',
                 :user_id => user.id)

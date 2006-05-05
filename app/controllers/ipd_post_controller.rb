@@ -71,7 +71,7 @@ class IpdPostController < ApplicationController
         reply_post.user_id   = @session[:user].id
         reply_post.body      = body
         if reply_post.save
-          IpdPostMailer::deliver_update(root_post)
+          TrackerMailer::deliver_ipd_update(root_post)
           flash["notice"] = "Reply post sucessfully created"
         end
       end
@@ -142,7 +142,7 @@ class IpdPostController < ApplicationController
     @ipd_post = IpdPost.new(params[:ipd_post])
     @ipd_post.user_id = @session[:user].id
     if @ipd_post.save
-      IpdPostMailer::deliver_update(@ipd_post)
+      TrackerMailer::deliver_ipd_update(@ipd_post)
       flash[:notice] = 'Post was successfully created'
       redirect_to(:action => 'show', :id => @ipd_post.id)
     else

@@ -525,8 +525,8 @@ class DesignReviewController < ApplicationController
 
 
     # Let everybody know that the design has been posted.
-    DesignReviewMailer::deliver_posting_notification(design_review,
-                                                     @params[:post_comment][:comment])
+    TrackerMailer::deliver_design_review_posting_notification(design_review,
+                                                             @params[:post_comment][:comment])
 
     redirect_to(:action     => 'index',
                 :controller => 'tracker')
@@ -594,9 +594,9 @@ class DesignReviewController < ApplicationController
     end
 
     # Let everybody know that the design has been posted.
-    DesignReviewMailer::deliver_posting_notification(design_review,
-                                                     @params[:post_comment][:comment],
-                                                     true)
+    TrackerMailer::deliver_design_review_posting_notification(design_review,
+                                                              @params[:post_comment][:comment],
+                                                              true)
 
 
     redirect_to(:action     => 'index',
@@ -632,9 +632,9 @@ class DesignReviewController < ApplicationController
       dr_comment.design_review_id = @params[:design_review][:id]
       dr_comment.create
 
-      DesignReviewMailer::deliver_update(@session[:user],
-                                         DesignReview.find(@params[:design_review][:id]),
-                                         true)
+      TrackerMailer::deliver_design_review_update(@session[:user],
+                                                  DesignReview.find(@params[:design_review][:id]),
+                                                  true)
     end
 
     flash['notice'] = "Comment added - mail has been sent"
@@ -1445,15 +1445,14 @@ class DesignReviewController < ApplicationController
     end
     
     if comment_update || (result_update && result_update.size > 0)
-      DesignReviewMailer::deliver_update(@session[:user], 
-                                         design_review,
-                                         comment_update,
-                                         result_update)
+      TrackerMailer::deliver_design_review_update(@session[:user], 
+                                                  design_review,
+                                                  comment_update,
+                                                  result_update)
     end
 
     if review_complete
-      DesignReviewMailer::deliver_review_complete_notification(@session[:user],
-                                                               design_review)
+      TrackerMailer::deliver_design_review_complete_notification(design_review)
     end
 
     if results && !results[:success]
@@ -1590,11 +1589,12 @@ class DesignReviewController < ApplicationController
           end
 
           if is_reviewer
-            ReviewReassignment::deliver_reassign_to_peer(@session[:user],
-                                                         peer,
-                                                         designer,
-                                                         design_review.design,
-                                                         role)
+            TrackerMailer::deliver_reassign_design_review_to_peer(
+                             @session[:user],
+                             peer,
+                             designer,
+                             design_review.design,
+                             role)
           end
         end
       }
@@ -1621,11 +1621,12 @@ class DesignReviewController < ApplicationController
           flash_msg += " and you are assigned to the #{role.name} review"
         end
 
-        ReviewReassignment::deliver_reassign_from_peer(@session[:user],
-                                                       peer,
-                                                       designer,
-                                                       design_review.design,
-                                                       role)
+        TrackerMailer::deliver_reassign_design_review_from_peer(
+                         @session[:user],
+                         peer,
+                         designer,
+                         design_review.design,
+                         role)
       end
 
     }

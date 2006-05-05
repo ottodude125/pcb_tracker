@@ -412,7 +412,7 @@ class AuditController < ApplicationController
               :designer_completed_checks => completed_checks,
               :designer_complete         => (completed_checks == total_checks))
 
-            AuditMailer.deliver_alert_peer(audit) if audit.designer_complete?
+            TrackerMailer.deliver_self_audit_complete(audit) if audit.designer_complete?
           end
           
           result = design_check.update_attributes(
@@ -441,7 +441,7 @@ class AuditController < ApplicationController
               :auditor_completed_checks => completed_checks,
               :auditor_complete         => (completed_checks == total_checks))
 
-            AuditMailer.deliver_alert_designer(audit) if audit.auditor_complete?
+            TrackerMailer.deliver_peer_audit_complete(audit) if audit.auditor_complete?
           end
 
           result = design_check.update_attributes(
