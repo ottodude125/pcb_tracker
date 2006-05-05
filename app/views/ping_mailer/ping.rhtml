@@ -1,8 +1,0 @@
-<% for review in @review_list %>
-Criticality: <%= review[:design_review].priority.name %>
-Review:      <%= review[:design_review].design.name %> <%= review[:design_review].review_type.name %> Review
-Age:         <%= review[:age] %> working days
-<% end %>
-
-Please review these boards as soon as possible using the PCB Tracker.
-The design information is located at <%= Pcbtr::PCBTR_BASE_URL %>tracker
