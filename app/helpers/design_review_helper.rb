@@ -62,8 +62,9 @@ module DesignReviewHelper
   
   def permitted_to_update_cc_list
   
-    return @session[:active_role] == 'Admin' || 
-           @session[:active_role] == 'Designer'
+    return @session[:active_role] == 'Admin'    || 
+           @session[:active_role] == 'Designer' ||
+           is_manager
   end
   
   
@@ -83,7 +84,7 @@ module DesignReviewHelper
 
 
   def pre_art_pcb(design_review, review_results)
- 
+      
     return (review_results.find { |rr| rr.role.name == "PCB Design" } &&
             design_review.review_type.name == "Pre-Artwork")
     
