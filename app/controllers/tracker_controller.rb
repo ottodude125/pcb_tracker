@@ -54,6 +54,10 @@ class TrackerController < ApplicationController
         redirect_to :action => :reviewer_home
       end
     end
+    
+    @session[:return_to] = {:controller => 'tracker',
+                            :action     => 'index'}
+
   end
 
 
@@ -355,110 +359,134 @@ class TrackerController < ApplicationController
     @design_reviews.reverse!
 
     @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_home'}
+                            :action     => 'index'}
   end
  
   
   def manager_list_by_priority
   
-    @sort_order = @session['flash'][:sort_order]
+    if @session[:active_role] == 'Manager'
+      @sort_order = @session['flash'][:sort_order]
 
-    @sort_order[:priority] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
-    flash[:sort_order] = @sort_order
+      @sort_order[:priority] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+      flash[:sort_order] = @sort_order
 
-    @design_reviews = get_design_reviews
+      @design_reviews = get_design_reviews
     
-    @design_reviews = @design_reviews.sort_by { |dr| dr.priority.value }
-    @design_reviews.reverse! if @params[:order] == 'ASC'
+      @design_reviews = @design_reviews.sort_by { |dr| dr.priority.value }
+      @design_reviews.reverse! if @params[:order] == 'ASC'
 
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_list_by_priority'}
-    render_action 'manager_home'
+      @session[:return_to] = {:controller => 'tracker',
+                              :action     => 'manager_list_by_priority'}
+      render_action 'manager_home'
+    else
+      redirect_to :action => :index
+    end
   end  
   
   
   def manager_list_by_design
   
-    @sort_order = flash[:sort_order]
-    @sort_order[:design] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
-    flash[:sort_order] = @sort_order
+    if @session[:active_role] == 'Manager'
+      @sort_order = flash[:sort_order]
+      @sort_order[:design] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+      flash[:sort_order] = @sort_order
     
-    @design_reviews = get_design_reviews
+      @design_reviews = get_design_reviews
     
-    @design_reviews = @design_reviews.sort_by { |dr| dr.design.name }
-    @design_reviews.reverse! if @params[:order] == 'ASC'
+      @design_reviews = @design_reviews.sort_by { |dr| dr.design.name }
+      @design_reviews.reverse! if @params[:order] == 'ASC'
     
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_list_by_design'}
-    render_action 'manager_home'
+      @session[:return_to] = {:controller => 'tracker',
+                              :action     => 'manager_list_by_design'}
+      render_action 'manager_home'
+    else
+      redirect_to :action => :index
+    end
   end  
   
   
   def manager_list_by_type
   
-    @sort_order = flash[:sort_order]
-    @sort_order[:type] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
-    flash[:sort_order] = @sort_order
+    if @session[:active_role] == 'Manager'
+      @sort_order = flash[:sort_order]
+      @sort_order[:type] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+      flash[:sort_order] = @sort_order
     
-    @design_reviews = get_design_reviews
+      @design_reviews = get_design_reviews
     
-    @design_reviews = @design_reviews.sort_by { |dr| dr.review_type.name }
-    @design_reviews.reverse! if @params[:order] == 'ASC'
+      @design_reviews = @design_reviews.sort_by { |dr| dr.review_type.name }
+      @design_reviews.reverse! if @params[:order] == 'ASC'
     
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_list_by_type'}
-    render_action 'manager_home'
+      @session[:return_to] = {:controller => 'tracker',
+                              :action     => 'manager_list_by_type'}
+      render_action 'manager_home'
+    else
+      redirect_to :action => :index
+    end
   end  
   
   
   def manager_list_by_designer
   
-    @sort_order = flash[:sort_order]
-    @sort_order[:designer] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
-    flash[:sort_order] = @sort_order
+    if @session[:active_role] == 'Manager'
+      @sort_order = flash[:sort_order]
+      @sort_order[:designer] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+      flash[:sort_order] = @sort_order
     
-    @design_reviews = get_design_reviews
+      @design_reviews = get_design_reviews
     
-    @design_reviews = @design_reviews.sort_by { |dr| User.find(dr.design.designer_id).last_name }
-    @design_reviews.reverse! if @params[:order] == 'ASC'
+      @design_reviews = @design_reviews.sort_by { |dr| User.find(dr.design.designer_id).last_name }
+      @design_reviews.reverse! if @params[:order] == 'ASC'
     
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_list_by_designer'}
-    render_action 'manager_home'
+      @session[:return_to] = {:controller => 'tracker',
+                              :action     => 'manager_list_by_designer'}
+      render_action 'manager_home'
+    else
+      redirect_to :action => :index
+    end
   end  
   
   
   def manager_list_by_peer
   
-    @sort_order = flash[:sort_order]
-    @sort_order[:designer] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
-    flash[:sort_order] = @sort_order
+    if @session[:active_role] == 'Manager'
+      @sort_order = flash[:sort_order]
+      @sort_order[:designer] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+      flash[:sort_order] = @sort_order
     
-    @design_reviews = get_design_reviews
+      @design_reviews = get_design_reviews
     
-    @design_reviews = @design_reviews.sort_by { |dr| User.find(dr.design.peer_id).last_name }
-    @design_reviews.reverse! if @params[:order] == 'ASC'
+      @design_reviews = @design_reviews.sort_by { |dr| User.find(dr.design.peer_id).last_name }
+      @design_reviews.reverse! if @params[:order] == 'ASC'
     
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_list_by_peer'}
-    render_action 'manager_home'
+      @session[:return_to] = {:controller => 'tracker',
+                              :action     => 'manager_list_by_peer'}
+      render_action 'manager_home'
+    else
+      redirect_to :action => :index
+    end
   end  
   
   
   def manager_list_by_date
   
-    @sort_order = flash[:sort_order]
-    @sort_order[:date] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
-    flash[:sort_order] = @sort_order
+    if @session[:active_role] == 'Manager'
+      @sort_order = flash[:sort_order]
+      @sort_order[:date] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+      flash[:sort_order] = @sort_order
     
-    @design_reviews = get_design_reviews
+      @design_reviews = get_design_reviews
     
-    @design_reviews = @design_reviews.sort_by { |dr| dr.reposted_on }
-    @design_reviews.reverse! if @params[:order] == 'ASC'
+      @design_reviews = @design_reviews.sort_by { |dr| dr.reposted_on }
+      @design_reviews.reverse! if @params[:order] == 'ASC'
     
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_list_by_date'}
-    render_action 'manager_home'
+      @session[:return_to] = {:controller => 'tracker',
+                              :action     => 'manager_list_by_date'}
+      render_action 'manager_home'
+    else
+      redirect_to :action => :index
+    end
   end  
   
   
