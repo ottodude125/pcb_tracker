@@ -1,0 +1,3 @@
+TrackerMailer#self_audit_complete
+
+Find me in app/views/tracker_mailer/self_audit_complete.rhtml
