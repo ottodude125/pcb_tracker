@@ -1,0 +1,19 @@
+The following reviewers with incomplete reviews have been pinged.
+
+<% for ping in @ping_list %>
+<%= ping[:reviewer].name %>
+  <% for review in ping[:review_list] %>
+  Design:       <%= review[:design_review].design.name %>
+  Review:       <%= review[:design_review].review_type.name %>
+  Criticality:  <%= review[:design_review].priority.name %>
+  Age:          <%= review[:age]%> work days
+  Role:         <%= review[:role] %>
+  <% end %>
+<% end %>
+
+
+About ping:
+
+No reviewer will receive a ping until the review has been posted for 3 days.
+After that, high criticality boards are pinged daily, medium criticality are
+pinged every other day, and low criticality boards are pinged every third day.

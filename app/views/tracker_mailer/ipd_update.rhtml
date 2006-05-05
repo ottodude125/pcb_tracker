@@ -1,0 +1,10 @@
+ORIGINAL POST: Posted by <%= @root_post.user.name %> @ <%= @root_post.created_at.strftime('%d-%b-%y at %I:%M %p') %>
+
+<%= h @root_post.body %>
+
+<% for child_post in @root_post.direct_children.reverse %>
+------------------------------------------------------------------------
+REPLY: Posted by <%= child_post.user.name %> @ <%= child_post.created_at.strftime('%d-%b-%y at %I:%M %p') %>
+<%= h child_post.body %>
+
+<% end %>
