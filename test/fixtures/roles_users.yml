@@ -118,3 +118,15 @@ jim_l_pcb:
 patrice_m_pcb_admin:
   role_id: 20
   user_id: 8000
+brian_d_hw_eng_mgr:
+  role_id: 22
+  user_id: 18500
+sangy_hw_eng_mgr:
+  role_id: 22
+  user_id: 18501
+al_o_program_mgr:
+  role_id: 21
+  user_id: 19000
+mark_f_program_mgr:
+  role_id: 21
+  user_id: 19001
