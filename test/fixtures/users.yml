@@ -485,4 +485,57 @@ patrice_m:
   created_on: 20050510104114
   updated_on: 20050510104114
   access:     20050510104114
+  
+##
+## Hardware Engineering Manager
+##
 
+b_davie:
+  id:         18500
+  login:      bdavie
+  first_name: Brian
+  last_name:  Davie
+  email:      brian_davie@notes.teradyne.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+sangy:
+  id:         18501
+  login:      sangy
+  first_name: Manny
+  last_name:  Sanguillen
+  email:      manny_sanguillen@pittsburgh_pirates.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## Program Manager
+##
+
+a_oliver:
+  id:         19000
+  login:      aoliver
+  first_name: Al
+  last_name:  Oliver
+  email:      al_oliver@pittsburgh_pirates.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+mfidrych:
+  id:         19001
+  login:      mfidrych
+  first_name: Mark
+  last_name:  Fidrych
+  email:      mark_fidrych@detroit_tigers.com
+  password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
