@@ -85,40 +85,44 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
     roles        = assigns(roles)['roles']
     review_types = assigns(review_types)['review_types']
 
-    assert_equal(15, roles.size)
+    assert_equal(17, roles.size)
     assert_equal(5, review_types.size)
 
     expected_values = Array[
       {:name => 'CE-DFT',     
-        :review_types => ['Final', 'Routing', 'Pre-Artwork', 'Placement']},
+       :review_types => ['Final', 'Routing', 'Pre-Artwork', 'Placement']},
       {:name => 'DFM',
-        :review_types => ['Final', 'Routing', 'Pre-Artwork', 'Placement']},
+       :review_types => ['Final', 'Routing', 'Pre-Artwork', 'Placement']},
+      {:name => 'Hardware Engineering Manager',
+       :review_types => []},
       {:name => 'HWENG',
-        :review_types => ['Final', 'Routing', 'Pre-Artwork', 'Placement', 'Release']},
+       :review_types => ['Final', 'Routing', 'Pre-Artwork', 'Placement', 'Release']},
       {:name => 'Library',
-        :review_types => ['Pre-Artwork']},
+       :review_types => ['Pre-Artwork']},
       {:name => 'Mechanical',
-        :review_types => ['Final', 'Pre-Artwork', 'Placement']},
+       :review_types => ['Final', 'Pre-Artwork', 'Placement']},
       {:name => 'Mechanical-MFG',
-        :review_types => ['Final', 'Routing', 'Pre-Artwork', 'Placement']}, 
+       :review_types => ['Final', 'Routing', 'Pre-Artwork', 'Placement']}, 
       {:name => 'Operations Manager',        
-        :review_types => ['Release']},
+       :review_types => ['Release']},
       {:name => 'PCB Design',        
-        :review_types => ['Final', 'Release']},
+       :review_types => ['Final', 'Release']},
       {:name => 'PCB Input Gate',
-        :review_types => ['Pre-Artwork']},
+       :review_types => ['Pre-Artwork']},
       {:name => 'PCB Mechanical',
-        :review_types => ['Pre-Artwork']},
+       :review_types => ['Pre-Artwork']},
       {:name => 'Planning',
-        :review_types => ['Final', 'Pre-Artwork']},
+       :review_types => ['Final', 'Pre-Artwork']},
+      {:name => 'Program Manager',
+       :review_types => []},
       {:name => 'SLM BOM',
-        :review_types => ['Pre-Artwork']},
+       :review_types => ['Pre-Artwork']},
       {:name => 'SLM-Vendor',
-        :review_types => ['Pre-Artwork']},
+       :review_types => ['Pre-Artwork']},
       {:name => 'TDE',
-        :review_types => ['Final', 'Pre-Artwork', 'Placement']},
+       :review_types => ['Final', 'Pre-Artwork', 'Placement']},
       {:name => 'Valor',
-        :review_types => ['Final', 'Pre-Artwork']}
+       :review_types => ['Final', 'Pre-Artwork']}
     ]
 
     roles.each { |role|
@@ -210,40 +214,44 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
     roles = assigns(roles)['roles']
     review_types  = assigns(review_types)['review_types']
 
-    assert_equal(15, roles.size)
+    assert_equal(17, roles.size)
     assert_equal(5, review_types.size)
 
     expected_values = Array[
       {:name => 'CE-DFT',
-        :review_types => ['Final', 'Placement', 'Release', 'Routing']},
+       :review_types => ['Final', 'Placement', 'Release', 'Routing']},
       {:name => 'DFM',
-        :review_types => ['Pre-Artwork', 'Release']},
+       :review_types => ['Pre-Artwork', 'Release']},
+      {:name => 'Hardware Engineering Manager',
+       :review_types => []},
       {:name => 'HWENG',
-        :review_types => ['Final', 'Pre-Artwork']},
+       :review_types => ['Final', 'Pre-Artwork']},
       {:name => 'Library',
-        :review_types => ['Final']},
+       :review_types => ['Final']},
       {:name => 'Mechanical',
-        :review_types => ['Final', 'Placement', 'Pre-Artwork']},
+       :review_types => ['Final', 'Placement', 'Pre-Artwork']},
       {:name => 'Mechanical-MFG',
-        :review_types => ['Placement', 'Pre-Artwork', 'Routing']},
+       :review_types => ['Placement', 'Pre-Artwork', 'Routing']},
       {:name => 'Operations Manager',
-        :review_types => ['Final', 'Release']},
+       :review_types => ['Final', 'Release']},
       {:name => 'PCB Design',
-        :review_types => ['Final', 'Release']},
+       :review_types => ['Final', 'Release']},
       {:name => 'PCB Input Gate',
-        :review_types => ['Final']},
+       :review_types => ['Final']},
       {:name => 'PCB Mechanical',
-        :review_types => ['Placement', 'Pre-Artwork', 'Release']},
+       :review_types => ['Placement', 'Pre-Artwork', 'Release']},
       {:name => 'Planning',
-        :review_types => ['Final', 'Pre-Artwork']},
+       :review_types => ['Final', 'Pre-Artwork']},
+      {:name => 'Program Manager',
+       :review_types => []},
       {:name => 'SLM BOM',
-        :review_types => ['Final', 'Placement', 'Pre-Artwork', 'Release', 'Routing']},
+       :review_types => ['Final', 'Placement', 'Pre-Artwork', 'Release', 'Routing']},
       {:name => 'SLM-Vendor',
-        :review_types => ['Placement', 'Pre-Artwork', 'Routing']},
+       :review_types => ['Placement', 'Pre-Artwork', 'Routing']},
       {:name => 'TDE',
-        :review_types => ['Final', 'Placement', 'Pre-Artwork']},
+       :review_types => ['Final', 'Placement', 'Pre-Artwork']},
       {:name => 'Valor',      
-        :review_types => ['Final', 'Pre-Artwork', 'Release', 'Routing']}
+       :review_types => ['Final', 'Pre-Artwork', 'Release', 'Routing']}
     ]
 
     roles.each { |role|
