@@ -116,3 +116,16 @@ pcb_admin:
   active:   1
   reviewer: 0
   cc_peers: 0
+program_manager:
+  id:       21
+  name:     Program Manager
+  active:   1
+  reviewer: 1
+  cc_peers: 0
+hweng_manager:
+  id:       22
+  name:     Hardware Engineering Manager
+  active:   1
+  reviewer: 1
+  cc_peers: 0
+  
