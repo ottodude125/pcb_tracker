@@ -184,7 +184,9 @@ class TrackerMailer < ActionMailer::Base
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
-    cc          = copy_to(design_review)
+    cc          = copy_to(design_review) +
+                    copy_to_on_milestone(
+                      design_review.design.board)
 
     case design_review.review_type.name
     when "Release"
@@ -235,6 +237,7 @@ class TrackerMailer < ActionMailer::Base
     @sent_on    = sent_at
     @headers    = {}
     @cc         = copy_to(design_review)
+    @cc         += copy_to_on_milestone(design_review.design.board)
 
     if design_review.review_type.name == "Final"
       pcb_admin = Role.find_by_name("PCB Admin")
@@ -302,13 +305,10 @@ class TrackerMailer < ActionMailer::Base
     @headers    = {}
 
     cc         = [poster.email] + 
-                   add_role_members(['Manager', 'PCB Input Gate'])
+                   add_role_members(['Manager', 'PCB Input Gate']) +
+                   add_board_reviewer(root_post.design.board,
+                                      ['Hardware Engineering Manager'])
     
-    pcb_input_gate_role = Role.find_by_name("PCB Input Gate")
-    for pcb_input_gate in pcb_input_gate_role.users
-      cc.push(pcb_input_gate.email)
-    end
-
     for child in root_post.direct_children
       cc.push(child.user.email)
     end
@@ -578,6 +578,66 @@ class TrackerMailer < ActionMailer::Base
 
     cc_list += add_role_members(['Manager', 'PCB Input Gate'])
     return cc_list.uniq
+    
+  end
+
+
+  ######################################################################
+  #
+  # copy_to_on_milestone
+  #
+  # Description:
+  # Given a board this method will return a list of the
+  # people who should be CC'ed on all milestone mails
+  #
+  # Parameters:
+  #   board - the board to get the milestone CC list for.
+  #
+  ######################################################################
+  #
+  def copy_to_on_milestone(board)
+
+    add_board_reviewer(board,
+                       ['Program Manager',
+                        'Hardware Engineering Manager'])
+    
+  end
+  
+  
+  ######################################################################
+  #
+  # add_board_reviewer
+  #
+  # Description:
+  # Given a board and a list of roles this function will load the
+  # CC list with users associated with the role for that board.
+  #
+  # Parameters:
+  #   board - the board record.
+  #   roles - a list of roles.  The associated user's email will be
+  #           added to the CC list.
+  #
+  ######################################################################
+  #
+  def add_board_reviewer(board, roles)
+  
+    cc_list = []
+    
+    for role in roles
+
+      reviewer_role = Role.find_by_name(role)
+      board_reviewer = BoardReviewers.find_by_board_id_and_role_id(
+                         board.id,
+                         reviewer_role.id)
+
+      if board_reviewer
+        reviewer = User.find(board_reviewer.reviewer_id)
+        cc_list << reviewer.email
+      end
+    
+    end
+    
+    return cc_list
     
   end
   
