@@ -265,8 +265,16 @@ before_filter(:verify_admin_role,
         board_reviewer = BoardReviewers.find(:first,
                                              :conditions => [ "board_id = ? and role_id = ?", @board.id, role.id ])
 
-        if board_reviewer.reviewer_id != reviewer_id
-          board_reviewer.update_attribute("reviewer_id", reviewer_id)
+        if board_reviewer
+          if board_reviewer.reviewer_id != reviewer_id
+            board_reviewer.update_attribute("reviewer_id", reviewer_id)
+          end
+        else
+          new_board_reviewer = 
+            BoardReviewers.new(:board_id    => @board.id,
+                               :reviewer_id => reviewer_id,
+                               :role_id     => role_id)
+          new_board_reviewer.save
         end
       }
 
@@ -332,8 +340,8 @@ before_filter(:verify_admin_role,
         for reviewer in reviewers
           board_reviewer = 
             BoardReviewers.new(:board_id    => @board.id,
-                                 :reviewer_id => reviewer[1],
-                                 :role_id     => Role.find(reviewer[0]).id)
+                               :reviewer_id => reviewer[1],
+                               :role_id     => Role.find(reviewer[0]).id)
           board_reviewer.save
         end
 
