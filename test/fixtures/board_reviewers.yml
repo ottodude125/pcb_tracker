@@ -89,3 +89,13 @@ mx234a_ce_dft:
   board_id:    1
   reviewer_id: 7101
   role_id:     7
+la453_hweng_mgr:
+  id:          19
+  board_id:    2
+  reviewer_id: 18501
+  role_id:     22
+la453_program_mgr:
+  id:          20
+  board_id:    2
+  reviewer_id: 19000
+  role_id:     21
