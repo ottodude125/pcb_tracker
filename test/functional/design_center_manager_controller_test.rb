@@ -111,10 +111,12 @@ class DesignCenterManagerControllerTest < Test::Unit::TestCase
     designers = Role.find_by_name("Designer").users
     designers.delete_if { |designer| ! designer.active? }
 
+    designer_list = {}
     for designer in designers
       # They all start off based in Boston.
       assert_equal(design_centers(:boston_harrison).id,
                    designer.design_center_id)
+      designer_list[designer.id] = designer
     end
 
     fridley = design_centers(:fridley)
@@ -130,6 +132,7 @@ class DesignCenterManagerControllerTest < Test::Unit::TestCase
 
     for designer in designers
       assert_equal(fridley.id, designer.design_center_id)
+      assert_equal(designer_list[designer.id].password, designer.password)
     end
 
   end
