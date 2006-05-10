@@ -68,9 +68,10 @@ class DesignCenterManagerController < ApplicationController
     # design centers.
     @params.each { |designer_id, design_center_id|
 
-      next if ( designer_id == "action" or designer_id == "controller" )
+      next if (designer_id == "action" or designer_id == "controller")
 
       designer          = User.find(designer_id)
+      next if (designer.design_center_id.to_s == design_center_id['id'])
       designer.password = designer.passwd
       designer.update_attribute('design_center_id', design_center_id['id'])
     }
