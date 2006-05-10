@@ -71,7 +71,7 @@ class DesignCenterManagerController < ApplicationController
       next if ( designer_id == "action" or designer_id == "controller" )
 
       designer          = User.find(designer_id)
-      designer.password = ''
+      designer.password = designer.passwd
       designer.update_attribute('design_center_id', design_center_id['id'])
     }
 
