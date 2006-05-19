@@ -86,6 +86,7 @@ class TrackerController < ApplicationController
     release_review = ReviewType.find_by_name('Release')
     designs = Design.find_all_by_phase_id(release_review.id,
                                           'created_on ASC')
+
     designs = designs.sort_by { |dr| dr.priority.value }
         
     @design_list = Array.new
@@ -284,8 +285,8 @@ class TrackerController < ApplicationController
     in_review      = ReviewStatus.find_by_name('In Review')
     pending_repost = ReviewStatus.find_by_name('Pending Repost')
     
-    design_reviews  = DesignReview.find_all("review_status_id='#{in_review.id}'") +
-      DesignReview.find_all("review_status_id='#{pending_repost.id}'")
+    design_reviews  = DesignReview.find_all_by_review_status_id(in_review.id) +
+      DesignReview.find_all_by_review_status_id(pending_repost.id)
 
     design_reviews = design_reviews.sort_by { |dr| dr.priority.value }
     design_reviews.reverse!
@@ -293,15 +294,15 @@ class TrackerController < ApplicationController
     @my_reviews    = Array.new
     @other_reviews = Array.new
     for design_review in design_reviews
-      review_results = DesignReviewResult.find_all("design_review_id='#{design_review.id}'")
-      
+      review_results = design_review.design_review_results
+    
       for review_result in review_results
         a_reviewer = (review_result.reviewer_id == me.id)
         break if a_reviewer
       end
       
       if a_reviewer
-        @my_reviews.push    design_review
+        @my_reviews.push(design_review)
       else
 
         # Capture the reviewer's peer names for display.
@@ -323,7 +324,7 @@ class TrackerController < ApplicationController
           end
         end
 
-        @other_reviews.push design_review
+        @other_reviews.push(design_review)
       end
     end
 
