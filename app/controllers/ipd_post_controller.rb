@@ -72,7 +72,7 @@ class IpdPostController < ApplicationController
         reply_post.body      = body
         if reply_post.save
           TrackerMailer::deliver_ipd_update(root_post)
-          flash["notice"] = "Reply post sucessfully created"
+          flash["notice"] = "Reply post sucessfully created - mail was sent"
         end
       end
     else
