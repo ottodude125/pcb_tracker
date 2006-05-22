@@ -25,6 +25,8 @@ class DesignCenterManagerControllerTest < Test::Unit::TestCase
   end
 
   fixtures(:design_centers,
+           :roles,
+           :roles_users,
            :users)
 
 
@@ -122,9 +124,9 @@ class DesignCenterManagerControllerTest < Test::Unit::TestCase
     fridley = design_centers(:fridley)
     set_admin
     post(:assign_designers_to_centers,
-         users(:scott_g).id.to_s => {'id' => fridley.id},
-         users(:rich_m).id.to_s  => {'id' => fridley.id},
-         users(:bob_g).id.to_s   => {'id' => fridley.id})
+         'Glover_' + users(:scott_g).id.to_s => {'id' => fridley.id},
+         'Miller_' + users(:rich_m).id.to_s  => {'id' => fridley.id},
+         'Goldin_' + users(:bob_g).id.to_s   => {'id' => fridley.id})
 
     # Verify the update.
     designers = Role.find_by_name("Designer").users
