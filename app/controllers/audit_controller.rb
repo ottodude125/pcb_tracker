@@ -18,313 +18,6 @@ class AuditController < ApplicationController
 
   ######################################################################
   #
-  # list
-  #
-  # Description:
-  # This method retrieves audits from the database to display
-  # a list.
-  #
-  # Parameters from @params
-  # None
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  # Validates the user is an Admin or Manager before proceeding.
-  #
-  ######################################################################
-  #
-  def list
-
-    if (@session[:active_role] != "Admin" &&
-        @session[:active_role] != "Manager")
-      flash['notice'] = 'You are not authorized to view or modify audit information - check your role'
-      redirect_to(:controller => 'tracker',
-                  :action     => "index")
-    else
-
-      # Save the page number.
-      @session[:page] = @params[:page]
-
-      #      @audit_pages, @audits = paginate(:audits,
-      #                                       :per_page   => 2,
-      #                                       :order_by   => 'id DESC')
-      raw_audits = Audit.find_all
-
-      for audit in raw_audits 
-
-        board = audit.design.board
-
-        audit[:display_name] = audit.design.name
-        audit[:platform] = Platform.find(board.platform_id).name
-        audit[:project]  = Project.find(board.project_id).name
-        audit[:designer] = (audit.design.designer_id > 0) \
-                             ? User.find(audit.design.designer_id).name \
-                             : 'Not Set'
-        audit[:auditor]  = (audit.design.peer_id > 0) \
-                             ? User.find(audit.design.peer_id).name \
-                             : 'Not Set'
-      end
-
-
-      temp_audits = Hash.new
-      for audit in raw_audits
-        temp_audits[audit[:display_name]] = audit
-      end
-
-      sorted_audits = temp_audits.sort
-      i = 0
-      sorted_audits.each { |k, v|
-        raw_audits[i] = v
-        i += 1
-      }
-
-      @audit_pages, @audits = paginate_collection(raw_audits, 
-                                                  :page => @params[:page])
-
-    end
-
-  end # list method
-
-
-  ######################################################################
-  #
-  # edit
-  #
-  # Description:
-  # This method retrieves the audit from the database for display.
-  #
-  # Parameters from @params
-  # ['id'] - Used to identify the audit to be retrieved.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  # None
-  #
-  ######################################################################
-  #
-  def edit
-
-    @audit = Audit.find(@params[:id])
-
-    # Get a list of designers.
-    @designers = Role.find_by_name("Designer").users.sort_by { |u| u.last_name }
-
-    # Only consider active designers
-    @designers.delete_if { |designer| ! designer.active? }
-
-  end # edit method
-
-
-  ######################################################################
-  #
-  # update
-  #
-  # Description:
-  # This method is called when the user submits from the edit audit
-  # screen.  The database is updated with the changes made by the user.
-  #
-  # Parameters from @params
-  # ['audit'] - Contains the udpated audit data.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  # None
-  #
-  ######################################################################
-  #
-  def update
-
-    if @params['audit']['designer_id'] != @params['audit']['auditor_id']
-
-      @audit = Audit.find(@params['audit']['id'])
-
-      design = @audit.design
-      design.designer_id = @params['audit']['designer_id']
-      design.peer_id     = @params['audit']['auditor_id']
-      
-      if design.save
-        flash['notice'] = 'Audit was successfully updated.'
-        redirect_to(:action => 'list',
-                    :page   => @session[:page])
-        @session[:page] = nil
-      else
-	flash['notice'] = 'Audit was not updated.'
-	redirect_to(:action => 'edit',
-		    :id     => @params['audit']['id'])
-      end
-    else
-      flash['notice'] = 'The designer and auditor must be different.'
-      redirect_to(:action => 'edit',
-                  :id     => @params['audit']['id'])
-    end
-
-  end # update method
-
-
-  ######################################################################
-  #
-  # create
-  #
-  # Description:
-  # This method retrieves the boards and designers for selection to add
-  # an audit.  Once the data is retrieved, the add audit screen is displayed.
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  # Validates the user is an Admin or Manager before proceeding.
-  #
-  ######################################################################
-  #
-  def create
-
-    new_audit = @params[:new_audit]
-
-    # Verify that the audit is not already in the system.
-    if (new_audit[:board_type] == 'Date Code' ||
-        new_audit[:board_type] == 'Dot Rev')
-      audit = Audit.find_all("board_id=#{new_audit[:board_id]} and " +
-                             "revision_id=#{new_audit[:revision_id]} and " +
-                             "board_type='#{new_audit[:board_type]}' and " +
-                             "suffix_id=#{new_audit[:suffix_id]}")
-    elsif new_audit[:board_type] == 'New Board'
-      audit = Audit.find_all("board_id=#{new_audit[:board_id]} and " +
-                             "revision_id=#{new_audit[:revision_id]} and " +
-                             "board_type='#{new_audit[:board_type]}'")
-    end
-    
-    if audit != nil && audit.size > 0
-
-      @board = Board.find(new_audit[:board_id])
-      
-      if new_audit[:board_type] == 'Date Code'
-
-        flash['notice'] = "The audit exists for " +
-          "#{@board.prefix.pcb_mnemonic}#{@board.number}" +
-        "#{Revision.find(new_audit[:revision_id]).name}" +
-        '_eco' +
-          "#{Suffix.find(new_audit[:suffix_id]).name}"
-        redirect_to(:designer_id => new_audit[:designer_id],
-                    :auditor_id  => new_audit[:auditor_id],
-                    :board_id    => new_audit[:board_id],
-                    :board_type  => 'Date Code',
-                    :action      => 'select_date_code_revision')
-      elsif new_audit[:board_type] == 'Dot Rev'
-        flash['notice'] = "The audit exists for " +
-          "#{@board.prefix.pcb_mnemonic}#{@board.number}" +
-        "#{Revision.find(new_audit[:revision_id]).name}" +
-        "#{Suffix.find(new_audit[:suffix_id]).name}"
-        redirect_to(:designer_id => new_audit[:designer_id],
-                    :auditor_id  => new_audit[:auditor_id],
-                    :board_id    => new_audit[:board_id],
-                    :board_type  => 'Dot Rev',
-                    :action      => 'select_dot_rev_revision')
-      end
-    else
-      
-      # Get the most recently released checklist.
-      checklist = Checklist.find_all("released=1", 
-                                     "major_rev_number ASC").pop
-      
-      params_audit = @params[:new_audit]
-      if params_audit[:suffix_id] == nil
-        params_audit[:suffix_id] = 0
-      end
-      
-      new_audit = Hash.new
-      new_audit['board_type']   = params_audit[:board_type]
-      new_audit['board_id']     = params_audit[:board_id]
-      new_audit['revision_id']  = params_audit[:revision_id]
-      if params_audit[:board_type] == 'New Board'
-        new_audit['suffix_id']    = 0
-      else
-        new_audit['suffix_id']    = params_audit[:suffix_id]
-      end
-      new_audit['checklist_id'] = checklist.id
-      new_audit['designer_id']  = params_audit[:designer_id]
-      new_audit['auditor_id']   = params_audit[:auditor_id]
-      new_audit['complete']     = 0
-      
-      @audit = Audit.new(new_audit)
-      
-      if @audit.save
-        create_checklist(@audit.id)
-        flash['notice'] = "Audit was successfully created."
-        redirect_to :action => 'list'
-      else
-        flash['notice'] = "Audit was not created."
-        redirect_to :action => 'list'
-      end
-    end
-
-  rescue
-    flash[:notice] = "Audit could not be saved."
-    redirect_to :action => 'list'
-  end # end create method
-
-  
-  ######################################################################
-  #
-  # designer_list
-  #
-  # Description:
-  # Called from the tracker index to list both the designs that 
-  # the designer has in audit and the designs that the designer
-  # is auditing.
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  # None
-  #
-  ######################################################################
-  #
-  def designer_list
-
-    my_designs = Design.find_all("designer_id=#{@session[:user][:id]}",
-				 'revision_id ASC, suffix_id ASC')
-    my_audits  = Design.find_all("peer_id=#{@session[:user][:id]}",
-				 'revision_id ASC, suffix_id ASC')
-
-    @my_designs = Array.new
-    for design in my_designs
-      @my_designs.push(design.audit)
-    end
-
-    @my_audits = Array.new
-    for design in my_audits
-      @my_audits.push(design.audit)
-    end
-    
-    # Gather the information to display the designer's boards that are in audit.
-    for audit in @my_designs
-      audit[:my_design_metrics] = collect_dashboard_data(audit)
-    end
-
-    # Gather the information to display the designer's boards that are in audit.
-    for audit in @my_audits
-      audit[:my_audit_metrics] = collect_dashboard_data(audit)
-    end
-
-  end # designer_list method
-
-
-  ######################################################################
-  #
   # update_design_checks
   #
   # Description:
@@ -346,15 +39,8 @@ class AuditController < ApplicationController
   #
   def update_design_checks
 
-    logger.info "############################# UPDATE_DESIGN_CHECKS"
     audit = Audit.find(@params[:audit][:id])
     is_designer = @session[:user][:id] == audit.design.designer_id
-    logger.info "  #### AUDIT: #{audit.id}"
-    logger.info "  ####  DESIGNER COMPLETED CHECKS: #{audit.designer_completed_checks}"
-    logger.info "  ####  DESIGNER COMPLETE: #{audit.designer_complete}"
-    logger.info "  ####  AUDITOR COMPLETED CHECKS: #{audit.auditor_completed_checks}"
-    logger.info "  ####  AUDITOR COMPLETE: #{audit.auditor_complete}"
-    logger.info "  #### IS_DESIGNER: #{is_designer}"
 
     # Go through the paramater list and pull out the checks.
     @params.keys.grep(/^check_/).each { |params_key|
@@ -369,13 +55,10 @@ class AuditController < ApplicationController
         result        = design_check.auditor_result
         result_update = design_check_update[:auditor_result]
       end
-      logger.info "  #### EXISTING RESULT: #{result}"
-      logger.info "  #### NEW RESULT: #{result_update}"
 
       if result_update != nil and 
           result_update != result
 
-        logger.info "  #### IN UPDATE BRANCH"
         # Make sure that the required comment has been added.
         if (design_check_update[:comment].strip.size == 0 and 
 
@@ -398,13 +81,11 @@ class AuditController < ApplicationController
             " response."
           end
           flash['notice'] = 'Not all checks were updated - please review the form for errors.'
-          logger.info flash['notice']
           next
         end
 
         check_count = Audit.check_count(audit.id)
         if is_designer and !audit.designer_complete?
-          logger.info "  #### UPDATING DESIGNER INFO"
           if result == "None"
            completed_checks = audit.designer_completed_checks + 1
            total_checks     = check_count[:designer]
@@ -422,7 +103,6 @@ class AuditController < ApplicationController
                      
         elsif !is_designer and !audit.auditor_complete?
 
-          logger.info "  #### UPDATING AUDITOR INFO"
           complete   = ['Verified', 'N/A', 'Waived']
           incomplete = ['None', 'Comment']
 
@@ -448,6 +128,14 @@ class AuditController < ApplicationController
                      :auditor_result     => result_update,
                      :auditor_checked_on => Time.now,
                      :auditor_id         => @session[:user].id)
+          if result_update == 'Comment'
+            designer = User.find(audit.design.designer_id)
+            TrackerMailer::deliver_audit_update(design_check,
+                                                design_check_update[:comment],
+                                                designer,
+                                                @session[:user])
+          end
+          
         end
 
       end
@@ -676,8 +364,16 @@ class AuditController < ApplicationController
                                  'sort_order ASC')
     @summary = Hash.new
     @summary[:board_number] = audit.design.name
-    @summary[:designer] = User.find(audit.design.designer_id).name
-    @summary[:auditor]  = User.find(audit.design.peer_id).name
+    if audit.design.designer_id > 0
+      @summary[:designer] = User.find(audit.design.designer_id).name
+    else
+      @summary[:designer] = 'Not Set'
+    end
+    if audit.design.peer_id > 0
+      @summary[:auditor] = User.find(audit.design.peer_id).name
+    else
+      @summary[:auditor] = 'Not Set'
+    end
 
     @summary[:checklist_rev] =
       audit.checklist.major_rev_number.to_s +
@@ -868,51 +564,6 @@ class AuditController < ApplicationController
     return checks
 
   end
-
-
-  ######################################################################
-  #
-  # collect_dashboard_data
-  #
-  # Description:
-  # Gathers the data to be displayed in the designers list of 
-  # peer audit reviews.
-  #
-  # Parameters:
-  # audit  - identifies the audit 
-  #
-  # Return value:
-  # metric data  - the summary information displayed on the 
-  #                designer's list.
-  #
-  # Additional information:
-  # None
-  #
-  ######################################################################
-  #
-  def collect_dashboard_data(audit)
-
-    metrics = Hash.new()
-
-    metrics[:display_name] = audit.design.name
-    metrics[:designer]     = User.find(audit.design.designer_id).name
-    metrics[:auditor]      = User.find(audit.design.peer_id).name
-
-    total_checks = total_checks(audit)
-
-    metrics[:designer_check_count]      = total_checks[:designer]
-    metrics[:designer_percent_complete] = audit.designer_completed_checks*100.0/total_checks[:designer]
-
-    metrics[:auditor_check_count] = total_checks[:auditor]
-    metrics[:auditor_check_complete] = audit.auditor_completed_checks*100.0/total_checks[:auditor]
-
-    metrics[:auditor_questions] = 
-      DesignCheck.find_all("audit_id=#{audit.id} and " +
-                           "auditor_result='Comment'").size
-
-    return metrics
-    
-  end # collect_dashboard_data method
 
 
 end # class AuditController
