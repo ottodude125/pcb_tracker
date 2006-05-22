@@ -17,10 +17,38 @@ class Design < ActiveRecord::Base
 
   has_and_belongs_to_many :fab_houses
 
+  has_many  :design_review_documents
   has_many  :design_reviews
   has_many  :ipd_posts
 
   has_one   :audit
+
+
+  def get_associated_users
+  
+    users = {:designer  => nil,
+             :pcb_input => nil,
+             :peer      => nil,
+             :reviewers => []}
+             
+    users[:designer]  = User.find(self.designer_id)  if (self.designer_id  > 0)
+    users[:peer]      = User.find(self.peer_id)      if (self.peer_id      > 0)
+    users[:pcb_input] = User.find(self.pcb_input_id) if (self.pcb_input_id > 0)
+    
+    reviewer_list = {}
+    design_reviews = self.design_reviews
+    for design_review in design_reviews
+      for design_review_result in design_review.design_review_results
+        reviewer_id = design_review_result.reviewer_id
+        if reviewer_list[reviewer_id] == nil
+          reviewer_list[reviewer_id] = User.find(reviewer_id)
+          users[:reviewers] << reviewer_list[reviewer_id]
+        end
+      end
+    end
+             
+    return users 
+  end
 
 
   COMPLETE = 255
