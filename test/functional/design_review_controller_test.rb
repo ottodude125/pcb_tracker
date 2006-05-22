@@ -44,7 +44,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
            :users)
 
   def test_1_id
-    print ("\n*** Design Review Controller Test - NEEDS WORK!!!\n")
+    print ("\n*** Design Review Controller Test\n")
     print ("*** $Id$\n")
   end
 
@@ -621,12 +621,29 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal('Test Comment',     dr_comment.comment)
     assert_equal(users(:scott_g).id, dr_comment.user_id)
 
+    assert_equal(15, @emails.size)
     email = @emails.pop
-    assert_equal(0, @emails.size)
+
+    assert_equal(14, email.to.size)
     assert_equal("mx234a: The Pre-Artwork review has been posted", 
                  email.subject)
     found_email = email.cc.detect { |addr| addr == admin_email }
     assert_equal(nil, found_email)
+
+    # The rest of the mails are invitations - verify that
+    invite_list = []
+    while @emails != []
+      email = @emails.pop
+      assert_equal(1, email.to.size)
+      assert_equal("Your login information for the PCB Design Tracker",
+                   email.subject)
+      invite_list << email
+    end
+    #invite_list = invite_list.sort_by { |email| email.to.pop }
+    for review_result in mx234a_pre_artwork.design_review_results
+      reviewer = User.find(review_result.reviewer_id)
+      assert(invite_list.detect { |email| email.to.pop == reviewer.email})
+    end
 
 
     mx234a_final = design_reviews(:mx234a_final)
@@ -680,7 +697,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(users(:scott_g).id, dr_comment.user_id)
 
     email = @emails.pop
-    assert_equal(0, @emails.size)
+    assert_equal(9, email.to.size)
     assert_equal("mx234a: The Final review has been posted", 
                  email.subject)
     found_email = email.cc.detect { |addr| addr == admin_email }
@@ -1220,8 +1237,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
 
   def test_get_attachment
-    assert true
-    print('?')
+
+    #post(:get_attachment, 
+    #     :id => documents(:mx234a_stackup_document).id)
+         
+    #print "\n\nFigure out how to verify that get_attachment is working\n\n"
   end
 
 
@@ -1233,20 +1253,78 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
   
   def test_review_mail_list
-    assert true
-    print('?')
-  end
+  
+    set_user(users(:cathy_m).id, 'Admin')
+    mx234a_pre_art = design_reviews(:mx234a_pre_artwork)
 
+    post(:review_mail_list,
+         :design_review_id => mx234a_pre_art.id)
 
-  def test_add_to_list
-    assert true
-    print('?')
-  end
+    assert_equal(mx234a_pre_art.id,        assigns(:design_review).id)
+    assert_equal(mx234a_pre_art.design.id, assigns(:design).id)
+    
+    
+    reviewer_list = assigns(:reviewers)
+    
+    expected_reviewer_list = []
+    
+    expected_users_not_copied = User.find_all(nil, 'last_name')
+    for design_review_result in mx234a_pre_art.design_review_results
+      user     = User.find(design_review_result.reviewer_id)
+      reviewer = {:id        => user.id,
+                  :name      => user.name,
+                  :last_name => user.last_name,
+                  :group     => Role.find(design_review_result.role_id).name}
+      expected_reviewer_list << reviewer
+      expected_users_not_copied.delete_if { |usr| usr.id == reviewer[:id] }
+    end
+    
+    expected_reviewer_list = expected_reviewer_list.sort_by { |reviewer| reviewer[:last_name]}
+    assert_equal(expected_reviewer_list, reviewer_list)
+    
+    
+    users_copied = assigns(:users_copied)
+    assert_equal([], users_copied)
+    
+    
+    
+    expected_users_not_copied.delete_if { |user| !user.active? }
+    expected_users_not_copied.delete_if { |user| user.id == mx234a_pre_art.design.designer_id }
 
-
-  def test_remove_from_list
-    assert true
-    print('?')
+    users_not_copied = assigns(:users_not_copied)
+    
+    assert_equal(expected_users_not_copied, users_not_copied)
+    
+    users_not_copied_list = expected_users_not_copied.dup
+    expected_users_copied = []
+    for copy_user in users_not_copied_list
+    
+      expected_users_not_copied.delete_if { |usr| usr == copy_user }
+      expected_users_copied << copy_user
+      expected_users_copied = expected_users_copied.sort_by { |usr| usr.last_name }
+      
+      post(:add_to_list, :id => copy_user.id)
+      
+      assert_equal(expected_users_not_copied, assigns(:users_not_copied))
+      assert_equal(expected_users_copied,     assigns(:users_copied))
+      
+    end
+    
+    users_copied_list = expected_users_copied.dup
+    for uncopy_user in users_copied_list
+    
+      expected_users_copied.delete_if { |usr| usr == uncopy_user }
+      expected_users_not_copied << uncopy_user
+      expected_users_not_copied = 
+        expected_users_not_copied.sort_by { |usr| usr.last_name }
+      
+      post(:remove_from_list, :id => uncopy_user.id)
+      
+      assert_equal(expected_users_not_copied, assigns(:users_not_copied))
+      assert_equal(expected_users_copied,     assigns(:users_copied))
+      
+    end
+    
   end
 
 
@@ -1303,6 +1381,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:ce_dft).id,
        :comment          => 'This is good!',
        :result           => 'APPROVED',
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_ce_dft).id,
        :role_id_tag      => 'role_id_7',
        :expected_results => {
@@ -1316,6 +1395,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:dfm).id,
        :comment          => 'This is good enough to waive.',
        :result           => 'WAIVED',
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_dfm).id,
        :role_id_tag      => ':role_id_8',
        :expected_results => {
@@ -1329,6 +1409,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:library).id,
        :comment          => 'Yankees Suck!!!',
        :result           => 'REJECTED',
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_lib),
        :role_id_tag      => ':role_id_15',
        :expected_results => {
@@ -1342,6 +1423,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:hweng).id,
        :comment          => 'No Comment',
        :result           => 'APPROVED',
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_hw).id,
        :role_id_tag      => ':role_id_5',
        :expected_results => {
@@ -1355,6 +1437,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:library).id,
        :comment          => '',
        :result           => 'APPROVED',
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_lib).id,
        :role_id_tag      => ':role_id_15',
        :expected_results => {
@@ -1366,12 +1449,27 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       # Espo - CE-DFT Reviewer
       {:user_id          => users(:espo).id,
        :role_id          => roles(:ce_dft).id,
-       :comment          => 'This is good!',
-       :result           => 'APPROVED',
+       :comment          => 'This is no good!',
+       :result           => 'REJECTED',
+       :ignore           => true,
        :review_result_id => design_review_results(:mx234a_pre_artwork_ce_dft).id,
        :role_id_tag      => 'role_id_7',
        :expected_results => {
          :comments_count => 5,
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + '- Comments added'
+       }
+      },
+      # Espo - CE-DFT Reviewer
+      {:user_id          => users(:espo).id,
+       :role_id          => roles(:ce_dft).id,
+       :comment          => 'Just kidding!',
+       :result           => 'APPROVED',
+       :ignore           => false,
+       :review_result_id => design_review_results(:mx234a_pre_artwork_ce_dft).id,
+       :role_id_tag      => 'role_id_7',
+       :expected_results => {
+         :comments_count => 6,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' CE-DFT - APPROVED - See comments'
        }
@@ -1381,10 +1479,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:mechanical).id,
        :comment          => 'This is good!',
        :result           => 'APPROVED',
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_mech).id,
        :role_id_tag      => 'role_id_10',
        :expected_results => {
-         :comments_count => 6,
+         :comments_count => 7,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' Mechanical - APPROVED - See comments'
        }
@@ -1394,10 +1493,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:mechanical_manufacturing).id,
        :comment          => '',
        :result           => 'APPROVED',
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_mech_mfg).id,
        :role_id_tag      => 'role_id_11',
        :expected_results => {
-         :comments_count => 6,
+         :comments_count => 7,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' Mechanical-MFG - APPROVED - No comments'
        }
@@ -1407,10 +1507,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:pcb_input_gate).id,
        :comment          => 'I always have something to say.',
        :result           => 'APPROVED',
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_pcb_ig).id,
        :role_id_tag      => 'role_id_14',
        :expected_results => {
-         :comments_count => 7,
+         :comments_count => 8,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' PCB Input Gate - APPROVED - See comments'
        }
@@ -1420,10 +1521,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:pcb_mechanical).id,
        :comment          => '',
        :result           => 'APPROVED',
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_pcb_mech).id,
        :role_id_tag      => 'role_id_16',
        :expected_results => {
-         :comments_count => 7,
+         :comments_count => 8,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' PCB Mechanical - APPROVED - No comments'
        }
@@ -1433,10 +1535,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:planning).id,
        :comment          => 'Comment before entering result.',
        :result           => nil,
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_plan).id,
        :role_id_tag      => 'role_id_13',
        :expected_results => {
-         :comments_count => 8,
+         :comments_count => 9,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + '- Comments added'
        }
@@ -1446,10 +1549,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:planning).id,
        :comment          => 'Testing.',
        :result           => 'APPROVED',
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_plan).id,
        :role_id_tag      => 'role_id_13',
        :expected_results => {
-         :comments_count => 9,
+         :comments_count => 10,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' Planning - APPROVED - See comments'
        }
@@ -1459,10 +1563,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:planning).id,
        :comment          => 'Comment after entering result.',
        :result           => nil,
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_plan).id,
        :role_id_tag      => 'role_id_13',
        :expected_results => {
-         :comments_count => 10,
+         :comments_count => 11,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + '- Comments added'
        }
@@ -1472,10 +1577,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:slm_bom).id,
        :comment          => '',
        :result           => 'APPROVED',
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_slm_bom).id,
        :role_id_tag      => 'role_id_17',
        :expected_results => {
-         :comments_count => 10,
+         :comments_count => 11,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' SLM BOM - APPROVED - No comments'
        }
@@ -1485,10 +1591,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:tde).id,
        :comment          => '',
        :result           => 'APPROVED',
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_tde).id,
        :role_id_tag      => 'role_id_9',
        :expected_results => {
-         :comments_count => 10,
+         :comments_count => 11,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' TDE - APPROVED - No comments'
        }
@@ -1498,10 +1605,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :role_id          => roles(:valor).id,
        :comment          => '',
        :result           => 'APPROVED',
+       :ignore           => false,
        :review_result_id => design_review_results(:mx234a_pre_artwork_valor).id,
        :role_id_tag      => 'role_id_6',
        :expected_results => {
-         :comments_count => 10,
+         :comments_count => 11,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' Valor - APPROVED - No comments'
        }
@@ -1547,7 +1655,10 @@ class DesignReviewControllerTest < Test::Unit::TestCase
              :post_comment                 => {"comment" => reviewer_result[:comment]},
              reviewer_result[:role_id_tag] => {reviewer_result[:review_result_id] => reviewer_result[:result]},
              :design_review                => {"id"      => mx234a.id})
-        expected_results[reviewer_result[:role_id].to_s] = reviewer_result[:result]
+        if !reviewer_result[:ignore]
+          expected_results[reviewer_result[:role_id].to_s] = 
+              reviewer_result[:result]
+        end
       else
         post(:reviewer_results,
              :post_comment  => {"comment" => reviewer_result[:comment]},
@@ -1557,15 +1668,25 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       if reviewer_result[:result] != 'REJECTED'
         assert_redirected_to(:action => :post_results)
       else
-        expected_results.each { |k,v| 
-          expected_results[k] = 'WITHDRAWN' if v == 'APPROVED'
-        }
+        if !reviewer_result[:ignore]
+          expected_results.each { |k,v| 
+            expected_results[k] = 'WITHDRAWN' if v == 'APPROVED'
+          }
+        end
+        
         assert_redirected_to(:action => :confirm_rejection)
-        post(:confirm_rejection)
+        follow_redirect
+        assert_equal(mx234a.id, assigns(:design_review_id))
+        
         repost = true
       end
 
-      post(:post_results)
+      if !reviewer_result[:ignore]
+        post(:post_results)
+      else
+        post(:post_results,
+             :note => 'ignore')
+      end
 
       email = @emails.pop
       assert_equal(0, @emails.size)
@@ -1661,7 +1782,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(fab_houses(:coretec).id,   fab_houses[1].fab_house_id.to_i)
 
     comments = DesignReviewComment.find_all_by_design_review_id(mx234a.id)
-    assert_equal(11, comments.size)
+    assert_equal(12, comments.size)
     assert_equal('Updated the fab houses  - Added: AdvantechPWB, Coretec - Removed: OPC, Merix, IBM', 
                  comments.pop.comment)
 
@@ -1727,7 +1848,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal('Review Completed', mx234a_pre_art_dr.review_status.name)
     assert_equal(Time.now.strftime('%d-%m-%y'),
                  mx234a_pre_art_dr.completed_on.strftime('%d-%m-%y'))
-    assert_equal(12, 
+    assert_equal(13, 
                  DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
 
                  
@@ -1901,8 +2022,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
         expected_results.each { |k,v| 
           expected_results[k] = 'WITHDRAWN' if v == 'APPROVED'
         }
+        
         assert_redirected_to(:action => :confirm_rejection)
-        post(:confirm_rejection)
+        follow_redirect
+        assert_equal(mx234a.id, assigns(:design_review_id))
+        
         repost = true
       end
 
@@ -2087,8 +2211,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
         expected_results.each { |k,v| 
           expected_results[k] = 'WITHDRAWN' if v == 'APPROVED'
         }
+        
         assert_redirected_to(:action => :confirm_rejection)
-        post(:confirm_rejection)
+        follow_redirect
+        assert_equal(mx234a.id, assigns(:design_review_id))
+        
         repost = true
       end
 
@@ -2335,8 +2462,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
         expected_results.each { |k,v| 
           expected_results[k] = 'WITHDRAWN' if v == 'APPROVED'
         }
+        
         assert_redirected_to(:action => :confirm_rejection)
-        post(:confirm_rejection)
+        follow_redirect
+        assert_equal(mx234a.id, assigns(:design_review_id))
+        
         repost = true
       end
 
@@ -2498,8 +2628,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
         expected_results.each { |k,v| 
           expected_results[k] = 'WITHDRAWN' if v == 'APPROVED'
         }
+        
         assert_redirected_to(:action => :confirm_rejection)
-        post(:confirm_rejection)
+        follow_redirect
+        assert_equal(mx234a.id, assigns(:design_review_id))
+        
         repost = true
       end
 
@@ -2554,12 +2687,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   end
 
 
-  def test_confirm_rejection
-    assert true
-    print('?')
-  end
-
-
   def test_reassign_reviewer
 
     set_user(users(:matt_d).id, 'Reviewer')
@@ -2609,8 +2736,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     set_user(users(:rich_a).id, 'Reviewer')
     post(:update_review_assignments,
-         :id               => design_reviews(:mx234a_pre_artwork).id,
-         '5_assign_to_self' => 'yes')
+         :id                      => design_reviews(:mx234a_pre_artwork).id,
+         'HWENG_5_assign_to_self' => 'yes')
 
     email = @emails.pop
     assert_equal(0, @emails.size)
