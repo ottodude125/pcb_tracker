@@ -366,7 +366,10 @@ class DesignReviewController < ApplicationController
     design_reviews = DesignReview.find_all_by_design_id(@design.id)
     review_type    = ReviewType.find(@params[:review_type_id])
     @design_review = design_reviews.find { |dr|  dr.review_type_id == review_type.id }
-    
+
+    # JPA: This must be a better way to set this.
+    @design_review.design_center_id = 1 if @design_review.design_center_id == 0
+
     # Handle the combined Placement/Routing reviews
     if @params[:combine_placement_routing] == '1'
 
@@ -494,6 +497,16 @@ class DesignReviewController < ApplicationController
       review_result.result      = 'No Response'
       review_result.reviewed_on = current_time
       review_result.update
+      
+      # Send an invitation to the reviewer if one has not been sent before
+      reviewer = User.find(review_result.reviewer_id)
+      if !reviewer.invited?
+        TrackerMailer::deliver_tracker_invite(reviewer)
+
+        reviewer.invited  = 1
+        reviewer.password = ''
+        reviewer.update
+      end
 
       #Update the CC list.
       if review_result.role.cc_peers?
@@ -934,6 +947,10 @@ class DesignReviewController < ApplicationController
             doc_type_name = DocumentType.find(drd_doc.document_type_id).name
             flash['notice'] = "File #{@document.name} (#{doc_type_name}) has been attached"
             save_failed = false
+            
+            TrackerMailer::deliver_attachment_update(drd_doc,
+                                                     @session[:user])
+            
           else
             flash['notice'] = "Unable to attach the file."
           end
@@ -1283,7 +1300,8 @@ class DesignReviewController < ApplicationController
   def post_results
 
     # TO be handled: an approval coming in after a rejection was received.
-  
+    ignore_rejection = @params[:note] && @params[:note] == 'ignore'
+
     review_results    = flash[:review_results]
     flash_msg         = ''
     fab_msg           = ''
@@ -1324,8 +1342,10 @@ class DesignReviewController < ApplicationController
         review_record = review_result_list.find { |rr| 
           rr.role_id.to_s == review_result[:id]
         }
-      
-        if review_result[:result] != 'COMMENT' && review_record
+
+        if (review_result[:result] != 'COMMENT' && 
+            review_record                       &&
+            !ignore_rejection)
           review_record.result      = review_result[:result]
           review_record.reviewed_on = Time.now
           review_record.update
@@ -1465,9 +1485,9 @@ class DesignReviewController < ApplicationController
       flash_msg += ' and' if comment_update && results_recorded > 0
       flash_msg += ' the review result'     if results_recorded > 0
       flash_msg += 's'                      if results_recorded > 1
-      flash_msg += '.'                      if updated
       flash_msg += ' ' + results[:alternate_msg]  if results
       flash_msg += ' ' + fab_msg                  if fab_msg != ''
+      flash_msg += ' - mail was sent'
     
     end
     flash['notice'] = flash_msg
@@ -1532,7 +1552,7 @@ class DesignReviewController < ApplicationController
       if match
         if @session[:user].id == match.reviewer_id
           peers = Role.find(match.role_id).users.delete_if { |u| u == @session[:user] }
-          peers.delete_if { |u| u.active == 0 }
+          peers.delete_if { |u| !u.active? }
           @matching_roles << { 
             :design_review => match,
             :peers         => peers
@@ -1606,7 +1626,7 @@ class DesignReviewController < ApplicationController
       next if not key.include?("assign_to_self")
       next if value[@session[:user].id.to_s] == 'no'
 
-      role = Role.find(key.split('_').shift)
+      role = Role.find(key.split('_')[1])
       design_review_result = DesignReviewResult.find_first("design_review_id='#{design_review_id}' and role_id='#{role.id}'")
 
       if design_review_result
