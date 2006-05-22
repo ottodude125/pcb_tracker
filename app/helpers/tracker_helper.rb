@@ -12,9 +12,13 @@ module TrackerHelper
 
 
   def review_locked(design_review)
-    audit = design_review.design.audit
-    is_final = design_review.review_type.name == "Final"
-    is_final && !(audit.designer_complete? && audit.auditor_complete?)
+    if design_review
+      audit = design_review.design.audit
+      is_final = design_review.review_type.name == "Final"
+      is_final && !(audit.designer_complete? && audit.auditor_complete?)
+    else
+      false
+    end
   end
 
 
