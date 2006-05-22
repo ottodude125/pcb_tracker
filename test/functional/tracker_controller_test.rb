@@ -121,8 +121,10 @@ class TrackerControllerTest < Test::Unit::TestCase
     set_user(users(:bob_g).id, 'Designer')
     get :index
     assert_response 302
+    assert_redirected_to(:action => :designer_home)
 
-    #breakpoint
+    #follow_redirect
+    #assert_no_tag :content => "POST Placement Review"
   end
   
 
