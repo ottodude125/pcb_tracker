@@ -438,10 +438,21 @@ class UserController < ApplicationController
         role_count += 1
       }
 
+      for user_role in @user.roles
+        if user_role.reviewer?
+          TrackerMailer::deliver_tracker_invite(@user)
+          @user.invited  = 1
+          @user.password = @user.passwd
+          @user.update
+          break
+        end
+      end
+      
       @user.roles << Role.find_by_name("Basic User") if role_count == 0
 
       flash['notice']  = "Account created for #{@user.name}"
-      redirect_back_or_default :action => "list"
+      redirect_to(:action => "list",
+                  :alpha  => @user.last_name[0..0])
     end      
   end  
   
@@ -462,7 +473,7 @@ class UserController < ApplicationController
     @session[:active_role] = nil
     
     redirect_to(:controller => 'tracker',
-		:action     => 'index')
+		        :action     => 'index')
   end
     
 
