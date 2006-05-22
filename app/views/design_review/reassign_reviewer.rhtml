@@ -37,7 +37,8 @@
             <b>Reassign to myself: </b>
           </td>
           <td>
-            <%= check_box("#{match[:design_review].role.id}_assign_to_self",
+            <% role = match[:design_review].role %>
+            <%= check_box("#{role.name}_#{role.id}_assign_to_self",
                           @session[:user].id,
                           {},
                           'yes',
