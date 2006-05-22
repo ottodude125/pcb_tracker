@@ -33,11 +33,11 @@
           <% for design_center in @design_centers %>
             <td align="center">
               <% if design_center.id != designer.design_center_id %>
-                <%= radio_button("#{designer.id}", 
+                <%= radio_button("#{designer.last_name}_#{designer.id}", 
                                  "id", 
                                  design_center.id) %>
               <% else %>
-                <%= radio_button("#{designer.id}", 
+                <%= radio_button("#{designer.last_name}_#{designer.id}", 
                                  "id", 
                                  design_center.id,
                                  { 'checked' => 'checked'}) %>
