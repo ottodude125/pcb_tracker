@@ -28,6 +28,7 @@ class TrackerMailerTest < Test::Unit::TestCase
            :design_centers,
            :design_checks,
            :design_review_comments,
+           :design_review_documents,
            :design_review_results,
            :design_reviews,
            :designs,
@@ -60,7 +61,27 @@ class TrackerMailerTest < Test::Unit::TestCase
     @mx234a_final_dr   = DesignReview.find(
                            design_reviews(:mx234a_final).id)
                            
-    @hweng_role = Role.find_by_name('HWENG')
+    @hweng_role   = Role.find_by_name('HWENG')
+    
+    @manager_email_list = []
+    manager_role = Role.find_by_name("Manager")
+    for manager in manager_role.users
+      @manager_email_list << manager.email if manager.active?
+    end
+    
+    @input_gate_email_list = []
+    input_gate_role = Role.find_by_name("PCB Input Gate")
+    for input_gate in input_gate_role.users
+      @input_gate_email_list << input_gate.email if input_gate.active?
+    end
+    
+    @pcb_admin_email_list = []
+    pcb_admin_role = Role.find_by_name("PCB Admin")
+    for pcb_admin in pcb_admin_role.users
+      @pcb_admin_email_list << pcb_admin.email if pcb_admin.active?
+    end
+
+    
     
     @rich_a  = User.find(users(:rich_a).id)
     @cathy_m = User.find(users(:cathy_m).id)
@@ -69,6 +90,10 @@ class TrackerMailerTest < Test::Unit::TestCase
     @scott_g = User.find(users(:scott_g).id)
     @bob_g   = User.find(users(:bob_g).id)
     @lee_s   = User.find(users(:lee_s).id)
+    @rich_m  = User.find(users(:rich_m).id)
+    
+    @mx234a_stackup_doc = DesignReviewDocument.find(
+                            design_review_documents(:mx234a_stackup_doc).id)
     
     @root_post = IpdPost.find(ipd_posts(:mx234a_thread_one).id)
     
@@ -154,15 +179,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     assert_equal(@now.to_s,       response.date.to_s)
     
     response_cc = response.cc.sort_by { |address| address }
-    expected_cc = []
-    manager_role = Role.find_by_name("Manager")
-    for manager in manager_role.users
-      expected_cc << manager.email if manager.active?
-    end
-    input_gate_role = Role.find_by_name("PCB Input Gate")
-    for input_gate in input_gate_role.users
-      expected_cc << input_gate.email if input_gate.active?
-    end
+    expected_cc = @manager_email_list + @input_gate_email_list
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
@@ -197,15 +214,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     assert_equal(@now.to_s,       response.date.to_s)
     
     response_cc = response.cc.sort_by { |address| address }
-    expected_cc = []
-    manager_role = Role.find_by_name("Manager")
-    for manager in manager_role.users
-      expected_cc << manager.email if manager.active?
-    end
-    input_gate_role = Role.find_by_name("PCB Input Gate")
-    for input_gate in input_gate_role.users
-      expected_cc << input_gate.email if input_gate.active?
-    end
+    expected_cc = @manager_email_list + @input_gate_email_list
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
@@ -240,15 +249,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     assert_equal(@now.to_s,       response.date.to_s)
     
     response_cc = response.cc.sort_by { |address| address }
-    expected_cc = []
-    manager_role = Role.find_by_name("Manager")
-    for manager in manager_role.users
-      expected_cc << manager.email if manager.active?
-    end
-    input_gate_role = Role.find_by_name("PCB Input Gate")
-    for input_gate in input_gate_role.users
-      expected_cc << input_gate.email if input_gate.active?
-    end
+    expected_cc = @manager_email_list + @input_gate_email_list
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
@@ -280,15 +281,7 @@ class TrackerMailerTest < Test::Unit::TestCase
                  response.body)
 
     response_cc = response.cc.sort_by { |address| address }
-    expected_cc = []
-    manager_role = Role.find_by_name("Manager")
-    for manager in manager_role.users
-      expected_cc << manager.email if manager.active?
-    end
-    input_gate_role = Role.find_by_name("PCB Input Gate")
-    for input_gate in input_gate_role.users
-      expected_cc << input_gate.email if input_gate.active?
-    end
+    expected_cc = @manager_email_list + @input_gate_email_list
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
@@ -317,15 +310,9 @@ class TrackerMailerTest < Test::Unit::TestCase
 
     response_cc = response.cc.sort_by { |address| address }
     
-    expected_final_cc = expected_cc
+    expected_final_cc = expected_cc + @pcb_admin_email_list
     designer = User.find(@mx234a_final_dr.design.designer_id)
-    expected_final_cc << designer.email
-    
-    pcb_admin_role = Role.find_by_name("PCB Admin")
-    for pcb_admin in pcb_admin_role.users
-      expected_final_cc << pcb_admin.email if pcb_admin.active?
-    end
-    
+    expected_final_cc << designer.email    
     expected_final_cc = expected_final_cc.sort_by { |address| address }.uniq
     assert_equal(expected_final_cc, response_cc)
     
@@ -354,15 +341,7 @@ class TrackerMailerTest < Test::Unit::TestCase
 
     response_cc = response.cc.sort_by { |address| address }
     
-    expected_release_cc = []
-    manager_role = Role.find_by_name("Manager")
-    for manager in manager_role.users
-      expected_release_cc << manager.email if manager.active?
-    end
-    input_gate_role = Role.find_by_name("PCB Input Gate")
-    for input_gate in input_gate_role.users
-      expected_release_cc << input_gate.email if input_gate.active?
-    end
+    expected_release_cc = @manager_email_list + @input_gate_email_list
     designer = User.find(@mx234a_release_dr.designer_id)
     expected_release_cc << designer.email
     expected_release_cc << "STD_DC_ECO_Inbox@notes.teradyne.com"
@@ -395,15 +374,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     assert_equal(@now.to_s,        response.date.to_s)
     
     response_cc = response.cc.sort_by { |address| address }
-    expected_cc = []
-    manager_role = Role.find_by_name("Manager")
-    for manager in manager_role.users
-      expected_cc << manager.email if manager.active?
-    end
-    input_gate_role = Role.find_by_name("PCB Input Gate")
-    for input_gate in input_gate_role.users
-      expected_cc << input_gate.email if input_gate.active?
-    end
+    expected_cc = @manager_email_list + @input_gate_email_list
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
@@ -430,15 +401,9 @@ class TrackerMailerTest < Test::Unit::TestCase
     
     response_cc = response.cc.sort_by { |address| address }
     
-    expected_final_cc = expected_cc
+    expected_final_cc = expected_cc + @pcb_admin_email_list
     designer = User.find(@mx234a_final_dr.design.designer_id)
     expected_final_cc << designer.email
-    
-    pcb_admin_role = Role.find_by_name("PCB Admin")
-    for pcb_admin in pcb_admin_role.users
-      expected_final_cc << pcb_admin.email if pcb_admin.active?
-    end
-    
     expected_final_cc = expected_final_cc.sort_by { |address| address }.uniq
     assert_equal(expected_final_cc, response_cc)
     
@@ -460,15 +425,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     assert_equal(@now.to_s,       response.date.to_s)
     
     response_cc = response.cc.sort_by { |address| address }
-    expected_cc = []
-    manager_role = Role.find_by_name("Manager")
-    for manager in manager_role.users
-      expected_cc << manager.email if manager.active?
-    end
-    input_gate_role = Role.find_by_name("PCB Input Gate")
-    for input_gate in input_gate_role.users
-      expected_cc << input_gate.email if input_gate.active?
-    end
+    expected_cc = @manager_email_list + @input_gate_email_list
 
     poster = User.find(@root_post.user_id)
     expected_cc << poster.email
@@ -503,15 +460,7 @@ class TrackerMailerTest < Test::Unit::TestCase
                  response.subject)
                  
     response_to = response.to.sort_by { |address| address }
-    expected_to = []
-    manager_role = Role.find_by_name("Manager")
-    for manager in manager_role.users
-      expected_to << manager.email if manager.active?
-    end
-    input_gate_role = Role.find_by_name("PCB Input Gate")
-    for input_gate in input_gate_role.users
-      expected_to << input_gate.email if input_gate.active?
-    end
+    expected_to = @manager_email_list + @input_gate_email_list
     expected_to = expected_to.sort_by { |address| address }.uniq
     assert_equal(expected_to,     response_to)
     assert_equal([Pcbtr::SENDER], response.from)
@@ -563,15 +512,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     assert_equal(@now.to_s,       response.date.to_s)
     
     response_cc = response.cc.sort_by { |address| address }
-    expected_cc = [@lee_s.email]
-    manager_role = Role.find_by_name("Manager")
-    for manager in manager_role.users
-      expected_cc << manager.email if manager.active?
-    end
-    input_gate_role = Role.find_by_name("PCB Input Gate")
-    for input_gate in input_gate_role.users
-      expected_cc << input_gate.email if input_gate.active?
-    end
+    expected_cc = [@lee_s.email] + @manager_email_list + @input_gate_email_list
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
@@ -597,18 +538,88 @@ class TrackerMailerTest < Test::Unit::TestCase
     assert_equal(@now.to_s,       response.date.to_s)
     
     response_cc = response.cc.sort_by { |address| address }
-    expected_cc = [@lee_s.email]
-    manager_role = Role.find_by_name("Manager")
-    for manager in manager_role.users
-      expected_cc << manager.email if manager.active?
-    end
-    input_gate_role = Role.find_by_name("PCB Input Gate")
-    for input_gate in input_gate_role.users
-      expected_cc << input_gate.email if input_gate.active?
-    end
+    expected_cc = [@lee_s.email] + @manager_email_list + @input_gate_email_list
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
+  end
+  
+  def test_tracker_invite
+  
+    response = TrackerMailer.create_tracker_invite(@lee_s,
+                                                   @now)
+                 
+    assert_equal("Your login information for the PCB Design Tracker", 
+                 response.subject)
+    response_to = response.to.sort_by { |address| address }
+    expected_to = [@lee_s.email]
+    assert_equal(expected_to,     response_to)
+    assert_equal([Pcbtr::SENDER], response.from)
+    assert_equal(@now.to_s,       response.date.to_s)
+    assert_equal(nil,             response.cc)
+    
+  end
+
+  def test_attachment_update
+  
+    response = TrackerMailer.create_attachment_update(@mx234a_stackup_doc,
+                                                      @lee_s,
+                                                      @now)
+                 
+    assert_equal("A document has been attached for the " +
+                 @mx234a_stackup_doc.design.name + " design", 
+                 response.subject)
+    response_to = response.to.sort_by { |address| address }
+    
+    expected_to = @manager_email_list
+
+    mx234a_design = @mx234a_stackup_doc.design
+    expected_to << User.find(mx234a_design.designer_id).email  if mx234a_design.designer_id > 0
+    expected_to << User.find(mx234a_design.peer_id).email      if mx234a_design.peer_id > 0
+    expected_to << User.find(mx234a_design.pcb_input_id).email if mx234a_design.pcb_input_id > 0
+
+    for design_review in mx234a_design.design_reviews
+      for review_result in design_review.design_review_results
+        expected_to << User.find(review_result.reviewer_id).email
+      end
+    end
+
+    expected_to = expected_to.uniq
+
+    expected_to = expected_to.sort_by { |address| address }
+    assert_equal(expected_to,     response_to)
+    assert_equal([Pcbtr::SENDER], response.from)
+    assert_equal(@now.to_s,       response.date.to_s)
+    
+    expected_cc = @input_gate_email_list
+    if mx234a_design.pcb_input_id > 0
+      pcb_input_gate = User.find(mx234a_design.pcb_input_id)
+      expected_cc.delete_if { |email| email == pcb_input_gate.email }
+    end
+    assert_equal(expected_cc, response.cc)
+    
+  end
+
+  def test_audit_update
+
+    response = TrackerMailer.create_audit_update(design_checks(:design_check_5),
+                                                 'No comment',
+                                                 @scott_g,
+                                                 @rich_m,
+                                                 @now)
+               
+    expected_subj = @mx234a_final_dr.design.name +
+                    " PEER AUDIT: A comment has been entered that requires " +
+                    "your attention"  
+    assert_equal(expected_subj, response.subject)
+    
+    response_to = response.to.sort_by { |address| address }
+
+    assert_equal([@scott_g.email],   response_to)
+    assert_equal([Pcbtr::SENDER],  response.from)
+    assert_equal(@now.to_s,        response.date.to_s)
+    assert_equal([@rich_m.email], response.cc)
+    
   end
 
   private
