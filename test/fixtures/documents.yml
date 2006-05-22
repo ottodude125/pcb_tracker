@@ -3,15 +3,16 @@
 #
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 mx234a_stackup_document:
-  id:         1
-  name:       mx234a_stackup.doc
-  created_on: 20060222114526
-  created_by: 4000
+  id:           1
+  name:         mx234a_stackup.doc
+  created_on:   20060222114526
+  created_by:   4000
+  data:         'The mx234a Stackup Document'
 mx234a_other_document_1:
-  id:         2
-  name:       go_pirates.xls
-  created_on: 20060222114526
-  created_by: 5001
+  id:           2
+  name:         go_pirates.xls
+  created_on:   20060222114526
+  created_by:   5001
 mx234a_eng_notes_document:
   id:         3
   name:       eng_notes.xls
