@@ -437,8 +437,7 @@ class TrackerMailer < ActionMailer::Base
     @headers    = {}
     
     cc_list =  [user.email]
-    cc_list += add_role_members(['Manager', 
-                                 'PCB Input Gate'])
+    cc_list += add_role_members(['Manager', 'PCB Input Gate'])
     cc_list.delete_if { |recipient| recipient == peer.email }
     @cc = cc_list.uniq
 
@@ -483,8 +482,7 @@ class TrackerMailer < ActionMailer::Base
     @headers    = {}
 
     cc_list =  [user.email]
-    cc_list += add_role_members(['Manager', 
-                                 'PCB Input Gate'])
+    cc_list += add_role_members(['Manager', 'PCB Input Gate'])
     cc_list.delete_if { |recipient| recipient == peer.email }
     @cc = cc_list.uniq
 
@@ -492,6 +490,118 @@ class TrackerMailer < ActionMailer::Base
     @body['peer_name'] = peer.name
     @body['role_name'] = role.name
     @body['design_name'] = design.name  
+
+  end
+
+
+  ######################################################################
+  #
+  # tracker_invite
+  #
+  # Description:
+  # This method generates the mail to a reviewer to let them know they
+  # have been added to the tracker
+  #
+  # Parameters:
+  #   user     - the reviewer's user object
+  #
+  ######################################################################
+  #
+  def tracker_invite(user,
+                     sent_at = Time.now)
+
+    @subject    = "Your login information for the PCB Design Tracker"
+    @recipients = user.email
+    @from       = Pcbtr::SENDER
+    @sent_on    = sent_at
+    @headers    = {}
+    @cc         = []
+
+    @body['reviewer'] = user
+
+  end
+  
+  
+  ######################################################################
+  #
+  # attachment_update
+  #
+  # Description:
+  # This method generates mail to indicate that a document has been
+  # attached.
+  #
+  # Parameters:
+  #   design_review_document - the design review document record
+  #
+  ######################################################################
+  #
+  def attachment_update(design_review_document,
+                        user,
+                        sent_at = Time.now)
+
+    @subject    = "A document has been attached for the " +
+                    "#{design_review_document.design.name} design"
+    @recipients = []
+    @from       = Pcbtr::SENDER
+    @sent_on    = sent_at
+    @headers    = {}
+    cc          = add_role_members(['Manager', 'PCB Input Gate'])
+    
+    design_users = design_review_document.design.get_associated_users()
+    recipients = []
+    recipients << design_users[:designer].email  if design_users[:designer]
+    recipients << design_users[:peer].email      if design_users[:peer]
+    recipients << design_users[:pcb_input].email if design_users[:pcb_input]
+    for reviewer in design_users[:reviewers]
+      recipients << reviewer.email
+    end
+
+    @recipients = recipients.uniq
+    
+    @cc = cc.uniq
+    for copied_to in cc
+      if recipients.detect { |sent_to| sent_to == copied_to }
+        @cc.delete_if { |cc_mail| cc_mail == copied_to }
+      end
+    end
+    
+    @body['document']    = design_review_document
+    @body['attached_by'] = user.name
+
+  end
+  
+  
+  ######################################################################
+  #
+  # attachment_update
+  #
+  # Description:
+  # This method generates mail to indicate that the peer auditor has entered
+  # a comment that the designer needs to respond to.
+  #
+  # Parameters:
+  #   design_review_document - the design review document record
+  #
+  ######################################################################
+  #
+  def audit_update(design_check,
+                   comment,
+                   designer,
+                   peer,
+                   sent_at = Time.now)
+
+    @subject    = design_check.audit.design.name +
+                    " PEER AUDIT: A comment has been entered that requires " +
+                    "your attention"
+    @recipients = designer.email
+    @from       = Pcbtr::SENDER
+    @sent_on    = sent_at
+    @headers    = {}
+    @cc         = peer.email
+
+    @body['design_check'] = design_check
+    @body['check']        = design_check.check
+    @body['comment']      = comment
 
   end
   
@@ -521,7 +631,7 @@ class TrackerMailer < ActionMailer::Base
       end
     end
     
-    return cc_list
+    return cc_list.uniq
     
   end
   
