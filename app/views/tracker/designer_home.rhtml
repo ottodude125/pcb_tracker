@@ -21,13 +21,6 @@
                border="0">
 
         <tr>
-          <td align="left">
-            <%= link_to("Tracker Settings (TBD)", 
-                        { :controller => "audit", 
-                          :action     => "designer_list" }) %>
-          </td>
-        </tr>
-        <tr>
           <td align="center">
             <%= link_to("Boards",
                           { :controller => 'board',
@@ -197,7 +190,7 @@
                                                 :action     => 'print',
                                                 :id         =>  design[:audit].id},
                                                :title => "Access to the completed #{design[:design].name} Peer Audit Review") %>
-                                <% else %>
+                                <% elsif ReviewType.find(design[:design].phase_id).name != 'Pre-Artwork' %>
                                   <%= link_to("Design Audit",
                                               { :controller => 'audit',
                                                 :action     => 'show_sections',
