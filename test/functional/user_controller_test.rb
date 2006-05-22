@@ -77,7 +77,7 @@ class UserControllerTest < Test::Unit::TestCase
     # Log in as a designer and try to edit a user record.
     post(:login,
          :user_login => "richm", 
-         :user_password => "test")
+         :user_password => "designer")
 
     assert_equal('Login successful',
                  flash['notice'])
@@ -198,7 +198,9 @@ class UserControllerTest < Test::Unit::TestCase
 
 
     assert_equal("Account created for Bob Squarepants", flash['notice'])
-    assert_redirect_url "http://www.yahoo.com"
+    assert_redirected_to(:controller => 'user',
+                         :action     => 'list',
+                         :alpha      => 'S')
 
     new_user = User.find_by_last_name "Squarepants"
     assert_equal('newbob', new_user.login)
