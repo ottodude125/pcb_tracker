@@ -66,14 +66,17 @@ class DesignCenterManagerController < ApplicationController
 
     # Go through the parameters passed back and assign the users to the
     # design centers.
-    @params.each { |designer_id, design_center_id|
+    @params.each { |form_tag, design_center_id|
 
-      next if (designer_id == "action" or designer_id == "controller")
+      next if (form_tag == "action" or form_tag == "controller")
 
-      designer          = User.find(designer_id)
+      name, id = form_tag.split('_')
+      designer          = User.find(id)
       next if (designer.design_center_id.to_s == design_center_id['id'])
-      designer.password = designer.passwd
+
+      designer.password = ''
       designer.update_attribute('design_center_id', design_center_id['id'])
+
     }
 
     flash['notice'] = 'The Designer/Design Center assignments have been recorded'
