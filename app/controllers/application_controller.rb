@@ -63,6 +63,31 @@ class ApplicationController < ActionController::Base
   end
 
   
+  protected
+  
+  
+  ######################################################################
+  #
+  # log_error
+  #
+  # Description:
+  # Sends mail to DTG whenever a user encounters an error.
+  #
+  ######################################################################
+  #
+  def log_error(exception)
+    begin
+      TrackerMailer.deliver_snapshot(exception,
+                                     clean_backtrace(exception),
+                                     @session.instance_variable_get("@data"),
+                                     @params,
+                                     @request.env)
+    rescue => e
+      logger.error(e)
+    end
+  end
+
+
   private
 
   ######################################################################
