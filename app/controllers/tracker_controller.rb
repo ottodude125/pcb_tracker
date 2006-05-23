@@ -14,6 +14,9 @@
 
 class TrackerController < ApplicationController
 
+  before_filter(:verify_logged_in,
+                :except => :index)
+
   ######################################################################
   #
   # index
