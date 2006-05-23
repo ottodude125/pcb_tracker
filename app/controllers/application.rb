@@ -116,6 +116,32 @@ class ApplicationController < ActionController::Base
 
   ######################################################################
   #
+  # verify_logged_in
+  #
+  # Description:
+  # Verifies that the user logged in.
+  #
+  # Return value:
+  # TRUE if the user is logged in, false otherwise
+  #
+  # Additional Information:
+  # Set flash['notice'] if the user is not logged in.
+  #
+  ######################################################################
+  #
+  def verify_logged_in
+    unless session[:user]
+      flash['notice'] = Pcbtr::PCBTR_BASE_URL +
+                        @params["controller"] + '/' +
+                        @params["action"]     + 
+                        " - unavailable unless logged in."
+      redirect_to(:controller => 'tracker',
+                  :action     => "index")
+    end
+  end
+
+  ######################################################################
+  #
   # verify_manager_admin_privs
   #
   # Description:
