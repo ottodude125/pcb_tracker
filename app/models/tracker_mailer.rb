@@ -606,6 +606,46 @@ class TrackerMailer < ActionMailer::Base
   end
   
   
+  ######################################################################
+  #
+  # snapshot
+  #
+  # Description:
+  # This method generates mail to DTG whenever a user encounters an 
+  # application error.
+  #
+  # Parameters:
+  #   exception - the exception record
+  #   trace     - to provide the backtrace information
+  #   session   - to provide a dump of the session record
+  #   params    - the params passed to the action
+  #   env       - the http environment
+  #
+  ######################################################################
+  #
+  def snapshot(exception,
+               trace,
+               session,
+               params,
+               env,
+               sent_on = Time.now)
+
+    content_type "text/html"
+    
+    @recipients = ['paul_altimonte@notes.teradyne.com']
+    @from       = Pcbtr::SENDER
+    @subject    = "[Error] exception in #{env['REQUEST_URI']}"
+    @sent_on    = sent_on
+    
+    @body['exception'] = exception
+    @body['trace']     = trace
+    @body['session']   = session
+    @body['params']    = params
+    @body['env']       = env
+  
+  end
+  
+  
   private
   
   
