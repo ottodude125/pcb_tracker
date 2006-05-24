@@ -456,7 +456,7 @@ class TrackerController < ApplicationController
   
     if @session[:active_role] == 'Manager'
       @sort_order = flash[:sort_order]
-      @sort_order[:designer] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+      @sort_order[:peer] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
       flash[:sort_order] = @sort_order
     
       @design_reviews = get_design_reviews
