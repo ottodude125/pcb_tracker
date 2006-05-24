@@ -498,7 +498,7 @@ class TrackerMailerTest < Test::Unit::TestCase
                  @lee_s,
                  @rich_a,
                  @scott_g,
-                 @mx234a_pre_art_dr.design,
+                 @mx234a_pre_art_dr,
                  @hweng_role,
                  @now)
                  
@@ -524,7 +524,7 @@ class TrackerMailerTest < Test::Unit::TestCase
                  @lee_s,
                  @rich_a,
                  @scott_g,
-                 @mx234a_pre_art_dr.design,
+                 @mx234a_pre_art_dr,
                  @hweng_role,
                  @now)
                  
