@@ -413,24 +413,25 @@ class TrackerMailer < ActionMailer::Base
   # the reviewer has assigned the review to the peer.
   #
   # Parameters:
-  #   user     - the reviewer's user object
-  #   peer     - the peer's user object
-  #   designer - the designer's user object
-  #   design   - the design object
-  #   role     - the role object
-  #   sent_at  - the timestamp for the mail header 
-  #              (defaults to Time.now)
+  #   user          - the reviewer's user object
+  #   peer          - the peer's user object
+  #   designer      - the designer's user object
+  #   design_review - the design object
+  #   role          - the role object
+  #   sent_at       - the timestamp for the mail header 
+  #                   (defaults to Time.now)
   #
   ######################################################################
   #
   def reassign_design_review_to_peer(user, 
                                      peer, 
                                      designer,
-                                     design,
+                                     design_review,
                                      role,
                                      sent_at = Time.now)
 
-    @subject    = "#{design.name}: You have been assigned to perform the #{role.name} review"
+    @subject    = design_review.design.name +
+                    ": You have been assigned to perform the #{role.name} review"
     @recipients = peer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
@@ -441,10 +442,11 @@ class TrackerMailer < ActionMailer::Base
     cc_list.delete_if { |recipient| recipient == peer.email }
     @cc = cc_list.uniq
 
-    @body['user_name'] = user.name
-    @body['peer_name'] = peer.name
-    @body['role_name'] = role.name
-    @body['design_name'] = design.name  
+    @body['user_name']        = user.name
+    @body['peer_name']        = peer.name
+    @body['role_name']        = role.name
+    @body['design_name']      = design_review.design.name
+    @body['design_review_id'] = design_review.id  
 
   end
 
@@ -458,12 +460,12 @@ class TrackerMailer < ActionMailer::Base
   # the reviewer has take the review assignment from the review.
   #
   # Parameters:
-  #   user     - the reviewer's user object
-  #   peer     - the peer's user object
-  #   designer - the designer's user object
-  #   design   - the design object
-  #   role     - the role object
-  #   sent_at  - the timestamp for the mail header 
+  #   user          - the reviewer's user object
+  #   peer          - the peer's user object
+  #   designer      - the designer's user object
+  #   design_review - the design object
+  #   role          - the role object
+  #   sent_at       - the timestamp for the mail header 
   #              (defaults to Time.now)
   #
   ######################################################################
@@ -471,11 +473,12 @@ class TrackerMailer < ActionMailer::Base
   def reassign_design_review_from_peer(user,
                                        peer,
                                        designer,
-                                       design,
+                                       design_review,
                                        role,
                                        sent_at = Time.now)
 
-    @subject    = "#{design.name}: The #{role.name} review has been reassigned to #{user.name}"
+    @subject    = design_review.design.name +
+                    ": The #{role.name} review has been reassigned to #{user.name}"
     @recipients = peer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
@@ -486,10 +489,11 @@ class TrackerMailer < ActionMailer::Base
     cc_list.delete_if { |recipient| recipient == peer.email }
     @cc = cc_list.uniq
 
-    @body['user_name'] = user.name
-    @body['peer_name'] = peer.name
-    @body['role_name'] = role.name
-    @body['design_name'] = design.name  
+    @body['user_name']        = user.name
+    @body['peer_name']        = peer.name
+    @body['role_name']        = role.name
+    @body['design_name']      = design_review.design.name
+    @body['design_review_id'] = design_review.id 
 
   end
 
