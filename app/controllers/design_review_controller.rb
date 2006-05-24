@@ -1613,7 +1613,7 @@ class DesignReviewController < ApplicationController
                              @session[:user],
                              peer,
                              designer,
-                             design_review.design,
+                             design_review,
                              role)
           end
         end
@@ -1645,7 +1645,7 @@ class DesignReviewController < ApplicationController
                          @session[:user],
                          peer,
                          designer,
-                         design_review.design,
+                         design_review,
                          role)
       end
 
