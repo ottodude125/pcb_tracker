@@ -21,6 +21,21 @@ class DesignReview < ActiveRecord::Base
   has_many   :design_review_results
 
 
+  ######################################################################
+  #
+  # review_name
+  #
+  # Description:
+  # This method returns the review (type) name for the object.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # The review (type) name
+  #
+  ######################################################################
+  #
   def review_name
     if self.review_type_id_2 == 0
       self.review_type.name
@@ -28,6 +43,52 @@ class DesignReview < ActiveRecord::Base
       self.review_type.name + '/' + ReviewType.find(self.review_type_id_2).name
     end
   end
+  
+  
+  ######################################################################
+  #
+  # comments
+  #
+  # Description:
+  # This method returns the comments for the design review object.
+  #
+  # Parameters:
+  # order - specifies the sort order for the created_on field.  Either 
+  #         'ASC' or 'DESC'
+  #
+  # Return value:
+  # A list of comments for the design review.
+  #
+  ######################################################################
+  #
+  def comments(order = 'DESC')
+    DesignReviewComment.find_all_by_design_review_id(self.id,
+                                                     "created_on #{order}")
+  end
+  
+  
+  ######################################################################
+  #
+  # review_results_by_role_name
+  #
+  # Description:
+  # This method returns the review results sorted by the review role
+  # for the design review object.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of design_review_result objects for the design review.
+  #
+  ######################################################################
+  #
+  def review_results_by_role_name
+    self.design_review_results.sort_by { |review_result| 
+      review_result.role.name
+    }
+  end
+  
   
   
 end
