@@ -23,223 +23,59 @@ class DesignReviewController < ApplicationController
                            :action     => 'view',
                            :id         => @params[:id]}
 
+    @design_review  = DesignReview.find(@params[:id])
+    @design         = Design.find(@design_review.design_id)
+    @review_results = @design_review.review_results_by_role_name
+    @comments       = @design_review.comments('DESC')
+
     case @session[:active_role]
       when 'Designer'
-        redirect_to(:action => :designer_view,  :id => @params[:id])
+        render_action('designer_view')
       when 'Manager'
-        redirect_to(:action => :manager_view,   :id => @params[:id])
+        render_action('manager_view')
       when 'Admin'
-        redirect_to(:action => :admin_view,     :id => @params[:id])
+        render_action('admin_view')
       when nil
-        redirect_to(:action => :safe_view,      :id => @params[:id])
+        render_action('safe_view')
       else
         active_role = Role.find_by_name(@session[:active_role])
-        reviewer_roles = Role.find_all(nil,'reviewer=1 and active=1')
+        if active_role.reviewer?
+        
+          @my_review_results = Array.new
+          for review_result in @review_results
+            @my_review_results << review_result if review_result.reviewer_id == @session[:user].id
+          end
 
-        if reviewer_roles.include?(active_role)
-          redirect_to(:action => :reviewer_view,  :id => @params[:id])
+          if pre_art_pcb(@design_review, @my_review_results)
+            designers   = Role.find_by_name("Designer").users
+            @designers  = designers.delete_if { |d| not d.active? }
+            @priorities = Priority.find_all(nil, 'value ASC')
+          else
+            @designers  = nil
+            @priorities = nil
+          end
+
+          if (@my_review_results.find { |rr| rr.role.name == "SLM-Vendor"})
+            design_fab_house_list = @design.fab_houses
+            design_fab_houses = {}
+            for dfh in design_fab_house_list
+              design_fab_houses[dfh.id] = dfh
+            end
+            @fab_houses = FabHouse.find_all(nil, 'name ASC')
+
+            for fab_house in @fab_houses
+              fab_house[:selected] = design_fab_houses[fab_house.id] != nil
+            end
+          else
+            @fab_houses = nil
+          end
+
+          render_action('reviewer_view')
         else
-          redirect_to(:action => :safe_view, :id => @params[:id])
+          render_action('safe_view')
         end
     end
     
-  end
-
-
-  ######################################################################
-  #
-  # admin_view
-  #
-  # Description:
-  # This method retrieves the design review from the database for display.
-  #
-  # Parameters from @params
-  # ['id'] - Used to identify the design review to be retrieved.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def admin_view
-
-    @design_review = DesignReview.find(@params[:id])
-    @design        = Design.find(@design_review.design_id)
-    review_results = DesignReviewResult.find_all("design_review_id='#{@design_review.id}'")
-
-    @review_results = review_results.sort_by { |review_result| 
-      review_result.role.name
-    }
-
-    @comments = DesignReviewComment.find_all("design_review_id='#{@design_review.id}'",
-                                             'created_on DESC')
-
-  end
-
-
-  ######################################################################
-  #
-  # manager_view
-  #
-  # Description:
-  # This method retrieves the design review from the database for display.
-  #
-  # Parameters from @params
-  # ['id'] - Used to identify the design review to be retrieved.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def manager_view
-
-    @design_review = DesignReview.find(@params[:id])
-    @design        = Design.find(@design_review.design_id)
-    review_results = DesignReviewResult.find_all("design_review_id='#{@design_review.id}'")
-
-    @review_results = review_results.sort_by { |review_result| 
-      review_result.role.name
-    }
-
-    @comments = DesignReviewComment.find_all("design_review_id='#{@design_review.id}'",
-                                             'created_on DESC')
-
-  end
-
-
-  ######################################################################
-  #
-  # safe_view
-  #
-  # Description:
-  # This method retrieves the design review from the database for display.
-  #
-  # Parameters from @params
-  # ['id'] - Used to identify the design review to be retrieved.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def safe_view
-
-    @design_review = DesignReview.find(@params[:id])
-    @design        = Design.find(@design_review.design_id)
-    review_results = DesignReviewResult.find_all("design_review_id='#{@design_review.id}'")
-
-    @review_results = review_results.sort_by { |review_result| 
-      review_result.role.name
-    }
-
-    @comments = DesignReviewComment.find_all("design_review_id='#{@design_review.id}'",
-                                             'created_on DESC')
-
-  end
-
-
-  ######################################################################
-  #
-  # designer_view
-  #
-  # Description:
-  # This method retrieves the design review from the database for display.
-  #
-  # Parameters from @params
-  # ['id'] - Used to identify the design review to be retrieved.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def designer_view
-
-    @design_review = DesignReview.find(@params[:id])
-    @design        = Design.find(@design_review.design_id)
-    review_results = DesignReviewResult.find_all("design_review_id='#{@design_review.id}'")
-
-    @review_results = review_results.sort_by { |review_result| 
-      review_result.role.name
-    }
-
-    @comments = DesignReviewComment.find_all("design_review_id='#{@design_review.id}'",
-                                             'created_on DESC')
-
-  end
-
-
-  ######################################################################
-  #
-  # reviewer_view
-  #
-  # Description:
-  # This method retrieves the design review from the database for display.
-  #
-  # Parameters from @params
-  # ['id'] - Used to identify the design review to be retrieved.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def reviewer_view
-
-    session[:return_to] = {:controller => 'design_review',
-                           :action     => 'view',
-                           :id         => @params[:id]}
-    @design_review = DesignReview.find(@params[:id])
-    @design        = Design.find(@design_review.design_id)
-    review_results = DesignReviewResult.find_all("design_review_id='#{@design_review.id}'")
-
-    @review_results = review_results.sort_by { |review_result| 
-      review_result.role.name
-    }
-    
-    @my_review_results = Array.new
-    for review_result in @review_results
-      @my_review_results << review_result if review_result.reviewer_id == @session[:user].id
-    end
-
-    @comments = DesignReviewComment.find_all("design_review_id='#{@design_review.id}'",
-                                             'created_on DESC')
-
-    if pre_art_pcb(@design_review, @my_review_results)
-      designers   = Role.find_by_name("Designer").users
-      @designers  = designers.delete_if { |d| not d.active? }
-      @priorities = Priority.find_all(nil, 'value ASC')
-    else
-      @designers  = nil
-      @priorities = nil
-    end
-
-    if (@my_review_results.find { |rr| rr.role.name == "SLM-Vendor"})
-      design_fab_house_list = @design.fab_houses
-      design_fab_houses = {}
-      for dfh in design_fab_house_list
-        design_fab_houses[dfh.id] = dfh
-      end
-      @fab_houses = FabHouse.find_all(nil, 'name ASC')
-
-      for fab_house in @fab_houses
-        fab_house[:selected] = design_fab_houses[fab_house.id] != nil
-      end
-    else
-      @fab_houses = nil
-    end
-
   end
 
 
@@ -428,14 +264,16 @@ class DesignReviewController < ApplicationController
     # Remove roles that are not appropriate for the review.
     roles = Role.find_all("reviewer=1 and active=1")
     
-    review_results = DesignReviewResult.find_all_by_design_review_id(@design_review.id)
+
     group_ids = Array.new
+    review_results = @design_review.design_review_results
     for review_result in review_results
       group_ids.push(review_result.role_id)
     end
 
     @reviewers = Design.get_reviewers(@design.board_id, group_ids)
-    review_results = DesignReviewResult.find_all("design_review_id=#{@design_review.id}")
+    review_results = DesignReviewResult.find_all_by_design_review_id(
+                       @design_review.id)
 
     for reviewer in @reviewers
       review_result = review_results.find { |rr| rr.role_id == reviewer[:group_id] }
@@ -482,14 +320,14 @@ class DesignReviewController < ApplicationController
     design_review.reposted_on      = Time.now
     design_review.update
 
-    review_results = DesignReviewResult.find_all("design_review_id='#{design_review.id}'")
     reviewer_list = Hash.new
     @params[:board_reviewers].each { |role_id, reviewer_id|
       reviewer_list[role_id.to_i] = reviewer_id.to_i
     }
 
+    pre_art_review = ReviewType.find_by_name('Pre-Artwork')
     current_time = Time.now
-    for review_result in review_results
+    for review_result in design_review.design_review_results
 
       if reviewer_list[review_result.role_id] != review_result.reviewer_id
         review_result.reviewer_id = reviewer_list[review_result.role_id]
@@ -508,20 +346,22 @@ class DesignReviewController < ApplicationController
         reviewer.update
       end
 
-      #Update the CC list.
-      if review_result.role.cc_peers?
+      # Update the CC list.
+      # Do not update the CC list for a Pre-Artwork review - it has already
+      # been set when the design was created.
+      if (design_review.review_type != pre_art_review &&
+          review_result.role.cc_peers?)
         cc_list = review_result.role.users
         for peer in cc_list
           # Do not update the list for the following conditions.
           #    - peer is the reviewer
           #    - peer is not active
           #    - peer is already on the list
-          if (peer.id == review_result.reviewer_id or
-              not peer.active?                     or
-              design_review.design.board.users.include?(peer))
-            next
+          if !(peer.id == review_result.reviewer_id or
+               not peer.active?                     or
+               design_review.design.board.users.include?(peer))
+            design_review.design.board.users << peer
           end
-          design_review.design.board.users << peer
         end
       end
     end
@@ -541,8 +381,7 @@ class DesignReviewController < ApplicationController
     TrackerMailer::deliver_design_review_posting_notification(design_review,
                                                              @params[:post_comment][:comment])
 
-    redirect_to(:action     => 'index',
-                :controller => 'tracker')
+    redirect_to(:action => 'index', :controller => 'tracker')
 
   end
 
@@ -611,9 +450,7 @@ class DesignReviewController < ApplicationController
                                                               @params[:post_comment][:comment],
                                                               true)
 
-
-    redirect_to(:action     => 'index',
-                :controller => 'tracker')
+    redirect_to(:action => 'index', :controller => 'tracker')
 
   end
 
@@ -652,8 +489,7 @@ class DesignReviewController < ApplicationController
 
     flash['notice'] = "Comment added - mail has been sent"
 
-    redirect_to(:action => :view,
-                :id     => @params[:design_review][:id])
+    redirect_to(:action => :view, :id => @params[:design_review][:id])
 
   end
   
@@ -713,8 +549,7 @@ class DesignReviewController < ApplicationController
       flash['notice'] = 'Error: The design center was not updated.'
     end
   
-    redirect_to(:action => :designer_view,
-                :id     => design_review.id)
+    redirect_to(:action => :view, :id => design_review.id)
   end
   
   
@@ -1492,8 +1327,7 @@ class DesignReviewController < ApplicationController
     end
     flash['notice'] = flash_msg
     
-    redirect_to(:action => :reviewer_view,
-                :id     => review_results[:design_review_id])
+    redirect_to(:action => :view, :id => review_results[:design_review_id])
   end
   
   
@@ -1657,8 +1491,7 @@ class DesignReviewController < ApplicationController
       flash['notice'] = 'Nothing selected - no assignments were made'
     end
 
-    redirect_to(:action => :reviewer_view,
-                :id     => design_review_id)
+    redirect_to(:action => :view, :id => design_review_id)
 
   end
 
@@ -1798,6 +1631,13 @@ class DesignReviewController < ApplicationController
 
 
   private
+  
+  
+  def noget_review_results(design_review)
+    design_review.design_review_results.sort_by { |review_result| 
+      review_result.role.name
+    }
+  end
 
 
   def pre_art_pcb(design_review, review_results)
