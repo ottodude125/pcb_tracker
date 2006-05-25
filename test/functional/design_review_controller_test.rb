@@ -67,14 +67,13 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a         = designs(:mx234a)
     get(:view, :id => mx234a_pre_art.id)
     
-    assert_response 302
-    assert_redirect_url('http://test.host/design_review/safe_view/1')
+    assert_response(:success)
 
     get(:safe_view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(0,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:comments).size)
     
   end
 
@@ -98,14 +97,13 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a         = designs(:mx234a)
     get(:view, :id => mx234a_pre_art.id)
     
-    assert_response 302
-    assert_redirect_url('http://test.host/design_review/admin_view/1')
+    assert_response(:success)
 
     get(:admin_view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(0,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:comments).size)
 
     end
 
@@ -128,14 +126,13 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a         = designs(:mx234a)
     get(:view, :id => mx234a_pre_art.id)
     
-    assert_response 302
-    assert_redirect_url('http://test.host/design_review/designer_view/1')
+    assert_response(:success)
 
     get(:designer_view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(0,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:comments).size)
     
   end
 
@@ -162,15 +159,13 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a         = designs(:mx234a)
     get(:view, :id => mx234a_pre_art.id)
 
-    assert_response 302
-    assert_redirected_to(:action => :reviewer_view,
-                         :id     => mx234a_pre_art.id.to_s)
+    assert_response(:success)
 
     get(:reviewer_view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(0,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:comments).size)
     assert_equal(nil,               assigns(:designers))
     assert_equal(nil,               assigns(:priorities))
     assert_equal(nil,               assigns(:fab_houses))
@@ -180,15 +175,13 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a           = designs(:mx234a)
     get(:view, :id => mx234a_pre_art.id)
 
-    assert_response 302
-    assert_redirected_to(:action => :reviewer_view,
-                         :id     => mx234a_pre_art.id.to_s)
+    assert_response(:success)
 
     get(:reviewer_view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(0,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:comments).size)
     assert_equal(3,                 assigns(:designers).size)
     assert_equal(2,                 assigns(:priorities).size)
     assert_equal(nil,               assigns(:fab_houses))
@@ -198,15 +191,13 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a           = designs(:mx234a)
     get(:view, :id => mx234a_pre_art.id)
 
-    assert_response 302
-    assert_redirected_to(:action => :reviewer_view,
-                         :id     => mx234a_pre_art.id.to_s)
+    assert_response(:success)
 
     get(:reviewer_view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(0,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:comments).size)
     assert_equal(nil,               assigns(:designers))
     assert_equal(nil,               assigns(:priorities))
 
@@ -241,14 +232,13 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a         = designs(:mx234a)
     get(:view, :id => mx234a_pre_art.id)
     
-    assert_response 302
-    assert_redirect_url('http://test.host/design_review/manager_view/1')
+    assert_response(:success)
 
     get(:manager_view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(0,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:comments).size)
     
   end
 
@@ -580,7 +570,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal('None', review_result.result)
     end
     comments = DesignReviewComment.find_all_by_design_review_id(mx234a_pre_artwork.id)
-    assert_equal(0, comments.size)
+    assert_equal(4, comments.size)
                  
     post(:post,
          :design_review   => {:id => mx234a_pre_artwork.id},
@@ -616,7 +606,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     end
     
     comments = DesignReviewComment.find_all_by_design_review_id(mx234a_pre_artwork.id)
-    assert_equal(1, comments.size)
+    assert_equal(5, comments.size)
     dr_comment = comments.pop
     assert_equal('Test Comment',     dr_comment.comment)
     assert_equal(users(:scott_g).id, dr_comment.user_id)
@@ -835,7 +825,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal('None', review_result.result)
     end
     comments = DesignReviewComment.find_all_by_design_review_id(mx234a_pre_artwork.id)
-    assert_equal(0, comments.size)
+    assert_equal(4, comments.size)
                  
     post(:post,
          :design_review   => {:id => mx234a_pre_artwork.id},
@@ -870,7 +860,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal('No Response', review_result.result)
     end
     comments = DesignReviewComment.find_all_by_design_review_id(mx234a_pre_artwork.id)
-    assert_equal(1, comments.size)
+    assert_equal(5, comments.size)
     dr_comment = comments.pop
     assert_equal('Test Comment',     dr_comment.comment)
     assert_equal(users(:scott_g).id, dr_comment.user_id)
@@ -909,9 +899,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal('No Response', review_result.result)
     end
     comments = DesignReviewComment.find_all_by_design_review_id(mx234a_pre_artwork.id)
-    assert_equal(2,                             comments.size)
-    assert_equal('Test Comment',                comments.shift.comment)
-    assert_equal('Test Comment for the repost', comments.shift.comment)
+    assert_equal(6,                             comments.size)
+    assert_equal('Test Comment',                comments[4].comment)
+    assert_equal('Test Comment for the repost', comments[5].comment)
     assert_equal(users(:scott_g).id,            dr_comment.user_id)
 
   end
@@ -944,7 +934,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     comments = DesignReviewComment.find_all_by_design_review_id(
                  mx234a_pre_artwork.id)
-    assert_equal(0, comments.size)
+    assert_equal(4, comments.size)
 
     post(:add_comment,
          :post_comment  => {:comment => ''},
@@ -952,7 +942,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     comments = DesignReviewComment.find_all_by_design_review_id(
                  mx234a_pre_artwork.id)
-    assert_equal(0, comments.size)
+    assert_equal(4, comments.size)
 
     post(:add_comment,
          :post_comment  => {:comment => 'First Comment!'},
@@ -960,8 +950,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     comments = DesignReviewComment.find_all_by_design_review_id(
                  mx234a_pre_artwork.id)
-    assert_equal(1, comments.size)
-    assert_equal('First Comment!', comments.shift.comment)
+    assert_equal(5, comments.size)
+    assert_equal('First Comment!', comments[4].comment)
 
     post(:add_comment,
          :post_comment  => {:comment => 'Second Comment!'},
@@ -969,9 +959,13 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     comments = DesignReviewComment.find_all_by_design_review_id(
                  mx234a_pre_artwork.id)
-    assert_equal(2, comments.size)
-    assert_equal('First Comment!',  comments.shift.comment)
-    assert_equal('Second Comment!', comments.shift.comment)
+    assert_equal(6, comments.size)
+    assert_equal('This is comment one',   comments[0].comment)
+    assert_equal('This is comment two',   comments[1].comment)
+    assert_equal('This is comment three', comments[2].comment)
+    assert_equal('This is comment four',  comments[3].comment)
+    assert_equal('First Comment!',        comments[4].comment)
+    assert_equal('Second Comment!',       comments[5].comment)
 
   end
 
@@ -1046,7 +1040,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a = DesignReview.find(mx234a_pre_artwork.id)
     assert_equal(fridley_dc.id, mx234a.design_center.id)
     assert_equal('The design center has been updated.', flash['notice'])
-    assert_redirected_to(:action => :designer_view,
+    assert_redirected_to(:action => :view,
                          :id     => mx234a.id)
 
   end
@@ -1385,7 +1379,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_ce_dft).id,
        :role_id_tag      => 'role_id_7',
        :expected_results => {
-         :comments_count   => 1,
+         :comments_count   => 5,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' CE-DFT - APPROVED - See comments'
        }
@@ -1399,7 +1393,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_dfm).id,
        :role_id_tag      => ':role_id_8',
        :expected_results => {
-         :comments_count => 2,
+         :comments_count => 6,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' DFM - WAIVED - See comments'
        }
@@ -1413,7 +1407,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_lib),
        :role_id_tag      => ':role_id_15',
        :expected_results => {
-         :comments_count => 3,
+         :comments_count => 7,
          :review_status_id => pending_repost.id,
          :mail_subject     => mail_subject + ' Library - REJECTED - See comments'
        }
@@ -1427,7 +1421,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_hw).id,
        :role_id_tag      => ':role_id_5',
        :expected_results => {
-         :comments_count => 4,
+         :comments_count => 8,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' HWENG - APPROVED - See comments'
        }
@@ -1441,7 +1435,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_lib).id,
        :role_id_tag      => ':role_id_15',
        :expected_results => {
-         :comments_count => 4,
+         :comments_count => 8,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' Library - APPROVED - No comments'
        }
@@ -1455,7 +1449,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_ce_dft).id,
        :role_id_tag      => 'role_id_7',
        :expected_results => {
-         :comments_count => 5,
+         :comments_count => 9,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + '- Comments added'
        }
@@ -1469,7 +1463,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_ce_dft).id,
        :role_id_tag      => 'role_id_7',
        :expected_results => {
-         :comments_count => 6,
+         :comments_count => 10,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' CE-DFT - APPROVED - See comments'
        }
@@ -1483,7 +1477,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_mech).id,
        :role_id_tag      => 'role_id_10',
        :expected_results => {
-         :comments_count => 7,
+         :comments_count => 11,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' Mechanical - APPROVED - See comments'
        }
@@ -1497,7 +1491,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_mech_mfg).id,
        :role_id_tag      => 'role_id_11',
        :expected_results => {
-         :comments_count => 7,
+         :comments_count => 11,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' Mechanical-MFG - APPROVED - No comments'
        }
@@ -1511,7 +1505,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_pcb_ig).id,
        :role_id_tag      => 'role_id_14',
        :expected_results => {
-         :comments_count => 8,
+         :comments_count => 12,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' PCB Input Gate - APPROVED - See comments'
        }
@@ -1525,7 +1519,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_pcb_mech).id,
        :role_id_tag      => 'role_id_16',
        :expected_results => {
-         :comments_count => 8,
+         :comments_count => 12,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' PCB Mechanical - APPROVED - No comments'
        }
@@ -1539,7 +1533,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_plan).id,
        :role_id_tag      => 'role_id_13',
        :expected_results => {
-         :comments_count => 9,
+         :comments_count => 13,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + '- Comments added'
        }
@@ -1553,7 +1547,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_plan).id,
        :role_id_tag      => 'role_id_13',
        :expected_results => {
-         :comments_count => 10,
+         :comments_count => 14,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' Planning - APPROVED - See comments'
        }
@@ -1567,7 +1561,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_plan).id,
        :role_id_tag      => 'role_id_13',
        :expected_results => {
-         :comments_count => 11,
+         :comments_count => 15,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + '- Comments added'
        }
@@ -1581,7 +1575,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_slm_bom).id,
        :role_id_tag      => 'role_id_17',
        :expected_results => {
-         :comments_count => 11,
+         :comments_count => 15,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' SLM BOM - APPROVED - No comments'
        }
@@ -1595,7 +1589,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_tde).id,
        :role_id_tag      => 'role_id_9',
        :expected_results => {
-         :comments_count => 11,
+         :comments_count => 15,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' TDE - APPROVED - No comments'
        }
@@ -1609,7 +1603,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_pre_artwork_valor).id,
        :role_id_tag      => 'role_id_6',
        :expected_results => {
-         :comments_count => 11,
+         :comments_count => 15,
          :review_status_id => in_review.id,
          :mail_subject     => mail_subject + ' Valor - APPROVED - No comments'
        }
@@ -1632,7 +1626,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
 
     assert_equal(14, mx234a_review_results.size)
-    assert_equal(0, 
+    assert_equal(4, 
                  DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
     for review_result in mx234a_review_results
       assert_equal("No Response", review_result.result)
@@ -1782,7 +1776,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(fab_houses(:coretec).id,   fab_houses[1].fab_house_id.to_i)
 
     comments = DesignReviewComment.find_all_by_design_review_id(mx234a.id)
-    assert_equal(12, comments.size)
+    assert_equal(16, comments.size)
     assert_equal('Updated the fab houses  - Added: AdvantechPWB, Coretec - Removed: OPC, Merix, IBM', 
                  comments.pop.comment)
 
@@ -1848,7 +1842,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal('Review Completed', mx234a_pre_art_dr.review_status.name)
     assert_equal(Time.now.strftime('%d-%m-%y'),
                  mx234a_pre_art_dr.completed_on.strftime('%d-%m-%y'))
-    assert_equal(13, 
+    assert_equal(17, 
                  DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
 
                  
