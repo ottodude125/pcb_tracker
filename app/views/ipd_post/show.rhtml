@@ -56,26 +56,33 @@
       </td>
     </tr>
   <% end %>
+
+  <% if @session[:user] %>
+    <tr>
+      <td colspan="2">
+        <p><label for="reply_post_body">Reply</label><br/>
+        <%= text_area('reply_post', 
+                      'body',
+                      :cols => "65",
+                      :rows => "10")  %></p>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">
+        <%= submit_tag('Reply', 
+                       :class => 'form_submit') %>
+      </td>
+      <td align="right">
+        <input class="form_return" type="button" value="Back"
+               onClick="parent.location='<%= url_for(:action => 'list',
+                                                     :design_id => @root_post.design_id) %>'" />
+      </td>
+    </tr>
+  <% else %>
   <tr>
-    <td colspan="2">
-      <p><label for="reply_post_body">Reply</label><br/>
-      <%= text_area('reply_post', 
-                    'body',
-                    :cols => "65",
-                    :rows => "10")  %></p>
-    </td>
+    <td><p><b>You must be logged in to update</b></p></td>
   </tr>
-  <tr>
-    <td align="left">
-      <%= submit_tag('Reply', 
-                     :class => 'form_submit') %>
-    </td>
-    <td align="right">
-      <input class="form_return" type="button" value="Back"
-             onClick="parent.location='<%= url_for(:action => 'list',
-                                                   :design_id => @root_post.design_id) %>'" />
-    </td>
-  </tr>
+  <% end %>
 </table>
 
 <%= end_form_tag %>
