@@ -44,17 +44,17 @@ class TrackerController < ApplicationController
     if @session[:active_role] != nil
       case @session[:active_role]
       when "Designer"
-        redirect_to :action => :designer_home
-      when "Reviewer"   
-        redirect_to :action => :reviewer_home
-      when "Manager"    
-        redirect_to :action => :manager_home
-      when "Admin"      
-        redirect_to :action => :admin_home
+        redirect_to(:action => :designer_home)
+      when "Reviewer"
+        redirect_to(:action => :reviewer_home)
+      when "Manager"
+        redirect_to(:action => :manager_home)
+      when "Admin"
+        redirect_to(:action => :admin_home)
       when "PCB Admin"
-        redirect_to :action => :pcb_admin_home
+        redirect_to(:action => :pcb_admin_home)
       else
-        redirect_to :action => :reviewer_home
+        redirect_to(:action => :reviewer_home)
       end
     end
     
@@ -492,11 +492,6 @@ class TrackerController < ApplicationController
       redirect_to :action => :index
     end
   end  
-  
-  
-  def admin_home
-  
-  end
   
   
   private
