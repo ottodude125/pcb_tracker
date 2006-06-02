@@ -15,6 +15,9 @@
 class IpdPostController < ApplicationController
 
 
+  before_filter(:verify_logged_in, :except => :show)
+ 
+
   ######################################################################
   #
   # list
@@ -225,11 +228,24 @@ class IpdPostController < ApplicationController
     @optional_cc_list = email_list[:optional_cc_list]
     @available_to_cc  = email_list[:available_to_cc]
     ipd_post          = flash[:ipd_post]
+    @subtractions     = flash[:subtractions]
+    @additions        = flash[:additions]
 
     user_to_add = @available_to_cc.detect { |user| user.id == @params[:id].to_i }
     @available_to_cc.delete_if { |user| user == user_to_add }
 
     ipd_post.users << user_to_add
+
+    if (! @subtractions ||
+        ! @subtractions.detect { |u| u == user_to_add })
+      if flash[:additions]
+        @additions += [user_to_add]
+        @additions = @additions.sort_by { |u| u.last_name }
+      else
+        @additions = [user_to_add] 
+      end
+    end
+    @subtractions.delete_if { |u| u == user_to_add } if @subtractions
 
     @optional_cc_list << user_to_add
     @optional_cc_list = @optional_cc_list.sort_by { |user| user.last_name }
@@ -241,6 +257,8 @@ class IpdPostController < ApplicationController
 
     flash[:thread_email_list] = email_list
     flash[:ipd_post]          = ipd_post
+    flash[:additions]         = @additions
+    flash[:subtractions]      = @subtractions
 
     render(:action => 'update_thread_list',
            :layout => false)
@@ -267,9 +285,22 @@ class IpdPostController < ApplicationController
     @optional_cc_list = email_list[:optional_cc_list]
     @available_to_cc  = email_list[:available_to_cc]
     ipd_post          = flash[:ipd_post]
+    @additions        = flash[:additions]
+    @subtractions     = flash[:subtractions]
 
     user_to_remove = @optional_cc_list.detect { |user| user.id == @params[:id].to_i }
     @optional_cc_list.delete_if { |user| user == user_to_remove}
+
+    if (! @additions ||
+        ! @additions.detect { |u| u == user_to_remove })
+      if flash[:subtractions]
+        @subtractions += [user_to_remove]
+        @subtractions = @subtractions.sort_by { |u| u.last_name }
+      else
+        @subtractions = [user_to_remove] 
+      end
+    end
+    @additions.delete_if { |u| u == user_to_remove } if @additions
 
     ipd_post.remove_users(user_to_remove)
 
@@ -283,6 +314,8 @@ class IpdPostController < ApplicationController
     
     flash[:thread_email_list] = email_list
     flash[:ipd_post]          = ipd_post
+    flash[:additions]         = @additions
+    flash[:subtractions]      = @subtractions
     
     render(:action => 'update_thread_list',
            :layout => false)
