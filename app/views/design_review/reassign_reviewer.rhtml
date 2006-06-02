@@ -58,7 +58,7 @@
         <input type="submit" value="Reassign" />
       </td>
       <td align="right">
-        <input type="button" value="Return" onClick="parent.location='<%= url_for( :action => 'reviewer_view', :id => @design_review_id ) %>'" />
+        <input type="button" value="Return" onClick="parent.location='<%= url_for( :action => 'view', :id => @design_review_id ) %>'" />
       </td>
     </tr>
   </table>

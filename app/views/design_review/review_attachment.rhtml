@@ -11,7 +11,7 @@
   <table width="100%">
     <tr>
       <td align="left">
-        <input type="button" value="Return" onClick="parent.location='<%= url_for( :controller => 'design_review', :action => 'designer_view', :id => @design_review.id ) %>'" />
+        <input type="button" value="Return" onClick="parent.location='<%= url_for( :controller => 'design_review', :action => 'view', :id => @design_review.id ) %>'" />
       </td>
       <td align="right">
         <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
