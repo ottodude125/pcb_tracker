@@ -61,11 +61,13 @@ class IpdPostController < ApplicationController
   ######################################################################
   #
   def create_reply
+
     body = params[:reply_post][:body].rstrip
+    @root_post = IpdPost.find(params[:id])
+
     if body != ''
 
-      root_post = IpdPost.find(params[:id])
-      last_reply_post = root_post.all_children.last
+      last_reply_post = @root_post.all_children.last
 
       if (last_reply_post == nil ||
           last_reply_post.body != body)
@@ -74,16 +76,16 @@ class IpdPostController < ApplicationController
         reply_post.user_id   = @session[:user].id
         reply_post.body      = body
         if reply_post.save
-          TrackerMailer::deliver_ipd_update(root_post)
-          flash["notice"] = "Reply post sucessfully created - mail was sent"
+          flash["notice"] = "Reply post sucessfully created"
+          redirect_to(:action => 'manage_email_list',
+                      :id     => @root_post.id)
         end
       end
     else
       flash["notice"] = "Your reply was empty - post not created"
+      render :action => 'show'
     end
         
-    @root_post = IpdPost.find(params[:id])
-    render :action => 'show'
   end
 
 
@@ -340,63 +342,6 @@ class IpdPostController < ApplicationController
     ipd_post = IpdPost.find(params['ipd_post']['id'])
     TrackerMailer::deliver_ipd_update(ipd_post)
     redirect_to(:action => 'show', :id => ipd_post.id)
-  end
-  
-  
-  ######################################################################
-  #
-  # modify_email_list
-  #
-  # Description:
-  # This method sets up the data structures to manage the email list
-  # of an existing thread.
-  #
-  # Parameters from @params
-  # id - identifies the root ipd post.
-  #
-  ######################################################################
-  #
-  def modify_email_list
-
-    flash['notice'] = flash['notice']
-  
-    @posting_new_thread = false
-    @ipd_post           = IpdPost.find(params[:ipd_post_id])
-    @associated_users   = @ipd_post.design.get_associated_users_by_role
-
-    @manager_list = Role.find_by_name('Manager').users
-    @manager_list.delete_if { |user| not user.active? }
-   
-    @input_gate_list = Role.find_by_name('PCB Input Gate').users
-    @input_gate_list.delete_if { |user| not user.active? }
-    
-    @optional_cc_list = @ipd_post.users.dup
-    
-
-    available_to_cc = User.find_all('active=1')
-    available_to_cc.delete_if { |user| user == @session[:user] }
-    available_to_cc.delete_if { |user| user == @associated_users['HWENG'] }
-    available_to_cc.delete_if { |user| user == @associated_users['Hardware Engineering Manager'] }
-    for input_gate in @input_gate_list
-      available_to_cc.delete_if { |user| user == input_gate }
-    end
-    for manager in @manager_list
-      available_to_cc.delete_if { |user| user == manager }
-    end
-    for person in @optional_cc_list
-      available_to_cc.delete_if { |user| user == person }
-    end
-    @available_to_cc = available_to_cc.sort_by { |user| user.last_name }
-    
-    email_list = {
-      :optional_cc_list => @optional_cc_list,
-      :available_to_cc  => @available_to_cc
-      }
-    flash[:thread_email_list] = email_list
-    flash[:ipd_post]          = @ipd_post
-    
-    render(:action => 'manage_email_list')
-    
   end
 
 
