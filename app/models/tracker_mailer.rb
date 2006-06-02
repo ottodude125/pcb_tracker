@@ -40,6 +40,7 @@ class TrackerMailer < ActionMailer::Base
     @headers    = {}
     cc_list     = [peer.email] + add_role_members(['Manager', 'PCB Input Gate'])
     @cc         = cc_list.uniq
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
     @body       = { :audit    => audit,
                     :designer => designer,
                     :peer     => peer }
@@ -73,6 +74,7 @@ class TrackerMailer < ActionMailer::Base
     @headers    = {}
     cc_list     = [designer.email] + add_role_members(['Manager', 'PCB Input Gate'])
     @cc         = cc_list.uniq
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
     @body       = { :audit    => audit,
                     :designer => designer,
                     :peer     => peer }
@@ -133,6 +135,7 @@ class TrackerMailer < ActionMailer::Base
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
     @cc         = copy_to(design_review)
 
     @body['user'] = user
@@ -200,6 +203,7 @@ class TrackerMailer < ActionMailer::Base
       cc.push(User.find(design_review.design.pcb_input_id).email)
     end
     @cc = cc.uniq
+    @bcc = 'paul_altimonte@notes.teradyne.com'
     
     @body['design_review_id'] = design_review.id
 
@@ -238,6 +242,7 @@ class TrackerMailer < ActionMailer::Base
     @headers    = {}
     @cc         = copy_to(design_review)
     @cc         += copy_to_on_milestone(design_review.design.board)
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
 
     if design_review.review_type.name == "Final"
       pcb_admin = Role.find_by_name("PCB Admin")
@@ -303,6 +308,7 @@ class TrackerMailer < ActionMailer::Base
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
 
     cc         = [poster.email] + 
                    add_role_members(['Manager', 'PCB Input Gate']) +
@@ -375,6 +381,7 @@ class TrackerMailer < ActionMailer::Base
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
     
   end
 
@@ -403,6 +410,7 @@ class TrackerMailer < ActionMailer::Base
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
 
     @body[:review_list] = review_result_list[:review_list]
 
@@ -440,6 +448,7 @@ class TrackerMailer < ActionMailer::Base
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
     
     cc_list =  [user.email]
     cc_list += add_role_members(['Manager', 'PCB Input Gate'])
@@ -487,6 +496,7 @@ class TrackerMailer < ActionMailer::Base
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
 
     cc_list =  [user.email]
     cc_list += add_role_members(['Manager', 'PCB Input Gate'])
@@ -524,6 +534,7 @@ class TrackerMailer < ActionMailer::Base
     @sent_on    = sent_at
     @headers    = {}
     @cc         = []
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
 
     @body['reviewer'] = user
 
@@ -553,6 +564,8 @@ class TrackerMailer < ActionMailer::Base
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
+
     cc          = add_role_members(['Manager', 'PCB Input Gate'])
     
     design_users = design_review_document.design.get_associated_users()
@@ -605,6 +618,7 @@ class TrackerMailer < ActionMailer::Base
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
     @cc         = peer.email
 
     @body['design_check'] = design_check
