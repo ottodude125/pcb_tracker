@@ -12,13 +12,13 @@
     </td>
   </tr>
   <tr bgcolor="#dfdfdf">
-    <td colspan="3"><b>Posted By:</b>
+    <td colspan="2"><b>Posted By:</b>
         <%= @root_post.user.name %> <b>On:</b>
         <%= @root_post.created_at.strftime('%d-%b-%y at %I:%M %p') %>
     </td>
   </tr>
   <tr bgcolor="#efefef">
-    <td colspan="3" valign="top">
+    <td colspan="2" valign="top">
       <%= auto_link simple_format(h(@root_post.body)), 
                     :all,
                     :target => '_blank' %>
@@ -26,14 +26,14 @@
   </tr>
   <% if @root_post.children_count > 0 %>
     <tr>
-      <th colspan="3" class="teraheader">
+      <th colspan="2" class="teraheader">
         Replies
       </th>
     </tr>
     
     <tr>
-      <td>
-        <table cellspacing="0" width="95%" align="right">
+      <td colspan="2">
+        <table cellspacing="0" width="95%" align="right" border="0">
           <% for child_post in @root_post.direct_children %>
             <tr bgcolor="#dfdfdf">
               <td colspan="2"><b>Posted By:</b>
@@ -56,7 +56,7 @@
 
   <% if @session[:user] %>
     <tr>
-      <td colspan="3">
+      <td colspan="2" align="center">
         <p><label for="reply_post_body">Reply</label><br/>
         <%= text_area('reply_post', 
                       'body',
@@ -65,14 +65,11 @@
       </td>
     </tr>
     <tr>
-      <td align="left" width="33%">
+      <td align="left" width="50%">
         <%= submit_tag('Submit Reply to Post', 
                        :class => 'form_submit') %>
       </td>
-      <td align="center" width="33%">
-        &nbsp;
-      </td>
-      <td align="right" width="33%">
+      <td align="right" width="50%">
         <input class="form_return" type="button" value="Back"
                onClick="parent.location='<%= url_for(:action => 'list',
                                                      :design_id => @root_post.design_id) %>'" />
