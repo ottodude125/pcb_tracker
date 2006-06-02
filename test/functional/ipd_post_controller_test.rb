@@ -28,6 +28,7 @@ class IpdPostControllerTest < Test::Unit::TestCase
            :design_review_results,
            :design_reviews,
            :ipd_posts,
+           :ipd_posts_users,
            :users)
 
   def test_1_id
@@ -148,6 +149,16 @@ class IpdPostControllerTest < Test::Unit::TestCase
   end
 
 
+  ######################################################################
+  #
+  # test_posting
+  #
+  # Description:
+  # This method does the functional testing of the posting method
+  # from the IPD Post class
+  #
+  ######################################################################
+  #
   def test_posting
 
     # The mx243c design has no idp posts in the database.  Verify
@@ -291,9 +302,208 @@ class IpdPostControllerTest < Test::Unit::TestCase
         i += 1
       end
     end
+    
+  end
+  
+  
+  ######################################################################
+  #
+  # test_email_list
+  #
+  # Description:
+  # This method does the functional testing of the email list manipulation
+  # methods from the IPD Post class
+  #
+  ######################################################################
+  #
+  def test_email_list
+  
+    set_user(users(:scott_g).id, 'Designer')
+   
+    mx234a_thread_one = ipd_posts(:mx234a_thread_one)
+    post(:manage_email_list,
+         :id => mx234a_thread_one.id)
+         
+    assert_equal(true,              assigns(:posting_new_thread))
+    assert_equal(mx234a_thread_one, assigns(:ipd_post))
+    
+    expected_associated_users = {
+     'PCB Mechanical'               => users(:john_g),
+     'PCB Input Gate'               => users(:cathy_m),
+     'DFM'                          => users(:heng_k),
+     :peer                          => users(:scott_g),
+     :pcb_input                     => users(:cathy_m),
+     'SLM-Vendor'                   => users(:dan_g),
+     'Operations Manager'           => users(:eileen_c),
+     :designer                      => users(:bob_g),
+     :pcb_input                     => users(:cathy_m),
+     'PCB Design'                   => users(:jim_l),
+     'HWENG'                        => users(:lee_s),
+     'Planning'                     => users(:matt_d),
+     'CE-DFT'                       => users(:espo),
+     'Valor'                        => users(:lisa_a),
+     'Mechanical'                   => users(:tom_f),
+     'SLM BOM'                      => users(:art_d),
+     'Mechanical-MFG'               => users(:anthony_g),
+     'Library'                      => users(:dave_m),
+     'TDE'                          => users(:rich_a),
+     'Hardware Engineering Manager' => User.new(:first_name => 'Not', :last_name => 'Set'),
+     'Program Manager'              => User.new(:first_name => 'Not', :last_name => 'Set')
+    }
+    associated_users = assigns(:associated_users)
+    assert_equal(expected_associated_users.size, associated_users.size)
+    expected_associated_users.each { |key, value|
+      assert_equal(expected_associated_users[key].name, associated_users[key].name)
+    }
+    
+    manager_list = assigns(:manager_list)
+    assert_equal([users(:jim_l)], manager_list)
+    
+    input_gate_list = assigns(:input_gate_list)
+    input_gate_list = input_gate_list.sort_by { |ig| ig.last_name }
+    expected_input_gates = [
+      users(:jan_k),
+      users(:cathy_m)
+    ]
+    assert_equal(expected_input_gates , input_gate_list)
+    
+    expected_cc_list = []
+    assert_equal(expected_cc_list, assigns(:optional_cc_list))
 
+    available_to_cc = assigns(:available_to_cc)
+    
+    available_to_cc = available_to_cc.sort_by { |u| u.last_name }
+    expected_available_cc_list = User.find_all('active=1', 'last_name ASC')
+    
+    # Remove the people who are already on the mail list.
+    remove_users = [
+      users(:scott_g),
+      users(:jan_k),
+      users(:lee_s),
+      users(:jim_l),
+      users(:cathy_m)
+    ]
+    for remove_user in remove_users
+      expected_available_cc_list.delete_if { |user| user == remove_user }
+    end
 
+    assert_equal(expected_available_cc_list, available_to_cc)
+    
+    
+    for user_to_add in available_to_cc
+    
+      expected_available_cc_list.delete_if { |u| u == user_to_add }
+      expected_cc_list << user_to_add
+      
+      post(:add_to_thread_list, :id => user_to_add.id)
+      
+      assert_equal(expected_cc_list, assigns(:optional_cc_list))
+      assert_equal(expected_available_cc_list,
+                   assigns(:available_to_cc))
+      
+    end
+    
+    users_to_remove = expected_cc_list.dup
+    for user_to_remove in users_to_remove
+   
+      expected_cc_list.delete_if { |u| u == user_to_remove }
+      expected_available_cc_list << user_to_remove
+        
+      post(:remove_from_thread_list, :id => user_to_remove.id)
+        
+      assert_equal(expected_cc_list, assigns(:optional_cc_list))
+      assert_equal(expected_available_cc_list,
+                   assigns(:available_to_cc))
+     
+    end
+    
+    mx234a_thread_one.reload
+    assert_equal([], mx234a_thread_one.users)
 
+    users_to_add = [
+      users(:alex_b),
+      users(:anthony_g),
+      users(:b_davie)
+    ].sort_by { |u| u.last_name }
+    for user_to_add in users_to_add
+      post(:add_to_thread_list, :id => user_to_add.id)
+    end
+
+    mx234a_thread_one.reload
+    stored_users = mx234a_thread_one.users.sort_by { |u| u.last_name }
+    assert_equal(users_to_add, stored_users)
+    
+    
+    post(:modify_email_list,
+         :ipd_post_id => mx234a_thread_one.id)
+    
+    assert_equal(false,             assigns(:posting_new_thread))
+    assert_equal(mx234a_thread_one, assigns(:ipd_post))
+    
+    expected_associated_users = {
+     'PCB Mechanical'               => users(:john_g),
+     'PCB Input Gate'               => users(:cathy_m),
+     'DFM'                          => users(:heng_k),
+     :peer                          => users(:scott_g),
+     :pcb_input                     => users(:cathy_m),
+     'SLM-Vendor'                   => users(:dan_g),
+     'Operations Manager'           => users(:eileen_c),
+     :designer                      => users(:bob_g),
+     :pcb_input                     => users(:cathy_m),
+     'PCB Design'                   => users(:jim_l),
+     'HWENG'                        => users(:lee_s),
+     'Planning'                     => users(:matt_d),
+     'CE-DFT'                       => users(:espo),
+     'Valor'                        => users(:lisa_a),
+     'Mechanical'                   => users(:tom_f),
+     'SLM BOM'                      => users(:art_d),
+     'Mechanical-MFG'               => users(:anthony_g),
+     'Library'                      => users(:dave_m),
+     'TDE'                          => users(:rich_a),
+     'Hardware Engineering Manager' => User.new(:first_name => 'Not', :last_name => 'Set'),
+     'Program Manager'              => User.new(:first_name => 'Not', :last_name => 'Set')
+    }
+    associated_users = assigns(:associated_users)
+    assert_equal(expected_associated_users.size, associated_users.size)
+    expected_associated_users.each { |key, value|
+      assert_equal(expected_associated_users[key].name, associated_users[key].name)
+    }
+    
+    manager_list = assigns(:manager_list)
+    assert_equal([users(:jim_l)], manager_list)
+    
+    input_gate_list = assigns(:input_gate_list)
+    input_gate_list = input_gate_list.sort_by { |ig| ig.last_name }
+    expected_input_gates = [
+      users(:jan_k),
+      users(:cathy_m)
+    ]
+    assert_equal(expected_input_gates , input_gate_list)
+    
+    expected_cc_list = users_to_add
+    optional_cc_list = assigns(:optional_cc_list).sort_by { |u| u.last_name }
+    assert_equal(expected_cc_list, optional_cc_list)
+
+    available_to_cc = assigns(:available_to_cc)
+    
+    available_to_cc = available_to_cc.sort_by { |u| u.last_name }
+    expected_available_cc_list = User.find_all('active=1', 'last_name ASC')
+    
+    # Remove the people who are already on the mail list.
+    remove_users = [
+      users(:scott_g),
+      users(:jan_k),
+      users(:lee_s),
+      users(:jim_l),
+      users(:cathy_m),
+    ]
+    remove_users += users_to_add
+    for remove_user in remove_users
+      expected_available_cc_list.delete_if { |user| user == remove_user }
+    end
+
+    assert_equal(expected_available_cc_list, available_to_cc)
+       
   end
 
 
