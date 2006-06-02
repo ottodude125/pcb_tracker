@@ -313,6 +313,10 @@ class TrackerMailer < ActionMailer::Base
       cc.push(child.user.email)
     end
     
+    for user in root_post.users
+      cc.push(user.email)
+    end
+    
     @cc = cc.uniq
 
   end
@@ -776,7 +780,6 @@ class TrackerMailer < ActionMailer::Base
   def add_board_reviewer(board, roles)
   
     cc_list = []
-    
     for role in roles
 
       reviewer_role = Role.find_by_name(role)
