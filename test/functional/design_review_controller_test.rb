@@ -69,7 +69,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     
     assert_response(:success)
 
-    get(:safe_view, :id => mx234a_pre_art.id)
+    get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
@@ -99,7 +99,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     
     assert_response(:success)
 
-    get(:admin_view, :id => mx234a_pre_art.id)
+    get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
@@ -128,7 +128,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     
     assert_response(:success)
 
-    get(:designer_view, :id => mx234a_pre_art.id)
+    get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
@@ -161,7 +161,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     assert_response(:success)
 
-    get(:reviewer_view, :id => mx234a_pre_art.id)
+    get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
@@ -177,7 +177,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     assert_response(:success)
 
-    get(:reviewer_view, :id => mx234a_pre_art.id)
+    get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
@@ -193,7 +193,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     assert_response(:success)
 
-    get(:reviewer_view, :id => mx234a_pre_art.id)
+    get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
@@ -234,7 +234,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     
     assert_response(:success)
 
-    get(:manager_view, :id => mx234a_pre_art.id)
+    get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
