@@ -24,6 +24,42 @@ class Design < ActiveRecord::Base
   has_one   :audit
 
 
+  def get_associated_users_by_role
+
+    users = {}
+    
+    users[:designer]  = User.find(self.designer_id)  if (self.designer_id  > 0)
+    users[:peer]      = User.find(self.peer_id)      if (self.peer_id      > 0)
+    users[:pcb_input] = User.find(self.pcb_input_id) if (self.pcb_input_id > 0)
+    
+    role_names = ['Hardware Engineering Manager',
+                  'Program Manager']
+    for role_name in role_names
+      role     = Role.find_by_name(role_name)
+      reviewer = BoardReviewers.find_by_board_id_and_role_id(
+                   self.board.id,
+                   role.id)
+      if reviewer && reviewer.reviewer_id > 0
+        users[role_name] = User.find(reviewer.reviewer_id)
+      else
+        users[role_name] = User.new(:first_name => 'Not', :last_name => 'Set')
+      end
+    end
+    
+    reviewer_list = self.all_reviewers
+    for design_review in self.design_reviews
+      for review_result in design_review.design_review_results
+        role = Role.find(review_result.role_id)
+        if not users[role.name]
+          users[role.name] = User.find review_result.reviewer_id
+        end
+      end
+    end
+    return users
+    
+  end
+  
+  
   def get_associated_users
   
     users = {:designer  => nil,
@@ -48,6 +84,54 @@ class Design < ActiveRecord::Base
     end
              
     return users 
+  end
+  
+  
+  def designer
+  
+    if self.designer_id > 0
+      User.find(self.designer_id)
+    else
+      User.new(:first_name => 'Not', :last_name => 'Assigned')
+    end
+  
+  end
+
+
+  def peer
+  
+    if self.peer_id > 0
+      User.find(self.peer_id)
+    else
+      User.new(:first_name => 'Not', :last_name => 'Assigned')
+    end
+  
+  end
+  
+  
+  def input_gate
+  
+    if self.pcb_input_id > 0
+      User.find(self.pcb_input_id)
+    else
+      User.new(:first_name => 'Not', :last_name => 'Assigned')
+    end
+    
+  end
+  
+  
+  def all_reviewers(sorted = false)
+  
+    reviewer_list = []
+    for design_review in self.design_reviews
+      reviewer_list = design_review.reviewers(reviewer_list)
+    end
+
+    reviewer_list = 
+      reviewer_list.sort_by { |reviewer| reviewer.last_name } if sorted
+    
+    reviewer_list.uniq
+    
   end
 
 
