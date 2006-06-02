@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   belongs_to :design_center
 
   has_and_belongs_to_many :boards
+  has_and_belongs_to_many :ipd_posts
   has_and_belongs_to_many :roles
 
 
@@ -57,7 +58,7 @@ class User < ActiveRecord::Base
   # If its empty we assume that the user didn't want to change his
   # password and just reset it to the old value.
   def crypt_unless_empty
-    if password.empty?      
+    if password.empty?   
       user = self.class.find(self.id)
       self.password = user.password
     else
