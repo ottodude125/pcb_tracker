@@ -53,7 +53,8 @@ class IpdPostControllerTest < Test::Unit::TestCase
     ipd_posts = IpdPost.find_all
     assert_equal(29, ipd_posts.size)
 
-
+    set_user(users(:scott_g).id, 'Designer')
+    
     # The la454c design has no idp posts in the database.  Verify
     # that list provides the expected information.
     post(:list,
@@ -107,6 +108,8 @@ class IpdPostControllerTest < Test::Unit::TestCase
   ######################################################################
   #
   def test_new
+  
+    set_user(users(:scott_g).id, 'Designer')
     
     post(:new, 
          :design_id => designs(:la453b).id)
@@ -161,7 +164,9 @@ class IpdPostControllerTest < Test::Unit::TestCase
   #
   def test_posting
 
-    # The mx243c design has no idp posts in the database.  Verify
+    set_user(users(:scott_g).id, 'Designer')
+
+    # The mx243c design has no ipd posts in the database.  Verify
     # that list provides the expected information.
     post(:list,
          :design_id => designs(:mx234c).id)
