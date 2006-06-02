@@ -75,6 +75,6 @@
 
   <input type="submit" value="Update Design Center" />
 
-  <input type="button" value="Return to Design Review" onClick="parent.location='<%= url_for( :action => 'designer_view', :id => @design_review.id ) %>'" />
+  <input type="button" value="Return to Design Review" onClick="parent.location='<%= url_for( :action => 'view', :id => @design_review.id ) %>'" />
 
 <%= end_form_tag %>
