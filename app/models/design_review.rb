@@ -90,5 +90,22 @@ class DesignReview < ActiveRecord::Base
   end
   
   
+  def reviewers(reviewer_list = [],
+                sorted        = false)
+  
+    for review_result in self.design_review_results
+      if not reviewer_list.detect { |reviewer| reviewer.id == review_result.reviewer_id }
+        reviewer_list << User.find(review_result.reviewer_id)
+      end
+    end
+    
+    reviewer_list = 
+      reviewer_list.sort_by { |reviewer| reviewer.last_name } if sorted
+    
+    reviewer_list.uniq
+    
+  end
+  
+  
   
 end
