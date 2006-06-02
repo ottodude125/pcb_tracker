@@ -5,31 +5,28 @@
                    :design_id => @root_post.design_id) %>
 <table border='0' cellspacing="0" width="80%" align="center">
   <tr>
-    <td align="right" colspan="2">
+    <td align="right" colspan="3">
       <input class="form_return" type="button" value="Back"
              onClick="parent.location='<%= url_for(:action => 'list',
                                                    :design_id => @root_post.design_id) %>'" />
     </td>
   </tr>
   <tr bgcolor="#dfdfdf">
-    <td colspan="2"><b>Posted By:</b>
+    <td colspan="3"><b>Posted By:</b>
         <%= @root_post.user.name %> <b>On:</b>
         <%= @root_post.created_at.strftime('%d-%b-%y at %I:%M %p') %>
     </td>
   </tr>
   <tr bgcolor="#efefef">
-    <td colspan="2" valign="top">
+    <td colspan="3" valign="top">
       <%= auto_link simple_format(h(@root_post.body)), 
                     :all,
                     :target => '_blank' %>
     </td>
   </tr>
-  <tr>
-    <th colspan="2" class="teraheader">Attachments</th>
-  </tr>
   <% if @root_post.children_count > 0 %>
     <tr>
-      <th colspan="2" class="teraheader">
+      <th colspan="3" class="teraheader">
         Replies
       </th>
     </tr>
@@ -59,7 +56,7 @@
 
   <% if @session[:user] %>
     <tr>
-      <td colspan="2">
+      <td colspan="3">
         <p><label for="reply_post_body">Reply</label><br/>
         <%= text_area('reply_post', 
                       'body',
@@ -68,11 +65,16 @@
       </td>
     </tr>
     <tr>
-      <td align="left">
+      <td align="left" width="33%">
         <%= submit_tag('Reply', 
                        :class => 'form_submit') %>
       </td>
-      <td align="right">
+      <td align="center" width="33%">
+        <input type="button" value="View/Change Email List"
+               onClick="parent.location='<%= url_for(:action => 'modify_email_list',
+                                                     :ipd_post_id => @root_post.id) %>'" />
+      </td>
+      <td align="right" width="33%">
         <input class="form_return" type="button" value="Back"
                onClick="parent.location='<%= url_for(:action => 'list',
                                                      :design_id => @root_post.design_id) %>'" />
