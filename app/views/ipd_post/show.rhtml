@@ -66,13 +66,11 @@
     </tr>
     <tr>
       <td align="left" width="33%">
-        <%= submit_tag('Reply', 
+        <%= submit_tag('Submit Reply to Post', 
                        :class => 'form_submit') %>
       </td>
       <td align="center" width="33%">
-        <input type="button" value="View/Change Email List"
-               onClick="parent.location='<%= url_for(:action => 'modify_email_list',
-                                                     :ipd_post_id => @root_post.id) %>'" />
+        &nbsp;
       </td>
       <td align="right" width="33%">
         <input class="form_return" type="button" value="Back"
