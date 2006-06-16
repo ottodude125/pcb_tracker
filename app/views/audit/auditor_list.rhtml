@@ -1,0 +1,73 @@
+<!-- View:    audit                                             -->
+<!-- Purpose: Displays a form to modify audit teams.            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@audit.design.name} Self/Peer Auditor Selection" %>
+
+<%= start_form_tag(:controller => 'audit', :action => 'update_auditor_list') %>
+
+  <%= hidden_field("audit", "id") %>
+
+  <table width="70%" align="center">
+    <tr>
+      <th align="right" width="50%">Lead Designer: </th>
+      <td align="left"><%= @auditor_list[:lead_designer].name %></td>
+    </tr>
+    <tr>
+      <th align="right">Lead Peer Reviewer: </th>
+      <td align="left"><%= @auditor_list[:lead_peer].name %></td>
+    </tr>
+  </table>
+
+  <table width="75%" align="center" border="2">
+    <tr>
+      <th>Section</th>
+      <th>Self Auditor</th>
+      <th>Peer Auditor</th>
+    </tr>
+    <% for section in @auditor_list[:sections] %>
+      <tr>
+        <% section_id = section[:section].id %>
+        <td valign="top"><%= section[:section].name %></td>
+        <td align="center" valign="top">
+          <select id='self_section_id_<%= section_id %>' name='self_auditor[section_id_<%= section_id %>]'>
+            <option value="">Please Select</option>
+            <%= options_from_collection_for_select(@auditor_list[:self_list],
+                                                   "id",
+                                                   :last_name_first,
+                                                   section[:self_auditor].id) %>
+          </select>
+        </td>
+        <td align="center" valign="top">
+          <select id='peer_section_id_<%= section_id %>' name='peer_auditor[section_id_<%= section_id %>]'>
+            <option value="">Please Select</option>
+            <%= options_from_collection_for_select(@auditor_list[:peer_list],
+                                                   "id",
+                                                   :last_name_first,
+                                                   section[:peer_auditor].id) %>
+          </select>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+  
+  <hr width="95%" align="center" class="div" />
+
+  <table align="center" width="90%">
+    <tr>
+      <td align="left" width="50%">
+        <input class="form_submit" type="submit" value="Update Assignments" />
+      </td>
+      <td align="right">
+        <input class="form_return" type="button" value="Return"
+         onClick="parent.location='<%= url_for( session[:return_to] ) %>'" />
+      </td>
+    </tr>
+  </table>
+
+<%= end_form_tag %>
+
+<%# debug @auditor_list %>
+<%# debug session %>
