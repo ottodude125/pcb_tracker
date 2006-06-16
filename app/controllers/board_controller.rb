@@ -165,10 +165,10 @@ before_filter(:verify_admin_role,
     for role in @review_roles
       reviewer_list = Hash.new
 
-      reviewers = Role.find_by_name("#{role.name}").users
+      reviewers = Role.find_by_name("#{role.name}").active_users
       reviewer_list[:group]     = role.name
       reviewer_list[:id]        = role.id
-      reviewer_list[:reviewers] = reviewers.sort_by { |r| r.last_name }
+      reviewer_list[:reviewers] = reviewers
       @reviewers.push(reviewer_list)
     end
 
@@ -219,10 +219,10 @@ before_filter(:verify_admin_role,
     for role in @review_roles
       reviewer_list = Hash.new
 
-      reviewers = Role.find_by_name("#{role.name}").users
+      reviewers = Role.find_by_name("#{role.name}").active_users
       reviewer_list[:group]        = role.name
       reviewer_list[:id]           = role.id
-      reviewer_list[:reviewers]    = reviewers.sort_by { |r| r.last_name }
+      reviewer_list[:reviewers]    = reviewers
       reviewer_list[:reviewer_id]  = board_reviewers[role.name]
       @reviewers.push(reviewer_list)
     end
