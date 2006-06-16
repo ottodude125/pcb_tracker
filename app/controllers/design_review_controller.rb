@@ -47,8 +47,7 @@ class DesignReviewController < ApplicationController
           end
 
           if pre_art_pcb(@design_review, @my_review_results)
-            designers   = Role.find_by_name("Designer").users
-            @designers  = designers.delete_if { |d| not d.active? }
+            @designers  = Role.find_by_name("Designer").active_users
             @priorities = Priority.find_all(nil, 'value ASC')
           else
             @designers  = nil
@@ -1523,7 +1522,7 @@ class DesignReviewController < ApplicationController
     designer_role        = Role.find_by_name("Designer")
     @designers           = designer_role.users.delete_if { |d| !d.active }
     @peer_list           = @designers
-    @pcb_input_gate_list = Role.find_by_name('PCB Input Gate').users.delete_if { |u| !u.active }
+    @pcb_input_gate_list = Role.find_by_name('PCB Input Gate').active_users
     @priorities          = Priority.find_all(nil, 'value ASC')
     @design_centers      = DesignCenter.find_all('active=1', 'name ASC')
 
