@@ -40,7 +40,11 @@ class AuditController < ApplicationController
   def update_design_checks
 
     audit = Audit.find(@params[:audit][:id])
-    is_designer = @session[:user][:id] == audit.design.designer_id
+
+    self_audit_update = (audit.is_self_auditor?(@session[:user]) && 
+                         audit.is_self_audit?)
+    peer_audit_update = (audit.is_peer_auditor?(@session[:user]) && 
+                         audit.is_peer_audit?)
 
     # Go through the paramater list and pull out the checks.
     @params.keys.grep(/^check_/).each { |params_key|
@@ -48,60 +52,56 @@ class AuditController < ApplicationController
       design_check_update = @params[params_key]
       design_check = DesignCheck.find(design_check_update[:design_check_id])
 
-      if is_designer
+      if self_audit_update
         result        = design_check.designer_result
         result_update = design_check_update[:designer_result]
-      else
+      elsif peer_audit_update
         result        = design_check.auditor_result
         result_update = design_check_update[:auditor_result]
       end
 
-      if result_update != nil and 
-          result_update != result
+      if result_update && result_update != result
 
         # Make sure that the required comment has been added.
-        if (design_check_update[:comment].strip.size == 0 and 
-
-            ((design_check.check.check_type == 'yes_no' and
-              design_check_update[:designer_result] == 'No') or
+        if (design_check_update[:comment].strip.size == 0 &&
+            ((design_check.check.yes_no? &&
+              design_check_update[:designer_result] == 'No') ||
              
-             ((design_check.check.check_type == 'designer_only' or
-               design_check.check.check_type == 'designer_auditor') and
-              (design_check_update[:designer_result] == 'Waived' or
-               design_check_update[:auditor_result] == 'Waived' or
+             ((design_check.check.designer_only? ||
+               design_check.check.designer_auditor?) &&
+              (design_check_update[:designer_result] == 'Waived' ||
+               design_check_update[:auditor_result] == 'Waived' ||
                design_check_update[:auditor_result] == 'Comment'))))
-          
-          if is_designer
+         
+          if self_audit_update
             flash[design_check.id] = "A comment is required for a " +
-              "#{design_check_update[:designer_result]}" +
-            " response."
-          else
+              "#{design_check_update[:designer_result]} response."
+          elsif peer_audit_update
             flash[design_check.id] = "A comment is required for a " +
-              "#{design_check_update[:auditor_result]}" +
-            " response."
+              "#{design_check_update[:auditor_result]} response."
           end
           flash['notice'] = 'Not all checks were updated - please review the form for errors.'
           next
         end
 
         check_count = Audit.check_count(audit.id)
-        if is_designer and !audit.designer_complete?
+        if self_audit_update && !audit.designer_complete?
+
           if result == "None"
-           completed_checks = audit.designer_completed_checks + 1
-           total_checks     = check_count[:designer]
+            completed_checks = audit.designer_completed_checks + 1
+            total_checks     = check_count[:designer]
             audit.update_attributes(
               :designer_completed_checks => completed_checks,
               :designer_complete         => (completed_checks == total_checks))
 
             TrackerMailer.deliver_self_audit_complete(audit) if audit.designer_complete?
           end
-          
           result = design_check.update_attributes(
                      :designer_result     => result_update,
                      :designer_checked_on => Time.now,
                      :designer_id         => @session[:user].id)
                      
-        elsif !is_designer and !audit.auditor_complete?
+        elsif peer_audit_update && !audit.auditor_complete?
 
           complete   = ['Verified', 'N/A', 'Waived']
           incomplete = ['None', 'Comment']
@@ -121,7 +121,10 @@ class AuditController < ApplicationController
               :auditor_completed_checks => completed_checks,
               :auditor_complete         => (completed_checks == total_checks))
 
-            TrackerMailer.deliver_peer_audit_complete(audit) if audit.auditor_complete?
+            if audit.auditor_complete?
+              TrackerMailer.deliver_peer_audit_complete(audit)
+              AuditTeammate.delete_all(["audit_id = ?", audit.id])
+            end
           end
 
           result = design_check.update_attributes(
@@ -179,21 +182,34 @@ class AuditController < ApplicationController
   #
   def perform_checks
 
-    @audit      = Audit.find(@params[:audit_id])
-    @subsection = Subsection.find(@params[:subsection_id])
-    @section    = Section.find(@subsection.section_id)
+    @audit        = Audit.find(@params[:audit_id])
+    @subsection   = Subsection.find(@params[:subsection_id])
+    @section      = Section.find(@subsection.section_id)
     @total_checks = total_checks(@audit)
 
-    is_designer = @session[:user][:id] == @audit.design.designer_id
+    teammate = AuditTeammate.find_by_audit_id_and_section_id_and_self(
+                 @audit.id,
+                 @section.id,
+                 @audit.is_self_audit? ? 1 : 0)
+    user_id = @session[:user].id
+
+    if @audit.is_self_audit?
+      @able_to_check = ((!teammate && user_id == @audit.design.designer_id) ||
+                        ( teammate && user_id == teammate.user_id))
+    else
+      @able_to_check = ((!teammate && user_id == @audit.design.peer_id) ||
+                        ( teammate && user_id == teammate.user_id))  &&
+                       !@audit.is_complete?
+    end
 
     condition = ''
-    if @audit.design.design_type == 'Date Code'
+    if @audit.design.date_code?
       condition = ' and date_code_check=1'
-    elsif @audit.design.design_type == 'Dot Rev'
+    elsif @audit.design.dot_rev?
       condition = ' and dot_rev_check=1'
     end
     
-    if is_designer
+    if @audit.is_self_audit?
       @checks = Check.find_all("subsection_id=#{@subsection.id}" +
                                condition,
                                'sort_order ASC')
@@ -206,9 +222,10 @@ class AuditController < ApplicationController
 
     # Add the design checks and comments for each of the checks.
     for check in @checks
-      check[:design_check] = DesignCheck.find_all("check_id=#{check.id} and " +
-                                                  "audit_id=#{@audit.id}").pop
-      check[:comments] = AuditComment.find_all("design_check_id=#{check[:design_check].id}",
+      check[:design_check] = 
+        DesignCheck.find_by_check_id_and_audit_id(check.id, @audit.id)
+      check[:comments] = 
+        AuditComment.find_all_by_design_check_id(check[:design_check].id,
                                                  'created_on DESC')
     end
 
@@ -237,45 +254,36 @@ class AuditController < ApplicationController
   #
   def show_sections
 
-    @audit = Audit.find(@params[:id])
+    @audit      = Audit.find(@params[:id])
     @board_name = @audit.design.name
+    
+    @lead = @audit.designer_complete? ? @audit.design.peer : @audit.design.designer
+    
+    self_flag = !@audit.is_self_audit?
+    @audit_team = @audit.audit_teammates.delete_if { |at| at.self? == self_flag }
 
-    design_checks = DesignCheck.find_all("audit_id=#{@audit.id}")
-      design_check_list = Hash.new
+    design_checks = DesignCheck.find_all_by_audit_id(@audit.id)
+    design_check_list = Hash.new
     for design_check in design_checks
       design_check_list[design_check.check_id] = design_check
     end
 
-    is_designer = @session[:user][:id] == @audit.design.designer_id
-
-
     @checklist_index = Array.new
-    sections = Section.find_all("checklist_id=#{@audit.checklist_id}",
-                                'sort_order ASC')
+    sections = Section.find_all_by_checklist_id(@audit.checklist_id,
+                                                'sort_order ASC')
     for section in sections
 
-      next if (((not section.full_review?) and 
-                (@audit.design.design_type == 'New')) or
-               ((not section.date_code_check?) and
-                (@audit.design.design_type == 'Date Code')) or
-               ((not section.dot_rev_check?) and
-                (@audit.design.design_type == 'Dot Rev')))
-      section_index = Hash.new
-      section_index['section_name'] = section.name
-      section_index['section_url']  = section.url
-      section_index['bg_color']     = section.background_color
+      next if !@audit.design.belongs_to(section)
       
-      subsections = Subsection.find_all("section_id=#{section.id}",
-                                        'sort_order ASC')
+      section_index = { :section => section }
+      
+      subsections = Subsection.find_all_by_section_id(section.id,
+                                                      'sort_order ASC')
       subsects = Array.new
       for subsection in subsections
 
-        next if (((not subsection.full_review?) and 
-                  (@audit.design.design_type == 'New')) or
-                 ((not subsection.date_code_check?) and
-                  (@audit.design.design_type == 'Date Code')) or
-                 ((not subsection.dot_rev_check?) and 
-                  (@audit.design.design_type == 'Dot Rev')))
+        next if !@audit.design.belongs_to(subsection)
+                 
         subsect = Hash.new
         subsect['name']             = subsection.name
         subsect['note']             = subsection.note
@@ -284,16 +292,17 @@ class AuditController < ApplicationController
         subsect['percent_complete'] = 0.0
         
         condition = ''
-        if @audit.design.design_type == 'Date Code'
+        if @audit.design.date_code?
           condition = ' and date_code_check=1'
-        elsif @audit.design.design_type == 'Dot Rev'
+        elsif @audit.design.dot_rev?
           condition = ' and dot_rev_check=1'
         end
         
-        if is_designer
+        if @audit.is_self_audit?
           subsection_checks = 
             Check.find_all("subsection_id=#{subsection.id}" +
                            condition)
+        #elsif @audit.is_peer_audit?
         else
           subsection_checks = 
             Check.find_all("subsection_id=#{subsection.id} and " +
@@ -304,7 +313,7 @@ class AuditController < ApplicationController
         
         checks_completed = 0
         questions        = 0
-        if is_designer
+        if @audit.is_self_audit?
 
           for check in subsection_checks
             if design_check_list[check.id]
@@ -312,7 +321,7 @@ class AuditController < ApplicationController
               questions += 1 if design_check_list[check.id].auditor_result == 'Comment'
             end
           end
-        else 
+        else
           for check in subsection_checks
             if design_check_list[check.id]
               checks_completed += 1 if design_check_list[check.id].auditor_result != 'None' and design_check_list[check.id].auditor_result != 'Comment'
@@ -360,21 +369,12 @@ class AuditController < ApplicationController
   def print
 
     audit     = Audit.find(@params[:id])
-    sections  = Section.find_all("checklist_id=#{audit.checklist_id}",
-                                 'sort_order ASC')
+    sections  = Section.find_all_by_checklist_id(audit.checklist_id,
+                                                 'sort_order ASC')
     @summary = Hash.new
-    @summary[:board_number] = audit.design.name
-    if audit.design.designer_id > 0
-      @summary[:designer] = User.find(audit.design.designer_id).name
-    else
-      @summary[:designer] = 'Not Set'
-    end
-    if audit.design.peer_id > 0
-      @summary[:auditor] = User.find(audit.design.peer_id).name
-    else
-      @summary[:auditor] = 'Not Set'
-    end
-
+    @summary[:board_number]  = audit.design.name
+    @summary[:designer]      = audit.design.designer.name
+    @summary[:auditor]       = audit.design.peer.name
     @summary[:checklist_rev] =
       audit.checklist.major_rev_number.to_s +
       '.' +
@@ -384,24 +384,14 @@ class AuditController < ApplicationController
     @display       = Array.new
     for section in sections
       
-      next if ((audit.design.design_type == 'New' and
-                not section.full_review?)            or
-               (audit.design.design_type == 'Date Code' and 
-                not section.date_code_check?)        or
-               (audit.design.design_type == 'Dot Rev'   and 
-                not section.dot_rev_check?))
+      next if !audit.design.belongs_to(section)
 
       subsections = Subsection.find_all("section_id=#{section.id}",
                                         'sort_order ASC')
 
       for subsection in subsections
 
-        next if ((audit.design.design_type == 'New' and
-                  not subsection.full_review?)         or
-                 (audit.design.design_type == 'Date Code' and 
-                  not subsection.date_code_check?)     or
-                 (audit.design.design_type == 'Dot Rev'   and 
-                  not subsection.dot_rev_check?))
+        next if !audit.design.belongs_to(subsection)
 
         box = Hash.new
         design_checks = Array.new
@@ -412,12 +402,7 @@ class AuditController < ApplicationController
         #       design check is found for the audit/check combination.
         for check in checks
 
-          next if ((audit.design.design_type == 'New' and
-                    not check.full_review?)             or
-                   (audit.design.design_type == 'Date Code' and 
-                    not check.date_code_check?)         or
-                   (audit.design.design_type == 'Dot Rev'   and 
-                    not check.dot_rev_check?))
+          next if !audit.design.belongs_to(check)
 
           check_info = Hash.new
           check_info[:check]        = check
@@ -463,64 +448,181 @@ class AuditController < ApplicationController
   end # print method
 
 
-  ########################################################################
-  private
-
-
   ######################################################################
   #
-  # get_audit_list
+  # auditor_list
   #
   # Description:
-  # This method retrieves the checks for the subsection identified
-  # by subsection_id
+  # This method retrieves information needed to display the designers
+  # assigned to the sections of the checklist.  This is for the 
+  # self and peer audit. 
   #
   # Parameters:
-  # audit_id      - identifies the audit 
-  # subsection_id - identifies the subsection
-  #
-  # Return value:
-  # A list of checks based on the subsection and board type.
-  #
-  # Additional information:
-  # None
+  # @params['id'] - The ID of the audit.
   #
   ######################################################################
   #
-  def get_audit_list(audit_id, subsection_id)
-
-    case Audit.find(audit_id).design.design_type
-
-    when 'New'
-      checks = Check.find_all("subsection_id=#{subsection_id} and " +
-                              "full_review=1",
-                              'sort_order ASC')
-    when 'Date Code'
-      checks = Check.find_all("subsection_id=#{subsection_id} and " +
-                              "date_code_check=1",
-                              'sort_order ASC')
-    when 'Dot Rev'
-      checks = Check.find_all("subsection_id=#{subsection_id} and " +
-                              "dot_rev_check=1",
-                              'sort_order ASC')
-    end
-
+  def auditor_list
     
-    i = 0;
-    check_list = Array.new
-    for check in checks
-      design_check = DesignCheck.find_all("audit_id=#{audit_id} and " +
-                                          "check_id=#{check.id}").pop
-        check_list[i] = Hash.new
-      check_list[i][:check]        = check
-      check_list[i][:design_check] = design_check
+    @audit = Audit.find(@params[:id])
+    
+    lead_designer = @audit.design.designer
+    lead_peer     = @audit.design.peer
 
-      i += 1
+    self_list = Role.find_by_name('Designer').active_users
+    peer_list = self_list.dup
+
+    self_list.delete_if { |u| u.id == @audit.design.peer_id }
+    peer_list.delete_if { |u| u.id == @audit.design.designer_id }
+    
+    checklist_sections = @audit.checklist.sections
+    checklist_sections = checklist_sections.sort_by { |s| s.sort_order }
+
+    audit_teammates = @audit.audit_teammates
+
+    sections = []
+    for section in checklist_sections
+      sect = {
+        :section      => section,
+        :self_auditor => lead_designer,
+        :peer_auditor => lead_peer
+      }
+    
+      self_auditor =
+         audit_teammates.detect { |mate| mate.section_id == section.id && mate.self? }
+      sect[:self_auditor] = User.find(self_auditor.user_id) if self_auditor
+      
+      peer_auditor = 
+        audit_teammates.detect { | mate| mate.section_id == section.id && !mate.self? }
+      sect[:peer_auditor] = User.find(peer_auditor.user_id) if peer_auditor
+      
+      sections << sect
+      
     end
     
-    return check_list
-
+    @auditor_list = {
+      :lead_designer => lead_designer,
+      :self_list     => self_list,
+      :lead_peer     => lead_peer,
+      :peer_list     => peer_list,
+      :sections      => sections
+    }
+    
   end
+  
+  
+  ######################################################################
+  #
+  # update_auditor_list
+  #
+  # Description:
+  # This method uses the information passed in from the user
+  # to make updates to the audit teammate list.
+  #
+  # Parameters:
+  # params[:audit][:id]   - The ID of the audit.
+  # params[:self_auditor] - A list that contains pairs of section IDs
+  #                         and user IDs used for assignment.
+  # params[:peer_autitor] - A list that contains pairs of section IDs
+  #                         and user IDs used for assignment.
+  #
+  ######################################################################
+  #
+  def update_auditor_list
+  
+    audit = Audit.find(params[:audit][:id])
+    
+    lead_designer = audit.design.designer
+    lead_peer     = audit.design.peer
+
+    self_auditor_list = params[:self_auditor]
+    peer_auditor_list = params[:peer_auditor]
+    
+    lead_designer_assignments = {}
+    lead_designer_assignments.default = false
+    self_auditor_list.each { |key, self_auditor|
+      if lead_designer.id == self_auditor.to_i
+        lead_designer_assignments[key.split('_')[2].to_i] = true
+      end
+    }
+
+    lead_peer_assignments = {}
+    lead_peer_assignments.default = false
+    peer_auditor_list.each { |key, peer_auditor|
+      if lead_peer.id == peer_auditor.to_i
+        lead_peer_assignments[key.split('_')[2].to_i] = true
+      end
+    }
+    
+    teammate_list_updates = []
+    
+    self_auditor_list.delete_if { |k,v| v.to_i == lead_designer.id }
+    peer_auditor_list.delete_if { |k,v| v.to_i == lead_peer.id }
+
+    audit_teammates = audit.audit_teammates
+    
+    for audit_teammate in audit_teammates
+      if ((audit_teammate.self? &&
+           lead_designer_assignments[audit_teammate.section_id]) ||
+          (!audit_teammate.self? &&
+           lead_peer_assignments[audit_teammate.section_id]))
+        teammate_list_updates << {:action   => 'removed from',
+                                  :teammate => audit_teammate.dup}
+        audit_teammate.destroy
+      end
+    end
+
+
+    self_auditor_list.each { |key, self_auditor|
+    
+      section_id = key.split('_')[2].to_i
+      
+      next if audit_teammates.detect{ |t|
+        t.self? && t.section_id == section_id && t.user_id == self_auditor.to_i
+      }
+
+      audit_teammate = AuditTeammate.new(:audit_id   => audit.id,
+                                         :section_id => section_id,
+                                         :user_id    => self_auditor,
+                                         :self       => 1)
+      teammate_list_updates << {:action   => 'added to    ',
+                                :teammate => audit_teammate}
+      audit_teammate.save
+
+    }
+
+    peer_auditor_list.each { |key, peer_auditor|
+    
+      section_id = key.split('_')[2].to_i
+
+      next if audit_teammates.detect{ |t|
+        !t.self? && t.section_id == section_id && t.user_id == peer_auditor.to_i
+      }  
+
+      audit_teammate = AuditTeammate.new(:audit_id   => audit.id,
+                                         :section_id => section_id,
+                                         :user_id    => peer_auditor,
+                                         :self       => 0)
+      teammate_list_updates << {:action   => 'added to    ',
+                                :teammate => audit_teammate}
+      audit_teammate.save
+      
+    }
+ 
+    if teammate_list_updates.size > 0
+      audit.reload
+      TrackerMailer::deliver_audit_team_updates(@session[:user],
+                                                audit,
+                                                teammate_list_updates)
+    end
+
+    redirect_to(:action => 'auditor_list', :id => audit.id)
+  
+  end
+
+
+  ######################################################################
+  private
 
 
   ######################################################################
@@ -547,15 +649,15 @@ class AuditController < ApplicationController
 
     # Compute the metrics for the designer's checks.
     checks = Hash.new
-    if audit.design.design_type == 'New'
+    if audit.design.new?
       checks[:designer] = audit.checklist.designer_only_count +
         audit.checklist.designer_auditor_count
       checks[:auditor]  = audit.checklist.designer_auditor_count
-    elsif audit.design.design_type == 'Date Code'
+    elsif audit.design.date_code?
       checks[:designer] = audit.checklist.dc_designer_only_count +
         audit.checklist.dc_designer_auditor_count
       checks[:auditor]  = audit.checklist.dc_designer_auditor_count
-    elsif audit.design.design_type == 'Dot Rev'
+    elsif audit.design.dot_rev?
       checks[:designer] = audit.checklist.dr_designer_only_count +
         audit.checklist.dr_designer_auditor_count
       checks[:auditor]  = audit.checklist.dr_designer_auditor_count
