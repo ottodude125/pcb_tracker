@@ -177,11 +177,8 @@ class IpdPostController < ApplicationController
     @ipd_post           = IpdPost.find(params[:id])
     @associated_users   = @ipd_post.design.get_associated_users_by_role
 
-    @manager_list = Role.find_by_name('Manager').users
-    @manager_list.delete_if { |user| not user.active? }
-   
-    @input_gate_list = Role.find_by_name('PCB Input Gate').users
-    @input_gate_list.delete_if { |user| not user.active? }
+    @manager_list    = Role.find_by_name('Manager').active_users
+    @input_gate_list = Role.find_by_name('PCB Input Gate').active_users
     
     @optional_cc_list = @ipd_post.users.dup
     
