@@ -1,0 +1,14 @@
+<%= @updated_by.name %> has updated the audit teams for the <%= @audit.design.name %>
+
+  Lead Designer:     <%= @audit.design.designer.name %>
+  Lead Peer Auditor: <%= @audit.design.peer.name %>
+
+                           MODIFICATIONS
+------------------------------------------------------------------------
+<% for update in @updates %>
+  <%= update[:teammate].user.name %> <%= update[:action] %> <%= update[:teammate].self? ? 'self' : 'peer' %> audit for <%= update[:teammate].section.name %><% end %>
+
+                           CURRENT TEAM
+------------------------------------------------------------------------
+<% for member in @audit.audit_teammates %>
+  <%= member.user.name %> - <%= member.self? ? 'self' : 'peer' %> auditor - <%= member.section.name %><% end %>
