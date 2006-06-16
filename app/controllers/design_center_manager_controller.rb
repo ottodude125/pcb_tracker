@@ -35,9 +35,8 @@ class DesignCenterManagerController < ApplicationController
   def design_center_assignment
     
     # Get all of the active designers.
-    @designers = Role.find_by_name("Designer").users
-    @designers.delete_if { |designer| ! designer.active? }
-    
+    @designers = Role.find_by_name("Designer").active_users
+
     # Get all of the active design centers.
     @design_centers = DesignCenter.find_all('active=1')
     @design_centers.delete_if { |dc| dc.name.include? "Archive" }
