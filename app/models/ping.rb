@@ -15,39 +15,6 @@ class Ping < ActiveRecord::Base
 
   ######################################################################
   #
-  # workdays
-  #
-  # Description:
-  # Given a start and stop time, this method computes the work days 
-  # between the 2 times.
-  #
-  # Parameters:
-  # start_time - the beginning of the time slice
-  # end_time   - the end of the time slice
-  #
-  # Returns:
-  # The number of days between the 2 time stamps.
-  #
-  ######################################################################
-  #
-  def self.workdays (start_time, end_time)
-    if end_time - start_time > 43200
-      workdays = 0
-    else
-      workdays = -1
-    end
-    while start_time <= end_time
-      day = start_time.strftime("%w").to_i
-      workdays += 1 if day > 0 && day < 6
-      # Add a day.
-      start_time += 86400
-    end
-    workdays
-  end
-
-
-  ######################################################################
-  #
   # send_message
   #
   # Description:
@@ -67,7 +34,7 @@ class Ping < ActiveRecord::Base
       for review_result in design_review.design_review_results
         next if review_result.result != "No Response"
         design_review = review_result.design_review
-        age = workdays(design_review.reposted_on, Time.now)
+        age = design_review.age
 
         if ((age > 3)                                                 &&
             (design_review.priority.name == 'High')                   ||
