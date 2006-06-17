@@ -70,7 +70,7 @@
                   <td width="40%" bgcolor="<%= color %>">&nbsp;</td>
                 <% end %>
               </tr>
-              <% if check.check_type == 'designer_auditor' %>
+              <% if check.designer_auditor? %>
                 <tr>
                   <% if check_info[:design_check].auditor_result != 'None' %>
                     <td align="center" width="30%">
