@@ -20,5 +20,32 @@ class Role < ActiveRecord::Base
 
 
   validates_uniqueness_of :name
+  
+  
+  ######################################################################
+  #
+  # active_users
+  #
+  # Description:
+  # This method returns an alphabetized list of active users for
+  # the role.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of User records.
+  #
+  ######################################################################
+  #
+  def active_users
+
+    users = self.users
+    users.delete_if { |u| !u.active? }
+
+    return users.sort_by { |u| u.last_name}
+
+  end
+
 
 end
