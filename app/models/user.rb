@@ -1,9 +1,23 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: user.rb
+#
+# This file maintains the state for users.
+#
+# $Id$
+#
+########################################################################
+
 require 'digest/sha1'
 
 # this model expects a certain database layout and its based on the name/login pattern. 
 class User < ActiveRecord::Base
 
   belongs_to :design_center
+  
+  has_many :audit_teammates
 
   has_and_belongs_to_many :boards
   has_and_belongs_to_many :ipd_posts
@@ -29,8 +43,43 @@ class User < ActiveRecord::Base
   end  
   
 
+  ######################################################################
+  #
+  # name
+  #
+  # Description:
+  # This method returns the user's name.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A string containing the user's name (last name first).
+  #
+  ######################################################################
+  #
   def name 
-    read_attribute('first_name') + ' ' + read_attribute('last_name')
+    self.first_name + ' ' + self.last_name
+  end
+  
+  
+  ######################################################################
+  #
+  # last_name_first
+  #
+  # Description:
+  # This method returns the user's name, last name first.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A string containing the user's name (last name first).
+  #
+  ######################################################################
+  #
+  def last_name_first
+    self.last_name + ', ' + self.first_name
   end
 
 
