@@ -24,14 +24,30 @@ class Design < ActiveRecord::Base
   has_one   :audit
 
 
+  ######################################################################
+  #
+  # get_associated_users_by_role
+  #
+  # Description:
+  # This method returns a hash of all of the people interested in 
+  # the design.  The user records are access by the role names.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A hash of user records accessed by their role names.
+  #
+  ######################################################################
+  #
   def get_associated_users_by_role
 
     users = {}
     
-    users[:designer]  = User.find(self.designer_id)  if (self.designer_id  > 0)
-    users[:peer]      = User.find(self.peer_id)      if (self.peer_id      > 0)
-    users[:pcb_input] = User.find(self.pcb_input_id) if (self.pcb_input_id > 0)
-    
+    users[:designer]  = self.designer   if (self.designer_id  > 0)
+    users[:peer]      = self.peer       if (self.peer_id      > 0)
+    users[:pcb_input] = self.input_gate if (self.pcb_input_id > 0)
+
     role_names = ['Hardware Engineering Manager',
                   'Program Manager']
     for role_name in role_names
@@ -55,11 +71,29 @@ class Design < ActiveRecord::Base
         end
       end
     end
+    
     return users
     
   end
   
   
+  ######################################################################
+  #
+  # get_associated_users_by_role
+  #
+  # Description:
+  # This method returns a hash of all of the people interested in 
+  # the design.  The user records are access by the role names.
+  # The reviewers are accessed by the key :reviewers.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A hash of user records accessed by their role names.
+  #
+  ######################################################################
+  #
   def get_associated_users
   
     users = {:designer  => nil,
@@ -87,6 +121,23 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # designer
+  #
+  # Description:
+  # This method returns the user record for the designer who is 
+  # listed for the design.  If there is no listed designer, a user
+  # record is created and the name is set to 'Not Assigned'.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A User record for the designer.
+  #
+  ######################################################################
+  #
   def designer
   
     if self.designer_id > 0
@@ -98,6 +149,53 @@ class Design < ActiveRecord::Base
   end
 
 
+  ######################################################################
+  #
+  # phase
+  #
+  # Description:
+  # This method returns the review type record that represents the phase
+  # that the design is in.  If there is no listed designer, a user
+  # record is created and the name is set to 'Not Assigned'.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A User record for the designer.
+  #
+  ######################################################################
+  #
+  def phase
+  
+    if self.phase_id > 0
+      ReviewType.find(self.phase_id)
+    elsif self.phase_id == Design::COMPLETE
+      ReviewType.new(:name => 'Complete')
+    else
+      ReviewType.new(:name => 'Not Started')
+    end
+  
+  end
+
+
+  ######################################################################
+  #
+  # peer
+  #
+  # Description:
+  # This method returns the user record for the peer who is 
+  # listed for the design.  If there is no listed peer, a user
+  # record is created and the name is set to 'Not Assigned'.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A User record for the peer.
+  #
+  ######################################################################
+  #
   def peer
   
     if self.peer_id > 0
@@ -109,6 +207,23 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # input_gate
+  #
+  # Description:
+  # This method returns the user record for the input_gate who is 
+  # listed for the design.  If there is no listed input_gate, a user
+  # record is created and the name is set to 'Not Assigned'.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A User record for the input_gate.
+  #
+  ######################################################################
+  #
   def input_gate
   
     if self.pcb_input_id > 0
@@ -120,6 +235,22 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # all_reviewers
+  #
+  # Description:
+  # This method returns a list of all of the reviewers responsible
+  # for the various reviews on the board.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of User records.  One for each of the reviewers.
+  #
+  ######################################################################
+  #
   def all_reviewers(sorted = false)
   
     reviewer_list = []
@@ -132,6 +263,92 @@ class Design < ActiveRecord::Base
     
     reviewer_list.uniq
     
+  end
+  
+  
+  ######################################################################
+  #
+  # date_code?
+  #
+  # Description:
+  # This method looks at the design_type and returns TRUE if it is
+  # set to 'Date Code'.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the design is a 'Date Code' design, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def date_code?
+    self.design_type == 'Date Code'
+  end
+  
+  
+  ######################################################################
+  #
+  # dot_rev?
+  #
+  # Description:
+  # This method looks at the design_type and returns TRUE if it is
+  # set to 'Dot Rev'.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the design is a 'Dot Rev' design, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def dot_rev?
+    self.design_type == 'Dot Rev'
+  end
+  
+  
+  ######################################################################
+  #
+  # new?
+  #
+  # Description:
+  # This method looks at the design_type and returns TRUE if it is
+  # set to 'New'.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the design is a 'New' design, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def new?
+    self.design_type == 'New'
+  end
+  
+  
+  ######################################################################
+  #
+  # belongs_to
+  #
+  # Description:
+  # This method looks at the entity (section, subsection, or check)
+  # to determine if it belongs to the design.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the entity belongs to the design, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def belongs_to(entity)
+      ((entity.full_review?     && self.new?)       ||
+       (entity.date_code_check? && self.date_code?) ||
+       (entity.dot_rev_check?   && self.dot_rev?))
   end
 
 
@@ -160,11 +377,11 @@ class Design < ActiveRecord::Base
 
       reviewer_list = Hash.new
 
-      reviewers = Role.find_by_name("#{role.name}").users
+      reviewers = Role.find_by_name("#{role.name}").active_users
       
       reviewer_list[:group]        = role.name
       reviewer_list[:group_id]     = role.id
-      reviewer_list[:reviewers]    = reviewers.sort_by { |r| r.last_name }
+      reviewer_list[:reviewers]    = reviewers
       reviewer_list[:reviewer_id]  = board_reviewers[role.name]
       @reviewers.push(reviewer_list)
     end
