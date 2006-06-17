@@ -69,6 +69,39 @@ class DesignReview < ActiveRecord::Base
   
   ######################################################################
   #
+  # age
+  #
+  # Description:
+  # This method returns the number of work days since the design review
+  # was originally posted.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # The number of workdays since the design review was posted.
+  #
+  ######################################################################
+  #
+  def age(end_time = Time.now)
+
+    start_time = self.created_on
+
+    workdays = end_time - start_time > 43200 ? 0 : -1
+
+    while start_time <= end_time
+      day         = start_time.strftime("%w").to_i
+      workdays   += 1 if 0 < day && day < 6
+      start_time += 86400                        # add a day's worth of seconds
+    end
+    
+    workdays
+    
+  end
+  
+  
+  ######################################################################
+  #
   # review_results_by_role_name
   #
   # Description:
@@ -105,6 +138,36 @@ class DesignReview < ActiveRecord::Base
     reviewer_list.uniq
     
   end
+  
+  
+  ######################################################################
+  #
+  # designer
+  #
+  # Description:
+  # This method returns the user record for the designer who is 
+  # listed for the design.  If there is no listed designer, a user
+  # record is created and the name is set to 'Not Assigned'.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A User record for the designer.
+  #
+  ######################################################################
+  #
+  def designer
+  
+    if self.designer_id > 0
+      User.find(self.designer_id)
+    else
+      User.new(:first_name => 'Not', :last_name => 'Assigned')
+    end
+  
+  end
+
+
   
   
   
