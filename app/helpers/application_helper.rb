@@ -144,39 +144,6 @@ module ApplicationHelper
 
   ######################################################################
   #
-  # workdays
-  #
-  # Description:
-  # Given a start and stop time, this method computes the work days 
-  # between the 2 times.
-  #
-  # Parameters:
-  # start_time - the beginning of the time slice
-  # end_time   - the end of the time slice
-  #
-  # Returns:
-  # The number of days between the 2 time stamps.
-  #
-  ######################################################################
-  #
-  def workdays (start_time, end_time)
-    if end_time - start_time > 43200
-      workdays = 0
-    else
-      workdays = -1
-    end
-    while start_time <= end_time
-      day = start_time.strftime("%w").to_i
-      workdays += 1 if day > 0 && day < 6
-      # Add a day.
-      start_time += 86400
-    end
-    workdays
-  end
-
-
-  ######################################################################
-  #
   # design_center_path
   #
   # Description:
@@ -223,6 +190,37 @@ module ApplicationHelper
     else
       User.find(design_review.designer_id).name
     end
+  end
+  
+  
+  def auditor_name(section_id, teammate_list, lead)
+    teammate = teammate_list.detect { |teammate| teammate.section_id == section_id }
+    if teammate
+      teammate.user.name
+    else
+      lead.name
+    end
+  end
+  
+  
+  def audit_radio_button(check, 
+                         audit,
+                         tag_value,
+                         disabled)
+                         
+    if audit.is_self_audit?
+      attribute = 'designer_result'
+      checked = check[:design_check][:designer_result] == tag_value ? true : nil
+    else
+      attribute = 'auditor_result'
+      checked = check[:design_check][:auditor_result] == tag_value ? true : nil
+    end
+    
+    radio_button("check_#{check.id}",
+                 attribute,
+                 tag_value,
+                 {:checked  => checked,
+                  :disabled => disabled})
   end
 
 
