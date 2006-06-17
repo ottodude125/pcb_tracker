@@ -3,11 +3,15 @@ module TrackerHelper
 
   def audit_locked_for_peer(audit)
 
-    total_design_checks = 
-      audit.checklist.designer_only_count + audit.checklist.designer_auditor_count
+    if audit[:self]
+      false
+    else
+      total_design_checks = 
+        audit.checklist.designer_only_count + audit.checklist.designer_auditor_count
       
-    audit.designer_completed_checks < total_design_checks
-
+      audit.designer_completed_checks < total_design_checks
+    end
+    
   end
 
 
