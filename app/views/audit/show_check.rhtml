@@ -127,7 +127,7 @@
 
   <hr size="8" color=#<%= @check.section.background_color %> noshade="noshade" />
     <table border="0" cellpadding="5" align="center" width="100%" >
-      <% if @check.check_type == "yes_no" %>
+      <% if @check.yes_no? %>
         <tr>
           <td>
             <table>
