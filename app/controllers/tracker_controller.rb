@@ -14,8 +14,8 @@
 
 class TrackerController < ApplicationController
 
-  before_filter(:verify_logged_in,
-                :except => :index)
+  before_filter(:verify_logged_in,           :except => :index)
+  before_filter(:verify_manager_admin_privs, :except => :index)
 
   ######################################################################
   #
@@ -44,17 +44,20 @@ class TrackerController < ApplicationController
     if @session[:active_role] != nil
       case @session[:active_role]
       when "Designer"
-        redirect_to(:action => :designer_home)
+        designer_home_setup
+        render_action('designer_home')
       when "Reviewer"
-        redirect_to(:action => :reviewer_home)
-      when "Manager"
-        redirect_to(:action => :manager_home)
-      when "Admin"
-        redirect_to(:action => :admin_home)
+        reviewer_home_setup
+        render_action('reviewer_home')
+      when "Manager", "Admin"
+        manager_home_setup
+        render_action('manager_home')
       when "PCB Admin"
-        redirect_to(:action => :pcb_admin_home)
+        pcb_admin_home_setup
+        render_action('pcb_admin_home')
       else
-        redirect_to(:action => :reviewer_home)
+        reviewer_home_setup
+        render_action('reviewer_home')
       end
     end
     
@@ -66,7 +69,254 @@ class TrackerController < ApplicationController
 
   ######################################################################
   #
-  # pcb_admin_home
+  # manager_list_by_priority
+  #
+  # Description:
+  # This method manages the ordering of the list by the criticality.
+  #
+  # Parameters from @params
+  # order - the desired order, either ascending or descending, of the
+  #         list by the criticality.
+  #
+  ######################################################################
+  #
+  def manager_list_by_priority
+  
+    @sort_order            = get_sort_order
+    @sort_order[:priority] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+    flash[:sort_order]     = @sort_order
+
+    @design_reviews = 
+      get_active_reviews.sort_by { |dr| [dr.priority.value, dr.age] }
+    @design_reviews.reverse! if @params[:order] == 'ASC'
+
+    @session[:return_to] = {:controller => 'tracker',
+                            :action     => 'manager_list_by_priority',
+                            :order      => @params[:order]}
+    render_action 'manager_home'
+
+  end  
+  
+  
+  ######################################################################
+  #
+  # manager_list_by_design
+  #
+  # Description:
+  # This method manages the ordering of the list by the design number.
+  #
+  # Parameters from @params
+  # order - the desired order, either ascending or descending, of the
+  #         list by the design number.
+  #
+  ######################################################################
+  #
+  def manager_list_by_design
+  
+      @sort_order          = get_sort_order
+      @sort_order[:design] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+      flash[:sort_order]   = @sort_order
+    
+      @design_reviews = get_active_reviews.sort_by { |dr| dr.design.name }
+      @design_reviews.reverse! if @params[:order] == 'ASC'
+    
+      @session[:return_to] = {:controller => 'tracker',
+                              :action     => 'manager_list_by_design',
+                              :order      => @params[:order]}
+      render_action 'manager_home'
+
+  end  
+  
+  
+  ######################################################################
+  #
+  # manager_list_by_type
+  #
+  # Description:
+  # This method manages the ordering of the list by the design review
+  # type.
+  #
+  # Parameters from @params
+  # order - the desired order, either ascending or descending, of the
+  #         list by the design review type.
+  #
+  ######################################################################
+  #
+  def manager_list_by_type
+    
+    @sort_order        = get_sort_order
+    @sort_order[:type] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+    flash[:sort_order] = @sort_order
+    
+    @design_reviews = 
+      get_active_reviews.sort_by { |dr| [dr.review_type.name, dr.age] }
+    @design_reviews.reverse! if @params[:order] == 'ASC'
+    
+    @session[:return_to] = {:controller => 'tracker',
+                            :action     => 'manager_list_by_type',
+                            :order      => @params[:order]}
+    render_action 'manager_home'
+
+  end  
+  
+  
+  ######################################################################
+  #
+  # manager_list_by_designer
+  #
+  # Description:
+  # This method manages the ordering of the list by the designer.
+  #
+  # Parameters from @params
+  # order - the desired order, either ascending or descending, of the
+  #         list by the designer.
+  #
+  ######################################################################
+  #
+  def manager_list_by_designer
+
+    @sort_order            = get_sort_order
+    @sort_order[:designer] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+    flash[:sort_order]     = @sort_order
+    
+    @design_reviews = 
+      get_active_reviews.sort_by { |dr| [dr.designer.last_name, dr.age] }
+    @design_reviews.reverse! if @params[:order] == 'ASC'
+    
+    @session[:return_to] = {:controller => 'tracker',
+                            :action     => 'manager_list_by_designer',
+                            :order      => @params[:order]}
+    render_action 'manager_home'
+
+  end  
+  
+  
+  ######################################################################
+  #
+  # manager_list_by_peer
+  #
+  # Description:
+  # This method manages the ordering of the list by the peer.
+  #
+  # Parameters from @params
+  # order - the desired order, either ascending or descending, of the
+  #         list by the peer.
+  #
+  ######################################################################
+  #
+  def manager_list_by_peer
+  
+    @sort_order        = get_sort_order
+    @sort_order[:peer] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+    flash[:sort_order] = @sort_order
+    
+    @design_reviews = 
+      get_active_reviews.sort_by { |dr| [dr.design.peer.last_name, dr.age] }
+    @design_reviews.reverse! if @params[:order] == 'ASC'
+    
+    @session[:return_to] = {:controller => 'tracker',
+                            :action     => 'manager_list_by_peer',
+                            :order      => @params[:order]}
+    render_action 'manager_home'
+    
+  end  
+  
+  
+  ######################################################################
+  #
+  # manager_list_by_age
+  #
+  # Description:
+  # This method manages the ordering of the list by the age in work days.
+  #
+  # Parameters from @params
+  # order - the desired order, either ascending or descending, of the
+  #         list by age in work days..
+  #
+  ######################################################################
+  #
+  def manager_list_by_age
+  
+    @sort_order        = get_sort_order
+    @sort_order[:date] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+    flash[:sort_order] = @sort_order
+    
+    @design_reviews = 
+      get_active_reviews.sort_by { |dr| [dr.age, dr.priority.value] }
+    @design_reviews.reverse! if @params[:order] == 'ASC'
+    
+    @session[:return_to] = {:controller => 'tracker',
+                            :action     => 'manager_list_by_date',
+                            :order      => @params[:order]}
+    render_action 'manager_home'
+
+  end  
+  
+  
+  ######################################################################
+  #
+  # manager_list_by_status
+  #
+  # Description:
+  # This method manages the ordering of the list by the design review
+  # status.
+  #
+  # Parameters from @params
+  # order - the desired order, either ascending or descending, of the
+  #         list by the design review status.
+  #
+  ######################################################################
+  #
+  def manager_list_by_status
+  
+    @sort_order          = get_sort_order
+    @sort_order[:status] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+    flash[:sort_order]   = @sort_order
+    
+    @design_reviews = 
+      get_active_reviews.sort_by { |dr| [dr.review_status.name, dr.age] }
+    @design_reviews.reverse! if @params[:order] == 'ASC'
+    
+    @session[:return_to] = {:controller => 'tracker',
+                            :action     => 'manager_list_by_date',
+                            :order      => @params[:order]}
+    render_action 'manager_home'
+
+  end  
+  
+  
+  private
+  
+  
+  ######################################################################
+  #
+  # get_sort_order
+  #
+  # Description:
+  # This method attempts to retrieve the sort order from the session flash.
+  # If it does not exist then a new hash is created and the default order 
+  # is set to ascending
+  #
+  # Parameters
+  # None
+  # 
+  # Returns
+  # A hash containing the sort order
+  #
+  ######################################################################
+  #
+  def get_sort_order
+    if @session['flash'][:sort_order]
+      return @session['flash'][:sort_order]
+    else
+      return Hash.new('ASC')
+    end
+  end
+  
+  
+  ######################################################################
+  #
+  # pcb_admin_home_setup
   #
   # Description:
   # This method gathers the information to display the PCB Admin's 
@@ -75,14 +325,9 @@ class TrackerController < ApplicationController
   # Parameters from @params
   # None
   #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
   ######################################################################
   #
-  def pcb_admin_home
+  def pcb_admin_home_setup
   
     @designer = Hash.new
 
@@ -155,7 +400,7 @@ class TrackerController < ApplicationController
 
   ######################################################################
   #
-  # designer_home
+  # designer_home_setup
   #
   # Description:
   # This method gathers the information to display the Designer's 
@@ -164,14 +409,9 @@ class TrackerController < ApplicationController
   # Parameters from @params
   # None
   #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
   ######################################################################
   #
-  def designer_home
+  def designer_home_setup
 
     @designer = Hash.new
 
@@ -244,29 +484,58 @@ class TrackerController < ApplicationController
       @design_list.push(design_summary)
     end
 
-    @audits = Array.new
-    
+    audits = []
+    #
+    # Get the audits where the user is listed as the lead peer.
+    # 
     peer_designs = Design.find_all("peer_id=#{@session[:user].id}",
                                    'created_on ASC')
-    
+
     for peer_design in peer_designs
+    
       audit = Audit.find_all("design_id='#{peer_design.id}'").pop
 
+      audit[:self] = false
       num_checks = Audit.check_count(audit.id)
-
       audit[:percent_complete]          = audit.auditor_completed_checks *
         100.0 / num_checks[:peer]
       audit[:designer_percent_complete] = audit.designer_completed_checks *
         100.0 / num_checks[:designer]
-      @audits.push(audit)
+      audits.push(audit)
+      
     end
+    
+    #
+    # Get the audits where the user is the member of an audit team.
+    # 
+    my_audit_teams = AuditTeammate.find_all_by_user_id(@session[:user].id)
+    
+    for audit_team in my_audit_teams
+      
+      audit = audit_team.audit
+      
+      audit[:self] = audit_team.self?
+      num_checks = Audit.check_count(audit.id)
+      audit[:percent_complete]          = audit.auditor_completed_checks *
+        100.0 / num_checks[:peer]
+      audit[:designer_percent_complete] = audit.designer_completed_checks *
+        100.0 / num_checks[:designer]
+      audits.push(audit)
+      
+    end
+    
+    @audits = audits.sort_by { |a| a.design.priority.value }.reverse
+    ##
+    #JPA - After reversin the values of priority so that the call to reverse is not
+    #      needed make this a multi-level sort.
+    #      audits.sort_by { |a| [a.design.priority.value, a.design.age] }
 
   end
   
   
   ######################################################################
   #
-  # reviewer_home
+  # reviewer_home_setup
   #
   # Description:
   # This method gathers the information to display the Reviewer's 
@@ -275,14 +544,9 @@ class TrackerController < ApplicationController
   # Parameters from @params
   # None
   #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
   ######################################################################
   #
-  def reviewer_home
+  def reviewer_home_setup
   
     me = @session[:user]
     in_review      = ReviewStatus.find_by_name('In Review')
@@ -336,7 +600,7 @@ class TrackerController < ApplicationController
   
   ######################################################################
   #
-  # manager_home
+  # working_manager_home_setup
   #
   # Description:
   # This method gathers the information to display the Manager's 
@@ -345,14 +609,9 @@ class TrackerController < ApplicationController
   # Parameters from @params
   # None
   #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
   ######################################################################
   #
-  def manager_home
+  def obs_working_manager_home_setup
 
     @sort_order = {:priority => 'DESC'}
     @sort_order.default = 'ASC'
@@ -365,137 +624,35 @@ class TrackerController < ApplicationController
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'index'}
   end
+
+
+  ######################################################################
+  #
+  # manager_home_setup
+  #
+  # Description:
+  # This method gathers the information to display the Manager's 
+  # home page.
+  #
+  # Parameters from @params
+  # None
+  #
+  ######################################################################
+  #
+  def manager_home_setup
+
+    @sort_order = {:priority => 'DESC'}
+    @sort_order.default = 'ASC'
+    flash[:sort_order] = @sort_order
+      
+    @design_reviews = get_active_reviews
+    @design_reviews = @design_reviews.sort_by { |dr| [dr.priority.value, dr.age] }
+    @design_reviews.reverse!
+
+    @session[:return_to] = {:controller => 'tracker',
+                            :action     => 'index'}
+  end
  
-  
-  def manager_list_by_priority
-  
-    if @session[:active_role] == 'Manager'
-      @sort_order = @session['flash'][:sort_order]
-
-      @sort_order[:priority] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
-      flash[:sort_order] = @sort_order
-
-      @design_reviews = get_design_reviews
-    
-      @design_reviews = @design_reviews.sort_by { |dr| dr.priority.value }
-      @design_reviews.reverse! if @params[:order] == 'ASC'
-
-      @session[:return_to] = {:controller => 'tracker',
-                              :action     => 'manager_list_by_priority'}
-      render_action 'manager_home'
-    else
-      redirect_to :action => :index
-    end
-  end  
-  
-  
-  def manager_list_by_design
-  
-    if @session[:active_role] == 'Manager'
-      @sort_order = flash[:sort_order]
-      @sort_order[:design] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
-      flash[:sort_order] = @sort_order
-    
-      @design_reviews = get_design_reviews
-    
-      @design_reviews = @design_reviews.sort_by { |dr| dr.design.name }
-      @design_reviews.reverse! if @params[:order] == 'ASC'
-    
-      @session[:return_to] = {:controller => 'tracker',
-                              :action     => 'manager_list_by_design'}
-      render_action 'manager_home'
-    else
-      redirect_to :action => :index
-    end
-  end  
-  
-  
-  def manager_list_by_type
-  
-    if @session[:active_role] == 'Manager'
-      @sort_order = flash[:sort_order]
-      @sort_order[:type] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
-      flash[:sort_order] = @sort_order
-    
-      @design_reviews = get_design_reviews
-    
-      @design_reviews = @design_reviews.sort_by { |dr| dr.review_type.name }
-      @design_reviews.reverse! if @params[:order] == 'ASC'
-    
-      @session[:return_to] = {:controller => 'tracker',
-                              :action     => 'manager_list_by_type'}
-      render_action 'manager_home'
-    else
-      redirect_to :action => :index
-    end
-  end  
-  
-  
-  def manager_list_by_designer
-  
-    if @session[:active_role] == 'Manager'
-      @sort_order = flash[:sort_order]
-      @sort_order[:designer] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
-      flash[:sort_order] = @sort_order
-    
-      @design_reviews = get_design_reviews
-    
-      @design_reviews = @design_reviews.sort_by { |dr| User.find(dr.design.designer_id).last_name }
-      @design_reviews.reverse! if @params[:order] == 'ASC'
-    
-      @session[:return_to] = {:controller => 'tracker',
-                              :action     => 'manager_list_by_designer'}
-      render_action 'manager_home'
-    else
-      redirect_to :action => :index
-    end
-  end  
-  
-  
-  def manager_list_by_peer
-  
-    if @session[:active_role] == 'Manager'
-      @sort_order = flash[:sort_order]
-      @sort_order[:peer] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
-      flash[:sort_order] = @sort_order
-    
-      @design_reviews = get_design_reviews
-    
-      @design_reviews = @design_reviews.sort_by { |dr| User.find(dr.design.peer_id).last_name }
-      @design_reviews.reverse! if @params[:order] == 'ASC'
-    
-      @session[:return_to] = {:controller => 'tracker',
-                              :action     => 'manager_list_by_peer'}
-      render_action 'manager_home'
-    else
-      redirect_to :action => :index
-    end
-  end  
-  
-  
-  def manager_list_by_date
-  
-    if @session[:active_role] == 'Manager'
-      @sort_order = flash[:sort_order]
-      @sort_order[:date] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
-      flash[:sort_order] = @sort_order
-    
-      @design_reviews = get_design_reviews
-    
-      @design_reviews = @design_reviews.sort_by { |dr| dr.reposted_on }
-      @design_reviews.reverse! if @params[:order] == 'ASC'
-    
-      @session[:return_to] = {:controller => 'tracker',
-                              :action     => 'manager_list_by_date'}
-      render_action 'manager_home'
-    else
-      redirect_to :action => :index
-    end
-  end  
-  
-  
-  private
-  
   
   def get_design_reviews
    in_process = ReviewStatus.find_by_name('In Review')
@@ -514,5 +671,40 @@ class TrackerController < ApplicationController
     end
     return design_reviews
   end
+  
+  
+  def get_active_reviews
+  
+    design_reviews = []
+    designs          = Design.find_all("phase_id!=#{Design::COMPLETE}")
+    
+    for design in designs
+    
+      next if design.phase_id == 0
+    
+      design_review = DesignReview.find_by_design_id_and_review_type_id(
+                        design.id,
+                        design.phase_id)
+           
+      begin
+        design_review[:priority_name] = design_review.priority.name
+      rescue
+        design_review[:priority_name] = 'Unset'
+      end
+      
+      design_review[:reviewers] = 
+        DesignReviewResult.find_all_by_design_review_id(design_review.id).size
+      design_review[:approvals] = 
+        DesignReviewResult.find_all_by_design_review_id_and_result(
+          design_review.id,
+          DesignReviewResult::APPROVED).size
+          
+      design_reviews << design_review
+    
+    end
+    
+    return design_reviews
+  end
+  
 
 end
