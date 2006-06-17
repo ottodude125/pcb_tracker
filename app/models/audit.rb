@@ -17,9 +17,150 @@ class Audit < ActiveRecord::Base
   belongs_to :revision
   belongs_to :suffix
 
+  has_many :audit_teammates
   has_many :design_checks
 
 
+#
+# Constants
+# 
+AUDIT_COMPLETE   = 0
+SELF_AUDIT       = 1
+PEER_AUDIT       = 2
+
+
+  ######################################################################
+  #
+  # audit_state
+  #
+  # Description:
+  # This method determines if the audit is a self audit.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the audit has not completed the self audit, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def audit_state
+  
+    if !self.designer_complete?
+      return SELF_AUDIT
+    elsif !self.auditor_complete?
+      return PEER_AUDIT
+    else
+      return AUDIT_COMPLETE
+    end
+    
+  end
+  
+  
+  ######################################################################
+  #
+  # is_self_audit?
+  #
+  # Description:
+  # This method determines if the audit is a self audit.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the audit is in the SELF_AUDIT state, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def is_self_audit?
+    self.audit_state == SELF_AUDIT
+  end
+  
+  
+  ######################################################################
+  #
+  # is_peer_audit?
+  #
+  # Description:
+  # This method determines if the audit is a peer audit.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the audit is in the PEER_AUDIT state, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def is_peer_audit?
+    self.audit_state == PEER_AUDIT
+  end
+  
+  
+  ######################################################################
+  #
+  # is_complete?
+  #
+  # Description:
+  # This method determines if the audit is complete.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the audit is in the AUDIT_COMPLETE state, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def is_complete?
+    self.audit_state == AUDIT_COMPLETE
+  end
+  
+  
+  ######################################################################
+  #
+  # is_self_auditor?
+  #
+  # Description:
+  # This method determines if the user is a self auditor.
+  #
+  # Parameters:
+  # user - A User record for the person this method is checking to
+  #        if the person is on the self audit team.
+  #
+  # Return value:
+  # TRUE if the user is on the self audit team, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def is_self_auditor?(user)
+    self.design.designer_id == user.id ||
+    self.audit_teammates.detect { |teammate| teammate.user_id == user.id && teammate.self? }
+  end
+
+
+  ######################################################################
+  #
+  # is_peer_auditor?
+  #
+  # Description:
+  # This method determines if the user is a peer auditor.
+  #
+  # Parameters:
+  # user - A User record for the person this method is checking to
+  #        if the person is on the peer audit team.
+  #
+  # Return value:
+  # TRUE if the user is on the peer audit team, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def is_peer_auditor?(user)
+    self.design.peer_id == user.id ||
+    self.audit_teammates.detect { |teammate| teammate.user_id == user.id && !teammate.self? }
+  end
+  
+  
   private
 
   ######################################################################
