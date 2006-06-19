@@ -129,6 +129,11 @@ a:hover { color: #fff; background-color:#000; }
   font-weight: bold;
 }
 
+.small_font_button{
+  font-size: 11px;
+  width: 130px;
+}
+
 .nav_table{
   margin-top:  10px;
   border: 0px solid #dfdfdf;
