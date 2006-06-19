@@ -32,8 +32,8 @@ class BoardControllerTest < Test::Unit::TestCase
 
 
   def test_1_id
-    print ("\n*** Board Controller Test\n")
-    print ("*** $Id$\n")
+    print("\n*** Board Controller Test\n")
+    print("*** $Id$\n")
   end
 
 
@@ -191,7 +191,7 @@ class BoardControllerTest < Test::Unit::TestCase
   #
   def test_create
 
-    assert_equal(6, Board.find_all.size)
+    assert_equal(7, Board.find_all.size)
 
     new_board = { 'active'      => '1',
                   'prefix_id'   => prefixes(:xx).id,
@@ -205,7 +205,7 @@ class BoardControllerTest < Test::Unit::TestCase
          :board => new_board,
          :board_reviewers => {'8' => '116', '5' => '1331'})
 
-    assert_equal(6, Board.find_all.size)
+    assert_equal(7, Board.find_all.size)
     assert_equal("Project can't be blank", flash['notice'])
     assert_redirected_to :action => 'add'
 
@@ -221,7 +221,7 @@ class BoardControllerTest < Test::Unit::TestCase
          :board => new_board,
          :board_reviewers => {'8' => '116', '5' => '1331'})
 
-    assert_equal(6, Board.find_all.size)
+    assert_equal(7, Board.find_all.size)
     assert_equal("Platform can't be blank", flash['notice'])
     assert_redirected_to :action => 'add'
 
@@ -237,7 +237,7 @@ class BoardControllerTest < Test::Unit::TestCase
          :board => new_board,
          :board_reviewers => {'8' => '116', '5' => '1331'})
 
-    assert_equal(6, Board.find_all.size)
+    assert_equal(7, Board.find_all.size)
     assert_equal("Number can't be blank", flash['notice'])
     assert_redirected_to :action => 'add'
 
@@ -253,7 +253,7 @@ class BoardControllerTest < Test::Unit::TestCase
          :board => new_board,
          :board_reviewers => {'8' => '116', '5' => '1331'})
 
-    assert_equal(6, Board.find_all.size)
+    assert_equal(7, Board.find_all.size)
     assert_equal('Prefix can not be blank', flash['notice'])
     assert_redirected_to :action => 'add'
 
@@ -281,14 +281,14 @@ class BoardControllerTest < Test::Unit::TestCase
          :board_reviewers => {'8' => '116', '5' => '1331'},
          :fab_house => fab_house_selections)
 
-    assert_equal(7, Board.find_all.size)
+    assert_equal(8, Board.find_all.size)
     assert_equal('Board was successfully created', flash['notice'])
     assert_redirected_to :action => 'list'
 
     post(:create,
          :board => new_board,
          :board_reviewers => {'8' => '116', '5' => '1331'})
-    assert_equal(7, Board.find_all.size)
+    assert_equal(8, Board.find_all.size)
     assert_equal("Name for board already exists", flash['notice'])
     assert_redirected_to :action => 'add'
 
@@ -298,7 +298,7 @@ class BoardControllerTest < Test::Unit::TestCase
          :board => board_bad_number,
          :board_reviewers => {'8' => '116', '5' => '1331'})
 
-    assert_equal(7, Board.find_all.size)
+    assert_equal(8, Board.find_all.size)
     assert_equal("Number is not a number", flash['notice'])
     assert_redirected_to :action => 'add'
 
