@@ -43,8 +43,8 @@ class DesignControllerTest < Test::Unit::TestCase
 
 
   def test_1_id
-    print ("\n*** Design Controller Test\n")
-    print ("*** $Id$\n")
+    print("\n*** Design Controller Test\n")
+    print("*** $Id$\n")
   end
 
 
@@ -121,9 +121,9 @@ class DesignControllerTest < Test::Unit::TestCase
     details = flash[:details]
 
     assert_equal(5,  Design.find_all("board_id='#{details[:board_id]}'").size)
-    assert_equal(25, DesignReview.find_all.size)
+    assert_equal(45, DesignReview.find_all.size)
     assert_equal(51, DesignReviewResult.find_all.size)
-    assert_equal(12, Audit.find_all.size)
+    assert_equal(15, Audit.find_all.size)
     assert_equal(43, DesignCheck.find_all.size)
 
     board_reviewers = {
@@ -143,6 +143,23 @@ class DesignControllerTest < Test::Unit::TestCase
       'TDE'                => '7201',
       'Valor'              => '5002'}
 
+    reviewer_flags = {
+      'CE-DFT'             => '0',
+      'HWENG'              => '1',
+      'DFM'                => '1',
+      'Library'            => '1',
+      'Mechanical'         => '1',
+      'Mechanical-MFG'     => '0',
+      'Operations Manager' => '1',
+      'PCB Design'         => '1',
+      'PCB Input Gate'     => '1',
+      'PCB Mechanical'     => '1',
+      'Planning'           => '1',
+      'SLM BOM'            => '1',
+      'SLM-Vendor'         => '1',
+      'TDE'                => '1',
+      'Valor'              => '1'}
+
     fab_house_selections = {
       '1' => '0',
       '2' => '1',
@@ -152,15 +169,17 @@ class DesignControllerTest < Test::Unit::TestCase
       '6' => '1',
       '7' => '0',
       '8' => '1'}
-return
+
     post(:create,
-         :review_type => {"Pre-Artwork" => '1',
-           "Placement"   => '0',
-           "Routing"     => '0',
-           "Final"       => '1',
-           "Release"     => '1'},
+         :review_type     => {"Pre-Artwork" => '1',
+                              "Placement"   => '0',
+                              "Routing"     => '0',
+                              "Final"       => '1',
+                              "Release"     => '1'},
          :board_reviewers => board_reviewers,
-         :fab_house => fab_house_selections)
+         :reviewer        => reviewer_flags,
+         :fab_house       => fab_house_selections,
+         :priority        => {:id => 2})
 
     designs = Design.find_all("board_id='#{details[:board_id]}'",
                               'created_on ASC')
@@ -168,41 +187,34 @@ return
 
     new_design = designs.pop
 
-    assert_equal(@la453.id,     new_design.board_id)
-    assert_equal(@bob_g.id,     new_design.designer_id)
-    assert_equal(@scott_g.id,   new_design.peer_id)
+    assert_equal(la453.id,      new_design.board_id)
     assert_equal("Date Code",   new_design.design_type)
-    assert_equal(@rev_a.id,     new_design.revision_id)
-    assert_equal(@suffix_2.id,  new_design.suffix_id)
+    assert_equal(rev_a.id,      new_design.revision_id)
+    assert_equal(suffix_2.id,   new_design.suffix_id)
     assert_equal('la453a_eco2', new_design.name)
 
-    assert_equal(7, DesignReview.find_all.size)
+    assert_equal(50, DesignReview.find_all.size)
     design_reviews = DesignReview.find_all("design_id='#{new_design.id}'")
-    assert_equal(5, design_reviews.size)
+    assert_equal(5,  design_reviews.size)
     # Verify the the design review results table was updated.
-    assert_equal(37, DesignReviewResult.find_all.size)
+    assert_equal(78, DesignReviewResult.find_all.size)
     assert_equal(46, DesignCheck.find_all.size)
 
     expected_vals = {
       'Pre-Artwork' => {
         :status     => 'Not Started',
-        :role_count => 13,
-        :roles      => [5, 6, 7, 8, 9, 10, 11, 13, 14, 15, 16, 17, 18]},
+        :roles      => [5, 6, 8, 9, 10, 13, 14, 15, 16, 17, 18]},
       'Placement'   => {
         :status     => 'Review Skipped',
-        :role_count => 6,
-        :roles      => [5, 7, 8, 9, 10, 11]},
+        :roles      => [5, 8, 9, 10]},
       'Routing'     => {
         :status     => 'Review Skipped',
-        :role_count => 4,
-        :roles      => [5, 7, 8, 11]},
+        :roles      => [5, 8]},
       'Final'       => {
         :status     => 'Not Started',
-        :role_count => 9,
-        :roles      => [5, 6, 7, 8, 9, 10, 11, 12, 13]},
+        :roles      => [5, 6, 8, 9, 10, 12, 13]},
       'Release'     => {
         :status     => 'Not Started',
-        :role_count => 3,
         :roles      => [5, 12, 19]}}
 
     for design_review in design_reviews
@@ -213,7 +225,7 @@ return
 
       design_review_results =
         DesignReviewResult.find_all("design_review_id='#{design_review.id}'")
-      assert_equal(expect[:role_count], design_review_results.size)
+      assert_equal(expect[:roles].size, design_review_results.size)
       
       roles = Array.new
       for drr in design_review_results
@@ -224,7 +236,7 @@ return
     end
 
 
-    assert_equal(10, Audit.find_all.size)
+    assert_equal(16, Audit.find_all.size)
     assert_equal(1,  Audit.find_all("design_id='#{new_design.id}'").size)
 
   end
@@ -523,6 +535,40 @@ return
     assert_equal(suffixes(:suffix_6).name, suffixes.shift.name)
     assert_equal(suffixes(:suffix_7).name, suffixes.shift.name)
     assert_equal(0, suffixes.size)
+
+  end
+  
+  
+  private
+  
+  
+  def dump_designs
+
+    print "\n\ndump_designs\n"
+    
+    designs = Design.find_all
+    print "There are #{designs.size} designs\n"
+    
+    for design in designs
+    
+      if design.phase_id == 0 
+        phase = 'Not Set'
+      elsif design.phase_id < 255
+        phase = ReviewType.find(design.phase_id).name
+      else
+        phase = "COMPLETE"
+      end
+      print "#{design.name} (#{design.id})  phase: #{phase}  #{design.design_reviews.size} design reviews\n"
+      for dr in design.design_reviews
+        print "#{dr.id} #{dr.review_type.name} - #{dr.review_status.name}"
+        print "\n"
+      end
+      design_review_list = design.design_reviews.sort_by { |dr| dr.review_type.sort_order }
+      print "\n"
+    
+    end
+    
+    print "\n\n"
 
   end
 
