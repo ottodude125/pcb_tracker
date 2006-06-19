@@ -1,3 +1,10 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays the rows for the reviewer's tracker      -->
+<!--          view.                                             -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
 <tr class="<%= reviewer_home_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
 
   <td align="left">
@@ -22,8 +29,7 @@
     <% end %>
   </td>
   <td title="Age in work days">
-    <%= workdays(reviewer_home_list_stripes.reposted_on,
-                 Time.now) %>
+    <%= reviewer_home_list_stripes.age %>
   </td>
   
   <% if my_reviews %>
