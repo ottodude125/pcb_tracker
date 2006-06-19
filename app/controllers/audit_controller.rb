@@ -575,6 +575,7 @@ class AuditController < ApplicationController
 
     self_auditor_list.each { |key, self_auditor|
     
+      next if self_auditor == ''
       section_id = key.split('_')[2].to_i
       
       next if audit_teammates.detect{ |t|
@@ -593,6 +594,7 @@ class AuditController < ApplicationController
 
     peer_auditor_list.each { |key, peer_auditor|
     
+      next if peer_auditor == ''
       section_id = key.split('_')[2].to_i
 
       next if audit_teammates.detect{ |t|
