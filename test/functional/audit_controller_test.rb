@@ -948,7 +948,9 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(lead_designer, auditor_list[:lead_designer])
     assert_equal(lead_peer,     auditor_list[:lead_peer])
     
-    expected_self_auditors = [users(:bob_g),    users(:rich_m)]
+    expected_self_auditors = [users(:scott_g),
+                              users(:bob_g),
+                              users(:rich_m)]
     assert_equal(expected_self_auditors, auditor_list[:self_list])
     
     expected_peer_auditors = [users(:scott_g),  users(:bob_g)]
