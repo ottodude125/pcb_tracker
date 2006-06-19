@@ -24,6 +24,7 @@ class AuditControllerTest < Test::Unit::TestCase
   end
 
   fixtures(:audit_comments,
+           :audit_teammates,
            :audits,
            :boards,
            :checklists,
@@ -49,8 +50,8 @@ class AuditControllerTest < Test::Unit::TestCase
 
 
   def test_1_id
-    print ("\n*** Audit Controller Test\n")
-    print ("*** $Id$\n")
+    print("\n*** Audit Controller Test\n")
+    print("*** $Id$\n")
   end
 
 
@@ -126,15 +127,14 @@ class AuditControllerTest < Test::Unit::TestCase
 
     # Log in as a designer and get the audit listing.
     designer = User.find(users(:rich_m).id)
-    @request.session[:user]        = designer
-    @request.session[:active_role] = 'Designer'
-    @request.session[:roles]       = designer.roles
+    set_user(users(:rich_m).id, 'Designer')
 
     audit = Audit.find(audits(:audit_mx234b).id)
     assert_equal(designer.id, audit.design.designer_id)
     assert(!audit.designer_complete?)
     assert(!audit.auditor_complete?)
-
+    assert(1, audit.audit_teammates.size)
+    
     # This check should fail to update because no comment is included.
     post(:update_design_checks,
          :audit         => {:id => audits(:audit_mx234b).id},
@@ -159,6 +159,9 @@ class AuditControllerTest < Test::Unit::TestCase
 
     assert_equal(0, assigns(:audit).designer_completed_checks)
     assert_equal(0, assigns(:audit).auditor_completed_checks)
+
+    audit.reload
+    assert_equal(1, audit.audit_teammates.size)
 
     checks = assigns(:checks)
     for check in checks
@@ -194,6 +197,9 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(4, assigns(:audit).designer_completed_checks)
     assert_equal(0, assigns(:audit).auditor_completed_checks)
 
+
+    audit.reload
+    assert_equal(1, audit.audit_teammates.size)
 
     results = %w{Waived Verified N/A Verified}
     checks = assigns(:checks)
@@ -234,6 +240,9 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(4, assigns(:audit).designer_completed_checks)
     assert_equal(0, assigns(:audit).auditor_completed_checks)
 
+    audit.reload
+    assert_equal(1, audit.audit_teammates.size)
+
     results = %w{Verified Verified N/A Verified} 
     checks = assigns(:checks)
     for check in checks
@@ -265,6 +274,9 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(5, assigns(:audit).designer_completed_checks)
     assert_equal(0, assigns(:audit).auditor_completed_checks)
 
+    audit.reload
+    assert_equal(1, audit.audit_teammates.size)
+
     results = %w{Yes None} 
     checks = assigns(:checks)
     for check in checks
@@ -291,6 +303,9 @@ class AuditControllerTest < Test::Unit::TestCase
 
     assert_equal(6, assigns(:audit).designer_completed_checks)
     assert_equal(0, assigns(:audit).auditor_completed_checks)
+
+    audit.reload
+    assert_equal(1, audit.audit_teammates.size)
 
     results = %w{Yes No} 
     checks = assigns(:checks)
@@ -321,6 +336,9 @@ class AuditControllerTest < Test::Unit::TestCase
 
     assert_equal(8, assigns(:audit).designer_completed_checks)
     assert_equal(0, assigns(:audit).auditor_completed_checks)
+
+    audit.reload
+    assert_equal(1, audit.audit_teammates.size)
 
     results = %w{Waived Waived} 
     checks = assigns(:checks)
@@ -357,6 +375,9 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(12, assigns(:audit).designer_completed_checks)
     assert_equal(0,  assigns(:audit).auditor_completed_checks)
 
+    audit.reload
+    assert_equal(1, audit.audit_teammates.size)
+
     results = %w{Waived Waived Verified Verified} 
     checks = assigns(:checks)
     for check in checks
@@ -387,6 +408,9 @@ class AuditControllerTest < Test::Unit::TestCase
 
     assert_equal(15, assigns(:audit).designer_completed_checks)
     assert_equal(0,  assigns(:audit).auditor_completed_checks)
+
+    audit.reload
+    assert_equal(1, audit.audit_teammates.size)
 
     results = %w{Waived Waived N/A} 
     checks = assigns(:checks)
@@ -429,6 +453,9 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(15, assigns(:audit).designer_completed_checks)
     assert_equal(2,  assigns(:audit).auditor_completed_checks)
 
+    audit.reload
+    assert_equal(1, audit.audit_teammates.size)
+
     results = %w{Verified N/A None None} 
     checks = assigns(:checks)
     for check in checks
@@ -467,6 +494,9 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(15, assigns(:audit).designer_completed_checks)
     assert_equal(4,  assigns(:audit).auditor_completed_checks)
 
+    audit.reload
+    assert_equal(1, audit.audit_teammates.size)
+
     results = %w{N/A Verified Waived Verified} 
     checks = assigns(:checks)
     for check in checks
@@ -496,6 +526,9 @@ class AuditControllerTest < Test::Unit::TestCase
 
     assert_equal(15, assigns(:audit).designer_completed_checks)
     assert_equal(6,  assigns(:audit).auditor_completed_checks)
+
+    audit.reload
+    assert_equal(1, audit.audit_teammates.size)
 
     results = %w{N/A Verified} 
     checks = assigns(:checks)
@@ -529,6 +562,9 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(9,  assigns(:audit).auditor_completed_checks)
     assert(assigns(:audit).designer_complete?)
     assert(assigns(:audit).auditor_complete?)
+
+    audit.reload
+    assert_equal(0, audit.audit_teammates.size)
 
     results = %w{N/A Verified Waived} 
     checks = assigns(:checks)
@@ -702,8 +738,10 @@ class AuditControllerTest < Test::Unit::TestCase
 
     expected = Array[
       { 'bg_color'     => '0', 
-        'section_name' => 'section_10_1', 
-        'section_url'  => 'www.dogpile.com', 
+        :section => 
+          {'name'             => 'section_10_1',
+           'id'               => '3'
+          },
         'subsections' => Array[{
             'name'             => 'subsection_10_1_1',
             'percent_complete' => 0.0,
@@ -725,8 +763,10 @@ class AuditControllerTest < Test::Unit::TestCase
         ]
       },
       { 'bg_color'     => '343434', 
-        'section_name' => 'section_10_2', 
-        'section_url'  => 'www.dogpile.com', 
+        :section      => 
+          { 'name'             => 'section_10_2',
+            'id'               => '4'
+          },
         'subsections' => Array[{
             'name'             => 'subsection_10_2_1',
             'percent_complete' => 0.0,
@@ -753,7 +793,9 @@ class AuditControllerTest < Test::Unit::TestCase
     for line in lines
       line.each { |k,v|	
         if k != 'subsections'
-          assert_equal(expected[i][k], v) if k != 'subsections'
+          section = expected[i][k]
+          assert_equal(section['id'].to_i, v.id)
+          assert_equal(section['name'],    v.name)
         else
           0.upto(line[k].size-1) { |idx|
             expected_vals = expected[i][k][idx]
@@ -775,8 +817,10 @@ class AuditControllerTest < Test::Unit::TestCase
 
     expected = Array[
       { 'bg_color'     => '0', 
-        'section_name' => 'section_10_1', 
-        'section_url'  => 'www.dogpile.com', 
+        :section      => 
+          { 'name'             => 'section_10_1',
+            'id'               => '3'
+          },
         'subsections' => Array[{
             'name'             => 'subsection_10_1_1',
             'percent_complete' => 0.0,
@@ -803,7 +847,9 @@ class AuditControllerTest < Test::Unit::TestCase
     for line in lines
       line.each { |k,v|	
         if k != 'subsections'
-          assert_equal(expected[i][k], v) if k != 'subsections'
+          section = expected[i][k]
+          assert_equal(section['id'].to_i, v.id)
+          assert_equal(section['name'],    v.name)
         else
           0.upto(line[k].size-1) { |idx|
             expected_vals = expected[i][k][idx]
@@ -826,8 +872,10 @@ class AuditControllerTest < Test::Unit::TestCase
 
     expected = Array[
       { 'bg_color'     => '0', 
-        'section_name' => 'section_10_1', 
-        'section_url'  => 'www.dogpile.com', 
+        :section      => 
+          { 'name'             => 'section_10_1',
+            'id'               => '3'
+          },
         'subsections' => Array[{
             'name'             => 'subsection_10_1_1',
             'percent_complete' => 0.0,
@@ -854,7 +902,9 @@ class AuditControllerTest < Test::Unit::TestCase
     for line in lines
       line.each { |k,v|	
         if k != 'subsections'
-          assert_equal(expected[i][k], v) if k != 'subsections'
+          section = expected[i][k]
+          assert_equal(section['id'].to_i, v.id)
+          assert_equal(section['name'],    v.name)
         else
           0.upto(line[k].size-1) { |idx|
             expected_vals = expected[i][k][idx]
@@ -869,7 +919,203 @@ class AuditControllerTest < Test::Unit::TestCase
     end
 
   end
+  
+  
+  ######################################################################
+  #
+  # test_auditor_list
+  #
+  # Description:
+  # This method does the functional testing of the show_sections method
+  # from the AuditController class
+  #
+  ######################################################################
+  #
+  def test_auditor_list
 
+    mx234c_audit = audits(:audit_mx234c)
+    set_user(users(:rich_m).id, 'Designer')
+    
+    post(:auditor_list, :id => mx234c_audit.id)
+    
+    assert_equal(mx234c_audit, assigns(:audit))
+    
+    auditor_list = assigns(:auditor_list)
+    
+    lead_designer = mx234c_audit.design.designer
+    lead_peer     = mx234c_audit.design.peer
+    
+    assert_equal(lead_designer, auditor_list[:lead_designer])
+    assert_equal(lead_peer,     auditor_list[:lead_peer])
+    
+    expected_self_auditors = [users(:bob_g),    users(:rich_m)]
+    assert_equal(expected_self_auditors, auditor_list[:self_list])
+    
+    expected_peer_auditors = [users(:scott_g),  users(:bob_g)]
+    assert_equal(expected_peer_auditors, auditor_list[:peer_list])
+
+    checklist_sections = [sections(:section_10_1), 
+                          sections(:section_10_2)]
+    
+    for section in auditor_list[:sections]
+      expected_section = checklist_sections.shift
+
+      assert_equal(lead_designer,         section[:self_auditor])
+      assert_equal(lead_peer,             section[:peer_auditor])
+      assert_equal(expected_section.name, section[:section].name)
+    end
+    
+    bob_g   = users(:bob_g)
+    rich_m  = users(:rich_m)
+    scott_g = users(:scott_g)
+    # No updates should have been made to audit teammates
+    post(:update_auditor_list,
+         :audit                => {:id => mx234c_audit.id},
+         :self_auditor         => {:section_id_3 => rich_m.id.to_s,
+                                   :section_id_4 => rich_m.id.to_s},
+         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
+                                   :section_id_4 => scott_g.id.to_s})
+
+    mx234c_audit.reload                    
+    assert_equal(0, mx234c_audit.audit_teammates.size)
+    
+    # There should be 1 teammates record
+    post(:update_auditor_list,
+         :audit                => {:id => mx234c_audit.id},
+         :self_auditor         => {:section_id_3 => rich_m.id.to_s, 
+                                   :section_id_4 => bob_g.id.to_s},
+         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
+                                   :section_id_4 => scott_g.id.to_s})
+
+    mx234c_audit.reload    
+    teammates = mx234c_audit.audit_teammates
+    assert_equal(1, teammates.size)
+
+    teammate = teammates.pop
+    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(sections(:section_10_2).id, teammate.section_id)
+    assert_equal(true,                       teammate.self?)
+         
+    # There should be no audit teammates records.
+    post(:update_auditor_list,
+         :audit                => {:id => mx234c_audit.id},
+         :self_auditor         => {:section_id_3 => rich_m.id.to_s,
+                                   :section_id_4 => rich_m.id.to_s},
+         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
+                                   :section_id_4 => scott_g.id.to_s})
+
+    mx234c_audit.reload    
+    assert_equal(0, mx234c_audit.audit_teammates.size)
+    
+    
+    # There should be 1 teammate record
+    post(:update_auditor_list,
+         :audit                => {:id => mx234c_audit.id},
+         :self_auditor         => {:section_id_3 => rich_m.id.to_s, 
+                                   :section_id_4 => rich_m.id.to_s},
+         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
+                                   :section_id_4 => bob_g.id.to_s})
+
+    mx234c_audit.reload    
+    teammates = mx234c_audit.audit_teammates
+    assert_equal(1, teammates.size)
+    teammate = teammates.pop
+    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(sections(:section_10_2).id, teammate.section_id)
+    assert_equal(false,                      teammate.self?)
+         
+    # There should be 1 teammates record
+    post(:update_auditor_list,
+         :audit                => {:id => mx234c_audit.id},
+         :self_auditor         => {:section_id_3 => rich_m.id.to_s, 
+                                   :section_id_4 => bob_g.id.to_s},
+         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
+                                   :section_id_4 => scott_g.id.to_s})
+
+    mx234c_audit.reload    
+    teammates = mx234c_audit.audit_teammates
+    assert_equal(1, teammates.size)
+    teammate = teammates.pop
+    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(sections(:section_10_2).id, teammate.section_id)
+    assert_equal(true,                       teammate.self?)
+         
+    # There should be 1 teammate record
+    post(:update_auditor_list,
+         :audit                => {:id => mx234c_audit.id},
+         :self_auditor         => {:section_id_3 => rich_m.id.to_s, 
+                                   :section_id_4 => rich_m.id.to_s},
+         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
+                                   :section_id_4 => bob_g.id.to_s})
+
+    mx234c_audit.reload    
+    teammates = mx234c_audit.audit_teammates
+    assert_equal(1, teammates.size)
+    teammate = teammates.pop
+    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(sections(:section_10_2).id, teammate.section_id)
+    assert_equal(false,                      teammate.self?)
+
+    # There should be 1 teammate record
+    post(:update_auditor_list,
+         :audit                => {:id => mx234c_audit.id},
+         :self_auditor         => {:section_id_3 => rich_m.id.to_s, 
+                                   :section_id_4 => rich_m.id.to_s},
+         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
+                                   :section_id_4 => bob_g.id.to_s})
+
+    mx234c_audit.reload    
+    teammates = mx234c_audit.audit_teammates
+    assert_equal(1, teammates.size)
+    teammate = teammates.pop
+    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(sections(:section_10_2).id, teammate.section_id)
+    assert_equal(false,                      teammate.self?)
+
+
+    # There should be 2 teammate records
+    post(:update_auditor_list,
+         :audit                => {:id => mx234c_audit.id},
+         :self_auditor         => {:section_id_3 => bob_g.id.to_s, 
+                                   :section_id_4 => bob_g.id.to_s},
+         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
+                                   :section_id_4 => scott_g.id.to_s})
+
+    mx234c_audit.reload    
+    teammates = mx234c_audit.audit_teammates
+    assert_equal(2, teammates.size)
+    teammate = teammates.pop
+    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(sections(:section_10_2).id, teammate.section_id)
+    assert_equal(true,                       teammate.self?)
+    teammate = teammates.pop
+    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(sections(:section_10_1).id, teammate.section_id)
+    assert_equal(true,                       teammate.self?)
+
+
+    # There should be 2 teammate records
+    post(:update_auditor_list,
+         :audit                => {:id => mx234c_audit.id},
+         :self_auditor         => {:section_id_3 => bob_g.id.to_s, 
+                                   :section_id_4 => bob_g.id.to_s},
+         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
+                                   :section_id_4 => scott_g.id.to_s})
+
+    mx234c_audit.reload    
+    teammates = mx234c_audit.audit_teammates
+    assert_equal(2, teammates.size)
+    teammate = teammates.pop
+    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(sections(:section_10_2).id, teammate.section_id)
+    assert_equal(true,                       teammate.self?)
+    teammate = teammates.pop
+    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(sections(:section_10_1).id, teammate.section_id)
+    assert_equal(true,                       teammate.self?)
+         
+  end
+  
 
   private
 
