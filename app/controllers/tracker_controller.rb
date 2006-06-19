@@ -246,7 +246,7 @@ class TrackerController < ApplicationController
     @design_reviews.reverse! if @params[:order] == 'ASC'
     
     @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_list_by_date',
+                            :action     => 'manager_list_by_age',
                             :order      => @params[:order]}
     render_action 'manager_home'
 
