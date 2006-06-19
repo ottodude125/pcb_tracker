@@ -1,43 +1,65 @@
-<tr class="<%= manager_home_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays the rows for the managers tracker view.  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
 
-  <td align="left">
-    <font size="-1">
-      <%= manager_home_list_stripes[:priority_name] %>
-    </font>
-  </td>
+<tr class="<%= manager_home_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
+
   <td>
     <%= link_to(manager_home_list_stripes.design.name,
                 :controller => 'design_review',
                 :action     => 'view',
                 :id         => manager_home_list_stripes.id)%>
   </td>
+  <td align="left">
+    <font size="-1">
+      <b><%= manager_home_list_stripes[:priority_name] %></b>
+    </font>
+  </td>
+  <td>
+    <%= manager_home_list_stripes.designer.name %>
+  </td>
+  <td>
+    <%= manager_home_list_stripes.design.peer.name %>
+  </td>
   <td>
     <%= manager_home_list_stripes.review_name %>
-  </td>
-  <td>
-    <%= User.find(manager_home_list_stripes.designer_id).name %>
-  </td>
-  <td>
-    <% if manager_home_list_stripes.design.peer_id > 0 %>
-      <%= User.find(manager_home_list_stripes.design.peer_id).name %>
-    <% else %>
-      <b>Not Set</b>
-    <% end %>
-  </td>
-  <td>
-    <%= manager_home_list_stripes.reposted_on.strftime('%d-%b-%y') %>
-  </td>
-  <td align="center">
-    <%= manager_home_list_stripes[:approvals] %> of
-    <%= manager_home_list_stripes[:reviewers] %>&nbsp;
   </td>
   <td>
     <%= manager_home_list_stripes.review_status.name %>
   </td>
   <td>
-    <%= button_to("Update Assignments", 
-                  { :controller => "design_review",
-                    :action     => "admin_update",
-                    :id         => manager_home_list_stripes.id }) %>
+    <%= manager_home_list_stripes.age %>
+  </td>
+  <td align="center">
+    <%= manager_home_list_stripes[:approvals] %> of
+    <%= manager_home_list_stripes[:reviewers] %>&nbsp;
+  </td>
+  <td align="right">
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td valign="top">
+          <%= button_to("Update Assignments", 
+                        { :controller => "design_review",
+                          :action     => "admin_update",
+                          :id         => manager_home_list_stripes.id },
+                        { :title => "Make updates to the design review assignments.",
+                          :class => "small_font_button" } ) %>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top">
+          <%= button_to('Audit Assignments',
+                        { :controller => 'audit',
+                          :action     => 'auditor_list',
+                          :id         => manager_home_list_stripes.design.audit.id,
+                          :return_to  => { :controller => 'tracker',
+                                           :action     => 'index' } },
+                        { :title => 'Set the assignments for self and peer audits.',
+                          :class => "small_font_button" } )%>
+        </td>
+      </tr>
+    </table>
   </td>
 </tr>
