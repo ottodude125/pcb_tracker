@@ -1,9 +1,24 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: role_test.rb
+#
+# This file contains the unit tests for the role model
+#
+# Revision History:
+#   $Id$
+#
+########################################################################
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class RoleTest < Test::Unit::TestCase
 
   fixtures(:review_types_roles,
-           :roles)
+           :roles,
+           :roles_users,
+           :users)
 
   def setup
     @role = Role.find(roles(:admin).id)
@@ -36,6 +51,31 @@ class RoleTest < Test::Unit::TestCase
   def test_destroy
     @role.destroy
     assert_raise(ActiveRecord::RecordNotFound) { Role.find(@role.id) }
+  end
+  
+  
+  ######################################################################
+  #
+  # test_users
+  #
+  # Description:
+  # Validates the behaviour of the following methods.
+  #
+  #   active_users()
+  #
+  ######################################################################
+  #
+  def test_users
+
+    all_designers = Role.find_by_name('Designer').users
+    assert_equal(4, all_designers.size)
+    all_designers.delete_if  { |u| !u.active? }
+    assert_equal(3, all_designers.size)
+    all_designers = all_designers.sort_by { |u| u.last_name }
+    
+    active_designers = Role.find_by_name('Designer').active_users
+    assert_equal(all_designers, active_designers)
+    
   end
 
 end
