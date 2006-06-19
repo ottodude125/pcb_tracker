@@ -103,4 +103,29 @@ audit_mx700b:
   auditor_complete:          0
   designer_completed_checks: 0
   auditor_completed_checks:  0
+audit_in_self_audit:
+  id:                        2000
+  design_id:                 13
+  checklist_id:              2
+  designer_complete:         0
+  auditor_complete:          0
+  designer_completed_checks: 10
+  auditor_completed_checks:  0
+audit_in_peer_audit:
+  id:                        2001
+  design_id:                 14
+  checklist_id:              2
+  designer_complete:         1
+  auditor_complete:          0
+  designer_completed_checks: 15
+  auditor_completed_checks:  10
+audit_complete:
+  id:                        2002
+  design_id:                 15
+  checklist_id:              2
+  designer_complete:         1
+  auditor_complete:          1
+  designer_completed_checks: 15
+  auditor_completed_checks:  10
+
 
