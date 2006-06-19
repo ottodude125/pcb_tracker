@@ -1,3 +1,16 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: design_test.rb
+#
+# This file contains the unit tests for the design model
+#
+# Revision History:
+#   $Id$
+#
+########################################################################
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class DesignTest < Test::Unit::TestCase
@@ -8,7 +21,18 @@ class DesignTest < Test::Unit::TestCase
     @design = Design.find(1)
   end
 
+  ######################################################################
   #
+  # test_people
+  #
+  # Description:
+  # Validates the behaviour of the following methods.
+  #
+  #   designer()
+  #   peer()
+  #   input_gate()
+  #
+  ######################################################################
   #
   def test_people
   
@@ -26,7 +50,16 @@ class DesignTest < Test::Unit::TestCase
   end
   
   
+  ######################################################################
   #
+  # test_all_reviewers
+  #
+  # Description:
+  # Validates the behaviour of the following methods.
+  #
+  #   all_reviewers()
+  #
+  ######################################################################
   #
   def test_all_reviewers
   
@@ -47,13 +80,49 @@ class DesignTest < Test::Unit::TestCase
   end
   
   
+  ######################################################################
+  #
+  # test_get_associated_users
+  #
+  # Description:
+  # Validates the behaviour of the following methods.
+  #
+  #   get_associated_users()
+  #
+  ######################################################################
+  #
   def test_get_associated_users
   
     mx234a_users = designs(:mx234a).get_associated_users
     
+    assert_equal(users(:bob_g),   mx234a_users[:designer])
+    assert_equal(users(:scott_g), mx234a_users[:peer])
+    assert_equal(users(:cathy_m), mx234a_users[:pcb_input])
+    
+    reviewers = mx234a_users[:reviewers].sort_by{ |u| u.last_name }
+    expected_reviewers = [
+      users(:rich_a),     users(:lisa_a),     users(:eileen_c),
+      users(:art_d),      users(:matt_d),     users(:espo),
+      users(:tom_f),      users(:anthony_g),  users(:john_g),
+      users(:dan_g),      users(:jim_l),      users(:dave_m),
+      users(:cathy_m),    users(:lee_s),      users(:heng_k)
+    ]
+    assert_equal(expected_reviewers, reviewers)
+
   end
   
 
+  ######################################################################
+  #
+  # test_get_associated_users_by_role
+  #
+  # Description:
+  # Validates the behaviour of the following methods.
+  #
+  #   get_associated_users_by_role()
+  #
+  ######################################################################
+  #
   def test_get_associated_users_by_role
   
     mx234a_users = designs(:mx234a).get_associated_users_by_role
@@ -90,6 +159,36 @@ class DesignTest < Test::Unit::TestCase
       end
     }
     
+  end
+  
+  
+  ######################################################################
+  #
+  # test_types
+  #
+  # Description:
+  # Validates the behaviour of the following methods.
+  #
+  #   new?()
+  #   date_code?()
+  #   dot_rev?()
+  #
+  ######################################################################
+  #
+  def test_types 
+  
+    assert_equal(true,  designs(:mx234a).new?)
+    assert_equal(false, designs(:mx234a).date_code?)
+    assert_equal(false, designs(:mx234a).dot_rev?)
+    
+    assert_equal(false, designs(:la453a_eco1).new?)
+    assert_equal(true,  designs(:la453a_eco1).date_code?)
+    assert_equal(false, designs(:la453a_eco1).dot_rev?)
+  
+    assert_equal(false, designs(:la453a1).new?)
+    assert_equal(false, designs(:la453a1).date_code?)
+    assert_equal(true,  designs(:la453a1).dot_rev?)
+  
   end
   
 
