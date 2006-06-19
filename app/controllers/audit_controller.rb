@@ -472,7 +472,6 @@ class AuditController < ApplicationController
     self_list = Role.find_by_name('Designer').active_users
     peer_list = self_list.dup
 
-    self_list.delete_if { |u| u.id == @audit.design.peer_id }
     peer_list.delete_if { |u| u.id == @audit.design.designer_id }
     
     checklist_sections = @audit.checklist.sections
@@ -571,6 +570,26 @@ class AuditController < ApplicationController
         audit_teammate.destroy
       end
     end
+    
+    # Go through the assignments and make sure the same person has
+    # not been assigned to the same section for peer and self audits.
+    flash['notice'] = ''
+    self_auditor_list.each { |key, self_auditor|
+
+      next if self_auditor == ''
+
+      if ((self_auditor == peer_auditor_list[key]) ||
+          (!peer_auditor_list[key] && self_auditor.to_i == audit.design.peer_id))
+        flash['notice']  = 'WARNING: Assignments not made <br />' if flash['notice'] == ''
+        section = Section.find(key.split('_')[2].to_i)
+        auditor = User.find(self_auditor)
+        flash['notice'] += "         #{auditor.name} can not be both " +
+                           "self and peer auditor for #{section.name}<br />"
+        self_auditor_list[key] = ''
+        peer_auditor_list[key] = ''
+      end
+      
+    }
 
 
     self_auditor_list.each { |key, self_auditor|
@@ -612,6 +631,11 @@ class AuditController < ApplicationController
     }
  
     if teammate_list_updates.size > 0
+    
+      flash['notice'] += "Updates to the audit team for the " +
+                         "#{audit.design.name} have been recorded - " +
+                         "mail was sent"
+    
       audit.reload
       TrackerMailer::deliver_audit_team_updates(@session[:user],
                                                 audit,
