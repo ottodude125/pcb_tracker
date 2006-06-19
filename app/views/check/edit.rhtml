@@ -154,21 +154,21 @@
             <th valign="top" align="right">Check Type: </th>
 
             <td>
-              <% if @check.check_type == 'yes_no' %>
+              <% if @check.yes_no? %>
                 <%= radio_button "check", "check_type", "yes_no", { 'checked' => 'checked' } %>
               <% else %>
                 <%= radio_button "check", "check_type", "yes_no"  %>
               <% end %>
               <b>Yes/No</b><br>
 
-              <% if @check.check_type == 'designer_auditor' %>
+              <% if @check.designer_auditor? %>
                 <%= radio_button "check", "check_type", "designer_auditor", { 'checked' => 'checked' }  %>
               <% else %>
                 <%= radio_button "check", "check_type", "designer_auditor" %>
               <% end %>
               <b>Designer/Auditor</b><br>
 
-              <% if @check.check_type == 'designer_only' %>
+              <% if @check.designer_only? %>
                 <%= radio_button "check", "check_type", "designer_only", { 'checked' => 'checked' } %>
               <% else %>
                 <%= radio_button "check", "check_type", "designer_only" %>
