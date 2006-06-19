@@ -72,7 +72,7 @@
             <% break if check.nil? %>
   
             <td width="5%">
-              <% if check.check_type == 'yes_no' %>
+              <% if check.yes_no? %>
                 <b>Y</b>
               <% else %>
                 <b>D</b>
@@ -80,10 +80,10 @@
               <b><font size="+2">&#9744;</font></b>
             </td>
             <td width="5%">
-              <% if check.check_type == 'yes_no' %>
+              <% if check.yes_no? %>
                 <b>N</b>
                 <b><font size="+2">&#9744;</font></b>
-              <% elsif check.check_type == 'designer_auditor' %>
+              <% elsif check.designer_auditor? %>
                 <b>A</b>
                 <b><font size="+2">&#9744;</font></b>
               <% else %>
