@@ -145,11 +145,11 @@
           </td>
 
           <td align="center">
-            <% if check.check_type == 'yes_no' %>
+            <% if check.yes_no? %>
               Y/N
-            <% elsif check.check_type == 'designer_auditor' %>
+            <% elsif check.designer_auditor? %>
               D/A
-            <% elsif check.check_type == 'designer_only' %>
+            <% elsif check.designer_only? %>
               D/O
             <% end %>
           </td>
