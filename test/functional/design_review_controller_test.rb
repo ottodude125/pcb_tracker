@@ -44,8 +44,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
            :users)
 
   def test_1_id
-    print ("\n*** Design Review Controller Test\n")
-    print ("*** $Id$\n")
+    print("\n*** Design Review Controller Test\n")
+    print("*** $Id$\n")
   end
 
 
@@ -553,27 +553,31 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #
   def test_post
 
+    review_status_list = ReviewStatus.find_all
+    statuses = {}
+    for review_status in review_status_list
+      statuses[review_status.name] = review_status.id
+    end
+
     admin_email = users(:patrice_m).email
 
     set_user(users(:scott_g).id, 'Designer')
-    mx234a_pre_artwork = design_reviews(:mx234a_pre_artwork)
+    pre_artwork_dr = design_reviews(:mx234c_pre_artwork)
 
     # Verify the state before posting.
-    assert_equal(ReviewStatus.find_by_name('Not Started').id,
-                 mx234a_pre_artwork.review_status_id)
-    assert_equal(0, mx234a_pre_artwork.posting_count)
+    assert_equal(statuses['Not Started'], 
+                 pre_artwork_dr.review_status_id)
+    assert_equal(0, pre_artwork_dr.posting_count)
 
-    mx234a_pre_art_results = DesignReviewResult.find_all_by_design_review_id(
-                               mx234a_pre_artwork.id)
-    assert_equal(14, mx234a_pre_art_results.size)
-    for review_result in mx234a_pre_art_results
+    assert_equal(14, pre_artwork_dr.design_review_results.size)
+    for review_result in pre_artwork_dr.design_review_results
       assert_equal('None', review_result.result)
     end
-    comments = DesignReviewComment.find_all_by_design_review_id(mx234a_pre_artwork.id)
-    assert_equal(4, comments.size)
+
+    assert_equal(0, pre_artwork_dr.comments.size)
                  
     post(:post,
-         :design_review   => {:id => mx234a_pre_artwork.id},
+         :design_review   => {:id => pre_artwork_dr.id},
          :board_reviewers => {'7'  => '7101',
                               '8'  => '7150',
                               '5'  => '7001',
@@ -590,23 +594,19 @@ class DesignReviewControllerTest < Test::Unit::TestCase
                               '13' => '7650'},
          :post_comment    => {:comment => 'Test Comment'})
 
-    design_review_update = DesignReview.find(mx234a_pre_artwork.id)
-
+    pre_artwork_dr.reload
     # Verify the state after posting.
-    assert_equal(ReviewStatus.find_by_name('Not Started').id,
-                 mx234a_pre_artwork.review_status_id)
-    design_review = DesignReview.find(mx234a_pre_artwork.id)
-    assert_equal(1, design_review.posting_count)
+    assert_equal(statuses['In Review'], 
+                 pre_artwork_dr.review_status_id)
+    assert_equal(1, pre_artwork_dr.posting_count)
 
-    mx234a_pre_art_results = DesignReviewResult.find_all_by_design_review_id(
-                               mx234a_pre_artwork.id)
-    assert_equal(14, mx234a_pre_art_results.size)
-    for review_result in mx234a_pre_art_results
+    assert_equal(14, pre_artwork_dr.design_review_results.size)
+    for review_result in pre_artwork_dr.design_review_results
       assert_equal('No Response', review_result.result)
     end
     
-    comments = DesignReviewComment.find_all_by_design_review_id(mx234a_pre_artwork.id)
-    assert_equal(5, comments.size)
+    comments = pre_artwork_dr.comments
+    assert_equal(1, comments.size)
     dr_comment = comments.pop
     assert_equal('Test Comment',     dr_comment.comment)
     assert_equal(users(:scott_g).id, dr_comment.user_id)
@@ -615,7 +615,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     email = @emails.pop
 
     assert_equal(14, email.to.size)
-    assert_equal("mx234a: The Pre-Artwork review has been posted", 
+    assert_equal("mx234c: The Pre-Artwork review has been posted", 
                  email.subject)
     found_email = email.cc.detect { |addr| addr == admin_email }
     assert_equal(nil, found_email)
@@ -630,7 +630,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       invite_list << email
     end
     #invite_list = invite_list.sort_by { |email| email.to.pop }
-    for review_result in mx234a_pre_artwork.design_review_results
+    for review_result in pre_artwork_dr.design_review_results
       reviewer = User.find(review_result.reviewer_id)
       assert(invite_list.detect { |email| email.to.pop == reviewer.email})
     end
@@ -639,18 +639,16 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a_final = design_reviews(:mx234a_final)
 
     # Verify the state before posting.
-    assert_equal(ReviewStatus.find_by_name('Not Started').id,
+    assert_equal(statuses['Not Started'],
                  mx234a_final.review_status_id)
     assert_equal(0, mx234a_final.posting_count)
 
-    mx234a_final_results = DesignReviewResult.find_all_by_design_review_id(
-                             mx234a_final.id)
-    assert_equal(9, mx234a_final_results.size)
-    for review_result in mx234a_final_results
+    assert_equal(9, mx234a_final.design_review_results.size)
+    for review_result in mx234a_final.design_review_results
       assert_equal('None', review_result.result)
     end
-    comments = DesignReviewComment.find_all_by_design_review_id(mx234a_final.id)
-    assert_equal(0, comments.size)
+
+    assert_equal(0, mx234a_final.comments.size)
                  
     post(:post,
          :design_review   => {:id => mx234a_final.id},
@@ -665,22 +663,19 @@ class DesignReviewControllerTest < Test::Unit::TestCase
                               '13' => '7650'},
          :post_comment    => {:comment => 'Test Comment'})
 
-    design_review_update = DesignReview.find(mx234a_final.id)
-
     # Verify the state after posting.
-    assert_equal(ReviewStatus.find_by_name('Not Started').id,
+    mx234a_final.reload
+    assert_equal(ReviewStatus.find_by_name('In Review').id,
                  mx234a_final.review_status_id)
-    design_review = DesignReview.find(mx234a_final.id)
-    assert_equal(1, design_review.posting_count)
 
-    mx234a_final_results = DesignReviewResult.find_all_by_design_review_id(
-                             mx234a_final.id)
-    assert_equal(9, mx234a_final_results.size)
-    for review_result in mx234a_final_results
+    assert_equal(1, mx234a_final.posting_count)
+
+    assert_equal(9, mx234a_final.design_review_results.size)
+    for review_result in mx234a_final.design_review_results
       assert_equal('No Response', review_result.result)
     end
     
-    comments = DesignReviewComment.find_all_by_design_review_id(mx234a_final.id)
+    comments = mx234a_final.comments
     assert_equal(1, comments.size)
     dr_comment = comments.pop
     assert_equal('Test Comment',     dr_comment.comment)
@@ -814,18 +809,16 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a_pre_artwork = design_reviews(:mx234a_pre_artwork)
 
     # Verify the state before posting.
-    assert_equal(ReviewStatus.find_by_name('Not Started').id,
+    assert_equal(ReviewStatus.find_by_name('In Review').id,
                  mx234a_pre_artwork.review_status_id)
-    assert_equal(0, mx234a_pre_artwork.posting_count)
+    assert_equal(1, mx234a_pre_artwork.posting_count)
 
-    mx234a_pre_art_results = DesignReviewResult.find_all_by_design_review_id(
-                               mx234a_pre_artwork.id)
-    assert_equal(14, mx234a_pre_art_results.size)
-    for review_result in mx234a_pre_art_results
+    assert_equal(14, mx234a_pre_artwork.design_review_results.size)
+    for review_result in mx234a_pre_artwork.design_review_results
       assert_equal('None', review_result.result)
     end
-    comments = DesignReviewComment.find_all_by_design_review_id(mx234a_pre_artwork.id)
-    assert_equal(4, comments.size)
+
+    assert_equal(4, mx234a_pre_artwork.comments.size)
                  
     post(:post,
          :design_review   => {:id => mx234a_pre_artwork.id},
@@ -845,23 +838,19 @@ class DesignReviewControllerTest < Test::Unit::TestCase
                               '13' => '7650'},
          :post_comment    => {:comment => 'Test Comment'})
 
-    design_review_update = DesignReview.find(mx234a_pre_artwork.id)
-
     # Verify the state after posting.
-    assert_equal(ReviewStatus.find_by_name('Not Started').id,
+    mx234a_pre_artwork.reload
+    assert_equal(ReviewStatus.find_by_name('In Review').id,
                  mx234a_pre_artwork.review_status_id)
-    design_review = DesignReview.find(mx234a_pre_artwork.id)
-    assert_equal(1, design_review.posting_count)
+    assert_equal(1, mx234a_pre_artwork.posting_count)
 
-    mx234a_pre_art_results = DesignReviewResult.find_all_by_design_review_id(
-                               mx234a_pre_artwork.id)
-    assert_equal(14, mx234a_pre_art_results.size)
-    for review_result in mx234a_pre_art_results
+    assert_equal(14, mx234a_pre_artwork.design_review_results.size)
+    for review_result in mx234a_pre_artwork.design_review_results
       assert_equal('No Response', review_result.result)
     end
-    comments = DesignReviewComment.find_all_by_design_review_id(mx234a_pre_artwork.id)
+    comments = mx234a_pre_artwork.comments
     assert_equal(5, comments.size)
-    dr_comment = comments.pop
+    dr_comment = comments.shift
     assert_equal('Test Comment',     dr_comment.comment)
     assert_equal(users(:scott_g).id, dr_comment.user_id)
 
@@ -884,24 +873,21 @@ class DesignReviewControllerTest < Test::Unit::TestCase
          :post_comment    => {:comment => 'Test Comment for the repost'})
 
 
-    design_review_update = DesignReview.find(mx234a_pre_artwork.id)
-
     # Verify the state after posting.
-    assert_equal(ReviewStatus.find_by_name('Not Started').id,
+    mx234a_pre_artwork.reload
+    assert_equal(ReviewStatus.find_by_name('In Review').id,
                  mx234a_pre_artwork.review_status_id)
-    design_review = DesignReview.find(mx234a_pre_artwork.id)
-    assert_equal(2, design_review.posting_count)
 
-    mx234a_pre_art_results = DesignReviewResult.find_all_by_design_review_id(
-                               mx234a_pre_artwork.id)
-    assert_equal(14, mx234a_pre_art_results.size)
-    for review_result in mx234a_pre_art_results
+    assert_equal(2, mx234a_pre_artwork.posting_count)
+
+    assert_equal(14, mx234a_pre_artwork.design_review_results.size)
+    for review_result in mx234a_pre_artwork.design_review_results
       assert_equal('No Response', review_result.result)
     end
-    comments = DesignReviewComment.find_all_by_design_review_id(mx234a_pre_artwork.id)
+    comments = mx234a_pre_artwork.comments
     assert_equal(6,                             comments.size)
-    assert_equal('Test Comment',                comments[4].comment)
-    assert_equal('Test Comment for the repost', comments[5].comment)
+    assert_equal('Test Comment',                comments[0].comment)
+    assert_equal('Test Comment for the repost', comments[1].comment)
     assert_equal(users(:scott_g).id,            dr_comment.user_id)
 
   end
@@ -1789,7 +1775,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     pre_art_design_review = DesignReview.find(mx234a.id)
     assert_equal(in_review.id, pre_art_design_review.review_status_id)
-    assert_equal('09-04-00',
+    assert_equal('09-05-06',
                  pre_art_design_review.completed_on.strftime('%d-%m-%y'))
 
 
