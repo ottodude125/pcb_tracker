@@ -103,8 +103,8 @@ class TrackerMailerTest < Test::Unit::TestCase
 
   def test_peer_audit_complete
   
-    peer = User.find(@audit.design.peer_id).name
-  
+    peer = @audit.design.peer.name
+
     response = TrackerMailer.create_peer_audit_complete(@audit,
                                                         @now)
     assert_equal("#{@audit.design.name}" +
@@ -574,9 +574,9 @@ class TrackerMailerTest < Test::Unit::TestCase
     expected_to = @manager_email_list
 
     mx234a_design = @mx234a_stackup_doc.design
-    expected_to << User.find(mx234a_design.designer_id).email  if mx234a_design.designer_id > 0
-    expected_to << User.find(mx234a_design.peer_id).email      if mx234a_design.peer_id > 0
-    expected_to << User.find(mx234a_design.pcb_input_id).email if mx234a_design.pcb_input_id > 0
+    expected_to << mx234a_design.designer.email   if mx234a_design.designer_id > 0
+    expected_to << mx234a_design.peer.email       if mx234a_design.peer_id > 0
+    expected_to << mx234a_design.input_gate.email if mx234a_design.pcb_input_id > 0
 
     for design_review in mx234a_design.design_reviews
       for review_result in design_review.design_review_results
