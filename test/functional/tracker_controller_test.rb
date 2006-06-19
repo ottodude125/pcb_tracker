@@ -35,8 +35,8 @@ class TrackerControllerTest < Test::Unit::TestCase
 
 
   def test_1_id
-    print ("\n*** Tracker Controller Test\n")
-    print ("*** $Id$\n")
+    print("\n*** Tracker Controller Test\n")
+    print("*** $Id$\n")
   end
 
 
@@ -51,24 +51,26 @@ class TrackerControllerTest < Test::Unit::TestCase
   #
   def test_manager_home
   
-    post('manager_home')
-    assert_response(302)
-    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    post('index')
+    assert_response(:success)
+    assert_template('tracker/index')
     
     set_user(users(:jim_l).id, 'Manager')
-    post('manager_home')
+    post('index')
+    assert_response(:success)
+    assert_template('tracker/manager_home')
 
     assert_equal('DESC', assigns(:sort_order)[:priority])
 
     design_reviews = assigns(:design_reviews)
-    assert_equal(3, design_reviews.size)
+    assert_equal(4, design_reviews.size)
 
-    expected_design_reviews = [ DesignReview.find(design_reviews(:la455b_placement).id),
-                                DesignReview.find(design_reviews(:mx600a_pre_artwork).id),
-                                DesignReview.find(design_reviews(:mx700b_release).id)]
+    expected_design_reviews = [ DesignReview.find(design_reviews(:la453a1_placement).id),
+                                DesignReview.find(design_reviews(:la453a_eco1_final).id),
+                                DesignReview.find(design_reviews(:la453b_placement).id),
+                                DesignReview.find(design_reviews(:mx234a_pre_artwork).id)]
     expected_design_reviews =
-      expected_design_reviews.sort_by { |review| review.priority.value }
-    expected_design_reviews.reverse!
+      expected_design_reviews.sort_by { |review| [review.priority.value, review.age] }.reverse!
 
     assert_equal(expected_design_reviews, design_reviews)
     
@@ -95,7 +97,7 @@ class TrackerControllerTest < Test::Unit::TestCase
 
     post('manager_list_by_type', :order => 'DESC')
     expected_design_reviews = 
-      expected_design_reviews.sort_by { |design_review| design_review.review_type.name }
+      expected_design_reviews.sort_by { |design_review| [design_review.review_type.name, design_review.age] }
     assert_equal('ASC',                   assigns(:sort_order)[:type])
     assert_equal(expected_design_reviews, assigns(:design_reviews))
 
@@ -106,7 +108,7 @@ class TrackerControllerTest < Test::Unit::TestCase
 
     post('manager_list_by_designer', :order => 'DESC')
     expected_design_reviews = 
-      expected_design_reviews.sort_by { |design_review| User.find(design_review.designer_id).last_name }
+      expected_design_reviews.sort_by { |design_review| [design_review.designer.last_name, design_review.age] }
     assert_equal('ASC',                   assigns(:sort_order)[:designer])
     assert_equal(expected_design_reviews, assigns(:design_reviews))
 
@@ -117,7 +119,7 @@ class TrackerControllerTest < Test::Unit::TestCase
 
     post('manager_list_by_peer', :order => 'DESC')
     expected_design_reviews = 
-      expected_design_reviews.sort_by { |design_review| User.find(design_review.design.peer_id).last_name }
+      expected_design_reviews.sort_by { |design_review| [design_review.design.peer.last_name, design_review.age] }
     assert_equal('ASC',                   assigns(:sort_order)[:peer])
     assert_equal(expected_design_reviews, assigns(:design_reviews))
 
@@ -126,14 +128,14 @@ class TrackerControllerTest < Test::Unit::TestCase
     assert_equal('DESC',                  assigns(:sort_order)[:peer])
     assert_equal(expected_design_reviews, assigns(:design_reviews))
 
-    post('manager_list_by_date', :order => 'DESC')
+    post('manager_list_by_age', :order => 'DESC')
     expected_design_reviews = 
-      expected_design_reviews.sort_by { |design_review| design_review.reposted_on }
+      expected_design_reviews.sort_by { |design_review| [design_review.age, design_review.priority.value] }
     assert_equal('ASC',                   assigns(:sort_order)[:date])
     assert_equal(expected_design_reviews, assigns(:design_reviews))
 
     expected_design_reviews.reverse!
-    post('manager_list_by_date', :order => 'ASC')
+    post('manager_list_by_age', :order => 'ASC')
     assert_equal('DESC',                  assigns(:sort_order)[:date])
     assert_equal(expected_design_reviews, assigns(:design_reviews))
 
@@ -153,33 +155,33 @@ class TrackerControllerTest < Test::Unit::TestCase
 
     # First verify the screen when not logged in.
     get :index
-    assert_response 200
+    assert_response(:success)
     assert_template 'tracker/index'
 
     set_admin()
     get :index
-    assert_response 302
-    assert_redirected_to :action => :admin_home
+    assert_response(:success)
+    assert_template('tracker/manager_home')
 
     set_designer()
     get :index
-    assert_response 302
-    assert_redirected_to :action => :designer_home
+    assert_response(:success)
+    assert_template('tracker/designer_home')
 
     set_manager()
     get :index
-    assert_response 302
-    assert_redirected_to :action => :manager_home
+    assert_response(:success)
+    assert_template('tracker/manager_home')
 
     set_reviewer()
     get :index
-    assert_response 302
-    assert_redirected_to :action => :reviewer_home
+    assert_response(:success)
+    assert_template('tracker/reviewer_home')
 
     set_user(users(:patrice_m).id, 'PCB Admin')
     get :index
-    assert_response 302
-    assert_redirected_to :action => :pcb_admin_home
+    assert_response(:success)
+    assert_template('tracker/pcb_admin_home')
 
     
   end
@@ -196,17 +198,15 @@ class TrackerControllerTest < Test::Unit::TestCase
   #
   def test_designer_home
 
-    post('designer_home')
-    assert_response(302)
-    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    post('index')
+    assert_response(:success)
+    assert_template('tracker/index')
     
     set_user(users(:bob_g).id, 'Designer')
-    get :index
-    assert_response(302)
-    assert_redirected_to(:action => :designer_home)
+    post('index')
+    assert_response(:success)
+    assert_template('tracker/designer_home')
 
-    #follow_redirect
-    #assert_no_tag :content => "POST Placement Review"
   end
   
 
@@ -221,14 +221,13 @@ class TrackerControllerTest < Test::Unit::TestCase
   #
   def test_reviewer_home
 
-    post('reviewer_home')
-    assert_response(302)
-    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    post('index')
+    assert_response(:success)
     
     set_user(users(:lee_s).id, 'Reviewer')
-    get :index
-    assert_response(302)
-    assert_redirected_to(:action => :reviewer_home)
+    post('index')
+    assert_response(:success)
+    assert_template('tracker/reviewer_home')
 
     #follow_redirect
     #assert_no_tag :content => "POST Placement Review"
