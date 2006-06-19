@@ -228,8 +228,9 @@
                                                   :action     => 'auditor_list',
                                                   :id         => design[:audit].id,
                                                   :return_to  => { :controller => 'tracker',
-                                                                   :action     => 'designer_home' } },
-                                                :title => 'Set the assignments for self and peer audits.')%>
+                                                                   :action     => 'index' } },
+                                                { :title => 'Set the assignments for self and peer audits.',
+                                                  :class => "small_font_button" })%>
                                 <% else %>
                                   &nbsp;
                                 <% end %>
@@ -333,6 +334,21 @@
                                            audit[:designer_percent_complete]) %></b>
                           </td>
                         </tr>
+                        
+                        <% if @session[:user].id == audit.design.peer_id  && !audit.is_complete? %>
+                        <tr>
+                          <td>
+                            <%= button_to('Audit Assignments',
+                              { :controller => 'audit',
+                                :action     => 'auditor_list',
+                                :id         => audit.id,
+                                :return_to  => { :controller => 'tracker',
+                                                 :action     => 'index' } },
+                                { :title => 'Set the assignments for self and peer audits.',
+                                  :class => "small_font_button" })%>
+                          </td>
+                        </tr>
+                        <% end %>
                       </table>
                     </td>
                   </tr>
@@ -348,3 +364,4 @@
 
 <%# debug @design_list %>
 <%# debug @audits %>
+<%# debug @session %>
