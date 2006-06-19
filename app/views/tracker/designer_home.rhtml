@@ -167,8 +167,7 @@
 
                       <tr>
                         <td colspan="6">
-                          <table width="100%"
-                                 border="0">
+                          <table width="100%" border="0">
                             <tr>
                               <td bgcolor="#ffffff"
                                   width="100">&nbsp;</td>
@@ -190,7 +189,7 @@
                                                 :action     => 'print',
                                                 :id         =>  design[:audit].id},
                                                :title => "Access to the completed #{design[:design].name} Peer Audit Review") %>
-                                <% elsif ReviewType.find(design[:design].phase_id).name != 'Pre-Artwork' %>
+                                <% elsif design[:design].phase.name != 'Pre_Artwork' %>
                                   <%= link_to("Design Audit",
                                               { :controller => 'audit',
                                                 :action     => 'show_sections',
@@ -215,12 +214,25 @@
                               </td>
                             </tr>
                             <tr>
-                              <td colspan="4">
+                              <td colspan="2" align="left">
                                 <%= button_to(design[:design].name + " In-Process Dialogue",
                                               { :controller => 'ipd_post',
                                                 :action     => 'list',
                                                 :design_id  => design[:design].id },
                                               :title => 'Initiate and discuss all in-process changes.')%>
+                              </td>
+                              <td colspan="2" align="right">
+                                <% if !design[:audit].is_complete? %>
+                                  <%= button_to('Audit Assignments',
+                                                { :controller => 'audit',
+                                                  :action     => 'auditor_list',
+                                                  :id         => design[:audit].id,
+                                                  :return_to  => { :controller => 'tracker',
+                                                                   :action     => 'designer_home' } },
+                                                :title => 'Set the assignments for self and peer audits.')%>
+                                <% else %>
+                                  &nbsp;
+                                <% end %>
                               </td>
                             </tr>
                           </table>
@@ -294,14 +306,15 @@
                         </tr>
                         <tr>
                           <td>
+                            <% audit_type = audit[:self] ? 'Self Audit' : 'Peer Audit' %>
                             <% if audit_locked_for_peer(audit) || audit.auditor_complete?%>
-                              <%= link_to("Peer Audit",
+                              <%= link_to(audit_type,
                                           { :controller => 'audit',
                                             :action     => 'print',
                                             :id         => audit.id },
                                           :title => "Access to the #{audit.design.name} Peer Audit Review") %>
                             <% else %>
-                              <%= link_to("Peer Audit",
+                              <%= link_to(audit_type,
                                           { :controller => 'audit',
                                             :action     => 'show_sections',
                                             :id         => audit.id },
@@ -313,7 +326,7 @@
                                            audit[:percent_complete]) %></b>
                           </td>
                           <td>
-                            <%= User.find(audit.design.designer_id).name %>
+                            <%= audit.design.designer.name %>
                           </td>
                           <td align="center">
                             <b><%= sprintf("%4.1f",
