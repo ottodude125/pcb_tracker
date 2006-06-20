@@ -36,6 +36,48 @@ class AuditTest < Test::Unit::TestCase
   end
 
 
+  def test_locking
+  
+    audit1 = Audit.find(@audit.id)
+    audit2 = Audit.find(@audit.id)
+    assert_equal(false, audit1.designer_complete?)
+    assert_equal(false, audit1.auditor_complete?)
+    
+    audit1.designer_complete = 1
+    audit2.auditor_complete  = 1
+    
+    audit1.save
+    
+    assert_raises(ActiveRecord::StaleObjectError) {
+      audit2.save
+    }
+    
+    audit1.reload
+    audit2.reload
+    assert(audit1.designer_complete?)
+    assert_equal(false, audit1.auditor_complete?)
+    assert(audit2.designer_complete?)
+    assert_equal(false, audit2.auditor_complete?)
+    
+    audit1.save
+    begin
+      audit2.auditor_complete = 1
+      audit2.save
+    rescue ActiveRecord::StaleObjectError
+      audit2.reload
+      retry
+    end
+    
+    audit1.reload
+    audit2.reload
+    assert(audit1.designer_complete?)
+    assert(audit1.auditor_complete?)
+    assert(audit2.designer_complete?)
+    assert(audit2.auditor_complete?)
+    
+  end
+  
+  
   def test_update
     
     @audit.designer_completed_checks = 100
