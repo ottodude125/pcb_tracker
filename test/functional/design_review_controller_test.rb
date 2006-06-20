@@ -30,6 +30,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   fixtures(:board_reviewers,
            :boards,
            :design_centers,
+           :design_review_comments,
            :design_review_documents,
            :design_review_results,
            :design_reviews,
