@@ -24,12 +24,6 @@ class AdminControllerTest < Test::Unit::TestCase
   end
 
 
-  def test_1_id
-    print("\n*** Admin Controller Test\n")
-    print("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_index

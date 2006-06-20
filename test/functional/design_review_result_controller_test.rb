@@ -25,11 +25,6 @@ class DesignReviewResultControllerTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
   end
 
-  def test_1_id
-    print("\n*** Design Review Result Controller Test - NEEDS WORK!!!\n")
-    print("*** $Id$\n")
-  end
-
 
   # Replace this with your real tests.
   def test_truth

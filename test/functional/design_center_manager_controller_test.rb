@@ -30,12 +30,6 @@ class DesignCenterManagerControllerTest < Test::Unit::TestCase
            :users)
 
 
-  def test_1_id
-    print("\n*** Design Center Mananager Controller Test\n")
-    print("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_design_center_assignment
