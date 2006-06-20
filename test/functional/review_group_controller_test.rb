@@ -27,12 +27,6 @@ class ReviewGroupControllerTest < Test::Unit::TestCase
            :users)
 
 
-  def test_1_id
-    print ("\n*** Review Group Controller Test\n")
-    print ("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_list
