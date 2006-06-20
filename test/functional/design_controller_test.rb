@@ -31,7 +31,7 @@ class DesignControllerTest < Test::Unit::TestCase
            :design_checks,
            :design_review_results,
            :design_reviews,
-	   :fab_houses,
+           :fab_houses,
            :review_status,
            :review_types,
            :review_types_roles,
@@ -40,12 +40,6 @@ class DesignControllerTest < Test::Unit::TestCase
            :roles_users,
            :suffixes,
            :users)
-
-
-  def test_1_id
-    print("\n*** Design Controller Test\n")
-    print("*** $Id$\n")
-  end
 
 
   ######################################################################

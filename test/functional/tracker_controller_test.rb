@@ -34,12 +34,6 @@ class TrackerControllerTest < Test::Unit::TestCase
            :users)
 
 
-  def test_1_id
-    print("\n*** Tracker Controller Test\n")
-    print("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_manager_home

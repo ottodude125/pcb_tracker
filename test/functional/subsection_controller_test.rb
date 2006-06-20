@@ -32,11 +32,6 @@ class SubsectionControllerTest < Test::Unit::TestCase
            :subsections,
            :users)
 
-  def test_1_id
-    print ("\n*** Subsection Controller Test\n")
-    print ("*** $Id$\n")
-  end
-  
   ######################################################################
   #
   # test_append

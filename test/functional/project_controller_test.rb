@@ -28,12 +28,6 @@ class ProjectControllerTest < Test::Unit::TestCase
 	   :users)
 
 
-  def test_1_id
-    print ("\n*** Project Controller Test\n")
-    print ("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_list

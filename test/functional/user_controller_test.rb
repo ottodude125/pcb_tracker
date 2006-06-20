@@ -33,12 +33,6 @@ class UserControllerTest < Test::Unit::TestCase
   end
 
 
-  def test_1_id
-    print ("\n*** User Controller Test\n")
-    print ("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_edit

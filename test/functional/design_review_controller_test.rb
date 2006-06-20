@@ -43,12 +43,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
            :roles,
            :users)
 
-  def test_1_id
-    print("\n*** Design Review Controller Test\n")
-    print("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_view

@@ -31,12 +31,6 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
            :users)
 
 
-  def test_1_id
-    print ("\n*** Review Mananager Controller Test\n")
-    print ("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_review_type_role_assignment

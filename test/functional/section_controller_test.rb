@@ -19,12 +19,6 @@ class SectionControllerTest < Test::Unit::TestCase
 	   :users)
 
 
-  def test_1_id
-    print ("\n*** Section Controller Test\n")
-    print ("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_append

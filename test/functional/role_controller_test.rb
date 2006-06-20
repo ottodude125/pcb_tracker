@@ -28,11 +28,6 @@ class RoleControllerTest < Test::Unit::TestCase
            :users)
 
 
-  def test_1_id
-    print ("\n*** Role Controller Test\n")
-    print ("*** $Id$\n")
-  end
-
   ######################################################################
   #
   # test_list

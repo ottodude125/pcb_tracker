@@ -27,12 +27,6 @@ class PriorityControllerTest < Test::Unit::TestCase
            :users)
 
 
-  def test_1_id
-    print ("\n*** Priority Controller Test\n")
-    print ("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_list

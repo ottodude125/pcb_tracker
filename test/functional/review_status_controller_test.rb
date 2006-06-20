@@ -30,12 +30,6 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
   self.use_instantiated_fixtures  = true
   
   
-  def test_1_id
-    print ("\n*** Review Status Controller Test\n")
-    print ("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_list
