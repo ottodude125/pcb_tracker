@@ -25,8 +25,8 @@ class AdminControllerTest < Test::Unit::TestCase
 
 
   def test_1_id
-    print ("\n*** Admin Controller Test\n")
-    print ("*** $Id$\n")
+    print("\n*** Admin Controller Test\n")
+    print("*** $Id$\n")
   end
 
 

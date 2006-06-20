@@ -31,8 +31,8 @@ class DesignCenterManagerControllerTest < Test::Unit::TestCase
 
 
   def test_1_id
-    print ("\n*** Design Center Mananager Controller Test\n")
-    print ("*** $Id$\n")
+    print("\n*** Design Center Mananager Controller Test\n")
+    print("*** $Id$\n")
   end
 
 

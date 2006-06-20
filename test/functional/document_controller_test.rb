@@ -25,8 +25,8 @@ class DocumentControllerTest < Test::Unit::TestCase
   end
 
   def test_1_id
-    print ("\n*** Document Controller Test - NEEDS WORK!!!\n")
-    print ("*** $Id$\n")
+    print("\n*** Document Controller Test - NEEDS WORK!!!\n")
+    print("*** $Id$\n")
   end
 
 

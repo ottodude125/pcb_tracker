@@ -26,8 +26,8 @@ class DesignReviewResultControllerTest < Test::Unit::TestCase
   end
 
   def test_1_id
-    print ("\n*** Design Review Result Controller Test - NEEDS WORK!!!\n")
-    print ("*** $Id$\n")
+    print("\n*** Design Review Result Controller Test - NEEDS WORK!!!\n")
+    print("*** $Id$\n")
   end
 
 

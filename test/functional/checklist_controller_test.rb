@@ -33,8 +33,8 @@ class ChecklistControllerTest < Test::Unit::TestCase
 
 
   def test_1_id
-    print ("\n*** Checklist Controller Test\n")
-    print ("*** $Id$\n")
+    print("\n*** Checklist Controller Test\n")
+    print("*** $Id$\n")
   end
 
 
