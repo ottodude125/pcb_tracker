@@ -88,11 +88,16 @@ class AuditController < ApplicationController
         if self_audit_update && !audit.designer_complete?
 
           if result == "None"
-            completed_checks = audit.designer_completed_checks + 1
-            total_checks     = check_count[:designer]
-            audit.update_attributes(
-              :designer_completed_checks => completed_checks,
-              :designer_complete         => (completed_checks == total_checks))
+            begin
+              completed_checks = audit.designer_completed_checks + 1
+              total_checks     = check_count[:designer]
+              audit.update_attributes(
+                :designer_completed_checks => completed_checks,
+                :designer_complete         => (completed_checks == total_checks))
+            rescue ActiveRecord::StaleObjectError
+              audit.reload
+              retry
+            end
 
             TrackerMailer.deliver_self_audit_complete(audit) if audit.designer_complete?
           end
@@ -115,11 +120,16 @@ class AuditController < ApplicationController
           end
 
           if incr != 0
-            completed_checks = audit.auditor_completed_checks + incr
-            total_checks     = check_count[:peer]
-            audit.update_attributes(
-              :auditor_completed_checks => completed_checks,
-              :auditor_complete         => (completed_checks == total_checks))
+            begin
+              completed_checks = audit.auditor_completed_checks + incr
+              total_checks     = check_count[:peer]
+              audit.update_attributes(
+                :auditor_completed_checks => completed_checks,
+                :auditor_complete         => (completed_checks == total_checks))
+            rescue ActiveRecord::StaleObjectError
+              audit.reload
+              retry
+            end
 
             if audit.auditor_complete?
               TrackerMailer.deliver_peer_audit_complete(audit)
