@@ -39,12 +39,6 @@ class CheckControllerTest < Test::Unit::TestCase
 	   :users)
 
 
-  def test_1_id
-    print("\n*** Check Controller Test\n")
-    print("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_edit

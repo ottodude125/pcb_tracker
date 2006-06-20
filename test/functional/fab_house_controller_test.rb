@@ -28,12 +28,6 @@ class FabHouseControllerTest < Test::Unit::TestCase
            :users)
 
 
-  def test_1_id
-    print ("\n*** Fab House Controller Test\n")
-    print ("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_list

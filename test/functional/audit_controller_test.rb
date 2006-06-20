@@ -49,12 +49,6 @@ class AuditControllerTest < Test::Unit::TestCase
     'audit information - check your role'
 
 
-  def test_1_id
-    print("\n*** Audit Controller Test\n")
-    print("*** $Id$\n")
-  end
-
-
   ######################################################################
   #
   # test_perform_checks

@@ -31,13 +31,6 @@ class IpdPostControllerTest < Test::Unit::TestCase
            :ipd_posts_users,
            :users)
 
-  def test_1_id
-    print ("\n*** In Process Dialog Post Controller Test\n")
-    print ("*** $Id$\n")
-  end
-
-
-
   ######################################################################
   #
   # test_list
