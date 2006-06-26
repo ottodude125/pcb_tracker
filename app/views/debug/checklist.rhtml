@@ -21,9 +21,7 @@
     <td><%= @check_count %></td>
   </tr>
   
-  <% sections = @checklist.sections.sort_by { |s| s.sort_order } %>
-  
-  <% for section in sections %>
+  <% for section in @checklist.sections %>
     <% subsections = section.subsections.sort_by { |s| s.sort_order } %>
     
     <table border='0'>
@@ -34,25 +32,32 @@
         <td><%= section.sort_order %></td>
         <th># of Subsections: </th>
         <td><%= subsections.size %></td>
+        <th>URL:</th>
+        <td><%= section.url != '' ? auto_link('http://' + section.url) : 'No URL' %><td>
       </tr>
       
       <% for subsect in subsections %>
-        <% checks = subsect.checks.sort_by { |c| c.sort_order } %>
+
         <tr>
           <th align='right'>Subsection ID:</th>
           <td><%= subsect.id %></td>
           <th>Sort Order: </th>
           <td><%= subsect.sort_order %></td>
           <th align='right'># of Checks: </th>
-          <td><%= checks.size %></td>
+          <td><%= subsect.checks.size %></td>
+          <th>URL:</th>
+          <td><%= subsect.url != '' ? auto_link('http://' + subsect.url) : 'No URL' %><td>
         </tr>
         
-        <% for check in checks %>
+        <% for check in subsect.checks %>
           <tr>
             <th align='right'>Check ID:</th>
             <td><%= check.id %></td>
             <th>Sort Order: </th>
             <td><%= check.sort_order %></td>
+            <td colspan=2>&nbsp;</td>
+            <th>URL:</th>
+            <td><%= check.url != '' ? auto_link('http://' + check.url) : 'No URL' %></td>
           </tr>
         <% end %>
         
