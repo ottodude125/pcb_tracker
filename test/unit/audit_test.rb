@@ -18,7 +18,11 @@ class AuditTest < Test::Unit::TestCase
   fixtures :audits,
            :audit_teammates,
            :boards,
+           :checklists,
+           :checks,
            :designs,
+           :sections,
+           :subsections,
            :users
 
   def setup
@@ -131,7 +135,7 @@ class AuditTest < Test::Unit::TestCase
     bob_g   = users(:bob_g)
     rich_m  = users(:rich_m)
     scott_g = users(:scott_g)
-    
+
     assert(audit_in_self_audit.is_self_auditor?(bob_g))
     assert_equal(nil, audit_in_self_audit.is_self_auditor?(rich_m))
     assert_equal(audit_teammates(:mx999a_self_auditor),
@@ -143,5 +147,58 @@ class AuditTest < Test::Unit::TestCase
                  audit_in_self_audit.is_peer_auditor?(scott_g))
   
   end
+  
+  
+  def test_check_creation
+  
+    audit_in_self_audit = audits(:audit_in_self_audit)
+    
+    assert_equal(0, audit_in_self_audit.design_checks.size)
+    assert_equal(2, audit_in_self_audit.checklist_id)
+    audit_in_self_audit.create_checklist
+    
+    # expected_checks is a nested hash.
+    #
+    #                 section  subsection  array of check ids
+    #                 id       id
+    expected_checks = {3 =>   {5 =>        [13, 14],
+                               6 =>        [15, 16, 17, 24]},
+                       4 =>   {7 =>        [18, 19, 20],
+                               8 =>        [21, 22, 23]}}
+    
+    audit_in_self_audit.reload
+    assert_equal(12, audit_in_self_audit.design_checks.size)
+    
+    actual_checks = {}
+    for design_check in audit_in_self_audit.design_checks
+      assert_equal(audit_in_self_audit.id, design_check.audit_id)
+      section_id    = design_check.check.section_id
+      subsection_id = design_check.check.subsection_id
+      actual_checks[section_id] = {} if !actual_checks[section_id]
+      actual_checks[section_id][subsection_id] = [] if !actual_checks[section_id][subsection_id]
+      actual_checks[section_id][subsection_id] << design_check.check_id
+    end
+    
+    assert_equal(expected_checks, actual_checks)
+     
+  end
+  
+  
+  def test_check_counts
+  
+    audit_in_self_audit = audits(:audit_in_self_audit)
+    assert_equal(11, audit_in_self_audit.check_count[:designer])
+    assert_equal(4,  audit_in_self_audit.check_count[:peer])
+    
+    la454c3_audit = audits(:audit_la454c3)
+    assert_equal(7, la454c3_audit.check_count[:designer])
+    assert_equal(5, la454c3_audit.check_count[:peer])
+    
+    la453b_eco2_audit = audits(:audit_la453b_eco2)
+    assert_equal(7, la453b_eco2_audit.check_count[:designer])
+    assert_equal(5, la453b_eco2_audit.check_count[:peer])
+    
+  end
+  
 
 end

@@ -81,9 +81,9 @@ class AuditControllerTest < Test::Unit::TestCase
     
     assert_equal(audits(:audit_mx234b).id,        assigns(:audit).id)
     assert_equal(subsections(:subsect_30_000).id, assigns(:subsection).id)
-    assert_equal(sections(:section_20_000).id,    assigns(:section).id)
+    assert_equal(sections(:section_20_000).id,    assigns(:subsection).section.id)
     assert_equal(15,                 assigns(:total_checks)[:designer])
-    assert_equal(9,                  assigns(:total_checks)[:auditor])
+    assert_equal(9,                  assigns(:total_checks)[:peer])
     assert_equal(4,                  assigns(:checks).size)
 
     check_id        = 10000
@@ -92,7 +92,7 @@ class AuditControllerTest < Test::Unit::TestCase
     for check in checks
       assert_equal(check_id,        check.id)
       assert_equal(design_check_id, check[:design_check].id)
-      assert_equal(0,               check[:comments].size)
+      assert_equal(0,               check[:design_check].audit_comments.size)
       check_id        += 1
       design_check_id += 1
     end
@@ -160,7 +160,7 @@ class AuditControllerTest < Test::Unit::TestCase
     checks = assigns(:checks)
     for check in checks
       assert_equal('None', check[:design_check].designer_result)
-      assert_equal(0,      check[:comments].size)
+      assert_equal(0,      check[:design_check].audit_comments.size)
     end 
 
 
@@ -200,9 +200,9 @@ class AuditControllerTest < Test::Unit::TestCase
     for check in checks
       assert_equal(results.shift, check[:design_check].designer_result)
       if check.id != 10000
-        assert_equal(0, check[:comments].size)
+        assert_equal(0, check[:design_check].audit_comments.size)
       else
-        assert_equal(1, check[:comments].size)
+        assert_equal(1, check[:design_check].audit_comments.size)
       end
     end 
 
@@ -242,9 +242,9 @@ class AuditControllerTest < Test::Unit::TestCase
     for check in checks
       assert_equal(results.shift, check[:design_check].designer_result)
       if check.id != 10000
-        assert_equal(0, check[:comments].size)
+        assert_equal(0, check[:design_check].audit_comments.size)
       else
-        assert_equal(1, check[:comments].size)
+        assert_equal(1, check[:design_check].audit_comments.size)
       end
     end 
 
@@ -275,7 +275,7 @@ class AuditControllerTest < Test::Unit::TestCase
     checks = assigns(:checks)
     for check in checks
       assert_equal(results.shift, check[:design_check].designer_result)
-      assert_equal(0,             check[:comments].size)
+      assert_equal(0,             check[:design_check].audit_comments.size)
     end 
 
     # The 'No' response should update this time.
@@ -306,9 +306,9 @@ class AuditControllerTest < Test::Unit::TestCase
     for check in checks
       assert_equal(results.shift, check[:design_check].designer_result)
       if check.id == 10004
-        assert_equal(0, check[:comments].size)
+        assert_equal(0, check[:design_check].audit_comments.size)
       else
-        assert_equal(1, check[:comments].size)
+        assert_equal(1, check[:design_check].audit_comments.size)
       end
     end 
 
@@ -338,7 +338,7 @@ class AuditControllerTest < Test::Unit::TestCase
     checks = assigns(:checks)
     for check in checks
       assert_equal(results.shift, check[:design_check].designer_result)
-      assert_equal(1,             check[:comments].size)
+      assert_equal(1,             check[:design_check].audit_comments.size)
     end 
 
 
@@ -376,7 +376,7 @@ class AuditControllerTest < Test::Unit::TestCase
     checks = assigns(:checks)
     for check in checks
       assert_equal(results.shift, check[:design_check].designer_result)
-      assert_equal(1,             check[:comments].size)
+      assert_equal(1,             check[:design_check].audit_comments.size)
     end 
 
 
@@ -410,7 +410,7 @@ class AuditControllerTest < Test::Unit::TestCase
     checks = assigns(:checks)
     for check in checks
       assert_equal(results.shift, check[:design_check].designer_result)
-      assert_equal(1,             check[:comments].size)
+      assert_equal(1,             check[:design_check].audit_comments.size)
     end 
 
 
@@ -455,9 +455,9 @@ class AuditControllerTest < Test::Unit::TestCase
     for check in checks
       assert_equal(results.shift, check[:design_check].auditor_result)
       if check.id != 10000
-        assert_equal(0, check[:comments].size)
+        assert_equal(0, check[:design_check].audit_comments.size)
       else
-        assert_equal(1, check[:comments].size)
+        assert_equal(1, check[:design_check].audit_comments.size)
       end
     end 
 
@@ -496,9 +496,14 @@ class AuditControllerTest < Test::Unit::TestCase
     for check in checks
       assert_equal(results.shift, check[:design_check].auditor_result)
       if check.id != 10000
-        assert_equal(1, check[:comments].size)
+        assert_equal(1, check[:design_check].audit_comments.size)
       else
-        assert_equal(2, check[:comments].size)
+        assert_equal(2, check[:design_check].audit_comments.size)
+        created_on = Time.now
+        for comment in check[:design_check].audit_comments
+          assert(comment.created_on < created_on)
+          created_on = comment.created_on
+        end
       end
     end 
 
@@ -528,7 +533,7 @@ class AuditControllerTest < Test::Unit::TestCase
     checks = assigns(:checks)
     for check in checks
       assert_equal(results.shift, check[:design_check].auditor_result)
-      assert_equal(2,             check[:comments].size)
+      assert_equal(2,             check[:design_check].audit_comments.size)
     end 
 
 
@@ -564,7 +569,7 @@ class AuditControllerTest < Test::Unit::TestCase
     checks = assigns(:checks)
     for check in checks
       assert_equal(results.shift, check[:design_check].auditor_result)
-      assert_equal(2,             check[:comments].size)
+      assert_equal(2,             check[:design_check].audit_comments.size)
     end 
 
   end
@@ -1078,16 +1083,14 @@ class AuditControllerTest < Test::Unit::TestCase
                                    :section_id_4 => scott_g.id.to_s})
 
     mx234c_audit.reload    
-    teammates = mx234c_audit.audit_teammates
+    teammates = mx234c_audit.audit_teammates.sort_by { |at| at.section_id}
     assert_equal(2, teammates.size)
-    teammate = teammates.pop
-    assert_equal(bob_g.id,                   teammate.user_id)
-    assert_equal(sections(:section_10_2).id, teammate.section_id)
-    assert_equal(true,                       teammate.self?)
-    teammate = teammates.pop
-    assert_equal(bob_g.id,                   teammate.user_id)
-    assert_equal(sections(:section_10_1).id, teammate.section_id)
-    assert_equal(true,                       teammate.self?)
+    assert_equal(bob_g.id,                   teammates[0].user_id)
+    assert_equal(sections(:section_10_1).id, teammates[0].section_id)
+    assert_equal(true,                       teammates[0].self?)
+    assert_equal(bob_g.id,                   teammates[1].user_id)
+    assert_equal(sections(:section_10_2).id, teammates[1].section_id)
+    assert_equal(true,                       teammates[1].self?)
 
 
     # There should be 2 teammate records
@@ -1099,16 +1102,14 @@ class AuditControllerTest < Test::Unit::TestCase
                                    :section_id_4 => scott_g.id.to_s})
 
     mx234c_audit.reload    
-    teammates = mx234c_audit.audit_teammates
+    teammates = mx234c_audit.audit_teammates.sort_by { |at| at.section_id}
     assert_equal(2, teammates.size)
-    teammate = teammates.pop
-    assert_equal(bob_g.id,                   teammate.user_id)
-    assert_equal(sections(:section_10_2).id, teammate.section_id)
-    assert_equal(true,                       teammate.self?)
-    teammate = teammates.pop
-    assert_equal(bob_g.id,                   teammate.user_id)
-    assert_equal(sections(:section_10_1).id, teammate.section_id)
-    assert_equal(true,                       teammate.self?)
+    assert_equal(bob_g.id,                   teammates[0].user_id)
+    assert_equal(sections(:section_10_1).id, teammates[0].section_id)
+    assert_equal(true,                       teammates[0].self?)
+    assert_equal(bob_g.id,                   teammates[1].user_id)
+    assert_equal(sections(:section_10_2).id, teammates[1].section_id)
+    assert_equal(true,                       teammates[1].self?)
          
   end
   

@@ -59,12 +59,10 @@ class TrackerControllerTest < Test::Unit::TestCase
     design_reviews = assigns(:design_reviews)
     assert_equal(4, design_reviews.size)
 
-    expected_design_reviews = [ DesignReview.find(design_reviews(:la453a1_placement).id),
-                                DesignReview.find(design_reviews(:la453a_eco1_final).id),
+    expected_design_reviews = [ DesignReview.find(design_reviews(:la453a_eco1_final).id),
                                 DesignReview.find(design_reviews(:la453b_placement).id),
-                                DesignReview.find(design_reviews(:mx234a_pre_artwork).id)]
-    expected_design_reviews =
-      expected_design_reviews.sort_by { |review| [review.priority.value, review.age] }.reverse!
+                                DesignReview.find(design_reviews(:mx234a_pre_artwork).id),
+                                DesignReview.find(design_reviews(:la453a1_placement).id)]
 
     assert_equal(expected_design_reviews, design_reviews)
     
@@ -80,7 +78,8 @@ class TrackerControllerTest < Test::Unit::TestCase
 
     post('manager_list_by_design', :order => 'DESC')
     expected_design_reviews = 
-      expected_design_reviews.sort_by { |design_review| design_review.design.name }
+      expected_design_reviews.sort_by { |design_review| [design_review.design.name, design_review.age] }
+    expected_design_reviews.reverse!
     assert_equal('ASC',                   assigns(:sort_order)[:design])
     assert_equal(expected_design_reviews, assigns(:design_reviews))
 
@@ -92,6 +91,7 @@ class TrackerControllerTest < Test::Unit::TestCase
     post('manager_list_by_type', :order => 'DESC')
     expected_design_reviews = 
       expected_design_reviews.sort_by { |design_review| [design_review.review_type.name, design_review.age] }
+    expected_design_reviews.reverse!  
     assert_equal('ASC',                   assigns(:sort_order)[:type])
     assert_equal(expected_design_reviews, assigns(:design_reviews))
 
@@ -103,6 +103,7 @@ class TrackerControllerTest < Test::Unit::TestCase
     post('manager_list_by_designer', :order => 'DESC')
     expected_design_reviews = 
       expected_design_reviews.sort_by { |design_review| [design_review.designer.last_name, design_review.age] }
+    expected_design_reviews.reverse!
     assert_equal('ASC',                   assigns(:sort_order)[:designer])
     assert_equal(expected_design_reviews, assigns(:design_reviews))
 
@@ -114,6 +115,7 @@ class TrackerControllerTest < Test::Unit::TestCase
     post('manager_list_by_peer', :order => 'DESC')
     expected_design_reviews = 
       expected_design_reviews.sort_by { |design_review| [design_review.design.peer.last_name, design_review.age] }
+    expected_design_reviews.reverse!
     assert_equal('ASC',                   assigns(:sort_order)[:peer])
     assert_equal(expected_design_reviews, assigns(:design_reviews))
 
@@ -125,6 +127,7 @@ class TrackerControllerTest < Test::Unit::TestCase
     post('manager_list_by_age', :order => 'DESC')
     expected_design_reviews = 
       expected_design_reviews.sort_by { |design_review| [design_review.age, design_review.priority.value] }
+    expected_design_reviews.reverse!
     assert_equal('ASC',                   assigns(:sort_order)[:date])
     assert_equal(expected_design_reviews, assigns(:design_reviews))
 

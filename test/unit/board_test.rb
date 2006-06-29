@@ -42,13 +42,13 @@ class BoardTest < Test::Unit::TestCase
   def test_update
 
     @board.prefix_id   = prefixes(:mx).id
-    @board.number      = 666
+    @board.number      = '666'
+    @board.name        = 'mx666'
     @board.platform_id = platforms(:flex).id
     @board.project_id  = projects(:bbac).id
     @board.active      = 0
-    @board.name        = 'mx666'
 
-    assert @board.save
+    assert @board.update
     @board.reload
 
     assert_equal('mx',                @board.prefix.pcb_mnemonic)
@@ -62,6 +62,13 @@ class BoardTest < Test::Unit::TestCase
   def test_destroy
     @board.destroy
     assert_raise(ActiveRecord::RecordNotFound) { Board.find(@board.id) }
+  end
+  
+  def test_name
+  
+    assert_equal('mx234', @board.name)
+    assert_equal('mx999', boards(:mx999).name)
+  
   end
 
 end

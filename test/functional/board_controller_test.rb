@@ -283,7 +283,8 @@ class BoardControllerTest < Test::Unit::TestCase
          :board => new_board,
          :board_reviewers => {'8' => '116', '5' => '1331'})
     assert_equal(8, Board.find_all.size)
-    assert_equal("Name for board already exists", flash['notice'])
+    assert_equal("Board xx666 already exists - entry is invalid",
+                 flash['notice'])
     assert_redirected_to :action => 'add'
 
     board_bad_number = new_board.dup
