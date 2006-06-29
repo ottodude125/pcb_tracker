@@ -68,7 +68,7 @@
                     <b><font size="-2">
                       <%= check_info[:design_check].designer_result %>
                       by 
-                      <%= check_info[:designer] %>
+                      <%= check_info[:design_check].self_auditor.name %>
                       <br/>
                       <%= check_info[:design_check].designer_checked_on.strftime("%a %b %d, %Y @ %I:%M %p") %>
                     </font></b></td>
@@ -83,7 +83,7 @@
                       <b><font size="-2">
                         <%= check_info[:design_check].auditor_result %>
                         by
-                        <%= check_info[:auditor] %>
+                        <%= check_info[:design_check].peer_auditor.name %>
                         <br/>
                         <%= check_info[:design_check].auditor_checked_on.strftime("%a %b %d, %Y @ %I:%M %p") %>
                     </font></b></td>
@@ -96,7 +96,7 @@
                   <td width="30%" bgcolor="#000000">&nbsp;</td>
                 </tr>
               <% end %>
-              <% if check_info[:comments].size > 0 %>
+              <% if check_info[:design_check].audit_comments.size > 0 %>
                 <tr>
                   <td colspan="2">
                     <table width="100%" border="0">
@@ -106,7 +106,7 @@
                       <tr>
                         <td>
                           <table width="95%" align="right" rules="all">
-                            <% for comment in check_info[:comments] %>
+                            <% for comment in check_info[:design_check].audit_comments %>
                               <tr>
                                 <td>
                                   <b><%= User.find(comment.user_id).name %> [<%= comment.created_on.strftime("%a %b %d, %Y @ %I:%M %p") %>] </b>
