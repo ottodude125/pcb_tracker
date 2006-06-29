@@ -110,6 +110,14 @@
               <% end %>
             </td>
           </tr>
+          <tr>
+            <td align="left">
+              <label for="board_platform">Description:</label>
+            </td>
+            <td>
+              <%= text_field :board, :description, :size => 60 %>
+            </td>
+          </tr>
         </table>
       </td>
       <td valign="top" 
@@ -132,7 +140,7 @@
                                            :"#{reviewer[:id]}",
                                            reviewer[:reviewers],
                                            "id", 
-                                           :name,
+                                           :last_name_first,
                                            {:include_blank => true},
                                            "class" => 'name_select') %>
                 <% elsif mode == "edit" %>
