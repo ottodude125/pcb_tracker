@@ -16,6 +16,30 @@ class Section < ActiveRecord::Base
   
   has_many   :audit_teammates
   has_many   :checks
-  has_many   :subsections
-  
+  has_many(:subsections,         :order => 'sort_order ASC')  
+
+
+  ######################################################################
+  #
+  # designer_auditor_checks
+  #
+  # Description:
+  # This method returns the number of designer/auditor checks.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def designer_auditor_checks
+    
+    total = 0
+    
+    for subsection in self.subsections
+      total += subsection.designer_auditor_checks
+    end
+    
+    total
+    
+  end
 end
