@@ -19,4 +19,21 @@ class DesignReviewResult < ActiveRecord::Base
   APPROVED = 'Approved'
   REJECTED = 'Rejected'
 
+  ######################################################################
+  #
+  # reviewer
+  #
+  # Description:
+  # Provides a user record for the reviewer
+  #
+  # Return value:
+  # A user record
+  #
+  ######################################################################
+  #
+  def reviewer
+    User.find(self.reviewer_id)
+  end
+  
+  
 end
