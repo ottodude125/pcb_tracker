@@ -254,6 +254,7 @@ before_filter(:verify_admin_role,
   ######################################################################
   #
   def update
+
     @board = Board.find(@params['board']['id'])
 
     @params['board'][:name] = Prefix.find(@params['board']['prefix_id']).pcb_mnemonic +
