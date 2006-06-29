@@ -4,7 +4,8 @@
     <td colspan="3">
       <%= @design.name %> -
       <%= @design.board.platform.name %> /
-      <%= @design.board.project.name %>
+      <%= @design.board.project.name %> /
+      <%= h @design.board.description %>
     </td>
   </tr>
   <tr>
