@@ -41,25 +41,19 @@
       <tr bgcolor=<%= color %>>
         <td colspan="6"> 
           <%= box[0]['name'] %> <!-- [JPA SECTION ID::<%= box[0]['id'] %>  -->
-<!--          <% t=0 %>                        -->
-<!--          <% for chex in box[2] %>         -->
-<!--            <% for check in chex %>        -->
-<!--              <% break if check == nil %>  -->
-<!--              <% t += 1 %>                 -->
-<!--            <% end %>                      -->
-<!--          <% end %> CHECKS::<%= t %>]      -->
+
           <% if box[0]['url'].size > 0 %>
-            <br>
+            <br />
             -> <a href="http://<%= box[0]['url'] %>" target="_blank"><b>Section Reference</b></a>
           <% end %>
           <% if box[1]['name'] != '' %>
-            <br> <%= box[1]['name'] %> <!-- [JPA SUBSECTION ID::<%= box[1]['id'] %>] -->
+            <br /> <%= box[1]['name'] %> <!-- [JPA SUBSECTION ID::<%= box[1]['id'] %>] -->
           <% end %>
           <% if box[1]['note'] != '' %>
-            <br> <%= box[1]['note'] %>
+            <br /> <%= box[1]['note'] %>
           <% end %> 
           <% if box[1]['url'].size > 0 %>
-            <br>
+            <br />
             -> <a href="http://<%= box[1]['url'] %>" target="_blank"><b>Subsection Reference</b></a>
           <% end %>
         </td>
@@ -98,8 +92,8 @@
               <%=h check.check %> <!-- [JPA CHECK ID::<%= check['id'] %>] -->
 
 	          <% if check.url.size > 0 %>
-                <br>
-                -> <a href="<%= check.url %>" target="_blank"><b>Check Reference</b></a>
+                <br />
+                -> <a href="http://<%= check.url %>" target="_blank"><b>Check Reference</b></a>
               <% end %>
             </td>
           <% end %>
@@ -111,6 +105,6 @@
   
   <hr class="div" />
 
-  <input type="button" value="Return to checklists" onClick="parent.location='<%= url_for( :action => 'list' ) %>'">
+  <input type="button" value="Return to checklists" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
 
 <%= end_form_tag %>
