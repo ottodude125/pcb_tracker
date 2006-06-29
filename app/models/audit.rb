@@ -161,8 +161,6 @@ PEER_AUDIT       = 2
   end
   
   
-  private
-
   ######################################################################
   #
   # create_checklist
@@ -172,46 +170,32 @@ PEER_AUDIT       = 2
   # Peer Audit Revew.
   #
   # Parameters:
-  # audit_id - Identifies the audit that the checklist will use
-  #            as a template
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
   # None
   #
   ######################################################################
   #
-  def self.create_checklist(audit_id)
+  def create_checklist
 
-    audit = Audit.find(audit_id)
-
-    checklist = Checklist.find(audit.checklist_id)
+    design    = self.design
+    checklist = self.checklist
 
     for section in checklist.sections
       for subsection in section.subsections
         for check in subsection.checks
+          if ((design.new?)                          ||
+              (design.date_code? && check.date_code_check?) ||
+              (design.dot_rev?   && check.dot_rev_check?))
+            design_check = DesignCheck.new(:audit_id => self.id, :check_id => check.id)
 
-          if ((audit.design.design_type == 'New') ||
-              ((audit.design.design_type == 'Date Code') &&
-               check.date_code_check?)    ||
-              ((audit.design.design_type == 'Dot Rev') &&
-               check.dot_rev_check?))
-            new_design_check = DesignCheck.new
-            new_design_check.audit_id = audit_id
-            new_design_check.check_id = check.id
-
-            fail 'Design check not saved' unless new_design_check.save
-
+            fail 'Design check not saved' unless design_check.save
           end
         end
       end
     end
     
-  end # create_checklist method
-
-
+  end
+  
+  
   ######################################################################
   #
   # check_count
@@ -221,39 +205,33 @@ PEER_AUDIT       = 2
   # peer based on the design type.
   #
   # Parameters:
-  # audit_id - Identifies the audit
-  #
-  # Return value:
-  # check_count - a hash containing a value for the designer and the peer.
-  #
-  # Additional information:
   # None
   #
   ######################################################################
   #
-  def self.check_count(audit_id)
+  def check_count
 
-    audit = Audit.find(audit_id)
+    count     = {}
+    checklist = self.checklist
 
-    count = Hash.new
-    checklist = audit.checklist
-
-    case audit.design.design_type
+    case self.design.design_type
     when 'New'
       count[:designer] = checklist.designer_only_count +
-	checklist.designer_auditor_count
+                           checklist.designer_auditor_count
       count[:peer]     = checklist.designer_auditor_count
     when 'Date Code'
       count[:designer] = checklist.dc_designer_only_count +
-	checklist.dc_designer_auditor_count
+                           checklist.dc_designer_auditor_count
       count[:peer]     = checklist.dc_designer_auditor_count
     when 'Dot Rev'
       count[:designer] = checklist.dr_designer_only_count +
-	checklist.dr_designer_auditor_count
+                           checklist.dr_designer_auditor_count
       count[:peer]     = checklist.dr_designer_auditor_count
     end
+
     return count
-  end # check_count
-  
-  
+    
+  end
+
+
 end
