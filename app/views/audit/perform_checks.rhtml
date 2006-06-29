@@ -8,7 +8,51 @@
 <% @heading = "Peer Audit Checks" %>
 
 
-<hr size="8" color="#<%= @section.background_color %>" noshade="noshade" />
+<hr size="8" color="#<%= @subsection.section.background_color %>" noshade="noshade" />
+
+<table border="0" width="100%">
+  <tr>
+    <td width="100" align="left">
+      <% if @arrows[:previous] %>
+        <%= link_to(image_tag('back_triangle.gif', 
+                              :title  => "Previous subsection",
+                              :border => 0),
+                    { :subsection_id => @arrows[:previous].id,
+                      :audit_id      => @audit.id }) %>
+      <% else %>
+        &nbsp;
+      <% end %>
+    </td>
+    <td align="center">
+      <table  cellpadding="1" cellspacing="1">
+        <tr>
+          <th align="right">Number of checks: </th>
+          <td><%= @checks.size %></td>
+        </tr>
+        <tr>
+          <th align="right">Completed self-audit checks: </th>
+          <td><%= @completed_self_checks %></td>
+        </tr>
+        <tr>
+          <th align="right">Completed peer-audit checks: </th>
+          <td><%= @completed_peer_checks %></td>
+        </tr>
+      </table>
+    </td>
+    <td width="100" align="right">
+      <% if @arrows[:next] %>
+        <%= link_to(image_tag('next_triangle.gif',
+                              :title  => "Next subsection",
+                              :border => 0),
+                    { :subsection_id => @arrows[:next].id,
+                      :audit_id      => @audit.id }) %>
+      <% else %>
+        &nbsp;
+      <% end %>
+    </td>
+  </tr>
+</table>
+
 <%= start_form_tag(:action => "update_design_checks") %> 
 
   <%= hidden_field "audit", "id" %>
@@ -18,9 +62,9 @@
     <tr>
 	  <th align="right" valign="top" width="15%">Section</th>
       <td>
-        <%= @section.name %>
-        <% if @section.url != '' %>
-          <br /><b>Reference:</b> <a href="<%=h @section.url %>" target="_blank"><%= @section.url %></a>
+        <%= @subsection.section.name %>
+        <% if @subsection.section.url != '' %>
+          <br /><b>Reference:</b> <a href="http://<%=h @subsection.section.url %>" target="_blank"><%= @subsection.section.url %></a>
         <% end %>
       </td>
     </tr>
@@ -38,7 +82,7 @@
     </tr>
   </table>
 
-  <hr size="8" color=#<%= @section.background_color %> noshade="noshade" />
+  <hr size="8" color=#<%= @subsection.section.background_color %> noshade="noshade" />
 
   <table width="100%">
     <tr>
@@ -129,18 +173,21 @@
         <% end %>
       
         </td>
-        <td valign="top" bgcolor=#<%= @section.background_color %> >
+        <td valign="top" bgcolor=#<%= @subsection.section.background_color %> >
            <% if check.title.strip.size > 0 %>
              <b><%= check.title %> - </b>
            <% end %> 
            <%= check.check %>
+           <% if check.url != '' %>
+             <br /><b>Reference:</b> <a href="http://<%= check.url %>" target="_blank"><%= check.url %></a>
+           <% end %>
         </td>
       </tr>
       <tr>
         <% if @flash[check[:design_check].id] %>
           <td valign="top" bgcolor="red">
         <% else %>
-          <td valign="top" bgcolor=#<%= @section.background_color %> >
+          <td valign="top" bgcolor=#<%= @subsection.section.background_color %> >
         <% end %>
           <label for="check_comment">Comment:</label>
           <%= text_field "check_#{i}", "comment", :size => 60 %>
@@ -207,7 +254,7 @@
       </tr>
     </table>
 
-    <% if check[:comments].size > 0 %>
+    <% if check[:design_check].audit_comments.size > 0 %>
       <table border="0" width="100%">
         <tr>
 	  <th bgcolor="#d3d3d3" align="left">COMMENTS:</th>
@@ -215,7 +262,7 @@
         <tr>
           <td>
             <table width="95%" align="right" rules="all">
-              <% for comment in check[:comments] %>
+              <% for comment in check[:design_check].audit_comments %>
                 <tr>
                   <td width="250" valign="top">
                     <table>
@@ -246,7 +293,7 @@
     <% end %>
 
 
-  <hr size="8" color="#<%= @section.background_color %>" noshade="noshade" />
+  <hr size="8" color="#<%= @subsection.section.background_color %>" noshade="noshade" />
 
   <table width="100%">
     <tr>
@@ -262,10 +309,37 @@
 <%= end_form_tag %>
 
 
-<hr size="8" color=#<%= @section.background_color %> noshade="noshade" />
+<hr size="8" color=#<%= @subsection.section.background_color %> noshade="noshade" />
 
-<%# debug @audit.is_self_audit? %>
-<%# debug @section %>
+<table border="0" width="100%">
+  <tr>
+    <td align="left">
+      <% if @arrows[:previous] %>
+        <%= link_to(image_tag('back_triangle.gif', 
+                              :title  => "Previous subsection",
+                              :border => 0),
+                    { :subsection_id => @arrows[:previous].id,
+                      :audit_id      => @audit.id }) %>
+      <% else %>
+        &nbsp;
+      <% end %>
+    </td>
+    <td align="right">
+      <% if @arrows[:next] %>
+        <%= link_to(image_tag('next_triangle.gif',
+                              :title  => "Next subsection",
+                              :border => 0),
+                    { :subsection_id => @arrows[:next].id,
+                      :audit_id      => @audit.id }) %>
+      <% else %>
+        &nbsp;
+      <% end %>
+    </td>
+  </tr>
+</table>
+
+
+<%# debug @arrows %>
 <%# debug @subsection %>
 <%# debug @checks %>
 <%# debug @total_checks %>
