@@ -1,7 +1,21 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: checklist.rb
+#
+# This file maintains the state for checklists.
+#
+# $Id$
+#
+########################################################################
+
 class Checklist < ActiveRecord::Base
-  has_many :sections
+
+  has_many(:sections,     :order => 'sort_order ASC')
   has_many :subsections
   has_many :audits
+
 
   ######################################################################
   #
@@ -16,37 +30,23 @@ class Checklist < ActiveRecord::Base
   # increment_value - Either 1 or -1 depending on whether a check is 
   #                   being added or destroyed.
   #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  # None
-  #
   ######################################################################
   #
-  def self.increment_checklist_counters(new_check, increment_value)
+  def increment_checklist_counters(check, increment)
 
-    checklist = Checklist.find(new_check.section.checklist_id)
-
-    if new_check.check_type == 'designer_auditor'
-      checklist.designer_auditor_count    += 
-	increment_value   if (new_check.full_review     == 1)
-      checklist.dc_designer_auditor_count += 
-	increment_value   if (new_check.date_code_check == 1)
-      checklist.dr_designer_auditor_count += 
-	increment_value   if (new_check.dot_rev_check   == 1)
+    if check.designer_auditor?
+      self.designer_auditor_count    += increment if check.full_review?
+      self.dc_designer_auditor_count += increment if check.date_code_check?
+      self.dr_designer_auditor_count += increment if check.dot_rev_check?
     else
-      checklist.designer_only_count       += 
-	increment_value   if (new_check.full_review     == 1)
-      checklist.dc_designer_only_count    +=
-	increment_value   if (new_check.date_code_check == 1)
-      checklist.dr_designer_only_count    += 
-	increment_value   if (new_check.dot_rev_check   == 1)
+      self.designer_only_count       += increment if check.full_review?
+      self.dc_designer_only_count    +=	increment if check.date_code_check?
+      self.dr_designer_only_count    += increment if check.dot_rev_check?
     end
 
-    checklist.update
+    self.update
 
   end
 
-  
+
 end
