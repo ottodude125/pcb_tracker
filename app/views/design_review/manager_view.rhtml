@@ -43,7 +43,8 @@
             <td>
               <input type="submit"
                value="Add Comment"
-               title="Add a comment to the design review" />
+               title="Add a comment to the design review"
+               class="small_font_wide_button" />
             </td>
           </tr>
           <tr><th>Other Actions</th></tr>
@@ -54,7 +55,8 @@
                     title="Add or view attachments"
                     onClick="parent.location='<%= url_for(:controller => 'design_review', 
                                                           :action => 'review_attachments',
-                                                          :design_review_id => @design_review.id) %>'" />
+                                                          :design_review_id => @design_review.id) %>'"
+                    class="small_font_wide_button" />
             </td>
           </tr>
           <tr>
@@ -64,7 +66,8 @@
                     title="Use to review the list of people on the mail list as well as to modify the CC list"
                     onClick="parent.location='<%= url_for(:controller => 'design_review', 
                                                           :action => 'review_mail_list',
-                                                          :design_review_id => @design_review.id) %>'" />
+                                                          :design_review_id => @design_review.id) %>'"
+                    class="small_font_wide_button" />
             </td>
           </tr>
           
@@ -75,7 +78,8 @@
                     title="Use to update Pre-Artwork, Designer, Peer, Design Center, and Criticality"
                     onClick="parent.location='<%= url_for(:controller => 'design_review', 
                                                           :action => 'admin_update',
-                                                          :id => @design_review.id) %>'" />
+                                                          :id => @design_review.id) %>'"
+                    class="small_font_wide_button" />
             </td>
           </tr>
 
@@ -86,7 +90,8 @@
                      title="Hardware/Designer communication log"
                      onClick="parent.location='<%= url_for(:controller => 'ipd_post', 
                                                            :action => 'list',
-                                                           :design_id => @design.id) %>'" />
+                                                           :design_id => @design.id) %>'"
+                     class="small_font_wide_button" />
             </td>
           </tr>
 
@@ -137,7 +142,7 @@
       <tr bgcolor="#dddddd">
         <td width="50%">
           <font size="-2">
-            <b>Posted By:</b> <%= User.find(comment.user_id).name %>
+            <b>Posted By:</b> <%= comment.user.name %>
           </font>
         </td>
         <td width="50%">

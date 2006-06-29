@@ -81,11 +81,7 @@
     <tr>
       <th align="left">Peer Reviewer:</th>
       <td align="left">
-        <% begin %>
-          <%= User.find(@design_review.design.peer_id).name %>
-        <% rescue %>
-          Not Set
-        <% end %>
+        <%= @design_review.design.peer.name %>
       </td>
       <td>
         <select id="peer"
