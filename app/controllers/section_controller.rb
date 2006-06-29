@@ -197,7 +197,7 @@ class SectionController < ApplicationController
 
     deleted_checks = Check.find_all("section_id=#{section.id}")
       for check in deleted_checks
-        Checklist.increment_checklist_counters(check, -1)
+        section.checklist.increment_checklist_counters(check, -1)
       end
 
     if Check.destroy_all("section_id = #{section.id}")       &&

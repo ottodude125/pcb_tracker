@@ -197,9 +197,8 @@ class SubsectionController < ApplicationController
         subsect.update_attribute('sort_order', new_sort_order)
       end 
     
-    deleted_checks = Check.find_all("subsection_id=#{subsection.id}")
-      for check in deleted_checks
-        Checklist.increment_checklist_counters(check, -1)
+      for check in subsection.checks
+        subsection.checklist.increment_checklist_counters(check, -1)
       end 
     if Check.destroy_all("subsection_id = #{subsection.id}") &&
         subsection.destroy

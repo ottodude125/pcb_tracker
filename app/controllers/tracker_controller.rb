@@ -88,7 +88,7 @@ class TrackerController < ApplicationController
 
     @design_reviews = 
       get_active_reviews.sort_by { |dr| [dr.priority.value, dr.age] }
-    @design_reviews.reverse! if @params[:order] == 'ASC'
+    @design_reviews.reverse! if @params[:order] == 'DESC'
 
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'manager_list_by_priority',
@@ -118,7 +118,7 @@ class TrackerController < ApplicationController
       flash[:sort_order]   = @sort_order
     
       @design_reviews = get_active_reviews.sort_by { |dr| dr.design.name }
-      @design_reviews.reverse! if @params[:order] == 'ASC'
+      @design_reviews.reverse! if @params[:order] == 'DESC'
     
       @session[:return_to] = {:controller => 'tracker',
                               :action     => 'manager_list_by_design',
@@ -150,7 +150,7 @@ class TrackerController < ApplicationController
     
     @design_reviews = 
       get_active_reviews.sort_by { |dr| [dr.review_type.name, dr.age] }
-    @design_reviews.reverse! if @params[:order] == 'ASC'
+    @design_reviews.reverse! if @params[:order] == 'DESC'
     
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'manager_list_by_type',
@@ -181,7 +181,7 @@ class TrackerController < ApplicationController
     
     @design_reviews = 
       get_active_reviews.sort_by { |dr| [dr.designer.last_name, dr.age] }
-    @design_reviews.reverse! if @params[:order] == 'ASC'
+    @design_reviews.reverse! if @params[:order] == 'DESC'
     
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'manager_list_by_designer',
@@ -212,7 +212,7 @@ class TrackerController < ApplicationController
     
     @design_reviews = 
       get_active_reviews.sort_by { |dr| [dr.design.peer.last_name, dr.age] }
-    @design_reviews.reverse! if @params[:order] == 'ASC'
+    @design_reviews.reverse! if @params[:order] == 'DESC'
     
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'manager_list_by_peer',
@@ -243,7 +243,7 @@ class TrackerController < ApplicationController
     
     @design_reviews = 
       get_active_reviews.sort_by { |dr| [dr.age, dr.priority.value] }
-    @design_reviews.reverse! if @params[:order] == 'ASC'
+    @design_reviews.reverse! if @params[:order] == 'DESC'
     
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'manager_list_by_age',
@@ -275,7 +275,7 @@ class TrackerController < ApplicationController
     
     @design_reviews = 
       get_active_reviews.sort_by { |dr| [dr.review_status.name, dr.age] }
-    @design_reviews.reverse! if @params[:order] == 'ASC'
+    @design_reviews.reverse! if @params[:order] == 'DESC'
     
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'manager_list_by_date',
@@ -385,7 +385,7 @@ class TrackerController < ApplicationController
       audit = Audit.find_all("design_id='#{design.id}'").pop
       design_summary[:audit] = audit
 
-      num_checks = Audit.check_count(audit.id)
+      num_checks = audit.check_count
 	
       design_summary[:percent_complete]      = 
         audit.designer_completed_checks * 100.0 / num_checks[:designer]
@@ -474,7 +474,7 @@ class TrackerController < ApplicationController
       audit = Audit.find_all("design_id='#{design.id}'").pop
       design_summary[:audit] = audit
 
-      num_checks = Audit.check_count(audit.id)
+      num_checks = audit.check_count
 	
       design_summary[:percent_complete]      = 
         audit.designer_completed_checks * 100.0 / num_checks[:designer]
@@ -484,7 +484,26 @@ class TrackerController < ApplicationController
       @design_list.push(design_summary)
     end
 
-    audits = []
+    audits = {}
+    #
+    # Get the audits where the user is the member of an audit team.
+    # 
+    my_audit_teams = AuditTeammate.find_all_by_user_id(@session[:user].id)
+    for audit_team in my_audit_teams
+      
+      audit = audit_team.audit
+      next if audit.is_peer_audit? & audit_team.self?
+ 
+      audit[:self] = audit_team.self?
+      num_checks = audit.check_count
+      audit[:percent_complete]          = audit.auditor_completed_checks *
+        100.0 / num_checks[:peer]
+      audit[:designer_percent_complete] = audit.designer_completed_checks *
+        100.0 / num_checks[:designer]
+      audits[audit.id] = audit
+      
+    end
+    
     #
     # Get the audits where the user is listed as the lead peer.
     # 
@@ -494,37 +513,22 @@ class TrackerController < ApplicationController
     for peer_design in peer_designs
     
       audit = Audit.find_all("design_id='#{peer_design.id}'").pop
-
+      next if audit.is_self_audit? && audits[audit.id]
+      
       audit[:self] = false
-      num_checks = Audit.check_count(audit.id)
+      num_checks = audit.check_count
       audit[:percent_complete]          = audit.auditor_completed_checks *
         100.0 / num_checks[:peer]
       audit[:designer_percent_complete] = audit.designer_completed_checks *
         100.0 / num_checks[:designer]
-      audits.push(audit)
+      audits[audit.id] = audit
       
     end
     
-    #
-    # Get the audits where the user is the member of an audit team.
-    # 
-    my_audit_teams = AuditTeammate.find_all_by_user_id(@session[:user].id)
+    audit_list = []
+    audits.each_value { |a| audit_list << a }
     
-    for audit_team in my_audit_teams
-      
-      audit = audit_team.audit
-      
-      audit[:self] = audit_team.self?
-      num_checks = Audit.check_count(audit.id)
-      audit[:percent_complete]          = audit.auditor_completed_checks *
-        100.0 / num_checks[:peer]
-      audit[:designer_percent_complete] = audit.designer_completed_checks *
-        100.0 / num_checks[:designer]
-      audits.push(audit)
-      
-    end
-    
-    @audits = audits.sort_by { |a| a.design.priority.value }.reverse
+    @audits = audit_list.sort_by { |a| a.design.priority.value }.reverse
     ##
     #JPA - After reversin the values of priority so that the call to reverse is not
     #      needed make this a multi-level sort.
@@ -556,7 +560,6 @@ class TrackerController < ApplicationController
       DesignReview.find_all_by_review_status_id(pending_repost.id)
 
     design_reviews = design_reviews.sort_by { |dr| dr.priority.value }
-    design_reviews.reverse!
     
     @my_reviews    = Array.new
     @other_reviews = Array.new
@@ -594,38 +597,13 @@ class TrackerController < ApplicationController
         @other_reviews.push(design_review)
       end
     end
+    
+    @my_reviews.sort_by { |dr| [dr.priority.value, dr.age] }
+    @my_reviews.reverse!
 
   end
   
   
-  ######################################################################
-  #
-  # working_manager_home_setup
-  #
-  # Description:
-  # This method gathers the information to display the Manager's 
-  # home page.
-  #
-  # Parameters from @params
-  # None
-  #
-  ######################################################################
-  #
-  def obs_working_manager_home_setup
-
-    @sort_order = {:priority => 'DESC'}
-    @sort_order.default = 'ASC'
-    flash[:sort_order] = @sort_order
-      
-    @design_reviews = get_design_reviews
-    @design_reviews = @design_reviews.sort_by { |dr| dr.priority.value }
-    @design_reviews.reverse!
-
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'index'}
-  end
-
-
   ######################################################################
   #
   # manager_home_setup
@@ -647,7 +625,6 @@ class TrackerController < ApplicationController
       
     @design_reviews = get_active_reviews
     @design_reviews = @design_reviews.sort_by { |dr| [dr.priority.value, dr.age] }
-    @design_reviews.reverse!
 
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'index'}
