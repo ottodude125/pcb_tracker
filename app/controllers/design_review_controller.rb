@@ -60,7 +60,7 @@ class DesignReviewController < ApplicationController
             for dfh in design_fab_house_list
               design_fab_houses[dfh.id] = dfh
             end
-            @fab_houses = FabHouse.find_all(nil, 'name ASC')
+            @fab_houses = FabHouse.find_all('active=1', 'name ASC')
 
             for fab_house in @fab_houses
               fab_house[:selected] = design_fab_houses[fab_house.id] != nil
