@@ -29,6 +29,22 @@ class Board < ActiveRecord::Base
 
   validates_numericality_of :number
 
-  validates_uniqueness_of(:name, :message => 'for board already exists')
 
+  ######################################################################
+  #
+  # validate_on_create
+  #
+  # Description:
+  # This method prevents duplicate boards from being created..
+  #
+  ######################################################################
+  #
+  def validate_on_create
+    new_board = Board.find_by_number_and_prefix_id(number, prefix_id)
+    if new_board
+      errors.add("Board #{new_board.name} already exists - entry")
+    end
+  end
+  
+  
 end
