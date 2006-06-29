@@ -219,7 +219,8 @@
                                               { :controller => 'ipd_post',
                                                 :action     => 'list',
                                                 :design_id  => design[:design].id },
-                                              :title => 'Initiate and discuss all in-process changes.')%>
+                                              { :title => 'Initiate and discuss all in-process changes.',
+                                                :class => 'small_font_b' }) %>
                               </td>
                               <td colspan="2" align="right">
                                 <% if !design[:audit].is_complete? %>
@@ -307,7 +308,7 @@
                         </tr>
                         <tr>
                           <td>
-                            <% audit_type = audit[:self] ? 'Self Audit' : 'Peer Audit' %>
+                            <% audit_type = (audit.is_self_audit? && audit[:self]) ? 'Self Audit' : 'Peer Audit' %>
                             <% if audit_locked_for_peer(audit) || audit.auditor_complete?%>
                               <%= link_to(audit_type,
                                           { :controller => 'audit',
