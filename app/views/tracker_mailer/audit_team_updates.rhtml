@@ -5,10 +5,25 @@
 
                            MODIFICATIONS
 ------------------------------------------------------------------------
-<% for update in @updates %>
-  <%= update[:teammate].user.name %> <%= update[:action] %> <%= update[:teammate].self? ? 'self' : 'peer' %> audit for <%= update[:teammate].section.name %><% end %>
+
+<% if @updates['self'].size > 0 %>Self Audit:<% end %>
+<% for update in @updates['self'] %>
+  <%= update[:action] + update[:teammate].user.name %> - <%= update[:teammate].section.name %><% end %>
+
+<% if @updates['peer'].size > 0 %>Peer Audit:<% end %>
+<% for update in @updates['peer'] %>
+  <%= update[:action] + update[:teammate].user.name %> - <%= update[:teammate].section.name %><% end %>
 
                            CURRENT TEAM
 ------------------------------------------------------------------------
-<% for member in @audit.audit_teammates %>
-  <%= member.user.name %> - <%= member.self? ? 'self' : 'peer' %> auditor - <%= member.section.name %><% end %>
+<% if @audit_team['self'].size + @audit_team['peer'].size > 0 %>
+<% if @audit_team['self'].size > 0 %>Self Audit:<% end %>
+<% for member in @audit_team['self'] %>
+  <%= member.user.name %> - <%= member.section.name %><% end %>
+  
+<% if @audit_team['peer'].size > 0 %>Peer Audit:<% end %>
+<% for member in @audit_team['peer'] %>
+  <%= member.user.name %> - <%= member.section.name %><% end %>
+<% else %>
+No teammates have been assigned to assist in completing the self or peer audits.
+<% end %>
