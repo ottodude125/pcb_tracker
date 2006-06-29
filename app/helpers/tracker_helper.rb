@@ -9,7 +9,7 @@ module TrackerHelper
       total_design_checks = 
         audit.checklist.designer_only_count + audit.checklist.designer_auditor_count
       
-      audit.designer_completed_checks < total_design_checks
+      audit.designer_completed_checks < audit.check_count[:designer]
     end
     
   end
