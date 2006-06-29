@@ -348,19 +348,41 @@ class TrackerMailer < ActionMailer::Base
   #
   def audit_team_updates(updated_by,
                          audit,
-                         team_update_list,
+                         team_update_lists,
                          sent_at = Time.now)
 
-    @subject    = "The audit team for the #{audit.design.name} has been updated"
-    team_list = team_update_list.sort_by { |t| t[:teammate].section.sort_order }
-    @body       = {:updated_by => updated_by,
-                   :audit      => audit,
-                   :updates    => team_list}
+    @subject = "The audit team for the #{audit.design.name} has been updated"
 
     recipients = []
-    for teammate in team_update_list
-      recipients.push(teammate[:teammate].user.email)
+    team_update_lists.each { |key, list|
+    
+      team_update_lists[key] = list.sort_by { |t| t[:teammate].section.sort_order }
+
+      for teammate in list
+        recipients.push(teammate[:teammate].user.email)
+      end
+    }
+    
+    audit_team_lists = { 'self' => [], 'peer' => [] }
+    for member in audit.audit_teammates
+      key = member.self? ? 'self' : 'peer'
+      audit_team_lists[key] << member
     end
+
+    audit_team_lists.each { |key, list|
+
+      audit_team_lists[key] = list.sort_by { |t| t.section.sort_order }
+
+      for teammate in list
+        recipients.push(teammate.user.email)
+      end
+    
+    }
+
+    @body = {:updated_by => updated_by,
+             :audit      => audit,
+             :updates    => team_update_lists,
+             :audit_team => audit_team_lists}
 
     @recipients = recipients.uniq
     @from       = Pcbtr::SENDER
@@ -368,8 +390,7 @@ class TrackerMailer < ActionMailer::Base
     @headers    = {}
     @bcc        = 'paul_altimonte@notes.teradyne.com'
 
-    cc         = [updated_by.email] + 
-                   add_role_members(['Manager', 'PCB Input Gate'])
+    cc = [updated_by.email] + add_role_members(['Manager', 'PCB Input Gate'])
     
     @cc = cc.uniq
 
