@@ -14,6 +14,8 @@ class Design < ActiveRecord::Base
 
   belongs_to :board
   belongs_to :priority
+  belongs_to :revision
+  belongs_to :suffix
 
   has_and_belongs_to_many :fab_houses
 
@@ -174,6 +176,33 @@ class Design < ActiveRecord::Base
       ReviewType.new(:name => 'Complete')
     else
       ReviewType.new(:name => 'Not Started')
+    end
+  
+  end
+
+
+  ######################################################################
+  #
+  # name
+  #
+  # Description:
+  # This method returns the design name.
+  #
+  # Return value:
+  # A string that identifies the design.
+  #
+  ######################################################################
+  #
+  def name
+
+    base_name = self.board.name + self.revision.name
+
+    if self.date_code?
+      base_name + '_eco' + self.suffix.name
+    elsif self.dot_rev?
+      base_name + self.suffix.name
+    else
+      base_name
     end
   
   end
