@@ -318,7 +318,6 @@ class DesignController < ApplicationController
     }
 
     design = Design.new
-    design.name         = details[:design_name]
     design.phase_id     = phase_id
     design.board_id     = details[:board_id]
     design.revision_id  = details[:revision_id]
@@ -417,7 +416,7 @@ class DesignController < ApplicationController
       peer_audit.designer_completed_checks = 0
       peer_audit.auditor_completed_checks  = 0
       peer_audit.save
-      Audit.create_checklist(peer_audit.id)
+      peer_audit.create_checklist
 
       # Set the fab house information
       @params['fab_house'].each { |fab_house_id, selected|

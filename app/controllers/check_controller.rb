@@ -84,7 +84,8 @@ class CheckController < ApplicationController
     new_ch = Check.create(@params['new_check'])
 
     if new_ch.errors.empty?
-      Checklist.increment_checklist_counters(new_ch, 1)
+      new_ch.section.checklist.increment_checklist_counters(new_ch, 1)
+
       flash['notice'] = 'Inserted check successfully.'
       redirect_to(:action => 'modify_checks',
                   :id => @params['new_check']['subsection_id'])
@@ -173,7 +174,7 @@ class CheckController < ApplicationController
     new_ch = Check.create(@params['new_check'])
 
     if new_ch.errors.empty?
-      Checklist.increment_checklist_counters(new_ch, 1)
+      new_ch.section.checklist.increment_checklist_counters(new_ch, 1)
       flash['notice'] = 'Appended check successfully.'
       redirect_to(:action => 'modify_checks',
                   :id => @params['new_check']['subsection_id'])
@@ -315,7 +316,7 @@ class CheckController < ApplicationController
     new_ch = Check.create(new_check)
 
     if new_ch.errors.empty?
-      Checklist.increment_checklist_counters(new_ch, 1)
+      new_ch.section.checklist.increment_checklist_counters(new_ch, 1)
       flash['notice'] = 'Added first check successfully.'
       redirect_to(:controller => 'checklist', 
                   :action => 'edit', 
@@ -440,7 +441,7 @@ class CheckController < ApplicationController
     omit_sort_order = check.sort_order
     
     if check.destroy
-      Checklist.increment_checklist_counters(check_dup, -1)
+      check_dup.section.checklist.increment_checklist_counters(check_dup, -1)
       flash['notice'] = 'Check deletion successful.'
     else
       flash['notice'] = 'Check deletion failed - Contact DTG'
@@ -483,9 +484,9 @@ class CheckController < ApplicationController
     subsection = Subsection.find(@params['id'])
 
     if not subsection.checklist.released?
-      deleted_checks = Check.find_all("subsection_id=#{subsection.id}")
-      for check in deleted_checks
-        Checklist.increment_checklist_counters(check, -1)
+
+      for check in subsection.checks
+        subsection.checklist.increment_checklist_counters(check, -1)
       end
         
       if Check.destroy_all("subsection_id=#{subsection.id}")
@@ -530,10 +531,10 @@ class CheckController < ApplicationController
     @check = Check.find(@params['check']['id'])
 
     if not @check.section.checklist.released?
-      Checklist.increment_checklist_counters(@check, -1)
+      @check.section.checklist.increment_checklist_counters(@check, -1)
 
       if @check.update_attributes(@params['check'])
-        Checklist.increment_checklist_counters(@check, 1)
+        @check.section.checklist.increment_checklist_counters(@check, 1)
         flash['notice'] = 'Check was successfully updated.'
         redirect_to(:action => 'modify_checks',
                     :id     => @check.subsection_id)
