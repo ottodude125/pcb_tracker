@@ -32,7 +32,8 @@
         <% section_id = section[:section].id %>
         <td valign="top"><%= section[:section].name %></td>
         <td align="center" valign="top">
-          <select id='self_section_id_<%= section_id %>' name='self_auditor[section_id_<%= section_id %>]'>
+          <select id='self_section_id_<%= section_id %>' 
+                  name='self_auditor[section_id_<%= section_id %>]'>
             <option value="">Please Select</option>
             <%= options_from_collection_for_select(@auditor_list[:self_list],
                                                    "id",
@@ -41,7 +42,14 @@
           </select>
         </td>
         <td align="center" valign="top">
-          <select id='peer_section_id_<%= section_id %>' name='peer_auditor[section_id_<%= section_id %>]'>
+          <% if section[:section].designer_auditor_checks > 0 %>
+            <select id='peer_section_id_<%= section_id %>' 
+                    name='peer_auditor[section_id_<%= section_id %>]'>
+          <% else %>
+            <select id='peer_section_id_<%= section_id %>' 
+                    name='peer_auditor[section_id_<%= section_id %>]'
+                    disabled='disabled'>
+          <% end %>
             <option value="">Please Select</option>
             <%= options_from_collection_for_select(@auditor_list[:peer_list],
                                                    "id",
