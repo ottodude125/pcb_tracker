@@ -222,77 +222,81 @@ class AuditController < ApplicationController
       end
     end
 
-    nav_section_i    = nav_sections.index(current_section)
-    nav_subsection_i = nav_sections[nav_section_i].subsections.index(@subsection)
+    nav_section_i = nav_sections.index(current_section)
+    
+    if nav_section_i
+
+      nav_subsection_i = nav_sections[nav_section_i].subsections.index(@subsection)
   
-    if nav_subsection_i > 0
-      @arrows[:previous] = nav_sections[nav_section_i].subsections[nav_subsection_i-1]
-    elsif nav_section_i > 0
-      @arrows[:previous] = nav_sections[nav_section_i-1].subsections.pop
-    end
+      if nav_subsection_i > 0
+        @arrows[:previous] = nav_sections[nav_section_i].subsections[nav_subsection_i-1]
+      elsif nav_section_i > 0
+        @arrows[:previous] = nav_sections[nav_section_i-1].subsections.pop
+      end
     
-    if nav_subsection_i < (nav_sections[nav_section_i].subsections.size-1)
-      @arrows[:next] = nav_sections[nav_section_i].subsections[nav_subsection_i+1]
-    elsif nav_section_i < (nav_sections.size-1)
-      @arrows[:next] = nav_sections[nav_section_i+1].subsections.shift
-    end
+      if nav_subsection_i < (nav_sections[nav_section_i].subsections.size-1)
+        @arrows[:next] = nav_sections[nav_section_i].subsections[nav_subsection_i+1]
+      elsif nav_section_i < (nav_sections.size-1)
+        @arrows[:next] = nav_sections[nav_section_i+1].subsections.shift
+      end
 
-    design_checks = []
-    for check in @subsection.checks
-      design_check = DesignCheck.find_by_audit_id_and_check_id(
-                       @audit.id, check.id)
-      design_checks << design_check if design_check 
-    end
+      design_checks = []
+      for check in @subsection.checks
+        design_check = DesignCheck.find_by_audit_id_and_check_id(
+                         @audit.id, check.id)
+        design_checks << design_check if design_check 
+      end
 
-    @completed_self_checks = design_checks.find_all { |dc| 
-                               dc.designer_result != 'None' }.size
-    @completed_peer_checks = design_checks.find_all { |dc|
-                               dc.auditor_result != 'None' &&
-                               dc.auditor_result != 'Comment' }.size
+      @completed_self_checks = design_checks.find_all { |dc| 
+                                 dc.designer_result != 'None' }.size
+      @completed_peer_checks = design_checks.find_all { |dc|
+                                 dc.auditor_result != 'None' &&
+                                 dc.auditor_result != 'Comment' }.size
     
 
-    teammate = AuditTeammate.find_by_audit_id_and_section_id_and_self(
-                 @audit.id,
-                 @subsection.section.id,
-                 @audit.is_self_audit? ? 1 : 0)
-    user_id = @session[:user].id
+      teammate = AuditTeammate.find_by_audit_id_and_section_id_and_self(
+                   @audit.id,
+                   @subsection.section.id,
+                   @audit.is_self_audit? ? 1 : 0)
+      user_id = @session[:user].id
 
-    if @audit.is_self_audit?
-      @able_to_check = ((!teammate && user_id == @audit.design.designer_id) ||
-                        ( teammate && user_id == teammate.user_id))
+      if @audit.is_self_audit?
+        @able_to_check = ((!teammate && user_id == @audit.design.designer_id) ||
+                          ( teammate && user_id == teammate.user_id))
+      else
+        @able_to_check = ((!teammate && user_id == @audit.design.peer_id) ||
+                          ( teammate && user_id == teammate.user_id))  &&
+                         !@audit.is_complete?
+      end
+
+      condition = ''
+      if @audit.design.date_code?
+        condition = ' and date_code_check=1'
+      elsif @audit.design.dot_rev?
+        condition = ' and dot_rev_check=1'
+      end
+    
+      if @audit.is_self_audit? || @audit.design.designer_id == @session[:user].id
+        @checks = Check.find_all("subsection_id=#{@subsection.id}" +
+                                 condition,
+                                 'sort_order ASC')
+      else
+        @checks = Check.find_all("subsection_id=#{@subsection.id} and " +
+                                 "check_type='designer_auditor'" +
+                                 condition,
+                                 'sort_order ASC')
+      end
+
+      # Add the design checks and comments for each of the checks.
+      # The audit comments are included in the design check.
+      for check in @checks
+        check[:design_check] = DesignCheck.find_by_check_id_and_audit_id(check.id, 
+                                                                         @audit.id)
+      end
     else
-      @able_to_check = ((!teammate && user_id == @audit.design.peer_id) ||
-                        ( teammate && user_id == teammate.user_id))  &&
-                       !@audit.is_complete?
+      redirect_to(:action => 'show_sections', :id => @audit.id)
     end
-
-    condition = ''
-    if @audit.design.date_code?
-      condition = ' and date_code_check=1'
-    elsif @audit.design.dot_rev?
-      condition = ' and dot_rev_check=1'
-    end
-    
-    if @audit.is_self_audit? || @audit.design.designer_id == @session[:user].id
-      @checks = Check.find_all("subsection_id=#{@subsection.id}" +
-                               condition,
-                               'sort_order ASC')
-    else
-      @checks = Check.find_all("subsection_id=#{@subsection.id} and " +
-                               "check_type='designer_auditor'" +
-                               condition,
-                               'sort_order ASC')
-    end
-
-    # Add the design checks and comments for each of the checks.
-    # The audit comments are included in the design check.
-    for check in @checks
-      check[:design_check] = DesignCheck.find_by_check_id_and_audit_id(check.id, 
-                                                                       @audit.id)
-    end
-
-  end
-
+  end 
 
   ######################################################################
   #
