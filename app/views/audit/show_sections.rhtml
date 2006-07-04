@@ -20,6 +20,9 @@
 	<th>%<br />Completed</th>
       </tr>
       <% for entry in @checklist_index %>
+      
+        <% next if @audit.is_peer_audit? && entry[:section].designer_auditor_checks == 0 %>
+      
         <% auditor = auditor_name(entry[:section].id, @audit_team, @lead) %>
         <% section_color = auditor == @session[:user].name ? "#00ff00" : "#ff0000" %>
         <tr>
