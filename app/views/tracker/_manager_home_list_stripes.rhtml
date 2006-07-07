@@ -39,7 +39,7 @@
   <td align="right">
     <table border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td valign="top">
+        <td align="center" valign="top">
           <%= button_to("Update Assignments", 
                         { :controller => "design_review",
                           :action     => "admin_update",
@@ -49,15 +49,19 @@
         </td>
       </tr>
       <tr>
-        <td valign="top">
-          <%= button_to('Audit Assignments',
-                        { :controller => 'audit',
-                          :action     => 'auditor_list',
-                          :id         => manager_home_list_stripes.design.audit.id,
-                          :return_to  => { :controller => 'tracker',
-                                           :action     => 'index' } },
-                        { :title => 'Set the assignments for self and peer audits.',
-                          :class => "small_font_button" } )%>
+        <td align="center" valign="top">
+          <% if !manager_home_list_stripes.design.audit.skip? %>
+            <%= button_to('Audit Assignments',
+                          { :controller => 'audit',
+                            :action     => 'auditor_list',
+                            :id         => manager_home_list_stripes.design.audit.id,
+                            :return_to  => { :controller => 'tracker',
+                                             :action     => 'index' } },
+                          { :title => 'Set the assignments for self and peer audits.',
+                            :class => "small_font_button" } )%>
+          <% else %>
+            <b>Audit Skipped</b>
+          <% end %>
         </td>
       </tr>
     </table>
