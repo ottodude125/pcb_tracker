@@ -73,28 +73,28 @@
         <option value="">Please select</option>
         <%= options_from_collection_for_select(@designers,
                                                "id",
-                                               "name",
+                                               "last_name_first",
                                                designer_id) %>
         </select>
       </td>
     </tr>
-    <tr>
-      <th align="left">Peer Reviewer:</th>
-      <td align="left">
-        <%= @design_review.design.peer.name %>
-      </td>
-      <td>
-        <select id="peer"
-                name="peer[id]"
-                class="name_select">
-        <option value="">Please select</option>
-        <%= options_from_collection_for_select(@peer_list,
-                                               "id",
-                                               "name",
-                                               @design_review.design.peer_id) %>
-        </select>
-      </td>
-    </tr>
+    <% if !@design_review.design.audit.skip? %>
+      <tr>
+        <th align="left">Peer Reviewer:</th>
+        <td align="left">
+          <%= @design_review.design.peer.name %>
+        </td>
+        <td>
+          <select id="peer" name="peer[id]" class="name_select">
+          <option value="">Please select</option>
+          <%= options_from_collection_for_select(@peer_list,
+                                                 "id",
+                                                 "last_name_first",
+                                                 @design_review.design.peer_id) %>
+          </select>
+        </td>
+      </tr>
+    <% end %>
 
     <tr>
       <th align="left">Design Center:</th>
@@ -131,6 +131,14 @@
         </select>
       </td>
     </tr>
+    
+    <% if @design_review.design.audit.skip? %>
+      <tr>
+        <td align="center" colspan="3">
+          <b>Note:</b> The audit has been skipped.
+        </td>
+      </tr>
+    <% end %>
     
   </table>
 
