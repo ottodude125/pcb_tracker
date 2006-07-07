@@ -170,6 +170,7 @@ class DesignControllerTest < Test::Unit::TestCase
                               "Routing"     => '0',
                               "Final"       => '1',
                               "Release"     => '1'},
+         :audit           => {"skip" => 0},
          :board_reviewers => board_reviewers,
          :reviewer        => reviewer_flags,
          :fab_house       => fab_house_selections,
