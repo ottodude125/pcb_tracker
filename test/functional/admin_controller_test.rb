@@ -32,14 +32,6 @@ class AdminControllerTest < Test::Unit::TestCase
   # This method does the functional testing of the index method
   # from the AdminController class
   #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
-  #
-  # Additional information: JPA - finish
-  #
   ######################################################################
   #
   def test_index
