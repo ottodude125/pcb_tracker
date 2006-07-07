@@ -28,7 +28,7 @@
 
 <table width="80%"
        align="center"
-        border="0"
+       border="0"
        cellspacing="2"
        cellpadding="2">
   <tr>
@@ -40,14 +40,12 @@
 
 <table width="90%"
        align="center"
-        border="0"
+       border="0"
        cellspacing="2"
        cellpadding="2">
   <tr>
-    <td width="50%"
-         valign="top">
-      <table border="0"
-              width="100%">
+    <td width="50%" valign="top">
+      <table border="0" width="100%">
         <tr>
           <th colspan="2" class="teraheader" width="50%">
             Reviews
@@ -76,7 +74,7 @@
         </tr>
       </table>
     </td>
-    <td rowspan="4"
+    <td rowspan="3"
          valign="top">
       <table border="0"
               width="100%">
@@ -181,6 +179,20 @@
                 </tr>
               <% end %>
             </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <table>
+        <tr>
+          <th align="right">
+            Skip Audit? 
+          </th>
+          <td align="left">
+            <%= check_box("audit", "skip") %>
           </td>
         </tr>
       </table>
