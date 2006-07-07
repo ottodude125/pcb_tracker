@@ -104,25 +104,25 @@
                         <option value="">Please select</option>
                         <%= options_from_collection_for_select(@designers,
                                                                :id, 
-                                                               :name,
+                                                               :last_name_first,
                                                                @design.designer_id) %>
                         </select>
                       </td>
                     </tr>
-                    <tr>
-                      <th align="right">Peer:</th>
-                      <td align="left">
-                        <select id="peer" 
-                                name="peer[id]" 
-                                class="name_select">
-                        <option value="">Please select</option>
-                        <%= options_from_collection_for_select(@designers,
-                                                               "id", 
-                                                               "name",
-                                                               @design.peer_id) %>
-                        </select>
-                      </td>
-                    </tr>
+                    <% if !@design.audit.skip? %>
+                      <tr>
+                        <th align="right">Peer:</th>
+                        <td align="left">
+                          <select id="peer" name="peer[id]" class="name_select">
+                          <option value="">Please select</option>
+                          <%= options_from_collection_for_select(@designers,
+                                                                 "id", 
+                                                                 "last_name_first",
+                                                                 @design.peer_id) %>
+                          </select>
+                        </td>
+                      </tr>
+                    <% end %>
                   </table>
                 </td>
               </tr>
