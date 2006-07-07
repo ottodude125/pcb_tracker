@@ -70,7 +70,8 @@
                       <font color="#ffffff">
                         <b><%= design[:design].name %> - 
                         <%= design[:design].board.platform.name %> / 
-                        <%= design[:design].board.project.name %></b>
+                        <%= design[:design].board.project.name %> /
+                        <%= design[:design].board.description %></b>
                       </font>
                     </td>
                   </tr>
@@ -142,7 +143,8 @@
                           </tr>
                         <% end %>
 
-                        <% if review_locked(design[:next_review]) %>
+                        <% if review_locked(design[:next_review])  &&
+                              !design[:audit].skip? %>
                           <tr bgcolor="#dfdfdf">
                             <td colspan="7">
                               Final Review can not be posted until the audit is complete
@@ -168,51 +170,58 @@
                       <tr>
                         <td colspan="6">
                           <table width="100%" border="0">
-                            <tr>
-                              <td bgcolor="#ffffff"
-                                  width="100">&nbsp;</td>
-                              <td align="center">
-                                <font size="-2"><b>% Complete</b></font>
-                              </td>
-                              <td>
-                                <font size="-2"><b>Peer</b></font>
-                              </td>
-                              <td align="center">
-                                <font size="-2"><b>Peer % Complete</b></font>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <% if design[:audit].auditor_complete? %>
-                                  <%= link_to("Design Audit",
-                                              { :controller => 'audit',
-                                                :action     => 'print',
-                                                :id         =>  design[:audit].id},
-                                               :title => "Access to the completed #{design[:design].name} Peer Audit Review") %>
-                                <% elsif design[:design].phase.name != 'Pre_Artwork' %>
-                                  <%= link_to("Design Audit",
-                                              { :controller => 'audit',
-                                                :action     => 'show_sections',
-                                                :id         =>  design[:audit].id},
-                                               :title => "Access to the #{design[:design].name} Peer Audit Review")  %>
-                                <% end %>
-                              </td>
-                              <td align="center">
-                                <b><%= sprintf("%4.1f",
-                                               design[:percent_complete]) %></b>
-                              </td>
-                              <td>
-                                <% if design[:design].peer_id > 0 %>
-                                  <b><%= User.find(design[:design].peer_id).name %></b>
-                                <% else %>
-                                  <b>Not Set</b>
-                                <% end %>
-                              </td>
-                              <td align="center">
-                                <b><%= sprintf("%4.1f",
-                                               design[:peer_percent_complete]) %></b>
-                              </td>
-                            </tr>
+                            <% if design[:audit].skip? %>
+                              <tr>
+                                <td colspan="4">  
+                                  <b>Design Audit Skipped</b>
+                                </td>
+                              </tr>
+                            <% else %>
+                              <tr>
+                                <td bgcolor="#ffffff" width="100">&nbsp;</td>
+                                <td align="center">
+                                  <font size="-2"><b>% Complete</b></font>
+                                </td>
+                                <td>
+                                  <font size="-2"><b>Peer</b></font>
+                                </td>
+                                <td align="center">
+                                  <font size="-2"><b>Peer % Complete</b></font>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td>
+                                  <% if design[:audit].auditor_complete? %>
+                                    <%= link_to("Design Audit",
+                                                { :controller => 'audit',
+                                                  :action     => 'print',
+                                                  :id         =>  design[:audit].id},
+                                                 :title => "Access to the completed #{design[:design].name} Peer Audit Review") %>
+                                  <% elsif design[:design].phase.name != 'Pre_Artwork' %>
+                                    <%= link_to("Design Audit",
+                                                { :controller => 'audit',
+                                                  :action     => 'show_sections',
+                                                  :id         =>  design[:audit].id},
+                                                 :title => "Access to the #{design[:design].name} Peer Audit Review")  %>
+                                  <% end %>
+                                </td>
+                                <td align="center">
+                                  <b><%= sprintf("%4.1f",
+                                                 design[:percent_complete]) %></b>
+                                </td>
+                                <td>
+                                  <% if design[:design].peer_id > 0 %>
+                                    <b><%= User.find(design[:design].peer_id).name %></b>
+                                  <% else %>
+                                    <b>Not Set</b>
+                                  <% end %>
+                                </td>
+                                <td align="center">
+                                  <b><%= sprintf("%4.1f",
+                                                 design[:peer_percent_complete]) %></b>
+                                </td>
+                              </tr>                                
+                            <% end %>
                             <tr>
                               <td colspan="2" align="left">
                                 <%= button_to(design[:design].name + " In-Process Dialogue",
@@ -223,7 +232,8 @@
                                                 :class => 'small_font_b' }) %>
                               </td>
                               <td colspan="2" align="right">
-                                <% if !design[:audit].is_complete? %>
+                                <% if !design[:audit].is_complete? && 
+                                      !design[:audit].skip? %>
                                   <%= button_to('Audit Assignments',
                                                 { :controller => 'audit',
                                                   :action     => 'auditor_list',
@@ -285,7 +295,8 @@
                     <td class="teraheader">
                       <b><%= audit.design.name %> -
                       <%= audit.design.board.platform.name %> /
-                      <%= audit.design.board.project.name %></b>
+                      <%= audit.design.board.project.name %> /
+                      <%= audit.design.board.description %></b>
                     </td>
                   </tr>
                   <tr>
@@ -336,7 +347,9 @@
                           </td>
                         </tr>
                         
-                        <% if @session[:user].id == audit.design.peer_id  && !audit.is_complete? %>
+                        <% if @session[:user].id == audit.design.peer_id  && 
+                              !audit.is_complete?                         &&
+                              !audit.skip? %>
                         <tr>
                           <td>
                             <%= button_to('Audit Assignments',
