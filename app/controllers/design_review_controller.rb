@@ -17,6 +17,20 @@ class DesignReviewController < ApplicationController
   before_filter(:verify_manager_admin_privs,
                 :only => [:process_admin_update])
 
+
+  ######################################################################
+  #
+  # view
+  #
+  # Description:
+  # This method gathers the information for displaying a design review
+  # and then renders the view based on the users' role.
+  #
+  # Parameters from @params
+  # ['id'] - The design review ID.
+  #
+  ######################################################################
+  #
   def view
 
     session[:return_to] = {:controller => 'design_review',
@@ -75,6 +89,96 @@ class DesignReviewController < ApplicationController
         end
     end
     
+  end
+  
+  
+  ######################################################################
+  #
+  # safe_view
+  #
+  # Description:
+  # This method redirects to the view action to display the appropriate
+  # view.
+  #
+  # Parameters from @params
+  # ['id'] - The design review ID.
+  #
+  ######################################################################
+  #
+  def safe_view
+    redirect_to(:action => 'view', :id => @params[:id])
+  end
+  
+  
+  ######################################################################
+  #
+  # admin_view
+  #
+  # Description:
+  # This method redirects to the view action to display the appropriate
+  # view.
+  #
+  # Parameters from @params
+  # ['id'] - The design review ID.
+  #
+  ######################################################################
+  #
+  def admin_view
+    redirect_to(:action => 'view', :id => @params[:id])
+  end
+  
+  
+  ######################################################################
+  #
+  # manager_view
+  #
+  # Description:
+  # This method redirects to the view action to display the appropriate
+  # view.
+  #
+  # Parameters from @params
+  # ['id'] - The design review ID.
+  #
+  ######################################################################
+  #
+  def manager_view
+    redirect_to(:action => 'view', :id => @params[:id])
+  end
+  
+  
+  ######################################################################
+  #
+  # designer_view
+  #
+  # Description:
+  # This method redirects to the view action to display the appropriate
+  # view.
+  #
+  # Parameters from @params
+  # ['id'] - The design review ID.
+  #
+  ######################################################################
+  #
+  def designer_view
+    redirect_to(:action => 'view', :id => @params[:id])
+  end
+  
+  
+  ######################################################################
+  #
+  # reviewer_view
+  #
+  # Description:
+  # This method redirects to the view action to display the appropriate
+  # view.
+  #
+  # Parameters from @params
+  # ['id'] - The design review ID.
+  #
+  ######################################################################
+  #
+  def reviewer_view
+    redirect_to(:action => 'view', :id => @params[:id])
   end
 
 
