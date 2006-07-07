@@ -1,3 +1,16 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: checklist_test.rb
+#
+# This file contains the unit tests for the checklist model
+#
+# Revision History:
+#   $Id$
+#
+########################################################################
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class ChecklistTest < Test::Unit::TestCase
@@ -65,7 +78,7 @@ class ChecklistTest < Test::Unit::TestCase
 		 @checklist.released)
     assert_equal(0,
 		 @checklist.used)
-# JPA ????
+# FIXME ????
 #    assert_equal("2005-05-23 00:00:00",
 #		 @checklist.released_on)
     assert_equal(3,
