@@ -144,10 +144,12 @@ class DesignReviewController < ApplicationController
   #
   def process_placement_routing
 
+    design_id = flash[:design_id]
+    
     if @params["combine"]["reviews"] == '1'
-      design_id = flash[:design_id]
+      
 
-      design_reviews = DesignReview.find_all_by_design_id(flash[:design_id])
+      design_reviews = DesignReview.find_all_by_design_id(design_id)
       placement_review = design_reviews.find { |dr| dr.review_type.name == 'Placement' }
       routing_review   = design_reviews.find { |dr| dr.review_type.name == 'Routing' }
 
@@ -171,7 +173,7 @@ class DesignReviewController < ApplicationController
 
     redirect_to(:action                    => 'post_review',
                 :combine_placement_routing => @params["combine"]["reviews"],
-                :design_id                 => flash[:design_id],
+                :design_id                 => design_id,
                 :review_type_id            => flash[:review_type_id])
     
   end
@@ -202,7 +204,7 @@ class DesignReviewController < ApplicationController
     review_type    = ReviewType.find(@params[:review_type_id])
     @design_review = design_reviews.find { |dr|  dr.review_type_id == review_type.id }
 
-    # JPA: This must be a better way to set this.
+    # TODO: There must be a better way to set this.
     @design_review.design_center_id = 1 if @design_review.design_center_id == 0
 
     # Handle the combined Placement/Routing reviews
@@ -1520,7 +1522,7 @@ class DesignReviewController < ApplicationController
     @design_review = DesignReview.find(@params[:id])
     
     designer_role        = Role.find_by_name("Designer")
-    @designers           = designer_role.users.delete_if { |d| !d.active }
+    @designers           = designer_role.active_users.sort_by { |u| u.last_name }
     @peer_list           = @designers
     @pcb_input_gate_list = Role.find_by_name('PCB Input Gate').active_users
     @priorities          = Priority.find_all(nil, 'value ASC')
@@ -1559,6 +1561,7 @@ class DesignReviewController < ApplicationController
     end
     
     design_review = DesignReview.find(params[:id])
+    audit_skipped = design_review.design.audit.skip?
 
     if !params[:designer]
 
@@ -1573,14 +1576,17 @@ class DesignReviewController < ApplicationController
       else
         redirect_to(:action => "index", :controller => "tracker" )
       end
-    elsif (params[:designer][:id] != params[:peer][:id]  ||
-           (params[:designer][:id] == '' &&
-            params[:peer][:id]     == ''))
+    
+    elsif (!audit_skipped  &&
+           (params[:designer][:id] != params[:peer][:id]  ||
+             (params[:designer][:id] == '' &&
+              params[:peer][:id]     == '')))  ||
+          audit_skipped 
       
       # Update the design reord
       design = design_review.design
       design.designer_id = params[:designer][:id]
-      design.peer_id     = params[:peer][:id]
+      design.peer_id     = params[:peer][:id] if !audit_skipped
       design.priority_id = params[:priority][:id]
       design.update
 
@@ -1650,16 +1656,29 @@ class DesignReviewController < ApplicationController
     results = {:success       => true,
                :alternate_msg => 'The following updates have been made - '}
 
-    if review_results[:designer]["id"] == '' || review_results[:peer]["id"] == ''
+    audit_skipped = design_review.design.audit.skip?
+    
+    if !audit_skipped &&
+       (review_results[:designer]["id"] == '' || 
+        review_results[:peer]["id"] == '')
       results[:success]       = false
       results[:alternate_msg] = 'The Designer and Peer must be specified - results not recorded'
-    elsif review_results[:designer]["id"] == review_results[:peer]["id"]
+    elsif !audit_skipped &&
+          (review_results[:designer]["id"] == 
+           review_results[:peer]["id"])
       results[:success]       = false
       results[:alternate_msg] = 'The Designer and Peer must be different - results not recorded'
+    elsif audit_skipped && review_results[:designer]["id"] == ''
+      results[:success]       = false
+      results[:alternate_msg] = 'The Designer must be specified - results not recorded'
     else
 
       designer = User.find(review_results[:designer]["id"])
-      peer     = User.find(review_results[:peer]["id"])
+      if !audit_skipped
+        peer = User.find(review_results[:peer]["id"])
+      else 
+        peer = User.new
+      end
       priority = Priority.find(review_results[:priority]["id"])
 
       design = design_review.design
@@ -1681,9 +1700,11 @@ class DesignReviewController < ApplicationController
       end
 
       results[:alternate_msg] += "Criticality is #{priority.name}, " if priority_update
-      results[:alternate_msg] += "the Designer is #{designer.name} and "
-      results[:alternate_msg] += "the Peer is #{peer.name}"
-      
+      results[:alternate_msg] += "the Designer is #{designer.name}"
+      if !audit_skipped
+        results[:alternate_msg] += " and the Peer is #{peer.name}"
+      end
+
     end
 
     return results
