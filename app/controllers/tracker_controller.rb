@@ -530,7 +530,7 @@ class TrackerController < ApplicationController
     
     @audits = audit_list.sort_by { |a| a.design.priority.value }.reverse
     ##
-    #JPA - After reversin the values of priority so that the call to reverse is not
+    #TODO: After reversing the values of priority so that the call to reverse is not
     #      needed make this a multi-level sort.
     #      audits.sort_by { |a| [a.design.priority.value, a.design.age] }
 
