@@ -14,8 +14,13 @@
 
 class TrackerController < ApplicationController
 
-  before_filter(:verify_logged_in,           :except => :index)
-  before_filter(:verify_manager_admin_privs, :except => :index)
+  before_filter(:verify_manager_admin_privs, 
+                :except => [:index,
+                            :admin_home,
+                            :designer_home,
+                            :manager_home,
+                            :pcb_admin_home,
+                            :reviewer_home])
 
   ######################################################################
   #
@@ -64,6 +69,91 @@ class TrackerController < ApplicationController
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'index'}
 
+  end
+  
+  
+  ######################################################################
+  #
+  # admin_home
+  #
+  # Description:
+  # This method redirects to index to accomodate an obsolete action.
+  #
+  # Parameters from @params
+  # None
+  #
+  ######################################################################
+  #
+  def admin_home
+    redirect_to(:action => 'index')
+  end
+  
+  
+  ######################################################################
+  #
+  # reviewer_home
+  #
+  # Description:
+  # This method redirects to index to accomodate an obsolete action.
+  #
+  # Parameters from @params
+  # None
+  #
+  ######################################################################
+  #
+  def reviewer_home
+    redirect_to(:action => 'index')
+  end
+  
+  
+  ######################################################################
+  #
+  # manager_home
+  #
+  # Description:
+  # This method redirects to index to accomodate an obsolete action.
+  #
+  # Parameters from @params
+  # None
+  #
+  ######################################################################
+  #
+  def manager_home
+    redirect_to(:action => 'index')
+  end
+  
+  
+  ######################################################################
+  #
+  # pcb_admin_home
+  #
+  # Description:
+  # This method redirects to index to accomodate an obsolete action.
+  #
+  # Parameters from @params
+  # None
+  #
+  ######################################################################
+  #
+  def pcb_admin_home
+    redirect_to(:action => 'index')
+  end
+  
+  
+  ######################################################################
+  #
+  # designer_home
+  #
+  # Description:
+  # This method redirects to index to accomodate an obsolete action.
+  #
+  # Parameters from @params
+  # None
+  #
+  ######################################################################
+  #
+  def designer_home
+    redirect_to(:action => 'index')
   end
 
 
