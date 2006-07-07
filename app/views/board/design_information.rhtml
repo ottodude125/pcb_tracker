@@ -12,7 +12,7 @@
 
   <table width="80%" 
          align="center" 
-         border="1"
+         border="0"
          cellspacing="2" 
          cellpadding="2" 
          rules="all">
@@ -28,11 +28,15 @@
           <td>
             <table width="98%"
                    align="right"
-                   border="1">
+                   border="0">
               <tr>
                 <th align="left"
-                    width="15%">
-                  <%= link_to(review.review_type.name,
+                    width="30%">
+                  <% review_name = review.review_type.name %>
+                  <% if review.review_type_id_2 != 0 %>
+                    <% review_name += '/' + ReviewType.find(review.review_type_id_2).name %>
+                  <% end %>
+                  <%= link_to(review_name,
                               {:controller => 'design_review',
                                :action     => 'view',
                                :id         => review.id})%>
@@ -47,10 +51,14 @@
       <% end %>
       <tr>
         <td>
-          <%= link_to('Peer Audit',
-                      {:controller => 'audit',
-                       :action     => 'print',
-                       :id         => design.audit.id}) %>
+          <% if !design.audit.skip? %>
+            <%= link_to('Audit',
+                        {:controller => 'audit',
+                         :action     => 'print',
+                         :id         => design.audit.id}) %>
+          <% else %>
+            <b>Audit Skipped</b>
+          <% end %>
         </td>
       </tr>
     <% end %>
