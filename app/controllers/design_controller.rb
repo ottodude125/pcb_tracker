@@ -365,7 +365,7 @@ class DesignController < ApplicationController
 
         # Check to make sure the review is going to happen before 
         # creating the entries for the design reviewers.
-        # JPA: This is going to require some logic to set the reviewers 
+        # TODO: This is going to require some logic to set the reviewers 
         # up if the review does get added in.
         next if not active
 
@@ -408,15 +408,16 @@ class DesignController < ApplicationController
                                   :conditions => ['released=1'],
                                   :order      => 'major_rev_number DESC')
 
-      peer_audit = Audit.new
-      peer_audit.design_id    = design.id
-      peer_audit.checklist_id = checklist.id
-      peer_audit.designer_complete         = 0
-      peer_audit.auditor_complete          = 0
-      peer_audit.designer_completed_checks = 0
-      peer_audit.auditor_completed_checks  = 0
-      peer_audit.save
-      peer_audit.create_checklist
+      audit = Audit.new
+      audit.design_id      = design.id
+      audit.checklist_id   = checklist.id
+      audit.skip           = @params[:audit][:skip]
+      audit.designer_complete         = 0
+      audit.auditor_complete          = 0
+      audit.designer_completed_checks = 0
+      audit.auditor_completed_checks  = 0
+      audit.save
+      audit.create_checklist
 
       # Set the fab house information
       @params['fab_house'].each { |fab_house_id, selected|
