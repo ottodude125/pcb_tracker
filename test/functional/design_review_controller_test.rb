@@ -305,8 +305,14 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     post(:posting_filter,
          :design_id      => designs(:mx234a).id,
          :review_type_id => placement_review_id)
-    
-    post(:placement_routing_post)
+         
+    assert_equal(designs(:mx234a).id.to_s, flash[:design_id])
+    assert_equal(placement_review_id.to_s, flash[:review_type_id])
+
+    assert_redirected_to(:action => 'placement_routing_post')
+    assert_equal(designs(:mx234a).id.to_s, flash[:design_id])
+    assert_equal(placement_review_id.to_s, flash[:review_type_id])
+    follow_redirect
 
     post(:process_placement_routing,
          :combine => {:reviews => '0'})
@@ -879,6 +885,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     for review_result in mx234a_pre_artwork.design_review_results
       assert_equal('No Response', review_result.result)
     end
+
     comments = mx234a_pre_artwork.comments
     assert_equal(6,                             comments.size)
     assert_equal('Test Comment',                comments[0].comment)
@@ -2762,8 +2769,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     post(:admin_update, :id => mx234a_pre_artwork.id)
 
-    assert_equal(4, assigns(:designers).size)
-    assert_equal(4, assigns(:peer_list).size)
+    assert_equal(3, assigns(:designers).size)
+    assert_equal(3, assigns(:peer_list).size)
     assert_equal(2, assigns(:priorities).size)
     assert_equal(2, assigns(:design_centers).size)
     
