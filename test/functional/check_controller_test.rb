@@ -482,7 +482,7 @@ class CheckControllerTest < Test::Unit::TestCase
     
     assert_response 200
     assert_equal(subsection_01_1_1.id, assigns(:subsection).id)
-    # JPA
+    # TODO:
     # Is there a better way to test than with hard code?
     # The only query I can think of is the same one that 
     # is used in the method
