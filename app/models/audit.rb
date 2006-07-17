@@ -232,6 +232,32 @@ PEER_AUDIT       = 2
     return count
     
   end
+  
+  
+  ######################################################################
+  #
+  # completion_stats
+  #
+  # Description:
+  # This method returns percent complete statistics for the 
+  # self and peer audit.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def completion_stats
+  
+    stats = { :self => 0.0, :peer => 0.0 }
+    total_checks = self.check_count
+    
+    stats[:self] = self.designer_completed_checks * 100.0 / total_checks[:designer]
+    stats[:peer] = self.auditor_completed_checks  * 100.0 / total_checks[:peer]
+  
+    stats
+  
+  end
 
 
 end
