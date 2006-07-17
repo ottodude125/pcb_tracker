@@ -429,37 +429,36 @@ class AuditController < ApplicationController
   #
   def print
 
-    audit     = Audit.find(@params[:id])
-
+    @audit   = Audit.find(@params[:id])
     @summary = Hash.new
-    @summary[:board_number]  = audit.design.name
-    @summary[:designer]      = audit.design.designer.name
-    @summary[:auditor]       = audit.design.peer.name
+    @summary[:board_number]  = @audit.design.name
+    @summary[:designer]      = @audit.design.designer.name
+    @summary[:auditor]       = @audit.design.peer.name
     @summary[:checklist_rev] =
-      audit.checklist.major_rev_number.to_s +
+      @audit.checklist.major_rev_number.to_s +
       '.' +
-      audit.checklist.minor_rev_number.to_s
+      @audit.checklist.minor_rev_number.to_s
 
     @display       = Array.new
-    for section in audit.checklist.sections
+    for section in @audit.checklist.sections
       
-      next if !audit.design.belongs_to(section)
+      next if !@audit.design.belongs_to(section)
 
       for subsection in section.subsections
 
-        next if !audit.design.belongs_to(subsection)
+        next if !@audit.design.belongs_to(subsection)
 
         box = Hash.new
         design_checks = Array.new
         for check in subsection.checks
 
-          next if !audit.design.belongs_to(check)
+          next if !@audit.design.belongs_to(check)
 
           check_info = Hash.new
           check_info[:check]        = check
 
           check_info[:design_check] = 
-            DesignCheck.find_by_check_id_and_audit_id(check.id, audit.id)
+            DesignCheck.find_by_check_id_and_audit_id(check.id, @audit.id)
 
           design_checks.push(check_info)
 
