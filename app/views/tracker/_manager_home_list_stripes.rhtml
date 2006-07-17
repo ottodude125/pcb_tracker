@@ -36,7 +36,7 @@
     <%= manager_home_list_stripes[:approvals] %> of
     <%= manager_home_list_stripes[:reviewers] %>&nbsp;
   </td>
-  <td align="right">
+  <td align="right" rowspan="2">
     <table border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="center" valign="top">
@@ -65,5 +65,48 @@
         </td>
       </tr>
     </table>
+  </td>
+</tr>
+
+<tr class="<%= manager_home_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
+  <td colspan="8">
+  
+    <div id="board_design_details-<%= manager_home_list_stripes.id %>">
+
+    <table width="95%" align="right" border="0">
+      <tr>
+        <td width="70%" align="left">
+          <% if !manager_home_list_stripes.design.audit.skip? %>
+            <table border="0">
+              <tr>
+                <td width="70">
+                  <%= link_to('Audit',
+                              :controller => 'audit',
+                              :action     => 'print',
+                              :id         => manager_home_list_stripes.design.audit.id)%>
+                </td>
+                <% stats = manager_home_list_stripes.design.audit.completion_stats %>
+                <th width="50" align="right">Self: </th>
+                <td width="140"> <%= sprintf("%3.f", stats[:self]) %>% Complete</td>
+                <th width="50" align="right">Peer: </th>
+                <td width="140"> <%= sprintf("%3.f", stats[:peer]) %>% Complete</td>
+              </tr>
+            </table
+          <% else %>
+            No Audit
+          <% end %>
+        </td>
+
+        <td align="right">
+
+          <%= link_to_remote('Show Details',
+                             :update => "board_design_details-#{manager_home_list_stripes.id}",
+                             :url    => {:controller => 'design_review',
+                                         :action     => 'get_review_result_details'},
+                             :with   => "'id=#{manager_home_list_stripes.id}'") %>
+        </td>
+      </tr>
+    </table>
+    </div>
   </td>
 </tr>
