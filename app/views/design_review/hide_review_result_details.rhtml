@@ -1,0 +1,34 @@
+<table width="95%" align="right" border="0">
+  <tr>
+    <td width="70%" align="left">
+      <% if !@design.audit.skip? %>
+        <table border="0">
+          <tr>
+            <td width="70">
+              <%= link_to('Audit',
+                          :controller => 'audit',
+                          :action     => 'print',
+                          :id         => @design.audit.id)%>
+            </td>
+            <% stats = @design.audit.completion_stats %>
+            <th width="50" align="right">Self: </th>
+            <td width="140"> <%= sprintf("%3.f", stats[:self]) %>% Complete </td>
+            <th width="50" align="right">Peer: </th>
+            <td width="140"> <%= sprintf("%3.f", stats[:peer]) %>% Complete </td>
+          </tr>
+        </table>
+      <% else %>
+        No Audit
+      <% end %>
+    </td>
+
+    <td align="right">
+
+      <%= link_to_remote('Show Details',
+                         :update => "board_design_details-#{@design_review.id}",
+                         :url    => {:controller => 'design_review',
+                                     :action     => 'get_review_result_details'},
+                         :with   => "'id=#{@design_review.id}'") %>
+    </td>
+  </tr>
+</table>

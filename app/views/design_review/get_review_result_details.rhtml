@@ -1,0 +1,63 @@
+<table width="95%" align="right" border="0">
+  <tr>
+    <td width="70%" align="left">
+      <% if !@design.audit.skip? %>
+        <table boarder="0">
+          <tr>
+            <td width="70">
+              <%= link_to('Audit',
+                          :controller => 'audit',
+                          :action     => 'print',
+                          :id         => @design.audit.id)%>
+            </td>
+            <% stats = @design.audit.completion_stats %>
+            <th width="50" align="right">Self: </th>
+            <td width="140"> <%= sprintf("%3.f", stats[:self]) %>% Complete</td>
+            <th width="50" align="right">Peer: </th>
+            <td width="140"> <%= sprintf("%3.f", stats[:peer]) %>% Complete</td>
+          </tr>
+        </table>
+      <% else %>
+        No Audit
+      <% end %>
+    </td>
+
+    <td align="right">
+
+      <%= link_to_remote('Hide Details',
+                         :update => "board_design_details-#{@design_review.id}",
+                         :url    => {:controller => 'design_review',
+                                     :action     => 'hide_review_result_details'},
+                         :with   => "'id=#{@design_review.id}'") %>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <table width="70%" align="right" border="0" cellpadding="0" cellspacing="0">
+
+        <tr>
+          <th>Reviewer</th>
+          <th>Group</th>
+          <th>Result</th>
+        </tr>
+
+        <% for review_result in @review_results %>
+          <tr>
+    
+            <td width="40%">
+              <%= User.find(review_result.reviewer_id).name %>
+            </td>
+            <td width="40%">
+              <%= Role.find(review_result.role_id).name %>
+            </td>
+            <td width="20%">
+              <%= review_result.result %>
+            </td>
+    
+          </tr>
+        <% end %>
+
+      </table>
+    </td>
+  </tr>
+</table>
