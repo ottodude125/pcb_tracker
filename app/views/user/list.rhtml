@@ -14,6 +14,20 @@
   <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
   <hr class="div" />
 
+  <p align="center">
+    Last Name: 
+    <% "A".upto("Z") { |char|  %>
+      <% if @alpha_list[char] %>
+        <%= link_to(char,
+                    {:action => 'list',
+                     :alpha  => char},
+                    :title  => "#{@alpha_list[char]} Users")%>
+      <% else %>
+        <%= char %>
+      <% end %>
+    <% } %>
+  </p>
+
   <table width="90%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
     <tr>
       <th>Login</th>
