@@ -1737,6 +1737,55 @@ class DesignReviewController < ApplicationController
     end
 
   end
+  
+  
+  ######################################################################
+  #
+  # get_review_result_details
+  #
+  # Description:
+  # Retrieves the design review results for display.
+  #
+  # Parameters from @params
+  # id - the design review id
+  #
+  ######################################################################
+  #
+  def get_review_result_details
+  
+    @design_review   = DesignReview.find(params[:id])
+    @design          = @design_review.design
+    @review_results  = @design_review.review_results_by_role_name.dup
+    @review_results.delete_if { |rr| 
+      rr.result == 'WAIVED' || 
+      rr.result == "APPROVED"
+    }
+    
+    render(:layout => false)
+    
+  end 
+
+
+  ######################################################################
+  #
+  # hide_review_result_details
+  #
+  # Description:
+  # Empties out the area used by get_review_result_details() 
+  #
+  # Parameters from @params
+  # id - the design review id
+  #
+  ######################################################################
+  #
+  def hide_review_result_details
+  
+    @design_review = DesignReview.find(params[:id])
+    @design        = @design_review.design
+    
+    render(:layout => false)
+    
+  end 
 
 
   private
