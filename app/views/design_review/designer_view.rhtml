@@ -95,9 +95,11 @@
             </td>
           </tr>
 
-          <% if (@session[:user].id == @design.designer_id || 
+          <% if @design_review.posting_count > 0 &&
+                @design_review.review_status.name != "Review Completed" &&
+                ((@session[:user].id == @design.designer_id || 
                  (@session[:user].id == @design.pcb_input_id &&
-                  @design_review.review_type.name == 'Pre-Artwork'))%>
+                  @design_review.review_type.name == 'Pre-Artwork'))) %>
           <tr>
             <td align="center">
               <%= link_to(image_tag('repost'),
