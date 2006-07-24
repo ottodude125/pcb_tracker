@@ -19,16 +19,22 @@
           rowspan="5"
           valign="top">
         <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
-
-
       </td>
       <td colspan="2">
         <%= render_partial("review_details") %>
+        
+        <hr class="div" />
       </td>
     </tr>
     <tr>
-      <td colspan="2">
-        &nbsp;
+      <td align="left">
+        <input type="button"
+               value="Attachments"
+               title="Add or view attachments"
+               onClick="parent.location='<%= url_for(:controller => 'design_review', 
+                                                     :action => 'review_attachments',
+                                                     :design_review_id => @design_review.id) %>'"
+               class="small_font_wide_button" />
       </td>
     </tr>
     <tr>
