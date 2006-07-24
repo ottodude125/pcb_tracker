@@ -47,7 +47,7 @@
         <td><%= User.find(drd.document.created_by).name %></td>
         <td><%= drd.document.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
         <td>
-          <% if drd.document_type.name != "Other" %>
+          <% if drd.document_type.name != "Other"  && @session[:user] %>
             <%= link_to("Update",
                         {:action           => 'update_documents',
                          :design_review_id => @design_review.id,
@@ -75,7 +75,9 @@
 
   <hr class="div" />
 
-  <input type="submit" value="New Attachment" />
+  <% if @session[:user] %>
+    <input type="submit" value="New Attachment" />
+  <% end %>
 
   <%= end_form_tag %>
 
