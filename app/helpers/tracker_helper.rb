@@ -51,9 +51,9 @@ module TrackerHelper
     if design_review
       audit = design_review.design.audit
       is_final = design_review.review_type.name == "Final"
-      (!audit.skip? && 
-       is_final        && 
-       !(audit.designer_complete? && audit.auditor_complete?))
+      
+      (is_final && !audit.skip? && !audit.auditor_complete?)
+
     else
       false
     end
