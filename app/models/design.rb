@@ -379,6 +379,47 @@ class Design < ActiveRecord::Base
        (entity.date_code_check? && self.date_code?) ||
        (entity.dot_rev_check?   && self.dot_rev?))
   end
+  
+  
+  ######################################################################
+  #
+  # increment_review
+  #
+  # Description:
+  # This method sets the phase of the design to the next available 
+  # review.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def increment_review
+
+    review_types = ReviewType.find_all
+    review_types = review_types.sort_by { |rt| rt.sort_order }
+    
+    current_review_type = ReviewType.find(self.phase_id)
+
+    phase_id   = Design::COMPLETE
+    next_review = nil
+    review_types.each { |rt|
+      next if rt.sort_order <= current_review_type.sort_order
+      next_review = self.design_reviews.detect { |dr| dr.review_type_id == rt.id }
+      break if next_review.review_status.name != "Review Skipped"
+    }
+
+    if next_review && next_review.review_status.name != "Review Skipped"
+      phase_id = next_review.review_type_id
+    end
+    
+    self.phase_id = phase_id
+    self.update
+  
+  end
 
 
   COMPLETE = 255
