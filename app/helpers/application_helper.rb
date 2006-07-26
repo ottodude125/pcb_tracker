@@ -186,9 +186,9 @@ module ApplicationHelper
   #
   def poster_name(design_review)
     if design_review.review_type.name == "Pre-Artwork"
-      User.find(design_review.design.pcb_input_id).name
+      design_review.design.input_gate.name
     else
-      User.find(design_review.designer_id).name
+      design_review.designer.name
     end
   end
   
@@ -222,6 +222,6 @@ module ApplicationHelper
                  {:checked  => checked,
                   :disabled => disabled})
   end
-
-
+  
+  
 end
