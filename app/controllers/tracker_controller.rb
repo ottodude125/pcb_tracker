@@ -465,8 +465,8 @@ class TrackerController < ApplicationController
 	    if reviews_started == 0
 	      design_summary[:next_review] = reviews[0]
 	    elsif reviews.size == review_list.size
-        design_summary[:next_review] = nil
-	    elsif last_status == "Review Completed"
+          design_summary[:next_review] = nil
+	    elsif next_review && next_review.review_status.name == "Not Started"
 	      design_summary[:next_review] = next_review
       else
 	      design_summary[:next_review] = nil
@@ -512,6 +512,7 @@ class TrackerController < ApplicationController
                                                              pre_art_phase_id,
                                                              'created_on ASC')
     designs = designs.uniq
+    designs.delete_if { |design| design.phase_id == Design::COMPLETE}
 
     designs = designs.sort_by { |dr| dr.priority.value }
     designs.reverse!
@@ -554,7 +555,7 @@ class TrackerController < ApplicationController
 	    if reviews_started == 0
 	      design_summary[:next_review] = reviews[0]
 	    elsif reviews.size == review_list.size
-        design_summary[:next_review] = nil
+          design_summary[:next_review] = nil
 	    elsif next_review && next_review.review_status.name == "Not Started"
 	      design_summary[:next_review] = next_review
       else
@@ -618,7 +619,7 @@ class TrackerController < ApplicationController
     audit_list = []
     audits.each_value { |a| audit_list << a }
     
-    @audits = audit_list.sort_by { |a| a.design.priority.value }.reverse
+    @audits = audit_list.sort_by { |a| a.design.priority.value }
     ##
     #TODO: After reversing the values of priority so that the call to reverse is not
     #      needed make this a multi-level sort.
@@ -689,7 +690,6 @@ class TrackerController < ApplicationController
     end
     
     @my_reviews.sort_by { |dr| [dr.priority.value, dr.age] }
-    @my_reviews.reverse!
 
   end
   
