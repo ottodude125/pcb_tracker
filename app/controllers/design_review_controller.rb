@@ -1788,6 +1788,40 @@ class DesignReviewController < ApplicationController
   end 
 
 
+  ######################################################################
+  #
+  # skip_review
+  #
+  # Description:
+  # Sets the design review to skipped and updates the phase of the design.
+  #
+  # Parameters from @params
+  # design_id - the design id
+  #
+  ######################################################################
+  #
+  def skip_review
+  
+    design = Design.find(params[:design_id])
+    
+    # Update the status of the review that is being skipped.
+    skipped_review_status = ReviewStatus.find_by_name("Review Skipped")
+    skipped_review = design.design_reviews.detect { |dr| 
+                       dr.review_type_id == design.phase_id }
+    skipped_review.review_status_id = skipped_review_status.id
+    skipped_review.update
+    
+    # Set the phase of the design to the next non-skipped review.
+    design.increment_review
+    
+    TrackerMailer::deliver_notify_design_review_skipped(skipped_review,
+                                                        @session)
+
+    redirect_to(:controller => 'tracker', :action => 'index')
+    
+  end 
+
+
   private
   
   
