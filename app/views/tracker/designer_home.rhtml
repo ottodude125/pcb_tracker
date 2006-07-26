@@ -31,8 +31,7 @@
     </td>
     <% if @session[:active_role] == "Designer" %>
       <td>
-        <table width="100%"
-               border="0">
+        <table width="100%" border="0">
           <tr>
             <td>
               <table width="100%" align="left" border="0">
@@ -78,27 +77,15 @@
                   <tr>
                     <td>&nbsp;</td>
                     <td>
-                      <table width="95%"
-                             align="right"
-                             border="0">
+                      <table width="95%" align="right" border="0">
                         <% if design[:reviews].size > 0 %>
                           <tr>
                             <td bgcolor="#ffffff">&nbsp;</td>
-                            <td>
-                              <font size="-2"><b>Posted</b></font>
-                            </td>
-                            <td>
-                              <font size="-2"><b>Status</b></font>
-                            </td>
-                            <td>
-                              <font size="-2"><b>Reviewers</b></font>
-                            </td>
-                            <td>
-                              <font size="-2"><b>Approvals</b></font>
-                            </td>
-                            <td>
-                              <font size="-2"><b>Completed</b></font>
-                            </td>
+                            <td><font size="-2"><b>Posted</b></font></td>
+                            <td><font size="-2"><b>Status</b></font></td>
+                            <td><font size="-2"><b>Reviewers</b></font></td>
+                            <td><font size="-2"><b>Approvals</b></font></td>
+                            <td><font size="-2"><b>Completed</b></font></td>
                           </tr>
                         <% end %>
 
@@ -143,26 +130,46 @@
                           </tr>
                         <% end %>
 
-                        <% if review_locked(design[:next_review])  &&
-                              !design[:audit].skip? %>
+                        <% if review_locked(design[:next_review]) %>
                           <tr bgcolor="#dfdfdf">
                             <td colspan="7">
                               Final Review can not be posted until the audit is complete
                             </td>
                           </tr>
+
                         <% elsif (design[:next_review] != nil &&
                                !review_locked(design[:next_review]) &&
                                design[:next_review].designer_id == @session[:user].id &&
                                design[:next_review].review_type_id == design[:design].phase_id) %>
                           <tr bgcolor="#dfdfdf">
                             <td colspan="6">
-                              <%= link_to('POST ' +
-                                          design[:next_review].review_type.name +
-                                          ' Review',
-                                          { :controller     => 'design_review',
-                                            :action         => 'posting_filter',
-                                            :design_id      => design[:design].id,
-                                            :review_type_id => design[:next_review].review_type.id }) %>
+                              <table width="100%" border="0">
+                                <tr>
+                                  <td width="50%" align="left">
+                                    <%= link_to('POST ' +
+                                                design[:next_review].review_type.name +
+                                                ' Review',
+                                                { :controller     => 'design_review',
+                                                  :action         => 'posting_filter',
+                                                  :design_id      => design[:design].id,
+                                                  :review_type_id => design[:next_review].review_type.id }) %>
+                                  </td>
+                                  <td width="50%" align="left">
+                                    <%= link_to('SKIP ' +
+                                                design[:next_review].review_type.name +
+                                                ' Review',
+                                                { :controller     => 'design_review',
+                                                  :action         => 'skip_review',
+                                                  :design_id      => design[:design].id,
+                                                  :review_type_id => design[:next_review].review_type.id },
+                                                { :confirm => "This will cause the " +
+                                                              design[:next_review].review_type.name +
+                                                              " to be skipped and the next review in the " +
+                                                              "review cycle will available for posting.  " +
+                                                              "Are you sure you want to do this?"}) %>
+                                  </td>
+                                </tr>
+                              </table>
                             </td>
                           </tr>
                         <% end %>
