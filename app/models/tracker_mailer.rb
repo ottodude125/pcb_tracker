@@ -583,6 +583,43 @@ class TrackerMailer < ActionMailer::Base
 
   ######################################################################
   #
+  # notify_design_review_skipped
+  #
+  # Description:
+  # This method generates the mail to notify the PCB Design team
+  # that a design review has been skipped.
+  #
+  # Parameters:
+  #   design_review - the design object
+  #   session       - the session object
+  #   sent_at       - the timestamp for the mail header 
+  #                   (defaults to Time.now)
+  #
+  ######################################################################
+  #
+  def notify_design_review_skipped(design_review,
+                                   session,
+                                   sent_at = Time.now)
+
+    @subject    = design_review.design.name +
+                    ": The #{design_review.review_type.name} " +
+                    "design review has been skipped"
+    @recipients = add_role_members(['Manager', 'PCB Input Gate'])
+    @from       = Pcbtr::SENDER
+    @sent_on    = sent_at
+    @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
+    @cc         = [design_review.design.designer.email]
+
+    @body['user_name']          = session[:user].name
+    @body['design_name']        = design_review.design.name
+    @body['design_review_name'] = design_review.review_type.name
+
+  end
+
+
+  ######################################################################
+  #
   # tracker_invite
   #
   # Description:
@@ -880,6 +917,6 @@ class TrackerMailer < ActionMailer::Base
     return cc_list
     
   end
-  
-  
+
+
 end
