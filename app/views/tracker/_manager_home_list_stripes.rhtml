@@ -30,7 +30,11 @@
     <%= manager_home_list_stripes.review_status.name %>
   </td>
   <td>
-    <%= manager_home_list_stripes.age %>
+    <% if manager_home_list_stripes.review_status.name != 'Not Started' %>
+      <%= manager_home_list_stripes.age %>
+    <% else %>
+      &nbsp;
+    <% end %>
   </td>
   <td align="center">
     <%= manager_home_list_stripes[:approvals] %> of
