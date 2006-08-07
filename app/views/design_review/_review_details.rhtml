@@ -1,3 +1,9 @@
+<!-- View:    design_review                                     -->
+<!-- Purpose: Displays the details for a design review.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
 <table border="0" width="100%">
   <tr>
     <th align="left"  width="130">Design:</th>
@@ -32,10 +38,12 @@
   <tr>
     <th align="left">Posting Number:</th>
     <td><%= @design_review.posting_count %></td>
-    <th align="left">Originally Posted:</th>
-    <td>
-      <%= @design_review.created_on.strftime("%d-%b-%y, %I:%M %p") %>
-    </td>
+    <% if @design_review.posting_count > 0 %>
+      <th align="left">Originally Posted:</th>
+      <td>
+        <%= @design_review.created_on.strftime("%d-%b-%y, %I:%M %p") %>
+      </td>
+    <% end %>
   </tr>
   <tr valign="top">
     <% if @design.fab_houses.size == 0 %>
@@ -56,10 +64,13 @@
         </table>
       </td>
     <% end %>
-    <th align="left">Last Posted:</th>
-    <td>
-      <%= @design_review.reposted_on.strftime("%d-%b-%y, %I:%M %p") %>
-    </td>
+    
+    <% if @design_review.posting_count > 0 %>
+      <th align="left">Last Posted:</th>
+      <td>
+        <%= @design_review.reposted_on.strftime("%d-%b-%y, %I:%M %p") %>
+      </td>
+    <% end %>
   </tr>
 </table>
 
