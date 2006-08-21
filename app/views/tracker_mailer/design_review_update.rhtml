@@ -12,7 +12,7 @@ COMMENTS:
   <% for comment in @comments %>
 =================================================================
 Entered by: <%= comment[:user]%> on <%= comment[:date].strftime("%d-%b-%y")%> at <%= comment[:date].strftime("%I:%M %p %Z")%>
-<%=h comment[:comment] %>
+<%=  comment[:comment] %>
   <% end %>
 
 <% end %>
