@@ -10,7 +10,7 @@
 
 <hr class="div" />
 
-<table width="60%" 
+<table width="80%" 
         align="center" 
         border="3" 
         cellspacing="2" 
@@ -42,10 +42,24 @@
   <tr>
     <th width="35%" align="left" valign="top">
       <%= link_to("Design Center/Designer Assignments",
-                    { :controller => 'design_center_manager',
+                  { :controller => 'design_center_manager',
                     :action     => 'design_center_assignment' }) %>
     </th>
     <td valign="top">Assign designers to design centers</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Design Directories",
+                  { :controller => 'design_directory', :action => 'list' }) %>
+    </th>
+    <td valign="top">Add, view, and modify the HW Design Directories</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Divisions",
+                  { :controller => 'division', :action => 'list' }) %>
+    </th>
+    <td valign="top">Add, view, and modify Teradyne divisions</td>
   </tr>
   <tr>
     <th width="35%" align="left" valign="top">
@@ -63,6 +77,21 @@
   </tr>
   <tr>
     <th width="35%" align="left" valign="top">
+      <%= link_to("Incoming Directories",
+                  { :controller => 'incoming_directory', :action => 'list' }) %>
+    </th>
+    <td valign="top">Add, view, and modify the PCB Entry Directories</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Locations",
+                  { :controller => 'location', :action => 'list' }) %>
+    </th>
+    <td valign="top">Add, view, and modify Teradyne locations</td>
+  </tr>
+  <tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
       <%= link_to("Peer Audit Checklist",
                   { :controller => 'checklist', :action => 'list' })%>
     </th>
@@ -74,6 +103,13 @@
                   { :controller => 'platform', :action => 'list' })%>
     </th>
     <td valign="top">Add, list, and modify Teradyne tester platform information</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Product Type",
+                  { :controller => 'product_type', :action => 'list' })%>
+    </th>
+    <td valign="top">Add, list, and modify Product Types</td>
   </tr>
   <tr>
     <th width="35%" align="left" valign="top">
