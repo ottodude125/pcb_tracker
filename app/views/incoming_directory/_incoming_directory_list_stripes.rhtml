@@ -1,0 +1,13 @@
+<!-- View:    incoming directories                              -->
+<!-- Purpose: Displays the rows in the incoming directory list. -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+<tr class="<%= incoming_directory_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% rid = incoming_directory_list_stripes["id"] %>
+    <%= link_to incoming_directory_list_stripes["name"], { :action => 'edit', :id => rid } %> </td>
+  <td align="center">
+    <%= incoming_directory_list_stripes.active? ? 'Yes' : 'No' %>
+  </td>
+</tr>

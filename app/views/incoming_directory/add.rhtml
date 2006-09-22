@@ -1,0 +1,40 @@
+<!-- View:    incoming directories                              -->
+<!-- Purpose: Displays a form to add a new incoming directory.  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<% @heading = "Create a new Incoming Directory" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'create') %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="incoming_directory_name">Incoming Directory:</label>
+      </td>
+      <td>
+        <%= text_field("new_incoming_directory", 
+                       "name", 
+                       "size" => 30,
+                       "maxlength" => 30) %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: </td>
+      <td>
+        <%= check_box("new_incoming_directory",
+                      "active", 
+                      { 'checked' => 'checked' }) %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Create Incoming Directory" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<%= end_form_tag %>
