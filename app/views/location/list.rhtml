@@ -1,0 +1,34 @@
+<!-- View:    location                                          -->
+<!-- Purpose: Displays a list of locations.                     -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "PCB Tracker - Locations" %>
+
+<%= start_form_tag( :action => 'add') %>
+
+  <hr class="div" />
+
+  <table width="40%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+    <tr>
+      <th width="70%">Location</th>
+      <th width="15%">Active</th>
+    </tr>
+
+    <%= render_collection_of_partials "location_list_stripes", @locations %>
+  </table>
+
+  <% pages = pagination_links @location_pages %>
+
+  <% if pages %>
+    <p><b>Pages:</b> <%= pages %>
+  <% end %>
+
+
+  <hr class="div" />
+
+  <input type="submit" value="New Location" />
+  <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
+
+<%= end_form_tag %>

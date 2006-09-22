@@ -1,0 +1,13 @@
+<!-- View:    locations                                         -->
+<!-- Purpose: Displays the rows in the location list.           -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+<tr class="<%= location_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% rid = location_list_stripes["id"] %>
+    <%= link_to location_list_stripes["name"], { :action => 'edit', :id => rid } %> </td>
+  <td align="center">
+    <%= location_list_stripes.active? ? "Yes" : "No" %>
+  </td>
+</tr>

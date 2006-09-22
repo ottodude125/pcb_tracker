@@ -1,0 +1,32 @@
+<!-- View:    product type                                      -->
+<!-- Purpose: Displays a product type for editing.              -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Product Type" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'update') %>
+
+  <%= hidden_field "product_type", "id" %>
+
+  <table border="0">
+    <tr>
+      <td><label for="product_type_name">Product Type:</label></td>
+      <td>
+        <%= text_field "product_type", "name", "size" => 64, "maxlength" => 64 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active:</td>
+      <td><%= check_box "product_type", "active" %></td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Product Type" />
+  <input type="button" value="Return to Product Type List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<%= end_form_tag %>

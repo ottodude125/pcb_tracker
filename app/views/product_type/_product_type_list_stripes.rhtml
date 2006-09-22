@@ -1,0 +1,17 @@
+<!-- View:    product_type                                      -->
+<!-- Purpose: Displays the rows in the product type list.       -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+<tr class="<%= product_type_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% rid = product_type_list_stripes["id"] %>
+    <%= link_to product_type_list_stripes["name"], { :action => 'edit', :id => rid } %> </td>
+  <td align="center">
+    <% if product_type_list_stripes["active"] == 1 %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  </td>
+</tr>

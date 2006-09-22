@@ -1,0 +1,35 @@
+<!-- View:    product_type                                      -->
+<!-- Purpose: Displays a list of product types.                 -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<% @heading = "PCB Tracker - Product Types" %>
+
+<%= start_form_tag(:action => 'add') %>
+
+  <hr class="div" />
+
+  <table width="70%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+    <tr>
+      <th width="70%">Product Type</th>
+      <th width="15%">Active</th>
+    </tr>
+
+    <%= render_collection_of_partials "product_type_list_stripes", @product_types %>
+  </table>
+
+  <% pages = pagination_links @product_type_pages %>
+
+  <% if pages %>
+    <p><b>Pages:</b> <%= pages %>
+  <% end %>
+
+
+  <hr class="div" />
+
+  <input type="submit" value="New Product Type" />
+  <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
+
+<%= end_form_tag %>
