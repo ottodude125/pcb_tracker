@@ -1,0 +1,40 @@
+<!-- View:    design directories                                -->
+<!-- Purpose: Displays a form to add a new design directory.    -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<% @heading = "Create a new Design Directory" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'create') %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="design_directory_name">Design Directory:</label>
+      </td>
+      <td>
+        <%= text_field("new_design_directory", 
+                       "name", 
+                       "size" => 30,
+                       "maxlength" => 30) %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: </td>
+      <td>
+        <%= check_box("new_design_directory",
+                      "active", 
+                      { 'checked' => 'checked' }) %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Create Design Directory" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<%= end_form_tag %>
