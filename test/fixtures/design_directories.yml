@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+hw_design_bos:
+  id:     1
+  name:   /hwnet/hw_design_bos
+  active: 1
+hw_design_ah:
+  id:     2
+  name:   /hwnet/hw_design_ah
+  active: 1
+hw_design_sj:
+  id:     3
+  name:   /hwnet/hw_design_sj
+  active: 0

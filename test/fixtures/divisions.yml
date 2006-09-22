@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+icd:
+  id:     1
+  name:   ICD
+  active: 0
+std:
+  id:     2
+  name:   STD
+  active: 1
+atb:
+  id:     3
+  name:   ATB
+  active: 1

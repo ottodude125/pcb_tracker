@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+production:
+  id:     1
+  name:   Production
+  active: 1
+p1_eng:
+  id:     2
+  name:   P1 Eng Board (Part to be used on Production Board)
+  active: 1
+p2_eng:
+  id:     3
+  name:   P2 Eng Board (Experimentation Only)
+  active: 1
+p3_eng:
+  id:     4
+  name:   P3 Eng Board (Testing)
+  active: 0

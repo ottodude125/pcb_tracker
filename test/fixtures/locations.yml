@@ -1,0 +1,21 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+north_reading:
+  id:     1
+  name:   North Reading
+  active: 1
+san_jose:
+  id:     2
+  name:   San Jose
+  active: 0
+fridley:
+  id:     3
+  name:   Fridley
+  active: 1
+agoura_hills:
+  id:     4
+  name:   Agoura Hills
+  active: 0
+boston:
+  id:     5
+  name:   Boston
+  active: 0

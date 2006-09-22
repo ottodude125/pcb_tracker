@@ -1,0 +1,8 @@
+<tr class="<%= division_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% rid = division_list_stripes["id"] %>
+    <%= link_to division_list_stripes["name"], { :action => 'edit', :id => rid } %> </td>
+  <td align="center">
+    <%= division_list_stripes.active? ? "Yes" : "No" %>
+  </td>
+</tr>

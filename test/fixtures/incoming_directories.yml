@@ -1,0 +1,13 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+board_bos_incoming:
+  id:     1
+  name:   /hwnet/board_bos/incoming
+  active: 1
+board_ah_incoming:
+  id:     2
+  name:   /hwnet/board_ah/incoming
+  active: 1
+board_sj_incoming:
+  id:     3
+  name:   /hwnet/board_sj/incoming
+  active: 0
