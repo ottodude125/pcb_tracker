@@ -36,7 +36,7 @@ class BoardTest < Test::Unit::TestCase
     assert_equal(mx234.platform_id, @board.platform_id)
     assert_equal(mx234.project_id,  @board.project_id)
     assert_equal(mx234.active,      @board.active)
-
+    
   end
 
   def test_update
@@ -64,11 +64,29 @@ class BoardTest < Test::Unit::TestCase
     assert_raise(ActiveRecord::RecordNotFound) { Board.find(@board.id) }
   end
   
+
+  ######################################################################
   def test_name
   
     assert_equal('mx234', @board.name)
     assert_equal('mx999', boards(:mx999).name)
   
+  end
+  
+  ######################################################################
+  def test_creation_validation
+
+    first_board = Board.new(:number    => '999',
+                            :prefix_id => 1)
+    assert_equal(false, first_board.save)
+
+    next_board = Board.new(:number    => '999',
+                           :prefix_id => 1)
+    next_board.save
+    assert_equal(1, next_board.errors.full_messages.size)
+    assert_equal('Board mx999 already exists - creation is invalid',
+                 next_board.errors.full_messages.pop)
+
   end
 
 end
