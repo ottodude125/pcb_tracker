@@ -344,7 +344,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     expected_release_cc = @manager_email_list + @input_gate_email_list
     designer = User.find(@mx234a_release_dr.designer_id)
     expected_release_cc << designer.email
-    expected_release_cc << "STD_DC_ECO_Inbox@notes.teradyne.com"
+    expected_release_cc << "STD_DC_ECO_Inbox@notes.teradyne.com" if !Pcbtr::DEVEL_SERVER
     
     expected_release_cc = expected_release_cc.sort_by { |address| address }.uniq
     assert_equal(expected_release_cc, response_cc)
@@ -502,7 +502,7 @@ class TrackerMailerTest < Test::Unit::TestCase
                  @hweng_role,
                  @now)
                  
-    assert_equal("mx234a: You have been assigned to perform the HWENG review", 
+    assert_equal("mx234a: You have been assigned to perform the Hardware Engineer (EE) review", 
                  response.subject)
     response_to = response.to.sort_by { |address| address }
     expected_to = [@rich_a.email]
@@ -528,7 +528,7 @@ class TrackerMailerTest < Test::Unit::TestCase
                  @hweng_role,
                  @now)
                  
-    assert_equal("mx234a: The HWENG review has been reassigned to Lee Schaff", 
+    assert_equal("mx234a: The Hardware Engineer (EE) review has been reassigned to Lee Schaff", 
                  response.subject)
     response_to = response.to.sort_by { |address| address }
     expected_to = [@rich_a.email]
