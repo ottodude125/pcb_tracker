@@ -8,124 +8,162 @@ admin:
   active:   1
   reviewer: 0
   cc_peers: 0
+  display_name: Tracker Admin
 designer:
   id:       2
   name:     Designer
   active:   1
   reviewer: 0
   cc_peers: 0
+  display_name: PCB Designer
 manager:
   id:       4
   name:     Manager
   active:   1
   reviewer: 0
   cc_peers: 0
+  display_name: Tracker PCB Management
 hweng:
   id:       5
   name:     HWENG
   active:   1
   reviewer: 1
   cc_peers: 0
+  display_name: Hardware Engineer (EE)
 valor:
   id:       6
   name:     Valor
   active:   1
   reviewer: 1
   cc_peers: 1
+  display_name: Valor
 ce_dft:
   id:       7
   name:     CE-DFT
   active:   1
   reviewer: 1
   cc_peers: 0
+  display_name: CE-DFT Engineer
 dfm:
   id:       8
   name:     DFM
   active:   1
   reviewer: 1
   cc_peers: 0
+  display_name: CE-DFM Engineer
 tde:
   id:       9
   name:     TDE
   active:   1
   reviewer: 1
   cc_peers: 0
+  display_name: TDE Engineer
 mechanical:
   id:       10
   name:     Mechanical
   active:   1
   reviewer: 1
   cc_peers: 0
+  display_name: Mechanical Engineer
 mechanical_manufacturing:
   id:       11
   name:     Mechanical-MFG
   active:   1
   reviewer: 1
   cc_peers: 0
+  display_name: Mechanical Mfg Engineer
 pcb_design:
   id:       12
   name:     PCB Design
   active:   1
   reviewer: 1
+  manager:  1
   cc_peers: 0
+  display_name: PCB Design Manager
 planning:
   id:       13
   name:     Planning
   active:   1
   reviewer: 1
   cc_peers: 0
+  display_name: New Product Planner
 pcb_input_gate:
   id:       14
   name:     PCB Input Gate
   active:   1
   reviewer: 1
   cc_peers: 0
+  display_name: PCB Design Input Gate
 library:
   id:       15
   name:     Library
   active:   1
   reviewer: 1
   cc_peers: 0
+  display_name: Component Development
 pcb_mechanical:
   id:       16
   name:     PCB Mechanical
   active:   1
   reviewer: 1
   cc_peers: 0
+  display_name: PCB Mechanical Engineer
 slm_bom:
   id:       17
   name:     SLM BOM
   active:   1
   reviewer: 1
   cc_peers: 0
+  display_name: SLM BOM
 slm_vendor:
   id:       18
   name:     SLM-Vendor
   active:   1
   reviewer: 1
   cc_peers: 0
+  display_name: SLM Vendor
 operations_manager:
   id:       19
   name:     Operations Manager
   active:   1
   reviewer: 1
+  manager:  1
   cc_peers: 0
+  display_name: Operations Manager
 pcb_admin:
   id:       20
   name:     PCB Admin
   active:   1
   reviewer: 0
   cc_peers: 0
+  display_name: PCB Admin
 program_manager:
   id:       21
   name:     Program Manager
   active:   1
   reviewer: 1
+  manager:  1
   cc_peers: 0
+  display_name: Program Manager
 hweng_manager:
   id:       22
   name:     Hardware Engineering Manager
   active:   1
   reviewer: 1
+  manager:  1
   cc_peers: 0
-  
+  display_name: EE Manager
+compliance_emc:
+  id:       23
+  name:     Compliance - EMC
+  active:   1
+  reviewer: 1
+  cc_peers: 0
+  display_name: Compliance - EMC
+compliance_safety:
+  id:       24
+  name:     Compliance - Safety
+  active:   1
+  reviewer: 1
+  cc_peers: 0
+  display_name: Compliance - Safety
