@@ -221,7 +221,7 @@ class TrackerControllerTest < Test::Unit::TestCase
     post('index')
     assert_response(:success)
     
-    set_user(users(:lee_s).id, 'Reviewer')
+    set_user(users(:lee_s).id, 'HWENG')
     post('index')
     assert_response(:success)
     assert_template('tracker/reviewer_home')
