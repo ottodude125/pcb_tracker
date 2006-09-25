@@ -61,7 +61,7 @@ class RoleControllerTest < Test::Unit::TestCase
     post(:list, 
          :page => 1)
 
-    assert_equal(21, assigns(:roles).size)
+    assert_equal(23, assigns(:roles).size)
 
   end
 
@@ -84,25 +84,28 @@ class RoleControllerTest < Test::Unit::TestCase
   #
   def test_create
 
-   assert_equal(21, Role.find_all.size)
+   assert_equal(23, Role.find_all.size)
 
     new_role = {
-      'active' => '1',
-      'name'   => 'HW_Engineer'
+      'active'       => '1',
+      'name'         => 'HW_Engineer',
+      'display_name' => 'Hardware Engineer',
+      'reviewer'     => '1',
+      'manager'      => '1'
     }
 
     set_admin
     post(:create,
-         :new_role  => new_role);
+         :role  => new_role);
 
-    assert_equal(22, Role.find_all.size)
-    assert_equal("Role #{new_role['name']} added", flash['notice'])
+    assert_equal(24, Role.find_all.size)
+    assert_equal("Role #{new_role['display_name']} added", flash['notice'])
     assert_redirected_to(:action => 'list')
 
     post(:create,
-         :new_role => new_role);
+         :role => new_role);
 
-    assert_equal(22, Role.find_all.size)
+    assert_equal(24, Role.find_all.size)
     assert_equal("Name has already been taken", flash['notice'])
     assert_redirected_to(:action => 'add')
 
