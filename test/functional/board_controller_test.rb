@@ -23,11 +23,19 @@ class BoardControllerTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
   end
 
-  fixtures(:board_reviewers,
+  fixtures(:audits,
+           :board_reviewers,
            :boards,
+           :design_review_documents,
+           :design_reviews,
+           :designs,
+           :fab_houses,
+           :ipd_posts,
            :platforms,
            :prefixes,
+           :priorities,
            :projects,
+           :revisions,
            :users)
 
 
@@ -283,7 +291,7 @@ class BoardControllerTest < Test::Unit::TestCase
          :board => new_board,
          :board_reviewers => {'8' => '116', '5' => '1331'})
     assert_equal(8, Board.find_all.size)
-    assert_equal("Board xx666 already exists - entry is invalid",
+    assert_equal("Board xx666 already exists - creation is invalid",
                  flash['notice'])
     assert_redirected_to :action => 'add'
 
