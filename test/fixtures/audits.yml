@@ -117,15 +117,15 @@ audit_in_peer_audit:
   checklist_id:              2
   designer_complete:         1
   auditor_complete:          0
-  designer_completed_checks: 15
-  auditor_completed_checks:  10
+  designer_completed_checks: 11
+  auditor_completed_checks:  3
 audit_complete:
   id:                        2002
   design_id:                 15
   checklist_id:              2
   designer_complete:         1
   auditor_complete:          1
-  designer_completed_checks: 15
-  auditor_completed_checks:  10
+  designer_completed_checks: 11
+  auditor_completed_checks:  4
 
 
