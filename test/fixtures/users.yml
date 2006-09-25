@@ -376,6 +376,19 @@ sheela_p:
   updated_on: 20050510104114
   access:     20050510104114
 
+frances_o:
+  id:         7402
+  login:      fohara
+  first_name: Frances
+  last_name:  Ohara
+  email:      frances_ohara@notes.teradyne.com
+  password:   ab92c7083a80d7d84caec1657ab8d6e30ff33762
+  passwd:     doggy
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
 ##
 ## PCB Mech
 ##
@@ -406,6 +419,19 @@ john_g:
   updated_on: 20050510104114
   access:     20050510104114
 
+andrey_k:
+  id:         7452
+  login:      andrey_k
+  first_name: Andrey
+  last_name:  Khoras
+  email:      andrey_khoras@notes.teradyne.com
+  password:   ab92c7083a80d7d84caec1657ab8d6e30ff33762
+  passwd:     doggy
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
 ##
 ## SLM BOM
 ##
@@ -416,6 +442,19 @@ art_d:
   first_name: Arthur
   last_name:  Davis
   email:      arthur_davis@notes.teradyne.com
+  password:   ab92c7083a80d7d84caec1657ab8d6e30ff33762
+  passwd:     doggy
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+joe_s:
+  id:         7501
+  login:      joe_s
+  first_name: Joe
+  last_name:  Seip
+  email:      joseph_seip@notes.teradyne.com
   password:   ab92c7083a80d7d84caec1657ab8d6e30ff33762
   passwd:     doggy
   active:     1
@@ -573,3 +612,38 @@ mfidrych:
   created_on: 20050510104114
   updated_on: 20050510104114
   access:     20050510104114
+
+##
+## Compliance - EMC
+##
+
+r_bechard:
+  id:         39000
+  login:      r_bechard
+  first_name: Russ
+  last_name:  Bechard
+  email:      russ_bechard@pittsburgh_pirates.com
+  password:   ab92c7083a80d7d84caec1657ab8d6e30ff33762
+  passwd:     doggy
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
+##
+## Compliance - Safety
+##
+
+s_pallotta:
+  id:         39001
+  login:      s_pallotta
+  first_name: Steve
+  last_name:  Pallotta
+  email:      steve_pallotta@pittsburgh_pirates.com
+  password:   ab92c7083a80d7d84caec1657ab8d6e30ff33762
+  passwd:     doggy
+  active:     1
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+  
