@@ -29,6 +29,7 @@ class AuditTest < Test::Unit::TestCase
     @audit = Audit.find(audits(:audit_mx234b).id)
   end
 
+  ######################################################################
   def test_create
 
     assert_kind_of Audit,  @audit
@@ -40,6 +41,7 @@ class AuditTest < Test::Unit::TestCase
   end
 
 
+  ######################################################################
   def test_locking
   
     audit1 = Audit.find(@audit.id)
@@ -82,6 +84,7 @@ class AuditTest < Test::Unit::TestCase
   end
   
   
+  ######################################################################
   def test_update
     
     @audit.designer_completed_checks = 100
@@ -96,6 +99,8 @@ class AuditTest < Test::Unit::TestCase
 
   end
 
+
+  ######################################################################
   def test_destroy
 
     @audit.destroy
@@ -104,6 +109,7 @@ class AuditTest < Test::Unit::TestCase
   end
   
   
+  ######################################################################
   def test_audit_states
   
     audit_in_self_audit = audits(:audit_in_self_audit)
@@ -129,6 +135,7 @@ class AuditTest < Test::Unit::TestCase
   end
   
   
+  ######################################################################
   def test_audit_teams
   
     audit_in_self_audit = audits(:audit_in_self_audit)
@@ -149,6 +156,7 @@ class AuditTest < Test::Unit::TestCase
   end
   
   
+  ######################################################################
   def test_check_creation
   
     audit_in_self_audit = audits(:audit_in_self_audit)
@@ -184,6 +192,7 @@ class AuditTest < Test::Unit::TestCase
   end
   
   
+  ######################################################################
   def test_check_counts
   
     audit_in_self_audit = audits(:audit_in_self_audit)
@@ -200,5 +209,27 @@ class AuditTest < Test::Unit::TestCase
     
   end
   
+  ######################################################################
+  def test_completion_stats
+  
+    audit_in_self_audit = audits(:audit_in_self_audit)
+    assert_equal(" 91", 
+                 sprintf("%3.f", audit_in_self_audit.completion_stats[:self]))
+    assert_equal("  0", 
+                 sprintf("%3.f", audit_in_self_audit.completion_stats[:peer]))
+    
+    audit_in_peer_audit = audits(:audit_in_peer_audit)
+    assert_equal("100", 
+                 sprintf("%3.f", audit_in_peer_audit.completion_stats[:self]))
+    assert_equal(" 75", 
+                 sprintf("%3.f", audit_in_peer_audit.completion_stats[:peer]))
 
+    audit_complete = audits(:audit_complete)
+    assert_equal("100", 
+                 sprintf("%3.f", audit_complete.completion_stats[:self]))
+    assert_equal("100", 
+                 sprintf("%3.f", audit_complete.completion_stats[:peer]))
+
+  end
+  
 end
