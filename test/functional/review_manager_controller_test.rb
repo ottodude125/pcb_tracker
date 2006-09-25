@@ -79,24 +79,28 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
     roles        = assigns(roles)['roles']
     review_types = assigns(review_types)['review_types']
 
-    assert_equal(17, roles.size)
+    assert_equal(19, roles.size)
     assert_equal(5, review_types.size)
 
     expected_values = Array[
       {:name => 'CE-DFT',     
-       :review_types => ['Final', 'Routing', 'Pre-Artwork', 'Placement']},
+       :review_types => ['Final', 'Placement', 'Pre-Artwork', 'Routing']},
+      {:name => 'Compliance - EMC',     
+       :review_types => []},
+      {:name => 'Compliance - Safety',     
+       :review_types => []},
       {:name => 'DFM',
-       :review_types => ['Final', 'Routing', 'Pre-Artwork', 'Placement']},
+       :review_types => ['Final', 'Placement', 'Pre-Artwork', 'Routing']},
       {:name => 'Hardware Engineering Manager',
        :review_types => []},
       {:name => 'HWENG',
-       :review_types => ['Final', 'Routing', 'Pre-Artwork', 'Placement', 'Release']},
+       :review_types => ['Final', 'Placement', 'Pre-Artwork', 'Release', 'Routing']},
       {:name => 'Library',
        :review_types => ['Pre-Artwork']},
       {:name => 'Mechanical',
-       :review_types => ['Final', 'Pre-Artwork', 'Placement']},
+       :review_types => ['Final', 'Placement', 'Pre-Artwork']},
       {:name => 'Mechanical-MFG',
-       :review_types => ['Final', 'Routing', 'Pre-Artwork', 'Placement']}, 
+       :review_types => ['Final', 'Placement', 'Pre-Artwork', 'Routing']}, 
       {:name => 'Operations Manager',        
        :review_types => ['Release']},
       {:name => 'PCB Design',        
@@ -114,7 +118,7 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
       {:name => 'SLM-Vendor',
        :review_types => ['Pre-Artwork']},
       {:name => 'TDE',
-       :review_types => ['Final', 'Pre-Artwork', 'Placement']},
+       :review_types => ['Final', 'Placement', 'Pre-Artwork']},
       {:name => 'Valor',
        :review_types => ['Final', 'Pre-Artwork']}
     ]
@@ -122,7 +126,8 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
     roles.each { |role|
       expected_role = expected_values.shift
 
-      role.review_types.each { |rt|
+      review_types = role.review_types.sort_by { |rt| rt.name }
+      review_types.each { |rt|
         expected_rt = expected_role[:review_types]
         expected_name = expected_rt.shift
         assert_equal(expected_role[:name]+'::'+expected_name.to_s,
@@ -132,14 +137,14 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
     }
 
     expected_values = Array[
+      {:name => 'Final',
+        :role_names => ['HWENG', 'Valor', 'CE-DFT', 'DFM', 'TDE', 'Mechanical', 'Mechanical-MFG', 'PCB Design', 'Planning']},
       {:name => 'Pre-Artwork',
         :role_names => ['HWENG', 'Valor', 'CE-DFT', 'DFM', 'TDE', 'Mechanical', 'Mechanical-MFG', 'Planning', 'PCB Input Gate', 'Library', 'PCB Mechanical', 'SLM BOM', 'SLM-Vendor']},
       {:name => 'Placement',
         :role_names => ['HWENG', 'CE-DFT', 'DFM', 'TDE', 'Mechanical', 'Mechanical-MFG']},
       {:name => 'Routing',
         :role_names => ['HWENG', 'CE-DFT', 'DFM', 'Mechanical-MFG', 'Library']},
-      {:name => 'Final',
-        :role_names => ['HWENG', 'Valor', 'CE-DFT', 'DFM', 'TDE', 'Mechanical', 'Mechanical-MFG', 'PCB Design', 'Planning']},
       {:name => 'Release',
         :role_names => ['HWENG', 'PCB Design', 'Operations Manager']},
     ]
@@ -208,12 +213,16 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
     roles = assigns(roles)['roles']
     review_types  = assigns(review_types)['review_types']
 
-    assert_equal(17, roles.size)
+    assert_equal(19, roles.size)
     assert_equal(5, review_types.size)
 
     expected_values = Array[
       {:name => 'CE-DFT',
        :review_types => ['Final', 'Placement', 'Release', 'Routing']},
+      {:name => 'Compliance - EMC',     
+       :review_types => []},
+      {:name => 'Compliance - Safety',     
+       :review_types => []},
       {:name => 'DFM',
        :review_types => ['Pre-Artwork', 'Release']},
       {:name => 'Hardware Engineering Manager',
