@@ -34,6 +34,7 @@ la455:
   platform_id: 2
   project_id:  2
   active:      1
+  description: la455 design
 mx600:
   id:          5
   name:        mx600
