@@ -1,0 +1,85 @@
+<% @heading = "PCB Engineering Entry - Processor List"%>
+
+<%= start_form_tag(:action => 'new_entry') %>
+
+<hr class="div" />
+
+<table align="center" border="0" cellpadding="4">
+  <tr>
+    <th>Design</th>
+    <th>Originated By</th>
+    <th>Submitted</th>
+    <th align="left">Submit Date</th>
+    <td>&nbsp;</td>
+  </tr>
+  <% for entry in @board_design_entries %>
+    <tr>
+      <td><%= entry.design_name %></td>
+      <td><%= User.find(entry.originator_id).name %></td>
+      <td><%= (entry.submitted? || entry.ready_to_post?) ? 'Yes' : 'No' %></td>
+      <td><%= entry.submitted_on.strftime("%B %d, %Y") if entry.submitted? || entry.ready_to_post? %></td>
+      <td align="center">
+        <% label = entry.modifiable? ? 'View/Update' : 'View' %>
+        <%= link_to(label, 
+                    {:action => 'view_entry',
+                     :id     => entry.id,
+                     :return => params[:action],
+                     :viewer => 'processor'},
+                    :title  => "View the PCB Engineering Entry") %>
+      </td>
+      <td align="center">
+        <% if entry.submitted? %>
+          <%= link_to('Set up in Tracker', 
+                      {:action => 'design_setup',
+                       :id     => entry.id},
+                      :title  => "Create the design reviews and audit associated with the tracker") %>
+        <% elsif entry.ready_to_post? %>
+          <%= link_to('Post the Pre-Artwork Review', 
+                      {:controller     => 'design',
+                       :action         => 'initial_cc_list',
+                       :design_id      => entry.design_id},
+                      :title  => "Post the Pre-Artwork Review based on the design entry") %>
+        <% else %>
+          &nbsp;
+        <% end %>
+      </td>
+      <% if entry.submitted? %>
+        <td align="center">
+          <%= link_to('Return Entry to Originator', 
+                      {:action => 'send_back',
+                       :id     => entry.id,
+                       :return => @params[:action]},
+                      :title  => "Return to #{User.find(entry.originator_id).name} for more information",
+                      :confirm => "Do you really want to send the entry back to the originator?  Click 'OK' to remove the entry, otherwise click 'Cancel'.") %>
+        </td>
+      <% end %>
+      <% if entry.originated? || entry.submitted? %>
+        <td align="center">
+          <%= link_to('Delete', 
+                      {:action => 'destroy',
+                       :id     => entry.id,
+                       :return => @params[:action]},
+                      :title  => "Delete the PDB Engineering Entry",
+                      :confirm => "Do you really want to delete the #{entry.design_name}?  Click 'OK' to remove the entry, otherwise click 'Cancel'.") %>
+        </td>
+      <% end %>
+    </tr>
+  <% end %>
+</table>
+
+<hr class="div" />
+
+<table width="75%" align="center">
+  <tr>
+    <td align="left">
+      <input type="button" 
+             value="Home"
+             onClick="parent.location='<%= url_for( :controller => 'tracker', 
+                                                    :action     => 'index') %>'" />
+    </td>
+  </tr>
+</table>
+
+<%= end_form_tag %>
+
+<%# debug @params %>

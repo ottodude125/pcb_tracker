@@ -1,0 +1,130 @@
+<% @heading = "PCB Engineering - #{@board_design_entry.design_name} - Design Constraints"%>
+
+<%= render(:partial => 'nav_bar',
+           :locals  => { :back_action => 'edit_entry',
+                         :next_action => 'set_management_team' }) %>
+
+
+<hr class="div" />
+
+<table class="design_constraints" align="center" cellspacing="0">
+  <tr>
+    <td class="teraheader" width="50%">&nbsp;</td>
+    <td align="center" class="teraheader" width="25%">Current Value</td>
+    <td align="center" class="teraheader" width="25%">Change To</td>
+  </tr>
+</table>
+
+<div id="diff_pairs">
+
+  <% value = @board_design_entry.differential_pairs? ? 'No' : 'Yes' %>
+  
+  <table class="design_constraints" align="center" border="0">
+    <tr>
+      <th class="descr_col">Differential Pairs:</th>
+      <td class="curr_val_col">
+        <%= @board_design_entry.differential_pairs? ? 'Yes' : 'No' %>
+      </td>
+      <td class="new_val_col">
+        <%= link_to_remote(value,
+                           :update => :diff_pairs,
+                           :url    => {:action => :update_yes_no,
+                                       :id     => @board_design_entry.id,
+                                       :value  => value,
+                                       :field  => :differential_pairs}) %>
+      </td>
+    </tr>    
+  </table>
+</div>
+
+<div id="controlled_impedance">
+
+  <% value = @board_design_entry.controlled_impedance? ? 'No' : 'Yes' %>
+  
+  <table class="design_constraints" align="center" border="0">
+    <tr>
+      <th class="descr_col">Controlled Impedance:</th>
+      <td class="curr_val_col">
+        <%= @board_design_entry.controlled_impedance? ? 'Yes' : 'No' %>
+      </td>
+      <td class="new_val_col">
+        <%= link_to_remote(value,
+                           :update => :controlled_impedance,
+                           :url    => {:action => :update_yes_no,
+                                       :id     => @board_design_entry.id,
+                                       :value  => value,
+                                       :field  => :controlled_impedance}) %>
+      </td>
+    </tr>    
+  </table>
+</div>
+
+<div id="scheduled_nets">
+
+  <% value = @board_design_entry.scheduled_nets? ? 'No' : 'Yes' %>
+  
+  <table class="design_constraints" align="center" border="0">
+    <tr>
+      <th class="descr_col">Scheduled Nets:</th>
+      <td class="curr_val_col">
+        <%= @board_design_entry.scheduled_nets? ? 'Yes' : 'No' %>
+      </td>
+      <td class="new_val_col">
+        <%= link_to_remote(value,
+                           :update => :scheduled_nets,
+                           :url    => {:action => :update_yes_no,
+                                       :id     => @board_design_entry.id,
+                                       :value  => value,
+                                       :field  => :scheduled_nets}) %>
+      </td>
+    </tr>    
+  </table>
+</div>
+
+<div id="prop_delay">
+
+  <% value = @board_design_entry.propagation_delay? ? 'No' : 'Yes' %>
+  
+  <table class="design_constraints" align="center" border="0">
+    <tr>
+      <th class="descr_col">Propagation Delay:</th>
+      <td class="curr_val_col">
+        <%= @board_design_entry.propagation_delay? ? 'Yes' : 'No' %>
+      </td>
+      <td class="new_val_col">
+        <%= link_to_remote(value,
+                           :update => :prop_delay,
+                           :url    => {:action => :update_yes_no,
+                                       :id     => @board_design_entry.id,
+                                       :value  => value,
+                                       :field  => :propagation_delay}) %>
+      </td>
+    </tr>    
+  </table>
+</div>
+
+<div id="matched_prop_delay">
+
+  <% value = @board_design_entry.matched_propagation_delay? ? 'No' : 'Yes' %>
+  
+  <table class="design_constraints" align="center" border="0">
+    <tr>
+      <th class="descr_col">Matched Propagation Delay:</th>
+      <td class="curr_val_col">
+        <%= @board_design_entry.matched_propagation_delay? ? 'Yes' : 'No' %>
+      </td>
+      <td class="new_val_col">
+        <%= link_to_remote(value,
+                           :update => :matched_prop_delay,
+                           :url    => {:action => :update_yes_no,
+                                       :id     => @board_design_entry.id,
+                                       :value  => value,
+                                       :field  => :matched_propagation_delay}) %>
+      </td>
+    </tr>    
+  </table>
+</div>
+
+<hr class="div" width="100%" />
+
+<%# debug session[:user] %>

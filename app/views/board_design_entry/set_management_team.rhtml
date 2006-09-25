@@ -1,0 +1,62 @@
+<% @heading = "PCB Engineering - #{@board_design_entry.design_name} Design Entry - Management Team"%>
+
+<%= render(:partial => 'nav_bar',
+           :locals  => { :back_action => 'design_constraints',
+                         :next_action => 'set_review_team' }) %>
+
+
+<hr class="div" />
+
+<table class="design_team" align="center" cellspacing="0" border="0">
+  <tr>
+    <th class="teraheader" width="20%">Manager</th>
+    <th align="center" class="teraheader" width="25%">Current Value</th>
+    <th align="center" class="teraheader" width="25%">Change To</th>
+  </tr>
+</table>
+
+<% for manager in @managers %>
+
+<div id ="role_<%= manager[:role].id.to_s %>">
+
+  <table class="design_team" align="center" cellspacing="0" border="0">
+    <tr>
+      <th class="design_team_name" align="left"><%= manager[:role].display_name %></th>
+      <td class="design_team_data" align="center">
+        <%= manager[:manager_id] > 0 ? User.find(manager[:manager_id]).name : "<font color='red'><b>Not Set</b></font>"  %>
+      </td>
+      <td class="design_team_data" align="center">
+        <select id="role_id_<%= manager[:role].id %>"
+                name="role_id_<%= manager[:role].id %>"
+                class="name_select">
+          <% if manager[:manager_id] == 0 %>
+            <option value="">Please Select a Manager</option>
+          <% end %>
+          <%= options_from_collection_for_select(manager[:manager_list],
+                                                 "id",
+                                                 "last_name_first",
+                                                 manager[:manager_id]) %>
+        </select>
+        <%= observe_field("role_id_#{manager[:role].id}",
+                          :update => "role_#{manager[:role].id.to_s}",
+                          :url => { :action            => :set_team_member,
+                                    :bde_id            => @board_design_entry.id,
+                                    :role_id           => manager[:role].id,
+                                    :member_id         => manager[:manager_id],
+                                    :required_checkbox => false },
+                          :with => "'id=' + escape(value)") %>
+      </td>
+    </tr>
+  </table>
+
+</div>
+
+<% end %>
+
+<hr class="div" />
+
+<%# debug @user_action %>
+<%# debug "MANAGERS ----------------------------------" %>
+<%# debug @managers %>
+<%# debug "BOARD DESIGN ENTRY ------------------------" %>
+<%# debug @board_design_entry %>

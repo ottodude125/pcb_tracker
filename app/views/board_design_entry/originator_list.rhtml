@@ -1,0 +1,83 @@
+<% @heading = "PCB Engineering Entry List"%>
+
+<%= start_form_tag(:action => 'get_design_id') %>
+
+<hr class="div" />
+
+<% if @board_design_entries.size > 0 %>
+  <table align="center" border="0" cellpadding="4">
+    <tr>
+      <th>Design</th>
+      <th>Submitted</th>
+      <th align="left">Submission Date</th>
+      <td colspan="3">&nbsp;</td>
+    </tr>
+    <% for entry in @board_design_entries %>
+      <tr>
+        <td><%= entry.design_name %>
+        </td>
+        <td><%= entry.submitted? ? "Yes" : "No" %></td>
+        <% if entry.submitted? %>
+          <td><%= entry.submitted_on.strftime("%B %d, %Y") %></td>
+        <% else %>
+          <td>&nbsp;</td>
+        <% end %>
+        <td align="center">
+          <%= link_to('View Entry',
+                      {:action => 'view_entry',
+                       :id     => entry.id,
+                       :return => params[:action]},
+                      :title => "View the PCB Engineering Entry") %>
+        </td>
+        <td align="center">
+          <% if !entry.submitted? %>
+            <%= link_to('Submit Entry', 
+                        {:action => 'submit',
+                         :id     => entry.id,
+                         :return => @params[:action]},
+                        :title  => "Used to submit the PCB Engineering Entry to PCB Design",
+                        :confirm => "Click 'OK' to submit the #{entry.design_name} to PCB Design for processing.  Otherwise, click 'Cancel'.") %>
+          <% else %>
+            &nbsp;
+          <% end%>
+        </td>
+        <td align="center">
+          <% if !entry.submitted? %>
+            <%= link_to('Delete Entry', 
+                        {:action => 'destroy',
+                         :id     => entry.id,
+                         :return => @params[:action]},
+                        :title  => "Used to delete the PDB Engineering Entry",
+                        :confirm => "Do you really want to delete the #{entry.design_name}?  Click 'OK' to remove the entry, otherwise click 'Cancel'.") %>
+          <% else %>
+            &nbsp;
+          <% end %> 
+        </td>
+      </tr>
+    <% end %>
+  </table>
+
+<% else %>
+
+  <p align="center">You do not have any entries.</p>
+
+<% end %>
+<hr class="div" />
+
+<table width="75%" align="center">
+  <tr>
+    <td align="left">
+      <input type="submit" value="Create a New Board Entry" />
+    </td>
+    <td align="right">
+      <input type="button" 
+             value="Home"
+             onClick="parent.location='<%= url_for( :controller => 'tracker', 
+                                                    :action     => 'index') %>'" />
+    </td>
+  </tr>
+</table>
+
+<%= end_form_tag %>
+
+<%# debug @params %>

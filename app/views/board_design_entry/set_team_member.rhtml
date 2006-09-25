@@ -1,0 +1,48 @@
+<table class="design_team" align="center" cellspacing="0" border="0">
+  <tr>
+    <th class="design_team_name" align="left"><%= @role.display_name %></th>
+      <td class="design_team_data" align="center">
+        <%= @member_id > 0 ? User.find(@member_id).name : "Not Set"  %>
+      </td>
+      <td class="design_team_data" align="center">
+        <select id="role_id_<%= @role.id %>"
+                name="role_id_<%= @role.id %>"
+                class="name_select">
+          <%= options_from_collection_for_select(@member_list,
+                                                 "id",
+                                                 "last_name_first",
+                                                 @member_id) %>
+        </select>
+        <%= observe_field("role_id_#{@role.id}",
+                          :update => "role_#{@role.id}",
+                          :url => { :action            => :set_team_member,
+                                    :bde_id            => @board_design_entry.id,
+                                    :role_id           => @role.id,
+                                    :required_checkbox => @required_checkbox },
+                          :with => "'id=' + escape(value)") %>
+    </td>
+    <% if @required_checkbox %>
+      <td align="center" class="design_team_required">
+        <% if @entry_user.required? %>
+          <%= check_box("reviewer_#{@role.id}", :toggle) %>
+          <% setting = 'not_required' %>
+        <% else %>
+          <%= check_box("reviewer_#{@role.id}", 
+                        :toggle, 
+                        { 'checked' => 'checked' }) %>
+          <% setting = 'required' %>        
+        <% end %>
+        Not Required
+        <%= observe_field("reviewer_#{@role.id}_toggle",
+                          :update => "role_#{@role.id.to_s}",
+                          :url => { :action            => :set_role_required,
+                                    :bde_id            => @board_design_entry.id,
+                                    :role_id           => @role.id,
+                                    :required          => setting,
+                                    :required_checkbox => @required_checkbox }) %>
+      </td>
+    <% end %>
+  </tr>
+</table>
+
+<%# debug @params %>

@@ -1,0 +1,61 @@
+<% @heading = "PCB Engineering - #{@board_design_entry.design_name} Design Entry Checklist"%>
+
+<hr class="div" />
+
+<table width="80%" align="center" border="0" cellspacing="0">
+  <tr>
+    <td>
+      <ul>
+        <li>
+          <%= link_to('Design Entry Details', 
+                      { :action   => 'edit_entry', 
+                        :id       => @board_design_entry.id,
+                        :updating => true }) %>
+        </li>
+        <li>
+          <%= link_to('Design Constraints', 
+                      { :action => 'design_constraints', 
+                        :id     => @board_design_entry.id,
+                        :adding => false }) %>
+        </li>
+        <li>
+          <%= link_to('Attachments', 
+                      { :action => 'view_attachments', 
+                        :id     => @board_design_entry.id,
+                        :adding => false }) %>
+       <li>
+       </li>
+          <%= link_to('Management Team', 
+                      { :action => 'set_management_team', 
+                        :id     => @board_design_entry.id,
+                        :adding => false }) %>
+        </li>
+        <li>
+          <%= link_to('Review Team', 
+                      { :action => 'set_review_team', 
+                        :id     => @board_design_entry.id,
+                        :adding => false }) %>
+        </li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+<hr class="div" />
+
+<table width="80%" align="center">
+  <tr>
+    <td align="left">
+      <input type="button" 
+             value="Return to List"
+             onClick="parent.location='<%= url_for( :action => 'originator_list') %>'" />
+    </td>
+    <td align="right">
+      <input type="button" 
+             value="Home"
+             onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index') %>'" />
+    </td>
+  </tr>
+</table>
+
+<%# debug @board_design_entry %>

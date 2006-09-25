@@ -1,0 +1,14 @@
+<table class="design_constraints" align="center" border="0">
+  <tr>
+    <th class="descr_col"><%= @label %></th>
+    <td class="curr_val_col"><%= @current_value %></td>
+    <td class="new_val_col">
+      <%= link_to_remote(@new_value,
+                         :update => @div_id,
+                         :url    => {:action => :update_yes_no,
+                                     :id     => @board_design_entry.id,
+                                     :value  => @new_value,
+                                     :field  => @field}) %>
+    </td>
+  </tr>    
+</table>

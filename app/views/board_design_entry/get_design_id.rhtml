@@ -1,0 +1,93 @@
+<!-- View:    board_design_entry                                -->
+<!-- Purpose: Displays a form to add a new PCB Engineering      -->
+<!--          Entry.                                            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% if @user_action == 'updating' %>
+
+  <% @heading = "PCB Engineering - Updating #{@board_design_entry.design_name}"%>
+
+  <%= start_form_tag(:action      => 'update_entry', 
+                     :id          => @board_design_entry.id,
+                     :user_action => 'updating',
+                     :viewer      => @viewer) %>
+
+<% elsif @user_action == 'adding' %>
+
+  <% @heading = "PCB Engineering - New Entry"%>
+  
+  <% if @new_entry %>
+    <%= start_form_tag(:action => 'create_board_design_entry') %>
+  <% else %>
+    <%= start_form_tag(:action      => 'update_entry', 
+                       :id          => @board_design_entry.id,
+                       :user_action => 'adding') %>
+  
+  <% end %>
+                      
+<% end %>
+
+
+<hr class="div" />
+
+<table width="90%" align="center" border="1" cellspacing="0">
+
+<!-- ********************************************************** -->
+  <tr valign="top">
+    <td class="label" rowspan="2" width="100">Design: </td>
+
+    <td class="label" width="141">PCB Mnemonic:</td>
+    <td class="data">
+      <%= select("board_design_entry", 
+                 "prefix_id", 
+                 @prefix_list.collect { |p| [ p.pcb_mnemonic, p.id ] }, 
+                 { :include_blank => true } ) %>
+    </td>
+  </tr>
+  <tr>
+    <td class="label">Number:</td>
+    <td class="data">
+      <%= text_field("board_design_entry", "number", "size" => 3, "maxlength" => 3) %>
+    </td>
+
+  </tr>
+  
+</table>
+
+<hr class="div" />
+
+<table width="80%" align="center">
+  <tr>
+    <td align="left">
+      <% if @user_action == 'updating' %>
+        <input type="button" 
+               value="Return"
+               onClick="parent.location='<%= url_for( :action => 'view_entry', 
+                                                      :id     => @board_design_entry.id,
+                                                      :viewer => @viewer) %>'" />
+      <% elsif @user_action == 'adding' %>
+        <input type="button" class="form_return" 
+               value="Cancel / Return to PCB Engineering Entry List"
+               onClick="parent.location='<%= url_for( :action => 'originator_list') %>'" />
+      <% end %>
+    </td>
+    
+
+    <td align="right">
+      <% if @user_action == 'updating'%>
+        <input type="submit" value="Update Entry" />
+      <% elsif @user_action == 'adding' %>
+        <input type="submit" class="form_submit" value="Next -->" />
+      <% end %>
+    </td>
+  </tr>
+</table>
+
+<%= end_form_tag %>
+
+<%# debug @user_action %>
+<%# debug @viewer %>
+<%# debug @division_list %>
+

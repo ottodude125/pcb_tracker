@@ -1,0 +1,39 @@
+<table width="100%" cellpadding="0" cellspacing="0" border="0">
+  <tr>
+    <td class="label" width="140">Yes: </td>
+    <td class="data"  width="30">
+      <%= radio_button(:board_design_entry, :make_from, '1') %>
+
+      <%= observe_field('board_design_entry_make_from_1',
+                        :update    => :make_from,
+                        :url       => { :action => :process_make_from,
+                                        :id     => @board_design_entry.id,
+                                        :value  => 'yes' }) %>
+    </td>
+
+    <% if @params[:value] == 'yes' %>
+      <td class="label" width="200" 
+          title="Identify the original PCB">
+        Original PCB Number: 
+      </td>
+      <td class="data">
+        <%= text_field("board_design_entry", "original_pcb_number", "size" => 16) %>
+      </td>
+    <% else %>
+      <td>&nbsp;</td>
+    <% end %>
+  </tr>
+
+  <tr>
+    <td class="label">No: </td>
+    <td class="data">
+      <%= radio_button(:board_design_entry, :make_from, '0') %>
+
+      <%= observe_field('board_design_entry_make_from_0',
+                        :update    => :make_from,
+                        :url       => { :action => :process_make_from,
+                                        :id     => @board_design_entry.id,
+                                        :value  => 'no' }) %>
+    </td>
+  </tr>
+</table>

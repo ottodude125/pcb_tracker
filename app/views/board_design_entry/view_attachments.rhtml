@@ -1,0 +1,127 @@
+<% @heading = "PCB Engineering - #{@board_design_entry.design_name} Design Entry - Attachments"%>
+
+<%= render(:partial => 'nav_bar',
+           :locals  => { :back_action => 'set_review_team',
+                         :next_action => 'view_originator_comments' }) %>
+
+
+<hr class="div" />
+
+<table width="500" align="center" border="0">
+  <tr>
+    <th colspan="3" align="left">Outline Drawing</th>
+  </tr>
+  <tr>
+    <td width="10">&nbsp;</td>
+    <% if !@board_design_entry.outline_drawing_document_id? %>
+      <td width="290">
+          <%= link_to('Add Outline Drawing',
+                      { :action      => 'add_document',
+                        :id          => @board_design_entry.id,
+                        :type        => 'Outline Drawing',
+                        :user_action => @user_action,
+                        :viewer      => params[:viewer] },
+                      :title => "Add the Outline Drawing Document") %>
+      </td>
+      <td width="200">&nbsp;</td>
+    <% else%>
+      <td>
+        <%= link_to(@outline_drawing_document.name,
+                    { :action => 'get_document',
+                      :id     => @outline_drawing_document.id },
+                    :title => "View the Outline Drawing Document") %>
+      </td>
+      <td align="right">
+        <%= link_to('Delete',
+                    { :action      => 'delete_document',
+                      :id          => @board_design_entry.id,
+                      :type        => 'Outline Drawing',
+                      :user_action => @user_action,
+                      :viewer      => params[:viewer] },
+                    :title => "Delete the Outline Drawing Document",
+                    :confirm => "Are you sure you want to delete the attached Outline Drawing Document?" ) %>
+      </td>
+    <% end %>
+
+  </tr>
+  <tr>
+    <th colspan="3" align="left">PCB Attribute Form</th>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <% if !@board_design_entry.pcb_attribute_form_document_id? %>
+      <td width="290">
+          <%= link_to('Add PCB Attribute Form',
+                      { :action      => 'add_document',
+                        :id          => @board_design_entry.id,
+                        :type        => 'PCB Attribute',
+                        :user_action => @user_action,
+                        :viewer      => params[:viewer] },
+                      :title => "Add the PCB Attribute Form") %>
+      </td>
+      <td width="200">&nbsp;</td>
+    <% else %>
+      <td>
+        <%= link_to(@pcb_attribute_document.name,
+                    { :action => 'get_document',
+                      :id     => @pcb_attribute_document.id },
+                    :title => "View the PCB Attribute Form") %>
+      </td>
+      <td align="right">
+        <%= link_to('Delete',
+                    { :action      => 'delete_document',
+                      :id          => @board_design_entry.id,
+                      :type        => 'PCB Attribute',
+                      :user_action => @user_action,
+                      :viewer      => params[:viewer] },
+                    :title => "Delete the PCB Attribute Form",
+                    :confirm => "Are you sure you want to delete the attached PCB Attribute Form?" ) %>
+      </td>
+    <% end %>
+
+  </tr>
+  <tr>
+    <th colspan="3" align="left">Teradyne Stackup</th>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <% if !@board_design_entry.teradyne_stackup_document_id? %>
+      <td width="290">
+          <%= link_to('Add Teradyne Stackup',
+                      { :action      => 'add_document',
+                        :id          => @board_design_entry.id,
+                        :type        => 'Stackup',
+                        :user_action => @user_action,
+                        :viewer      => params[:viewer] },
+                      :title => "Add the Teradyne Stackup Document") %>
+      </td>
+      <td width="200">&nbsp;</td>
+    <% else %>
+      <td>
+        <%= link_to(@stackup_document.name,
+                    { :action => 'get_document',
+                      :id     => @stackup_document },
+                    :title => "View the PCB Attribute Form") %>
+      </td>
+      <td align="right">
+        <%= link_to('Delete',
+                    { :action      => 'delete_document',
+                      :id          => @board_design_entry.id,
+                      :type        => 'Stackup',
+                      :user_action => @user_action,
+                      :viewer      => params[:viewer] },
+                    :title => "Delete the Outline Drawing Document",
+                    :confirm => "Are you sure you want to delete the attached Teradyne Stackup Document?" ) %>
+      </td>
+    <% end %>
+  </tr>
+</table>
+
+
+<hr class="div" />
+
+<%# debug @user_action %>
+<%# debug "REVIWERS ----------------------------------" %>
+<%# debug @reviewers %>
+<%# debug "BOARD DESIGN ENTRY ------------------------" %>
+<%# debug @board_design_entry %>
