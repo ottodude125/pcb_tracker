@@ -140,7 +140,7 @@ class UserControllerTest < Test::Unit::TestCase
     assert_equal "bob", @response.session[:user].login
 
     assert_session_has :active_role
-    assert_equal 'Admin', @response.session[:active_role]
+    assert_equal 'Admin', @response.session[:active_role].name
 
     assert_session_has :roles
     assert_redirect_url "http://localhost/bogus/location"
@@ -447,7 +447,7 @@ class UserControllerTest < Test::Unit::TestCase
     set_admin
     post(:set_role, :role => {'id' => '14'})
 
-    assert_equal('PCB Input Gate', session[:active_role])
+    assert_equal('PCB Input Gate', session[:active_role].name)
     assert_redirected_to(:controller => 'tracker',
                          :action     => 'index')
 
