@@ -1,0 +1,198 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+# av714b - Catalyst/DC90/First Board Entry - Ben Bina
+av714b:
+  id:                                        1
+  location_id:                               1
+  division_id:                               2
+  platform_id:                               1
+  project_id:                                8
+  description:                               First Board Entry
+  product_type_id:                           2
+  review_doc_location:                       Boston
+  prefix_id:                                 3
+  number:                                    714
+  revision_id:                               2
+  numeric_revision:                          0
+  entry_type:                                new
+  originator_id:                             6000
+  state:                                     originated
+  submitted_on:                              20060718110015
+  make_from:                                 1
+  original_pcb_number:                       232-714-A0
+  outline_drawing_number:                    121-AWB
+  hipot_testing_required:                    0
+  lead_free_devices:                         0
+  design_directory_id:                       1
+  incoming_directory_id:                     2
+  differential_pairs:                        1
+  controlled_impedance:                      1
+  scheduled_nets:                            1
+  propagation_delay:                         1
+  matched_propagation_delay:                 0
+  
+# la021c - Flex/Viking/Second Board Entry - Lee Schaff
+la021c:
+  id:                                        2
+  location_id:                               1
+  division_id:                               2
+  platform_id:                               2
+  project_id:                                15
+  description:                               Second Board Entry
+  product_type_id:                           2
+  review_doc_location:                       New York
+  prefix_id:                                 6
+  number:                                    '021'
+  revision_id:                               3
+  numeric_revision:                          0
+  entry_type:                                new
+  originator_id:                             7001
+  state:                                     originated
+  submitted_on:                              20060720081101
+  make_from:                                 1
+  original_pcb_number:                       958-021-B0
+  outline_drawing_number:                    343-TWA
+  hipot_testing_required:                    1
+  lead_free_devices:                         0
+  design_directory_id:                       1
+  incoming_directory_id:                     1
+  differential_pairs:                        1
+  controlled_impedance:                      1
+  scheduled_nets:                            0
+  propagation_delay:                         1
+  matched_propagation_delay:                 0
+  outline_drawing_document_id:               1
+  pcb_attribute_form_document_id:            2
+  teradyne_stackup_document_id:              3
+  
+
+# mx008b4 - J750/POOL2/Third Board Entry - John Joyce
+mx008b4:
+  id:                                        3
+  location_id:                               1
+  division_id:                               2
+  platform_id:                               5
+  project_id:                                12
+  description:                               Third Board Entry
+  product_type_id:                           2
+  review_doc_location:                       Oswego
+  prefix_id:                                 1
+  number:                                    008
+  revision_id:                               2
+  numeric_revision:                          4
+  entry_type:                                dot_rev
+  originator_id:                             7000
+  state:                                     submitted
+  submitted_on:                              20060710150000
+  make_from:                                 0
+  outline_drawing_number:                    001-GWB
+  hipot_testing_required:                    0
+  lead_free_devices:                         1
+  lead_free_device_names:                    device_1, device_2, device_3
+  design_directory_id:                       1
+  incoming_directory_id:                     2
+  differential_pairs:                        1
+  controlled_impedance:                      1
+  scheduled_nets:                            1
+  propagation_delay:                         1
+  matched_propagation_delay:                 1
+
+
+# mx008b4 - J750/POOL2/Third Board Entry - John Joyce
+mx008b4_ecoP123456:
+  id:                                        4
+  location_id:                               1
+  division_id:                               2
+  platform_id:                               5
+  project_id:                                12
+  description:                               Third Board Entry
+  product_type_id:                           2
+  review_doc_location:                       Oswego
+  prefix_id:                                 1
+  number:                                    008
+  revision_id:                               2
+  numeric_revision:                          4
+  eco_number:                                P123456
+  entry_type:                                date_code
+  originator_id:                             7000
+  state:                                     submitted
+  submitted_on:                              20060710150000
+  make_from:                                 0
+  outline_drawing_number:                    001-GWB
+  hipot_testing_required:                    0
+  lead_free_devices:                         1
+  lead_free_device_names:                    device_1, device_2, device_3
+  design_directory_id:                       1
+  incoming_directory_id:                     2
+  differential_pairs:                        1
+  controlled_impedance:                      1
+  scheduled_nets:                            1
+  propagation_delay:                         1
+  matched_propagation_delay:                 1
+  
+  
+# mx234a
+mx234a:
+  id:                                        5
+  location_id:                               1
+  division_id:                               2
+  platform_id:                               5
+  project_id:                                12
+  description:                               Third Board Entry
+  product_type_id:                           2
+  review_doc_location:                       Oswego
+  prefix_id:                                 1
+  number:                                    234
+  revision_id:                               1
+  numeric_revision:                          4
+  eco_number:                                P123456
+  entry_type:                                date_code
+  originator_id:                             7000
+  state:                                     submitted
+  submitted_on:                              20060710150000
+  make_from:                                 0
+  outline_drawing_number:                    001-GWB
+  hipot_testing_required:                    0
+  lead_free_devices:                         1
+  lead_free_device_names:                    device_1, device_2, device_3
+  design_directory_id:                       1
+  incoming_directory_id:                     2
+  differential_pairs:                        1
+  controlled_impedance:                      1
+  scheduled_nets:                            1
+  propagation_delay:                         1
+  matched_propagation_delay:                 1
+  design_id:                                 1
+  
+
+# mx234c
+mx234c:
+  id:                                        6
+  location_id:                               1
+  division_id:                               2
+  platform_id:                               5
+  project_id:                                12
+  description:                               Third Board Entry
+  product_type_id:                           2
+  review_doc_location:                       Oswego
+  prefix_id:                                 1
+  number:                                    234
+  revision_id:                               3
+  numeric_revision:                          4
+  eco_number:                                P123456
+  entry_type:                                date_code
+  originator_id:                             7000
+  state:                                     submitted
+  submitted_on:                              20060710150000
+  make_from:                                 0
+  outline_drawing_number:                    001-GWB
+  hipot_testing_required:                    0
+  lead_free_devices:                         1
+  lead_free_device_names:                    device_1, device_2, device_3
+  design_directory_id:                       1
+  incoming_directory_id:                     2
+  differential_pairs:                        1
+  controlled_impedance:                      1
+  scheduled_nets:                            1
+  propagation_delay:                         1
+  matched_propagation_delay:                 1
+  design_id:                                 9
