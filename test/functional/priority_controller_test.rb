@@ -49,10 +49,10 @@ class PriorityControllerTest < Test::Unit::TestCase
     # VERIFY: The user is redirected.
     post :list
     set_non_admin
+
     assert_redirected_to(:controller => 'tracker',
                          :action     => 'index')
-    assert_equal('You are not authorized to view or modify priority information - check your role',
-                 flash['notice'])
+    assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
     # Try listing from an Admin account
     # VERIFY: The project list data is retrieved
@@ -112,6 +112,7 @@ class PriorityControllerTest < Test::Unit::TestCase
     priority      = Priority.find(priorities(:high).id)
     priority.name = '1'
 
+    set_admin()
     get(:update,
         :priority => priority.attributes)
 
@@ -142,6 +143,7 @@ class PriorityControllerTest < Test::Unit::TestCase
 
     assert_equal(2, Priority.find_all.size)
 
+    set_admin
     new_priority = {
       'value'  => 2,
       'name'   => 'Medium',
