@@ -33,12 +33,12 @@ class AuditControllerTest < Test::Unit::TestCase
            :design_checks,
            :platforms,
            :projects,
+           :prefixes,
            :revisions,
            :roles,
            :roles_users,
            :sections,
            :subsections,
-           :suffixes,
            :users)
            
   self.use_transactional_fixtures = true
@@ -72,7 +72,7 @@ class AuditControllerTest < Test::Unit::TestCase
     # Log in as a designer and get the audit listing.
     user = User.find(users(:scott_g).id)
     @request.session[:user]        = user
-    @request.session[:active_role] = 'Designer'
+    @request.session[:active_role] = Role.find_by_name('Designer')
     @request.session[:roles]       = user.roles
 
     post(:perform_checks,
@@ -416,9 +416,9 @@ class AuditControllerTest < Test::Unit::TestCase
 
     # Log in as an auditor and get the audit listing.
     user = User.find(users(:scott_g).id)
-    @request.session[:user]        = user
-    @request.session[:active_role] = 'Designer'
-    @request.session[:roles]       = user.roles
+    @request.session[:user]             = user
+    @request.session[:active_role].name = 'Designer'
+    @request.session[:roles]            = user.roles
 
     post(:update_design_checks,
          :audit         => {:id => audits(:audit_mx234b).id},
@@ -644,7 +644,7 @@ class AuditControllerTest < Test::Unit::TestCase
         :id => audits(:audit_la453b_eco2).id)
 
     summary = assigns(:summary)
-    assert_equal('la453b_eco2',   summary[:board_number])
+    assert_equal('la453b4_eco2',  summary[:board_number])
     assert_equal('1.0',           summary[:checklist_rev])
     assert_equal(users(:scott_g).name,   summary[:designer])
     assert_equal(users(:rich_m).name,    summary[:auditor])
@@ -726,7 +726,7 @@ class AuditControllerTest < Test::Unit::TestCase
 
     user = User.find(rich_m.id)
     @request.session[:user]        = user
-    @request.session[:active_role] = 'Designer'
+    @request.session[:active_role] = Role.find_by_name('Designer')
     @request.session[:roles]       = user.roles
 
     get(:show_sections,
@@ -811,7 +811,7 @@ class AuditControllerTest < Test::Unit::TestCase
     get(:show_sections,
         :id => audits(:audit_la453b_eco2).id)
 
-    assert_equal("la453b_eco2", assigns(:board_name))
+    assert_equal("la453b4_eco2", assigns(:board_name))
     lines = assigns(:checklist_index)
 
     expected = Array[
