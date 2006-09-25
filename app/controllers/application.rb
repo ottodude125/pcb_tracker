@@ -107,7 +107,7 @@ class ApplicationController < ActionController::Base
   ######################################################################
   #
   def verify_admin_role
-    unless session[:active_role] == 'Admin'
+    unless session[:active_role] && session[:active_role].name == 'Admin'
       flash['notice'] = Pcbtr::MESSAGES[:admin_only]
       redirect_to(:controller => 'tracker',
                   :action     => "index")
