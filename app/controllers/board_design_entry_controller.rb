@@ -53,6 +53,12 @@ class BoardDesignEntryController < ApplicationController
   ######################################################################
   #
   def processor_list
+  
+    if !allow_access()
+      flash['notice'] = "Access Prohibited"
+      return
+    end
+  
     bde  = BoardDesignEntry.find_all_by_state('originated').sort_by { |e| e.design_name }
     bde += BoardDesignEntry.find_all_by_state('submitted').sort_by { |e| e.design_name }
     bde += BoardDesignEntry.find_all_by_state('ready_to_post').sort_by { |e| e.design_name }
@@ -124,8 +130,13 @@ class BoardDesignEntryController < ApplicationController
   #
   def send_back
 
-    @board_design_entry = BoardDesignEntry.find(params[:id])
+    if !allow_access()
+      flash['notice'] = "Access Prohibited"
+      return
+    end
 
+    @board_design_entry = BoardDesignEntry.find(params[:id])
+    
   end
   
   
@@ -145,6 +156,11 @@ class BoardDesignEntryController < ApplicationController
   #
   def return_entry_to_originator
   
+    if !allow_access()
+      flash['notice'] = "Access Prohibited"
+      return
+    end
+
     board_design_entry = BoardDesignEntry.find(params[:id])
     
     board_design_entry.originated
@@ -328,8 +344,7 @@ class BoardDesignEntryController < ApplicationController
   # edit_entry
   #
   # Description:
-  # This action validates the input and creates a new row in the 
-  # board design entry table.  
+  # This action provides the data for the user to edit an entry.  
   # 
   # Parameters from params
   # None
@@ -548,7 +563,8 @@ class BoardDesignEntryController < ApplicationController
   # entry_type_selected
   #
   # Description:
-  # This action displays the numeric revisions field for dot revs.  
+  # This action updates the entry type div when the user selects the 
+  # entry type in an edit entry view.  
   # 
   # Parameters from params
   # None
@@ -567,7 +583,8 @@ class BoardDesignEntryController < ApplicationController
   # process_make_from
   #
   # Description:
-  # This action displays the original pcb number field for make froms.  
+  # This action updates the make from div when the user selects a make 
+  # from radio button in an edit entry view.  
   # 
   # Parameters from params
   # None
@@ -586,8 +603,8 @@ class BoardDesignEntryController < ApplicationController
   # process_lead_free
   #
   # Description:
-  # This action displays the lead free device field for designs with 
-  # lead free devices.  
+  # This action updates the make from div when the user selects a lead 
+  # free radio button in an edit entry view.  
   # 
   # Parameters from params
   # None
@@ -606,7 +623,7 @@ class BoardDesignEntryController < ApplicationController
   # entry_input_checklist
   #
   # Description:
-  # This action displays entry input checklist.  
+  # This action provides the data for the entry input checklist view.
   # 
   # Parameters from params
   # id - the board_design_entry id
@@ -808,8 +825,9 @@ class BoardDesignEntryController < ApplicationController
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @field              = params[:field]
     
-    @board_design_entry.update_attribute(@field, 
-                                         (@board_design_entry[@field] == 0 ? 1 : 0))
+    @board_design_entry.update_attribute(
+      @field, 
+      (@board_design_entry[@field] == 0 ? 1 : 0))
 
     render(:layout => false)
     
@@ -980,8 +998,7 @@ class BoardDesignEntryController < ApplicationController
   def submit
   
     board_design_entry = BoardDesignEntry.find(params[:id])
-    board_design_entry.update_attribute('state',        'submitted')
-    board_design_entry.update_attribute('submitted_on', Time.now())
+    board_design_entry.submitted
     
     TrackerMailer::deliver_board_design_entry_submission(board_design_entry)
     
@@ -995,7 +1012,9 @@ class BoardDesignEntryController < ApplicationController
   # update_yes_no
   #
   # Description:
-  # This action sets the values for the design constraint questions.  
+  # This action sets the values for the design constraint questions and 
+  # updates the row in the view identified by the field key of the params
+  # hash.  
   # 
   # Parameters from params
   # id    - the board_design_entry id
@@ -1361,6 +1380,20 @@ class BoardDesignEntryController < ApplicationController
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @review_types       = ReviewType.find_all_by_active(1, 'sort_order ASC')
     @priorities         = Priority.find_all(nil, 'value ASC')
+  
+  end
+  
+  
+  private
+  
+  def allow_access
+  
+    if session[:user].roles.detect { |r| r.name == 'Admin' }
+      true
+    else
+      redirect_to(:controller => 'tracker', :action => 'index')
+      false
+    end
   
   end
   
