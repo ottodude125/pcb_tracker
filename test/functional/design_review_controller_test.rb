@@ -27,7 +27,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     @emails.clear
   end
 
-  fixtures(:board_reviewers,
+  fixtures(:board_design_entry_users,
+           :board_reviewers,
            :boards,
            :design_centers,
            :design_review_comments,
@@ -419,43 +420,43 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(14, reviewer_list.size)
 
     expected_values = [
-      {:group          => 'CE-DFT',
+      {:group          => 'CE-DFT Engineer',
        :group_id       => 7,
        :reviewer_count => 2},
-      {:group          => 'DFM',
+      {:group          => 'CE-DFM Engineer',
        :group_id       => 8,
        :reviewer_count => 3},
-      {:group          => 'HWENG',
+      {:group          => 'Hardware Engineer (EE)',
        :group_id       => 5,
        :reviewer_count => 4},
-      {:group          => 'Library',
+      {:group          => 'Component Development',
        :group_id       => 15,
        :reviewer_count => 2},
-      {:group          => 'Mechanical',
+      {:group          => 'Mechanical Engineer',
        :group_id       => 10,
        :reviewer_count => 2},
-      {:group          => 'Mechanical-MFG',
+      {:group          => 'Mechanical Mfg Engineer',
        :group_id       => 11,
        :reviewer_count => 2},
-      {:group          => 'PCB Design',
+      {:group          => 'PCB Design Manager',
        :group_id       => 12,
        :reviewer_count => 1},
-      {:group          => 'PCB Input Gate',
+      {:group          => 'PCB Design Input Gate',
        :group_id       => 14,
        :reviewer_count => 2},
-      {:group          => 'PCB Mechanical',
+      {:group          => 'PCB Mechanical Engineer',
        :group_id       => 16,
        :reviewer_count => 2},
-      {:group          => 'Planning',
+      {:group          => 'New Product Planner',
        :group_id       => 13,
        :reviewer_count => 2},
       {:group          => 'SLM BOM',
        :group_id       => 17,
        :reviewer_count => 1},
-      {:group    => 'SLM-Vendor',
+      {:group    => 'SLM Vendor',
        :group_id       => 18,
        :reviewer_count => 1},
-      {:group          => 'TDE',
+      {:group          => 'TDE Engineer',
        :group_id       => 9,
        :reviewer_count => 2},
       {:group          => 'Valor',
@@ -492,22 +493,22 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(6, reviewer_list.size)
 
     expected_values = [
-      {:group          => 'CE-DFT',
+      {:group          => 'CE-DFT Engineer',
        :group_id       => 7,
        :reviewer_count => 2},
-      {:group          => 'DFM',
+      {:group          => 'CE-DFM Engineer',
        :group_id       => 8,
        :reviewer_count => 3},
-      {:group          => 'HWENG',
+      {:group          => 'Hardware Engineer (EE)',
        :group_id       => 5,
        :reviewer_count => 4},
-      {:group          => 'Mechanical',
+      {:group          => 'Mechanical Engineer',
        :group_id       => 10,
        :reviewer_count => 2},
-      {:group          => 'Mechanical-MFG',
+      {:group          => 'Mechanical Mfg Engineer',
        :group_id       => 11,
        :reviewer_count => 2},
-      {:group          => 'TDE',
+      {:group          => 'TDE Engineer',
        :group_id       => 9,
        :reviewer_count => 2},
       {:group          => 'Valor',
@@ -728,43 +729,43 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(14, reviewer_list.size)
 
     expected_values = [
-      {:group          => 'CE-DFT',
+      {:group          => 'CE-DFT Engineer',
        :group_id       => 7,
        :reviewer_count => 2},
-      {:group          => 'DFM',
+      {:group          => 'CE-DFM Engineer',
        :group_id       => 8,
        :reviewer_count => 3},
-      {:group          => 'HWENG',
+      {:group          => 'Hardware Engineer (EE)',
        :group_id       => 5,
        :reviewer_count => 4},
-      {:group          => 'Library',
+      {:group          => 'Component Development',
        :group_id       => 15,
        :reviewer_count => 2},
-      {:group          => 'Mechanical',
+      {:group          => 'Mechanical Engineer',
        :group_id       => 10,
        :reviewer_count => 2},
-      {:group          => 'Mechanical-MFG',
+      {:group          => 'Mechanical Mfg Engineer',
        :group_id       => 11,
        :reviewer_count => 2},
-      {:group          => 'PCB Design',
+      {:group          => 'PCB Design Manager',
        :group_id       => 12,
        :reviewer_count => 1},
-      {:group          => 'PCB Input Gate',
+      {:group          => 'PCB Design Input Gate',
        :group_id       => 14,
        :reviewer_count => 2},
-      {:group          => 'PCB Mechanical',
+      {:group          => 'PCB Mechanical Engineer',
        :group_id       => 16,
        :reviewer_count => 2},
-      {:group          => 'Planning',
+      {:group          => 'New Product Planner',
        :group_id       => 13,
        :reviewer_count => 2},
       {:group          => 'SLM BOM',
        :group_id       => 17,
        :reviewer_count => 1},
-      {:group    => 'SLM-Vendor',
+      {:group          => 'SLM Vendor',
        :group_id       => 18,
        :reviewer_count => 1},
-      {:group          => 'TDE',
+      {:group          => 'TDE Engineer',
        :group_id       => 9,
        :reviewer_count => 2},
       {:group          => 'Valor',
@@ -886,10 +887,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal('No Response', review_result.result)
     end
 
-    comments = mx234a_pre_artwork.comments
+    comments = mx234a_pre_artwork.comments.sort_by { |c| c.id }
+    
     assert_equal(6,                             comments.size)
-    assert_equal('Test Comment',                comments[0].comment)
-    assert_equal('Test Comment for the repost', comments[1].comment)
+    assert_equal('Test Comment',                comments[4].comment)
+    assert_equal('Test Comment for the repost', comments[5].comment)
     assert_equal(users(:scott_g).id,            dr_comment.user_id)
 
   end
@@ -2628,9 +2630,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
         assert_equal("mx234a: Release Review is complete",
                      email.subject)
 
-        doc_control_email = 'STD_DC_ECO_Inbox@notes.teradyne.com'
-        found_email = email.cc.detect { |addr| addr == doc_control_email }
-        assert_equal(doc_control_email, found_email)
+        if !Pcbtr::DEVEL_SERVER
+          doc_control_email = 'STD_DC_ECO_Inbox@notes.teradyne.com'
+          found_email = email.cc.detect { |addr| addr == doc_control_email }
+          assert_equal(doc_control_email, found_email)
+        end
 
         email = @emails.pop
       end
@@ -2723,7 +2727,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     email = @emails.pop
     assert_equal(0, @emails.size)
-    assert_equal('mx234a: The HWENG review has been reassigned to Rich Ahamed',
+    assert_equal('mx234a: The Hardware Engineer (EE) review has been reassigned to Rich Ahamed',
                  email.subject)
 
     hw_review_result.reload
@@ -2736,11 +2740,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
                      'HWENG' => '6000'})
     email = @emails.pop
     assert_equal(1, @emails.size)
-    assert_equal('mx234a: You have been assigned to perform the TDE review',
+    assert_equal('mx234a: You have been assigned to perform the TDE Engineer review',
                  email.subject)
     email = @emails.pop
     assert_equal(0, @emails.size)
-    assert_equal('mx234a: You have been assigned to perform the HWENG review',
+    assert_equal('mx234a: You have been assigned to perform the Hardware Engineer (EE) review',
                  email.subject)
 
     hw_review_result.reload
