@@ -12,6 +12,8 @@
 
 class ReviewTypeController < ApplicationController
 
+  before_filter :verify_admin_role
+
   ######################################################################
   #
   # update
@@ -96,13 +98,6 @@ class ReviewTypeController < ApplicationController
   ######################################################################
   #
   def list
-
-    if @session[:active_role] != "Admin"
-      flash['notice'] = 'You are not authorized to view or modify ' +
-        'review type information - check your role'
-      redirect_to(:controller => 'tracker',
-                  :action     => "index")
-    end
 
     @review_type_pages, @review_types = paginate(:review_types,
                                                  :per_page => 15,
