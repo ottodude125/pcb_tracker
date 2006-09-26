@@ -51,11 +51,13 @@
       <% end %>
       <tr>
         <td>
-          <% if !design.audit.skip? %>
+          <% if design.audit && !design.audit.skip? %>
             <%= link_to('Audit',
                         {:controller => 'audit',
                          :action     => 'print',
                          :id         => design.audit.id}) %>
+          <% elsif !design.audit %>
+            <b>Audit Not Set Up</b>
           <% else %>
             <b>Audit Skipped</b>
           <% end %>
