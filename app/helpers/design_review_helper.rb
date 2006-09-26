@@ -62,9 +62,9 @@ module DesignReviewHelper
   
   def permitted_to_update_cc_list
   
-    return @session[:active_role] == 'Admin'     || 
-           @session[:active_role] == 'Designer'  ||
-           @session[:active_role] == 'PCB Admin' ||
+    return session[:active_role].name == 'Admin'     || 
+           session[:active_role].name == 'Designer'  ||
+           session[:active_role].name == 'PCB Admin' ||
            is_manager
   end
   
