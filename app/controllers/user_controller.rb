@@ -151,7 +151,7 @@ class UserController < ApplicationController
   #
   def edit
 
-    @roles = Role.find_all(nil, 'name ASC')
+    @roles = Role.find_all(nil, 'display_name ASC')
     @user = User.find(@params['id'])
     user_roles = @user.roles
 
@@ -349,20 +349,20 @@ class UserController < ApplicationController
   ######################################################################
   #
   def login
-    case @request.method
+    case request.method
       when :post
-      if @session[:user] = User.authenticate(@params[:user_login], 
-                                             @params[:user_password])
+      if session[:user] = User.authenticate(params[:user_login], 
+                                            params[:user_password])
       
-        @session[:roles]       = @session[:user].roles
+        session[:roles]       = session[:user].roles
         admin   = Role.find_by_name('Admin')
         manager = Role.find_by_name('Manager')
-        if @session[:roles].include?(admin)
-          @session[:active_role] = admin.name
-        elsif @session[:roles].include?(manager)
-          @session[:active_role] = manager.name
-        elsif @session[:roles].size > 0
-          @session[:active_role] = @session[:roles].first.name
+        if session[:roles].include?(admin)
+          session[:active_role] = admin
+        elsif session[:roles].include?(manager)
+          session[:active_role] = manager
+        elsif session[:roles].size > 0
+          session[:active_role] = session[:roles].first
         end
 
         flash['notice']  = "Login successful"
@@ -371,7 +371,7 @@ class UserController < ApplicationController
       else
         flash.now['notice']  = "Login unsuccessful"
 
-        @login = @params[:user_login]
+        @login = params[:user_login]
       end
     end
   end
@@ -391,7 +391,7 @@ class UserController < ApplicationController
   #
   def set_role
 
-    @session[:active_role] = @session[:roles].find(@params['role']['id']).name
+    session[:active_role] = session[:roles].find(params['role']['id'])
     redirect_back_or_default(:controller => "tracker",
                              :action     => "index")
   end
@@ -467,10 +467,10 @@ class UserController < ApplicationController
   ######################################################################
   #
   def logout
-    @session[:user]        = nil
-    @session[:roles]       = nil
-    @session[:return_to]   = nil
-    @session[:active_role] = nil
+    session[:user]        = nil
+    session[:roles]       = nil
+    session[:return_to]   = nil
+    session[:active_role] = nil
     
     redirect_to(:controller => 'tracker',
 		        :action     => 'index')
