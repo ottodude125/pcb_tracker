@@ -14,6 +14,7 @@ class Revision < ActiveRecord::Base
 
   has_one :audit
   
+  has_many :board_design_entries
   has_many :designs
   
 end
