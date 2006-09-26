@@ -7,8 +7,10 @@
 
 <% @heading = "#{@design.name} - #{@design.board.platform.name} / #{@design.board.project.name} Attachments" %>
 
-<%= start_form_tag(:action => 'add_attachment',
-                      :id     => @design.board_id ) %>
+<%= start_form_tag(:controller => 'design_review',
+                   :action     => 'add_attachment',
+                   :id         => @design.board_id,
+                   :return_to  => 'initial_attachments' ) %>
                    
 <%= hidden_field "design_review", "id" %>
 
@@ -16,9 +18,6 @@
     <tr>
       <td align="left">
         <input type="button" value="Post Pre-Artwork Review" onClick="parent.location='<%= url_for( :controller => 'design_review', :action => 'post_review', :design_id => @design.id, :review_type_id => @pre_art.id) %>'" />
-      </td>
-      <td align="right">
-        <input type="button" value="Done" onClick="parent.location='<%= url_for( :controller => 'board', :action => 'list' ) %>'" />
       </td>
     </tr>
   </table>
@@ -41,8 +40,9 @@
       <tr>
 	      <td>
 	        <%= link_to(drd.document.name,
-	                    :action => "get_attachment",
-		                  :id     => drd.document.id) %>
+	                    { :controller => 'design_review',
+	                      :action     => "get_attachment",
+		                    :id         => drd.document.id }) %>
         </td>
         <td><%= DocumentType.find(drd.document_type_id).name %></td>
         <td><%= User.find(drd.document.created_by).name %></td>
@@ -50,9 +50,11 @@
         <td>
           <% if drd.document_type.name != "Other" %>
             <%= link_to("Update",
-                        {:action           => 'update_documents',
-                         :design_review_id => @design_review.id,
-                         :document_id      => drd.id},
+                        { :controller        => 'design_review',
+                          :action            => 'update_documents',
+                          :design_review_id  => @design_review.id,
+                          :document_id       => drd.id,
+                          :return_to         => 'initial_attachments' },
                         :confirm =>   "Do you want to replace the file " +
                                       "#{drd.document.name} with a new file?") %>
           <% else %>
@@ -62,9 +64,11 @@
 	      <td>
           <% if drd[:multiple_docs] %>
             <%= link_to("Obsolete Documents",
-                        {:action           => 'list_obsolete',
+                        {:controller       => 'design_review',
+                         :action           => 'list_obsolete',
                          :id               => @design_review.id,
-                         :document_type_id => drd.document_type_id}) %>
+                         :document_type_id => drd.document_type_id,
+                         :return_to        => 'initial_attachments'}) %>
 	        <% else %>
 	          &nbsp;
           <% end %>
@@ -76,9 +80,10 @@
 
   <hr class="div" />
 
-  <input type="submit" value="New Attachment - Not Working" />
+  <input type="submit" value="New Attachment" />
 
   <%= end_form_tag %>
 
-<%# debug @documents %>
+<%# debug @design %>
+<%#S debug @design_review %>
 

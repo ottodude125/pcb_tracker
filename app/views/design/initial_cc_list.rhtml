@@ -5,7 +5,7 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% @heading = "Review::#{@design.name} - #{@design.board.platform.name} / #{@design.board.project.name}" %>
+<% @heading = "Review::#{@design.name} - #{@design.board.platform.name} / #{@design.board.project.name} / #{@design.board.description}" %>
 
 <%= start_form_tag(:action => 'update_cc_list') %>
 
@@ -47,7 +47,7 @@
           <% for reviewer in @reviewers %>
             <tr valign="top">
               <td align="left"><%= reviewer[:name] %></td>
-              <td align="left"><%= reviewer[:group] %></td>
+              <td align="left"><%= reviewer[:group_name] %></td>
             </tr>
           <% end %>
           <tr>
