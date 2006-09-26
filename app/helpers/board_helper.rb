@@ -15,11 +15,12 @@ module BoardHelper
             revisions.push(Revision.find(design.revision_id).name)
           elsif design.design_type == 'Date Code'
             revisions.push(Revision.find(design.revision_id).name +
+                           design.numeric_revision.to_s +
                            '_eco' +
-                           Suffix.find(design.suffix_id).name)
+                           design.eco_number)
           elsif design.design_type == 'Dot Rev'
             revisions.push(Revision.find(design.revision_id).name +
-                           Suffix.find(design.suffix_id).name)
+                           design.numeric_revision.to_s)
           end
         end
         revisions.sort!
