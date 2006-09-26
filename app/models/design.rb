@@ -15,7 +15,6 @@ class Design < ActiveRecord::Base
   belongs_to :board
   belongs_to :priority
   belongs_to :revision
-  belongs_to :suffix
 
   has_and_belongs_to_many :fab_houses
 
@@ -24,6 +23,10 @@ class Design < ActiveRecord::Base
   has_many  :ipd_posts
 
   has_one   :audit
+  has_one   :board_design_entry
+  
+  
+  NOT_SET = 'Not Set'
 
 
   ######################################################################
@@ -198,13 +201,26 @@ class Design < ActiveRecord::Base
     base_name = self.board.name + self.revision.name
 
     if self.date_code?
-      base_name + '_eco' + self.suffix.name
+      if self.numeric_revision?
+        base_name + self.numeric_revision.to_s + '_eco' + self.eco_number
+      else
+        base_name + '_eco' + self.eco_number
+      end
     elsif self.dot_rev?
-      base_name + self.suffix.name
+      if self.numeric_revision?
+        base_name + self.numeric_revision.to_s
+      else
+        base_name
+      end
     else
       base_name
     end
   
+  end
+  
+  
+  def priority_name
+    self.priority_id > 0 ? self.priority.name : NOT_SET
   end
 
 
@@ -420,45 +436,131 @@ class Design < ActiveRecord::Base
     self.update
   
   end
+  
+  
+  def setup_design_reviews(review_types_list, 
+                           board_team_list)
+    
+    not_started    = ReviewStatus.find_by_name('Not Started')
+    review_skipped = ReviewStatus.find_by_name('Review Skipped')
+    review_types   = ReviewType.find_all_by_active(1)
+    
+    #Go through each of the review types and setup a review.
+    review_types_list.each { |review, active|
+
+      review_type = review_types.detect { |rt| rt.name == review }
+      
+      design_review = DesignReview.new(:design_id      => self.id,
+                                       :review_type_id => review_type.id,
+                                       :creator_id     => self.created_by,
+                                       :priority_id    => self.priority_id)
+      design_review.review_status_id = active == '1' ? not_started.id : review_skipped.id
+      
+      if review_type.name == "Pre-Artwork"
+        design_review.designer_id      = self.pcb_input_id
+        design_review.design_center_id = User.find(self.pcb_input_id).design_center_id
+      elsif review_type.name == 'Release'
+        #TO Do: This assumes there is only one PCB ADMIN - fix
+        pcb_admin = User.find_by_first_name_and_last_name('Patrice', 'Michaels')
+        design_review.designer_id      = pcb_admin.id
+        design_review.design_center_id = pcb_admin.design_center_id
+      end
+      
+      design_review.save
+      design_review.dump_design_review
+      
+      pcb_input_gate_role = Role.find_by_name('PCB Input Gate')
+      board_team_list.each { |reviewer|
+      
+        # Do not create a record if the team member is not a reviewer or
+        # if the reviewer role is not required
+        next if !reviewer.role.reviewer? || !reviewer.required?
+        
+        if reviewer.role.review_types.include?(review_type)
+        
+          if reviewer.role_id == pcb_input_gate_role.id 
+            reviewer_id = self.created_by
+          else
+            reviewer_id = reviewer.user_id
+          end
+          
+          drr = DesignReviewResult.new(:design_review_id => design_review.id,
+                                       :reviewer_id      => reviewer.user_id,
+                                       :role_id          => reviewer.role_id)
+          drr.save
+
+          # If the role (group) is set to have the peers CC'ed then update the 
+          # design review.
+          if reviewer.role.cc_peers?
+            cc_list = drr.role.users
+            for peer in cc_list
+             next if (peer.id == drr.reviewer_id ||
+                      !peer.active?              ||
+                      design_review.design.board.users.include?(peer))
+              design_review.design.board.users << peer
+            end
+          end
+
+
+        end 
+       
+      }
+    }
+    
+  
+  end
+  
+  
+  def dump_design
+  
+    review   = ReviewType.find(self.phase_id)
+    priority = Priority.find(self.priority_id)
+    designer = User.find(self.designer_id)  if self.designer_id  > 0
+    peer     = User.find(self.peer_id)      if self.peer_id      > 0
+    ig       = User.find(self.pcb_input_id) if self.pcb_input_id > 0
+    creator  = User.find(self.created_by)   if self.created_by   > 0
+    
+    logger.info "************************* DESIGN *************************"
+    logger.info "NAME: #{self.name}"
+    logger.info "TYPE: #{self.design_type}"
+    logger.info "ID: #{self.id}"
+    logger.info "BOARD_ID: #{self.board_id}"
+    if review
+      logger.info "PHASE: #{review.name}"
+    else
+      logger.info "PHASE_ID: #{self.phase_id}"
+    end
+    if priority
+      logger.info "PRIORITY: #{priority.name}"
+    else
+      logger.info "PRIORITY_ID: #{self.priority_id}"
+    end
+    if designer
+      logger.info "DESIGNER: #{designer.name}"
+    else
+      logger.info "DESIGNER_ID: #{self.designer_id}"
+    end
+    if peer
+      logger.info "PEER: #{peer.name}"
+    else
+      logger.info "PEER_ID: #{self.peer_id}"
+    end
+    if ig
+      logger.info "INPUT GATE: #{ig.name}"
+    else
+      logger.info "INPUT GATE ID: #{self.pcb_input_id}"
+    end
+    if creator
+      logger.info "CREATED BY: #{creator.name}"
+    else
+      logger.info "CREATED BY ID: #{self.created_by}"
+    end
+    logger.info "##########################################################"
+  
+  end
 
 
   COMPLETE = 255
-  
-
-  private
-
-  def self.get_reviewers(board_id, role_list=nil)
-
-    @review_roles = Role.find_all('reviewer=1', 'name ASC')
-
-    reviewers = BoardReviewers.find_all("board_id=#{board_id}")
-
-    board_reviewers = Hash.new
-    for reviewer in reviewers
-      board_reviewers[Role.find(reviewer.role_id).name] = reviewer.reviewer_id
-    end
-
-    @reviewers = Array.new
-    for role in @review_roles
-
-      if role_list != nil
-        next if not role_list.include?(role.id)
-      end
-
-      reviewer_list = Hash.new
-
-      reviewers = Role.find_by_name("#{role.name}").active_users
-      
-      reviewer_list[:group]        = role.name
-      reviewer_list[:group_id]     = role.id
-      reviewer_list[:reviewers]    = reviewers
-      reviewer_list[:reviewer_id]  = board_reviewers[role.name]
-      @reviewers.push(reviewer_list)
-    end
-
-    return @reviewers
-    
-  end
   
 
 end
