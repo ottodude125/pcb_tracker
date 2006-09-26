@@ -12,6 +12,8 @@
 
 class PriorityController < ApplicationController
 
+  before_filter :verify_admin_role
+
   ######################################################################
   #
   # update
@@ -96,13 +98,6 @@ class PriorityController < ApplicationController
   ######################################################################
   #
   def list
-
-    if @session[:active_role] != "Admin"
-      flash['notice'] = 'You are not authorized to view or modify ' +
-        'priority information - check your role'
-      redirect_to(:controller => 'tracker',
-                  :action     => "index")
-    end
 
     @priority_pages, @priorities = paginate(:priorities,
                                             :per_page => 15,

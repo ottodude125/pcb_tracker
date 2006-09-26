@@ -12,6 +12,7 @@
 
 class ReviewGroupController < ApplicationController
 
+  before_filter :verify_admin_role
 
   ######################################################################
   #
@@ -97,13 +98,6 @@ class ReviewGroupController < ApplicationController
   ######################################################################
   #
   def list
-
-    if @session[:active_role] != "Admin"
-      flash['notice'] = 'You are not authorized to view or modify ' +
-        'review group information - check your role'
-      redirect_to(:controller => 'tracker',
-                  :action     => "index")
-    end
 
     @review_group_pages, @review_groups = paginate(:review_groups,
                                                    :per_page => 15,

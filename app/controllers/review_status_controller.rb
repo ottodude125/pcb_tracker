@@ -13,6 +13,8 @@
 class ReviewStatusController < ApplicationController
 
 
+  before_filter :verify_admin_role
+
   ######################################################################
   #
   # update
@@ -98,13 +100,6 @@ class ReviewStatusController < ApplicationController
   ######################################################################
   #
   def list
-
-    if @session[:active_role] != "Admin"
-      flash['notice'] = 'You are not authorized to view or modify ' +
-        'review status information - check your role'
-      redirect_to(:controller => 'tracker',
-                  :action     => "index")
-    end
 
     @review_status_pages, 
       @review_statuses = paginate(:review_statuses,
