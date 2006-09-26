@@ -16,9 +16,12 @@ require 'digest/sha1'
 class User < ActiveRecord::Base
 
   belongs_to :design_center
+  belongs_to :division
+  belongs_to :location
   
   has_many :audit_comments
   has_many :audit_teammates
+  has_many :board_design_entry_users
   has_many :design_review_comments
 
   has_and_belongs_to_many :boards
