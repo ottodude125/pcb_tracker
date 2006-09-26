@@ -41,7 +41,30 @@ class RoleController < ApplicationController
 
   end
 
-
+  ######################################################################
+  #
+  # add
+  #
+  # Description:
+  # This method creates a role for the edit view.
+  #
+  # Parameters from @params
+  # None
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def add
+  
+    @role = Role.new(:active => 1)
+  
+    render_action('edit')
+    
+  end
   ######################################################################
   #
   # create
@@ -60,10 +83,10 @@ class RoleController < ApplicationController
   #
   def create
 
-    @role = Role.create(@params['new_role'])
+    @role = Role.create(@params['role'])
 
     if @role.errors.empty?
-      flash['notice'] = "Role #{@role.name} added"
+      flash['notice'] = "Role #{@role.display_name} added"
       redirect_to :action => 'list'
     else
       flash['notice'] = @role.errors.full_messages.pop
