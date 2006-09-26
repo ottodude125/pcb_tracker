@@ -45,9 +45,9 @@ class TrackerController < ApplicationController
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'index'}
     flash['notice'] = flash['notice']
-
-    if @session[:active_role] != nil
-      case @session[:active_role]
+    
+    if session[:active_role] != nil
+      case session[:active_role].name
       when "Designer"
         designer_home_setup
         render_action('designer_home')
@@ -642,8 +642,8 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def reviewer_home_setup
-  
-    me = @session[:user]
+
+    me = session[:user]
     in_review      = ReviewStatus.find_by_name('In Review')
     pending_repost = ReviewStatus.find_by_name('Pending Repost')
     
@@ -651,7 +651,7 @@ class TrackerController < ApplicationController
       DesignReview.find_all_by_review_status_id(pending_repost.id)
 
     design_reviews = design_reviews.sort_by { |dr| dr.priority.value }
-    
+
     @my_reviews    = Array.new
     @other_reviews = Array.new
     for design_review in design_reviews
