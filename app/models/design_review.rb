@@ -140,6 +140,25 @@ class DesignReview < ActiveRecord::Base
   end
   
   
+  def generate_reviewer_selection_list()
+
+    review_results = DesignReviewResult.find_all_by_design_review_id(self.id)
+    review_results = review_results.sort_by { |rr| rr.role.name }
+
+    reviewers = Array.new
+    for review_result in review_results
+      reviewers.push({ :group       => review_result.role.display_name,
+                       :group_id    => review_result.role.id,
+                       :reviewers   => review_result.role.active_users,
+                       :reviewer_id => review_result.reviewer_id })
+    end
+
+    return reviewers
+    
+  end
+  
+  
+  
   ######################################################################
   #
   # designer
@@ -168,6 +187,33 @@ class DesignReview < ActiveRecord::Base
   end
 
 
+  def dump_design_review
+  
+    priority = Priority.find(self.priority_id)
+    designer = User.find(self.designer_id)  if self.designer_id  > 0
+    creator  = User.find(self.creator_id)   if self.creator_id   > 0
+    
+    logger.info "***********************DESIGN REVIEW **********************"
+    logger.info "NAME: #{self.design.name}"
+    logger.info "REVIEW TYPE: #{self.review_type.name}"
+    logger.info "ID: #{self.id}"
+    logger.info "POSTING COUNT: #{self.posting_count}"
+    logger.info "STATUS: #{self.review_status.name}"
+    logger.info "PRIORITY: #{priority.name}"
+
+    if designer
+      logger.info "DESIGNER: #{designer.name}"
+    else
+      logger.info "DESIGNER_ID: #{self.designer_id}"
+    end
+    if creator
+      logger.info "CREATED BY: #{creator.name}"
+    else
+      logger.info "CREATED BY ID: #{self.created_by}"
+    end
+    logger.info "##########################################################"
+  
+  end
   
   
   
