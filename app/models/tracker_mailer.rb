@@ -189,13 +189,11 @@ class TrackerMailer < ActionMailer::Base
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
-    cc          = copy_to(design_review) +
-                    copy_to_on_milestone(
-                      design_review.design.board)
+    cc = copy_to(design_review) + copy_to_on_milestone(design_review.design.board)
 
     case design_review.review_type.name
     when "Release"
-      cc.push("STD_DC_ECO_Inbox@notes.teradyne.com")
+      cc.push("STD_DC_ECO_Inbox@notes.teradyne.com") if !Pcbtr::DEVEL_SERVER
     when "Final"
       pcb_admin = Role.find_by_name("PCB Admin")
       for user in pcb_admin.active_users
@@ -242,17 +240,16 @@ class TrackerMailer < ActionMailer::Base
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
-    @cc         = copy_to(design_review)
-    @cc         += copy_to_on_milestone(design_review.design.board)
     @bcc        = 'paul_altimonte@notes.teradyne.com'
+    cc = copy_to(design_review) + copy_to_on_milestone(design_review.design.board)
 
     if design_review.review_type.name == "Final"
       pcb_admin = Role.find_by_name("PCB Admin")
       for user in pcb_admin.active_users
-        @cc.push(user.email)
+        cc.push(user.email)
       end
     end
-    @cc = @cc.uniq
+    @cc = cc.uniq
 
     @body['user']          = design_review.designer
     @body['comments']      = comment
@@ -512,7 +509,7 @@ class TrackerMailer < ActionMailer::Base
                                      sent_at = Time.now)
 
     @subject    = design_review.design.name +
-                    ": You have been assigned to perform the #{role.name} review"
+                    ": You have been assigned to perform the #{role.display_name} review"
     @recipients = peer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
@@ -526,7 +523,7 @@ class TrackerMailer < ActionMailer::Base
 
     @body['user_name']        = user.name
     @body['peer_name']        = peer.name
-    @body['role_name']        = role.name
+    @body['role_name']        = role.display_name
     @body['design_name']      = design_review.design.name
     @body['design_review_id'] = design_review.id  
 
@@ -560,7 +557,7 @@ class TrackerMailer < ActionMailer::Base
                                        sent_at = Time.now)
 
     @subject    = design_review.design.name +
-                    ": The #{role.name} review has been reassigned to #{user.name}"
+                    ": The #{role.display_name} review has been reassigned to #{user.name}"
     @recipients = peer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
@@ -574,7 +571,7 @@ class TrackerMailer < ActionMailer::Base
 
     @body['user_name']        = user.name
     @body['peer_name']        = peer.name
-    @body['role_name']        = role.name
+    @body['role_name']        = role.display_name
     @body['design_name']      = design_review.design.name
     @body['design_review_id'] = design_review.id 
 
@@ -700,7 +697,7 @@ class TrackerMailer < ActionMailer::Base
   
   ######################################################################
   #
-  # attachment_update
+  # audit_update
   #
   # Description:
   # This method generates mail to indicate that the peer auditor has entered
@@ -730,6 +727,76 @@ class TrackerMailer < ActionMailer::Base
     @body['design_check'] = design_check
     @body['check']        = design_check.check
     @body['comment']      = comment
+
+  end
+  
+  
+  ######################################################################
+  #
+  # originator_board_design_entry_deletion
+  #
+  # Description:
+  # This method generates mail to indicate that the peer auditor has entered
+  # a comment that the designer needs to respond to.
+  #
+  # Parameters:
+  #   board_design_entry_name - the name of the board design entry
+  #   originator              - the user record for the originator
+  #   sent_at                 - the time of the event
+  #
+  ######################################################################
+  #
+  def originator_board_design_entry_deletion(board_design_entry_name,
+                                             originator,
+                                             sent_at = Time.now)
+
+    @subject    = "The #{board_design_entry_name} has been removed from the" +
+                  " PCB Engineering Entry list"
+                  
+    @recipients = add_role_members(['PCB Input Gate'])
+    @from       = Pcbtr::SENDER
+    @sent_on    = sent_at
+    @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
+    @cc         = [originator.email] + add_role_members(['Manager'])
+
+    @body['entry_name'] = board_design_entry_name
+    @body['originator'] = originator
+
+  end
+  
+  
+  ######################################################################
+  #
+  # board_design_entry_submission
+  #
+  # Description:
+  # This method generates mail to indicate that a board design entry has 
+  # been submitted to PCB Design.
+  #
+  # Parameters:
+  #   board_design_entry - the board design entry
+  #   sent_at            - the time of the event
+  #
+  ######################################################################
+  #
+  def board_design_entry_submission(board_design_entry,
+                                    sent_at = Time.now)
+                                    
+    originator = User.find(board_design_entry.originator_id)
+
+    @subject    = "The #{board_design_entry.design_name} has been submitted for " +
+                  "entry to PCB Design"
+                  
+    @recipients = add_role_members(['PCB Input Gate', 'Manager'])
+    @from       = Pcbtr::SENDER
+    @sent_on    = sent_at
+    @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
+    @cc         = [originator.email, 'lisa_austin@notes.teradyne.com']
+
+    @body['board_design_entry'] = board_design_entry
+    @body['originator']         = originator
 
   end
   
