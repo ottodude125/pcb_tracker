@@ -340,7 +340,8 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #
   def submitted
-    self.update_attribute('state', 'submitted')
+    self.update_attributes(:state        => 'submitted',
+                           :submitted_on => Time.now())
   end
 
   ######################################################################
