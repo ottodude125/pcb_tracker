@@ -15,7 +15,6 @@ class Audit < ActiveRecord::Base
   belongs_to :checklist
   belongs_to :design
   belongs_to :revision
-  belongs_to :suffix
 
   has_many :audit_teammates
   has_many :design_checks
@@ -34,13 +33,16 @@ PEER_AUDIT       = 2
   # audit_state
   #
   # Description:
-  # This method determines if the audit is a self audit.
+  # This method reports that the audit is a self audit, a peer audit, or
+  # is complete.
   #
   # Parameters:
   # None
   #
   # Return value:
-  # TRUE if the audit has not completed the self audit, FALSE otherwise.
+  # SELF_AUDIT if the audit has not completed the self audit, 
+  # PEER_AUDIT if the audit is in peer audit, or
+  # AUDIT_COMPLETE if both the self and peer audits are complete.
   #
   ######################################################################
   #
@@ -254,10 +256,10 @@ PEER_AUDIT       = 2
     
     stats[:self] = self.designer_completed_checks * 100.0 / total_checks[:designer]
     stats[:peer] = self.auditor_completed_checks  * 100.0 / total_checks[:peer]
-  
+
     stats
   
   end
-
-
+  
+  
 end
