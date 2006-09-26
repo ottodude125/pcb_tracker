@@ -35,15 +35,29 @@ class Board < ActiveRecord::Base
   # validate_on_create
   #
   # Description:
-  # This method prevents duplicate boards from being created..
+  # This method prevents duplicate boards from being created
   #
   ######################################################################
   #
   def validate_on_create
     new_board = Board.find_by_number_and_prefix_id(number, prefix_id)
     if new_board
-      errors.add("Board #{new_board.name} already exists - entry")
+      errors.add("Board #{new_board.name} already exists - creation")
     end
+  end
+  
+
+  ######################################################################
+  #
+  # name
+  #
+  # Description:
+  # This method returns the boards display name
+  #
+  ######################################################################
+  #
+  def name 
+    self.prefix.pcb_mnemonic + self.number
   end
   
   
