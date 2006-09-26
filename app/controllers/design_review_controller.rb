@@ -42,53 +42,55 @@ class DesignReviewController < ApplicationController
     @review_results = @design_review.review_results_by_role_name
     @comments       = @design_review.comments('DESC')
 
-    case @session[:active_role]
+    active_role = session[:active_role]
+    if session[:active_role] && !active_role.reviewer?
+    
+      case session[:active_role].name
       when 'Designer'
         render_action('designer_view')
       when 'Manager'
         render_action('manager_view')
       when 'Admin'
         render_action('admin_view')
-      when nil
-        render_action('safe_view')
-      else
-        active_role = Role.find_by_name(@session[:active_role])
-        if active_role.reviewer?
+      end
+      
+    else
+
+      if active_role && active_role.reviewer?
         
-          @my_review_results = Array.new
-          for review_result in @review_results
-            @my_review_results << review_result if review_result.reviewer_id == @session[:user].id
-          end
-
-          if pre_art_pcb(@design_review, @my_review_results)
-            @designers  = Role.find_by_name("Designer").active_users
-            @priorities = Priority.find_all(nil, 'value ASC')
-          else
-            @designers  = nil
-            @priorities = nil
-          end
-
-          if (@my_review_results.find { |rr| rr.role.name == "SLM-Vendor"})
-            design_fab_house_list = @design.fab_houses
-            design_fab_houses = {}
-            for dfh in design_fab_house_list
-              design_fab_houses[dfh.id] = dfh
-            end
-            @fab_houses = FabHouse.find_all('active=1', 'name ASC')
-
-            for fab_house in @fab_houses
-              fab_house[:selected] = design_fab_houses[fab_house.id] != nil
-            end
-          else
-            @fab_houses = nil
-          end
-
-          render_action('reviewer_view')
-        else
-          render_action('safe_view')
+        @my_review_results = Array.new
+        for review_result in @review_results
+          @my_review_results << review_result if review_result.reviewer_id == @session[:user].id
         end
+
+        if pre_art_pcb(@design_review, @my_review_results)
+          @designers  = Role.find_by_name("Designer").active_users
+          @priorities = Priority.find_all(nil, 'value ASC')
+        else
+          @designers  = nil
+          @priorities = nil
+        end
+
+        if (@my_review_results.find { |rr| rr.role.name == "SLM-Vendor"})
+          design_fab_house_list = @design.fab_houses
+          design_fab_houses = {}
+          for dfh in design_fab_house_list
+            design_fab_houses[dfh.id] = dfh
+          end
+          @fab_houses = FabHouse.find_all('active=1', 'name ASC')
+
+          for fab_house in @fab_houses
+            fab_house[:selected] = design_fab_houses[fab_house.id] != nil
+          end
+        else
+          @fab_houses = nil
+        end
+
+        render_action('reviewer_view')
+      else
+        render_action('safe_view')
+      end
     end
-    
   end
   
   
@@ -338,7 +340,7 @@ class DesignReviewController < ApplicationController
       group_ids.push(review_result.role_id)
     end
                                                                       
-    @reviewers = Design.get_reviewers(@design.board_id, group_ids)
+    @reviewers = @design_review.generate_reviewer_selection_list
 
   end
 
@@ -376,17 +378,7 @@ class DesignReviewController < ApplicationController
       group_ids.push(review_result.role_id)
     end
 
-    @reviewers = Design.get_reviewers(@design.board_id, group_ids)
-    review_results = DesignReviewResult.find_all_by_design_review_id(
-                       @design_review.id)
-
-    for reviewer in @reviewers
-      review_result = review_results.find { |rr| rr.role_id == reviewer[:group_id] }
-
-      if review_result
-        reviewer[:reviewer_id] = review_result.reviewer_id
-      end
-    end
+    @reviewers = @design_review.generate_reviewer_selection_list
 
     render_action 'post_review'
 
@@ -416,13 +408,14 @@ class DesignReviewController < ApplicationController
 
 
     design_review = DesignReview.find(@params[:design_review][:id])
+    current_time = Time.now
 
     # Set the status for the design review.
     in_review = ReviewStatus.find_by_name('In Review')
     design_review.review_status_id = in_review.id
     design_review.posting_count    = 1
-    design_review.created_on       = Time.now
-    design_review.reposted_on      = Time.now
+    design_review.created_on       = current_time
+    design_review.reposted_on      = current_time
     design_review.update
 
     reviewer_list = Hash.new
@@ -431,7 +424,11 @@ class DesignReviewController < ApplicationController
     }
 
     pre_art_review = ReviewType.find_by_name('Pre-Artwork')
-    current_time = Time.now
+    
+    if design_review.review_type.name == 'Pre-Artwork'
+      design_review.design.board_design_entry.complete
+    end
+
     for review_result in design_review.design_review_results
 
       if reviewer_list[review_result.role_id] != review_result.reviewer_id
@@ -741,10 +738,11 @@ class DesignReviewController < ApplicationController
   # Description:
   # This method stores the document identified by the user.
   #
-  # Parameters from @params
+  # Parameters from params
   # [:document] - The document that will be stored.
   # [:design_review][:id] - Used to identify the design review.
   # [:doc_id] - Used to identify the document.
+  # [:return_to] - Used to control the navigation.
   #
   # Return value:
   # None
@@ -761,22 +759,24 @@ class DesignReviewController < ApplicationController
     if document.name == ''
       flash['notice'] = 'No file was specified'
       redirect_to(:action           => :update_documents,
-                  :design_review_id => @params[:design_review][:id],
-                  :document_id      => @params[:doc_id])
+                  :design_review_id => params[:design_review][:id],
+                  :document_id      => params[:doc_id],
+                  :return_to        => params[:return_to])
     elsif document.data.size >= Document::MAX_FILE_SIZE
       flash['notice'] = "Files must be smaller than #{Document::MAX_FILE_SIZE} characters"
       redirect_to(:action           => :update_documents,
-                  :design_review_id => @params[:design_review][:id],
-                  :document_id      => @params[:doc_id])
+                  :design_review_id => params[:design_review][:id],
+                  :document_id      => params[:doc_id],
+                  :return_to        => params[:return_to])
     else
       
-      document.created_by       = @session[:user].id
+      document.created_by       = session[:user].id
       
       if document.save
         
-        design_review = DesignReview.find(@params[:design_review][:id])
+        design_review = DesignReview.find(params[:design_review][:id])
         board         = Board.find(design_review.design.board_id)
-        existing_drd  = DesignReviewDocument.find(@params[:doc_id])
+        existing_drd  = DesignReviewDocument.find(params[:doc_id])
         
         drd_doc.document_type_id = existing_drd.document_type_id
         drd_doc.board_id         = board.id
@@ -786,8 +786,14 @@ class DesignReviewController < ApplicationController
         
         doc_type_name = DocumentType.find(drd_doc.document_type_id).name
         flash['notice'] = "The #{doc_type_name} document has been updated."
-        redirect_to(:action           => :review_attachments,
-                    :design_review_id => @params[:design_review][:id])
+        if params[:return_to] == 'initial_attachments'
+          redirect_to(:controller => 'design',
+                      :action     => 'initial_attachments',
+                      :design_id  => design_review.design_id)
+        else
+          redirect_to(:action           => :review_attachments,
+                      :design_review_id => params[:design_review][:id])
+        end
       end
     end
   end
@@ -847,6 +853,7 @@ class DesignReviewController < ApplicationController
   # Parameters from @params
   # [:id] - Used to identify the board.
   # [:document_type][:id] - Identifies the type of document.
+  # [:return_to] - Used to control navigation
   #
   # Return value:
   # None
@@ -859,7 +866,7 @@ class DesignReviewController < ApplicationController
 
     @document = Document.new(params[:document])
     
-    if @params[:document_type][:id] == ''
+    if params[:document_type][:id] == ''
       save_failed = true
       flash['notice'] = 'Please select the document type'
     elsif @document.name == ''
@@ -872,13 +879,13 @@ class DesignReviewController < ApplicationController
       
       if @document.data.size < Document::MAX_FILE_SIZE
       
-        @document.created_by       = @session[:user].id
+        @document.created_by = session[:user].id
 
         if @document.save
           drd_doc = DesignReviewDocument.new
           
-          drd_doc.document_type_id = @params[:document_type][:id]
-          drd_doc.board_id         = @params[:board][:id]
+          drd_doc.document_type_id = params[:document_type][:id]
+          drd_doc.board_id         = params[:board][:id]
           drd_doc.design_id        = DesignReview.find(@params[:design_review][:id]).design_id
           drd_doc.document_id      = @document.id
           
@@ -889,7 +896,7 @@ class DesignReviewController < ApplicationController
             save_failed = false
             
             TrackerMailer::deliver_attachment_update(drd_doc,
-                                                     @session[:user])
+                                                     session[:user])
             
           else
             flash['notice'] = "Unable to attach the file."
@@ -904,12 +911,17 @@ class DesignReviewController < ApplicationController
     
     if save_failed
       redirect_to(:action           => :add_attachment,
-                  :id               => @params[:id],
-                  :design_review_id => @params[:design_review][:id])
+                  :id               => params[:id],
+                  :design_review_id => params[:design_review][:id],
+                  :return_to        => params[:return_to])
+    elsif params[:return_to] == 'initial_attachments'
+      redirect_to(:controller => 'design',
+                  :action     => 'initial_attachments',
+                  :design_id  => drd_doc.design_id)
     else
       redirect_to(:action           => :review_attachments,
-                  :id               => @params[:id],
-                  :design_review_id => @params[:design_review][:id])
+                  :id               => params[:id],
+                  :design_review_id => params[:design_review][:id])
     end
   end
   
@@ -1575,9 +1587,9 @@ class DesignReviewController < ApplicationController
 
         new_reviewer = session[:user].name
         if flash_msg == ''
-          flash_msg = "You are assigned to the #{role.name} review"
+          flash_msg = "You are assigned to the #{role.display_name} review"
         else
-          flash_msg += " and you are assigned to the #{role.name} review"
+          flash_msg += " and you are assigned to the #{role.display_name} review"
         end
 
         TrackerMailer::deliver_reassign_design_review_from_peer(
