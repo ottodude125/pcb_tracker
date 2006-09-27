@@ -23,13 +23,23 @@
         <tr>
           <td align="center">
             <%= link_to("Boards",
-                          { :controller => 'board',
-                            :action     => 'show_boards' }) %> <br />
+                        { :controller => 'board',
+                          :action     => 'show_boards' }) %> <br />
           </td>
         </tr>
+        <tr>
+          <td align="center">
+            <%# link_to("PCB Engineering Entry",
+                        { :controller => 'board_design_entry',
+                          :action     => 'originator_list' }) %>
+          </td>
+        </tr>
+        
+        <tr><td>&nbsp;</td></tr>
+        
       </table>
     </td>
-    <% if @session[:active_role] == "Designer" %>
+    <% if session[:active_role].name == "Designer" %>
       <td>
         <table width="100%" border="0">
           <tr>
@@ -63,7 +73,7 @@
                   <tr>
                     <td align="center"
                         valign="top">
-                      <b><%= design[:design].priority.name %></b>
+                      <b><%= design[:design].priority_name %></b>
                     </td>
                     <td class="teraheader">
                       <font color="#ffffff">
@@ -165,7 +175,7 @@
                                                 { :confirm => "This will cause the " +
                                                               design[:next_review].review_type.name +
                                                               " to be skipped and the next review in the " +
-                                                              "review cycle will available for posting.  " +
+                                                              "review cycle will be available for posting.  " +
                                                               "Are you sure you want to do this?"}) %>
                                   </td>
                                 </tr>
@@ -297,7 +307,7 @@
                   <tr>
                     <td align="center"
                         valign="top">
-                      <b><%= audit.design.priority.name %></b>
+                      <b><%= audit.design.priority_name %></b>
                     </td>
                     <td class="teraheader">
                       <b><%= audit.design.name %> -
