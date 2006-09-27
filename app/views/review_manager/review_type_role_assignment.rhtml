@@ -23,7 +23,7 @@
 
       <% for role in @roles %>
         <tr>
-          <th align="left"><font size="-2"><%= role.name %></font></th>
+          <th align="left"><font size="-2"><%= role.display_name %></font></th>
           <% for review in @review_types %>
             <td align="center">
               <%# review.name %>

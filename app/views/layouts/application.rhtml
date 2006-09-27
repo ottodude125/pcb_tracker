@@ -78,7 +78,12 @@ function setFocus() {
               </td>
               <td align="center">
                 <font color="#023a94">
-                  ROLE: <%= @session[:active_role] %>
+                  ROLE: 
+                  <% if session[:active_role] %>
+                    <%= session[:active_role].display_name %>
+                  <% else %>
+                    &nbsp;
+                  <% end %>
                 </font>
                 <% if @session[:roles].size > 1 %>
                   </td><td align="center">
