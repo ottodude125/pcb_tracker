@@ -10,10 +10,12 @@
 
   <hr class="div" />
 
-  <table width="40%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+  <table width="80%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
     <tr>
       <th>Role</th>
+      <th>Display Name</th>
       <th>Reviewer</th>
+      <th>Manager</th>
       <th>Active</th>
     </tr>
     <%= render_collection_of_partials "role_list_stripes", @roles %>
