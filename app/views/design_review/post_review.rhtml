@@ -43,7 +43,7 @@
           <tr>
             <th align="left">Criticality:</th>
             <td>
-              <%= @design.priority.name %>
+              <%= @design.priority_name %>
             </td>
             <th align="left">Review Type:</th>
             <td>
@@ -81,6 +81,7 @@
                                                               "name",
                                                               reviewer_list[:reviewer_id]) %>
                       </select>
+
                     </td>
                   </tr>
                 <% end %>
