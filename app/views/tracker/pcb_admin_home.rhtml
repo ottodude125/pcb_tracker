@@ -27,6 +27,15 @@
                             :action     => 'show_boards' }) %> <br />
           </td>
         </tr>
+        
+        <tr>
+          <td align="center">
+            <%= link_to("PCB Engineering Entry",
+                        { :controller => 'board_design_entry',
+                          :action     => 'originator_list' }) %>
+          </td>
+        </tr>
+        
       </table>
     </td>
 
@@ -58,7 +67,7 @@
                 <tr>
                   <td align="center"
                       valign="top">
-                    <b><%= design[:design].priority.name %></b>
+                    <b><%= design[:design].priority_name %></b>
                   </td>
                   <td class="teraheader">
                     <font color="#ffffff">

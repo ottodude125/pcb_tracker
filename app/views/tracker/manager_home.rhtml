@@ -27,7 +27,7 @@
           </td>
         </tr>
         
-        <% if @session[:active_role] == 'Admin' %>
+        <% if session[:active_role].name == 'Admin' %>
         <tr>
           <td align="center">
             <%= link_to("Admin Portal", { :controller => "admin" }) %>
@@ -35,6 +35,26 @@
         </tr>
         <% end %>
 
+        <tr>
+          <td align="center">
+            <%= link_to("PCB Engineering Entry",
+                        { :controller => 'board_design_entry',
+                          :action     => 'originator_list' }) %>
+          </td>
+        </tr>
+        
+        <tr>
+          <td align="center">
+            <%= link_to("Process PCB Engineering Entries",
+                        { :controller => 'board_design_entry',
+                          :action     => 'processor_list' }) %>
+          </td>
+        </tr>
+        
+        <tr>
+          <td>&nbsp;</td>
+        </tr>
+        
       </table>
     </td>
 
