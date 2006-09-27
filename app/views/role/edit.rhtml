@@ -4,35 +4,61 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% @heading = "Edit role" %>
+<% mode = @params[:action] == 'edit' ? 'edit' : 'add' %>
+
+<% @heading = "Edit Role" %>
 
 <hr class="div" />
 
-<%= start_form_tag(:action => 'update') %>
-
+<% if mode == 'add' %>
+  <%= start_form_tag(:action => 'create') %>
+<% else %>
+  <%= start_form_tag(:action => 'update') %>
   <%= hidden_field "role", "id" %>
+<% end %>
 
   <table border="0">
     <tr>
-      <td>
-        <label for="role_name">Role:</label>
-        <%= text_field "role", "name", "size" => 30, "maxlength" => 30 %>
+      <td align="right">Role (Internal Name): </td>
+      <% if mode == 'add' %>
+        <td align="left">
+          <%= text_field "role", "name", "size" => 30, "maxlength" => 30 %>
+        </td>
+      <% else %>
+        <td align="left"><%= @role.name %></td>
+      <% end %>
+    </tr>
+    <tr>
+      <td align="right">
+        <label for="display_name">Display Name: </label>
+      </td>
+      <td align="left">
+        <%= text_field "role", "display_name", "size" => 50, "maxlength" => 50 %>
       </td>
     </tr>
     <tr>
-      <td align="left">Reviewer: 
-        <%= check_box "role", "reviewer" %>
-      </td>
+      <td align="right">Reviewer: </td>
+      <td align="left"><%= check_box "role", "reviewer" %></td>
     </tr>
     <tr>
-      <td align="left">Active: 
-        <%= check_box "role", "active" %>
-      </td>
+      <td align="right">Manager: </td>
+      <td align="left"><%= check_box "role", "manager" %></td>
+    </tr>
+    <tr>
+      <td align="right">Active: </td> 
+      <td align="left"><%= check_box "role", "active" %></td>
     </tr>
   </table>
 
   <hr class="div" />
-  <input type="submit" value="Update role" />
+  
+  <% if mode == "add" %>
+    <input type="submit" value="Create new role" />
+  <% else %>
+    <input type="submit" value="Update role" />
+  <% end %>
   <input type="button" value="Return to Role List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
 
 <%= end_form_tag %>
+
+<%# debug mode %>
