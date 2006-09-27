@@ -15,6 +15,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class DesignTest < Test::Unit::TestCase
   fixtures(:designs,
+           :priorities,
            :users)
 
   def setup
@@ -190,6 +191,45 @@ class DesignTest < Test::Unit::TestCase
     assert_equal(true,  designs(:la453a1).dot_rev?)
   
   end
+
+
+  ######################################################################
+  #
+  # test_accessors
+  #
+  # Description:
+  # Validates the behaviour of the following methods.
+  #
+  #   name()
+  #   phase()
+  #   priority_name()
+  #
+  ######################################################################
+  #
+ def test_accessors
+ 
+   design = Design.new
+
+   assert_equal('Not Started', design.phase.name)
+
+   design.phase_id = ReviewType.find_by_name('Final').id
+   assert_equal('Final', design.phase.name)
+   
+   design.phase_id = Design::COMPLETE
+   assert_equal("Complete", design.phase.name)
+   
+   
+   assert_equal('Not Set', design.priority_name)
+   
+   design.priority_id = Priority.find_by_name('High').id
+   assert_equal('High', design.priority_name)
+   
+   
+   assert_equal('mx234a',       designs(:mx234a).name)
+   assert_equal('la453a2',      designs(:la453a2).name)
+   assert_equal('la453b4_eco2', designs(:la453b4_eco2).name)
+ 
+ end
   
 
 end

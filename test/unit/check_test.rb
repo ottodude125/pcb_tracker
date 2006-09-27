@@ -1,3 +1,16 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: check_test.rb
+#
+# This file contains the unit tests for the check model
+#
+# Revision History:
+#   $Id$
+#
+########################################################################
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class CheckTest < Test::Unit::TestCase
@@ -7,6 +20,8 @@ class CheckTest < Test::Unit::TestCase
     @check = Check.find(checks(:check_18).id)
   end
 
+
+  ######################################################################
   def test_create
     assert_kind_of Check,  @check
 
@@ -23,7 +38,31 @@ class CheckTest < Test::Unit::TestCase
     assert_equal check_18.sort_order,      @check.sort_order
     assert_equal check_18.check_type,      @check.check_type
   end
+  
+  
+  ######################################################################
+  def test_accessors
+  
+    check_01 = checks(:check_01)
+    check_04 = checks(:check_04)
+    check_09 = checks(:check_09)
+    
+    assert(check_04.yes_no?)
+    assert(!check_04.designer_auditor?)
+    assert(!check_04.designer_only?)
+    
+    assert(check_01.designer_auditor?)
+    assert(!check_01.yes_no?)
+    assert(!check_01.designer_only?)
+    
+    assert(check_09.designer_only?)
+    assert(!check_09.yes_no?)
+    assert(!check_09.designer_auditor?)
+  
+  end
 
+
+  ######################################################################
   def test_update
 
     assert_equal checks(:check_18).id, @check.id
@@ -51,6 +90,8 @@ class CheckTest < Test::Unit::TestCase
 
   end
 
+
+  ######################################################################
   def test_destroy
     @check.destroy
     assert_raise(ActiveRecord::RecordNotFound) { Check.find(checks(:check_18).id) }
