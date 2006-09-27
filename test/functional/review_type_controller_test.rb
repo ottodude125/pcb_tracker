@@ -53,7 +53,7 @@ class ReviewTypeControllerTest < Test::Unit::TestCase
 
     assert_redirected_to(:controller => 'tracker',
                          :action     => 'index')
-    assert_equal('You are not authorized to view or modify review type information - check your role',
+    assert_equal('Administrators only!  Check your role.',
                  flash['notice'])
 
     # Try listing from an Admin account
@@ -111,6 +111,7 @@ class ReviewTypeControllerTest < Test::Unit::TestCase
   #
   def test_update
 
+    set_admin
     review_type      = ReviewType.find(review_types(:routing).id)
     review_type.name = 'Bogus'
 
@@ -142,6 +143,7 @@ class ReviewTypeControllerTest < Test::Unit::TestCase
   #
   def test_create
 
+    set_admin
     assert_equal(6, ReviewType.find_all.size)
 
     new_review_type = {

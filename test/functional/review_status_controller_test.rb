@@ -55,7 +55,7 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
 
     assert_redirected_to(:controller => 'tracker',
                          :action     => 'index')
-    assert_equal('You are not authorized to view or modify review status information - check your role',
+    assert_equal('Administrators only!  Check your role.',
                  flash['notice'])
 
     # Try listing from an Admin account
@@ -113,6 +113,7 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
   #
   def test_update
 
+    set_admin
     review_status      = ReviewStatus.find(review_statuses(:in_review).id)
     review_status.name = 'Test'
 
@@ -144,6 +145,7 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
   #
   def test_create
 
+    set_admin
     assert_equal(5, ReviewStatus.find_all.size)
 
     new_review_status = {
