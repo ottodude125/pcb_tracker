@@ -65,7 +65,7 @@
                       <% end %>
                     </td>
                     <td align="left">
-                      <label for="role_name"><%= role['name'] %></label>
+                      <label for="role_name"><%= role.display_name %></label>
                       <% if role.reviewer? %>
                         Reviewer
                       <% end %>
@@ -88,7 +88,7 @@
                       <% end %>
                     </td>
                     <td align="left">
-                      <label for="role_name"><%= role['name'] %></label>
+                      <label for="role_name"><%= role.display_name %></label>
                       <% if role.reviewer? %>
                         Reviewer
                       <% end %>
