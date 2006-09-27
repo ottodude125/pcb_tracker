@@ -34,6 +34,23 @@
       <td>&nbsp;</td>
       <td>&nbsp;</td>
     </tr>
+    
+    <% if @design_review.design.board_design_entry %>
+      <tr>
+        <td>
+          <%= link_to('Input Checklist',
+                      :controller       => "board_design_entry",
+                      :action           => "view_entry",
+                      :id               => @design_review.design.board_design_entry.id,
+                      :design_review_id => params[:design_review_id]) %>
+        </td>
+        <td>PCB Input Form</td>
+        <td><%= @design_review.design.board_design_entry.originator %></td>
+        <td>
+          <%= @design_review.design.board_design_entry.submitted_on.strftime("%d-%b-%y, %I:%M %p") %>
+        </td>
+      </tr>
+    <% end %>
 
     <%# Loop through the design review documents and display. %>
     <% for drd in @documents %>
@@ -51,7 +68,8 @@
             <%= link_to("Update",
                         {:action           => 'update_documents',
                          :design_review_id => @design_review.id,
-                         :document_id      => drd.id},
+                         :document_id      => drd.id,
+                         :return_to        => 'review_attachments'},
                         :confirm =>   "Do you want to replace the file " +
                                       "#{drd.document.name} with a new file?") %>
           <% else %>
@@ -81,5 +99,5 @@
 
   <%= end_form_tag %>
 
-<%# debug @documents %>
+<%# debug params %>
 

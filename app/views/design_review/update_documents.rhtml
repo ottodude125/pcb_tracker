@@ -9,9 +9,10 @@
 
 <%= error_messages_for("drd") %>
 
-<%= form_tag({:action => 'save_update', 
-              :id     => @design_review.design.board.id, 
-              :doc_id => @existing_drd.id},
+<%= form_tag({:action    => 'save_update', 
+              :id        => @design_review.design.board.id, 
+              :doc_id    => @existing_drd.id,
+              :return_to => params[:return_to]},
              :multipart => true ) %>
 
   <%= hidden_field "board",         "id" %>
@@ -33,9 +34,18 @@
   <hr class="div" />
 
   <input type="submit" value="Upload File" />
-  <input type="button" value="Cancel" onClick="parent.location='<%= url_for(:action => 'review_attachments', :design_review_id => @design_review.id) %>'" />
+  <% if params[:return_to] == 'initial_attachments' %>
+    <input type="button" value="Cancel" 
+           onClick="parent.location='<%= url_for(:controller => 'design',
+                                                 :action     => 'initial_attachments',
+                                                 :design_id  => @design_review.design_id) %>'" />
+  <% else %>
+    <input type="button" value="Cancel" 
+           onClick="parent.location='<%= url_for(:action => 'review_attachments', 
+                                                 :design_review_id => @design_review.id) %>'" />
+  <% end %>
 
   <%= end_form_tag %>
 
-<%# debug @document %>
+<%# debug params %>
 <%# debug @design_review %>
