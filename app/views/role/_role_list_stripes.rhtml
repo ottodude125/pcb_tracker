@@ -1,19 +1,10 @@
 <tr class="<%= role_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
   <td>
-    <% rid = role_list_stripes.id %>
-    <%= link_to role_list_stripes.name, { :action => 'edit', :id => rid } %> </td>
-  <td align="center">
-    <% if role_list_stripes.reviewer? %>
-      Yes
-    <% else %>
-      No
-    <% end %>
+    <%= link_to role_list_stripes.name, { :action => 'edit', 
+                                          :id     => role_list_stripes.id } %> 
   </td>
-  <td align="center">
-    <% if role_list_stripes.active? %>
-      Yes
-    <% else %>
-      No
-    <% end %>
-  </td>
+  <td><%= role_list_stripes.display_name %></td>
+  <td align="center"><%= role_list_stripes.reviewer? ? 'Yes' : 'No' %></td>
+  <td align="center"><%= role_list_stripes.manager?  ? 'Yes' : 'No' %></td>
+  <td align="center"><%= role_list_stripes.active?   ? 'Yes' : 'No' %></td>
 </tr>
