@@ -87,6 +87,102 @@ class ChecklistTest < Test::Unit::TestCase
 		 @checklist.created_by)
 
   end
+  
+  
+  def test_increment_checklist_counters
+  
+    expected_results = { 
+     :designer_auditor_count    => [0, 1, 0, 0, 0, 0, 0],
+     :dc_designer_auditor_count => [0, 0, 1, 0, 0, 0, 0],
+     :dr_designer_auditor_count => [0, 0, 0, 1, 0, 0, 0],
+     :designer_only_count       => [0, 0, 0, 0, 1, 0, 0],
+     :dc_designer_only_count    => [0, 0, 0, 0, 0, 1, 0],
+     :dr_designer_only_count    => [0, 0, 0, 0, 0, 0, 1]
+    }
+    
+    checklist = Checklist.new
+    check     = Check.new
+    
+    expected_results.each { |field, value|
+      assert_equal(value[0], checklist.send(field)) }
+    
+    
+    check.check_type  = 'designer_auditor'
+    check.full_review = 1
+
+    checklist.increment_checklist_counters(check, 1)
+    expected_results.each { |field, value|
+      assert_equal(value[1], checklist.send(field)) }
+
+    checklist.increment_checklist_counters(check, -1)
+    expected_results.each { |field, value|
+      assert_equal(value[0], checklist.send(field)) }
+      
+    
+    check.full_review     = 0
+    check.date_code_check = 1
+
+    checklist.increment_checklist_counters(check, 1)
+    expected_results.each { |field, value|
+      assert_equal(value[2], checklist.send(field)) }
+
+    checklist.increment_checklist_counters(check, -1)
+    expected_results.each { |field, value|
+      assert_equal(value[0], checklist.send(field)) }
+
+
+    check.date_code_check = 0
+    check.dot_rev_check   = 1
+
+    checklist.increment_checklist_counters(check, 1)
+    expected_results.each { |field, value|
+      assert_equal(value[3], checklist.send(field)) }
+
+    checklist.increment_checklist_counters(check, -1)
+    expected_results.each { |field, value|
+      assert_equal(value[0], checklist.send(field)) }
+
+
+    check.check_type    = 'designer_only'
+    check.dot_rev_check = 0
+    check.full_review   = 1
+
+    checklist.increment_checklist_counters(check, 1)
+    expected_results.each { |field, value|
+      assert_equal(value[4], checklist.send(field)) }
+
+    checklist.increment_checklist_counters(check, -1)
+    expected_results.each { |field, value|
+      assert_equal(value[0], checklist.send(field)) }
+      
+    
+    check.check_type      = "yes_no"
+    check.full_review     = 0
+    check.date_code_check = 1
+
+    checklist.increment_checklist_counters(check, 1)
+    expected_results.each { |field, value|
+      assert_equal(value[5], checklist.send(field)) }
+
+    checklist.increment_checklist_counters(check, -1)
+    expected_results.each { |field, value|
+      assert_equal(value[0], checklist.send(field)) }
+
+
+    check.check_type      = 'designer_only'
+    check.date_code_check = 0
+    check.dot_rev_check   = 1
+
+    checklist.increment_checklist_counters(check, 1)
+    expected_results.each { |field, value|
+      assert_equal(value[6], checklist.send(field)) }
+
+    checklist.increment_checklist_counters(check, -1)
+    expected_results.each { |field, value|
+      assert_equal(value[0], checklist.send(field)) }
+
+  end
+  
 
   def test_destroy
     @checklist.destroy
