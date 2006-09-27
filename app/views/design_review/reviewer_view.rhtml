@@ -44,7 +44,7 @@
                     <% for review_result in @my_review_results %>
                       <% if display_role(review_result) %>
                         <tr>
-                          <th><%= review_result.role.name %></th>
+                          <th><%= review_result.role.display_name %></th>
                           <td align="center">
                             <%= radio_button("role_id_#{review_result.role.id}",
                                              "#{review_result.id}",
