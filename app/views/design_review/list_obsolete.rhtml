@@ -6,8 +6,14 @@
 
 <% @heading = "#{@design_review.design.name} - Obsolete #{@document_type_name} Documents" %>
 
-<%= start_form_tag(:action        => 'review_attachments',
+<% if params[:return_to] == 'initial_attachments' %>
+  <%= start_form_tag(:controller => 'design',
+                     :action     => 'initial_attachments',
+                     :design_id  => @design_review.design_id ) %>
+<% else %>
+  <%= start_form_tag(:action        => 'review_attachments',
                      :design_review_id => @design_review.id ) %>
+<% end %>
                    
 <%= hidden_field "design_review", "id" %>
 
@@ -15,9 +21,6 @@
     <tr>
       <td align="left">
         <input type="submit" value="Return" />
-      </td>
-      <td align="right">
-        <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
       </td>
     </tr>
   </table>
@@ -53,5 +56,5 @@
 
   <%= end_form_tag %>
 
-<%# debug @docs %>
+<%# debug params %>
 
