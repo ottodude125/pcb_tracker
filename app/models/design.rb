@@ -84,7 +84,7 @@ class Design < ActiveRecord::Base
   
   ######################################################################
   #
-  # get_associated_users_by_role
+  # get_associated_users
   #
   # Description:
   # This method returns a hash of all of the people interested in 
@@ -173,10 +173,10 @@ class Design < ActiveRecord::Base
   #
   def phase
   
-    if self.phase_id > 0
-      ReviewType.find(self.phase_id)
-    elsif self.phase_id == Design::COMPLETE
+    if self.phase_id == Design::COMPLETE
       ReviewType.new(:name => 'Complete')
+    elsif self.phase_id > 0
+      ReviewType.find(self.phase_id)
     else
       ReviewType.new(:name => 'Not Started')
     end
@@ -219,6 +219,18 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # priority_name
+  #
+  # Description:
+  # This method returns the priority name.
+  #
+  # Return value:
+  # A string that identifies the priority.
+  #
+  ######################################################################
+  #
   def priority_name
     self.priority_id > 0 ? self.priority.name : NOT_SET
   end
