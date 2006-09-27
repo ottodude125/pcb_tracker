@@ -19,7 +19,7 @@
              rules="rows"
                cellpadding="5"
                border="0">
-        <% if @session[:active_role] == "Admin" %>
+        <% if session[:active_role] && session[:active_role].name == "Admin" %>
           <tr>
             <td align="center">
               <%= link_to("Admin Portal", 
@@ -28,19 +28,14 @@
             </td>
           </tr>
         <% end %>
-<!--        <tr>                           -->
-<!--          <td align="center">          -->
-<!--            <a href="">Preferences</a> -->
-<!--          </td>                        -->
-<!--        </tr>                          -->
-        <% if @session[:active_role] == "Designer" %>
+        <% if session[:active_role] && session[:active_role].name == "Designer" %>
 <!--          <tr>                          -->
 <!--            <td align="center">         -->
 <!--              <a href="">My Designs</a> -->
 <!--            </td>                       -->
 <!--          </tr>                         -->
         <% end %>
-        <% if @session[:active_role] == "Designer" %>
+        <% if session[:active_role] && session[:active_role].name == "Designer" %>
           <tr>
             <td align="left">
               <%= link_to("Tracker Settings (TBD)", 
@@ -62,14 +57,15 @@
             Access to the Board data stored in the system.
           </td>
         </tr>
-        <% if @session[:active_role] == "Admin" ||
-	      @session[:active_role] == "Manager" %>
+        <% if session[:active_role] && 
+              (session[:active_role].name == "Admin" ||
+	             session[:active_role].name == "Manager") %>
         <% end %>
       </table>
     </td>
-    <% if @session[:user] == nil %>
+    <% if session[:user] == nil %>
       <h1 align="center">Welcome to the PCB Design Board Tracker</h1>
-    <% elsif @session[:active_role] == "Designer" %>
+    <% elsif session[:active_role] && session[:active_role].name == "Designer" %>
       <td>
         <table width="100%"
                border="0">
