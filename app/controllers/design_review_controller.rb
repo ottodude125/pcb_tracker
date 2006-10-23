@@ -1491,9 +1491,13 @@ class DesignReviewController < ApplicationController
   #
   def reassign_reviewer
 
-    review_results = DesignReviewResult.find_all("design_review_id=#{@params[:design_review_id]}")
+    review_results = DesignReviewResult.find_all_by_design_review_id(
+                       params[:design_review_id])
+    # Remove reviewer results if the reviewer has already completed the 
+    # review. 
+    review_results.delete_if { |rr| rr.complete? }
 
-    @design_review_id = @params[:design_review_id]
+    @design_review_id = params[:design_review_id]
     @matching_roles = Array.new
     for role in @session[:roles]
 
