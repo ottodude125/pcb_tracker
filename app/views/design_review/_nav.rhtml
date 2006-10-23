@@ -1,0 +1,19 @@
+<table cellspacing="10">
+  <tr>
+    <td>
+      <input type="button" value="Home" 
+             onClick="parent.location='<%= url_for( :controller => 'tracker', 
+                                                    :action     => 'index' ) %>'" />
+    </td>
+  </tr>
+  <% if params[:search] %>
+  <tr>
+    <td>
+      <input type="button" value="Back" 
+             onClick="parent.location='<%= url_for( :controller => 'design', 
+                                                    :action     => 'view',
+                                                    :id         => @design.id ) %>'" />
+    </td>
+  </tr>
+  <% end %>
+</table>

@@ -1,0 +1,85 @@
+<!-- View:    design                                            -->
+<!-- Purpose: Displays a view of a design with links to the     -->
+<!--          design review and the audit.                      -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading =  "#{@design.name} - #{@design.board.platform.name} / #{@design.board.project.name}" %>
+<% @heading += " / #{@design.board.description}"  if @design.board.description != "" %>
+
+<hr class="div" />
+
+<h2>Design Reviews</h2>
+
+<table width="60%" align="center" border="0">
+
+  <tr>
+    <th width="40%" align="left">Design Review</th>
+    <th align="left">Posted By</th>
+    <th align="left">Status</th>
+  </tr>
+
+  <% @design_reviews.each do |design_review| %>
+    <tr>
+      <td align="left">
+        <%= link_to(design_review.review_type.name,
+                    :controller => 'design_review',
+                    :action     => 'view',
+                    :id         => design_review.id,
+                    :search     => 1) %>
+      </td>
+      <td align="left"><%= design_review.designer.name %></td>
+      <td align="left"><%= design_review.review_status.name %></td>
+    </tr>
+  <% end %>
+
+</table>
+
+
+<h2>Audit</h2>
+
+<table width="60%" align="center" border="0">
+
+  <tr>
+    <th width="40%" align="left">&nbsp;</th>
+    <th align="left">Lead Designer</th>
+    <th align="left">Lead Peer</th>
+  </tr>
+
+  <tr>
+    <td align="left">
+      <%= link_to('Audit',
+                  :controller => 'audit',
+                  :action     => 'print',
+                  :id         => @design.audit.id,
+                  :search     => 1)%>
+    </td>
+    <td align="left"><%= @design.designer.name %></td>
+    <td align="left"><%= @design.peer.name %></td>
+  </tr>
+
+</table>
+
+
+<hr class="div" />
+
+<%# start_form_tag(url_for(session[:return_to])) %>
+
+<table width="80%" align="center">
+  <tr>
+    <td align="left">
+      <input type="button" value="Home" 
+             onClick="parent.location='<%= url_for( :controller => 'tracker', 
+                                                    :action     => 'index' ) %>'" />
+    </td>
+  </tr>
+</table>
+
+<%# end_form_tag %>
+
+
+<%# debug @design.audit %>
+<%# debug params%>
+
+

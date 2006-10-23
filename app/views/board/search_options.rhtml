@@ -1,0 +1,124 @@
+<!-- View:    board                                             -->
+<!-- Purpose: Displays the design search options.               -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Search Designs" %>
+
+<%= start_form_tag(:action => 'board_design_search') %>
+
+  <table width="100%">
+    <tr>
+      <td align="left">
+       </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <div id="selections">
+
+
+  <table border="0" width="80%" align="center">
+
+    <tr>
+      <th>Selection Criteria</th>
+    </tr>
+    
+    <tr>
+      <th width="50%">Designer</th>
+      <td align="left">
+        <% if @designer %>
+          <select id='user_id' 
+                  name='user[id]'>
+            <option value="">All Designers</option>
+            <%= options_from_collection_for_select(@designers,
+                                                   "id",
+                                                   :last_name_first,
+                                                   @designer.id) %>
+          </select>
+        <% else %>
+          <%= collection_select(:user, 
+                                :id, 
+                                @designers,
+                                :id,
+                                :last_name_first,
+                                :prompt => 'All Designers') %>
+        <% end %>
+      </td>
+    </tr>
+    
+    <tr>
+      <th width="50%">Platform</th>
+      <td align="left">
+        <%= collection_select(:platform,
+                              :id,
+                              @platforms,
+                              :id,
+                              :name,
+                              :prompt => 'All Platforms') %>
+      </td>
+    </tr>
+    
+    <tr>
+     <th width="50%">Projects</th>
+     <td align="left">
+        <%= collection_select(:project,
+                              :id,
+                              @projects,
+                              :id,
+                              :name,
+                              :prompt => 'All Projects') %>
+      </td>
+    </tr>
+    
+    <tr>
+      <th width="50%" valign="top">Last Completed Phase</th>
+      <td>
+        <table border="0">
+          <tr>
+            <td class="data" align="right">
+              <%= radio_button(:review_type, :phase, 'Final') %>
+            </td>
+            <th align="left">Final</th>
+          </tr>
+          <tr>
+            <td class="data" align="right">
+              <%= radio_button(:review_type, :phase, 'Release') %>
+            </td>
+            <th align="left">Release</th>
+          </tr>
+          <tr>
+            <td class="data" align="right">
+              <%= radio_button(:review_type, :phase, 'All',:checked => 'checked') %>
+            </td>
+            <th align="left">All</th>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+
+  </table>
+
+  </div>
+
+  <hr class="div" />
+  
+  <table width="80%" align="center">
+    <tr>
+      <td align="left">
+        <input type="submit" value="Search Designs" />
+      </td>
+      <td align="right">
+        <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+      </td>
+    </tr>
+  </table>
+
+  <%= end_form_tag %>
+
+<%# debug @designer %>
+<%# debug @platforms %>
+<%# debug @projects %>

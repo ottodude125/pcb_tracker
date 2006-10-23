@@ -1,0 +1,85 @@
+<!-- View:    design                                            -->
+<!-- Purpose: Displays the design search options.               -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Search Designs" %>
+
+<%= start_form_tag(:action => 'design_search') %>
+
+
+  <hr class="div" />
+  
+  <table border="0" width="50%" align="center" cellspacing="0">
+    <tr>
+      <th align="right" width="50%">Designer: </th>
+      <td><%= @designer %></td>
+    </tr>
+    <tr>
+      <th align="right">Platform: </th>
+      <td><%= @platform %></td>
+    </tr>
+    <tr>
+      <th align="right">Projects: </th>
+      <td><%= @project %></td>
+    </tr>
+    <tr>
+      <th align="right">Phase: </th>
+      <td>
+        <% if params[:review_type][:phase] == 'All' %>
+          All Phases
+        <% elsif params[:review_type][:phase] == 'Final' %>
+          Release and Complete
+        <% else %>
+          Complete
+        <% end %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <div id="selections">
+
+
+  <table border="0" width="80%" align="center">
+  
+    <tr>
+      <th>Design</th>
+      <th>Phase</th>
+      <th>Project</th>
+      <th>Platform</th>
+      <th>Designer</th>
+    </tr>
+
+    <% for board in @board_list %>
+      <%= render_collection_of_partials("board_design_search_list_stripes",
+                                        board.designs) %>
+    <% end %>
+
+  </table>
+
+  </div>
+
+  <hr class="div" />
+  
+  <table width="80%" align="center">
+    <tr>
+      <td align="left">
+        <input type="button" value="Back" 
+               onClick="parent.location='<%= url_for( :controller => 'board',
+                                                      :action     => 'search_options' ) %>'" />
+      </td>
+      <td align="right">
+        <input type="button" value="Home"
+               onClick="parent.location='<%= url_for( :controller => 'tracker',
+                                                      :action     => 'index' ) %>'" />
+      </td>
+    </tr>
+  </table>
+
+  <%= end_form_tag %>
+
+<%# debug params %>
+<%# debug session[:return_to] %>
