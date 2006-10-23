@@ -167,7 +167,9 @@ class BoardDesignEntryController < ApplicationController
     board_design_entry.update_attribute('input_gate_comments', 
                                         params[:board_design_entry][:input_gate_comments])
   
-    # TODO: The mail to the originator.
+    TrackerMailer::deliver_board_design_entry_return_to_originator(
+      board_design_entry,
+      session[:user])
 
     redirect_to(:action => 'processor_list')
   
@@ -531,17 +533,20 @@ class BoardDesignEntryController < ApplicationController
       flash['notice'] = "Entry #{@board_design_entry.design_name} has been updated"
 
       #Update the user's division and/or location if it has changed.
-      user = User.find(session[:user].id)
-      if session[:user].division_id != @board_design_entry.division_id
+       if (session[:user].division_id != @board_design_entry.division_id ||
+           session[:user].location_id != @board_design_entry.location_id)
+
         session[:user].division_id = @board_design_entry.division_id
-        user.update_attribute('division_id', @board_design_entry.division_id)
+        session[:user].location_id = @board_design_entry.location_id
+ 
+        user = User.find(session[:user].id)
+        user.division_id = @board_design_entry.division_id
+        user.location_id = @board_design_entry.location_id
+        user.password    = ''
+        user.update
+
       end
       
-      if session[:user].location_id != @board_design_entry.location_id
-        session[:user].location_id = @board_design_entry.location_id
-        user.update_attribute('location_id', @board_design_entry.location_id)
-      end
-
       if params[:user_action] == 'adding'
         redirect_to(:action      => 'design_constraints',
                     :id          => @board_design_entry.id,
@@ -653,7 +658,8 @@ class BoardDesignEntryController < ApplicationController
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @user_action        = params[:user_action]
         
-    reviewer_roles  = Role.find_all_by_reviewer_and_manager_and_active(1, 0, 1)
+    reviewer_roles  = Role.find_all_by_reviewer_and_manager_and_active(1, 0, 1).delete_if { |m| 
+                        !m.send(@board_design_entry.entry_type+'_design_type?') }
 
     # TO DO: Add a way to for the tracker admins to specify roles with a 
     # default user.  If a role has a default user then do not present it to 
@@ -698,7 +704,8 @@ class BoardDesignEntryController < ApplicationController
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @user_action        = params[:user_action]
     
-    manager_roles = Role.find_all_by_manager_and_active(1, 1)
+    manager_roles = Role.find_all_by_manager_and_active(1, 1).delete_if { |m| 
+                      !m.send(@board_design_entry.entry_type+'_design_type?') }
 
     # TO DO: Add a way to for the tracker admins to specify roles with a 
     # default user.  If a role has a default user then do not present it to 
@@ -1211,7 +1218,7 @@ class BoardDesignEntryController < ApplicationController
   # create_tracker_entry
   #
   # Description:
-  # This action deletesthe document that the user selected for deletion.  
+  # This action creates the tracker entry.  
   # 
   # Parameters from params
   # id            - the board_design_entry id
@@ -1265,20 +1272,32 @@ class BoardDesignEntryController < ApplicationController
     end
     
     # Update the board reviewers table for this board.
+    ig_role = Role.find_by_name('PCB Input Gate')
     for reviewer_record in board_design_entry.board_design_entry_users
     
       next if !reviewer_record.required?
-      
+
       board_reviewer = BoardReviewers.find_by_board_id_and_role_id(
                          board.id, 
                          reviewer_record.role_id)
+                         
       if !board_reviewer
+      
+        if reviewer_record.role_id != ig_role.id
+          reviewer_id = reviewer_record.user_id
+        else
+          reviewer_id = session[:user].id
+        end
+
         board_reviewer = BoardReviewers.new(:board_id    => board.id,
-                                            :reviewer_id => reviewer_record.user_id,
+                                            :reviewer_id => reviewer_id,
                                             :role_id     => reviewer_record.role_id)
         board_reviewer.save
+        
       elsif board_reviewer.reviewer_id != reviewer_record.user_id
+      
         board_reviewer.update_attribute('reviewer_id', reviewer_record.user_id)
+
       end
       
     end
@@ -1312,7 +1331,7 @@ class BoardDesignEntryController < ApplicationController
                         :priority_id      => params[:priority][:id],
                         :pcb_input_id     => session[:user][:id],
                         :created_by       => session[:user][:id])
-    design.dump_design                   
+                  
     if design.save
       flash['notice'] += "Design created ... "
       
