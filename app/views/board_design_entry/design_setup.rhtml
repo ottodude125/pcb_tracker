@@ -24,9 +24,15 @@
         <% for review in @review_types %>
           <tr>
             <td width="50%" align="right">
-              <%= check_box('review_type',
-                            review.name,
-                            { 'checked' => 'checked' }) %>
+              <% if @board_design_entry.entry_type == 'new' || 
+                    (@board_design_entry.entry_type != 'new' &&
+                     !(review.name == 'Placement' || review.name == 'Routing')) %>
+                <%= check_box('review_type',
+                              review.name,
+                              { 'checked' => 'checked' }) %>
+              <% else %>
+                <%= check_box('review_type', review.name) %>
+              <% end %>
             </td>
             <th align="left"><%= review.name %></th>
           </tr>
@@ -111,6 +117,6 @@
   </tr>
 </table>
 
-
-
 <%= end_form_tag %>
+
+<%# debug @board_design_entry %>
