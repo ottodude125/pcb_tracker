@@ -15,12 +15,8 @@
   <table border="0"
          width="100%">
     <tr>
-      <td width="10%"
-          rowspan="5"
-          valign="top">
-        <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
-
-
+      <td width="70" rowspan="5" valign="top">
+        <%= render_partial("nav") %>
       </td>
       <td colspan="2">
         <%= render_partial("review_details") %>
