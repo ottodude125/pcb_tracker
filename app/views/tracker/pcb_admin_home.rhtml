@@ -13,18 +13,22 @@
        align="center"
        rules="cols">
   <tr>
-    <td width="20%" valign="top">
-      <table width="90%"
-             align="center"
-               rules="rows"
-               cellpadding="5"
-               border="0">
+    <td width="115" valign="top">
+      <table align="center" rules="rows" cellpadding="5" border="0">
 
         <tr>
           <td align="center">
-            <%= link_to("Boards",
-                          { :controller => 'board',
-                            :action     => 'show_boards' }) %> <br />
+            <%= link_to("All Boards",
+                        { :controller => 'board', :action => 'show_boards' }) %>
+            <br />
+          </td>
+        </tr>
+        
+        <tr>
+          <td align="center">
+            <%= link_to("Board Search",
+                        { :controller => 'board', :action => 'search_options' }) %>
+            <br />
           </td>
         </tr>
         

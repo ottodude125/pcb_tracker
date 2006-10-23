@@ -13,34 +13,27 @@
        align="center"
        rules="cols">
   <tr>
-    <td width="100" 
-        valign="top"
-        rowspan="2">
-      <table width="90%"
-             align="center"
-             rules="rows"
-               cellpadding="5"
-               border="0">
+    <td width="155" valign="top" rowspan="2">
+      <table align="center" rules="rows" cellpadding="5" border="0">
         <tr>
           <td align="center">
-            <%# link_to("Tracker Settings (TBD)", 
-                        { :controller => "audit", 
-                          :action     => "designer_list" }) %>
-          </td>
-        </tr>
-
-        <tr>
-          <td align="center">
-            <%= link_to("Boards",
-                        { :controller => 'board',
-                          :action     => 'show_boards' },
+            <%= link_to("All Boards",
+                        { :controller => 'board', :action => 'show_boards' },
                         :title => 'Access to all boards') %>
           </td>
         </tr>
         
         <tr>
           <td align="center">
-            <%# link_to("PCB Engineering Entry",
+            <%= link_to("Board Search",
+                        { :controller => 'board', :action => 'search_options' },
+                        :title => 'Search boards by designer, project, platform, and phase') %>
+          </td>
+        </tr>
+        
+        <tr>
+          <td align="center">
+            <%= link_to("PCB Engineering Entry",
                         { :controller => 'board_design_entry',
                           :action     => 'originator_list' }) %>
           </td>

@@ -13,20 +13,24 @@
        align="center"
        rules="cols">
   <tr>
-    <td width="10%" valign="top">
-      <table width="90%"
-             align="center"
-             rules="rows"
-             cellpadding="5"
-             border="0">
+    <td width="155" valign="top">
+      <table align="center" rules="rows" cellpadding="5" border="0">
         <tr>
           <td align="center">
-            <%= link_to("View boards",
+            <%= link_to("All Boards",
                           { :controller => 'board',
                             :action     => 'show_boards' }) %>
           </td>
         </tr>
         
+        <tr>
+          <td align="center">
+            <%= link_to("Board Search",
+                        { :controller => 'board',
+                          :action     => 'search_options' }) %> <br />
+          </td>
+        </tr>
+
         <% if session[:active_role].name == 'Admin' %>
         <tr>
           <td align="center">
@@ -43,6 +47,7 @@
           </td>
         </tr>
         
+        <% if session[:active_role].name == 'Admin' %>
         <tr>
           <td align="center">
             <%= link_to("Process PCB Engineering Entries",
@@ -50,6 +55,7 @@
                           :action     => 'processor_list' }) %>
           </td>
         </tr>
+        <% end %>
         
         <tr>
           <td>&nbsp;</td>
