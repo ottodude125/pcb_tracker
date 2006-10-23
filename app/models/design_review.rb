@@ -118,7 +118,7 @@ class DesignReview < ActiveRecord::Base
   #
   def review_results_by_role_name
     self.design_review_results.sort_by { |review_result| 
-      review_result.role.name
+      review_result.role.display_name
     }
   end
   
@@ -143,7 +143,7 @@ class DesignReview < ActiveRecord::Base
   def generate_reviewer_selection_list()
 
     review_results = DesignReviewResult.find_all_by_design_review_id(self.id)
-    review_results = review_results.sort_by { |rr| rr.role.name }
+    review_results = review_results.sort_by { |rr| rr.role.display_name }
 
     reviewers = Array.new
     for review_result in review_results
