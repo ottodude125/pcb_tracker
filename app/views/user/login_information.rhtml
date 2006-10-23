@@ -44,13 +44,12 @@
       <th align="right" valign="top">Roles:</th>
       <td>
         <table>
-          <% for role in user.roles %>
+          <% user_roles = user.roles.sort_by { |ur| ur.display_name } %>
+          <% for role in user_roles %>
             <tr>
               <td>
-                <%= role.name %>
-                <% if role.reviewer? %>
-                Reviewer
-                <% end %>
+                <%= role.display_name %>
+                <%= 'Reviewer' if role.reviewer? %>
               </td>
             </tr>
           <% end %>
