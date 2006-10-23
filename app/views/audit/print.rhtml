@@ -7,6 +7,26 @@
 <% @heading = "PCB Tracker - Peer Audit Checklist Results" %>
 <%# debug @session %>
 
+<%# start_form_tag(url_for(session[:return_to])) %>
+
+<table width="90%" align="center">
+  <tr>
+    <% if params[:search] %>
+    <td align="left">
+      <input type="button" value="Back" 
+             onClick="parent.location='<%= url_for( :controller => 'design', 
+                                                    :action     => 'view',
+                                                    :id         => @audit.design_id ) %>'" />
+    </td>
+    <% end %>
+    <td align="right">
+      <input type="button" value="Home" 
+             onClick="parent.location='<%= url_for( :controller => 'tracker', 
+                                                    :action     => 'index' ) %>'" />
+    </td>
+  </tr>
+</table>
+
 <hr class="div" />
 
   <table align="center" border="0">
@@ -137,3 +157,25 @@
   <% end %>
 <hr class="div" />
 
+<table width="90%" align="center">
+  <tr>
+    <% if params[:search] %>
+    <td align="left">
+      <input type="button" value="Back" 
+             onClick="parent.location='<%= url_for( :controller => 'design', 
+                                                    :action     => 'view',
+                                                    :id         => @audit.design_id ) %>'" />
+    </td>
+    <% end %>
+    <td align="right">
+      <input type="button" value="Home" 
+             onClick="parent.location='<%= url_for( :controller => 'tracker', 
+                                                    :action     => 'index' ) %>'" />
+    </td>
+  </tr>
+</table>
+
+<%# end_form_tag %>
+
+<%# debug params %>
+<%# debug @audit.design_id%>
