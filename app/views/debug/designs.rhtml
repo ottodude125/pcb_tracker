@@ -39,12 +39,14 @@
     <th>PHASE</th>
     <th>PRIORITY</th>
     <th>REVISION</th>
-    <th>SUFFIX</th>
+    <th>NUMERIC REV</th>
+    <th>ECO NUMBER</th>
     <th>TYPE</th>
     <th>DESIGNER</th>
     <th>PEER</th>
     <th>CREATED</th>
     <th>REVIEWS</th>
+    <th>AUDIT</th>
   </tr>
   
   <% for design in @designs %>
@@ -61,13 +63,14 @@
           <%= ReviewType.find(design.phase_id).name %>
         <% end %>
       </td>
-      <td><%= design.priority.name %></td>
+      <td><%= design.priority_name %></td>
       <td><%= Revision.find(design.revision_id).name %></td>
-      <% if design.suffix_id %>
-        <td><%= Suffix.find(design.suffix_id).name %></td>
+      <% if design.numeric_revision %>
+        <td><%= design.numeric_revision.to_s %></td>
       <% else %>
         <td>&nbsp;</td>
       <% end %>
+      <td><%= design.eco_number %></td>
       <td><%= design.design_type %></td>
       <% if design.designer_id > 0 %>
         <td><%= User.find(design.designer_id).name %>
@@ -84,6 +87,9 @@
         <%= link_to(design.design_reviews.size,
                     { :action => 'design_reviews',
                       :id     => design.id}) %>
+      </td>
+      <td align="center">
+        <%# link_to() %>
       </td>
     </tr>
   <% end %>

@@ -38,7 +38,8 @@
     <th>PHASE</th>
     <th>PRIORITY</th>
     <th>REVISION</th>
-    <th>SUFFIX</th>
+    <th>NUM REV</th>
+    <th>ECO NUM</th>
     <th>TYPE</th>
     <th>DESIGNER</th>
     <th>PEER</th>
@@ -59,13 +60,14 @@
         <%= ReviewType.find(@design.phase_id).name %>
       <% end %>
     </td>
-    <td><%= @design.priority.name %></td>
+    <td><%= @design.priority_name %></td>
     <td><%= Revision.find(@design.revision_id).name %></td>
-    <% if @design.suffix_id %>
-      <td><%= Suffix.find(@design.suffix_id).name %></td>
+    <% if @design.numeric_revision %>
+      <td><%= @design.numeric_revision.to_s %></td>
     <% else %>
       <td>&nbsp;</td>
     <% end %>
+    <td><%= @design.eco_number %></td>
     <td><%= @design.design_type %></td>
     <% if @design.designer_id > 0 %>
       <td><%= User.find(@design.designer_id).name %></td>
@@ -77,7 +79,13 @@
     <% else %>
       <td><b>Not Set</b></td>
     <% end %>
-    <td><%= User.find(@design.pcb_input_id).name %></td>
+    <td>
+      <% if @design.pcb_input_id > 0 %>
+        <%= User.find(@design.pcb_input_id).name %>
+      <% else %>
+        <b>Not Set</b>
+      <% end %>
+    </td>
     <td><%= @design.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
   </tr>
 
@@ -127,7 +135,7 @@
           &nbsp;
         <% end %>
       </td>
-      <td><%= dr.priority.name %></td>
+      <td><%= dr.priority_id > 0 ? dr.priority.name : 'Not Set' %></td>
       <td><%= User.find(dr.creator_id).name %>
       <td><%= dr.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
       <td><%= dr.reposted_on.strftime("%d-%b-%y, %I:%M %p") %></td>
