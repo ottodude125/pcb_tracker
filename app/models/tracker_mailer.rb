@@ -768,6 +768,40 @@ class TrackerMailer < ActionMailer::Base
   
   ######################################################################
   #
+  # board_design_entry_return_to_originator
+  #
+  # Description:
+  # This method generates mail to indicate that the processor returned
+  # the board design entry to the originator.
+  #
+  # Parameters:
+  #   board_design_entry - the board design entry
+  #   processor          - the user record for the processor
+  #   sent_at            - the time of the event
+  #
+  ######################################################################
+  #
+  def board_design_entry_return_to_originator(board_design_entry,
+                                              originator,
+                                              sent_at = Time.now)
+
+    @subject    = "The #{board_design_entry.design_name} design entry has been returned by PCB"
+                  
+    @recipients = [originator.email]
+    @from       = Pcbtr::SENDER
+    @sent_on    = sent_at
+    @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
+    @cc         = add_role_members(['PCB Input Gate', 'Manager'])
+
+    @body['board_design_entry'] = board_design_entry
+    @body['originator']         = originator
+
+  end
+  
+  
+  ######################################################################
+  #
   # board_design_entry_submission
   #
   # Description:
@@ -967,16 +1001,16 @@ class TrackerMailer < ActionMailer::Base
   def add_board_reviewer(board, roles)
   
     cc_list = []
-    for role in roles
+    board_reviewers = BoardReviewers.find_all_by_board_id(board.id)
+    role_list       = Role.find_all
 
-      reviewer_role = Role.find_by_name(role)
-      board_reviewer = BoardReviewers.find_by_board_id_and_role_id(
-                         board.id,
-                         reviewer_role.id)
+    roles.each do |role|
 
-      if board_reviewer
-        reviewer = User.find(board_reviewer.reviewer_id)
-        cc_list << reviewer.email
+      reviewer_role  = role_list.detect { |r| r.name == role }
+      board_reviewer = board_reviewers.detect { |br| br.role_id == reviewer_role.id }
+
+      if board_reviewer && board_reviewer.reviewer_id?
+        cc_list << User.find(board_reviewer.reviewer_id).email
       end
     
     end
