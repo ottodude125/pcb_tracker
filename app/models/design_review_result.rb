@@ -16,8 +16,9 @@ class DesignReviewResult < ActiveRecord::Base
   belongs_to :role
   
   
-  APPROVED = 'Approved'
-  REJECTED = 'Rejected'
+  APPROVED = 'APPROVED'
+  REJECTED = 'REJECTED'
+  WAIVED   = 'WAIVED'
 
   ######################################################################
   #
@@ -33,6 +34,23 @@ class DesignReviewResult < ActiveRecord::Base
   #
   def reviewer
     User.find(self.reviewer_id)
+  end
+  
+  
+  ######################################################################
+  #
+  # complete?
+  #
+  # Description:
+  # Indicates that the review result has been processed by the reviewer
+  #
+  # Return value:
+  # TRUE if the review result is complete, otherwise FALSE
+  #
+  ######################################################################
+  #
+  def complete?
+    self.result == APPROVED || self.result == WAIVED || self.result == REJECTED
   end
   
   
