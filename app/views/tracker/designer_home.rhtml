@@ -13,23 +13,26 @@
        align="center"
        rules="cols">
   <tr>
-    <td width="20%" valign="top">
-      <table width="90%"
-             align="center"
-               rules="rows"
-               cellpadding="5"
-               border="0">
+    <td width="155" valign="top">
+      <table align="center" rules="rows" cellpadding="5" border="0">
 
         <tr>
           <td align="center">
-            <%= link_to("Boards",
+            <%= link_to("All Boards",
                         { :controller => 'board',
                           :action     => 'show_boards' }) %> <br />
           </td>
         </tr>
         <tr>
           <td align="center">
-            <%# link_to("PCB Engineering Entry",
+            <%= link_to("Board Search",
+                        { :controller => 'board',
+                          :action     => 'search_options' }) %> <br />
+          </td>
+        </tr>
+        <tr>
+          <td align="center">
+            <%= link_to("PCB Engineering Entry",
                         { :controller => 'board_design_entry',
                           :action     => 'originator_list' }) %>
           </td>
