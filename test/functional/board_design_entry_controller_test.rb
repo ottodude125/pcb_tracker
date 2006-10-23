@@ -170,11 +170,11 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     assert_equal("The design entry has been stored in the database",
                  flash['notice'])
     assert_equal('mx437', new_entry.design)
-    assert_equal(19,      new_entry.board_design_entry_users.size)
+    assert_equal(8,       new_entry.board_design_entry_users.size)
     assert_equal(0,       new_entry.platform_id)
     assert_equal(0,       new_entry.project_id)
     assert_equal('',      new_entry.description)
-    assert_equal(21,      BoardDesignEntryUser.find_all.size)
+    assert_equal(10,      BoardDesignEntryUser.find_all.size)
 
 
     post(:create_board_design_entry, 
@@ -186,11 +186,11 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
                  flash['notice'])
     delete_entry = new_entry.dup
     assert_equal('la455',        new_entry.design)
-    assert_equal(19,             new_entry.board_design_entry_users.size)
+    assert_equal(8,              new_entry.board_design_entry_users.size)
     assert_equal(2,              new_entry.platform_id)
     assert_equal(2,              new_entry.project_id)
     assert_equal('la455 design', new_entry.description)
-    assert_equal(40,             BoardDesignEntryUser.find_all.size)
+    assert_equal(18,             BoardDesignEntryUser.find_all.size)
     assert_redirected_to(:action      => 'new_entry',
                          :id          => new_entry.id,
                          :user_action => 'adding')
@@ -201,7 +201,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     assert_equal('adding', assigns(:user_action))
     new_entry = assigns(:board_design_entry)
     assert_equal('la455',        new_entry.design)
-    assert_equal(19,             new_entry.board_design_entry_users.size)
+    assert_equal(8,              new_entry.board_design_entry_users.size)
     assert_equal(2,              new_entry.platform_id)
     assert_equal(2,              new_entry.project_id)
     assert_equal('la455 design', new_entry.description)
@@ -708,8 +708,8 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     assert_equal(new_entry.id, assigns(:board_design_entry).id)
     assert_equal('test',       assigns(:return))
     assert_equal('Lee Schaff', assigns(:originator).name)
-    assert_equal(4,            assigns(:managers).size)
-    assert_equal(15,           assigns(:reviewers).size)
+    assert_equal(1,            assigns(:managers).size)
+    assert_equal(7,           assigns(:reviewers).size)
     
     
     assert_equal('new', new_entry.entry_type)
@@ -753,19 +753,15 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     post(:set_review_team, :id => new_entry.id, :user_action => 'test')
     assert_equal(new_entry.id, assigns(:board_design_entry).id)
     assert_equal('test',       assigns(:user_action))
-    assert_equal(8,            assigns(:reviewers).size)    
+    assert_equal(5,            assigns(:reviewers).size)    
 
 
     post(:set_management_team, :id => new_entry.id, :user_action => 'testing')
     assert_equal(new_entry.id, assigns(:board_design_entry).id)
     assert_equal('testing',    assigns(:user_action))
-    assert_equal(3,            assigns(:managers).size)    
-    
-    
+    assert_equal(1,            assigns(:managers).size)    
+  
     hweng_role = Role.find_by_name("HWENG")
-    hweng_reviewer = new_entry.board_design_entry_users.detect { |bde_u|
-                       bde_u.role_id == hweng_role.id }
-    assert_equal(0, hweng_reviewer.user_id)
     
     post(:set_team_member,
          :bde_id  => new_entry.id,
@@ -971,7 +967,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     }
 
 
-    assert_equal(40, BoardDesignEntryUser.find_all.size)
+    assert_equal(19, BoardDesignEntryUser.find_all.size)
     assert_equal(8,  BoardDesignEntry.find_all.size)
     assert_equal(3,  BoardDesignEntry.find_all_by_originator_id(session[:user].id).size)
     
@@ -979,7 +975,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
 
     assert_equal(7,  BoardDesignEntry.find_all.size)
     assert_equal(2,  BoardDesignEntry.find_all_by_originator_id(session[:user].id).size)
-    assert_equal(21, BoardDesignEntryUser.find_all.size)
+    assert_equal(10, BoardDesignEntryUser.find_all.size)
     
   end
   
