@@ -16,7 +16,9 @@ class BoardController < ApplicationController
 
 before_filter(:verify_admin_role, 
               :except => [:auto_complete_for_board_name,
+                          :board_design_search,
                           :design_information,
+                          :search_options,
                           :show_boards] )
   
   auto_complete_for :board, :name
@@ -31,7 +33,7 @@ before_filter(:verify_admin_role,
   # display.  The list is paginated and is limited to the number 
   # passed to the ":per_page" argument.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -70,7 +72,7 @@ before_filter(:verify_admin_role,
     }
 
     @board_pages, @boards = paginate_collection(queried_boards,
-                                                :page => @params[:page])
+                                                :page => params[:page])
   end
 
 
@@ -83,7 +85,7 @@ before_filter(:verify_admin_role,
   # for display.  The list is paginated and is limited to the number 
   # passed to the ":per_page" argument.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -97,16 +99,16 @@ before_filter(:verify_admin_role,
 
     conditions = ''
 
-    if @params['filter']['prefix_id'] != ''
-      conditions = "prefix_id=#{@params['filter']['prefix_id']}"
+    if params['filter']['prefix_id'] != ''
+      conditions = "prefix_id=#{params['filter']['prefix_id']}"
     end
-    if @params['filter']['platform_id'] != ''
+    if params['filter']['platform_id'] != ''
       conditions += ' and ' if conditions != ''
-      conditions += "platform_id=#{@params['filter']['platform_id']}"
+      conditions += "platform_id=#{params['filter']['platform_id']}"
     end
-    if @params['filter']['project_id'] != ''
+    if params['filter']['project_id'] != ''
       conditions += ' and ' if conditions != ''
-      conditions += "project_id=#{@params['filter']['project_id']}"
+      conditions += "project_id=#{params['filter']['project_id']}"
     end
 
     if conditions == ''
@@ -133,7 +135,7 @@ before_filter(:verify_admin_role,
     }
 
     @board_pages, @boards = paginate_collection(queried_boards,
-                                                :page => @params[:page])
+                                                :page => params[:page])
 
     render(:action => 'list')
   end
@@ -146,7 +148,7 @@ before_filter(:verify_admin_role,
   # Description:
   # This method retrieves the board from the database for display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the board to be retrieved.
   #
   # Return value:
@@ -192,7 +194,7 @@ before_filter(:verify_admin_role,
   # Description:
   # This method retrieves the board from the database for display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the board to be retrieved.
   #
   # Return value:
@@ -202,7 +204,7 @@ before_filter(:verify_admin_role,
   #
   def edit
 
-    @board = Board.find(@params['id'])
+    @board = Board.find(params['id'])
     @platforms = Platform.find_all('active=1', 'name ASC')
     @projects  = Project.find_all('active=1',  'name ASC')
     @prefixes  = Prefix.find_all('active=1',   'pcb_mnemonic ASC')
@@ -245,7 +247,7 @@ before_filter(:verify_admin_role,
   # This method uses information passed back from the edit screen to
   # update the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['project'] - Used to identify the board to be updated.
   #
   # Return value:
@@ -255,13 +257,13 @@ before_filter(:verify_admin_role,
   #
   def update
 
-    @board = Board.find(@params['board']['id'])
+    @board = Board.find(params['board']['id'])
 
-    @params['board'][:name] = Prefix.find(@params['board']['prefix_id']).pcb_mnemonic +
-      @params['board'][:number]
-    if @board.update_attributes(@params['board'])
+    params['board'][:name] = Prefix.find(params['board']['prefix_id']).pcb_mnemonic +
+      params['board'][:number]
+    if @board.update_attributes(params['board'])
       
-      @params['board_reviewers'].each { |role_id, reviewer_id|
+      params['board_reviewers'].each { |role_id, reviewer_id|
         role = Role.find(role_id)
         board_reviewer = BoardReviewers.find(:first,
                                              :conditions => [ "board_id = ? and role_id = ?", @board.id, role.id ])
@@ -280,7 +282,7 @@ before_filter(:verify_admin_role,
       }
 
       # Process the fab houses.
-      @params['fab_house'].each { |fab_house_id, selected|
+      params['fab_house'].each { |fab_house_id, selected|
         fab_house = FabHouse.find(fab_house_id)
 
         if not @board.fab_houses.include?(fab_house)
@@ -296,7 +298,7 @@ before_filter(:verify_admin_role,
       flash['notice'] = 'Board not updated'
     end
     redirect_to(:action => 'edit',
-                :id     => @params["board"]["id"])
+                :id     => params["board"]["id"])
   end
 
 
@@ -308,7 +310,7 @@ before_filter(:verify_admin_role,
   # This method uses the information passed back from the user
   # to create a new board in the database
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_project'] - the information to be stored for the new board.
   #
   # Return value:
@@ -318,14 +320,14 @@ before_filter(:verify_admin_role,
   #
   def create
 
-    @board = Board.new(@params['board'])
+    @board = Board.new(params['board'])
 
     # Verify that the prefix ID is in the request.  For some reason, 
     # 'validates_presence_of :prefix_id' is not working from the model.
-    prefix_id_present = @params['board']['prefix_id'] != ''
+    prefix_id_present = params['board']['prefix_id'] != ''
 
     # Verify that all of the reviewers have a been selected
-    reviewers = @params['board_reviewers']
+    reviewers = params['board_reviewers']
     for reviewer in reviewers
       all_reviewers_selected = reviewer[1] != ''
       break if not all_reviewers_selected
@@ -347,7 +349,7 @@ before_filter(:verify_admin_role,
         end
 
         # Record any fab house selections
-        @params['fab_house'].each { |fab_house_id, selected|
+        params['fab_house'].each { |fab_house_id, selected|
           @board.fab_houses << FabHouse.find(fab_house_id) if selected == '1'
         }
 
@@ -375,7 +377,7 @@ before_filter(:verify_admin_role,
   # Description:
   # 
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -410,7 +412,7 @@ before_filter(:verify_admin_role,
   # Description:
   # 
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -421,10 +423,10 @@ before_filter(:verify_admin_role,
   def design_information
 
     #Get the board information
-    if @params[:board] != nil
-      @board = Board.find_by_name(@params[:board][:name])
+    if params[:board] != nil
+      @board = Board.find_by_name(params[:board][:name])
     else
-      @board = Board.find(@params['board_id'])
+      @board = Board.find(params['board_id'])
     end
     
     # First sort the designs by name, then sort the reviews by review order.
@@ -443,6 +445,125 @@ before_filter(:verify_admin_role,
     end
 
   end
+  
+  
+  ######################################################################
+  #
+  # search_options
+  #
+  # Description:
+  # This method provides the lists of options available for searching.
+  #
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def search_options
+  
+    designer_role = Role.find_by_name('Designer')
+    @designers = designer_role.users.sort_by { |u| u.last_name }
+    @platforms = Platform.find_all.sort_by   { |p| p.name }
+    @projects  = Project.find_all.sort_by    { |p| p.name }
+    
+    @designer = session[:user] if session[:user].roles.detect { |r| r.name == 'Designer' }
+  
+  end
 
 
+  ######################################################################
+  #
+  # board_design_search
+  #
+  # Description:
+  # This method responds to the search_options view/form.  It uses the
+  # selections made by the user to execute a search on boards.  The 
+  # search is used to populate the board_design_search view.
+  #
+  # Parameters from params
+  # [:platform][:id]       - if not an empty string then use the id 
+  #                          provided in the database query.
+  # [:project][:id]        - if not an empty string then use the id
+  #                          provided in the database query.
+  # [:user][:id]           - if not an empty string then use the id
+  #                          provided in the database query.
+  # [:review_type][:phase] - if 'All' then display all designs.
+  #                          Otherwise, display only the designs that 
+  #                          have completed the phase identified by
+  #                          the parameter.
+  #
+  ######################################################################
+  #
+  def board_design_search
+  
+    @project  = 'All Projects'
+    @platform = 'All Platforms'
+    @designer = 'All Designers'
+    
+    if    params[:platform][:id] == '' && params[:project][:id] == ''
+      board_list = Board.find_all
+    elsif params[:platform][:id] != '' && params[:project][:id] == ''
+      board_list = Board.find_all_by_platform_id(params[:platform][:id])
+      @platform  = Platform.find(params[:platform][:id]).name
+    elsif params[:platform][:id] == '' && params[:project][:id] != ''
+      board_list = Board.find_all_by_project_id(params[:project][:id])
+      @project   = Project.find(params[:project][:id])
+    else
+      board_list = Board.find_all_by_platform_id_and_project_id(
+                     params[:platform][:id],
+                     params[:project][:id])
+      @platform  = Platform.find(params[:platform][:id]).name
+      @project   = Project.find(params[:project][:id])
+    end
+    
+    release_rt = ReviewType.find_by_name('Release')
+    final_rt   = ReviewType.find_by_name('Final')
+    for board in board_list 
+      for design in board.designs
+        if !(design.phase_id == Design::COMPLETE ||
+             design.phase_id == release_rt.id)
+          design[:designer_name] = design.designer.name
+          design[:designer_id]   = design.designer.id
+        else 
+          final_review = design.design_reviews.detect { |dr| 
+                           dr.review_type_id == final_rt.id }
+          design[:designer_name] = final_review.designer.name
+          design[:designer_id]   = final_review.designer.id
+        end
+      end
+    end
+
+    # If the designer was specified  then filter the list.
+    if params[:user][:id] != ''
+      @designer = User.find(params[:user][:id]).name
+      for board in board_list
+        board.designs.delete_if { |d| d[:designer_id] != params[:user][:id].to_i}
+      end
+    end
+
+    # If a phase of "Final" or "Release" was specified then filter the list.
+    if params[:review_type][:phase] != 'All'
+      review_types          = ReviewType.find_all
+      completed_review_type = review_types.detect { |rt| 
+                                rt.name == params[:review_type][:phase] }
+      review_types.delete_if { |rt| rt.sort_order <= completed_review_type.sort_order }
+
+      for board in board_list
+        for design in board.designs
+          if design.phase_id != Design::COMPLETE
+            if !review_types.detect { |rt| rt.id == design.phase_id }
+              design[:delete_me] = true
+            end
+          end
+        end
+        board.designs.delete_if { |d| d[:delete_me] }
+      end
+    
+    end
+    
+    @board_list = board_list.sort_by { |b| b.name }
+    
+  end
+  
+  
 end
