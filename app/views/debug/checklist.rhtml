@@ -4,68 +4,150 @@
 
 <table>
   <tr>
-    <th width='30'>ID</th>
-    <th>Rel?</th>
-    <th>Used?</th>
-    <th>Sections</th>
-    <th>Subsections</th>
-    <th>Checks</th>
-  </tr>
-  
-  <tr>
+    <th width='30'>ID: </th>
     <td><%= @checklist.id %></td>
+  </tr>
+  <tr>
+    <th>Rel?: </th>
     <td><%= @checklist.released? %></td>
-    <td><%= @checklist.used? %></td>
+  </tr>
+  <tr>
+    <th>Used?: </th>
+    <td><%= @checklist.used? %></td> 
+  </tr>
+  <tr>
+    <th>Sections: </th>
     <td><%= @checklist.sections.size %></td>
+  </tr>
+  <tr>
+    <th>Subsections: </th>
     <td><%= @subsection_count %></td>
+  </tr>
+  <tr>
+    <th>Checks:</th>
     <td><%= @check_count %></td>
   </tr>
-  
-  <% for section in @checklist.sections %>
-    <% subsections = section.subsections.sort_by { |s| s.sort_order } %>
-    
-    <table border='0'>
-      <tr>
-        <th width='150' align='left'>Section ID: </th>
-        <td><%= section.id %></td>
-        <th>Sort Order: </th>
-        <td><%= section.sort_order %></td>
-        <th># of Subsections: </th>
-        <td><%= subsections.size %></td>
-        <th>URL:</th>
-        <td><%= section.url != '' ? auto_link('http://' + section.url) : 'No URL' %><td>
-      </tr>
-      
-      <% for subsect in subsections %>
+</table>
 
-        <tr>
-          <th align='right'>Subsection ID:</th>
-          <td><%= subsect.id %></td>
-          <th>Sort Order: </th>
-          <td><%= subsect.sort_order %></td>
-          <th align='right'># of Checks: </th>
-          <td><%= subsect.checks.size %></td>
-          <th>URL:</th>
-          <td><%= subsect.url != '' ? auto_link('http://' + subsect.url) : 'No URL' %><td>
-        </tr>
-        
-        <% for check in subsect.checks %>
-          <tr>
-            <th align='right'>Check ID:</th>
-            <td><%= check.id %></td>
-            <th>Sort Order: </th>
-            <td><%= check.sort_order %></td>
-            <td colspan=2>&nbsp;</td>
-            <th>URL:</th>
-            <td><%= check.url != '' ? auto_link('http://' + check.url) : 'No URL' %></td>
-          </tr>
-        <% end %>
-        
+ 
+
+<table>  
+  <tr><td>  
+  <% for section in @checklist.sections %>
+    
+    <table border='1' width="100%">
+      <tr>
+        <th align="right" width="100">Name:</th>
+        <td colspan="8"><%= section.name %></td>
+      </tr>
+      <tr>
+        <th align='right'>Section ID: </th>
+        <td><%= section.id %></td>
+      </tr>
+      <tr>
+        <th align="right">Sort Order: </th>
+        <td><%= section.sort_order %></td>
+      </tr>
+      <tr>
+        <th align="right">Subsections: </th>
+        <td><%= section.subsections.size %></td>
+      </tr>
+      <tr>
+        <th align="right">URL: </th>
+        <td><%= section.url != '' ? auto_link('http://' + section.url) : 'No URL' %></td>
+      </tr>
+      <% if section.url != '' %>
+      <tr>
+          <th align="right">Code: </th>
+          <td><%= section[:resp][:code] %></td>
+      </tr>
+      <tr>
+          <th align="right">Message: </th>
+          <td><%= section[:resp][:message] %></td>
+      </tr>
       <% end %>
       
-    </table>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <table width="100%" border="1">
+      
+            <% for subsect in section.subsections %>
+
+              <tr>
+                <th align="right" width="120">Name:</th>
+                <td><%= subsect.name %></td>
+              </tr>
+              <tr>
+                <th align='right'>Subsection ID:</th>
+                <td><%= subsect.id %></td>
+              </tr>
+              <tr>
+                <th align="right">Sort Order: </th>
+                <td><%= subsect.sort_order %></td>
+              </tr>
+              <tr>
+                <th align='right'>Checks: </th>
+                <td><%= subsect.checks.size %></td>
+              </tr>
+              <tr>
+                <th align="right">URL:</th>
+                <td><%= subsect.url != '' ? auto_link('http://' + subsect.url) : 'No URL' %></td>
+              </tr>
+              <% if subsect.url != '' %>
+              <tr>
+                  <th align="right">Code: </th>
+                  <td><%= subsect[:resp][:code] %></td>
+              </tr>
+              <tr>
+                  <th align="right">Message: </th>
+                  <td><%= subsect[:resp][:message] %></td>
+              </tr>
+              <% end %>
+        
+              <tr>
+                <td>&nbsp;</td>
+                <td>
+                  <table width="100%" border="1">
+                    <% for check in subsect.checks %>
+                      <tr>
+                        <td width="100">&nbsp;</td>
+                        <td><%= check.title %> - <%= check.check %> </td>
+                      </tr>
+                      <tr>
+                        <th align='right'>Check ID: </th>
+                        <td><%= check.id %></td>
+                      </tr>
+                      <tr>
+                        <th align="right">Sort Order: </th>
+                        <td><%= check.sort_order %></td>
+                      </tr>
+                      <tr>
+                        <th align="right">URL: </th>
+                        <td><%= check.url != '' ? auto_link('http://' + check.url) : 'No URL' %></td>
+                      </tr>
+                      <% if check.url != '' %>
+                      <tr>
+                        <th align="right">Code: </th>
+                        <td><%= check[:resp][:code] %>
+                      </tr>
+                      <tr>
+                        <th align="right">Message: </th>
+                        <td><%= check[:resp][:message] %></td>
+                      </tr>
+                      <% end %>
+                    <% end %>
+                  </table>
+                </td>
+              </tr>
+            <% end %>
+          </table>
+        </td>
+      </tr>
+    </table><br />
   <% end %>
   
+
   
   <% for message in @messages %>
     <p>
@@ -73,4 +155,6 @@
     </p>
   <% end %>
   
-</table>
+
+
+<%# debug @checklist %>
