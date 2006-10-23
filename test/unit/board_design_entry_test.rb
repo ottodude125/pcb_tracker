@@ -139,10 +139,10 @@ class BoardDesignEntryTest < Test::Unit::TestCase
     bde = BoardDesignEntry.find(board_design_entries(:av714b).id)
     assert_equal(0, bde.board_design_entry_users.size)
     assert_equal(2, BoardDesignEntryUser.find_all.size)
-    
+
     bde.load_design_team
-    assert_equal(19, bde.board_design_entry_users.size)
-    assert_equal(21, BoardDesignEntryUser.find_all.size)
+    assert_equal( 8, bde.board_design_entry_users.size)
+    assert_equal(10, BoardDesignEntryUser.find_all.size)
     
     default_user_list = { 'PCB Design'          => 'Light',
                           'Compliance - EMC'    => 'Bechard',
