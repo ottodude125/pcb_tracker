@@ -48,4 +48,29 @@ class Role < ActiveRecord::Base
   end
 
 
+  ######################################################################
+  #
+  # include?
+  #
+  # Description:
+  # This method determines if the role should be included based on the 
+  # entities design type.
+  #
+  # Parameters:
+  # design_type - the entity's design type.
+  #
+  # Return value:
+  # TRUE if the role is included in the entities design_type.  Otherwise
+  # FALSE.
+  #
+  ######################################################################
+  #
+  def include?(design_type)
+
+    #design_type = design_type.downcase.sub(/ /, '_')
+    self.send(design_type.downcase.sub(/ /, '_') + '_design_type?')
+
+  end
+
+
 end
