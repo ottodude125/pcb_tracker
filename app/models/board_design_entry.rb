@@ -482,7 +482,7 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #
   def load_design_team
-                  
+            
     #To Do: Come up with a better way to specify default users.          
     default_assignments = { 'PCB Design' => 'Light' } 
     manager_roles = Role.find_all_by_active_and_manager(1, 1)
@@ -494,7 +494,7 @@ class BoardDesignEntry < ActiveRecord::Base
       if default_assignments[role.name]
         board_design_entry_user.user_id = User.find_by_last_name(default_assignments[role.name]).id
       end
-      board_design_entry_user.save
+      board_design_entry_user.save if board_design_entry_user.user_id?
     end
 
     #To Do: Come up with a better way to specify default users.          
@@ -506,6 +506,7 @@ class BoardDesignEntry < ActiveRecord::Base
                             'SLM BOM'             => 'Seip',
                             'SLM-Vendor'          => 'Gough' }
     reviewer_roles = Role.find_all_by_active_and_reviewer_and_manager(1, 1, 0)
+
     for role in reviewer_roles     
       board_design_entry_user = BoardDesignEntryUser.new(
                                   :board_design_entry_id => self.id,
@@ -518,13 +519,13 @@ class BoardDesignEntry < ActiveRecord::Base
           board_design_entry_user.user_id = 0   
         end
       end
-      board_design_entry_user.save
+      board_design_entry_user.save if board_design_entry_user.user_id?
     end
     
     self.board_design_entry_users(true)
   
     existing_board = Board.find_by_prefix_id_and_number(self.prefix_id, self.number)
-    
+
     if existing_board
 
       board_reviewers = BoardReviewers.find_all_by_board_id(existing_board.id)
@@ -534,9 +535,11 @@ class BoardDesignEntry < ActiveRecord::Base
         bde_user = self.board_design_entry_users.detect { |bdeu| 
           bdeu.role_id == board_reviewer.role_id
         }
-        bde_user.user_id = board_reviewer.reviewer_id
-        bde_user.save
-      
+        
+        if bde_user
+          bde_user.user_id = board_reviewer.reviewer_id
+          bde_user.save
+        end     
       end
       
     end
