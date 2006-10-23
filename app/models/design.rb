@@ -452,10 +452,25 @@ class Design < ActiveRecord::Base
   
   def setup_design_reviews(review_types_list, 
                            board_team_list)
+                           
+    skip_role = []
+    if self.design_type != 'New'
+      skip_role = [Role.find_by_name('Hardware Engineering Manager').id,
+                   Role.find_by_name('Library').id,
+                   Role.find_by_name('Compliance - EMC').id,
+                   Role.find_by_name('Compliance - Safety').id,
+                   Role.find_by_name('Operations Manager').id,
+                   Role.find_by_name('PCB Mechanical').id,
+                   Role.find_by_name('Program Manager').id,
+                   Role.find_by_name('SLM BOM').id,
+                   Role.find_by_name('SLM-Vendor').id]
+    end
     
     not_started    = ReviewStatus.find_by_name('Not Started')
     review_skipped = ReviewStatus.find_by_name('Review Skipped')
     review_types   = ReviewType.find_all_by_active(1)
+
+    pcb_input_gate_role = Role.find_by_name('PCB Input Gate')
     
     #Go through each of the review types and setup a review.
     review_types_list.each { |review, active|
@@ -479,14 +494,18 @@ class Design < ActiveRecord::Base
       end
       
       design_review.save
-      design_review.dump_design_review
+
       
-      pcb_input_gate_role = Role.find_by_name('PCB Input Gate')
       board_team_list.each { |reviewer|
       
-        # Do not create a record if the team member is not a reviewer or
-        # if the reviewer role is not required
-        next if !reviewer.role.reviewer? || !reviewer.required?
+        # Do not create a record if:
+        #   the team member is not a reviewer, or
+        #   the reviewer role is not required, or
+        #   the reviewer user id is zero,      or
+        #   the role is listed it in skip_review
+        next if (!(reviewer.role.reviewer? && reviewer.required? && 
+                   reviewer.user_id?) || 
+                 skip_role.detect { |i| i == reviewer.role_id })
         
         if reviewer.role.review_types.include?(review_type)
         
@@ -497,7 +516,7 @@ class Design < ActiveRecord::Base
           end
           
           drr = DesignReviewResult.new(:design_review_id => design_review.id,
-                                       :reviewer_id      => reviewer.user_id,
+                                       :reviewer_id      => reviewer_id,
                                        :role_id          => reviewer.role_id)
           drr.save
 
