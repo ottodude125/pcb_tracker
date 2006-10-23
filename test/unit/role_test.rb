@@ -77,5 +77,30 @@ class RoleTest < Test::Unit::TestCase
     assert_equal(all_designers, active_designers)
     
   end
+  
+  
+  def test_include
+  
+    role = Role.new
+    
+    assert(!role.include?('Date Code'))
+    assert(!role.include?('date_code'))
+    assert(!role.include?('Dot Rev'))
+    assert(!role.include?('dot_rev'))
+    assert(!role.include?('New'))
+    assert(!role.include?('new'))
+    
+    role.new_design_type       = 1
+    role.date_code_design_type = 1
+    role.dot_rev_design_type   = 1
+  
+    assert(role.include?('Date Code'))
+    assert(role.include?('date_code'))
+    assert(role.include?('Dot Rev'))
+    assert(role.include?('dot_rev'))
+    assert(role.include?('New'))
+    assert(role.include?('new'))
+    
+  end
 
 end

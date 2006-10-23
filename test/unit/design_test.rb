@@ -203,6 +203,7 @@ class DesignTest < Test::Unit::TestCase
   #   name()
   #   phase()
   #   priority_name()
+  #   belongs_to()
   #
   ######################################################################
   #
@@ -228,6 +229,50 @@ class DesignTest < Test::Unit::TestCase
    assert_equal('mx234a',       designs(:mx234a).name)
    assert_equal('la453a2',      designs(:la453a2).name)
    assert_equal('la453b4_eco2', designs(:la453b4_eco2).name)
+   
+   
+   section_all        = Section.new(:full_review     => 1,
+                                    :date_code_check => 1,
+                                    :dot_rev_check   => 1)
+   section_nothing    = Section.new(:full_review     => 0,
+                                    :date_code_check => 0,
+                                    :dot_rev_check   => 0)
+   subsection_all     = Subsection.new(:full_review     => 1,
+                                       :date_code_check => 1,
+                                       :dot_rev_check   => 1)
+   subsection_nothing = Subsection.new(:full_review     => 0,
+                                       :date_code_check => 0,
+                                       :dot_rev_check   => 0)
+   check_all          = Check.new(:full_review     => 1,
+                                  :date_code_check => 1,
+                                  :dot_rev_check   => 1)
+   check_nothing      = Check.new(:full_review     => 0,
+                                  :date_code_check => 0,
+                                  :dot_rev_check   => 0)
+   
+   design.design_type = 'New'
+   assert(design.belongs_to(section_all))
+   assert(!design.belongs_to(section_nothing))
+   assert(design.belongs_to(subsection_all))
+   assert(!design.belongs_to(subsection_nothing))
+   assert(design.belongs_to(check_all))
+   assert(!design.belongs_to(check_nothing))
+   
+   design.design_type = 'Date Code'
+   assert(design.belongs_to(section_all))
+   assert(!design.belongs_to(section_nothing))
+   assert(design.belongs_to(subsection_all))
+   assert(!design.belongs_to(subsection_nothing))
+   assert(design.belongs_to(check_all))
+   assert(!design.belongs_to(check_nothing))
+
+   design.design_type = 'Dot Rev'
+   assert(design.belongs_to(section_all))
+   assert(!design.belongs_to(section_nothing))
+   assert(design.belongs_to(subsection_all))
+   assert(!design.belongs_to(subsection_nothing))
+   assert(design.belongs_to(check_all))
+   assert(!design.belongs_to(check_nothing))
  
  end
   
