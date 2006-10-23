@@ -3,167 +3,203 @@
 #
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 admin:
-  id:       1
-  name:     Admin
-  active:   1
-  reviewer: 0
-  cc_peers: 0
-  display_name: Tracker Admin
+  id:                    1
+  name:                  Admin
+  active:                1
+  reviewer:              0
+  cc_peers:              0
+  display_name:          Tracker Admin
 designer:
-  id:       2
-  name:     Designer
-  active:   1
-  reviewer: 0
-  cc_peers: 0
-  display_name: PCB Designer
+  id:                    2
+  name:                  Designer
+  active:                1
+  reviewer:              0
+  cc_peers:              0
+  display_name:          PCB Designer
 manager:
-  id:       4
-  name:     Manager
-  active:   1
-  reviewer: 0
-  cc_peers: 0
-  display_name: Tracker PCB Management
+  id:                    4
+  name:                  Manager
+  active:                1
+  reviewer:              0
+  cc_peers:              0
+  display_name:          Tracker PCB Management
 hweng:
-  id:       5
-  name:     HWENG
-  active:   1
-  reviewer: 1
-  cc_peers: 0
-  display_name: Hardware Engineer (EE)
+  id:                    5
+  name:                  HWENG
+  active:                1
+  reviewer:              1
+  cc_peers:              0
+  display_name:          Hardware Engineer (EE)
+  new_design_type:       1
+  date_code_design_type: 1
+  dot_rev_design_type:   1
 valor:
-  id:       6
-  name:     Valor
-  active:   1
-  reviewer: 1
-  cc_peers: 1
-  display_name: Valor
+  id:                    6
+  name:                  Valor
+  active:                1
+  reviewer:              1
+  cc_peers:              1
+  display_name:          Valor
+  new_design_type:       1
+  date_code_design_type: 1
+  dot_rev_design_type:   1
 ce_dft:
-  id:       7
-  name:     CE-DFT
-  active:   1
-  reviewer: 1
-  cc_peers: 0
-  display_name: CE-DFT Engineer
+  id:                    7
+  name:                  CE-DFT
+  active:                1
+  reviewer:              1
+  cc_peers:              0
+  display_name:          CE-DFT Engineer
+  new_design_type:       1
 dfm:
-  id:       8
-  name:     DFM
-  active:   1
-  reviewer: 1
-  cc_peers: 0
-  display_name: CE-DFM Engineer
+  id:                    8
+  name:                  DFM
+  active:                1
+  reviewer:              1
+  cc_peers:              0
+  display_name:          CE-DFM Engineer
+  new_design_type:       1
+  date_code_design_type: 1
+  dot_rev_design_type:   1
 tde:
-  id:       9
-  name:     TDE
-  active:   1
-  reviewer: 1
-  cc_peers: 0
-  display_name: TDE Engineer
+  id:                    9
+  name:                  TDE
+  active:                1
+  reviewer:              1
+  cc_peers:              0
+  display_name:          TDE Engineer
+  new_design_type:       1
 mechanical:
-  id:       10
-  name:     Mechanical
-  active:   1
-  reviewer: 1
-  cc_peers: 0
-  display_name: Mechanical Engineer
+  id:                   10
+  name:                  Mechanical
+  active:                1
+  reviewer:              1
+  cc_peers:              0
+  display_name:          Mechanical Engineer
+  new_design_type:       1
+  date_code_design_type: 1
+  dot_rev_design_type:   1
 mechanical_manufacturing:
-  id:       11
-  name:     Mechanical-MFG
-  active:   1
-  reviewer: 1
-  cc_peers: 0
-  display_name: Mechanical Mfg Engineer
+  id:                    11
+  name:                  Mechanical-MFG
+  active:                1
+  reviewer:              1
+  cc_peers:              0
+  display_name:          Mechanical Mfg Engineer
+  new_design_type:       1
 pcb_design:
-  id:       12
-  name:     PCB Design
-  active:   1
-  reviewer: 1
-  manager:  1
-  cc_peers: 0
-  display_name: PCB Design Manager
+  id:                    12
+  name:                  PCB Design
+  active:                1
+  reviewer:              1
+  manager:               1
+  cc_peers:              0
+  display_name:          PCB Design Manager
+  new_design_type:       1
+  date_code_design_type: 1
+  dot_rev_design_type:   1
 planning:
-  id:       13
-  name:     Planning
-  active:   1
-  reviewer: 1
-  cc_peers: 0
-  display_name: New Product Planner
+  id:                    13
+  name:                  Planning
+  active:                1
+  reviewer:              1
+  cc_peers:              0
+  display_name:          New Product Planner
+  new_design_type:       1
+  date_code_design_type: 1
+  dot_rev_design_type:   1
 pcb_input_gate:
-  id:       14
-  name:     PCB Input Gate
-  active:   1
-  reviewer: 1
-  cc_peers: 0
-  display_name: PCB Design Input Gate
+  id:                    14
+  name:                  PCB Input Gate
+  active:                1
+  reviewer:              1
+  cc_peers:              0
+  display_name:          PCB Design Input Gate
+  new_design_type:       1
+  date_code_design_type: 1
+  dot_rev_design_type:   1
 library:
-  id:       15
-  name:     Library
-  active:   1
-  reviewer: 1
-  cc_peers: 0
-  display_name: Component Development
+  id:                    15
+  name:                  Library
+  active:                1
+  reviewer:              1
+  cc_peers:              0
+  display_name:          Component Development
+  new_design_type:       1
 pcb_mechanical:
-  id:       16
-  name:     PCB Mechanical
-  active:   1
-  reviewer: 1
-  cc_peers: 0
-  display_name: PCB Mechanical Engineer
+  id:                    16
+  name:                  PCB Mechanical
+  active:                1
+  reviewer:              1
+  cc_peers:              0
+  display_name:          PCB Mechanical Engineer
+  new_design_type:       1
 slm_bom:
-  id:       17
-  name:     SLM BOM
-  active:   1
-  reviewer: 1
-  cc_peers: 0
+  id:                    17
+  name:                  SLM BOM
+  active:                1
+  reviewer:              1
+  cc_peers:              0
   display_name: SLM BOM
+  new_design_type:       1
 slm_vendor:
-  id:       18
-  name:     SLM-Vendor
-  active:   1
-  reviewer: 1
-  cc_peers: 0
-  display_name: SLM Vendor
+  id:                    18
+  name:                  SLM-Vendor
+  active:                1
+  reviewer:              1
+  cc_peers:              0
+  display_name:          SLM Vendor
+  new_design_type:       1
 operations_manager:
-  id:       19
-  name:     Operations Manager
-  active:   1
-  reviewer: 1
-  manager:  1
-  cc_peers: 0
-  display_name: Operations Manager
+  id:                    19
+  name:                  Operations Manager
+  active:                1
+  reviewer:              1
+  manager:               1
+  cc_peers:              0
+  display_name:          Operations Manager
+  new_design_type:       1
+  date_code_design_type: 1
+  dot_rev_design_type:   1
 pcb_admin:
-  id:       20
-  name:     PCB Admin
-  active:   1
-  reviewer: 0
-  cc_peers: 0
-  display_name: PCB Admin
+  id:                    20
+  name:                  PCB Admin
+  active:                1
+  reviewer:              0
+  cc_peers:              0
+  display_name:          PCB Admin
 program_manager:
-  id:       21
-  name:     Program Manager
-  active:   1
-  reviewer: 1
-  manager:  1
-  cc_peers: 0
-  display_name: Program Manager
+  id:                    21
+  name:                  Program Manager
+  active:                1
+  reviewer:              1
+  manager:               1
+  cc_peers:              0
+  display_name:          Program Manager
+  new_design_type:       1
 hweng_manager:
-  id:       22
-  name:     Hardware Engineering Manager
-  active:   1
-  reviewer: 1
-  manager:  1
-  cc_peers: 0
-  display_name: EE Manager
+  id:                    22
+  name:                  Hardware Engineering Manager
+  active:                1
+  reviewer:              1
+  manager:               1
+  cc_peers:              0
+  display_name:          EE Manager
+  new_design_type:       1
 compliance_emc:
-  id:       23
-  name:     Compliance - EMC
-  active:   1
-  reviewer: 1
-  cc_peers: 0
-  display_name: Compliance - EMC
+  id:                    23
+  name:                  Compliance - EMC
+  active:                1
+  reviewer:              1
+  cc_peers:              0
+  display_name:          Compliance - EMC
+  new_design_type:       1
 compliance_safety:
-  id:       24
-  name:     Compliance - Safety
-  active:   1
-  reviewer: 1
-  cc_peers: 0
-  display_name: Compliance - Safety
+  id:                    24
+  name:                  Compliance - Safety
+  active:                1
+  reviewer:              1
+  cc_peers:              0
+  display_name:          Compliance - Safety
+  new_design_type:       1
+ 
