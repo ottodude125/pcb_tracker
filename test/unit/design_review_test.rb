@@ -41,8 +41,9 @@ class DesignReviewTest < Test::Unit::TestCase
   
     review_results   = @mx234a_pre_art_review.review_results_by_role_name
     expected_results = @mx234a_pre_art_review.design_review_results
+    review_results   = review_results.sort_by   { |rr| rr.role.name }
     expected_results = expected_results.sort_by { |er| er.role.name }
-    
+
     assert_equal(expected_results, review_results)
     assert_equal(14,               review_results.size)
   end

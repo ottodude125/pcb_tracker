@@ -7,8 +7,19 @@ class DesignReviewResultTest < Test::Unit::TestCase
     @design_review_result = DesignReviewResult.find(1)
   end
 
-  # Replace this with your real tests.
-  def test_truth
-    assert_kind_of DesignReviewResult,  @design_review_result
+  ###################################################################
+  def test_complete
+    
+    results = { 'APPROVED' => true,
+                'WAIVED'   => true,
+                'COMMENT'  => false, 
+                'REJECTED' => true }
+                
+    drr = DesignReviewResult.new
+    results.each do |result, expected_return|
+      drr.result = result
+      assert_equal(expected_return, drr.complete?)
+    end
+    
   end
 end
