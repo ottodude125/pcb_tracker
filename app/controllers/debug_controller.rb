@@ -13,7 +13,9 @@
 
 class DebugController < ApplicationController
 
+require 'net/http'
 
+before_filter(:verify_admin_role)
 
   ######################################################################
   #
@@ -42,7 +44,7 @@ class DebugController < ApplicationController
   #
   def designs
     @board   = Board.find(@params[:id])
-    @designs = Design.find_all_by_board_id(@board.id, "name ASC")
+    @designs = Design.find_all_by_board_id(@board.id)
   end
 
 
@@ -165,8 +167,9 @@ class DebugController < ApplicationController
     expected_section_so = 1
     @messages = []
 
-    sections = @checklist.sections.sort_by { |s| s.sort_order }
-    for section in sections
+    urls = {}
+    #sections = @checklist.sections.sort_by { |s| s.sort_order }
+    for section in @checklist.sections
       if section.sort_order != expected_section_so
         @messages.push   "Section #{section.id}: Expected sort order " +
                          "#{expected_section_so}  " +
@@ -181,9 +184,24 @@ class DebugController < ApplicationController
 
       subsection_count       = section.subsections.size
       expected_subsection_so = 1
+      
+      logger.info "#############################################"
+      logger.info "                   SECTION"
+      logger.info "  URL: #{section.url}"
+      if section.url != ''
+        url = section.url.split('/')
+        logger.info " BASE: #{url[0]}"
+        if !urls[section.url]
+          h = Net::HTTP::new(url.shift)
+          urls[section.url] = h.get('/' + url.join('/'))
+        end
+        section[:resp] = { :message => urls[section.url].message,
+                           :code    => urls[section.url].code }
+      end
+      logger.info "#############################################"
 
-      subsections = section.subsections.sort_by { |s| s.sort_order }
-      for subsection in subsections
+      #subsections = section.subsections.sort_by { |s| s.sort_order }
+      for subsection in section.subsections
         if subsection.sort_order != expected_subsection_so
           @messages.push   "Subsection #{subsection.id}: Expected sort order " +
                          "#{expected_subsection_so}  " +
@@ -198,9 +216,24 @@ class DebugController < ApplicationController
 
         check_count       = subsection.checks.size
         expected_check_so = 1
+        
+        logger.info "#############################################"
+        logger.info "                SUBSECTION"
+        logger.info "  URL: #{subsection.url}"
+        if subsection.url != ''
+          url = subsection.url.split('/')
+          logger.info " BASE: #{url[0]}"
+          if !urls[subsection.url]
+            h = Net::HTTP::new(url.shift)
+            urls[subsection.url], data = h.get('/' + url.join('/'))
+          end
+          subsection[:resp] = { :message => urls[subsection.url].message,
+                                :code    => urls[subsection.url].code }
+        end
+        logger.info "#############################################"
 
-        checks = subsection.checks.sort_by { |c| c.sort_order }
-        for check in checks
+        #checks = subsection.checks.sort_by { |c| c.sort_order }
+        for check in subsection.checks
           if check.sort_order != expected_check_so
             @messages.push   "Check #{check.id}: Expected sort order " +
                              "#{expected_check_so}  " +
@@ -213,6 +246,16 @@ class DebugController < ApplicationController
           end
           expected_check_so += 1
           
+          if check.url != ''
+            url = check.url.split('/')
+            if !urls[check.url]
+              h = Net::HTTP::new(url.shift)
+              urls[check.url], data = h.get('/' + url.join('/'))
+            end
+            check[:resp] = { :message => urls[check.url].message,
+                             :code    => urls[check.url].code }
+          end
+
         end
         
       end
