@@ -14,7 +14,7 @@
 
 class DesignController < ApplicationController
 
-  before_filter :verify_admin_role
+  before_filter(:verify_admin_role, :except => [:view])
 
   auto_complete_for :design, :name
 
@@ -24,15 +24,10 @@ class DesignController < ApplicationController
   # initial_cc_list
   #
   # Description:
+  # Provides the data for the initial_cc_list view.
   #
-  #
-  # Parameters from @params
-  # design_id -
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
+  # Parameters from params
+  # design_id - identifies the design
   #
   ######################################################################
   #
@@ -97,11 +92,26 @@ class DesignController < ApplicationController
   end
 
 
+  ######################################################################
+  #
+  # add_to_initial_cc_list
+  #
+  # Description:
+  # This method responds when the users clicks on a name in the list of
+  # names to be added to the CC list.  The database is updated to add the
+  # user to the CC list and the view is refreshed to indicate that the 
+  # change was made.
+  #
+  # Parameters from params
+  # id - identifies the user to add to the CC list.
+  #
+  ######################################################################
+  #
   def add_to_initial_cc_list
 
     details    = flash[:details]
     @reviewers = details[:reviewers]
-    user       = User.find(@params[:id])
+    user       = User.find(params[:id])
 
     details[:design].board.users << user
 
@@ -134,11 +144,26 @@ class DesignController < ApplicationController
   end
 
 
+  ######################################################################
+  #
+  # remove_from_initial_cc_list
+  #
+  # Description:
+  # This method responds when the users clicks on a name in the list of
+  # names to be removed from the CC list.  The database is updated to 
+  # removea the user from the CC list and the view is refreshed to 
+  # indicate that the change was made.
+  #
+  # Parameters from params
+  # id - identifies the user to remove from the CC list.
+  #
+  ######################################################################
+  #
   def remove_from_initial_cc_list
 
     details = flash[:details]
     @reviewers = details[:reviewers]
-    user = User.find(@params[:id])
+    user = User.find(params[:id])
 
     # Update the database
     details[:design].board.remove_users(user)
@@ -167,6 +192,18 @@ class DesignController < ApplicationController
   end
 
 
+  ######################################################################
+  #
+  # initial_attachments
+  #
+  # Description:
+  # Provides the data for the initial_attachments view.
+  #
+  # Parameters from params
+  # design_id - identifies the design
+  #
+  ######################################################################
+  #
   def initial_attachments
 
     @design        = Design.find(params[:design_id])
@@ -196,6 +233,26 @@ class DesignController < ApplicationController
         end
       end
     end
+  end
+  
+  
+  ######################################################################
+  #
+  # view
+  #
+  # Description:
+  # Provides the data for the design view view.
+  #
+  # Parameters from params
+  # id - identifies the design
+  #
+  ######################################################################
+  #
+  def view
+  
+    @design         = Design.find(params[:id])
+    @design_reviews = @design.design_reviews.sort_by { |dr| dr.review_type.sort_order}
+  
   end
 
 
