@@ -759,12 +759,11 @@ class TrackerController < ApplicationController
         design_review[:priority_name] = 'Unset'
       end
       
-      design_review[:reviewers] = 
-        DesignReviewResult.find_all_by_design_review_id(design_review.id).size
-      design_review[:approvals] = 
-        DesignReviewResult.find_all_by_design_review_id_and_result(
-          design_review.id,
-          DesignReviewResult::APPROVED).size
+      results = design_review.design_review_results.collect { |r| r.result }
+      design_review[:reviewers] = results.size
+      design_review[:approvals] = results.find_all { |r| 
+                                    (r == DesignReviewResult::APPROVED ||
+                                     r == DesignReviewResult::WAIVED) }.size
           
       design_reviews << design_review
     
