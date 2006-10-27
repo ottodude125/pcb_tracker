@@ -7,6 +7,6 @@ MESSAGES = {
 PCBTR_BASE_URL = 'http://linuxolten.icd.teradyne.com/tracker/'
 SENDER         = 'PCB_Tracker'
 EAVESDROP      = 'paul_altimonte@notes.teradyne.com'
-
+DEVEL_SERVER   = false
 
 end
