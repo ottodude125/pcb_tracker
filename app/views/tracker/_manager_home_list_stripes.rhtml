@@ -44,25 +44,25 @@
     <table border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="center" valign="top">
-          <%= button_to("Update Assignments", 
-                        { :controller => "design_review",
-                          :action     => "admin_update",
-                          :id         => manager_home_list_stripes.id },
-                        { :title => "Make updates to the design review assignments.",
-                          :class => "small_font_button" } ) %>
+          <input type="button" value="Update Assignments"
+                 title='<%= "#{manager_home_list_stripes.design.name}: Make updates to the design review assignments" %>'
+                 onClick="parent.location='<%= url_for(:controller => 'design_review',
+                                                       :action     => 'admin_update',
+                                                       :id         => manager_home_list_stripes.id) %>'"
+                     class="small_font_button" />
         </td>
       </tr>
       <tr>
         <td align="center" valign="top">
           <% if !manager_home_list_stripes.design.audit.skip? %>
-            <%= button_to('Audit Assignments',
-                          { :controller => 'audit',
-                            :action     => 'auditor_list',
-                            :id         => manager_home_list_stripes.design.audit.id,
-                            :return_to  => { :controller => 'tracker',
-                                             :action     => 'index' } },
-                          { :title => 'Set the assignments for self and peer audits.',
-                            :class => "small_font_button" } )%>
+          <input type="button" value="Audit Assignments"
+                 title= '<%= "#{manager_home_list_stripes.design.name}: Set the assignments for self and peer audits" %>'
+                 onClick="parent.location='<%= url_for(:controller => 'audit',
+                                                       :action     => 'auditor_list',
+                                                       :id         => manager_home_list_stripes.design.audit.id,
+                                                       :return_to  => { :controller => 'tracker',
+                                                                        :action     => 'index' }) %>'"
+                 class="small_font_button" />
           <% else %>
             <b>Audit Skipped</b>
           <% end %>
