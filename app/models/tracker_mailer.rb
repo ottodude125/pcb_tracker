@@ -776,17 +776,18 @@ class TrackerMailer < ActionMailer::Base
   #
   # Parameters:
   #   board_design_entry - the board design entry
-  #   processor          - the user record for the processor
+  #   processor          - the user record for the PCB input gate
   #   sent_at            - the time of the event
   #
   ######################################################################
   #
   def board_design_entry_return_to_originator(board_design_entry,
-                                              originator,
+                                              processor,
                                               sent_at = Time.now)
 
     @subject    = "The #{board_design_entry.design_name} design entry has been returned by PCB"
-                  
+    
+    originator  = User.find(board_design_entry.originator_id)          
     @recipients = [originator.email]
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
@@ -795,7 +796,7 @@ class TrackerMailer < ActionMailer::Base
     @cc         = add_role_members(['PCB Input Gate', 'Manager'])
 
     @body['board_design_entry'] = board_design_entry
-    @body['originator']         = originator
+    @body['processor']          = processor
 
   end
   
@@ -871,6 +872,23 @@ class TrackerMailer < ActionMailer::Base
     @body['session']   = session
     @body['params']    = params
     @body['env']       = env
+  
+  end
+  
+  
+  def oi_assignment_notification(oi_instruction,
+                                 sent_on         = Time.now)
+  
+    @subject    = "#{oi_instruction.design.name}:: Work Assignment"
+                  
+    @recipients = oi_instruction.users.collect { |u| u.email }
+    @from       = Pcbtr::SENDER
+    @sent_on    = sent_on
+    @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
+    @cc         = add_role_members(['PCB Input Gate', 'Manager'])
+
+    @body['oi_instruction'] = oi_instruction
   
   end
   
