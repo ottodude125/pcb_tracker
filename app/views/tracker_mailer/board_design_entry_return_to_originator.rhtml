@@ -1,3 +1,8 @@
-The <%= @entry_name %> has been returned to you by <%= @originator.name %>
+The <%= @board_design_entry.design_name %> has been returned to you by <%= @processor.name %>
+
+COMMENTS:
+--------------------------------------------------------------------------------
+<%= @board_design_entry.input_gate_comments %>
+--------------------------------------------------------------------------------
 
 For details, please refer to <%= Pcbtr::PCBTR_BASE_URL %>board_design_entry/view_entry/<%= @board_design_entry.id %>
