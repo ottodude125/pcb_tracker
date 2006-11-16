@@ -1162,9 +1162,10 @@ class BoardDesignEntryController < ApplicationController
   
    document = Document.find(params[:id])
    
-   send_data(document.data.to_a.pack("H"),
-             :filename  => document.name,
-             :type      => document.content_type)
+   send_data(document.data.to_a.pack("H*"),
+             :filename    => document.name,
+             :type        => document.content_type,
+             :disposition => "inline")
   
   end
   
