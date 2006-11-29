@@ -15,7 +15,7 @@ class DebugController < ApplicationController
 
 require 'net/http'
 
-before_filter(:verify_admin_role)
+before_filter(:verify_admin_role, :except => [:cycle_time])
 
   ######################################################################
   #
@@ -266,6 +266,22 @@ before_filter(:verify_admin_role)
   def users
 
     @users = User.find_all(nil, 'last_name ASC')
+  
+  end
+  
+  
+  def cycle_time
+  
+    @cycle_times = [{ :user           => User.find_by_last_name('Bechard'),
+                      :design_reviews => [] },
+                    { :user           => User.find_by_last_name('Pallotta'),
+                      :design_reviews => [] }]
+                      
+    @cycle_times.each do |ct|
+      review_results = DesignReviewResult.find_all_by_reviewer_id(ct[:user].id)
+      review_results.delete_if { |rr| rr.result == 'No Response' || rr.result == 'NONE' }
+      ct[:design_reviews] = review_results
+    end
   
   end
 
