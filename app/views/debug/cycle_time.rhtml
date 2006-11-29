@@ -1,0 +1,38 @@
+<% @cycle_times.each do |ct| %>
+
+  <table width="1000" border="1" align="center">
+    <tr class="teraheader">
+      <th colspan="8"><%= ct[:user].name %></th>
+    </tr>
+    
+    <tr valign="top">
+      <th>Design</th>
+      <th>Review Type</th>
+      <th>Posting Count</th>
+      <th>Role</th>
+      <th>Result</th>
+      <th>Original<br />Posting</th>
+      <th>Last<br />Posting</th>
+      <th>Resolved</th>
+    </tr>
+    
+    <% ct[:design_reviews].each do |review_result| %>
+    
+      <tr>
+        <td><%= review_result.design_review.design.name %></td>
+        <td><%= review_result.design_review.review_type.name %></td>
+        <td><%= review_result.design_review.posting_count %></td>
+        <td><%= review_result.role.name %></td>
+        <td><%= review_result.result %></td>
+        <td><%= review_result.design_review.created_on.strftime('%m/%d/%y %I:%M %p') %></td>
+        <td><%= review_result.design_review.reposted_on.strftime('%m/%d/%y %I:%M %p') %></td>
+        <td><%= review_result.reviewed_on.strftime('%m/%d/%y %I:%M %p') %></td>
+      </tr>
+    
+    <% end %>
+  
+  </table>
+
+<% end %>
+
+<%# debug @cycle_times %>
