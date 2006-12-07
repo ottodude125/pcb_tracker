@@ -1,0 +1,20 @@
+<table border="1" align="center">
+
+  <tr class="teraheader" valign="top">
+    <th>Design</th>
+    <th>Originator</th>
+    <th>Ready To<br />Post</th>
+    <th>Submitted</th>
+    <th>Complete</th>
+  </tr>
+  
+  <% @bde_list.each do |@bde| %>
+  <tr>
+    <td><%= @bde.design_name %></td>
+    <td><%= @bde.originator %></td>
+    <td><%= @bde.ready_to_post? ? 'Yes' : 'No' %>
+    <td><%= @bde.submitted?     ? 'Yes' : 'No' %>
+    <td><%= @bde.complete?      ? 'Yes' : 'No' %>
+  </tr>
+  <% end %>
+</table>
