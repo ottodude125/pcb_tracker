@@ -80,10 +80,8 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   #
   def orphaned_audits
 
-    audits = Audit.find_all
-
     @audit_list = {}
-    for audit in audits
+    Audit.find_all.each do |audit|
       begin
         @audit_list[audit.id] = Design.find(audit.design_id).name
       rescue
@@ -105,11 +103,9 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   #
   def orphaned_checks
 
-    checks = Check.find_all
-
     @section_list    = {}
     @subsection_list = {}
-    for check in checks
+    Check.find_all.each do |check|
       begin
         Section.find(check.section_id)
       rescue
@@ -154,10 +150,10 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
     @checklist = Checklist.find(@params[:id])
     @subsection_count = 0
     @check_count      = 0
-    for section in @checklist.sections
+    @checklist.sections.each do |section|
       @subsection_count += section.subsections.size
 
-      for subsection in section.subsections
+      section.subsections.each do |subsection|
         @check_count += subsection.checks.size
       end
       
@@ -169,7 +165,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
 
     urls = {}
     #sections = @checklist.sections.sort_by { |s| s.sort_order }
-    for section in @checklist.sections
+    @checklist.sections.each do |section|
       if section.sort_order != expected_section_so
         @messages.push   "Section #{section.id}: Expected sort order " +
                          "#{expected_section_so}  " +
@@ -201,7 +197,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
       logger.info "#############################################"
 
       #subsections = section.subsections.sort_by { |s| s.sort_order }
-      for subsection in section.subsections
+      section.subsections.each do |subsection|
         if subsection.sort_order != expected_subsection_so
           @messages.push   "Subsection #{subsection.id}: Expected sort order " +
                          "#{expected_subsection_so}  " +
@@ -233,7 +229,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
         logger.info "#############################################"
 
         #checks = subsection.checks.sort_by { |c| c.sort_order }
-        for check in subsection.checks
+        subsection.checks.each do |check|
           if check.sort_order != expected_check_so
             @messages.push   "Check #{check.id}: Expected sort order " +
                              "#{expected_check_so}  " +
@@ -260,6 +256,13 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
         
       end
     end
+  end
+  
+  
+  def board_design_entries
+  
+    @bde_list = BoardDesignEntry.find_all
+  
   end
 
 
