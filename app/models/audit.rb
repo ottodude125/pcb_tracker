@@ -48,14 +48,10 @@ PEER_AUDIT       = 2
   #
   def audit_state
   
-    if !self.designer_complete?
-      return SELF_AUDIT
-    elsif !self.auditor_complete?
-      return PEER_AUDIT
-    else
-      return AUDIT_COMPLETE
-    end
-    
+    return SELF_AUDIT     unless self.designer_complete?
+    return PEER_AUDIT     unless self.auditor_complete?
+    return AUDIT_COMPLETE
+
   end
   
   
@@ -181,9 +177,9 @@ PEER_AUDIT       = 2
     design    = self.design
     checklist = self.checklist
 
-    for section in checklist.sections
-      for subsection in section.subsections
-        for check in subsection.checks
+    checklist.sections.each do |section|
+      section.subsections.each do |subsection|
+        subsection.checks.each do |check|
           if ((design.new?)                          ||
               (design.date_code? && check.date_code_check?) ||
               (design.dot_rev?   && check.dot_rev_check?))
