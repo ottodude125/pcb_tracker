@@ -23,7 +23,7 @@ audit_la453b:
 audit_la453a_eco1:
   id:                        1003
   design_id:                 3
-  checklist_id:              2
+  checklist_id:              222
   designer_complete:         0
   auditor_complete:          0
   designer_completed_checks: 0

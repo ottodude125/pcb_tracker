@@ -395,7 +395,7 @@ check_10_003:
   url: www.teradyne.com
   full_review: 1
   date_code_check: 0
-  dot_rev_check: 0
+  dot_rev_check: 1
   sort_order: 4
   check_type: designer_auditor
 check_10_004:

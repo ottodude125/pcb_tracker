@@ -19,6 +19,9 @@ scott_role:
 mily_role:
   role_id: 2
   user_id: 5003
+siva_role:
+  role_id: 2
+  user_id: 5004
 ben_b_hweng:
   role_id: 5
   user_id: 6000

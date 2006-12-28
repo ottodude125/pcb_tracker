@@ -434,3 +434,163 @@ design_check_20_2014:
   designer_id:         5002
   designer_result:     None
   designer_checked_on: 
+design_check_la45a1_dr:
+  id:                  20500
+  audit_id:            1004
+  check_id:            10003
+  auditor_id:          5001
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5002
+  designer_result:     None
+  designer_checked_on: 
+design_check_la45a_eco1_dc1:
+  id:                  20600
+  audit_id:            1003
+  check_id:            10000
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_la45a_eco1_dc2:
+  id:                  20601
+  audit_id:            1003
+  check_id:            10001
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_la45a_eco1_dc3:
+  id:                  20602
+  audit_id:            1003
+  check_id:            10002
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_mx999b_dc1:
+  id:                  30300
+  audit_id:            2001
+  check_id:            13
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_mx999b_dc2:
+  id:                  30301
+  audit_id:            2001
+  check_id:            14
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_mx999b_dc3:
+  id:                  30302
+  audit_id:            2001
+  check_id:            15
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_mx999b_dc4:
+  id:                  30303
+  audit_id:            2001
+  check_id:            16
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_mx999b_dc5:
+  id:                  30304
+  audit_id:            2001
+  check_id:            17
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_mx999b_dc6:
+  id:                  30305
+  audit_id:            2001
+  check_id:            24
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_mx999b_dc7:
+  id:                  30306
+  audit_id:            2001
+  check_id:            18
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_mx999b_dc8:
+  id:                  30307
+  audit_id:            2001
+  check_id:            19
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_mx999b_dc9:
+  id:                  30308
+  audit_id:            2001
+  check_id:            20
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_mx999b_dc10:
+  id:                  30309
+  audit_id:            2001
+  check_id:            21
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_mx999b_dc11:
+  id:                  30310
+  audit_id:            2001
+  check_id:            22
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 
+design_check_mx999b_dc12:
+  id:                  30311
+  audit_id:            2001
+  check_id:            23
+  auditor_id:          5002
+  auditor_result:      None
+  auditor_checked_on:   
+  designer_id:         5000
+  designer_result:     None
+  designer_checked_on: 

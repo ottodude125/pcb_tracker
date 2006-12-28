@@ -18,3 +18,7 @@ eng_inst:
   id:     4
   name:   Eng Notes
   active: 1
+outline_drawing:
+  id:     5
+  name:   Outline Drawing
+  active: 1

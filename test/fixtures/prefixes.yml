@@ -38,3 +38,9 @@ la:
   loaded_prefix:   949
   unloaded_prefix: 942
   active:          1
+dj:
+  id:              7
+  pcb_mnemonic:    dj
+  loaded_prefix:   600
+  unloaded_prefix: 610
+  active:          0
