@@ -36,43 +36,22 @@ before_filter(:verify_admin_role,
   # Parameters from params
   # None
   #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
   ######################################################################
   #
   def list
 
-    #    @board_pages, @boards = paginate(:boards,
-    #				     :per_page => 15,
-    #				     :order_by => '`prefixes`.`name` ASC, `boards`.`number` ASC',
-    #				     :join => ' LEFT JOIN `prefixes` ON boards.prefix_id=prefixes.id')
-    #    The wrong index is being stuffed into the link.
-    #    For the time being, sort the boards based on the prefix/number combination.
-
     queried_boards = Board.find_all
 
-    prefix_list = Array.new
-    temp_boards = Hash.new
-    for board in queried_boards
-      if prefix_list[board.prefix_id] == nil
-        prefix_list[board.prefix_id] = Prefix.find(board.prefix_id).pcb_mnemonic
-      end
-
+    prefix_list = []
+    temp_boards = {}
+    queried_boards.each do |board|
+      prefix_list[board.prefix_id] = board.prefix.pcb_mnemonic if !prefix_list[board.prefix_id]
       temp_boards[prefix_list[board.prefix_id].to_s + board.number.to_s] = board
     end
 
-    sorted_boards = temp_boards.sort
-    i = 0
-    sorted_boards.each { |k, v|
-      queried_boards[i] = v
-      i += 1
-    }
-
-    @board_pages, @boards = paginate_collection(queried_boards,
+    @board_pages, @boards = paginate_collection(temp_boards.sort.collect { |sb| sb.pop },
                                                 :page => params[:page])
+    
   end
 
 
@@ -99,14 +78,19 @@ before_filter(:verify_admin_role,
 
     conditions = ''
 
-    if params['filter']['prefix_id'] != ''
+    # Save the filter information for paging
+    flash[:prefix_filter]   = flash[:prefix_filter]   ? flash[:prefix_filter]   : params['filter']['prefix_id']
+    flash[:platform_filter] = flash[:platform_filter] ? flash[:platform_filter] : params['filter']['platform_id']
+    flash[:project_filter]  = flash[:project_filter]  ? flash[:project_filter]  : params['filter']['project_id']
+
+    if flash[:prefix_filter] != ''
       conditions = "prefix_id=#{params['filter']['prefix_id']}"
     end
-    if params['filter']['platform_id'] != ''
+    if flash[:platform_filter] != ''
       conditions += ' and ' if conditions != ''
       conditions += "platform_id=#{params['filter']['platform_id']}"
     end
-    if params['filter']['project_id'] != ''
+    if flash[:project_filter] != ''
       conditions += ' and ' if conditions != ''
       conditions += "project_id=#{params['filter']['project_id']}"
     end
@@ -117,73 +101,17 @@ before_filter(:verify_admin_role,
       queried_boards = Board.find_all(conditions)
     end
 
-    prefix_list = Array.new
-    temp_boards = Hash.new
-    for board in queried_boards
-      if prefix_list[board.prefix_id] == nil
-        prefix_list[board.prefix_id] = Prefix.find(board.prefix_id).pcb_mnemonic
-      end
-
+    prefix_list = []
+    temp_boards = {}
+    queried_boards.each do |board|
+      prefix_list[board.prefix_id] = board.prefix.pcb_mnemonic if !prefix_list[board.prefix_id]
       temp_boards[prefix_list[board.prefix_id].to_s + board.number.to_s] = board
     end
 
-    sorted_boards = temp_boards.sort
-    i = 0
-    sorted_boards.each { |k, v|
-      queried_boards[i] = v
-      i += 1
-    }
-
-    @board_pages, @boards = paginate_collection(queried_boards,
+    @board_pages, @boards = paginate_collection(temp_boards.sort.collect { |sb| sb.pop },
                                                 :page => params[:page])
 
     render(:action => 'list')
-  end
-
-
-  ######################################################################
-  #
-  # add
-  #
-  # Description:
-  # This method retrieves the board from the database for display.
-  #
-  # Parameters from params
-  # ['id'] - Used to identify the board to be retrieved.
-  #
-  # Return value:
-  # None
-  #
-  ######################################################################
-  #
-  def add
-
-    @platforms = Platform.find_all('active=1',  'name ASC')
-    @projects  = Project.find_all('active=1',   'name ASC')
-    @prefixes  = Prefix.find_all('active=1',    'pcb_mnemonic ASC')
-    @review_roles = Role.find_all('reviewer=1', 'name ASC')
-
-    @reviewers = Array.new
-    for role in @review_roles
-      reviewer_list = Hash.new
-
-      reviewers = Role.find_by_name("#{role.name}").active_users
-      reviewer_list[:group]     = role.name
-      reviewer_list[:id]        = role.id
-      reviewer_list[:reviewers] = reviewers
-      @reviewers.push(reviewer_list)
-    end
-
-    @fab_houses = FabHouse.find_all('active=1', 'name ASC')
-    # fab_house_ids is used for the form - when adding, it's empty.
-    @fab_house_ids = Array.new
-
-    # Create the new board and set to active.
-    @board = Board.new
-    @board.active = 1
-
-    render_action 'edit'
-
   end
 
 
@@ -197,44 +125,29 @@ before_filter(:verify_admin_role,
   # Parameters from params
   # ['id'] - Used to identify the board to be retrieved.
   #
-  # Return value:
-  # None
-  #
   ######################################################################
   #
   def edit
 
-    @board = Board.find(params['id'])
-    @platforms = Platform.find_all('active=1', 'name ASC')
-    @projects  = Project.find_all('active=1',  'name ASC')
-    @prefixes  = Prefix.find_all('active=1',   'pcb_mnemonic ASC')
-    @review_roles = Role.find_all('reviewer=1', 'name ASC')
+    @board         = Board.find(params['id'])
+    
+    @fab_house_ids = @board.fab_houses.collect { |fh| fh.id }
+    @fab_houses    = FabHouse.get_all_active
+    @platforms     = Platform.get_all_active
+    @projects      = Project.get_all_active
+    @prefixes      = Prefix.get_all_active
+    @review_roles  = Role.get_review_roles
 
-    reviewers = BoardReviewers.find_all("board_id=#{@board.id}")
-      
-    board_reviewers = Hash.new
-    for reviewer in reviewers
-      board_reviewers[Role.find(reviewer.role_id).name] = reviewer.reviewer_id
+    board_reviewers = {}
+    @board.board_reviewers.each { |br| board_reviewers[br.role.name] = br.reviewer_id }
+
+    @reviewers = []
+    @review_roles.each do |role|
+      @reviewers.push({ :group       => role.name,
+                        :id          => role.id,
+                        :reviewers   => Role.find_by_name(role.name).active_users,
+                        :reviewer_id => board_reviewers[role.name] })
     end
-
-    @reviewers = Array.new
-    for role in @review_roles
-      reviewer_list = Hash.new
-
-      reviewers = Role.find_by_name("#{role.name}").active_users
-      reviewer_list[:group]        = role.name
-      reviewer_list[:id]           = role.id
-      reviewer_list[:reviewers]    = reviewers
-      reviewer_list[:reviewer_id]  = board_reviewers[role.name]
-      @reviewers.push(reviewer_list)
-    end
-
-    board_fab_houses = @board.fab_houses
-    @fab_house_ids = Array.new
-    for fab_house in board_fab_houses
-      @fab_house_ids.push(fab_house.id)
-    end
-    @fab_houses    = FabHouse.find_all('active=1', 'name ASC')
 
   end
 
@@ -250,9 +163,6 @@ before_filter(:verify_admin_role,
   # Parameters from params
   # ['project'] - Used to identify the board to be updated.
   #
-  # Return value:
-  # None
-  #
   ######################################################################
   #
   def update
@@ -263,110 +173,45 @@ before_filter(:verify_admin_role,
       params['board'][:number]
     if @board.update_attributes(params['board'])
       
-      params['board_reviewers'].each { |role_id, reviewer_id|
-        role = Role.find(role_id)
-        board_reviewer = BoardReviewers.find(:first,
-                                             :conditions => [ "board_id = ? and role_id = ?", @board.id, role.id ])
+      params['board_reviewers'].each do |role_id, reviewer_id|
 
+        board_reviewer = @board.board_reviewers.detect do |br| 
+          br.board_id == @board.id && br.role_id == role_id.to_i
+        end
+  
         if board_reviewer
           if board_reviewer.reviewer_id != reviewer_id
             board_reviewer.update_attribute("reviewer_id", reviewer_id)
           end
         else
-          new_board_reviewer = 
-            BoardReviewers.new(:board_id    => @board.id,
-                               :reviewer_id => reviewer_id,
-                               :role_id     => role_id)
-          new_board_reviewer.save
+          BoardReviewer.new(:board_id    => @board.id,
+                            :reviewer_id => reviewer_id,
+                            :role_id     => role_id).save
         end
-      }
+      end
 
       # Process the fab houses.
-      params['fab_house'].each { |fab_house_id, selected|
+      included_fab_houses = []
+      excluded_fab_houses = []
+      params['fab_house'].each do |fab_house_id, selected|
         fab_house = FabHouse.find(fab_house_id)
 
-        if not @board.fab_houses.include?(fab_house)
-          @board.fab_houses << fab_house  if selected == '1'
+        if ! @board.fab_houses.include?(fab_house)
+          included_fab_houses << fab_house  if selected == '1'
         else
-          @board.remove_fab_houses(fab_house) if selected == '0'
+          excluded_fab_houses << fab_house  if selected == '0'
         end
-      }
-      
+      end
+      @board.fab_houses << included_fab_houses
+      @board.remove_fab_houses(excluded_fab_houses)
 
       flash['notice'] = 'Board was successfully updated.'
     else
       flash['notice'] = 'Board not updated'
     end
-    redirect_to(:action => 'edit',
-                :id     => params["board"]["id"])
-  end
-
-
-  ######################################################################
-  #
-  # create
-  #
-  # Description:
-  # This method uses the information passed back from the user
-  # to create a new board in the database
-  #
-  # Parameters from params
-  # ['new_project'] - the information to be stored for the new board.
-  #
-  # Return value:
-  # None
-  #
-  ######################################################################
-  #
-  def create
-
-    @board = Board.new(params['board'])
-
-    # Verify that the prefix ID is in the request.  For some reason, 
-    # 'validates_presence_of :prefix_id' is not working from the model.
-    prefix_id_present = params['board']['prefix_id'] != ''
-
-    # Verify that all of the reviewers have a been selected
-    reviewers = params['board_reviewers']
-    for reviewer in reviewers
-      all_reviewers_selected = reviewer[1] != ''
-      break if not all_reviewers_selected
-    end
-
-    if all_reviewers_selected and prefix_id_present
-
-      @board.name = Prefix.find(@board.prefix_id).pcb_mnemonic + @board.number
-      @board.save
-
-      if @board.errors.empty?
-
-        for reviewer in reviewers
-          board_reviewer = 
-            BoardReviewers.new(:board_id    => @board.id,
-                               :reviewer_id => reviewer[1],
-                               :role_id     => Role.find(reviewer[0]).id)
-          board_reviewer.save
-        end
-
-        # Record any fab house selections
-        params['fab_house'].each { |fab_house_id, selected|
-          @board.fab_houses << FabHouse.find(fab_house_id) if selected == '1'
-        }
-
-        flash['notice'] = "Board was successfully created"
-        redirect_to :action => 'list'
-      else
-        flash['notice'] = @board.errors.full_messages.pop
-        redirect_to :action => 'add'
-      end
-
-    elsif not all_reviewers_selected
-      flash['notice'] = "Please make a selection for all reviewers - No board added"
-      redirect_to :action => 'add'
-    else 
-      flash['notice'] = "Prefix can not be blank"
-      redirect_to :action => 'add'      
-    end
+    
+    redirect_to(:action => 'edit', :id => params["board"]["id"])
+    
   end
 
 
@@ -376,11 +221,7 @@ before_filter(:verify_admin_role,
   #
   # Description:
   # 
-  #
   # Parameters from params
-  # None
-  #
-  # Return value:
   # None
   #
   ######################################################################
@@ -388,16 +229,15 @@ before_filter(:verify_admin_role,
   def show_boards
 
     board_list = Board.find_all
-    boards = Hash.new
     
-    for board in board_list 
-      boards[board.prefix.pcb_mnemonic] = Array.new if ! boards[board.prefix.pcb_mnemonic]
+    boards = {} 
+    board_list.each do |board|
+      boards[board.prefix.pcb_mnemonic] = [] if ! boards[board.prefix.pcb_mnemonic]
       boards[board.prefix.pcb_mnemonic] << board
     end
     
     @boards = boards.sort
-    
-    for board_list in @boards
+    @boards.each do |board_list|
       board_list[1] = board_list[1].sort_by { |board| board.number }
     end
 
@@ -415,9 +255,6 @@ before_filter(:verify_admin_role,
   # Parameters from params
   # None
   #
-  # Return value:
-  # None
-  #
   ######################################################################
   #
   def design_information
@@ -432,7 +269,7 @@ before_filter(:verify_admin_role,
     # First sort the designs by name, then sort the reviews by review order.
     if @board
       @board.designs.sort_by { |d| d.name }
-      for design in @board.designs
+      @board.designs.each do |design|
         design[:sorted_design_reviews] = 
           design.design_reviews.sort_by { |dr| dr.review_type.sort_order }
         
@@ -460,14 +297,19 @@ before_filter(:verify_admin_role,
   ######################################################################
   #
   def search_options
-  
+
     designer_role = Role.find_by_name('Designer')
     @designers = designer_role.users.sort_by { |u| u.last_name }
     @platforms = Platform.find_all.sort_by   { |p| p.name }
     @projects  = Project.find_all.sort_by    { |p| p.name }
     
-    @designer = session[:user] if session[:user].roles.detect { |r| r.name == 'Designer' }
-  
+    if (session[:user] && 
+        session[:user].roles.detect { |r| r.name == 'Designer' })
+      @designer = session[:user]
+    else
+      @designer = nil
+    end
+
   end
 
 
@@ -495,31 +337,36 @@ before_filter(:verify_admin_role,
   ######################################################################
   #
   def board_design_search
-  
+
     @project  = 'All Projects'
     @platform = 'All Platforms'
     @designer = 'All Designers'
     
-    if    params[:platform][:id] == '' && params[:project][:id] == ''
-      board_list = Board.find_all
-    elsif params[:platform][:id] != '' && params[:project][:id] == ''
-      board_list = Board.find_all_by_platform_id(params[:platform][:id])
-      @platform  = Platform.find(params[:platform][:id]).name
-    elsif params[:platform][:id] == '' && params[:project][:id] != ''
-      board_list = Board.find_all_by_project_id(params[:project][:id])
-      @project   = Project.find(params[:project][:id])
-    else
-      board_list = Board.find_all_by_platform_id_and_project_id(
-                     params[:platform][:id],
-                     params[:project][:id])
-      @platform  = Platform.find(params[:platform][:id]).name
-      @project   = Project.find(params[:project][:id])
+    if params[:platform][:id] != ''
+      platform  = Platform.find(params[:platform][:id])
+      @platform = platform.name
     end
     
+    if params[:project][:id] != ''
+      project  = Project.find(params[:project][:id])
+      @project = project.name
+    end
+    
+    case
+    when !platform && !project
+      board_list = Board.find_all
+    when  platform && !project
+      board_list = Board.find_all_by_platform_id(platform.id)
+    when !platform &&  project
+      board_list = Board.find_all_by_project_id(project.id)
+    else
+      board_list = Board.find_all_by_platform_id_and_project_id(platform.id, project.id)
+    end
+   
     release_rt = ReviewType.find_by_name('Release')
     final_rt   = ReviewType.find_by_name('Final')
-    for board in board_list 
-      for design in board.designs
+    board_list.each do |board|
+      board.designs.each do |design|
         if !(design.phase_id == Design::COMPLETE ||
              design.phase_id == release_rt.id)
           design[:designer_name] = design.designer.name
@@ -536,7 +383,7 @@ before_filter(:verify_admin_role,
     # If the designer was specified  then filter the list.
     if params[:user][:id] != ''
       @designer = User.find(params[:user][:id]).name
-      for board in board_list
+      board_list.each do |board|
         board.designs.delete_if { |d| d[:designer_id] != params[:user][:id].to_i}
       end
     end
@@ -548,15 +395,11 @@ before_filter(:verify_admin_role,
                                 rt.name == params[:review_type][:phase] }
       review_types.delete_if { |rt| rt.sort_order <= completed_review_type.sort_order }
 
-      for board in board_list
-        for design in board.designs
-          if design.phase_id != Design::COMPLETE
-            if !review_types.detect { |rt| rt.id == design.phase_id }
-              design[:delete_me] = true
-            end
-          end
+      board_list.each do |board|
+        board.designs.delete_if do |design| 
+          (design.phase_id != Design::COMPLETE &&
+           !review_types.detect { |rt| rt.id == design.phase_id })
         end
-        board.designs.delete_if { |d| d[:delete_me] }
       end
     
     end
