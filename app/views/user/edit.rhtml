@@ -20,8 +20,10 @@
       <td valign="top" width="40%">
         <table border="0" cellspacing="5">
           <tr>
-            <td align="left">ID: <%= @user.id %> </td>
-            <td align="right">Active: <%= check_box "user", "active" %> </td>
+            <td><%= check_box "user", "active" %> Active</td>
+          </tr>
+          <tr>
+            <td><%= check_box "user", "employee" %> Teradyne Employee</td>
           </tr>
           <tr>
             <td align="left">Login: <%= @user.login %> </td>
@@ -108,10 +110,13 @@
 
   <input type="submit" value="Update User" />
 
-  <input type="button" value="Return to list of users" onClick="parent.location='<%= url_for( :action => 'list' )%>'" />
+  <input type="button" value="Return to list of users" 
+         onClick="parent.location='<%= url_for( :action => 'list', 
+                                                :alpha  => @user.alpha_char )%>'" />
 
 </form>
 
+<br />
 <table border="1" rules="all">
   <tr>
     <td valign="top"><font size="-1"><b>Note:</b></font></td>
