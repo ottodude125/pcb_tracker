@@ -17,6 +17,7 @@ class Board < ActiveRecord::Base
   belongs_to :prefix
 
   has_many   :designs
+  has_many   :board_reviewers
   has_one    :audit
 
   has_and_belongs_to_many :fab_houses
