@@ -45,6 +45,35 @@ a:active  { color: #ff0000; }
   background-color: #dfe9ff;
 }
 
+.keytable {
+  border-collapse: colapse;
+  border: 4px double #444;
+  border-color: #023a94;
+  background-color: #dfe9ff;
+}
+
+.keyheader {
+  background: #023a94;
+  font-size: 12px;
+  font-style: italic;
+  color: #ffffff;
+}
+
+.keytitle {
+  font-size: 10px;
+}
+
+.keyscore {
+  font-size: 10px;
+  font-style: italic; bold;
+}
+
+.keyvalue {
+  font-size: 10px;
+  font-style: italic;
+  text-align: center;
+}
+
 .buttonPost{
   color: #184f3f;
   background-color: #4dcfa8;
@@ -141,6 +170,10 @@ a:hover { color: #fff; background-color:#000; }
   margin-left:    auto;
 }
 
+.instruction_category_table {
+  text-align: center;
+}
+
 .review_results_table{
   border-width:   0;
   border-spacing: 0;
@@ -151,6 +184,11 @@ a:hover { color: #fff; background-color:#000; }
 .review_summary{
   width:          100%;
   border:         0px solid;
+}
+
+.tera_submit{
+  color: #023a94;
+  font-weight: bold;
 }
 
 .form_submit{
