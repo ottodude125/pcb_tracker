@@ -343,12 +343,11 @@ class ChecklistController < ApplicationController
     latest_checklist =
       Checklist.find_all("major_rev_number=#{existing_checklist['major_rev_number']}", 
                          'minor_rev_number ASC').pop
-    existing_checklist['minor_rev_number'] =
-      latest_checklist.minor_rev_number + 1
-      
+    existing_checklist['minor_rev_number'] = latest_checklist.minor_rev_number + 1
+
     existing_checklist.delete('created_on')
     existing_checklist.delete('released_on')
-      
+
     new_checklist = Checklist.create(existing_checklist)
     
     # Copy all of the sections
