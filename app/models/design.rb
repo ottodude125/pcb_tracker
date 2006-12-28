@@ -21,12 +21,42 @@ class Design < ActiveRecord::Base
   has_many  :design_review_documents
   has_many  :design_reviews
   has_many  :ipd_posts
+  has_many  :oi_instructions
 
   has_one   :audit
   has_one   :board_design_entry
   
   
   NOT_SET = 'Not Set'
+
+
+  def work_assignment_data
+  
+    totals = { :assignments            => 0,
+               :completed_assignments  => 0,
+               :report_cards           => 0 }
+    
+    self.oi_instructions.each do |instruction| 
+      instruction.oi_assignments.each do |a|
+        totals[:assignments]            += 1 
+        totals[:completed_assignments]  += 1 if a.complete?
+        totals[:report_cards]           += 1 if a.oi_assignment_report
+      end 
+    end
+    
+    totals
+  
+  end
+  
+  
+  def work_assignments_complete?
+
+    summary = self.work_assignment_data
+    
+    ( ( summary[:assignments] == summary[:completed_assignments] ) &&
+      ( summary[:assignments] == summary[:report_cards] ) )
+ 
+  end
 
 
   ######################################################################
@@ -55,11 +85,10 @@ class Design < ActiveRecord::Base
 
     role_names = ['Hardware Engineering Manager',
                   'Program Manager']
-    for role_name in role_names
+    role_names.each do |role_name|
       role     = Role.find_by_name(role_name)
-      reviewer = BoardReviewers.find_by_board_id_and_role_id(
-                   self.board.id,
-                   role.id)
+      reviewer = self.board.board_reviewers.detect { |br| br.role_id == role.id }
+
       if reviewer && reviewer.reviewer_id > 0
         users[role_name] = User.find(reviewer.reviewer_id)
       else
@@ -68,8 +97,8 @@ class Design < ActiveRecord::Base
     end
     
     reviewer_list = self.all_reviewers
-    for design_review in self.design_reviews
-      for review_result in design_review.design_review_results
+    self.design_reviews.each do |design_review|
+      design_review.design_review_results.each do |review_result|
         role = Role.find(review_result.role_id)
         if not users[role.name]
           users[role.name] = User.find review_result.reviewer_id
@@ -80,6 +109,47 @@ class Design < ActiveRecord::Base
     return users
     
   end
+  
+  
+  def have_assignments(user_id)
+    
+    self.oi_instructions.each do |instruction|
+      if OiAssignment.find_by_oi_instruction_id_and_user_id(instruction.id, user_id) != nil
+        return true
+      end
+    end
+    
+    return false
+    
+  end
+  
+  
+  def my_assignments(user_id)
+  
+    my_assignments  = []    
+    self.oi_instructions.each do |instruction|
+      instruction.oi_assignments.each do |assignment| 
+        my_assignments << assignment if assignment.user_id == user_id 
+      end
+    end
+    
+    my_assignments
+  
+  end
+
+
+  def all_assignments(category_id = 0)
+
+    assignments  = []
+    self.oi_instructions.each do |instruction|
+      next if category_id > 0 && category_id != instruction.oi_category_section.oi_category_id
+      instruction.oi_assignments.each { |assignment| assignments << assignment }
+    end
+
+    assignments
+
+  end
+  
   
   
   ######################################################################
@@ -112,8 +182,8 @@ class Design < ActiveRecord::Base
     
     reviewer_list = {}
     design_reviews = self.design_reviews
-    for design_review in design_reviews
-      for design_review_result in design_review.design_review_results
+    design_reviews.each do |design_review|
+      design_review.design_review_results.each do |design_review_result|
         reviewer_id = design_review_result.reviewer_id
         if reviewer_list[reviewer_id] == nil
           reviewer_list[reviewer_id] = User.find(reviewer_id)
@@ -311,7 +381,7 @@ class Design < ActiveRecord::Base
   def all_reviewers(sorted = false)
   
     reviewer_list = []
-    for design_review in self.design_reviews
+    self.design_reviews.each do |design_review|
       reviewer_list = design_review.reviewers(reviewer_list)
     end
 
@@ -450,6 +520,22 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # setup_design_reviews
+  #
+  # Description:
+  # This method sets up the design reviews.
+  #
+  # Parameters:
+  # review_types_list - 
+  # board_team_list   - a collection of users that are on the board team
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
   def setup_design_reviews(review_types_list, 
                            board_team_list)
                            
@@ -523,11 +609,10 @@ class Design < ActiveRecord::Base
           # If the role (group) is set to have the peers CC'ed then update the 
           # design review.
           if reviewer.role.cc_peers?
-            cc_list = drr.role.users
-            for peer in cc_list
-             next if (peer.id == drr.reviewer_id ||
-                      !peer.active?              ||
-                      design_review.design.board.users.include?(peer))
+            drr.role.users.each do |peer|
+              next if (peer.id == drr.reviewer_id ||
+                       !peer.active?              ||
+                       design_review.design.board.users.include?(peer))
               design_review.design.board.users << peer
             end
           end
