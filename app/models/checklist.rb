@@ -47,6 +47,23 @@ class Checklist < ActiveRecord::Base
     self.update
 
   end
+  
+  
+  ######################################################################
+  #
+  # revision
+  #
+  # Description:
+  # This method returns the revision of the checklist.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def revision
+    self.major_rev_number.to_s + '.' + self.minor_rev_number.to_s
+  end
 
 
 end
