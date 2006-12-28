@@ -14,6 +14,7 @@
 
 require_dependency "login_system"
 
+
 class ApplicationController < ActionController::Base
 
   include LoginSystem
@@ -60,6 +61,35 @@ class ApplicationController < ActionController::Base
     last  = [first + options[:per_page], collection.size].min
     slice = collection[first...last]
     return [pages, slice]
+  end
+  
+  
+  ######################################################################
+  #
+  # start_of_quarter
+  #
+  # Description:
+  # Generates the beginning of the quarter based on the current date
+  #
+  # Parameters from @params
+  #
+  # Return value:
+  # date - the date that corresponds to the start of the quarter.
+  #
+  ######################################################################
+  #
+  def start_of_quarter(current_date = Time.now)
+
+    year          = current_date.strftime("%Y").to_i
+    current_month = current_date.strftime("%m").to_i
+    
+    month = 1
+    1.step(13, 3) do |m|
+      break if m > current_month
+      month = m
+    end
+
+    Date.new(year, month, 1)
   end
 
   
@@ -169,9 +199,65 @@ class ApplicationController < ActionController::Base
       end
     rescue
       flash['notice'] = 'Update not allowed - Must be admin or manager'
-      redirect_to(:controller => 'tracker',
-                    :action     => "index")
+      redirect_to(:controller => 'tracker', :action => "index")
     end
   end
+  
+  
+  ######################################################################
+  #
+  # verify_pcb_group
+  #
+  # Description:
+  # Verifies that the user is a member of the PCB Group.  In addition,
+  # any action listed in employee_actions is limited to users that are
+  # employees (vs. contractors/outsource).
+  #
+  # Return value:
+  # TRUE for the following conditions:
+  # 
+  #   - the user is a member of the PCB Design Group and the action is
+  #     not listed in employee_actions
+  #   - the user is a member of the PCB Design Group, an employee, and 
+  #     the action is listed in employee_actions
+  #     
+  #  Otherwise false is returned.
+  #
+  # Additional Information:
+  # Set flash['notice'] if the user is not a valid user
+  #
+  ######################################################################
+  #
+  def verify_pcb_group
 
+    valid_user = false
+    role_list = ['Designer']
+
+    if session[:user]
+      roles = session[:user].roles.collect { |r| r.name }  
+      valid_user = (roles & role_list).size > 0
+      
+      if valid_user
+        employee_actions = ['oi_category_selection',
+                            'process_assignment_details',
+                            'process_assignments', 
+                            'section_selection',
+                            'report_card_list',
+                            'view_assignments',
+                            'view_assignment_report']
+        if employee_actions.detect { |a| a == params[:action] }
+          valid_user &= session[:user].employee?
+        end
+      end
+    end
+    
+    if !valid_user
+      flash['notice'] = 'You are not authorized to access this page'
+      redirect_to(:controller => 'tracker', :action => 'index')
+    end
+  
+  end
+  
+  
 end
+
