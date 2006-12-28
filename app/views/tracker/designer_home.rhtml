@@ -8,7 +8,7 @@
 <%# debug @session %>
 
 <table width="100%"
-       border="0" 
+       border="0"
        cellspacing="2"
        align="center"
        rules="cols">
@@ -56,7 +56,7 @@
 
                <% if @design_list.size > 0 %>
                   <tr>
-                    <td align="left" width="45">
+                    <td align="left" width="60">
                       <font size="-2"><b>Criticality</b></font>
                     </td>
                     <td>&nbsp;</td>
@@ -243,28 +243,47 @@
                               </tr>                                
                             <% end %>
                             <tr>
-                              <td colspan="2" align="left">
-                                <%= button_to(design[:design].name + " In-Process Dialogue",
-                                              { :controller => 'ipd_post',
-                                                :action     => 'list',
-                                                :design_id  => design[:design].id },
-                                              { :title => 'Initiate and discuss all in-process changes.',
-                                                :class => 'small_font_b' }) %>
-                              </td>
-                              <td colspan="2" align="right">
-                                <% if !design[:audit].is_complete? && 
-                                      !design[:audit].skip? %>
-                                  <%= button_to('Audit Assignments',
-                                                { :controller => 'audit',
-                                                  :action     => 'auditor_list',
-                                                  :id         => design[:audit].id,
-                                                  :return_to  => { :controller => 'tracker',
-                                                                   :action     => 'index' } },
-                                                { :title => 'Set the assignments for self and peer audits.',
-                                                  :class => "small_font_button" })%>
-                                <% else %>
-                                  &nbsp;
-                                <% end %>
+                              <td colspan="4" align="left">
+                                <table border="0" width="100%">
+                                  <tr>
+                                    <td width="33%" align="left">
+                                      <input type="button" value='<%= "#{design[:design].name} In-Process Dialogue" %>'
+                                             title="Initiate and discuss all in-process changes."
+                                             onClick="parent.location='<%= url_for(:controller => 'ipd_post',
+                                                                                   :action     => 'list',
+                                                                                   :design_id  => design[:design].id) %>'"
+                                             class="small_font_wide_button" />
+                                    </td>
+                                    <td width="34%" align="center">
+                                    <% if session[:user].has_access?(['Designer']) && session[:user].employee? %>
+
+                                      <input type="button" value='<%= "#{design[:design].name} Outsource Instructions" %>'
+                                             title="Create/View/Update Instructions to low cost regions"
+                                             onClick="parent.location='<%= url_for(:controller => 'oi_instruction',
+                                                                                   :action     => 'oi_category_selection',
+                                                                                   :design_id  => design[:design].id) %>'"
+                                             class="small_font_wide_button" />
+                                    <% else %>
+                                      &nbsp;
+                                    <% end %>
+                                    </td>
+                                    <td width="33%" align="right">
+                                      <% if !design[:audit].is_complete? && 
+                                            !design[:audit].skip? %>
+                                      <input type="button" value='<%= "#{design[:design].name} Audit Assignments" %>'
+                                             title="Set the assignments for self and peer audits."
+                                             onClick="parent.location='<%= url_for(:controller => 'audit',
+                                                                                   :action     => 'auditor_list',
+                                                                                   :id         => design[:audit].id,
+                                                                                   :return_to  => { :controller => 'tracker',
+                                                                                                    :action     => 'index' }) %>'"
+                                             class="small_font_wide_button" />
+                                      <% else %>
+                                        &nbsp;
+                                      <% end %>
+                                    </td>
+                                  </tr>
+                                </table>
                               </td>
                             </tr>
                           </table>
@@ -284,6 +303,41 @@
               <hr class="div" />
             </td>
           </tr>
+          
+          <% if @work_assignments %>
+            <tr>
+              <td>
+              <table width="100%" align="right" border="0" cellspacing="0">
+                <tr>
+                  <th colspan="4">My Work Assignments</th>
+                </tr>
+                <tr>
+                  <td width="60">&nbsp;</td>
+                  <th align="left" class="teraheader">Design</th>
+                  <th align="left" class="teraheader">Assignments</th>
+                  <th align="left" class="teraheader">Completed Assignments</th>
+                </tr>
+                <% @my_assignments.each do |row| %>
+                  <% design, assignments, completed = assignment_info(row) %>
+                  <tr>
+                    <td>&nbsp;</td>
+                    <td>
+                      <%= link_to(design.name,
+                                  { :controller => 'oi_instruction',
+                                    :action     => 'category_details',
+                                    :id         => design.id },
+                                    :title => "Access to #{design.name} work assignments") %>
+                    
+                    </td>
+                    <td><%= assignments%></td>
+                    <td><%= completed %></td>
+                  </tr>
+                <% end %>
+              </table>
+              </td>
+            </tr>
+            <tr><td><hr class="div" /></td></tr>
+          <% end %>
           <tr>
             <td>
               <table width="100%" 
@@ -293,7 +347,7 @@
 
                 <% if @audits.size > 0 %>
                   <tr>
-                    <td align="left" width="45">
+                    <td align="left" width="60">
                       <font size="-2"><b>Criticality</b></font>
                     </td>
                     <td>&nbsp;</td>
@@ -397,5 +451,5 @@
 </table>
 
 <%# debug @design_list %>
-<%# debug @audits %>
-<%# debug @session %>
+<%# debug @work_assignments %>
+<%# debug @my_assignments %>
