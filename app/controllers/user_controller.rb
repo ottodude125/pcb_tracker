@@ -132,7 +132,8 @@ class UserController < ApplicationController
   ######################################################################
   #
   def signup
-    @roles = Role.find_all(nil, 'name ASC')
+    @roles    = Role.find_all_by_active('1', 'display_name ASC')
+    @new_user = User.new(:employee => '1', :active => '1')
   end 
 
 
@@ -412,7 +413,7 @@ class UserController < ApplicationController
   #
   def create
 
-    @user = User.new(@params[:new_user])
+    @user        = User.new(params[:new_user])
     @user.passwd = @user.password
     
     # If the user left the login and/or email fields blank, set
@@ -453,6 +454,18 @@ class UserController < ApplicationController
       flash['notice']  = "Account created for #{@user.name}"
       redirect_to(:action => "list",
                   :alpha  => @user.last_name[0..0])
+    else
+    
+      @roles    = Role.find_all_by_active('1', 'display_name ASC')
+      @new_user = @user
+      
+      if User.find_by_login(@user.login)
+        flash['notice'] = "#{@user.login} duplicates an existing login - please change"
+      else
+        flash['notice']  = "Unable to create an account for #{@user.name}"
+      end
+      render(:action => "signup")
+      
     end      
   end  
   
