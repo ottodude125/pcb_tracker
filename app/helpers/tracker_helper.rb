@@ -35,6 +35,19 @@ module TrackerHelper
     end
     
   end
+  
+  
+  def assignment_info(row)
+  
+    assignment_list = row[1]
+    design          = assignment_list[0].oi_instruction.design
+    
+    completed = 0
+    assignment_list.each { |a| completed += 1 if a.complete? }
+    
+    return design, assignment_list.size, completed
+  
+  end
 
 
   ######################################################################
@@ -49,10 +62,10 @@ module TrackerHelper
   #
   def review_locked(design_review)
     if design_review
-      audit = design_review.design.audit
-      is_final = design_review.review_type.name == "Final"
-      
-      (is_final && !audit.skip? && !audit.auditor_complete?)
+      (design_review.review_type.name == "Final" && 
+       !(design_review.design.audit.skip?             || 
+         design_review.design.audit.auditor_complete? || 
+         design_review.design.work_assignments_complete?))
 
     else
       false
