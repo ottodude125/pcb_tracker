@@ -485,8 +485,8 @@ class BoardDesignEntry < ActiveRecord::Base
             
     #To Do: Come up with a better way to specify default users.          
     default_assignments = { 'PCB Design' => 'Light' } 
-    manager_roles = Role.find_all_by_active_and_manager(1, 1)
-    for role in manager_roles     
+
+    Role.find_all_by_active_and_manager(1, 1).each do |role|    
       board_design_entry_user = BoardDesignEntryUser.new(
                                   :board_design_entry_id => self.id,
                                   :role_id               => role.id)
@@ -505,9 +505,8 @@ class BoardDesignEntry < ActiveRecord::Base
                             'PCB Mechanical'      => 'Khoras',
                             'SLM BOM'             => 'Seip',
                             'SLM-Vendor'          => 'Gough' }
-    reviewer_roles = Role.find_all_by_active_and_reviewer_and_manager(1, 1, 0)
 
-    for role in reviewer_roles     
+    Role.find_all_by_active_and_reviewer_and_manager(1, 1, 0).each do |role|     
       board_design_entry_user = BoardDesignEntryUser.new(
                                   :board_design_entry_id => self.id,
                                   :role_id               => role.id)
@@ -528,9 +527,7 @@ class BoardDesignEntry < ActiveRecord::Base
 
     if existing_board
 
-      board_reviewers = BoardReviewers.find_all_by_board_id(existing_board.id)
-
-      for board_reviewer in board_reviewers
+      existing_board.board_reviewers.each do |board_reviewer|
       
         bde_user = self.board_design_entry_users.detect { |bdeu| 
           bdeu.role_id == board_reviewer.role_id
@@ -539,7 +536,8 @@ class BoardDesignEntry < ActiveRecord::Base
         if bde_user
           bde_user.user_id = board_reviewer.reviewer_id
           bde_user.save
-        end     
+        end 
+            
       end
       
     end
