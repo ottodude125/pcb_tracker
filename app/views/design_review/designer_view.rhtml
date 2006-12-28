@@ -85,11 +85,24 @@
                      value="In-Process Dialogue"
                      title="Hardware/Designer communication log"
                      onClick="parent.location='<%= url_for(:controller => 'ipd_post', 
-                                                           :action => 'list',
-                                                           :design_id => @design.id) %>'"
+                                                           :action     => 'list',
+                                                           :design_id  => @design.id) %>'"
                      class="small_font_wide_button" />
             </td>
           </tr>
+          
+          <% if session[:user].has_access?(['Designer']) %>
+          <tr>
+            <td>
+              <input type="button" value="Outsource Instructions"
+                     title="Create/View/Update Instructions to low cost regions"
+                     onClick="parent.location='<%= url_for(:controller => 'oi_instruction',
+                                                           :action     => 'oi_category_selection',
+                                                           :design_id  => @design.id) %>'"
+                     class="small_font_wide_button" />
+            </td>
+          </tr>
+          <% end %>
 
           <% if @design_review.posting_count > 0 &&
                 @design_review.review_status.name != "Review Completed" &&
