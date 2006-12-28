@@ -517,8 +517,8 @@ class TrackerController < ApplicationController
     designs = designs.sort_by { |dr| dr.priority.value }
     designs.reverse!
         
-    @design_list = Array.new
-    for design in designs
+    @design_list      = []
+    for design in designs 
 
       design_summary = Hash.new
       design_summary[:design] = design
@@ -624,7 +624,21 @@ class TrackerController < ApplicationController
     #TODO: After reversing the values of priority so that the call to reverse is not
     #      needed make this a multi-level sort.
     #      audits.sort_by { |a| [a.design.priority.value, a.design.age] }
-
+    
+    # Get all of the active designs and determine if there are any work assignments
+    # associated with the design for the user.
+    @work_assignments = false
+    @my_assignments   = {}
+    active_designs = Design.find_all("phase_id != #{Design::COMPLETE}")
+    
+    active_designs.each do |design|
+      @work_assignments                 |= design.have_assignments(session[:user].id)
+      my_assignments                     = design.my_assignments(session[:user].id)
+      @my_assignments[design.created_on] = my_assignments if my_assignments.size > 0
+    end
+    
+    @my_assignments = @my_assignments.to_a.sort_by { |a| a[0]}
+    
   end
   
   
