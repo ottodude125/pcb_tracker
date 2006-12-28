@@ -876,12 +876,25 @@ class TrackerMailer < ActionMailer::Base
   end
   
   
+  ######################################################################
+  #
+  # oi_assignment_notification
+  #
+  # Description:
+  # This method generates mail to indicate that an outsource instruction
+  # has been assigned.
+  #
+  # Parameters:
+  #   oi_instruction - the outsource instruction that is being assigned
+  #   sent_at        - the time of the event
+  #
+  ######################################################################
+  #
   def oi_assignment_notification(oi_instruction,
                                  sent_on         = Time.now)
   
-    @subject    = "#{oi_instruction.design.name}:: Work Assignment"
-                  
-    @recipients = oi_instruction.users.collect { |u| u.email }
+    @subject    = "#{oi_instruction.design.name}:: Work Assignment Created"       
+    @recipients = oi_instruction.oi_assignments.collect { |i| i.user.email }
     @from       = Pcbtr::SENDER
     @sent_on    = sent_on
     @headers    = {}
@@ -890,6 +903,55 @@ class TrackerMailer < ActionMailer::Base
 
     @body['oi_instruction'] = oi_instruction
   
+  end
+  
+  
+  ######################################################################
+  #
+  # oi_task_update
+  #
+  # Description:
+  # This method generates mail to indicate that an outsource instruction
+  # assignment has been updated.
+  #
+  # Parameters:
+  #   assignment - the assignment record that was just updated
+  #   originator - the user record of the person who made the update
+  #   completed  - a flag to indicate that the assignment has been set
+  #                to complete when true
+  #   reset      - a flag to indicate that the assignment has been reset
+  #                when true
+  #   sent_at    - the time of the event
+  #
+  ######################################################################
+  #
+  def oi_task_update(assignment, 
+                     originator, 
+                     completed, 
+                     reset,
+                     sent_on     = Time.now)
+  
+    @subject    = "#{assignment.oi_instruction.design.name}:: " + 
+                  'Work Assignment Update'
+    @subject   += " - Completed" if completed
+    @subject   += " - Reopened"  if reset
+
+    @from       = Pcbtr::SENDER
+    @sent_on    = sent_on
+    @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
+    @cc         = add_role_members(['PCB Input Gate', 'Manager'])
+    @cc << originator.email
+
+    @body['assignment'] = assignment
+    
+    case
+      when assignment.oi_instruction.user_id == originator.id
+        @recipients = [assignment.user.email]
+      when assignment.user_id == originator.id
+        @recipients = [assignment.oi_instruction.user.email]
+      end
+                  
   end
   
   
@@ -912,8 +974,8 @@ class TrackerMailer < ActionMailer::Base
   def add_role_members(role_list)
   
     cc_list = []
-    for role_name in role_list
-      for member in Role.find_by_name(role_name).active_users
+    role_list.each do |role_name|
+      Role.find_by_name(role_name).active_users.each do |member|
         cc_list << member.email
       end
     end
@@ -1018,14 +1080,13 @@ class TrackerMailer < ActionMailer::Base
   #
   def add_board_reviewer(board, roles)
   
-    cc_list = []
-    board_reviewers = BoardReviewers.find_all_by_board_id(board.id)
-    role_list       = Role.find_all
+    cc_list   = []
+    role_list = Role.find_all
 
     roles.each do |role|
 
       reviewer_role  = role_list.detect { |r| r.name == role }
-      board_reviewer = board_reviewers.detect { |br| br.role_id == reviewer_role.id }
+      board_reviewer = board.board_reviewers.detect { |br| br.role_id == reviewer_role.id }
 
       if board_reviewer && board_reviewer.reviewer_id?
         cc_list << User.find(board_reviewer.reviewer_id).email
