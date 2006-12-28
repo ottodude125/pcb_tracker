@@ -1,18 +1,16 @@
 <tr class="<%= user_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
-  <td width="15%">
-    <% uid = user_list_stripes["id"] %>
-    <%= link_to user_list_stripes["login"], { :action => 'edit', :id => uid } %> 
+  <td>
+    <% uid = user_list_stripes.id %>
+    <%= link_to user_list_stripes.login, { :action => 'edit', :id => uid } %> 
   </td>
-  <td width="40%">
-    <%= user_list_stripes["last_name"] %>, 
-    <%= user_list_stripes["first_name"] %>
+  <td>
+    <%= user_list_stripes.last_name_first %>
   </td>
-  <td align="center" width="10%">
-    <% if user_list_stripes["active"] == 1 %>
-      Yes
-    <% else %>
-      No
-    <% end %>
+  <td align="center">
+    <%= user_list_stripes.active? ? 'Yes' : 'No' %>
+  </td>
+  <td align="center">
+    <%= user_list_stripes.employee? ? 'Yes' : 'No' %>
   </td>
   <td>
     <%= link_to 'change password', { :action => 'change_password', :id => uid } %> 
