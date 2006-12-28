@@ -49,7 +49,7 @@
 
   <hr class="div" />
 
-  <input type="button" value="New Board" onClick="parent.location='<%= url_for( :action => 'add' ) %>'" />
-  <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
+  <input type="button" value="Return to Admin portal" 
+         onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
 
 <%= end_form_tag %>
