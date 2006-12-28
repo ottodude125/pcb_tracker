@@ -4,16 +4,9 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% mode = @params[:action] == 'edit' ? 'edit' : 'add' %>
-
-<% if mode == 'edit' %>
-  <% @heading = "Edit board" %>
-  <%= start_form_tag(:action => 'update') %>
-  <%= hidden_field "board", "id" %>
-<% elsif mode == 'add' %>
-  <% @heading = "NEW Create a new board" %>
-  <%= start_form_tag(:action => 'create') %>
-<% end %>
+<% @heading = "Edit board" %>
+<%= start_form_tag(:action => 'update') %>
+<%= hidden_field "board", "id" %>
 
 <hr class="div" />
 
@@ -37,22 +30,12 @@
               <label for="board_prefix">Prefix:</label>
             </td>
             <td>
-              <% if mode == 'add' %>
-                <%= collection_select(:board, 
-                                      :prefix_id, 
-                                      @prefixes,
-                                      "id", 
-                                      :pcb_mnemonic, 
-                                      {:prompt=>true}) %>
-              <% elsif mode == "edit" %>
-                <select id="prefix_id" 
-                        name="board[prefix_id]">
-                  <%= options_from_collection_for_select(@prefixes,
-	                                                 "id",
-                                                         "pcb_mnemonic",
-                                                         @board.prefix_id) %>
-                </select>
-              <% end %>
+              <select id="prefix_id" name="board[prefix_id]">
+                <%= options_from_collection_for_select(@prefixes,
+	                                                   "id",
+                                                       "pcb_mnemonic",
+                                                       @board.prefix_id) %>
+              </select>
             </td>
           </tr>
           <tr>
@@ -71,21 +54,12 @@
               <label for="board_platform">Platform:</label>
             </td>
             <td>
-              <% if mode == 'add' %>
-                <%= collection_select(:board,
-                                      :platform_id,
-                                      @platforms, 
-                                      "id",
-                                      :name,
-                                      {:prompt=>true}) %>
-              <% elsif mode == 'edit' %>
-                <select id="platform_id" name="board[platform_id]">
-                  <%= options_from_collection_for_select(@platforms, 
-                                                         "id",
-                                                         "name", 
-                                                         @board[:platform_id]) %>
-                </select>
-              <% end %>
+              <select id="platform_id" name="board[platform_id]">
+                <%= options_from_collection_for_select(@platforms, 
+                                                       "id",
+                                                       "name", 
+                                                       @board[:platform_id]) %>
+              </select>
             </td>
           </tr>
           <tr>
@@ -93,21 +67,12 @@
               <label for="board_project">Project:</label>
             </td>
             <td>
-              <% if mode == 'add' %>
-                <%= collection_select(:board,
-                                      :project_id,
-                                      @projects,
-                                      "id", 
-                                      :name,
-                                      {:prompt=>true}) %>
-              <% elsif mode == 'edit' %>
-                <select id="project_id" name="board[project_id]">
-                  <%= options_from_collection_for_select(@projects, 
-                                                         "id", 
-                                                         "name", 
-                                                         @board[:project_id]) %>
-                </select>
-              <% end %>
+              <select id="project_id" name="board[project_id]">
+                <%= options_from_collection_for_select(@projects, 
+                                                       "id", 
+                                                       "name", 
+                                                       @board[:project_id]) %>
+              </select>
             </td>
           </tr>
           <tr>
@@ -126,33 +91,21 @@
                width="100%"
                align="center">
           <tr>
-            <th colspan="4" bgcolor="#000000">
-              <font color="#ffffff">Reviewers</font>
-            </th>
+            <th colspan="4" class="teraheader">Reviewers</th>
           </tr>
-          <% for reviewer in @reviewers %>
+          <% @reviewers.each do |reviewer| %>
             <tr>
               <td width="40">&nbsp;</td>
               <th align="right"> <%= reviewer[:group] %>: </th>
               <td>
-                <% if mode == "add" %>
-                  <%= collection_select(:board_reviewers,
-                                           :"#{reviewer[:id]}",
-                                           reviewer[:reviewers],
-                                           "id", 
-                                           :last_name_first,
-                                           {:include_blank => true},
-                                           "class" => 'name_select') %>
-                <% elsif mode == "edit" %>
-                  <select id="<%= "board_reviewers_#{reviewer[:id]}" %>" 
-                           name="<%= "board_reviewers[#{reviewer[:id]}]" %>"
-                           class="name_select">
-                    <%=  options_from_collection_for_select(reviewer[:reviewers],
-                                                            "id",
-                                                            "name",
-                                                            reviewer[:reviewer_id]) %>
-                  </select>
-                <% end %>
+                <select id="<%= "board_reviewers_#{reviewer[:id]}" %>" 
+                        name="<%= "board_reviewers[#{reviewer[:id]}]" %>"
+                        class="name_select">
+                  <%=  options_from_collection_for_select(reviewer[:reviewers],
+                                                          "id",
+                                                          "name",
+                                                          reviewer[:reviewer_id]) %>
+                </select>
               </td>
               <td width="40">&nbsp;</td>
             </tr>
@@ -165,10 +118,7 @@
       <td>
         <table width="100%">
           <tr>
-            <th bgcolor="#000000"
-                 colspan="2">
-              <font color="#ffffff">Fab House(s)</font>
-            </th>
+            <th class="teraheader" colspan="2">Fab House(s)</th>
           </tr>
           <tr>
             <td valign="top">
@@ -219,16 +169,12 @@
   </table>
 
   <hr class="div" />
-  <% if mode == "add" %>
-    <input type="submit" value="Create new board" />
-  <% elsif mode == "edit" %>
-    <input type="submit" value="Update board" />
-  <% end %>
+
+  <input type="submit" value="Update board" />
+
   <input type="button" value="Return to Board List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
 
 <%= end_form_tag %>
 
 <%# debug @review_roles %>
-<%# debug @reviewers %>
-<%# debug @fab_houses %>
-<%# debug @fab_house_ids %>
+
