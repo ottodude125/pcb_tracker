@@ -18,4 +18,32 @@ class FabHouse < ActiveRecord::Base
   validates_uniqueness_of :name
   validates_presence_of   :name
 
+
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+  
+  ######################################################################
+  #
+  # get_all_active
+  #
+  # Description:
+  # This method returns a list of the active fab houses
+  #
+  # Parameters:
+  # sort - specifies the field(s) and sort order
+  #
+  # Return value:
+  # An array of active fab house records
+  #
+  ######################################################################
+  #
+  def FabHouse.get_all_active(sort = 'name ASC')
+    FabHouse.find_all_by_active(1, sort)
+  end
+
+
 end
