@@ -1275,13 +1275,11 @@ class BoardDesignEntryController < ApplicationController
     # Update the board reviewers table for this board.
     ig_role = Role.find_by_name('PCB Input Gate')
     for reviewer_record in board_design_entry.board_design_entry_users
-    
+
       next if !reviewer_record.required?
 
-      board_reviewer = BoardReviewers.find_by_board_id_and_role_id(
-                         board.id, 
-                         reviewer_record.role_id)
-                         
+      board_reviewer = board.board_reviewers.detect { |br| br.role_id == reviewer_record.role_id }
+
       if !board_reviewer
       
         if reviewer_record.role_id != ig_role.id
@@ -1290,9 +1288,9 @@ class BoardDesignEntryController < ApplicationController
           reviewer_id = session[:user].id
         end
 
-        board_reviewer = BoardReviewers.new(:board_id    => board.id,
-                                            :reviewer_id => reviewer_id,
-                                            :role_id     => reviewer_record.role_id)
+        board_reviewer = BoardReviewer.new(:board_id    => board.id,
+                                           :reviewer_id => reviewer_id,
+                                           :role_id     => reviewer_record.role_id)
         board_reviewer.save
         
       elsif board_reviewer.reviewer_id != reviewer_record.user_id
