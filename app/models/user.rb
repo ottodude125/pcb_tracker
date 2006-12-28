@@ -23,6 +23,10 @@ class User < ActiveRecord::Base
   has_many :audit_teammates
   has_many :board_design_entry_users
   has_many :design_review_comments
+  has_many :oi_assignments
+  has_many :oi_assignment_comments
+  has_many :oi_assignment_reports
+  has_many :oi_instructions
 
   has_and_belongs_to_many :boards
   has_and_belongs_to_many :ipd_posts
@@ -85,6 +89,47 @@ class User < ActiveRecord::Base
   #
   def last_name_first
     self.last_name + ', ' + self.first_name
+  end
+  
+  
+  ######################################################################
+  #
+  # alpha_char
+  #
+  # Description:
+  # Provides the downcased first character of the user's last name.
+  #
+  # Return value:
+  # The lowercase first character of the user's last name.
+  #
+  ######################################################################
+  #
+  def alpha_char
+    self.last_name[0..0].downcase
+  end
+  
+  
+  ######################################################################
+  #
+  # has_access?
+  #
+  # Description:
+  # Indicates that the user has access based on role.
+  # 
+  # Parameters:
+  # required_roles - an array of roles that are permitted access to the 
+  # resource.
+  #
+  # Return value:
+  # A boolean value that indicates that the user has access to the 
+  # resource if set to TRUE.
+  #
+  ######################################################################
+  #
+  def has_access?(required_roles)
+  
+    (self.roles.collect { |r| r.name } & required_roles).size > 0
+  
   end
 
 
