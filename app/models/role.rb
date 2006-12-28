@@ -12,6 +12,8 @@
 
 class Role < ActiveRecord::Base
 
+  has_many :board_reviewers
+
   has_many :board_design_entry_users
   has_many :design_review_results
 
@@ -22,6 +24,33 @@ class Role < ActiveRecord::Base
   validates_uniqueness_of :name
   
   
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+  
+  ######################################################################
+  #
+  # get_review_roles
+  #
+  # Description:
+  # This method returns a list of the review roles
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An array of review role records
+  #
+  ######################################################################
+  #
+  def Role.get_review_roles
+    Role.find_all_by_reviewer(1).sort_by { |r| r.display_name}
+  end
+
+
   ######################################################################
   #
   # active_users
