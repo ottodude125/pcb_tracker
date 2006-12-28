@@ -1,0 +1,47 @@
+<!-- View:    report                                            -->
+<!-- Purpose: Displays the rows for the report card rollup      -->
+<!--          view.                                             -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<tr class="<%= report_card_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
+  <td width="150" align="center"
+      title="Click to see the report card">
+    <%= link_to(report_card_list_stripes.oi_assignment.oi_instruction.design.name,
+                { :controller => 'oi_instruction', 
+                  :action     => 'static_view',
+                  :id         => report_card_list_stripes.oi_assignment.id },
+                :popup => ['new_window', 'height=400,width=800,scrollbars=yes,resizable=1']) %>
+  </td>
+  <td width="80" align="center">
+    <%= report_card_list_stripes.score %>
+  </td>
+  <td align="center">
+    <%= report_card_list_stripes.oi_assignment.oi_instruction.oi_category_section.oi_category.name %>
+  </td>
+  <td width="200" align="center">
+    <%= report_card_list_stripes.user.name %>
+  </td>
+  <td width="200" align="center">
+    <%= report_card_list_stripes.oi_assignment.user.name %>
+  </td>
+  <td width="100" align="center">
+    <%= report_card_list_stripes.oi_assignment.task_duration %>
+  </td>
+</tr>
+
+<% if report_card_list_stripes.comment.size > 0 %>
+  <tr class="<%= report_card_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
+    <td colspan="6" title="<%= report_card_list_stripes.comment %>">
+      <table width="90%" align="right" border="0">
+        <tr>
+          <td valign="top" width="80"><b>COMMENT: </b></td>
+          <td align="left">
+            <%= report_card_list_stripes.comment %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+<% end %>

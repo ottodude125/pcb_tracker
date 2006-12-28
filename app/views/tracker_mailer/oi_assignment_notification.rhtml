@@ -1,0 +1,9 @@
+CATEGORY:             <%= @oi_instruction.oi_category_section.oi_category.name %>
+SECTION:              <%= @oi_instruction.oi_category_section.name %>
+LEAD DESIGNER:        <%= User.find(@oi_instruction.user_id).name %>
+<%= "ALLEGRO BOARD SYMBOL: #{@oi_instruction.allegro_board_symbol}" if @oi_instruction.oi_category_section.allegro_board_symbol? %>
+--------------------------------------------------------------------------------
+<%= @oi_instruction.oi_category_section.email_formatted_urls if @oi_instruction.oi_category_section.urls.size > 0 %>
+<% if @oi_instruction.oi_assignments[0].oi_assignment_comments.size > 0 %>ADDITIONAL INFORMATION:
+<%= @oi_instruction.oi_assignments[0].oi_assignment_comments[0].comment %>
+<% end %>

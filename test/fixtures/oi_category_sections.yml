@@ -1,0 +1,74 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+board_prep_1:
+  id:                   1
+  name:                 Place board outline symbol
+  url1:                 http://www.teradyne.com
+  instructions:         Include Allegro Board Symbol Name (above)
+  oi_category_id:       1
+  allegro_board_symbol: 1
+  outline_drawing_link: 0
+board_prep_2:
+  id:                   2
+  name:                 Create cross-section using board stackup
+  url1:                 http://www.teradyne.com
+  oi_category_id:       1
+  allegro_board_symbol: 0
+  outline_drawing_link: 0
+board_prep_3:
+  id:                   3
+  name:                 Check outline symbol against outline drawing
+  url1:                 http://www.teradyne.com
+  instructions:         Include Allegro Board Symbol Name
+  oi_category_id:       1
+  allegro_board_symbol: 1
+  outline_drawing_link: 1
+placement_1:
+  id:                   4
+  name:                 Ensure that all mechanical parts (e.g., stiffeners) are placed using outline drawing as a reference
+  instructions:         Provide ref des or symbol name of each part
+  oi_category_id:       2
+  allegro_board_symbol: 0
+  outline_drawing_link: 1
+placement_2:
+  id:                   5
+  name:                 Place components that have fixed locations and lock placement by attaching the FIXED property to each ref des
+  instructions:         Provide ref des
+  oi_category_id:       2
+  allegro_board_symbol: 0
+  outline_drawing_link: 1
+placement_3:
+  id:                   6
+  name:                 Place components per instructions
+  instructions:         Provide schematic page number, ref des if applicab...
+  oi_category_id:       2
+  allegro_board_symbol: 0
+  outline_drawing_link: 0
+placement_4:
+  id:                   7
+  name:                 Ensure all symbols are from the master library. In Allegro, run Tools>Reports>Symbol Library Path and review the report.
+  instructions:         Provide schematic page number, ref des if applicab...
+  oi_category_id:       2
+  allegro_board_symbol: 0
+  outline_drawing_link: 0
+placement_5:
+  id:                   8
+  name:                 Ensure that no pins have been edited. In Allegro, run Place>Update Symbols, selecting "Package symbols" and "Update symbol padstacks". The .brd file does not need to be saved and the resultant refresh.log will show edited pins by component location.
+  instructions:         Provide schematic page number, ref des if applicab...
+  oi_category_id:       2
+  allegro_board_symbol: 0
+  outline_drawing_link: 0
+placement_6:
+  id:                   9
+  name:                 Fanout all SMT devices
+  url1_name:            Examples
+  url1:                 http://www.google.com
+  instructions:         Provide schematic page number, ref des if applicab...
+  oi_category_id:       2
+  allegro_board_symbol: 0
+  outline_drawing_link: 0
+other_1:
+  id:                   32
+  oi_category_id:       7
+  allegro_board_symbol: 0
+  outline_drawing_link: 0
+  

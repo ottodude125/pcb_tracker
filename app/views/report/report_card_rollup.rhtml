@@ -1,0 +1,207 @@
+<!-- View:    report                                            -->
+<!-- Purpose: Displays form to select the parameters for a      -->
+<!--          report card rollup.                               -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Report Card Rollup - Query" %>
+
+<%= start_form_tag(:action => 'report_card_rollup') -%>
+
+<table width="800" align="center" border="0">
+  <tr>
+    <td align="left">
+      <input type="button" value="Home"
+             onClick="parent.location='<%= url_for(:controller => 'tracker', 
+                                                   :action     => 'index') %>'" />
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<hr class="div" width="820" />
+
+<table border="0" align="center">
+
+  <tr>
+    <td rowspan="5" valign="middle" align="center" width="150">
+      <input title="Click here to generate the report card rollup report." 
+             class="tera_submit" type="submit" value="Create Report" />
+    </td>
+
+    <th align="right" class="teraheader" width="150">
+      Lead Designer:
+    </th>
+    <td width="300">
+      <select id="lead_designer" name="lead_designer[id]" class="name_select">
+        <option value="0">All Teradyne Designers</option>
+        <%= options_from_collection_for_select(@ter_designers,
+                                               "id",
+                                               "last_name_first",
+                                               @lead_designer_id) %>
+      </select>
+    </td>
+    <td width="180"><b><%= team_leader(@lead_designer_id) %></b></td>
+  </tr>
+  
+  <tr>
+    <th align="right" class="teraheader">
+      Team Member:
+    </th>
+    <td>
+      <select id="team_member" name="team_member[id]" class="name_select">
+        <option value="0">All Team Members</option>
+        <%= options_from_collection_for_select(@lcr_designers,
+                                               "id",
+                                               "last_name_first",
+                                               @team_member_id) %>
+      </select>
+    </td>
+    <td width="180"><b><%= team_member(@team_member_id) %></b></td>
+  </tr>
+  
+  <tr>
+    <th align="right" class="teraheader">
+      Category:
+    </th>
+    <td>
+      <select id="category" name="category[id]" class="name_select">
+        <option value="0">All Categories</option>
+        <%= options_from_collection_for_select(@categories,
+                                               "id",
+                                               "name",
+                                               @category_id) %>
+      </select>
+    </td>
+    <td><b><%= category(@category_id) %></b></td>
+  </tr>
+  
+  <tr>
+    <th align="right" class="teraheader">
+      Start Date:
+    </th>
+    <td align="left">
+      <%= select_date(date = @start_date, :prefix => "start_date") %>
+    </td>
+    <td><b><%= display_date(@start_date) %></b?</td>
+  </tr>
+  
+  <tr>
+    <th align="right" class="teraheader">
+      End Date:
+    </th>
+    <td align="left">
+      <%= select_date(date = @end_date, :prefix => "end_date") %>
+    </td>
+    <td><b><%= display_date(@end_date) %></b?</td>
+  </tr>
+  
+</table>
+
+<hr class="div" width="820" />
+
+<%= end_form_tag %>
+
+<h2> Summary </h2>
+
+<table align="center" border="0">
+
+  <tr valign="top">
+    <th class="teraheader" width="260" align="right">Number of Report Cards: </th>
+    <td width="220" align="left"><b><%= @report_cards.size %></b></td>
+    <td rowspan="3" width="220">
+      <table width="100%" class="keytable" cellpadding="0" cellspacing="0">
+        <tr><th class="keyheader" colspan="2">Key</th></tr>
+        <tr>
+          <th class="keytitle">Score</th>
+          <th class="keytitle">Percentage of Rework</th>
+        </tr>
+        <tr>
+          <th class="keyscore">1</th>
+          <td class="keyvalue">90% - 100%</td>
+        </tr>
+        <tr>
+          <th class="keyscore">2</th>
+          <td class="keyvalue">64% - 89%</td>
+        </tr>
+        <tr>
+          <th class="keyscore">3</th>
+          <td class="keyvalue">34% - 63%</td>
+        </tr>
+        <tr>
+          <th class="keyscore">4</th>
+          <td class="keyvalue">11% - 33%</td>
+        </tr>
+        <tr>
+          <th class="keyscore">5</th>
+          <td class="keyvalue">0% - 10%</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr valign="top">
+    <th class="teraheader" width="220" align="right">Average Score: </th>
+    <td width="220" align="left"><b>
+      <% if @report_cards.size > 0 %>
+        <%= sprintf("%4.2f", (@total_score.to_f/@report_cards.size)) %>
+      <% else %>
+        0.0
+      <% end %>
+    </b></td>
+  </tr>
+  <tr valign="top">
+    <th class="teraheader" width="220" align="right">Distribution: </th>
+    <td width="220" align="left">
+      <table border="0">
+        <tr>
+          <th>Score: </th>
+          <% 1.upto(5) do |score| %>
+            <td align='center' width="50"><%= score %></td>
+          <% end %>
+        </tr>
+        <tr>
+          <th>Count: </th>
+          <% 1.upto(5) do |score| %>
+            <td align='center' width="50"><%= @score_distribution[score]  %></td>
+          <% end %>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<hr class="div" width="820" />
+
+<% if @report_cards.size > 0 %>
+<h2> Details </h2>
+
+<table border="0" align="center" cellspacing="0">
+  <tr class="teraheader">
+    <th>Design</th>
+    <th>Score</th>
+    <th>Section</th>
+    <th>Lead Designer</th>
+    <th>Team Member</th>
+    <th>Duration</th>
+  </tr>
+  
+  <%= render_collection_of_partials("report_card_list_stripes", @report_cards) %>
+  
+</table>
+
+
+<hr class="div" width="820" />
+<% end %>
+
+<table width="800" align="center" border="0">
+  <tr>
+    <td align="left">
+      <input type="button" value="Home"
+             onClick="parent.location='<%= url_for(:controller => 'tracker', 
+                                                   :action     => 'index') %>'" />
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<%# debug @lcr_designers %>
+<%# debug flash %>

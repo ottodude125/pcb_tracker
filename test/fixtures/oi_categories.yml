@@ -1,0 +1,22 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+board_prep:
+  id:   1
+  name: Board Preparation
+placement:
+  id:   2
+  name: Placement
+routing:
+  id:   3
+  name: Routing
+fab_drawing:
+  id:   4
+  name: Fabrication Drawing
+nomenclature:
+  id:   5
+  name: Nomenclature
+assembly_drawing:
+  id:   6
+  name: Assembly Drawing
+other:
+  id:   7
+  name: Other

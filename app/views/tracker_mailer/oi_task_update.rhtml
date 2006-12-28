@@ -1,0 +1,11 @@
+<%= @assignment.email_update_header %>Total comments: <%= @assignment.oi_assignment_comments.size %>
+<%# comments = @assignment.oi_assignment_comments.sort_by { |c| c.created_on }.reverse! %>
+<%# comments[0..2].each do |comment| %>
+<% @assignment.oi_assignment_comments.sort_by { |c| c.created_on }.reverse[0..2].each do |comment| %>
+----------------------------------------------------------------------
+Posted By: <%= comment.user.name %>
+Date:      <%= comment.created_on.strftime("%d-%b-%y, %I:%M %p") %>
+
+<%= comment.comment %><% end %>
+
+NOTE: The work instruction information is located at <%= Pcbtr::PCBTR_BASE_URL %>oi_instruction/assignment_view/<%= @assignment.id %>
