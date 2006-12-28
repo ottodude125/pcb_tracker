@@ -15,8 +15,13 @@
       <td width="40%">
         <table border="0" cellspacing="5">
           <tr>
-            <td align="left">Active: 
-              <%= check_box "new_user", "active", { 'checked' => 'checked' } %>
+            <td>
+              <%= check_box "new_user", "active" %> Active
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <%= check_box "new_user", "employee" %> Teradyne Employee
             </td>
           </tr>
           <tr>
@@ -114,6 +119,7 @@
 
 <%= end_form_tag %>
 
+<br />
 <table border="1" rules="all">
   <tr>
     <td valign="top"><font size="-1"><b>Notes:</b></font></td>
@@ -132,5 +138,5 @@
   </tr>
 </table>
 
-<%# debug @user %>
+<%# debug @new_user %>
 <%# debug @session %>

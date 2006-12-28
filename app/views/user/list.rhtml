@@ -28,11 +28,13 @@
     <% } %>
   </p>
 
-  <table width="90%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+  <table align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
     <tr>
-      <th>Login</th>
-      <th>User's Name</th>
-      <th>Active</th>
+      <th width="150">Login</th>
+      <th width="200">User's Name</th>
+      <th width="100">Active</th>
+      <th width="200">Teradyne Employee</th>
+      <td width="150">&nbsp;</td>
     </tr>
     <%= render_collection_of_partials "user_list_stripes", @users %>
   </table>
