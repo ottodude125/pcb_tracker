@@ -40,6 +40,12 @@
         <% end %>
 
         <tr>
+          <th class="teraheader">
+            PCB Engineering Entry
+          </th>
+        </tr>
+
+        <tr>
           <td align="center">
             <%= link_to("PCB Engineering Entry",
                         { :controller => 'board_design_entry',
@@ -56,6 +62,20 @@
           </td>
         </tr>
         <% end %>
+        
+        <tr>
+          <th class="teraheader">
+            Reports
+          </th>
+        </tr>
+
+        <tr>
+          <td align="center">
+            <%= link_to("Outsource Instruction Roll-up",
+                        { :controller => 'report',
+                          :action     => 'report_card_rollup' }) %>
+          </td>
+        </tr>
         
         <tr>
           <td>&nbsp;</td>
