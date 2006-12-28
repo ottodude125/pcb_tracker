@@ -1,0 +1,69 @@
+<table width="800" align="center" border="0">
+
+  <tr valign="top">
+    <th class="teraheader" align="right" width="20%">Step:</th>
+    <% line = 1 %>
+    <%= start_td(line) %>
+      <%= @assignment.oi_instruction.oi_category_section.name %>
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <th class="teraheader" align="right">Reference(s):</th>
+    <% urls = @assignment.oi_instruction.oi_category_section.urls %>
+    <% line += 1 %>
+    <%= start_td(line) %>
+      <% if urls.size == 0 %>
+        None
+      <% else %>
+        <table width="100%" border='0'>
+          <% urls.each do |url| %>
+            <tr>
+              <td width="10">&nbsp;</td>
+              <td>
+                <a href="<%= url[:url] %>" target="_blank"><%= url[:text] %></a>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      <% end %>
+    </td>
+  </tr>
+  
+  <% if session[:user].employee? %>
+  <tr valign="top">
+    <th class="teraheader" align="right">Designer:</th>
+    <% line += 1 %>
+    <%= start_td(line) %>
+      <%= @assignment.user.name %>
+    </td>
+  </tr>
+  <% end %>
+  
+  <tr valign="top">
+    <th class="teraheader" align="right">Complete:</th>
+    <% line += 1 %>
+    <%= start_td(line) %>
+      <%= @assignment.complete? ? 'Yes' : 'No' %>
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <th class="teraheader" align="right">Date Assigned:</th>
+    <% line += 1 %>
+    <%= start_td(line) %>
+      <%= @assignment.created_on.strftime("%d-%b-%y, %I:%M %p %Z") %>
+    </td>
+  </tr>
+
+  <% if @assignment.complete? %>
+    <tr valign="top">
+      <th class="teraheader" align="right">Date Completed:</th>
+      <% line += 1 %>
+      <%= start_td(line) %>
+        <%= @assignment.completed_on.strftime("%d-%b-%y, %I:%M %p %Z") %>
+      </td>
+    </tr>
+  <% end %>
+
+</table>

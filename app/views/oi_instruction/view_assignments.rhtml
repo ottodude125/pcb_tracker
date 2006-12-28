@@ -1,0 +1,57 @@
+<!-- View:    oi_instruction                                    -->
+<!-- Purpose: Displays the assignments.                         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@design.name}: Work Instruction Assignments" %>
+
+<hr class="div" />
+
+<table width="800" align="center" border="0">
+
+<% @assignment_list.each do |category, assignments| %>
+
+  <tr class="teraheader">
+    <th align="left" colspan="3"><%= category.name %></th>
+  </tr>
+  
+  <% assignments.each do |assignment| %>
+  
+    <tr>
+      <td width="2">&nbsp;</td>
+      <td width="398">
+        <%= link_to(assignment.user.name,
+                    { :action     => 'assignment_view',
+                      :id         => assignment.id }) %>
+      </td>
+      <td>
+        <%= assignment.complete? ? 'Complete' : 'Not Complete' %>
+      </td>
+    </tr>
+  
+  <% end %>
+
+<% end %>
+
+</table>
+
+<hr class="div" />
+
+<table width="75%" align="center">
+  <tr>
+    <td align="left">
+      <input type="button" value="Return"
+             onClick="parent.location='<%= url_for(:action    => 'oi_category_selection',
+                                                   :design_id => @design.id) %>'" />
+    </td>
+    <td align="right">
+      <input type="button" value="Home"
+             onClick="parent.location='<%= url_for(:controller => 'tracker', 
+                                                   :action     => 'index') %>'" />
+    </td>
+  </tr>
+</table>
+
+<%# debug @assignment_list.class %>
+<%# debug @design %>

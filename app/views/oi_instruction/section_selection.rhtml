@@ -1,0 +1,113 @@
+<!-- ********************************************************** -->
+<!-- View:    section_selection                                 -->
+<!-- Purpose: Displays a list of sections for the selected      -->
+<!--          outsource instruction category                    -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@design.name} - #{@category.name}" %>
+
+<hr class="div" />
+
+<%= start_form_tag(:action => 'process_assignments') %>
+
+<%= hidden_field("design",   "id") %>
+<%= hidden_field("category", "id") %>
+
+<table width="100%" border="0" cellspacing="0">
+  <tr valign="top">
+    <td width="90">
+      <b><i>Instructions:</i></b>
+    </td>
+    <td>
+      <ol>
+        <li>
+          <i>
+            Click the checkbox next to step(s) that you want to assign to a 
+            single team member
+          </i>
+        </li>
+        <li>
+          <i>
+            Click the next button
+          </i>
+        </li>
+      </ol>
+    </td>
+  </tr>
+</table>
+
+
+<table width="100%" border="0">
+
+  <tr>
+    <td colspan="3" align="center" class="teraheader"><%= @category.name %> Steps</td>
+  </tr>
+  
+  <% @sections.each do |section| %>
+  
+    <tr valign="top">
+      <td width="20">
+        <% if section_assigned?(@design.oi_instructions, section.id) %>
+          <%= check_box('section', section.id, { 'disabled' => 'disabled' }) %>
+        <% elsif !@section_selection || @section_selection[section.id.to_s] == "0" %>
+          <%= check_box('section', section.id) %>
+        <% else %>
+          <%= check_box('section', section.id, { 'checked' => 'checked' }) %>
+        <% end %>
+      </td>
+      <td>
+        <table>
+          <tr><td><%= section.name %></td></tr>
+          
+          <tr><td>
+            <% section_urls = section.urls %>
+            <% if section_urls.size > 0 %>
+              <table width="100%" border='0'>
+                <% section_urls.each do |url| %>
+                  <tr>
+                    <td width="10">&nbsp;</td>
+                    <td>
+                      <a href="<%= url[:url] %>" target="_blank">
+                        <%= url[:text] %>
+                      </a>
+                    <%# link_to(url[:text],
+                                :controller => 'design_review',
+                                :action     => 'view',
+                                :id         => 1)%>
+                    </td>
+                  </tr>
+                <% end %>
+              </table>
+            <% end %>
+          </td></tr>
+        </table>
+      </td>
+    </tr>
+    
+    <tr><td colspan="2"><hr class="div" /></td></tr>
+    
+  <% end %>
+
+</table>
+
+<table width="100%">
+  <tr>
+    <td align="left">
+      <%# button_to('Return', session[:return_to], :class=>'form_return') %>
+      <input type="button" value="Home" class="form_return"
+             onClick="parent.location='<%= url_for( session[:return_to] ) %>'" />
+    </td>
+    <td align="right">
+      <input type="submit" value="Next -->" class="form_submit" />
+    </td>
+  </tr>
+</table>
+
+<%= end_form_tag %>
+
+<%# debug @team_members %>
+<%# debug @team_member_id %>
+<%# debug params %>
+

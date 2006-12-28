@@ -1,0 +1,16 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays the rows for the managers tracker view.  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<tr class="<%= section_selection_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
+
+  <td>
+    <%= debug section_selection_list_stripes_counter.modulo(2)%>
+    <%# link_to(section_selection_list_stripes,
+                :controller => 'design_review',
+                :action     => 'view',
+                :id         => 1)%>
+  </td>
+</tr>

@@ -1,0 +1,71 @@
+<!-- View:    report_card_list                                    -->
+<!-- Purpose: Displays a list of assignments .                         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@design.name}: #{@category.name} Feedback" %>
+
+<hr class="div" />
+
+<table width="800" align="center" border="0">
+  <tr class="teraheader">
+    <th colspan="3" width="75%">Section</th>
+    <th width="25%">Feedback</th>
+  </tr>
+  
+  <% @assignment_list.each do |section, assignment_list| %>
+
+    <% next if assignment_list.size == 0 %>
+    <tr>
+      <td width="5">&nbsp;</td>
+      <td><%= section.name %></td>
+      <td width="5">&nbsp;</td>
+    </tr>
+    
+    <% assignment_list.each do |assignment| %>
+      <tr>
+        <td>&nbsp;</td>
+        <td align="right"><%= assignment.user.name %></td>
+        <td>&nbsp;</td>
+        
+        <% if assignment.oi_assignment_report %>
+          <td align="center" title="View the report card for this section">
+            <%= link_to('View',
+                        { :action     => 'view_assignment_report',
+                          :id         => assignment.id })  %>
+          </td>
+        <% else %>
+          <td align="center" title="Create the report card for this assignment">
+            <%= link_to('Create',
+                        { :action     => 'create_assignment_report',
+                          :id         => assignment.id })  %>
+          </td>
+         <% end %>
+        
+      </tr>
+    <% end %>
+    
+  <% end %>
+  
+</table>
+
+<hr class="div" />
+
+<table width="75%" align="center">
+  <tr>
+    <td align="left">
+      <input type="button" value="Return"
+             title="Return to the work assignment category list"
+             onClick="parent.location='<%= url_for(:action    => 'oi_category_selection',
+                                                   :design_id => @design.id) %>'" />
+    </td>
+    <td align="right">
+      <input type="button" value="Home"
+             onClick="parent.location='<%= url_for(:controller => 'tracker', 
+                                                   :action     => 'index') %>'" />
+    </td>
+  </tr>
+</table>
+
+<%# debug @assignment_list %>

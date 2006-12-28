@@ -1,0 +1,125 @@
+<!-- ********************************************************** -->
+<!-- View:    section_selection                                 -->
+<!-- Purpose: Displays a list of sections that have been        -->
+<!--          selected for an outsource team member.            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@design.name} - #{@category.name} Instruction Details" %>
+
+<%= start_form_tag(:action => 'process_assignment_details') %>
+
+<%= hidden_field("design",   "id") %>
+<%= hidden_field("category", "id") %>
+
+
+<% if @common_field %>
+
+  <hr class="div" />
+
+  <table width="95%" align="center" border="0">
+    <% if @common_fields[:allegro_board_symbol_name] %>
+      <tr>
+        <th width="200" align="right">Allegro Board Symbol:</th>
+        <% abs = flash[:allegro_board_symbol] ? flash[:allegro_board_symbol] : '' %>
+        <td>
+          <%= text_field("allegro_board_symbol", 
+                         "name",
+                         "size"      => 32, 
+                         "maxlength" => 32, 
+                         "value"     => abs) %>
+        </td>
+      </tr>
+    <% end %>
+    <% if @common_fields[:outline_drawing_link] %>
+      <tr>
+        <th width="200" align="right">Outline Drawing:</th>
+        <td>
+          <% if @outline_drawing %>
+            <%= link_to(@outline_drawing .document.name,
+                        :controller => "design_review",
+	                      :action     => "get_attachment",
+		                    :id         => @outline_drawing.document.id) %>
+          <% else %>
+          No Outline Drawing attached
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+<% @selected_steps.each do |step| %>
+
+  <hr class="div" />
+  
+  <table width="95%" align="center" border="0">
+    <tr><th class="teraheader" colspan="2"><%= step.name %></th></tr>
+    
+    <% step_urls = step.urls %>
+    <% if step_urls.size > 0 %>
+    
+      <% step_urls.each do |url| %>
+        <tr>
+          <td width="10">&nbsp;</td>
+          <td>
+            <a href="<%= url[:url] %>" target="_blank"><%= url[:text] %></a>
+          </td>
+        </tr>
+      <% end %>
+                
+    <% end %>
+    
+    <tr>
+      <% if step.instructions.size > 0 %>
+        <th width="90" valign="top">Instructions: </th>
+        <td><%= step.instructions %></td>
+      <% else %>
+        <th width="90" valign="top">&nbsp;</th>
+        <td>&nbsp;</td>
+
+      <% end %>
+    </tr>
+    
+    <tr>
+      <td>&nbsp;</td>
+      <td>
+        <% step_instruction = @step_instructions[step.id] %>
+        <textarea name="step_instructions_<%= step.id %>"
+                  id="step_instructions_<%= step.id %>"
+                  cols="60" rows="5"><%= step_instruction.details %></textarea>
+      </td>
+    </tr>
+    
+    <tr>
+      <td>&nbsp;</td>
+      <td bgcolor="#efefef"><%= fmt_team_members(@team_members, 
+                                                 step.id,
+                                                 flash[:team_members]) %></td>
+    </tr>
+    
+  </table>
+  
+<% end %>
+
+
+<hr class="div" />
+
+<table width="100%">
+  <tr>
+    <td align="left">
+      <input type="button" value="<-- Back" class="form_return"
+             onClick="parent.location='<%= url_for( {:action    => 'section_selection',
+                                                     :id        => @category.id,
+                                                     :design_id => @design.id }) %>'" />
+    </td>
+    <td align="right">
+      <input type="submit" value="Next -->" class="form_submit" />
+    </td>
+  </tr>
+</table>
+
+<%= end_form_tag %>
+
+<%# debug flash %>

@@ -1,0 +1,34 @@
+<!-- View:    oi_instruction                                    -->
+<!-- Purpose: Displays the work instruction assignments         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@design.name}: My #{@section_list[:category].name} Work Assignments" %>
+
+<hr class="div" />
+
+<table width="1000" align="center" border="0" cellspacing="0">
+    <tr class="teraheader">
+      <td width="150">&nbsp;</td>
+      <th>Step</th>
+      <th width="150">Complete</th>
+    </tr>
+
+    <%= render_collection_of_partials("assignment_list_stripes", 
+                                      @section_list[:assignment_list]) %>
+
+</table>
+
+<hr class="div" />
+
+<table width="80%" align="center">
+  <tr>
+    <td align="left">
+      <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+    </td>
+  </tr>
+</table>
+
+<%# debug @section_list[:category] %>
+<%# debug @section_list[:assignment_list] %>

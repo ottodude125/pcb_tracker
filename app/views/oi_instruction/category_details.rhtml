@@ -1,0 +1,53 @@
+<!-- View:    oi_instruction                                    -->
+<!-- Purpose: Displays the category details for a team member.  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@design.name}: Work Instruction Categories" %>
+
+<hr class="div" />
+
+<table width="500" align="center" cellspacing="0">
+  <tr class="teraheader">
+    <th>Category</th>
+    <th>Assignments</th>
+    <th>Completed</th>
+  </tr>
+  
+  <% @category_list.each do |category, assignment_list| %>
+  <tr>
+    <td>
+      <% if assignment_list.size > 1 %>
+        <%= link_to(category.name,
+                    { :controller => 'oi_instruction',
+                      :action     => 'assignment_details',
+                      :id         => category.id,
+                      :design_id  => @design.id },
+                      :title => "Access to #{category.name} work assignments") %>
+      <% else %>
+        <%= link_to(category.name,
+                    { :action     => 'assignment_view',
+                      :id         => assignment_list[0].id },
+                      :title => "Access to the assignment") %>      <% end %>
+    </td>
+    <td align="center"><%= assignment_list.size %></td>
+    <td align="center"><%= complete_count(assignment_list) %>
+  </tr>
+  <% end %>
+  
+</table>
+
+<hr class="div" />
+
+  <table width="80%" align="center">
+    <tr>
+      <td align="left">
+        <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+      </td>
+    </tr>
+  </table>
+
+
+<%# debug @design %>
+<%# debug @category_list %>
