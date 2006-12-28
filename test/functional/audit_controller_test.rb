@@ -69,12 +69,14 @@ class AuditControllerTest < Test::Unit::TestCase
   #
   def test_perform_checks
 
-    # Log in as a designer and get the audit listing.
+    # Log in as a designer and perform the checks.
     user = User.find(users(:scott_g).id)
     @request.session[:user]        = user
     @request.session[:active_role] = Role.find_by_name('Designer')
     @request.session[:roles]       = user.roles
 
+
+    # New Design
     post(:perform_checks,
          :audit_id      => audits(:audit_mx234b).id,
          :subsection_id => subsections(:subsect_30_000).id)
@@ -89,7 +91,58 @@ class AuditControllerTest < Test::Unit::TestCase
     check_id        = 10000
     design_check_id = 20000
     checks = assigns(:checks)
-    for check in checks
+    checks.each do |check|
+      assert_equal(check_id,        check.id)
+      assert_equal(design_check_id, check[:design_check].id)
+      assert_equal(0,               check[:design_check].audit_comments.size)
+      check_id        += 1
+      design_check_id += 1
+    end
+
+#    # Date Code Design
+    audit      = audits(:audit_la453a_eco1)
+    section    = sections(:section_20_000)
+    subsection = subsections(:subsect_30_000)
+    post(:perform_checks,
+         :audit_id      => audit.id,
+         :subsection_id => subsection.id)
+
+    assert_equal(audit.id,      assigns(:audit).id)
+    assert_equal(subsection.id, assigns(:subsection).id)
+    assert_equal(section.id,    assigns(:subsection).section.id)
+    assert_equal(7,             assigns(:total_checks)[:designer])
+    assert_equal(5,             assigns(:total_checks)[:peer])
+    assert_equal(3,             assigns(:checks).size)
+
+    check_id        = 10000
+    design_check_id = 20600
+    checks = assigns(:checks).each do |check|
+      assert_equal(check_id,        check.id)
+      assert_equal(design_check_id, check[:design_check].id)
+      assert_equal(0,               check[:design_check].audit_comments.size)
+      check_id        += 1
+      design_check_id += 1
+    end
+
+    # Dot Rev Design
+    audit      = audits(:audit_la453a1)
+    section    = sections(:section_20_000)
+    subsection = subsections(:subsect_30_000)
+    post(:perform_checks, 
+         :audit_id      => audit.id, 
+         :subsection_id => subsection.id)
+    
+    assert_equal(audit.id,      assigns(:audit).id)
+    assert_equal(subsection.id, assigns(:subsection).id)
+    assert_equal(section.id,    assigns(:subsection).section.id)
+    assert_equal(7,             assigns(:total_checks)[:designer])
+    assert_equal(5,             assigns(:total_checks)[:peer])
+    assert_equal(1,             assigns(:checks).size)
+
+    check_id        = 10003
+    design_check_id = 20500
+
+    assigns(:checks).each do |check|
       assert_equal(check_id,        check.id)
       assert_equal(design_check_id, check[:design_check].id)
       assert_equal(0,               check[:design_check].audit_comments.size)
@@ -129,6 +182,9 @@ class AuditControllerTest < Test::Unit::TestCase
     assert(!audit.auditor_complete?)
     assert(1, audit.audit_teammates.size)
     
+    start_time = Time.now
+
+
     # This check should fail to update because no comment is included.
     post(:update_design_checks,
          :audit         => {:id => audits(:audit_mx234b).id},
@@ -157,8 +213,7 @@ class AuditControllerTest < Test::Unit::TestCase
     audit.reload
     assert_equal(1, audit.audit_teammates.size)
 
-    checks = assigns(:checks)
-    for check in checks
+    assigns(:checks).each do |check|
       assert_equal('None', check[:design_check].designer_result)
       assert_equal(0,      check[:design_check].audit_comments.size)
     end 
@@ -196,14 +251,12 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(1, audit.audit_teammates.size)
 
     results = %w{Waived Verified N/A Verified}
-    checks = assigns(:checks)
-    for check in checks
-      assert_equal(results.shift, check[:design_check].designer_result)
-      if check.id != 10000
-        assert_equal(0, check[:design_check].audit_comments.size)
-      else
-        assert_equal(1, check[:design_check].audit_comments.size)
-      end
+    comment_count = { 10000 => 1 } 
+    comment_count.default= 0
+
+    assigns(:checks).each do |check|
+      assert_equal(results.shift,           check[:design_check].designer_result)
+      assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
 
 
@@ -238,14 +291,10 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(1, audit.audit_teammates.size)
 
     results = %w{Verified Verified N/A Verified} 
-    checks = assigns(:checks)
-    for check in checks
-      assert_equal(results.shift, check[:design_check].designer_result)
-      if check.id != 10000
-        assert_equal(0, check[:design_check].audit_comments.size)
-      else
-        assert_equal(1, check[:design_check].audit_comments.size)
-      end
+
+    assigns(:checks).each do |check|
+      assert_equal(results.shift,           check[:design_check].designer_result)
+      assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
 
     # No comment is included for the 'No' response - only one will update.
@@ -272,10 +321,10 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(1, audit.audit_teammates.size)
 
     results = %w{Yes None} 
-    checks = assigns(:checks)
-    for check in checks
-      assert_equal(results.shift, check[:design_check].designer_result)
-      assert_equal(0,             check[:design_check].audit_comments.size)
+
+    assigns(:checks).each do |check|
+      assert_equal(results.shift,           check[:design_check].designer_result)
+      assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
 
     # The 'No' response should update this time.
@@ -301,15 +350,12 @@ class AuditControllerTest < Test::Unit::TestCase
     audit.reload
     assert_equal(1, audit.audit_teammates.size)
 
-    results = %w{Yes No} 
-    checks = assigns(:checks)
-    for check in checks
-      assert_equal(results.shift, check[:design_check].designer_result)
-      if check.id == 10004
-        assert_equal(0, check[:design_check].audit_comments.size)
-      else
-        assert_equal(1, check[:design_check].audit_comments.size)
-      end
+    results = %w{Yes No}
+    comment_count[10005] = 1
+
+    assigns(:checks).each do |check|
+      assert_equal(results.shift,           check[:design_check].designer_result)
+      assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
 
     post(:update_design_checks,
@@ -334,11 +380,12 @@ class AuditControllerTest < Test::Unit::TestCase
     audit.reload
     assert_equal(1, audit.audit_teammates.size)
 
-    results = %w{Waived Waived} 
-    checks = assigns(:checks)
-    for check in checks
-      assert_equal(results.shift, check[:design_check].designer_result)
-      assert_equal(1,             check[:design_check].audit_comments.size)
+    results = %w{Waived Waived}
+    10006.upto(10007) { |i| comment_count[i] = 1}
+
+    assigns(:checks).each do |check|
+      assert_equal(results.shift,           check[:design_check].designer_result)
+      assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
 
 
@@ -373,10 +420,11 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(1, audit.audit_teammates.size)
 
     results = %w{Waived Waived Verified Verified} 
-    checks = assigns(:checks)
-    for check in checks
-      assert_equal(results.shift, check[:design_check].designer_result)
-      assert_equal(1,             check[:design_check].audit_comments.size)
+    10008.upto(10011) { |i| comment_count[i] = 1}
+
+    assigns(:checks).each do |check|
+      assert_equal(results.shift,           check[:design_check].designer_result)
+      assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
 
 
@@ -407,10 +455,11 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(1, audit.audit_teammates.size)
 
     results = %w{Waived Waived N/A} 
-    checks = assigns(:checks)
-    for check in checks
-      assert_equal(results.shift, check[:design_check].designer_result)
-      assert_equal(1,             check[:design_check].audit_comments.size)
+    10012.upto(10014) { |i| comment_count[i] = 1}
+
+    assigns(:checks).each do |check|
+      assert_equal(results.shift,           check[:design_check].designer_result)
+      assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
 
 
@@ -419,7 +468,7 @@ class AuditControllerTest < Test::Unit::TestCase
     @request.session[:user]             = user
     @request.session[:active_role].name = 'Designer'
     @request.session[:roles]            = user.roles
-
+    
     post(:update_design_checks,
          :audit         => {:id => audits(:audit_mx234b).id},
          :subsection    => {:id => subsections(:subsect_30_000).id},
@@ -450,16 +499,50 @@ class AuditControllerTest < Test::Unit::TestCase
     audit.reload
     assert_equal(1, audit.audit_teammates.size)
 
-    results = %w{Verified N/A None None} 
-    checks = assigns(:checks)
-    for check in checks
-      assert_equal(results.shift, check[:design_check].auditor_result)
-      if check.id != 10000
-        assert_equal(0, check[:design_check].audit_comments.size)
-      else
-        assert_equal(1, check[:design_check].audit_comments.size)
-      end
-    end 
+    results = %w{Verified N/A None None}
+
+    assigns(:checks).each do |check|
+      assert_equal(results.shift,           check.design_check.auditor_result)
+      assert_equal(comment_count[check.id], check.design_check.audit_comments.size)
+    end
+
+    post(:update_design_checks,
+         :audit         => {:id => audits(:audit_mx234b).id},
+         :subsection    => {:id => subsections(:subsect_30_000).id},
+         :check_10000   => {
+           :auditor_result  => 'Verified',
+           :design_check_id => '20000',
+           :comment         => ''},
+         :check_10001   => {
+           :auditor_result  => 'Comment',
+           :design_check_id => '20001',
+           :comment         => 'Withdrew N/A'},
+         :check_10002   => {
+           :auditor_result  => 'Waived',
+           :design_check_id => '20002',
+           :comment         => ''},
+         :check_10003   => {
+           :auditor_result  => 'Comment',
+           :design_check_id => '20003',
+           :comment         => ''})
+
+    post(:perform_checks,
+         :audit_id      => audits(:audit_mx234b).id,
+         :subsection_id => subsections(:subsect_30_000).id)
+       
+    assert_equal(15, assigns(:audit).designer_completed_checks)
+    assert_equal(1,  assigns(:audit).auditor_completed_checks)
+
+    audit.reload
+    assert_equal(1, audit.audit_teammates.size)
+
+    results = %w{Verified Comment None None}
+    comment_count[10001] = 1
+ 
+    assigns(:checks).each do |check|
+      assert_equal(results.shift,           check.design_check.auditor_result)
+      assert_equal(comment_count[check.id], check.design_check.audit_comments.size)
+    end
 
     post(:update_design_checks,
          :audit         => {:id => audits(:audit_mx234b).id},
@@ -491,21 +574,13 @@ class AuditControllerTest < Test::Unit::TestCase
     audit.reload
     assert_equal(1, audit.audit_teammates.size)
 
-    results = %w{N/A Verified Waived Verified} 
-    checks = assigns(:checks)
-    for check in checks
-      assert_equal(results.shift, check[:design_check].auditor_result)
-      if check.id != 10000
-        assert_equal(1, check[:design_check].audit_comments.size)
-      else
-        assert_equal(2, check[:design_check].audit_comments.size)
-        created_on = Time.now
-        for comment in check[:design_check].audit_comments
-          assert(comment.created_on < created_on)
-          created_on = comment.created_on
-        end
-      end
-    end 
+    results = %w{N/A Verified Waived Verified}
+    10000.upto(10003) { |i| comment_count[i] += 1 }
+    
+    assigns(:checks).each do |check|
+      assert_equal(results.shift,           check.design_check.auditor_result)
+      assert_equal(comment_count[check.id], check.design_check.audit_comments.size)
+    end
 
     post(:update_design_checks,
          :audit         => {:id => audits(:audit_mx234b).id},
@@ -530,11 +605,12 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(1, audit.audit_teammates.size)
 
     results = %w{N/A Verified} 
-    checks = assigns(:checks)
-    for check in checks
-      assert_equal(results.shift, check[:design_check].auditor_result)
-      assert_equal(2,             check[:design_check].audit_comments.size)
-    end 
+    10006.upto(10007) { |i| comment_count[i] += 1 }
+    
+    assigns(:checks).each do |check|
+      assert_equal(results.shift,           check.design_check.auditor_result)
+      assert_equal(comment_count[check.id], check.design_check.audit_comments.size)
+    end
 
 
     post(:update_design_checks,
@@ -566,11 +642,12 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(0, audit.audit_teammates.size)
 
     results = %w{N/A Verified Waived} 
-    checks = assigns(:checks)
-    for check in checks
-      assert_equal(results.shift, check[:design_check].auditor_result)
-      assert_equal(2,             check[:design_check].audit_comments.size)
-    end 
+    10012.upto(10014) { |i| comment_count[i] += 1 }
+    
+    assigns(:checks).each do |check|
+      assert_equal(results.shift,           check.design_check.auditor_result)
+      assert_equal(comment_count[check.id], check.design_check.audit_comments.size)
+    end
 
   end
 
@@ -599,11 +676,11 @@ class AuditControllerTest < Test::Unit::TestCase
     get(:print,
         :id => audits(:audit_mx234b).id)
 
-    summary = assigns(:summary)
-    assert_equal('mx234b',      summary[:board_number])
-    assert_equal('2.0',         summary[:checklist_rev])
-    assert_equal(users(:rich_m).name,  summary[:designer])
-    assert_equal(users(:scott_g).name, summary[:auditor])
+    audit = assigns(:audit)
+    assert_equal('mx234b',             audit.design.name)
+    assert_equal('2.0',                audit.checklist.revision)
+    assert_equal(users(:rich_m).name,  audit.design.designer.name)
+    assert_equal(users(:scott_g).name, audit.design.peer.name)
 
     display = assigns(:display)
 
@@ -643,11 +720,11 @@ class AuditControllerTest < Test::Unit::TestCase
     get(:print,
         :id => audits(:audit_la453b_eco2).id)
 
-    summary = assigns(:summary)
-    assert_equal('la453b4_eco2',  summary[:board_number])
-    assert_equal('1.0',           summary[:checklist_rev])
-    assert_equal(users(:scott_g).name,   summary[:designer])
-    assert_equal(users(:rich_m).name,    summary[:auditor])
+    audit = assigns(:audit)
+    assert_equal('la453b4_eco2',       audit.design.name)
+    assert_equal('1.0',                audit.checklist.revision)
+    assert_equal(users(:scott_g).name, audit.design.designer.name)
+    assert_equal(users(:rich_m).name,  audit.design.peer.name)
 
     display = assigns(:display)
 
@@ -674,11 +751,11 @@ class AuditControllerTest < Test::Unit::TestCase
     get(:print,
         :id => audits(:audit_la454c3).id)
 
-    summary = assigns(:summary)
-    assert_equal('la454c3',     summary[:board_number])
-    assert_equal('1.0',         summary[:checklist_rev])
-    assert_equal(users(:rich_m).name,  summary[:designer])
-    assert_equal(users(:scott_g).name, summary[:auditor])
+    audit = assigns(:audit)
+    assert_equal('la454c3',            audit.design.name)
+    assert_equal('1.0',                audit.checklist.revision)
+    assert_equal(users(:rich_m).name,  audit.design.designer.name)
+    assert_equal(users(:scott_g).name, audit.design.peer.name)
 
     display = assigns(:display)
 
@@ -843,7 +920,7 @@ class AuditControllerTest < Test::Unit::TestCase
     ]
     
     i = 0
-    for line in lines
+    lines.each do |line|
       line.each { |k,v|	
         if k != 'subsections'
           section = expected[i][k]
@@ -898,7 +975,7 @@ class AuditControllerTest < Test::Unit::TestCase
     ]
     
     i = 0
-    for line in lines
+    lines.each do |line|
       line.each { |k,v|	
         if k != 'subsections'
           section = expected[i][k]
@@ -909,6 +986,85 @@ class AuditControllerTest < Test::Unit::TestCase
             expected_vals = expected[i][k][idx]
             actual_vals = line['subsections'][idx]
             actual_vals.each { |key,actual_value|
+              assert_equal(expected_vals[key], actual_value)
+            }
+          }
+        end
+      }
+      i += 1
+    end
+
+    get(:show_sections,
+        :id => audits(:audit_in_peer_audit).id)
+
+    assert_equal("mx999b", assigns(:board_name))
+    lines = assigns(:checklist_index)
+
+    expected = Array[
+      { 'bg_color'     => '0', 
+        :section      => 
+          { 'name'             => 'section_10_1',
+            'id'               => '3'
+          },
+        'subsections' => Array[{
+            'name'             => 'subsection_10_1_1',
+            'percent_complete' => 0.0,
+            'questions'        => 0,
+            'checks'           => 2,
+            'url'              => 'www.eds.com',
+            'id'               => 5,
+            'note'             => 'id - 5'
+          },
+          {
+            'name'             => 'subsection_10_1_2',
+            'percent_complete' => 0.0,
+            'questions'        => 0,
+            'checks'           => 0,
+            'url'              => 'www.eds.com',
+            'id'               => 6,
+            'note'             => 'id - 6'
+          }
+        ]
+      },
+      { 'bg_color'     => '343434', 
+        :section      => 
+          { 'name'             => 'section_10_2',
+            'id'               => '4'
+          },
+        'subsections' => Array[{
+            'name'             => 'subsection_10_2_1',
+            'percent_complete' => 0.0,
+            'questions'        => 0,
+            'checks'           => 0,
+            'url'              => 'www.google.com',
+            'id'               => 7,
+            'note'             => 'id - 7'
+          },
+          {
+            'name'             => 'subsection_10_2_2',
+            'percent_complete' => 0.0,
+            'questions'        => 0,
+            'checks'           => 3,
+            'url'              => 'www.google.com',
+            'id'               => 8,
+            'note'             => 'id - 8'
+          }
+        ]
+      }
+    ]
+    
+    i = 0
+    lines.each do |line|
+      line.each { |k,v|
+        if k != 'subsections'
+          section = expected[i][k]
+          assert_equal(section['id'].to_i, v.id)
+          assert_equal(section['name'],    v.name)
+        else
+          0.upto(line[k].size-1) { |idx|
+            expected_vals = expected[i][k][idx]
+            actual_vals = line['subsections'][idx]
+            actual_vals.each { |key, actual_value|
               assert_equal(expected_vals[key], actual_value)
             }
           }
@@ -947,18 +1103,21 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(lead_designer, auditor_list[:lead_designer])
     assert_equal(lead_peer,     auditor_list[:lead_peer])
     
-    expected_self_auditors = [users(:scott_g),
+    expected_self_auditors = [users(:siva_e),
+                              users(:scott_g),
                               users(:bob_g),
                               users(:rich_m)]
     assert_equal(expected_self_auditors, auditor_list[:self_list])
     
-    expected_peer_auditors = [users(:scott_g),  users(:bob_g)]
+    expected_peer_auditors = [users(:siva_e),
+                              users(:scott_g),  
+                              users(:bob_g)]
     assert_equal(expected_peer_auditors, auditor_list[:peer_list])
 
     checklist_sections = [sections(:section_10_1), 
                           sections(:section_10_2)]
     
-    for section in auditor_list[:sections]
+    auditor_list[:sections].each do |section|
       expected_section = checklist_sections.shift
 
       assert_equal(lead_designer,         section[:self_auditor])
@@ -979,6 +1138,24 @@ class AuditControllerTest < Test::Unit::TestCase
 
     mx234c_audit.reload                    
     assert_equal(0, mx234c_audit.audit_teammates.size)
+
+    # No updates should have been made to audit teammates - can not assign
+    # same person to be the peer and self auditor
+    post(:update_auditor_list,
+         :audit                => {:id => mx234c_audit.id},
+         :self_auditor         => {:section_id_3 => bob_g.id.to_s,
+                                   :section_id_4 => bob_g.id.to_s},
+         :peer_auditor         => {:section_id_3 => bob_g.id.to_s,
+                                   :section_id_4 => bob_g.id.to_s})
+
+    mx234c_audit.reload                    
+    assert_equal(0, mx234c_audit.audit_teammates.size)
+    assert_equal('WARNING: Assignments not made <br />' +
+                 '         Robert Goldin can not be both ' +
+                 'self and peer auditor for section_10_1<br />' +
+                 '         Robert Goldin can not be both ' +
+                 'self and peer auditor for section_10_2<br />',
+                 flash['notice'])
     
     # There should be 1 teammates record
     post(:update_auditor_list,
@@ -1114,6 +1291,15 @@ class AuditControllerTest < Test::Unit::TestCase
   end
   
 
+  def test_zzzz
+  return
+    dump_audit(audits(:audit_in_peer_audit).id,
+                      "mx999b",
+                      true)
+  
+  end
+   
+  
   private
 
 
@@ -1172,6 +1358,7 @@ class AuditControllerTest < Test::Unit::TestCase
             print "      DESIGN_CHECK ID: #{design_check.id}\n"
             print "      AUDIT ID: #{design_check.audit_id}\n"
             print "      CHECK ID: #{design_check.check_id}\n"
+            puts  "      TYPE:     #{check.check_type}"
             auditor  = User.find(design_check.auditor_id).name
             designer = User.find(design_check.designer_id).name
             print "      AUDITOR: #{auditor}\n"
