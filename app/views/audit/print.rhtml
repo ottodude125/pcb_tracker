@@ -32,15 +32,15 @@
   <table align="center" border="0">
     <tr>
       <th align="left" width="170">Board Number: </th>
-      <td width="200"><%= @summary[:board_number] %></td>
+      <td width="200"><%= @audit.design.name %></td>
       <th align="left" width="170">Checklist Revision: </th>
-      <td width="200"><%= @summary[:checklist_rev] %></td>
+      <td width="200"><%= @audit.checklist.revision %></td>
     </tr>
     <tr>
       <th align="left">Current Designer: </th>
-      <td><%= @summary[:designer] %></td>
+      <td><%= @audit.design.designer.name %></td>
       <th align="left">Current Peer Auditor: </th>
-      <td><%= @summary[:auditor] %></td>
+      <td><%= @audit.design.peer.name %></td>
     </tr>
     <tr>
       <% stats = @audit.completion_stats %>
