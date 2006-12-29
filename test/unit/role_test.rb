@@ -68,9 +68,9 @@ class RoleTest < Test::Unit::TestCase
   def test_users
 
     all_designers = Role.find_by_name('Designer').users
-    assert_equal(4, all_designers.size)
+    assert_equal(5, all_designers.size)
     all_designers.delete_if  { |u| !u.active? }
-    assert_equal(3, all_designers.size)
+    assert_equal(4, all_designers.size)
     all_designers = all_designers.sort_by { |u| u.last_name }
     
     active_designers = Role.find_by_name('Designer').active_users

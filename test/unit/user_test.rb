@@ -75,6 +75,7 @@ class UserTest < Test::Unit::TestCase
     u.password = u.password_confirmation = "bobs_secure_password"
       
     assert u.save  
+    assert(u.employee?)
     
   end
   
