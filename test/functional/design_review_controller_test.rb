@@ -178,7 +178,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(mx234a.id,         assigns(:design).id)
     assert_equal(14,                assigns(:review_results).size)
     assert_equal(4,                 assigns(:comments).size)
-    assert_equal(3,                 assigns(:designers).size)
+    assert_equal(4,                 assigns(:designers).size)
     assert_equal(2,                 assigns(:priorities).size)
     assert_equal(nil,               assigns(:fab_houses))
     
@@ -1196,8 +1196,10 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(mx234a_pre_art.design.board.id, assigns(:board).id)
     assert_kind_of(Document, assigns(:document))
     doc_type = assigns(:document_types)
-    assert_equal(1, doc_type.size)
-    assert_equal("Other", doc_type[0].name)
+
+    assert_equal(2, doc_type.size)
+    assert_equal("Other",           doc_type[0].name)
+    assert_equal('Outline Drawing', doc_type[1].name)
     
     post(:add_attachment,
          :id               => mx234a_pre_art.design.board.id,
@@ -1207,9 +1209,10 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(mx234a_pre_art.design.board.id, assigns(:board).id)
     assert_kind_of(Document, assigns(:document))
     doc_type = assigns(:document_types)
-    assert_equal(1, doc_type.size)
+    assert_equal(2, doc_type.size)
     assert_equal("Other", doc_type[0].name)
-    
+    assert_equal('Outline Drawing', doc_type[1].name)
+
   end
 
 
@@ -2773,8 +2776,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     post(:admin_update, :id => mx234a_pre_artwork.id)
 
-    assert_equal(3, assigns(:designers).size)
-    assert_equal(3, assigns(:peer_list).size)
+    assert_equal(4, assigns(:designers).size)
+    assert_equal(4, assigns(:peer_list).size)
     assert_equal(2, assigns(:priorities).size)
     assert_equal(2, assigns(:design_centers).size)
     
