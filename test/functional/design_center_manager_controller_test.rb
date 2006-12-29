@@ -76,7 +76,7 @@ class DesignCenterManagerControllerTest < Test::Unit::TestCase
     designers      = assigns(designers)['designers']
     design_centers = assigns(design_centers)['design_centers']
 
-    assert_equal(3,  designers.size)
+    assert_equal(4,  designers.size)
     assert_equal(2,  design_centers.size)
 
   end
@@ -118,6 +118,7 @@ class DesignCenterManagerControllerTest < Test::Unit::TestCase
     fridley = design_centers(:fridley)
     set_admin
     post(:assign_designers_to_centers,
+         'Esakky_' + users(:siva_e).id.to_s  => {'id' => fridley.id},
          'Glover_' + users(:scott_g).id.to_s => {'id' => fridley.id},
          'Miller_' + users(:rich_m).id.to_s  => {'id' => fridley.id},
          'Goldin_' + users(:bob_g).id.to_s   => {'id' => fridley.id})
