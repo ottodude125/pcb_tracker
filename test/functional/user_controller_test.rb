@@ -35,7 +35,7 @@ class UserControllerTest < Test::Unit::TestCase
 
   ######################################################################
   #
-  # test_edit
+  # test_edit_without_user
   #
   # Description:
   # Verify that the tracker will not allow a user that is not logged in to 
@@ -54,7 +54,7 @@ class UserControllerTest < Test::Unit::TestCase
 
   ######################################################################
   #
-  # test_edit
+  # test_auth_to_edit
   #
   # Description:
   # Verify that the tracker limits the user record edit function to an 
@@ -170,7 +170,8 @@ class UserControllerTest < Test::Unit::TestCase
            :first_name            => "Bob",
            :last_name             => "Squarepants",
            :email                 => "Bob_Squarepants@notes.teradyne.com",
-           :active                => "1"},
+           :active                => "1",
+           :employee              => "0"},
          :role => {"1"=>"1", "2"=>"0", "4"=>"1"})
 
 
@@ -187,7 +188,8 @@ class UserControllerTest < Test::Unit::TestCase
            :first_name            => "Bob",
            :last_name             => "Squarepants",
            :email                 => "Bob_Squarepants@notes.teradyne.com",
-           :active                => "1"},
+           :active                => "1",
+           :employee              => "0"},
          :role => {"1"=>"1", "2"=>"0", "4"=>"1"})
 
 
@@ -198,6 +200,8 @@ class UserControllerTest < Test::Unit::TestCase
 
     new_user = User.find_by_last_name "Squarepants"
     assert_equal('newbob', new_user.login)
+    assert(new_user.active?)
+    assert(!new_user.employee?)
 
     # Make sure that the defaults are loaded properly.
     post(:create,
