@@ -254,15 +254,9 @@ class BoardDesignEntryController < ApplicationController
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @return             = params[:return]
     @originator         = User.find(@board_design_entry.originator_id)
-    
-    @managers = @board_design_entry.board_design_entry_users.dup
-    @managers.delete_if { |bde_user| !bde_user.role.manager? }
-    @managers = @managers.sort_by { |m| m.role.display_name }
-    
-    @reviewers = @board_design_entry.board_design_entry_users
-    @reviewers.delete_if { |bde_user| !bde_user.role.reviewer? || bde_user.role.manager? }
-    @reviewers = @reviewers.sort_by { |r| r.role.display_name }
-  
+    @managers           = @board_design_entry.managers
+    @reviewers          = @board_design_entry.reviewers
+
   end
 
 
