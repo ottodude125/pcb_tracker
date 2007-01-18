@@ -1,0 +1,6 @@
+Modified by: <%= @comment.user.name %> on <%= @comment.created_on.strftime("%d-%b-%y")%> at <%= @comment.created_on.strftime("%I:%M %p %Z")%>
+
+<%=  @comment.comment %>
+
+
+NOTE: The design information is located at <%= Pcbtr::PCBTR_BASE_URL %>design_review/view/<%= @design_review_id%>
