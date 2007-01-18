@@ -30,9 +30,9 @@
             <th align="left"
                 width="60">Design:</th>
             <td width="40%">
-              <%= @design.name %> -
-              <%= @design.board.platform.name %> /
-              <%= @design.board.project.name %>
+              <%= @design_review.design.name %> -
+              <%= @design_review.design.board.platform.name %> /
+              <%= @design_review.design.board.project.name %>
             </td>
             <th align="left"
                 width="140">Location of Data:</th>
@@ -43,7 +43,7 @@
           <tr>
             <th align="left">Criticality:</th>
             <td>
-              <%= @design.priority_name %>
+              <%= @design_review.design.priority_name %>
             </td>
             <th align="left">Review Type:</th>
             <td>
@@ -71,15 +71,15 @@
                      width="100%">
                 <% for reviewer_list in @reviewers[ranges[1][:start]..ranges[1][:stop]] %>
                   <tr>
-                    <th align="right"> <%= reviewer_list[:group] %>: </th>
+                    <th align="right"> <%= reviewer_list.role.display_name %>: </th>
                     <td>
-                      <select id="<%= "board_reviewers_#{reviewer_list[:group_id]}" %>" 
-                              name="<%= "board_reviewers[#{reviewer_list[:group_id]}]" %>"
+                      <select id="<%= "board_reviewers_#{reviewer_list.role_id}" %>" 
+                              name="<%= "board_reviewers[#{reviewer_list.role_id}]" %>"
                               class="name_select">
-                      <%=  options_from_collection_for_select(reviewer_list[:reviewers],
+                      <%=  options_from_collection_for_select(reviewer_list.role.active_users,
                                                               "id",
                                                               "last_name_first",
-                                                              reviewer_list[:reviewer_id]) %>
+                                                              reviewer_list.reviewer_id) %>
                       </select>
 
                     </td>
@@ -94,15 +94,15 @@
                      width="100%">
                 <% for reviewer_list in @reviewers[ranges[2][:start]..ranges[2][:stop]] %>
                   <tr>
-                    <th align="right"> <%= reviewer_list[:group] %>: </th>
+                    <th align="right"> <%= reviewer_list.role.display_name %>: </th>
                     <td>
-                      <select id="<%= "board_reviewers_#{reviewer_list[:group_id]}" %>" 
-                              name="<%= "board_reviewers[#{reviewer_list[:group_id]}]" %>"
+                      <select id="<%= "board_reviewers_#{reviewer_list.role_id}" %>" 
+                              name="<%= "board_reviewers[#{reviewer_list.role_id}]" %>"
                               class="name_select">
-                      <%=  options_from_collection_for_select(reviewer_list[:reviewers],
+                      <%=  options_from_collection_for_select(reviewer_list.role.active_users,
                                                               "id",
-                                                              "name",
-                                                              reviewer_list[:reviewer_id]) %>
+                                                              "last_name_first",
+                                                              reviewer_list.reviewer_id) %>
                       </select>
                     </td>
                   </tr>
