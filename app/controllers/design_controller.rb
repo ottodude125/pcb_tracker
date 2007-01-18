@@ -70,9 +70,7 @@ class DesignController < ApplicationController
 
     # Get all of the active users.
     users = User.find_all('active=1', 'last_name ASC')
-    for reviewer in @reviewers
-      users.delete_if { |user| user.id == reviewer[:id] }
-    end
+    @reviewers.each { |rvr| users.delete_if { |user| user.id == rvr[:id] } }
 
     @users_copied     = []
     @users_not_copied = []
