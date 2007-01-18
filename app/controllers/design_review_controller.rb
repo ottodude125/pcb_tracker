@@ -26,7 +26,7 @@ class DesignReviewController < ApplicationController
   # This method gathers the information for displaying a design review
   # and then renders the view based on the users' role.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - The design review ID.
   #
   ######################################################################
@@ -35,12 +35,10 @@ class DesignReviewController < ApplicationController
 
     session[:return_to] = {:controller => 'design_review',
                            :action     => 'view',
-                           :id         => @params[:id]}
+                           :id         => params[:id]}
 
-    @design_review  = DesignReview.find(@params[:id])
-    @design         = Design.find(@design_review.design_id)
+    @design_review  = DesignReview.find(params[:id])
     @review_results = @design_review.review_results_by_role_name
-    @comments       = @design_review.comments('DESC')
 
     active_role = session[:active_role]
     if session[:active_role] && !active_role.reviewer?
@@ -58,9 +56,9 @@ class DesignReviewController < ApplicationController
 
       if active_role && active_role.reviewer?
         
-        @my_review_results = Array.new
-        for review_result in @review_results
-          @my_review_results << review_result if review_result.reviewer_id == @session[:user].id
+        @my_review_results = []
+        @review_results.each do |review_result|
+          @my_review_results << review_result if review_result.reviewer_id == session[:user].id
         end
 
         if pre_art_pcb(@design_review, @my_review_results)
@@ -72,16 +70,11 @@ class DesignReviewController < ApplicationController
         end
 
         if (@my_review_results.find { |rr| rr.role.name == "SLM-Vendor"})
-          design_fab_house_list = @design.fab_houses
           design_fab_houses = {}
-          for dfh in design_fab_house_list
-            design_fab_houses[dfh.id] = dfh
-          end
-          @fab_houses = FabHouse.find_all('active=1', 'name ASC')
-
-          for fab_house in @fab_houses
-            fab_house[:selected] = design_fab_houses[fab_house.id] != nil
-          end
+          @design_review.design.fab_houses.each { |dfh| design_fab_houses[dfh.id] = dfh }
+          
+          @fab_houses = FabHouse.get_all_active
+          @fab_houses.each { |fh| fh[:selected] = design_fab_houses[fh.id] != nil }
         else
           @fab_houses = nil
         end
@@ -102,13 +95,13 @@ class DesignReviewController < ApplicationController
   # This method redirects to the view action to display the appropriate
   # view.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - The design review ID.
   #
   ######################################################################
   #
   def safe_view
-    redirect_to(:action => 'view', :id => @params[:id])
+    redirect_to(:action => 'view', :id => params[:id])
   end
   
   
@@ -120,13 +113,13 @@ class DesignReviewController < ApplicationController
   # This method redirects to the view action to display the appropriate
   # view.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - The design review ID.
   #
   ######################################################################
   #
   def admin_view
-    redirect_to(:action => 'view', :id => @params[:id])
+    redirect_to(:action => 'view', :id => params[:id])
   end
   
   
@@ -138,13 +131,13 @@ class DesignReviewController < ApplicationController
   # This method redirects to the view action to display the appropriate
   # view.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - The design review ID.
   #
   ######################################################################
   #
   def manager_view
-    redirect_to(:action => 'view', :id => @params[:id])
+    redirect_to(:action => 'view', :id => params[:id])
   end
   
   
@@ -156,13 +149,13 @@ class DesignReviewController < ApplicationController
   # This method redirects to the view action to display the appropriate
   # view.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - The design review ID.
   #
   ######################################################################
   #
   def designer_view
-    redirect_to(:action => 'view', :id => @params[:id])
+    redirect_to(:action => 'view', :id => params[:id])
   end
   
   
@@ -174,13 +167,13 @@ class DesignReviewController < ApplicationController
   # This method redirects to the view action to display the appropriate
   # view.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - The design review ID.
   #
   ######################################################################
   #
   def reviewer_view
-    redirect_to(:action => 'view', :id => @params[:id])
+    redirect_to(:action => 'view', :id => params[:id])
   end
 
 
@@ -192,7 +185,7 @@ class DesignReviewController < ApplicationController
   # This method redirects to the next method depending on the review type
   # that the user is posting.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['design_id']      - Used to identify the design that the user is posting
   #                      the review for.
   # ['review_type_id'] - Used to identify the review type.
@@ -201,15 +194,15 @@ class DesignReviewController < ApplicationController
   #
   def posting_filter
 
-    review = ReviewType.find(@params["review_type_id"])
+    review = ReviewType.find(params["review_type_id"])
 
     if review.name != 'Placement'
       redirect_to(:action         => 'post_review',
-                  :design_id      => @params["design_id"],
-                  :review_type_id => @params["review_type_id"])
+                  :design_id      => params["design_id"],
+                  :review_type_id => params["review_type_id"])
     else
-      flash[:design_id]      = @params["design_id"]
-      flash[:review_type_id] = @params["review_type_id"]
+      flash[:design_id]      = params["design_id"]
+      flash[:review_type_id] = params["review_type_id"]
       redirect_to(:action => 'placement_routing_post')
     end
 
@@ -224,7 +217,7 @@ class DesignReviewController < ApplicationController
   # This method refreshes the information in the flash prior to displaying the
   # Plaement Routing Review Posting form.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   ######################################################################
@@ -243,7 +236,7 @@ class DesignReviewController < ApplicationController
   # This method refreshes the information in the flash prior to displaying the
   # Plaement Routing Review Posting form.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   ######################################################################
@@ -252,33 +245,27 @@ class DesignReviewController < ApplicationController
 
     design_id = flash[:design_id]
     
-    if @params["combine"]["reviews"] == '1'
+    if params["combine"]["reviews"] == '1'
       
-
       design_reviews = DesignReview.find_all_by_design_id(design_id)
       placement_review = design_reviews.find { |dr| dr.review_type.name == 'Placement' }
       routing_review   = design_reviews.find { |dr| dr.review_type.name == 'Routing' }
-
-      placement_results = DesignReviewResult.find_all_by_design_review_id(
-                            placement_review.id)
-      routing_results   = DesignReviewResult.find_all_by_design_review_id(
-                            routing_review.id)
-
-      for routing_result in routing_results
-       if !placement_results.find { |pr| pr.role_id == routing_result.role_id }
-         new_placement_result = DesignReviewResult.new
-         new_placement_result.design_review_id = placement_results[0].design_review_id
-         new_placement_result.reviewer_id      = routing_result.reviewer_id
-         new_placement_result.role_id          = routing_result.role_id
-         new_placement_result.result           = routing_result.result
-         new_placement_result.reviewed_on      = routing_result.reviewed_on
-         new_placement_result.create
+      placement_results = placement_review.design_review_results
+      
+      routing_review.design_review_results.each do |routing_result|
+       if !placement_results.detect { |pr| pr.role_id == routing_result.role_id }
+         DesignReviewResult.new(
+           :design_review_id => placement_review.id,
+           :reviewer_id      => routing_result.reviewer_id,
+           :role_id          => routing_result.role_id,
+           :result           => routing_result.result,
+           :reviewed_on      => routing_result.reviewed_on).create
        end
       end
     end
 
     redirect_to(:action                    => 'post_review',
-                :combine_placement_routing => @params["combine"]["reviews"],
+                :combine_placement_routing => params["combine"]["reviews"],
                 :design_id                 => design_id,
                 :review_type_id            => flash[:review_type_id])
     
@@ -293,7 +280,7 @@ class DesignReviewController < ApplicationController
   # This method retrieves the design reviews and the reviewers to display for
   # posting.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the design to be retrieved.
   #
   # Return value:
@@ -305,41 +292,31 @@ class DesignReviewController < ApplicationController
   #
   def post_review
 
-    @design        = Design.find(@params[:design_id])
-    design_reviews = DesignReview.find_all_by_design_id(@design.id)
-    review_type    = ReviewType.find(@params[:review_type_id])
-    @design_review = design_reviews.find { |dr|  dr.review_type_id == review_type.id }
+    review_type    = ReviewType.find(params[:review_type_id])
+    design_reviews = Design.find(params[:design_id]).design_reviews
+    @design_review = design_reviews.detect { |dr| dr.review_type_id == review_type.id }
 
-    # TODO: There must be a better way to set this.
-    @design_review.design_center_id = 1 if @design_review.design_center_id == 0
-
+    # TODO: GET A DSR FOR THIS UPDATE
+    @design_review.set_valor_reviewer  if @design_review.review_type.name == 'Final'
+    @design_review.reload
+       
     # Handle the combined Placement/Routing reviews
-    if @params[:combine_placement_routing] == '1'
+    if params[:combine_placement_routing] == '1'
 
-      routing_review = ReviewType.find_by_name 'Routing'
+      routing_review = ReviewType.find_by_name('Routing')
       
       @design_review.review_type_id_2 = routing_review.id
       @design_review.update
 
       # Remove the routing design review and review results for this design
-      routing_review = design_reviews.find { |dr|
-        dr.review_type_id == routing_review.id 
-      }
+      routing_review = design_reviews.detect { |dr| dr.review_type_id == routing_review.id }
       routing_review_results = 
         DesignReviewResult.delete_all("design_review_id=#{routing_review.id}")
 
-      if routing_review_results
-        DesignReview.delete(routing_review.id)
-      end
+      DesignReview.delete(routing_review.id) if routing_review_results
 
     end
 
-    review_results = DesignReviewResult.find_all_by_design_review_id(@design_review.id)
-    group_ids = Array.new
-    for review_result in review_results
-      group_ids.push(review_result.role_id)
-    end
-                                                                      
     @reviewers = @design_review.generate_reviewer_selection_list
 
   end
@@ -353,7 +330,7 @@ class DesignReviewController < ApplicationController
   # This method retrieves the design review and the reviewers to display for
   # posting.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the design to be retrieved.
   #
   # Return value:
@@ -365,20 +342,8 @@ class DesignReviewController < ApplicationController
   #
   def repost_review
 
-    @design_review = DesignReview.find(@params[:design_review_id])
-    @design        = Design.find(@design_review.design_id)
-
-    # Remove roles that are not appropriate for the review.
-    roles = Role.find_all("reviewer=1 and active=1")
-    
-
-    group_ids = Array.new
-    review_results = @design_review.design_review_results
-    for review_result in review_results
-      group_ids.push(review_result.role_id)
-    end
-
-    @reviewers = @design_review.generate_reviewer_selection_list
+    @design_review = DesignReview.find(params[:design_review_id])
+    @reviewers     = @design_review.generate_reviewer_selection_list
 
     render_action 'post_review'
 
@@ -393,7 +358,7 @@ class DesignReviewController < ApplicationController
   # This method retrieves the design review and updates it with the posting
   # information.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the design review to be retrieved.
   # [:post_comment] - The posting comment
   #
@@ -406,8 +371,7 @@ class DesignReviewController < ApplicationController
   #
   def post
 
-
-    design_review = DesignReview.find(@params[:design_review][:id])
+    design_review = DesignReview.find(params[:design_review][:id])
     current_time = Time.now
 
     # Set the status for the design review.
@@ -418,8 +382,8 @@ class DesignReviewController < ApplicationController
     design_review.reposted_on      = current_time
     design_review.update
 
-    reviewer_list = Hash.new
-    @params[:board_reviewers].each { |role_id, reviewer_id|
+    reviewer_list = {}
+    params[:board_reviewers].each { |role_id, reviewer_id|
       reviewer_list[role_id.to_i] = reviewer_id.to_i
     }
 
@@ -429,7 +393,7 @@ class DesignReviewController < ApplicationController
       design_review.design.board_design_entry.complete
     end
 
-    for review_result in design_review.design_review_results
+    design_review.design_review_results.each do |review_result|
 
       if reviewer_list[review_result.role_id] != review_result.reviewer_id
         review_result.reviewer_id = reviewer_list[review_result.role_id]
@@ -453,8 +417,7 @@ class DesignReviewController < ApplicationController
       # been set when the design was created.
       if (design_review.review_type != pre_art_review &&
           review_result.role.cc_peers?)
-        cc_list = review_result.role.users
-        for peer in cc_list
+        review_result.role.users.each do |peer|
           # Do not update the list for the following conditions.
           #    - peer is the reviewer
           #    - peer is not active
@@ -470,18 +433,16 @@ class DesignReviewController < ApplicationController
     
 
     # Store the comment if the designer entered one.
-    if @params[:post_comment][:comment] != ""
-      dr_comment = DesignReviewComment.new
-      dr_comment.comment = @params[:post_comment][:comment]
-      dr_comment.user_id = @session[:user][:id]
-      dr_comment.design_review_id = design_review.id
-      dr_comment.create
+    if params[:post_comment][:comment] != ""
+      DesignReviewComment.new(:comment          => params[:post_comment][:comment],
+                              :user_id          => session[:user][:id],
+                              :design_review_id => design_review.id).create
     end
 
 
     # Let everybody know that the design has been posted.
     TrackerMailer::deliver_design_review_posting_notification(design_review,
-                                                             @params[:post_comment][:comment])
+                                                              params[:post_comment][:comment])
 
     redirect_to(:action => 'index', :controller => 'tracker')
 
@@ -496,7 +457,7 @@ class DesignReviewController < ApplicationController
   # This method retrieves the design review and updates it with the posting
   # information.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the design review to be retrieved.
   # [:post_comment] - The posting comment
   #
@@ -509,7 +470,7 @@ class DesignReviewController < ApplicationController
   #
   def repost
 
-    design_review  = DesignReview.find(@params[:design_review][:id])
+    design_review  = DesignReview.find(params[:design_review][:id])
 
     # Set the status for the design review.
     in_review = ReviewStatus.find_by_name('In Review')
@@ -519,15 +480,15 @@ class DesignReviewController < ApplicationController
     design_review.update
 
     review_results = 
-      DesignReviewResult.find_all("design_review_id='#{design_review.id}'" +
-                                    " and result!='WAIVED'")
-    reviewer_list = Hash.new
-    @params[:board_reviewers].each { |role_id, reviewer_id|
+      design_review.design_review_results.delete_if { |rr| rr.result == 'WAIVED' }
+
+    reviewer_list = {}
+    params[:board_reviewers].each do |role_id, reviewer_id|
       reviewer_list[role_id.to_i] = reviewer_id.to_i
-    }
+    end
 
     current_time = Time.now
-    for review_result in review_results
+    review_results.each do |review_result|
 
       if reviewer_list[review_result.role_id] != review_result.reviewer_id
         review_result.reviewer_id = reviewer_list[review_result.role_id]
@@ -539,17 +500,15 @@ class DesignReviewController < ApplicationController
     
 
     # Store the comment if the designer entered one.
-    if @params[:post_comment][:comment] != ""
-      dr_comment = DesignReviewComment.new
-      dr_comment.comment = @params[:post_comment][:comment]
-      dr_comment.user_id = @session[:user][:id]
-      dr_comment.design_review_id = design_review.id
-      dr_comment.create
+    if params[:post_comment][:comment] != ""
+      DesignReviewComment.new(:comment          => params[:post_comment][:comment],
+                              :user_id          => session[:user][:id],
+                              :design_review_id => design_review.id).create
     end
 
     # Let everybody know that the design has been posted.
     TrackerMailer::deliver_design_review_posting_notification(design_review,
-                                                              @params[:post_comment][:comment],
+                                                              params[:post_comment][:comment],
                                                               true)
 
     redirect_to(:action => 'index', :controller => 'tracker')
@@ -564,7 +523,7 @@ class DesignReviewController < ApplicationController
   # Description:
   # This method updates the database with the comment for the design review.
   #
-  # Parameters from @params
+  # Parameters from params
   # [:design_review][:id] - Used to identify the design review.
   # [:post_comment] - The posting comment
   #
@@ -577,21 +536,19 @@ class DesignReviewController < ApplicationController
   #
   def add_comment
 
-    if @params[:post_comment][:comment] != ""
-      dr_comment = DesignReviewComment.new
-      dr_comment.comment = @params[:post_comment][:comment]
-      dr_comment.user_id = @session[:user][:id]
-      dr_comment.design_review_id = @params[:design_review][:id]
-      dr_comment.create
+    if params[:post_comment][:comment] != ""
+      DesignReviewComment.new(:comment          => params[:post_comment][:comment],
+                              :user_id          => session[:user][:id],
+                              :design_review_id => params[:design_review][:id]).create
 
-      TrackerMailer::deliver_design_review_update(@session[:user],
-                                                  DesignReview.find(@params[:design_review][:id]),
+      TrackerMailer::deliver_design_review_update(session[:user],
+                                                  DesignReview.find(params[:design_review][:id]),
                                                   true)
     end
 
     flash['notice'] = "Comment added - mail has been sent"
 
-    redirect_to(:action => :view, :id => @params[:design_review][:id])
+    redirect_to(:action => :view, :id => params[:design_review][:id])
 
   end
   
@@ -604,7 +561,7 @@ class DesignReviewController < ApplicationController
   # This method gathers the data used to populate the change design 
   # center form.
   #
-  # Parameters from @params
+  # Parameters from params
   # [:design_review_id] - Used to identify the design review.
   #
   # Return value:
@@ -615,8 +572,8 @@ class DesignReviewController < ApplicationController
   ######################################################################
   #
   def change_design_center
-    @design_centers = DesignCenter.find_all('active=1', 'name ASC')
-    @design_review  = DesignReview.find(@params[:design_review_id])
+    @design_centers = DesignCenter.get_all_active
+    @design_review  = DesignReview.find(params[:design_review_id])
   end
   
   
@@ -628,7 +585,7 @@ class DesignReviewController < ApplicationController
   # This method the imput from the change design center form and updates
   # the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # [:design_review][:id] - Used to identify the design review.
   # [:design_center][:location] - The design center ID of the new design
   #                               center.
@@ -642,11 +599,24 @@ class DesignReviewController < ApplicationController
   #
   def update_design_center
   
-    design_review = DesignReview.find(@params[:design_review][:id])
-    design_review.design_center_id = @params[:design_center][:location]
+    design_review = DesignReview.find(params[:design_review][:id])
+
+    changes = { }
+    if (params[:design_center][:location] != "" &&
+        params[:design_center][:location] != design_review.design_center_id.to_s)
+      changes[:design_center] = { :old => design_review.design_center.name, 
+                                  :new => DesignCenter.find(params[:design_center][:location]).name }
+      end
+      
+    design_review.design_center_id = params[:design_center][:location]
     
     if design_review.update
       flash['notice'] = 'The design center has been updated.'
+      
+      create_comment(design_review, '', changes)
+
+      TrackerMailer::deliver_design_review_modification(session[:user], design_review)
+
     else
       flash['notice'] = 'Error: The design center was not updated.'
     end
@@ -665,7 +635,7 @@ class DesignReviewController < ApplicationController
   # This method retrieves the design review and the documents associated with
   # the design review.
   #
-  # Parameters from @params
+  # Parameters from params
   # [:design_review_id] - Used to identify the design review.
   #
   # Return value:
@@ -677,10 +647,10 @@ class DesignReviewController < ApplicationController
   #
   def review_attachments
  
-    @design_review = DesignReview.find(@params[:design_review_id])
+    @design_review = DesignReview.find(params[:design_review_id])
     document_types = DocumentType.find_all(nil, 'name ASC')
 
-    @documents = Array.new
+    @documents = []
     for doc_type in document_types
       docs = DesignReviewDocument.find_all("board_id='#{@design_review.design.board_id}' " +
                                            "and document_type_id='#{doc_type.id}'")
@@ -712,7 +682,7 @@ class DesignReviewController < ApplicationController
   # Description:
   # This method gathers the information to display update a document.
   #
-  # Parameters from @params
+  # Parameters from params
   # [:design_review_id] - Used to identify the design review.
   # [:document_id] - Used to identify the document.
   #
@@ -724,9 +694,9 @@ class DesignReviewController < ApplicationController
   ######################################################################
   #
   def update_documents
-    @drd = DesignReviewDocument.new
-    @design_review = DesignReview.find(@params[:design_review_id])
-    @existing_drd  = DesignReviewDocument.find(@params[:document_id])
+    @drd           = DesignReviewDocument.new
+    @design_review = DesignReview.find(params[:design_review_id])
+    @existing_drd  = DesignReviewDocument.find(params[:document_id])
     @document_type = DocumentType.find(@existing_drd.document_type_id)
   end
   
@@ -806,7 +776,7 @@ class DesignReviewController < ApplicationController
   # Description:
   # This method retrieves the document types the board for adding an attachment
   #
-  # Parameters from @params
+  # Parameters from params
   # [:id] - Used to identify the board.
   #
   # Return value:
@@ -818,18 +788,18 @@ class DesignReviewController < ApplicationController
   #
   def add_attachment
 
-    @document = Document.new
+    @document       = Document.new
     @document_types = DocumentType.find_all('active=1', 'name ASC')
     
-    if @params[:design_review] != nil
-      design_review_id = @params[:design_review][:id]
+    if params[:design_review] != nil
+      design_review_id = params[:design_review][:id]
     else
-      design_review_id = @params[:design_review_id]
+      design_review_id = params[:design_review_id]
     end
    
    
     @design_review = DesignReview.find(design_review_id)
-    @board = Board.find(@params[:id])
+    @board = Board.find(params[:id])
     
     # Eliminate document types that are already attached.
     documents = DesignReviewDocument.find_all("design_id='#{@design_review.design_id}'")
@@ -850,7 +820,7 @@ class DesignReviewController < ApplicationController
   # Description:
   # This method saves the attachment that the user selected.
   #
-  # Parameters from @params
+  # Parameters from params
   # [:id] - Used to identify the board.
   # [:document_type][:id] - Identifies the type of document.
   # [:return_to] - Used to control navigation
@@ -886,7 +856,7 @@ class DesignReviewController < ApplicationController
           
           drd_doc.document_type_id = params[:document_type][:id]
           drd_doc.board_id         = params[:board][:id]
-          drd_doc.design_id        = DesignReview.find(@params[:design_review][:id]).design_id
+          drd_doc.design_id        = DesignReview.find(params[:design_review][:id]).design_id
           drd_doc.document_id      = @document.id
           
           if drd_doc.save
@@ -933,7 +903,7 @@ class DesignReviewController < ApplicationController
   # Description:
   # This method retrieves the attachment selected by the user.
   #
-  # Parameters from @params
+  # Parameters from params
   # [:design_review_id] - Used to identify the design review.
   # [:document_type][:id] - Identifies the type of document.
   #
@@ -962,7 +932,7 @@ class DesignReviewController < ApplicationController
   # This method gathers the information to display a list of obsolete
   # documents.
   #
-  # Parameters from @params
+  # Parameters from params
   # [:id] - Used to identify the design review.
   # [:document_type_id] - Identifies the type of document.
   #
@@ -975,9 +945,9 @@ class DesignReviewController < ApplicationController
   #
   def list_obsolete
   
-    @design_review = DesignReview.find(@params[:id])
+    @design_review = DesignReview.find(params[:id])
     @docs = DesignReviewDocument.find_all("design_id='#{@design_review.design.id}' " +
-                                          "and document_type_id='#{@params[:document_type_id]}'")
+                                          "and document_type_id='#{params[:document_type_id]}'")
                                           
     @docs.sort_by { |drd| drd.document.created_on}
     @docs.reverse!
@@ -997,7 +967,7 @@ class DesignReviewController < ApplicationController
   # This method gathers the information to the mail list information for the 
   # design review.
   #
-  # Parameters from @params
+  # Parameters from params
   # [:design_review_id] - Used to identify the design review.
   # [:document_type][:id] - Identifies the type of document.
   #
@@ -1010,48 +980,31 @@ class DesignReviewController < ApplicationController
   #
   def review_mail_list
 
-    @design_review = DesignReview.find(@params[:design_review_id])
-    @design        = Design.find(@design_review.design_id)
-
-    # Get the list of reviewers
-    review_results = DesignReviewResult.find_all("design_review_id='#{@design_review.id}'")
+    @design_review = DesignReview.find(params[:design_review_id])
+    @design        = @design_review.design
 
     # Grab the reviewer names, their functions and sort the list by the
     # reviewer's last name.
-    reviewers = Array.new
-    for review_result in review_results
-      reviewer = User.find(review_result.reviewer_id)
-      reviewer = {
-        :name      => reviewer.first_name + ' ' + reviewer.last_name,
-        :group     => review_result.role.name,
-        :last_name => reviewer.last_name,
-        :id        => reviewer.id
-      }
-      
-      reviewers.push(reviewer)
-
-      @reviewers = reviewers.sort_by { |reviewer| reviewer[:last_name] }
-
+    reviewers = []
+    @design_review.design_review_results.each do |review_result|
+      reviewers.push({ :name      => review_result.reviewer.name,
+                       :group     => review_result.role.name,
+                       :last_name => review_result.reviewer.last_name,
+                       :id        => review_result.reviewer_id })
     end
+    @reviewers = reviewers.sort_by { |reviewer| reviewer[:last_name] }
 
     # Get all of the users who are in the CC list for the board.
-    users_copied = Board.find(@design.board_id).users
-    users_on_cc_list = Array.new
-    for user in users_copied
-      users_on_cc_list.push(user.id)
-    end
-
+    users_on_cc_list = []
+    Board.find(@design.board_id).users.each { |user| users_on_cc_list.push(user.id) }
 
     # Get all of the users, remove the reviewer names, and add the full name.
     users = User.find_all('active=1', 'last_name ASC')
-    for reviewer in @reviewers
-      users.delete_if { |user| user.id == reviewer[:id] }
-    end
+    @reviewers.each { |reviewer| users.delete_if { |user| user.id == reviewer[:id] } }
 
-    @users_copied     = Array.new
-    @users_not_copied = Array.new
-    for user in users
-
+    @users_copied     = []
+    @users_not_copied = []
+    users.each do |user|
       next if user.id == @design.designer_id
       if users_on_cc_list.include?(user.id)
         @users_copied.push(user)
@@ -1060,7 +1013,7 @@ class DesignReviewController < ApplicationController
       end
     end
     
-    details = Hash.new
+    details = {}
     details[:design]        = @design
     details[:design_review] = @design_review
     details[:reviewers]     = @reviewers
@@ -1079,7 +1032,7 @@ class DesignReviewController < ApplicationController
   # This method updates the CC list with the user that was selected to be
   # added.
   #
-  # Parameters from @params
+  # Parameters from params
   # [:id] - Identifies the user to be added to the CC list.
   #
   # Return value:
@@ -1094,7 +1047,7 @@ class DesignReviewController < ApplicationController
     details    = flash[:details]
     @reviewers = details[:reviewers]
 
-    user = User.find(@params[:id])
+    user = User.find(params[:id])
 
     # Update the database.
     details[:design].board.users << user
@@ -1102,7 +1055,7 @@ class DesignReviewController < ApplicationController
     # Update the history
     cc_list_history = CcListHistory.new
     cc_list_history.design_review_id = details[:design_review].id
-    cc_list_history.user_id          = @session[:user].id
+    cc_list_history.user_id          = session[:user].id
     cc_list_history.addressee_id     = user.id
     cc_list_history.action           = 'Added'
     cc_list_history.save
@@ -1134,7 +1087,7 @@ class DesignReviewController < ApplicationController
   # This method updates the CC list with the user that was selected to be
   # removed.
   #
-  # Parameters from @params
+  # Parameters from params
   # [:id] - Identifies the user to be removed from the CC list.
   #
   # Return value:
@@ -1149,7 +1102,7 @@ class DesignReviewController < ApplicationController
     details    = flash[:details]
     @reviewers = details[:reviewers]
 
-    user = User.find(@params[:id])
+    user = User.find(params[:id])
 
     # Update the database.
     details[:design].board.remove_users(user)
@@ -1157,7 +1110,7 @@ class DesignReviewController < ApplicationController
     # Update the history
     cc_list_history = CcListHistory.new
     cc_list_history.design_review_id = details[:design_review].id
-    cc_list_history.user_id          = @session[:user].id
+    cc_list_history.user_id          = session[:user].id
     cc_list_history.addressee_id     = user.id
     cc_list_history.action           = 'Removed'
     cc_list_history.save
@@ -1187,7 +1140,7 @@ class DesignReviewController < ApplicationController
   #
   # Description:
   #
-  # Parameters from @params
+  # Parameters from params
   #
   # Return value:
   # None
@@ -1200,8 +1153,8 @@ class DesignReviewController < ApplicationController
   
     # Go through the results for each role and look for a rejection
     rejected = false
-    roles    = Array.new
-    @params.each { |key, value|
+    roles    = []
+    params.each { |key, value|
 
       if key.include?("role_id")
         result = value.to_a
@@ -1216,17 +1169,20 @@ class DesignReviewController < ApplicationController
     
     # Save the data in flash
     review_results = {
-      :comments         => @params["post_comment"]["comment"],
-      :design_review_id => @params["design_review"]["id"],
+      :comments         => params["post_comment"]["comment"],
+      :design_review_id => params["design_review"]["id"],
       :roles            => roles,
-      :priority         => @params["priority"],
-      :designer         => @params["designer"],
-      :peer             => @params["peer"],
-      :fab_houses       => @params["fab_house"]
+      :priority         => params["priority"],
+      :designer         => params["designer"],
+      :peer             => params["peer"],
+      :fab_houses       => params["fab_house"]
     }
     flash[:review_results] = review_results
 
-    if not rejected
+    if roles .size == 0 && params["post_comment"]["comment"].strip == ""
+      flash['notice'] = "No information was provided - no update was recorded"
+      redirect_to(:action => 'view', :id => params["design_review"]["id"])
+    elsif not rejected
       redirect_to(:action => :post_results)
     else
       redirect_to(:action => :confirm_rejection)
@@ -1240,7 +1196,7 @@ class DesignReviewController < ApplicationController
   #
   # Description:
   #
-  # Parameters from @params
+  # Parameters from params
   #
   # Return value:
   # None
@@ -1251,8 +1207,7 @@ class DesignReviewController < ApplicationController
   #
   def post_results
 
-    # TO be handled: an approval coming in after a rejection was received.
-    ignore_rejection = @params[:note] && @params[:note] == 'ignore'
+    ignore_rejection = params[:note] && params[:note] == 'ignore'
 
     review_results    = flash[:review_results]
     flash_msg         = ''
@@ -1266,38 +1221,37 @@ class DesignReviewController < ApplicationController
     if review_results[:comments].size > 0
       dr_comment = DesignReviewComment.new
       dr_comment.comment          = review_results[:comments]
-      dr_comment.user_id          = @session[:user].id
+      dr_comment.user_id          = session[:user].id
       dr_comment.design_review_id = review_results[:design_review_id]
       dr_comment.create
       
       comment_update = true
     end
-    
+
     # Check to see if the reviewer is PCB Design performing a Pre_Artwork review
     # Only the PCB Design Approval screen returns a non-nil value in
     # review_results[:priority].
-    if (design_review.review_type.name == "Pre-Artwork &&"
-        review_results[:priority])
+    if (design_review.review_type.name == "Pre-Artwork" && review_results[:priority])
       results = post_pcb_design_results(design_review, review_results)
       design_review.reload
     end
+    
+    if review_results[:fab_houses]
+      comment_update = post_fab_house_updates(design_review, review_results[:fab_houses])
+    end
 
-    if review_results[:priority] == nil || results[:success]
-      
+    if design_review.in_review?
 
-      review_result_list = 
-        DesignReviewResult.find_all("design_review_id='#{review_results[:design_review_id]}'")
+      review_result_list = design_review.design_review_results
 
       rejection_entered = false
-      for review_result in review_results[:roles]
+      review_results[:roles].each do |review_result|
 
-        review_record = review_result_list.find { |rr| 
+        review_record = review_result_list.detect do |rr| 
           rr.role_id.to_s == review_result[:id]
-        }
+        end
 
-        if (review_result[:result] != 'COMMENT' && 
-            review_record                       &&
-            !ignore_rejection)
+        if review_result[:result] != 'COMMENT' && review_record && !ignore_rejection
           review_record.result      = review_result[:result]
           review_record.reviewed_on = Time.now
           review_record.update
@@ -1309,56 +1263,6 @@ class DesignReviewController < ApplicationController
         end
       end
 
-
-      # Check to see if the reviewer is an SLM-Vendor reviewer.
-      # review_results[:fab_houses] will be non-nil.
-      added   = ''
-      removed = ''
-      if (review_results[:fab_houses])
-        review_results[:fab_houses].each { |id, selected|
-
-          fab_house = FabHouse.find(id)
-          # Update the design
-          design = design_review.design
-          if selected == '0' && design.fab_houses.include?(fab_house)
-            design.remove_fab_houses(fab_house)
-            if removed == ''
-              removed = fab_house.name
-            else
-              removed += ', ' + fab_house.name
-            end
-          elsif selected == '1' && !design.fab_houses.include?(fab_house)
-            design.fab_houses << fab_house
-            if added == ''
-              added = fab_house.name
-            else
-              added += ', ' + fab_house.name
-            end
-          end
-        
-          # Update the board
-          board = design.board
-          if selected == '0' && board.fab_houses.include?(fab_house)
-            board.remove_fab_houses(fab_house)
-          elsif selected == '1' && !board.fab_houses.include?(fab_house)
-            board.fab_houses << fab_house                                      
-          end
-        }
-
-        if added !=  '' || removed != ''
-          fab_msg = 'Updated the fab houses '
-        
-          fab_msg += " - Added: #{added}"     if added   != ''
-          fab_msg += " - Removed: #{removed}" if removed != ''
-      
-          dr_comment = DesignReviewComment.new
-          dr_comment.comment          = fab_msg
-          dr_comment.user_id          = @session[:user].id
-          dr_comment.design_review_id = review_results[:design_review_id]
-          dr_comment.create
-          comment_update = true
-        end
-      end
 
       # Go through the design review list and withdraw the approvals and set the 
       # status to "Pending Repost"
@@ -1379,7 +1283,7 @@ class DesignReviewController < ApplicationController
 
         # If all of the reviews have a positive response, the review is complete
         response = ['WITHDRAWN', 'No Response', 'REJECTED']
-        outstanding_result = review_result_list.find { |rr| response.include?(rr.result) }
+        outstanding_result = review_result_list.detect { |rr| response.include?(rr.result) }
 
         if not outstanding_result
           review_completed = ReviewStatus.find_by_name('Review Completed')
@@ -1417,7 +1321,7 @@ class DesignReviewController < ApplicationController
     end
     
     if comment_update || (result_update && result_update.size > 0)
-      TrackerMailer::deliver_design_review_update(@session[:user], 
+      TrackerMailer::deliver_design_review_update(session[:user], 
                                                   design_review,
                                                   comment_update,
                                                   result_update)
@@ -1430,7 +1334,7 @@ class DesignReviewController < ApplicationController
     if results && !results[:success]
       flash_msg = results[:alternate_msg]
       flash_msg += " - Your comments have been recorded" if comment_update
-    else
+    elsif (design_review.in_review? || design_review.review_complete?)
       updated    = comment_update || results || results_recorded > 0
       flash_msg  = 'Design Review updated with'  if updated
       flash_msg += ' comments'                   if comment_update
@@ -1440,7 +1344,13 @@ class DesignReviewController < ApplicationController
       flash_msg += ' ' + results[:alternate_msg]  if results
       flash_msg += ' ' + fab_msg                  if fab_msg != ''
       flash_msg += ' - mail was sent'
-    
+    else
+      flash_msg  = "Design Review status is '#{design_review.review_status.name}': "
+      if comment_update
+        flash_msg += "comments were recorded and review results were discarded - mail was sent"
+      else
+        flash_msg += "the review results were discarded - no mail was sent"
+      end
     end
     flash['notice'] = flash_msg
     
@@ -1454,7 +1364,7 @@ class DesignReviewController < ApplicationController
   #
   # Description:
   #
-  # Parameters from @params
+  # Parameters from params
   #
   # Return value:
   # None
@@ -1480,7 +1390,7 @@ class DesignReviewController < ApplicationController
   #
   # Description:
   #
-  # Parameters from @params
+  # Parameters from params
   #
   # Return value:
   # None
@@ -1498,20 +1408,17 @@ class DesignReviewController < ApplicationController
     review_results.delete_if { |rr| rr.complete? }
 
     @design_review_id = params[:design_review_id]
-    @matching_roles = Array.new
-    for role in @session[:roles]
+    @matching_roles = []
+    for role in session[:roles]
 
       next if not role.reviewer?
 
       match = review_results.find { |rr| role.id == rr.role_id }
       if match
-        if @session[:user].id == match.reviewer_id
-          peers = Role.find(match.role_id).users.delete_if { |u| u == @session[:user] }
+        if session[:user].id == match.reviewer_id
+          peers = Role.find(match.role_id).users.delete_if { |u| u == session[:user] }
           peers.delete_if { |u| !u.active? }
-          @matching_roles << { 
-            :design_review => match,
-            :peers         => peers
-          }
+          @matching_roles << { :design_review => match, :peers => peers }
         else
           @matching_roles << { :design_review => match }
         end
@@ -1527,7 +1434,7 @@ class DesignReviewController < ApplicationController
   #
   # Description:
   #
-  # Parameters from @params
+  # Parameters from params
   #
   # Return value:
   # None
@@ -1538,8 +1445,8 @@ class DesignReviewController < ApplicationController
   #
   def update_review_assignments
 
-    design_review_id = @params[:id]
-    new_reviewers    = @params[:user]
+    design_review_id = params[:id]
+    new_reviewers    = params[:user]
     design_review    = DesignReview.find(design_review_id)
     designer         = User.find(design_review.designer_id)
     flash_msg        = ''
@@ -1552,7 +1459,7 @@ class DesignReviewController < ApplicationController
         design_review_result = DesignReviewResult.find_first("design_review_id='#{design_review_id}' and reviewer_id='#{session[:user].id}' and role_id='#{role.id}'")
 
         if design_review_result
-          is_reviewer = @session[:user].id == design_review_result.reviewer_id
+          is_reviewer = session[:user].id == design_review_result.reviewer_id
           design_review_result.reviewer_id = user_id
           design_review_result.update
           peer         = User.find(user_id)
@@ -1565,7 +1472,7 @@ class DesignReviewController < ApplicationController
 
           if is_reviewer
             TrackerMailer::deliver_reassign_design_review_to_peer(
-                             @session[:user],
+                             session[:user],
                              peer,
                              designer,
                              design_review,
@@ -1576,17 +1483,17 @@ class DesignReviewController < ApplicationController
     end
 
     # Check to see if any "assign_to_self" box is check.
-    @params.each { |key, value|
+    params.each { |key, value|
 
       next if not key.include?("assign_to_self")
-      next if value[@session[:user].id.to_s] == 'no'
+      next if value[session[:user].id.to_s] == 'no'
 
       role = Role.find(key.split('_')[1])
       design_review_result = DesignReviewResult.find_first("design_review_id='#{design_review_id}' and role_id='#{role.id}'")
 
       if design_review_result
         peer = User.find(design_review_result.reviewer_id)
-        design_review_result.reviewer_id = @session[:user].id
+        design_review_result.reviewer_id = session[:user].id
         design_review_result.update
 
         new_reviewer = session[:user].name
@@ -1597,7 +1504,7 @@ class DesignReviewController < ApplicationController
         end
 
         TrackerMailer::deliver_reassign_design_review_from_peer(
-                         @session[:user],
+                         session[:user],
                          peer,
                          designer,
                          design_review,
@@ -1624,7 +1531,7 @@ class DesignReviewController < ApplicationController
   # Description:
   # Gathers the data for the admin/manager update screen.
   #
-  # Parameters from @params
+  # Parameters from params
   #
   # Return value:
   # None
@@ -1635,24 +1542,29 @@ class DesignReviewController < ApplicationController
   #
   def admin_update
     
-    if @session['flash'][:sort_order]
-      @session['flash'][:sort_order] = @session['flash'][:sort_order]
+    if session['flash'][:sort_order]
+      session['flash'][:sort_order] = session['flash'][:sort_order]
     end
     
-    @design_review = DesignReview.find(@params[:id])
+    @design_review = DesignReview.find(params[:id])
     
-    designer_role        = Role.find_by_name("Designer")
-    @designers           = designer_role.active_users.sort_by { |u| u.last_name }
+    @designers           = Role.find_by_name("Designer").active_users
     @peer_list           = @designers
     @pcb_input_gate_list = Role.find_by_name('PCB Input Gate').active_users
     @priorities          = Priority.find_all(nil, 'value ASC')
-    @design_centers      = DesignCenter.find_all('active=1', 'name ASC')
+    @design_centers      = DesignCenter.get_all_active
+    
+    @review_statuses = []
+    if @design_review.in_review? || @design_review.on_hold?
+      @review_statuses << ReviewStatus.find_by_name('In Review')
+      @review_statuses << ReviewStatus.find_by_name('Review On-Hold')
+    end
 
-    @pcb_input_gate    = User.find(@design_review.design.pcb_input_id).name
+    @pcb_input_gate    = @design_review.design.input_gate.name
     @pcb_input_gate_id = @design_review.design.pcb_input_id
     
     if @design_review.design.designer_id > 0
-      @designer = User.find(@design_review.design.designer_id)
+      @designer = @design_review.design.designer
     end
 
   end
@@ -1665,7 +1577,7 @@ class DesignReviewController < ApplicationController
   # Description:
   # Updates the based on user input on the admin update screen.
   #
-  # Parameters from @params
+  # Parameters from params
   #
   # Return value:
   # None
@@ -1676,12 +1588,15 @@ class DesignReviewController < ApplicationController
   #
   def process_admin_update
 
-    if @session['flash'][:sort_order]
-      @session['flash'][:sort_order] = @session['flash'][:sort_order]
+    if session['flash'][:sort_order]
+      session['flash'][:sort_order] = session['flash'][:sort_order]
     end
     
-    design_review = DesignReview.find(params[:id])
-    audit_skipped = design_review.design.audit.skip?
+    design_review  = DesignReview.find(params[:id])
+    audit_skipped  = design_review.design.audit.skip?
+    audit_complete = design_review.design.audit.is_complete?
+    
+    peer_id = params[:peer] ? params[:peer][:id] : design_review.design.peer_id
 
     if !params[:designer]
 
@@ -1691,47 +1606,102 @@ class DesignReviewController < ApplicationController
       end
 
       flash['notice'] = "#{design_review.design.name} has been updated"
-      if @session[:return_to]
-        redirect_to(@session[:return_to])
+      if session[:return_to]
+        redirect_to(session[:return_to])
       else
         redirect_to(:action => "index", :controller => "tracker" )
       end
     
     elsif (!audit_skipped  &&
-           (params[:designer][:id] != params[:peer][:id]  ||
-             (params[:designer][:id] == '' &&
-              params[:peer][:id]     == '')))  ||
+           (params[:designer][:id] != peer_id  ||
+            (params[:designer][:id] == '' &&
+             peer_id                == '')))  ||
           audit_skipped 
-      
-      # Update the design reord
+          
       design = design_review.design
+
+      # Keep track of the updates for the comment update
+      changes = { }
+      
+      if (params[:priority][:id] != "" &&
+          params[:priority][:id] != design.priority_id.to_s)
+        changes[:priority] = { :old => design.priority.name, 
+                               :new => Priority.find(params[:priority][:id]).name }
+      end
+      if (params[:design_center][:id] != "" &&
+          params[:design_center][:id] != design_review.design_center_id.to_s)
+        changes[:design_center] = { :old => design_review.design_center.name, 
+                                    :new => DesignCenter.find(params[:design_center][:id]).name }
+      end
+      if (params[:designer][:id] != "" &&
+          params[:designer][:id] != design.designer_id.to_s)
+        changes[:designer] = { :old => design.designer.name, 
+                               :new => User.find(params[:designer][:id]).name }
+      end
+      if (!audit_complete          && 
+          params[:peer][:id] != "" &&
+          params[:peer][:id] != design.peer_id.to_s)
+        changes[:peer] = { :old => design.peer.name, 
+                           :new => User.find(params[:peer][:id]).name }
+      end
+      
+      # Update the design record
       design.designer_id = params[:designer][:id]
-      design.peer_id     = params[:peer][:id] if !audit_skipped
+      design.peer_id     = params[:peer][:id] if !(audit_skipped || audit_complete)
       design.priority_id = params[:priority][:id]
       design.update
 
+      if (params[:review_status]            &&
+          params[:review_status][:id] != "" &&
+          params[:review_status][:id] != design_review.review_status_id.to_s)
+
+        changes[:review_status] = { :old => design_review.review_status.name,
+                                    :new => ReviewStatus.find(params[:review_status][:id]).name }
+
+        on_hold = ReviewStatus.find_by_name('Review On-Hold')
+        if params[:review_status][:id] == on_hold.id.to_s
+          design_review.place_on_hold
+        else
+          design_review.remove_from_hold(params[:review_status][:id])
+        end
+
+      end
+      
       # Update all design reviews that are not complete
       pre_art_review = ReviewType.find_by_name('Pre-Artwork')
       release_review = ReviewType.find_by_name('Release')
-      for design_review in design.design_reviews
-        if design_review.review_status.name != 'Review Completed'
-          if design_review.review_type_id != pre_art_review.id
-            if design_review.review_type_id != release_review.id
-              design_review.designer_id = params[:designer][:id]
+      design.design_reviews.each do |dr|
+        if dr.review_status.name != 'Review Completed'
+          if dr.review_type_id != pre_art_review.id
+            if dr.review_type_id != release_review.id
+              dr.designer_id = params[:designer][:id]
             end
           else
-            design_review.designer_id = params[:pcb_input_gate][:id]
+            if (params[:pcb_input_gate][:id] != "" &&
+                params[:pcb_input_gate][:id] != dr.designer_id.to_s)
+              changes[:pcb_input_gate] = { :old => User.find(dr.designer_id).name, 
+                                           :new => User.find(params[:pcb_input_gate][:id]).name }
+            end
+            dr.designer_id = params[:pcb_input_gate][:id]
           end
-          design_review.priority_id      = params[:priority][:id]
+          dr.priority_id = params[:priority][:id]
         end
-        design_review.design_center_id = params[:design_center][:id]
-        design_review.update
+        dr.design_center_id = params[:design_center][:id]
+        dr.update
 
       end
+     
+      if changes.size > 0 || params[:post_comment][:comment].size > 0
+        # Add a comment to the design review and send mail for the update
+        create_comment(design_review, params[:post_comment][:comment], changes)
 
-      flash['notice'] = "#{design.name} has been updated"
-      if @session[:return_to]
-        redirect_to(@session[:return_to])
+        TrackerMailer::deliver_design_review_modification(session[:user], design_review)
+
+        flash['notice'] = "#{design.name} has been updated - mail sent"
+      end
+      
+      if session[:return_to]
+        redirect_to(session[:return_to])
       else
         redirect_to(:action => "index", :controller => "tracker" )
       end
@@ -1742,19 +1712,6 @@ class DesignReviewController < ApplicationController
   end
 
 
-  def dump_design_review_info
-
-    @design = Design.find(40)
-    @design_reviews = DesignReview.find_all_by_design_id(@design.id)
-    @design_reviews = @design_reviews.sort_by { |dr| dr.review_type.sort_order }
-
-    for design_review in @design_reviews
-      design_review[:result] = DesignReviewResult.find_all_by_design_review_id(design_review.id)
-    end
-
-  end
-  
-  
   ######################################################################
   #
   # get_review_result_details
@@ -1762,7 +1719,7 @@ class DesignReviewController < ApplicationController
   # Description:
   # Retrieves the design review results for display.
   #
-  # Parameters from @params
+  # Parameters from params
   # id - the design review id
   #
   ######################################################################
@@ -1772,10 +1729,7 @@ class DesignReviewController < ApplicationController
     @design_review   = DesignReview.find(params[:id])
     @design          = @design_review.design
     @review_results  = @design_review.review_results_by_role_name.dup
-    @review_results.delete_if { |rr| 
-      rr.result == 'WAIVED' || 
-      rr.result == "APPROVED"
-    }
+    @review_results.delete_if { |rr| rr.result == 'WAIVED' || rr.result == "APPROVED" }
     
     render(:layout => false)
     
@@ -1789,7 +1743,7 @@ class DesignReviewController < ApplicationController
   # Description:
   # Empties out the area used by get_review_result_details() 
   #
-  # Parameters from @params
+  # Parameters from params
   # id - the design review id
   #
   ######################################################################
@@ -1811,7 +1765,7 @@ class DesignReviewController < ApplicationController
   # Description:
   # Sets the design review to skipped and updates the phase of the design.
   #
-  # Parameters from @params
+  # Parameters from params
   # design_id - the design id
   #
   ######################################################################
@@ -1831,29 +1785,180 @@ class DesignReviewController < ApplicationController
     design.increment_review
     
     TrackerMailer::deliver_notify_design_review_skipped(skipped_review,
-                                                        @session)
+                                                        session)
 
     redirect_to(:controller => 'tracker', :action => 'index')
     
   end 
 
 
+########################################################################
+########################################################################
   private
+########################################################################
+########################################################################
   
   
-  def noget_review_results(design_review)
-    design_review.design_review_results.sort_by { |review_result| 
-      review_result.role.name
-    }
+  ######################################################################
+  #
+  # create_comment
+  #
+  # Description:
+  # This method creates the comment for design review modifications made
+  # by the managers and designers
+  #
+  # Parameters
+  # design_review - the designer review that is being modified
+  # post_comment  - the associated comment entered by the user
+  # changes       - contains the modifications that were made to the 
+  #                 design review
+  #
+  ######################################################################
+  #
+  def create_comment(design_review, post_comment, changes)
+  
+    msg = ''
+    
+    if changes[:designer]
+      msg += "The Lead Designer was changed from #{changes[:designer][:old]} to #{changes[:designer][:new]}\n"
+    end
+    if changes[:peer]
+      msg += "The Peer Auditor was changed from #{changes[:peer][:old]} to #{changes[:peer][:new]}\n"
+    end
+    if changes[:pcb_input_gate]
+      msg += "The PCB Input Gate was changed from #{changes[:pcb_input_gate][:old]} to #{changes[:pcb_input_gate][:new]}\n"
+    end
+    if changes[:priority]
+      msg += "The Criticality was changed from #{changes[:priority][:old]} to #{changes[:priority][:new]}\n"
+    end
+    if changes[:design_center]
+      msg += "The Design Center was changed from #{changes[:design_center][:old]} to #{changes[:design_center][:new]}\n"
+    end
+    if changes[:review_status]
+      msg += "The design review status was changed from #{changes[:review_status][:old]} to #{changes[:review_status][:new]}\n"
+    end
+
+    msg += "\n\n" + post_comment if post_comment.size > 0
+
+    dr_comment = DesignReviewComment.new(:user_id          => session[:user][:id],
+                                         :design_review_id => design_review.id,
+                                         :highlight        => 1,
+                                         :comment          => msg).create
   end
-
-
+  
+  
+  ######################################################################
+  #
+  # pre_art_pcb
+  #
+  # Description:
+  # This method determines if the design review is a Pre-Artwork design
+  # review and if the role is PCB Design.
+  # 
+  # TODO: This should be moved to the design_review model
+  #
+  # Parameters
+  # design_review  - the designer review
+  # review_results - 
+  #
+  ######################################################################
+  #
   def pre_art_pcb(design_review, review_results)
     return (review_results.find { |rr| rr.role.name == "PCB Design" } &&
             design_review.review_type.name == "Pre-Artwork")
   end
 
 
+  ######################################################################
+  #
+  # post_fab_house_updates
+  #
+  # Description:
+  # This method builds and stores the comment that is generated when
+  # the fab houses are updated by SLM Vendor
+  #
+  # Parameters:
+  # design_review  - the designer review that is being modified
+  # fab_house_list - the list of fab_houses
+  # 
+  # Return Value:
+  # A boolean that indicates that a comment was generated when true.
+  #
+  ######################################################################
+  #
+  def post_fab_house_updates(design_review, fab_house_list)
+  
+    comment_update = false
+    
+    # Check to see if the reviewer is an SLM-Vendor reviewer.
+    # review_results[:fab_houses] will be non-nil.
+    added   = ''
+    removed = ''
+    fab_house_list.each do |id, selected|
+
+      fab_house = FabHouse.find(id)
+      # Update the design
+      design = design_review.design
+      if selected == '0' && design.fab_houses.include?(fab_house)
+        design.remove_fab_houses(fab_house)
+        if removed == ''
+          removed = fab_house.name
+        else
+          removed += ', ' + fab_house.name
+        end
+      elsif selected == '1' && !design.fab_houses.include?(fab_house)
+        design.fab_houses << fab_house
+        if added == ''
+          added = fab_house.name
+        else
+          added += ', ' + fab_house.name
+        end
+      end
+      
+      # Update the board
+      board = design.board
+      if selected == '0' && board.fab_houses.include?(fab_house)
+        board.remove_fab_houses(fab_house)
+      elsif selected == '1' && !board.fab_houses.include?(fab_house)
+        board.fab_houses << fab_house                                      
+      end
+    end
+    
+    if added !=  '' || removed != ''
+      fab_msg = 'Updated the fab houses '
+        
+      fab_msg += " - Added: #{added}"     if added   != ''
+      fab_msg += " - Removed: #{removed}" if removed != ''
+      
+      dr_comment = DesignReviewComment.new(:comment          => fab_msg,
+                                           :user_id          => session[:user].id,
+                                           :design_review_id => design_review.id).create
+      comment_update = true
+    end
+    
+    comment_update
+    
+  end
+  
+  
+  ######################################################################
+  #
+  # post_pcb_design_results
+  #
+  # Description:
+  # This method builds and stores the comment that is generated when
+  # PCB Design performs the Pre-Artwork design review.
+  #
+  # Parameters:
+  # design_review  - the designer review that is being modified
+  # review_results - the list of inputs provided by PCB Design for the
+  #                  Pre-Artwork design review.
+  # 
+  # Return Value:
+  # The message that will be loaded into flash['notice'] by the caller.
+  #
+  ######################################################################
+  #
   def post_pcb_design_results(design_review, review_results)
 
     results = {:success       => true,
