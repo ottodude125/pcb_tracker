@@ -1,0 +1,33 @@
+<!-- View:    design_review                                     -->
+<!-- Purpose: Displays the comments for a design review.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<tr>
+  <td width="50%">
+    <font size="-2">
+      <b>Posted By:</b> <%= comment_list.user.name %>
+    </font>
+  </td>
+  <td width="50%">
+    <font size="-2">
+      <b>Date:</b> <%= comment_list.created_on.strftime("%d-%b-%y, %I:%M %p")%>
+    </font>
+  </td>
+</tr>
+<tr>
+  <td colspan="2">
+    <% if !comment_list.highlight? %>
+      <table width="99%" border="2" cellpadding="1" cellspacing="2" align="center">
+    <% else %>
+      <table width="99%" border="2" cellpadding="1" cellspacing="2" align="center" bgcolor="#fff99d">
+    <% end %>
+      <tr>
+        <td>
+          <%= auto_link simple_format(h(comment_list.comment)) -%>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
