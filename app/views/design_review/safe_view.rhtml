@@ -50,7 +50,7 @@
           </tr>
 
 	        <%= render_collection_of_partials("reviewer_list_stripes",
-                                            @review_results) %>
+                                              @review_results) %>
         </table>
       </td>
     </tr>
@@ -58,37 +58,15 @@
 
   <br />
   <div id="comments">
-
-  <% if @comments.size > 0 %>
-  <table border="0"
-         cellspacing="0"
-         width="100%"
-         align="center">
-    <tr>
-      <th class="teraheader" colspan="2">
-        Comments
-      </th>
-    </tr>
-    <% for comment in @comments %>
-      <tr bgcolor="#dddddd">
-        <td width="50%">
-          <font size="-2">
-            <b>Posted By:</b> <%= comment.user.name %>
-          </font>
-        </td>
-        <td width="50%">
-          <font size="-2">
-            <b>Date:</b> <%= comment.created_on.strftime("%d-%b-%y, %I:%M %p")%>
-          </font>
-        </td>
-      </tr>
+  
+  <% if @design_review.design_review_comments.size > 0 %>
+    <table border="0" cellspacing="0" width="100%" align="center">
       <tr>
-        <td colspan="2">
-          <%= auto_link simple_format(h(comment.comment)) -%>
-        </td>
+        <th class="teraheader" colspan="2">Comments</th>
       </tr>
-    <% end %>
-  </table>
+      <%= render_collection_of_partials("comment_list",
+                                        @design_review.design_review_comments) %>
+    </table>
   <% end %>
 
   </div>
