@@ -658,35 +658,32 @@ class TrackerController < ApplicationController
   def reviewer_home_setup
 
     me = session[:user]
-    in_review      = ReviewStatus.find_by_name('In Review')
-    pending_repost = ReviewStatus.find_by_name('Pending Repost')
-    
-    design_reviews  = DesignReview.find_all_by_review_status_id(in_review.id) +
-      DesignReview.find_all_by_review_status_id(pending_repost.id)
+    review_status_list = [ReviewStatus.find_by_name('In Review').id,
+                          ReviewStatus.find_by_name('Pending Repost').id,
+                          ReviewStatus.find_by_name('Review On-Hold').id]
+
+    design_reviews = []
+    review_status_list.each do |review_status_id|
+      design_reviews += DesignReview.find_all_by_review_status_id(review_status_id)
+    end
 
     design_reviews = design_reviews.sort_by { |dr| dr.priority.value }
 
-    @my_reviews    = Array.new
-    @other_reviews = Array.new
-    for design_review in design_reviews
+    @my_reviews    = []
+    @other_reviews = []
+    design_reviews.each do |design_review|
       review_results = design_review.design_review_results
     
-      for review_result in review_results
-        a_reviewer = (review_result.reviewer_id == me.id)
-        break if a_reviewer
-      end
-      
-      if a_reviewer
+      if review_results.detect { |rr| rr.reviewer_id == me.id}
         @my_reviews.push(design_review)
       else
 
         # Capture the reviewer's peer names for display.
         design_review[:peer_list]   = []
         design_review[:peer_result] = []
-        for role in @session[:roles]
+        session[:roles].each do |role|
           if role.reviewer?
-            for review_result in review_results
-
+            review_results.each do |review_result|
               peer_info = {}
               if role.id == review_result.role_id
                 peer_info[:name]   = User.find(review_result.reviewer_id).name
@@ -699,7 +696,9 @@ class TrackerController < ApplicationController
           end
         end
 
-        @other_reviews.push(design_review)
+        if design_review.design_review_results.detect { |rr| rr.role.id == session[:active_role].id } 
+          @other_reviews.push(design_review) 
+        end
       end
     end
     
