@@ -138,8 +138,8 @@
                         </tr>
                       <% end %>
 
-                      <% if (design[:next_review] != nil &&
-                             !review_locked(design[:next_review]) &&
+                      <% if (design[:next_review]                 &&
+                             !design[:next_review].review_locked? &&
                              design[:next_review].designer_id == @session[:user].id) %>
                         <tr bgcolor="#dfdfdf">
                           <td colspan="6">
