@@ -12,6 +12,7 @@
 
 class DesignReviewComment < ActiveRecord::Base
 
+  belongs_to :design_review
   belongs_to :user
 
 end
