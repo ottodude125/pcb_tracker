@@ -528,11 +528,11 @@ class BoardDesignEntry < ActiveRecord::Base
     if existing_board
 
       existing_board.board_reviewers.each do |board_reviewer|
-      
+   
         bde_user = self.board_design_entry_users.detect { |bdeu| 
           bdeu.role_id == board_reviewer.role_id
         }
-        
+
         if bde_user
           bde_user.user_id = board_reviewer.reviewer_id
           bde_user.save
@@ -541,6 +541,56 @@ class BoardDesignEntry < ActiveRecord::Base
       end
       
     end
+  end
+  
+  
+  ######################################################################
+  #
+  # managers
+  #
+  # Description:
+  # This method provides a list of board design entry users who are 
+  # managers.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def managers
+  
+    managers = self.board_design_entry_users.dup
+    managers.delete_if { |bde_user| !bde_user.role.manager? }
+    return managers.sort_by { |m| m.role.display_name }
+  
+  end
+
+
+  ######################################################################
+  #
+  # reviewers
+  #
+  # Description:
+  # This method provides a list of board design entry users who are 
+  # reviewers.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def reviewers
+  
+    reviewers = self.board_design_entry_users.dup
+    reviewers.delete_if { |bde_user| !bde_user.role.reviewer? || bde_user.role.manager? }
+    return reviewers.sort_by { |m| m.role.display_name }
+  
   end
 
 
