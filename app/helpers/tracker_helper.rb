@@ -52,29 +52,6 @@ module TrackerHelper
 
   ######################################################################
   #
-  # review_locked
-  #
-  # Description:
-  # Returns true if the audit is not yet complete so that the final
-  # audit can not be posted.
-  #
-  ######################################################################
-  #
-  def review_locked(design_review)
-    if design_review
-      (design_review.review_type.name == "Final" && 
-       !(design_review.design.audit.skip?             || 
-         design_review.design.audit.auditor_complete? || 
-         design_review.design.work_assignments_complete?))
-
-    else
-      false
-    end
-  end
-
-
-  ######################################################################
-  #
   # get_my_results
   #
   # Description:
