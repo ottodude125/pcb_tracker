@@ -166,6 +166,42 @@ class TrackerMailer < ActionMailer::Base
   
   ######################################################################
   #
+  # design_review_modification
+  #
+  # Description:
+  # This method generates the mail indicate that a design review 
+  # has been modifed
+  #
+  # Parameters:
+  #   user           - the user making the update
+  #   design_review  - the design review that was updated
+  #   sent_at        - the timestamp for the mail header 
+  #                    (defaults to Time.now)
+  #
+  ######################################################################
+  #
+  def design_review_modification(user, 
+                                 design_review, 
+                                 sent_at         = Time.now)
+
+    @subject    = "The #{design_review.design.name} #{design_review.review_name}" +
+                  " Design Review has been modified by #{user.name}"
+    @recipients = reviewer_list(design_review)
+    @from       = Pcbtr::SENDER
+    @sent_on    = sent_at
+    @headers    = {}
+    @bcc        = 'paul_altimonte@notes.teradyne.com'
+    @cc         = copy_to(design_review)
+
+    @body['user']             = user
+    @body['comment']          = design_review.design_review_comments.shift
+    @body['design_review_id'] = design_review.id
+
+  end
+  
+  
+  ######################################################################
+  #
   # design_review_complete_notification
   #
   # Description:
