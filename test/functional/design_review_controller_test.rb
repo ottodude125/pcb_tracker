@@ -44,6 +44,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
            :review_statuses,
            :roles,
            :users)
+           
 
   ######################################################################
   #
@@ -67,9 +68,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
-    assert_equal(mx234a.id,         assigns(:design).id)
+    assert_equal(mx234a.id,         assigns(:design_review).design.id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(4,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:design_review).design_review_comments.size)
     
   end
 
@@ -97,9 +98,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
-    assert_equal(mx234a.id,         assigns(:design).id)
+    assert_equal(mx234a.id,         assigns(:design_review).design.id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(4,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:design_review).design_review_comments.size)
 
     end
 
@@ -126,9 +127,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
-    assert_equal(mx234a.id,         assigns(:design).id)
+    assert_equal(mx234a.id,         assigns(:design_review).design.id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(4,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:design_review).design_review_comments.size)
     
   end
 
@@ -159,9 +160,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
-    assert_equal(mx234a.id,         assigns(:design).id)
+    assert_equal(mx234a.id,         assigns(:design_review).design.id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(4,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:design_review).design_review_comments.size)
     assert_equal(nil,               assigns(:designers))
     assert_equal(nil,               assigns(:priorities))
     assert_equal(nil,               assigns(:fab_houses))
@@ -175,9 +176,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
-    assert_equal(mx234a.id,         assigns(:design).id)
+    assert_equal(mx234a.id,         assigns(:design_review).design.id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(4,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:design_review).design_review_comments.size)
     assert_equal(4,                 assigns(:designers).size)
     assert_equal(2,                 assigns(:priorities).size)
     assert_equal(nil,               assigns(:fab_houses))
@@ -191,9 +192,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
-    assert_equal(mx234a.id,         assigns(:design).id)
+    assert_equal(mx234a.id,         assigns(:design_review).design.id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(4,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:design_review).design_review_comments.size)
     assert_equal(nil,               assigns(:designers))
     assert_equal(nil,               assigns(:priorities))
 
@@ -232,9 +233,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     get(:view, :id => mx234a_pre_art.id)
     assert_equal(mx234a_pre_art.id, assigns(:design_review).id)
-    assert_equal(mx234a.id,         assigns(:design).id)
+    assert_equal(mx234a.id,         assigns(:design_review).design.id)
     assert_equal(14,                assigns(:review_results).size)
-    assert_equal(4,                 assigns(:comments).size)
+    assert_equal(4,                 assigns(:design_review).design_review_comments.size)
     
   end
 
@@ -413,63 +414,63 @@ class DesignReviewControllerTest < Test::Unit::TestCase
          :design_id                 => mx234a.id,
          :review_type_id            => pre_art_review.id)
 
-    assert_equal(mx234a.id,         assigns(:design).id)
+    assert_equal(mx234a.id,         assigns(:design_review).design.id)
     assert_equal(pre_art_review.id, assigns(:design_review).review_type_id)
 
-    reviewer_list = assigns(:reviewers)
-    assert_equal(14, reviewer_list.size)
-
     expected_values = [
-      {:group          => 'CE-DFM Engineer',
-       :group_id       => 8,
-       :reviewer_count => 3},
-      {:group          => 'CE-DFT Engineer',
-       :group_id       => 7,
-       :reviewer_count => 2},
-      {:group          => 'Component Development',
-       :group_id       => 15,
-       :reviewer_count => 2},
-      {:group          => 'Hardware Engineer (EE)',
-       :group_id       => 5,
-       :reviewer_count => 4},
-      {:group          => 'Mechanical Engineer',
-       :group_id       => 10,
-       :reviewer_count => 2},
-      {:group          => 'Mechanical Mfg Engineer',
-       :group_id       => 11,
-       :reviewer_count => 2},
-      {:group          => 'New Product Planner',
-       :group_id       => 13,
-       :reviewer_count => 2},
-      {:group          => 'PCB Design Input Gate',
-       :group_id       => 14,
-       :reviewer_count => 2},
-      {:group          => 'PCB Design Manager',
-       :group_id       => 12,
-       :reviewer_count => 1},
-      {:group          => 'PCB Mechanical Engineer',
-       :group_id       => 16,
-       :reviewer_count => 2},
-      {:group          => 'SLM BOM',
-       :group_id       => 17,
-       :reviewer_count => 1},
-      {:group          => 'SLM Vendor',
-       :group_id       => 18,
-       :reviewer_count => 1},
-      {:group          => 'TDE Engineer',
-       :group_id       => 9,
-       :reviewer_count => 2},
-      {:group          => 'Valor',
-       :group_id       => 6,
-       :reviewer_count => 4}
+      {:group          => roles(:dfm),
+       :reviewer_count => 3,
+       :reviewer       => users(:heng_k)},
+      {:group          => roles(:ce_dft),
+       :reviewer_count => 2,
+       :reviewer       => users(:espo)},
+      {:group          => roles(:library),
+       :reviewer_count => 2,
+       :reviewer       => users(:dave_m)},
+      {:group          => roles(:hweng),
+       :reviewer_count => 4,
+       :reviewer       => users(:lee_s)},
+      {:group          => roles(:mechanical),
+       :reviewer_count => 2,
+       :reviewer       => users(:tom_f)},
+      {:group          => roles(:mechanical_manufacturing),
+       :reviewer_count => 2,
+       :reviewer       => users(:anthony_g)},
+      {:group          => roles(:planning),
+       :reviewer_count => 2,
+       :reviewer       => users(:matt_d)},
+      {:group          => roles(:pcb_input_gate),
+       :reviewer_count => 2,
+       :reviewer       => users(:cathy_m)},
+      {:group          => roles(:pcb_design),
+       :reviewer_count => 1,
+       :reviewer       => users(:jim_l)},
+      {:group          => roles(:pcb_mechanical),
+       :reviewer_count => 2,
+       :reviewer       => users(:john_g)},
+      {:group          => roles(:slm_bom),
+       :reviewer_count => 1,
+       :reviewer       => users(:art_d)},
+      {:group          => roles(:slm_vendor),
+       :reviewer_count => 1,
+       :reviewer       => users(:dan_g)},
+      {:group          => roles(:tde),
+       :reviewer_count => 2,
+       :reviewer       => users(:rich_a)},
+      {:group          => roles(:valor),
+       :reviewer_count => 4,
+       :reviewer       => users(:lisa_a)}
     ]
 
-    for review_group in reviewer_list
-      expected_val = expected_values.shift
+    reviewer_list = assigns(:reviewers)
+    assert_equal(expected_values.size, reviewer_list.size)
 
-      assert_equal(expected_val[:group],          review_group[:group])
-      assert_equal(expected_val[:group_id],       review_group[:group_id])
-      assert_equal(expected_val[:reviewer_count], review_group[:reviewers].size)
+    reviewer_list.each do |review_group|
+      expected_val = expected_values.shift
+      assert_equal(expected_val[:group].display_name, review_group.role.display_name)
+      assert_equal(expected_val[:group].id,           review_group.role_id)
+      assert_equal(expected_val[:reviewer_count],     review_group.role.active_users.size)
+      assert_equal(expected_val[:reviewer].id,        review_group.reviewer_id)
     end
 
     pre_art_design_review = DesignReview.find_all(
@@ -486,48 +487,102 @@ class DesignReviewControllerTest < Test::Unit::TestCase
          :design_id                 => mx234a.id,
          :review_type_id            => placement_review.id)
 
-    assert_equal(mx234a.id,         assigns(:design).id)
+    assert_equal(mx234a.id,           assigns(:design_review).design.id)
     assert_equal(placement_review.id, assigns(:design_review).review_type_id)
 
-    reviewer_list = assigns(:reviewers)
-    assert_equal(6, reviewer_list.size)
-
     expected_values = [
-      {:group          => 'CE-DFM Engineer',
-       :group_id       => 8,
-       :reviewer_count => 3},
-      {:group          => 'CE-DFT Engineer',
-       :group_id       => 7,
-       :reviewer_count => 2},
-      {:group          => 'Hardware Engineer (EE)',
-       :group_id       => 5,
-       :reviewer_count => 4},
-      {:group          => 'Mechanical Engineer',
-       :group_id       => 10,
-       :reviewer_count => 2},
-      {:group          => 'Mechanical Mfg Engineer',
-       :group_id       => 11,
-       :reviewer_count => 2},
-      {:group          => 'TDE Engineer',
-       :group_id       => 9,
-       :reviewer_count => 2},
-      {:group          => 'Valor',
-       :group_id       => 6,
-       :reviewer_count => 4}
+      {:group          => roles(:dfm),
+       :reviewer_count => 3,
+       :reviewer       => users(:heng_k)},
+      {:group          => roles(:ce_dft),
+       :reviewer_count => 2,
+       :reviewer       => users(:espo)},
+      {:group          => roles(:hweng),
+       :reviewer_count => 4,
+       :reviewer       => users(:lee_s)},
+      {:group          => roles(:mechanical),
+       :reviewer_count => 2,
+       :reviewer       => users(:tom_f)},
+      {:group          => roles(:mechanical_manufacturing),
+       :reviewer_count => 2,
+       :reviewer       => users(:anthony_g)},
+      {:group          => roles(:tde),
+       :reviewer_count => 2,
+       :reviewer       => users(:rich_a)}
     ]
 
-    for review_group in reviewer_list
-      expected_val = expected_values.shift
+    reviewer_list = assigns(:reviewers)
+    assert_equal(expected_values.size, reviewer_list.size)
 
-      assert_equal(expected_val[:group],          review_group[:group])
-      assert_equal(expected_val[:group_id],       review_group[:group_id])
-      assert_equal(expected_val[:reviewer_count], review_group[:reviewers].size)
+    reviewer_list.each do |review_group|
+      expected_val = expected_values.shift
+      assert_equal(expected_val[:group].display_name, review_group.role.display_name)
+      assert_equal(expected_val[:group].id,           review_group.role_id)
+      assert_equal(expected_val[:reviewer_count],     review_group.role.active_users.size)
+      assert_equal(expected_val[:reviewer].id,        review_group.reviewer_id)
     end
 
     placement_design_review = DesignReview.find_all(
                                 "design_id='#{mx234a.id}' and " +
                                 "review_type_id='#{placement_review.id}'").pop
     assert_equal(routing_review.id, placement_design_review.review_type_id_2)
+    
+
+    final_review_type = ReviewType.find_by_name('Final')
+    
+    post(:post_review,
+         :combine_placement_routing => '0',
+         :design_id                 => mx234a.id,
+         :review_type_id            => final_review_type.id)
+
+    assert_equal(mx234a.id,            assigns(:design_review).design.id)
+    assert_equal(final_review_type.id, assigns(:design_review).review_type_id)
+
+    expected_values = [
+      {:group          => roles(:dfm),
+       :reviewer_count => 3,
+       :reviewer       => users(:heng_k)},
+      {:group          => roles(:ce_dft),
+       :reviewer_count => 2,
+       :reviewer       => users(:espo)},
+      {:group          => roles(:hweng),
+       :reviewer_count => 4,
+       :reviewer       => users(:lee_s)},
+      {:group          => roles(:mechanical),
+       :reviewer_count => 2,
+       :reviewer       => users(:tom_f)},
+      {:group          => roles(:mechanical_manufacturing),
+       :reviewer_count => 2,
+       :reviewer       => users(:anthony_g)},
+      {:group          => roles(:planning),
+       :reviewer_count => 2,
+       :reviewer       => users(:matt_d)},
+      {:group          => roles(:pcb_design),
+       :reviewer_count => 1,
+       :reviewer       => users(:jim_l)},
+      {:group          => roles(:tde),
+       :reviewer_count => 2,
+       :reviewer       => users(:rich_a)},
+      {:group          => roles(:valor),
+       :reviewer_count => 4,
+       :reviewer       => users(:scott_g)}
+    ]
+
+    reviewer_list = assigns(:reviewers)
+    assert_equal(expected_values.size, reviewer_list.size)
+
+    reviewer_list.each do |review_group|
+      expected_val = expected_values.shift
+      assert_equal(expected_val[:group].display_name, review_group.role.display_name)
+      assert_equal(expected_val[:group].id,           review_group.role_id)
+      assert_equal(expected_val[:reviewer_count],     review_group.role.active_users.size)
+      assert_equal(expected_val[:reviewer].id,        review_group.reviewer_id)
+    end
+
+    pre_art_design_review = DesignReview.find_all(
+                              "design_id='#{mx234a.id}' and " +
+                              "review_type_id='#{pre_art_review.id}'").pop
+    assert_equal(0, pre_art_design_review.review_type_id_2)
 
   end
 
@@ -539,12 +594,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   # Description:
   # This method does the functional testing of the post method
   # from the Design Review class
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
   #
   # Additional information:
   # Verifies the following
@@ -576,7 +625,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal('None', review_result.result)
     end
 
-    assert_equal(0, pre_artwork_dr.comments.size)
+    assert_equal(0, pre_artwork_dr.design_review_comments.size)
                  
     post(:post,
          :design_review   => {:id => pre_artwork_dr.id},
@@ -607,7 +656,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal('No Response', review_result.result)
     end
     
-    comments = pre_artwork_dr.comments
+    comments = pre_artwork_dr.design_review_comments
     assert_equal(1, comments.size)
     dr_comment = comments.pop
     assert_equal('Test Comment',     dr_comment.comment)
@@ -650,7 +699,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal('None', review_result.result)
     end
 
-    assert_equal(0, mx234a_final.comments.size)
+    assert_equal(0, mx234a_final.design_review_comments.size)
                  
     post(:post,
          :design_review   => {:id => mx234a_final.id},
@@ -677,7 +726,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal('No Response', review_result.result)
     end
     
-    comments = mx234a_final.comments
+    comments = mx234a_final.design_review_comments
     assert_equal(1, comments.size)
     dr_comment = comments.pop
     assert_equal('Test Comment',     dr_comment.comment)
@@ -701,12 +750,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   # This method does the functional testing of the repost_review method
   # from the Design Review class
   #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
-  #
   # Additional information:
   # Verifies the following
   #   - User can not view unless logged in as an designer.
@@ -722,7 +765,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     post(:repost_review,
          :design_review_id => mx234a_pre_artwork.id)
 
-    assert_equal(mx234a_pre_artwork.design.id, assigns(:design).id)
+    assert_equal(mx234a_pre_artwork.design.id, assigns(:design_review).design.id)
     assert_equal(pre_art_review.id,            assigns(:design_review).review_type_id)
 
     reviewer_list = assigns(:reviewers)
@@ -776,9 +819,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     for review_group in reviewer_list
       expected_val = expected_values.shift
 
-      assert_equal(expected_val[:group],          review_group[:group])
-      assert_equal(expected_val[:group_id],       review_group[:group_id])
-      assert_equal(expected_val[:reviewer_count], review_group[:reviewers].size)
+      assert_equal(expected_val[:group],          review_group.role.display_name)
+      assert_equal(expected_val[:group_id],       review_group.role_id)
+      assert_equal(expected_val[:reviewer_count], review_group.role.active_users.size)
     end
 
   end
@@ -791,12 +834,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   # Description:
   # This method does the functional testing of the repost method
   # from the Design Review class
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
   #
   # Additional information:
   # Verifies the following
@@ -820,7 +857,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal('None', review_result.result)
     end
 
-    assert_equal(4, mx234a_pre_artwork.comments.size)
+    assert_equal(4, mx234a_pre_artwork.design_review_comments.size)
                  
     post(:post,
          :design_review   => {:id => mx234a_pre_artwork.id},
@@ -850,7 +887,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     for review_result in mx234a_pre_artwork.design_review_results
       assert_equal('No Response', review_result.result)
     end
-    comments = mx234a_pre_artwork.comments
+    comments = mx234a_pre_artwork.design_review_comments
     assert_equal(5, comments.size)
     dr_comment = comments.shift
     assert_equal('Test Comment',     dr_comment.comment)
@@ -887,7 +924,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal('No Response', review_result.result)
     end
 
-    comments = mx234a_pre_artwork.comments.sort_by { |c| c.id }
+    comments = mx234a_pre_artwork.design_review_comments.sort_by { |c| c.id }
     
     assert_equal(6,                             comments.size)
     assert_equal('Test Comment',                comments[4].comment)
@@ -904,12 +941,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   # Description:
   # This method does the functional testing of the add_comment method
   # from the Design Review class
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
   #
   # Additional information:
   # Verifies the following
@@ -968,12 +999,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   # This method does the functional testing of the change_design_center
   # method from the Design Review class
   #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
-  #
   # Additional information:
   # Verifies the following
   #   - User can not view unless logged in as an designer.
@@ -1001,12 +1026,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   # This method does the functional testing of the add_comment method
   # from the Design Review class
   #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
-  #
   # Additional information:
   # Verifies the following
   #   - User can not update unless logged in as an designer.
@@ -1015,6 +1034,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   ######################################################################
   #
   def test_update_design_center
+
+    set_user(users(:scott_g).id, 'Designer')
 
     mx234a_pre_artwork = design_reviews(:mx234a_pre_artwork)
     boston_dc          = design_centers(:boston_harrison)
@@ -1043,12 +1064,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   # Description:
   # This method does the functional testing of the review_attachments
   # method from the Design Review class
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
   #
   # Additional information:
   # Verifies the following
@@ -1103,12 +1118,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   # Description:
   # This method does the functional testing of the update_documents
   # method from the Design Review class
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
   #
   # Additional information:
   # Verifies the following
@@ -1216,6 +1225,15 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   end
 
 
+  #
+  ######################################################################
+  #
+  # test_save_attachment
+  #
+  # TODO: test_save_attachment
+  #
+  ######################################################################
+  #
   def test_save_attachment
     
     #post(:save_attahment,
@@ -1223,6 +1241,15 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   end
 
 
+  #
+  ######################################################################
+  #
+  # test_get_attachment
+  #
+  # TODO: test_get_attachment
+  #
+  ######################################################################
+  #
   def test_get_attachment
 
     #post(:get_attachment, 
@@ -1232,13 +1259,31 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   end
 
 
+  #
+  ######################################################################
+  #
+  # test_list_obsolete
+  #
+  # TODO: test_list_obsolete
+  #
+  ######################################################################
+  #
   def test_list_obsolete
     assert true
-    print('?')
   end
 
 
   
+  #
+  ######################################################################
+  #
+  # test_review_mail_list
+  #
+  # Description:
+  # This method verifies the review mail list
+  # 
+  ######################################################################
+  #
   def test_review_mail_list
   
     set_user(users(:cathy_m).id, 'Admin')
@@ -1323,15 +1368,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   # Description:
   # This method does the functional testing of the post results and
   # reviewer_results methods from the Design Review class
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  # None
   #
   ######################################################################
   #
@@ -1838,14 +1874,14 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(17, 
                  DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
 
-                 
+
     set_user(users(:dan_g).id, Role.find(roles(:slm_vendor).id))
     post(:reviewer_results,
          :post_comment  => {"comment" => 'This is a test.'},
          :design_review => {"id"      => mx234a.id},
                             :fab_house   => {'1' => '0',        '2' => '0',
-                                             '3' => '1',        '4' => '1',
-                                             '5' => '0',        '6' => '0',
+                                             '3' => '0',        '4' => '0',
+                                             '5' => '1',        '6' => '1',
                                              '7' => '0',        '8' => '0'})
                                              
     assert_redirected_to(:action => :post_results)
@@ -1854,8 +1890,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     email = @emails.pop
     assert_equal(0, @emails.size)
     # Expect comments - the fab houses changed
-    assert_equal(mail_subject + '- Comments added',
-                 email.subject)
+    assert_equal(mail_subject + '- Comments added', email.subject)
 
     #
     # THE PLACEMENT REVIEW
@@ -2676,6 +2711,357 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   end
 
 
+  #
+  ######################################################################
+  #
+  # test_post_results_and_hold
+  #
+  # Description:
+  # This method does the functional testing of the post results and
+  # reviewer_results methods from the Design Review class
+  #
+  ######################################################################
+  #
+  def test_post_results_and_hold
+
+    #
+    # THE PRE-ARTWORK REVIEW
+    #
+    expected_results = {
+      '7'  => "No Response",
+      '8'  => "No Response",
+      '5'  => "No Response",
+      '15' => "No Response",
+      '10' => "No Response",
+      '11' => "No Response",
+      '14' => "No Response",
+      '16' => "No Response",
+      '13' => "No Response",
+      '17' => "No Response",
+      '18' => "No Response",
+      '9'  => "No Response",
+      '6'  => "No Response",
+      '12' => "No Response"
+    }
+
+    in_review       = ReviewStatus.find_by_name("In Review")
+    pending_repost  = ReviewStatus.find_by_name("Pending Repost")
+    review_complete = ReviewStatus.find_by_name("Review Completed")
+    on_hold         = ReviewStatus.find_by_name("Review On-Hold")
+
+    mail_subject = 'mx234a::Pre-Artwork '
+    reviewer_result_list= [
+      # Espo - CE-DFT Reviewer
+      {:user_id          => users(:espo).id,
+       :role_id          => roles(:ce_dft).id,
+       :comment          => 'espo comment while in-review',
+       :result           => 'APPROVED',
+       :ignore           => false,
+       :review_result_id => design_review_results(:mx234a_pre_artwork_ce_dft).id,
+       :role_id_tag      => 'role_id_7',
+       :review_status    => in_review,
+       :expected_results => {
+         :comments_count   => 5,
+         :review_status_id => in_review.id,
+         :mail_subject     => mail_subject + ' CE-DFT - APPROVED - See comments',
+         :notice           => "Design Review updated with comments and the review result - mail was sent"
+       }
+      },
+      # Heng Kit Too - DFM Reviewer
+      {:user_id          => users(:heng_k).id,
+       :role_id          => roles(:dfm).id,
+       :comment          => 'HKT comment while on-hold',
+       :result           => 'WAIVED',
+       :ignore           => false,
+       :review_result_id => design_review_results(:mx234a_pre_artwork_dfm).id,
+       :role_id_tag      => ':role_id_8',
+       :review_status    => on_hold,
+       :expected_results => {
+         :comments_count => 6,
+         :review_status_id => on_hold.id,
+         :mail_subject     => mail_subject + '- Comments added',
+         :notice           => "Design Review status is 'Review On-Hold': comments were recorded and review results were discarded - mail was sent"
+       }
+      },
+      # Heng Kit Too - DFM Reviewer
+      {:user_id          => users(:heng_k).id,
+       :role_id          => roles(:dfm).id,
+       :comment          => 'HKT comment while pending repost',
+       :result           => 'WAIVED',
+       :ignore           => false,
+       :review_result_id => design_review_results(:mx234a_pre_artwork_dfm).id,
+       :role_id_tag      => ':role_id_8',
+       :review_status    => pending_repost,
+       :expected_results => {
+         :comments_count => 7,
+         :review_status_id => pending_repost.id,
+         :mail_subject     => mail_subject + '- Comments added',
+         :notice           => "Design Review status is 'Pending Repost': comments were recorded and review results were discarded - mail was sent"
+       }
+      }
+    ]
+
+    mx234a = design_reviews(:mx234a_pre_artwork)
+
+    mx234a.design_review_results.each do |rr|
+      rr.result = 'No Response'
+      rr.update
+    end
+    
+    mx234a_review_results = mx234a.design_review_results
+
+    assert_equal(14, mx234a_review_results.size)
+    assert_equal(4,  mx234a.design_review_comments.size)
+    mx234a_review_results.each { |rr| assert_equal("No Response", rr.result) }
+
+    reviewer_result_list.each do |reviewer_result|
+
+      if reviewer_result[:review_status] == on_hold
+        mx234a.place_on_hold
+      elsif reviewer_result[:review_status] == pending_repost
+        mx234a.review_status_id = pending_repost.id
+        mx234a.update
+      else
+        mx234a.remove_from_hold(in_review)
+        expected_results[reviewer_result[:role_id].to_s] = reviewer_result[:result]
+      end
+      mx234a.reload
+
+      rev = User.find(reviewer_result[:user_id]).name
+      set_user(reviewer_result[:user_id], Role.find(reviewer_result[:role_id]))
+
+      post(:reviewer_results,
+           :post_comment                 => {"comment"                          => reviewer_result[:comment]},
+           reviewer_result[:role_id_tag] => {reviewer_result[:review_result_id] => reviewer_result[:result]},
+           :design_review                => {"id"                               => mx234a.id})
+
+      assert_redirected_to(:action => :post_results)
+
+      follow_redirect
+      
+      assert_equal(reviewer_result[:expected_results][:notice], flash['notice'])
+
+      email = @emails.pop
+      assert_equal(0, @emails.size)
+      assert_equal(reviewer_result[:expected_results][:mail_subject],
+                   email.subject)
+                   
+      design_review_comments = DesignReviewComment.find_all_by_design_review_id(mx234a.id)
+      assert_equal(reviewer_result[:expected_results][:comments_count], 
+                   design_review_comments.size)
+      if reviewer_result[:comment] != ''
+        assert_equal(reviewer_result[:comment], design_review_comments.pop.comment)
+      end
+
+      review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
+
+      for review_result in review_results
+        assert_equal(expected_results[review_result.role_id.to_s],
+                     review_result.result)
+      end
+
+      pre_art_design_review = DesignReview.find(mx234a.id)
+      assert_equal(reviewer_result[:expected_results][:review_status_id],
+                   pre_art_design_review.review_status_id)
+    end
+
+    #Verify the existing priority and designer.
+    mx234a_pre_art_dr = DesignReview.find(mx234a.id)
+    mx234a_design     = mx234a_pre_art_dr.design
+    high              = Priority.find_by_name('High')
+    low               = Priority.find_by_name('Low')
+    bob_g             = User.find_by_last_name("Goldin")
+    scott_g           = User.find_by_last_name("Glover")
+    patrice_m         = User.find_by_last_name("Michaels")
+    cathy_m           = User.find_by_last_name("McLaren")
+
+    assert_equal(high.id,  mx234a_design.priority_id)
+    assert_equal(5000,     mx234a_design.designer_id)
+    assert_equal(5001,     mx234a_design.peer_id)
+
+    release_review = ReviewType.find_by_name('Release')
+    pre_art_review = ReviewType.find_by_name('Pre-Artwork')
+    for mx234a_dr in mx234a_design.design_reviews
+      assert_equal(high.id,  mx234a_dr.priority_id)
+      if release_review.id === mx234a_dr.review_type_id
+        assert_equal(patrice_m.name, User.find(mx234a_dr.designer_id).name)
+      elsif pre_art_review.id == mx234a_dr.review_type_id
+        assert_equal(cathy_m.name, User.find(mx234a_dr.designer_id).name)
+      else
+        assert_equal(bob_g.name, User.find(mx234a_dr.designer_id).name)
+      end
+    end
+
+    assert_equal(ReviewType.find_by_name("Pre-Artwork").id,
+                 mx234a_design.phase_id)
+
+    # Handle special processing cases
+    assert_equal(0, mx234a_design.board.fab_houses.size)
+    assert_equal(3, mx234a_design.fab_houses.size)
+    fab_houses = mx234a_design.fab_houses.sort_by { |fh| fh.name }
+    assert_equal(fab_houses(:ibm).id,   fab_houses[0].fab_house_id.to_i)
+    assert_equal(fab_houses(:merix).id, fab_houses[1].fab_house_id.to_i)
+    assert_equal(fab_houses(:opc).id,   fab_houses[2].fab_house_id.to_i)
+    
+    set_user(users(:dan_g).id, Role.find(roles(:slm_vendor).id))
+
+    comment_count = mx234a.design_review_comments.size
+    # Verify the behavior when the review is pending and on hold
+    updates = [{:review_status   => pending_repost,
+                :notice          => "Design Review status is 'Pending Repost': comments were recorded and review results were discarded - mail was sent",
+                :fab_house       => {'1' => '1', '2' => '0',  '3' => '1',
+                                     '4' => '1', '5' => '0',  '6' => '0',
+                                     '7' => '0', '8' => '1'},
+                :fab_house_count => 4,
+                :fab_house_list  => ['AdvantechPWB', 'Coretec', 
+                                     'Merix',        'OPC']},
+               {:review_status   => on_hold,
+                :notice          => "Design Review status is 'Review On-Hold': comments were recorded and review results were discarded - mail was sent",
+                :fab_house       => {'1' => '0', '2' => '0',  '3' => '0',
+                                     '4' => '0', '5' => '1',  '6' => '0',
+                                     '7' => '1', '8' => '1'},
+                :fab_house_count => 3,
+                :fab_house_list  => ['DDI Anaheim',  'MEI',   'OPC']}]
+                
+    updates.each do |update|
+
+      review_status = update[:review_status]
+      if review_status.id == on_hold.id
+        mx234a.place_on_hold
+      else
+        mx234a.review_status_id = review_status.id
+        mx234a.update
+      end
+      mx234a.reload
+    
+      post(:reviewer_results,
+           :post_comment  => {"comment"    => "#{review_status.name}"},
+           :role_id_18    => {11           => 'APPROVED'},
+           :design_review => {"id"         => mx234a.id},
+                              :fab_house   => update[:fab_house])
+                                             
+      assert_redirected_to(:action => :post_results)
+      follow_redirect
+
+      email = @emails.pop
+      assert_equal(0, @emails.size)
+      # Expect comments - the fab houses changed
+      assert_equal(mail_subject + '- Comments added', email.subject)
+
+      assert_equal(update[:fab_house_count], mx234a.design.fab_houses.size)
+      assert_equal(update[:fab_house_count], mx234a.design.board.fab_houses.size)
+      
+      if update[:fab_house_count] > 0
+        design_fab_houses = mx234a.design.fab_houses.sort_by { |fh| fh.name }
+        board_fab_houses  = mx234a.design.board.fab_houses.sort_by { |fh| fh.name }
+      
+        0.upto(update[:fab_house_count]-1) do |i|
+          assert_equal(update[:fab_house_list][i], design_fab_houses[i].name)
+          assert_equal(update[:fab_house_list][i], board_fab_houses[i].name)
+        end
+      end
+      
+      comment_count += 2
+      assert_equal(comment_count,   mx234a.design_review_comments.size)
+      
+      assert_equal(update[:notice], flash['notice'])
+
+    end       
+
+    # Handle special proessing for PCB Design Manager
+    set_user(users(:jim_l).id, Role.find(roles(:pcb_design).id))
+    comment_count = mx234a.design_review_comments.size
+    # Verify the behavior when the review is pending and on hold
+    updates = [{:review_status   => pending_repost,
+                :notice          => "Design Review status is 'Pending Repost': comments were recorded and review results were discarded - mail was sent",
+                :fab_house       => {'1' => '1', '2' => '0',  '3' => '1',
+                                     '4' => '1', '5' => '0',  '6' => '0',
+                                     '7' => '0', '8' => '1'},
+                :fab_house_count => 4,
+                :fab_house_list  => ['AdvantechPWB', 'Coretec', 
+                                     'Merix',        'OPC']},
+               {:review_status   => on_hold,
+                :notice          => "Design Review status is 'Review On-Hold': comments were recorded and review results were discarded - mail was sent",
+                :fab_house       => {'1' => '0', '2' => '0',  '3' => '0',
+                                     '4' => '0', '5' => '1',  '6' => '0',
+                                     '7' => '1', '8' => '1'},
+                :fab_house_count => 3,
+                :fab_house_list  => ['DDI Anaheim',  'MEI',   'OPC']}]
+                
+    email = []
+    updates.each do |update|
+    
+      review_status = update[:review_status]
+      if review_status.id == on_hold.id
+        mx234a.place_on_hold
+      else
+        mx234a.review_status_id = review_status.id
+        mx234a.update
+      end
+      mx234a.reload
+    
+      post(:reviewer_results,
+           :post_comment  => {"comment" => 'Absolutely!'},
+           :role_id_12    => {'100'     => 'APPROVED'},
+           :design_review => {"id"      => mx234a.id},
+           :designer      => {:id       => scott_g.id},
+           :peer          => {:id       => bob_g.id},
+           :priority      => {:id       => low.id})
+
+      assert_redirected_to(:action => :post_results)
+      follow_redirect
+
+      email = @emails.pop
+      assert_equal(0, @emails.size)
+      # Expect comments - the fab houses changed
+      assert_equal(mail_subject + '- Comments added', email.subject)
+
+      comment_count += 1
+      assert_equal(comment_count,   mx234a.design_review_comments.size)
+      
+      assert_equal(update[:notice], flash['notice'])
+
+    end
+
+    mx234a.reload
+    
+    designer_email = User.find(mx234a.design.pcb_input_id).email
+
+    found_email = email.cc.detect { |addr| addr == designer_email }
+    assert_equal(designer_email, found_email)
+    
+    mx234a_pre_art_dr = DesignReview.find(mx234a.id)
+    mx234a_design     = Design.find(mx234a_pre_art_dr.design_id)
+
+    assert_equal(low.id,     mx234a_design.priority_id)
+    assert_equal(scott_g.id, mx234a_design.designer_id)
+
+    for mx234a_dr in mx234a_design.design_reviews
+      assert_equal(low.name, Priority.find(mx234a_dr.priority_id).name)
+      case ReviewType.find(mx234a_dr.review_type_id).name
+      when 'Pre-Artwork'
+        assert_equal(cathy_m.name,   User.find(mx234a_dr.designer_id).name)
+      when 'Release'
+        assert_equal(patrice_m.name, User.find(mx234a_dr.designer_id).name)
+      else
+        assert_equal(scott_g.name,   User.find(mx234a_dr.designer_id).name)
+      end
+    end
+
+  end
+  
+
+  #
+  ######################################################################
+  #
+  # test_reassign_reviewer
+  #
+  # Description:
+  # This method does the functional testing of the reassign reviewer
+  # action.
+  #
+  ######################################################################
+  #
   def test_reassign_reviewer
 
     set_user(users(:matt_d).id, 'Reviewer')
@@ -2714,6 +3100,17 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     end
 
 
+  #
+  ######################################################################
+  #
+  # test_update_review_assignments
+  #
+  # Description:
+  # This method does the functional testing of the update_review_assignments
+  # action.
+  #
+  ######################################################################
+  #
   def test_update_review_assignments
 
   hw_review_result = 
@@ -2806,8 +3203,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     post(:process_admin_update,
          :id       => mx234a_pre_artwork.id,
-         :designer => {:id => scott_g.id},
-         :peer     => {:id => scott_g.id})
+         :designer => {:id => scott_g.id.to_s},
+         :peer     => {:id => scott_g.id.to_s})
 
     assert_redirected_to(:controller => 'tracker', :action => 'index')
     assert_equal('Update not allowed - Must be admin or manager',
@@ -2816,8 +3213,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     set_user(users(:jim_l).id, 'Manager')
     post(:process_admin_update,
          :id       => mx234a_pre_artwork.id,
-         :designer => {:id => scott_g.id},
-         :peer     => {:id => scott_g.id})
+         :designer => {:id => scott_g.id.to_s},
+         :peer     => {:id => scott_g.id.to_s})
 
     assert_redirected_to(:action => "admin_update",
                          :id     => mx234a_pre_artwork.id.to_s)
@@ -2856,11 +3253,13 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     post(:process_admin_update,
          :id             => mx234a_pre_artwork.id,
-         :designer       => {:id => rich_m.id},
-         :pcb_input_gate => {:id => jan_k.id},
-         :peer           => {:id => scott_g.id},
-         :priority       => {:id => priorities(:low).id},
-         :design_center  => {:id => design_centers(:fridley).id})
+         :designer       => {:id      => rich_m.id.to_s},
+         :pcb_input_gate => {:id      => jan_k.id.to_s},
+         :peer           => {:id      => scott_g.id.to_s},
+         :review_status  => {:id      => review_statuses(:in_review).id.to_s},
+         :priority       => {:id      => priorities(:low).id.to_s},
+         :design_center  => {:id      => design_centers(:fridley).id.to_s},
+         :post_comment   => {:comment => "This is a test"})
 
     assert_equal(5000, mx234a.designer_id)
     assert_equal(5001, mx234a.peer_id)
