@@ -139,9 +139,14 @@ class BoardDesignEntryTest < Test::Unit::TestCase
     bde = BoardDesignEntry.find(board_design_entries(:av714b).id)
     assert_equal(0, bde.board_design_entry_users.size)
     assert_equal(2, BoardDesignEntryUser.find_all.size)
+    assert_equal(0, bde.managers.size)
+    assert_equal(0, bde.reviewers.size)
 
     bde.load_design_team
-    assert_equal( 8, bde.board_design_entry_users.size)
+
+    assert_equal(1,  bde.managers.size)
+    assert_equal(7,  bde.reviewers.size)
+    assert_equal(8,  bde.board_design_entry_users.size)
     assert_equal(10, BoardDesignEntryUser.find_all.size)
     
     default_user_list = { 'PCB Design'          => 'Light',
@@ -169,7 +174,45 @@ class BoardDesignEntryTest < Test::Unit::TestCase
       end
     end
   
+    bde = BoardDesignEntry.find(board_design_entries(:mx234a).id)
+    assert_equal(0,  bde.board_design_entry_users.size)
+    assert_equal(10, BoardDesignEntryUser.find_all.size)
+    assert_equal(0, bde.managers.size)
+    assert_equal(0, bde.reviewers.size)
+
+    bde.load_design_team
+
+    assert_equal(1, bde.managers.size)
+    assert_equal(7, bde.reviewers.size)
+    assert_equal( 8, bde.board_design_entry_users.size)
+    assert_equal(18, BoardDesignEntryUser.find_all.size)
+    
+    default_user_list = { 'PCB Design'          => 'Light',
+                          'Compliance - EMC'    => 'Bechard',
+                          'Compliance - Safety' => 'Pallotta',
+                          'Library'             => 'Ohara',
+                          'PCB Input Gate'      => 'Kasting',
+                          'PCB Mechanical'      => 'Khoras',
+                          'SLM BOM'             => 'Seip',
+                          'SLM-Vendor'          => 'Gough' }
+    default_users = {}
+    
+    default_user_list.each { |role_name, user_last_name|  
+      role = Role.find_by_name(role_name)
+      user = User.find_by_last_name(user_last_name)
+      default_users[role.id] = user.id  
+    }
+    
+    for bde_user in bde.board_design_entry_users
+      assert_equal(bde.id, bde_user.board_design_entry_id)
+      if default_users[bde_user.role_id]
+        assert_equal(default_users[bde_user.role_id], bde_user.user_id)
+      else
+        assert_equal(0, bde_user.user_id)
+      end
+    end
+  
   end
-
-
+  
+  
 end
