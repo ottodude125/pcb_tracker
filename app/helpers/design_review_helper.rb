@@ -7,10 +7,11 @@ module DesignReviewHelper
 
     in_review = ReviewStatus.find_by_name("In Review")
     review_outstanding = @review_results.find { |rr| 
-      rr.reviewer_id == @session[:user].id && rr.result == 'No Response'
+      rr.reviewer_id == session[:user].id && rr.result == 'No Response'
     }
 
     return ((review_status.name == "Pending Repost" ||
+             review_status.name == "Review On-Hold" ||
              review_status.name == "In Review") &&
             review_outstanding)
 
