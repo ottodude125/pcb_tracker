@@ -143,17 +143,15 @@
                           </tr>
                         <% end %>
 
-                        <% if review_locked(design[:next_review]) %>
+                        <% if design[:next_review] && design[:next_review].review_locked? %>
                           <tr bgcolor="#dfdfdf">
                             <td colspan="7">
-                              Final Review can not be posted until the audit is complete
+                              Final Review can not be posted until the audit and all work assignments are complete.
                             </td>
                           </tr>
 
-                        <% elsif (design[:next_review] != nil &&
-                               !review_locked(design[:next_review]) &&
-                               design[:next_review].designer_id == @session[:user].id &&
-                               design[:next_review].review_type_id == design[:design].phase_id) %>
+                        <% elsif design[:next_review] && review[:review].post_review?(design[:next_review], session[:user]) %>
+
                           <tr bgcolor="#dfdfdf">
                             <td colspan="6">
                               <table width="100%" border="0">
