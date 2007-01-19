@@ -17,4 +17,7 @@ review_skipped:
 pending_repost:
   id:   5
   name: Pending Repost
+on_hold:
+  id:   6
+  name: Review On-Hold
 
