@@ -19,4 +19,32 @@ class ReviewStatus < ActiveRecord::Base
                           :message => 'already exists in the database')
   validates_presence_of   :name
 
+
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+  
+  ######################################################################
+  #
+  # get_all_active
+  #
+  # Description:
+  # This method returns a list of the active review status values
+  #
+  # Parameters:
+  # sort - specifies the field(s) and sort order
+  #
+  # Return value:
+  # An array of active review status records
+  #
+  ######################################################################
+  #
+  def ReviewStatus.get_all_active(sort = 'name ASC')
+    ReviewStatus.find_all_by_active(1, sort)
+  end
+  
+
 end
