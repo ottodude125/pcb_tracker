@@ -31,7 +31,7 @@
   </td>
   <td>
     <% if manager_home_list_stripes.review_status.name != 'Not Started' %>
-      <%= manager_home_list_stripes.age %>
+      <%= manager_home_list_stripes.age_in_days %>
     <% else %>
       &nbsp;
     <% end %>
@@ -44,7 +44,7 @@
     <table border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="center" valign="top">
-          <input type="button" value="Update Assignments"
+          <input type="button" value="Updates"
                  title='<%= "#{manager_home_list_stripes.design.name}: Make updates to the design review assignments" %>'
                  onClick="parent.location='<%= url_for(:controller => 'design_review',
                                                        :action     => 'admin_update',
@@ -54,7 +54,7 @@
       </tr>
       <tr>
         <td align="center" valign="top">
-          <% if !manager_home_list_stripes.design.audit.skip? %>
+          <% if !(manager_home_list_stripes.design.audit.skip? || manager_home_list_stripes.design.audit.is_complete?) %>
           <input type="button" value="Audit Assignments"
                  title= '<%= "#{manager_home_list_stripes.design.name}: Set the assignments for self and peer audits" %>'
                  onClick="parent.location='<%= url_for(:controller => 'audit',
@@ -64,7 +64,7 @@
                                                                         :action     => 'index' }) %>'"
                  class="small_font_button" />
           <% else %>
-            <b>Audit Skipped</b>
+            <b>Audit <%= manager_home_list_stripes.design.audit.skip? ? 'Skipped' : 'is Complete' %></b>
           <% end %>
         </td>
       </tr>

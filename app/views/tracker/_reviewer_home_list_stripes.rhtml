@@ -22,6 +22,9 @@
     <%= reviewer_home_list_stripes.review_name %>
   </td>
   <td>
+    <%= reviewer_home_list_stripes.review_status.name %>
+  </td>
+  <td>
     <% if reviewer_home_list_stripes.review_name == "Pre-Artwork" %>
       <%= User.find(reviewer_home_list_stripes.design.pcb_input_id).name %>
     <% else %>
@@ -29,21 +32,40 @@
     <% end %>
   </td>
   <td title="Age in work days">
-    <%= reviewer_home_list_stripes.age %>
+    <%= reviewer_home_list_stripes.age_in_days %>
   </td>
   
   <% if my_reviews %>
   <td>
-    <%= button_to('In-Process Dialogue',
-                  { :controller => 'ipd_post',
-                    :action     => 'list',
-                    :design_id  => reviewer_home_list_stripes.design.id },
-                  :title => "Initiate and discuss all in-process changes for the #{reviewer_home_list_stripes.design.name}") %>
-    <table cellpadding="0" cellspacing="1">
+    <table width="100%" border="0">
+      <tr>
+        <td>
+          <%# button_to('In-Process Dialogue',
+                        { :controller => 'ipd_post',
+                          :action     => 'list',
+                          :design_id  => reviewer_home_list_stripes.design.id },
+                        :class => "small_font_wide_button",
+                        :title => "Initiate and discuss all in-process changes for the #{reviewer_home_list_stripes.design.name}") %>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="button" value="In-Process Dialogue"
+                 title="Initiate and discuss all in-process changes for the #{reviewer_home_list_stripes.design.name}"
+                 onClick="parent.location='<%= url_for(:controller => 'ipd_post',
+                                                       :action     => 'list',
+                                                       :design_id  => reviewer_home_list_stripes.design.id) %>'"
+                     class="small_font_wide_button" />
+        </td>
+      </tr>
+    </table>
+    <table cellpadding="0" cellspacing="1" border="0">
       <% for result in get_my_results(reviewer_home_list_stripes.id) %>
         <tr>
-          <% if result.size > 1 %>
-            <td><%= result[1] %></td>
+          <% if result.size == 1 %>
+            <td class="reviewer_peer"><%= result[0] %></td>
+          <% elsif result.size == 2 %>
+            <td class="reviewer_peer"><%= result[0] %> - <%= result[1]%></td>
           <% else %>
             <td>&nbsp;</td>
           <% end %>
@@ -67,7 +89,7 @@
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
       <% for reviewer in reviewer_home_list_stripes[:peer_list] %>
         <tr>
-          <td class="reviewer_peer" width="70%">
+          <td class="reviewer_peer" valign="top">
             <%= reviewer[:name] %>
           </td>
           <td class="reviewer_peer">
