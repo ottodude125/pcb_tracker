@@ -18,7 +18,12 @@ class DesignReview < ActiveRecord::Base
   belongs_to :review_status
   belongs_to :review_type
 
-  has_many   :design_review_results
+  has_many(:design_review_comments, :order => 'created_on DESC')
+  has_many(:design_review_results)
+  
+  
+  SUNDAY   = 0
+  SATURDAY = 6
 
 
   ######################################################################
@@ -47,23 +52,102 @@ class DesignReview < ActiveRecord::Base
   
   ######################################################################
   #
-  # comments
+  # time_on_hold
   #
   # Description:
-  # This method returns the comments for the design review object.
+  # This method returns the number of seconds that a design has been
+  # on hold
   #
   # Parameters:
-  # order - specifies the sort order for the created_on field.  Either 
-  #         'ASC' or 'DESC'
+  # current_time - the current time
   #
   # Return value:
-  # A list of comments for the design review.
+  # If the design_review is on hold then the number of second the design
+  # has been on hold is return.  Otherwise, a 0 is returned
   #
   ######################################################################
   #
-  def comments(order = 'DESC')
-    DesignReviewComment.find_all_by_design_review_id(self.id,
-                                                     "created_on #{order}")
+  def time_on_hold(current_time = Time.now)
+
+    on_hold = ReviewStatus.find_by_name('Review On-Hold')
+
+    return 0 if self.review_status_id != on_hold.id
+    age_in_seconds(self.placed_on_hold_on, current_time)
+   
+  end
+  
+  
+  ######################################################################
+  #
+  # time_on_hold_total
+  #
+  # Description:
+  # This method returns the running total of the number of seconds that 
+  # a design has been on hold
+  #
+  # Parameters:
+  # current_time - the current time
+  #
+  # Return value:
+  # The running total for the number of seconds that have elapsed while
+  # the design review is on hold
+  #
+  ######################################################################
+  #
+  def time_on_hold_total(current_time = Time.now)
+    (self.total_time_on_hold + self.time_on_hold(current_time))
+  end
+  
+
+  ######################################################################
+  #
+  # place_on_hold
+  #
+  # Description:
+  # This method sets the design_review status to on-hold sets the 
+  # placed_on_hold_on field to the current time
+  #
+  # Parameters:
+  # current_time - the current time
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def place_on_hold(current_time = Time.now)
+    self.review_status_id  = ReviewStatus.find_by_name('Review On-Hold').id
+    self.placed_on_hold_on = current_time
+    self.update
+  end
+  
+    
+  ######################################################################
+  #
+  # remove_from_hold
+  #
+  # Description:
+  # This method sets the design_review status to the value specified by the
+  # review_status_id parameter and it updates the field that keeps track
+  # the running total of time on hold for the design review
+  #
+  # Parameters:
+  # review_status_id - the new status for the design review
+  # current_time     - the current time
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def remove_from_hold(review_status_id, current_time = Time.now)
+  
+    if self.review_status_id == ReviewStatus.find_by_name('Review On-Hold').id
+      self.review_status_id    = review_status_id
+      self.total_time_on_hold += age_in_seconds(self.placed_on_hold_on, current_time)
+      self.update
+    end
+
   end
   
   
@@ -79,24 +163,12 @@ class DesignReview < ActiveRecord::Base
   # None
   #
   # Return value:
-  # The number of workdays since the design review was posted.
+  # The number of workdays in seconds since the design review was posted.
   #
   ######################################################################
   #
   def age(end_time = Time.now)
-
-    start_time = self.created_on
-
-    workdays = end_time - start_time > 43200 ? 0 : -1
-
-    while start_time <= end_time
-      day         = start_time.strftime("%w").to_i
-      workdays   += 1 if 0 < day && day < 6
-      start_time += 86400                        # add a day's worth of seconds
-    end
-    
-    workdays
-    
+    age_in_seconds(self.created_on, end_time)
   end
   
   
@@ -117,48 +189,67 @@ class DesignReview < ActiveRecord::Base
   ######################################################################
   #
   def review_results_by_role_name
-    self.design_review_results.sort_by { |review_result| 
-      review_result.role.display_name
-    }
+    self.design_review_results.sort_by { |rr| rr.role.display_name }
   end
   
   
-  def reviewers(reviewer_list = [],
-                sorted        = false)
+  ######################################################################
+  #
+  # reviewers
+  #
+  # Description:
+  # This method returns a list of user records.  The list is uniq and if
+  # the sorted flag is set to TRUE it is sorted by the user's last name.
+  #
+  # Parameters:
+  # reviewer_list - A list of user records.  The default value is an 
+  #                 empty array
+  # sorted        - A flag that indicates whether or not to sort the 
+  #                 reviewer_list by the last names
+  #
+  # Return value:
+  # A list of reviewers (user records) for the design review
+  #
+  ######################################################################
+  #
+  def reviewers(reviewer_list = [], sorted = false)
   
-    for review_result in self.design_review_results
+    self.design_review_results.each do |review_result|
       if not reviewer_list.detect { |reviewer| reviewer.id == review_result.reviewer_id }
         reviewer_list << User.find(review_result.reviewer_id)
       end
     end
     
-    reviewer_list = 
-      reviewer_list.sort_by { |reviewer| reviewer.last_name } if sorted
+    reviewer_list = reviewer_list.sort_by { |reviewer| reviewer.last_name } if sorted
     
     reviewer_list.uniq
     
   end
   
   
+  ######################################################################
+  #
+  # generate_reviewer_selection_list
+  #
+  # Description:
+  # This method returns a list review groups for the design review.
+  # See "Return value" for the details.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of review groups containing the role display name and id,
+  # the assigned reviewer's id, and a list of the reviewers for the 
+  # role.
+  #
+  ######################################################################
+  #
   def generate_reviewer_selection_list()
-
-    review_results = DesignReviewResult.find_all_by_design_review_id(self.id)
-    review_results = review_results.sort_by { |rr| rr.role.display_name }
-
-    reviewers = Array.new
-    for review_result in review_results
-      reviewers.push({ :group       => review_result.role.display_name,
-                       :group_id    => review_result.role.id,
-                       :reviewers   => review_result.role.active_users,
-                       :reviewer_id => review_result.reviewer_id })
-    end
-
-    return reviewers
-    
+    self.design_review_results.sort_by { |rr| rr.role.display_name }
   end
-  
-  
-  
+
+
   ######################################################################
   #
   # designer
@@ -187,34 +278,264 @@ class DesignReview < ActiveRecord::Base
   end
 
 
-  def dump_design_review
-  
-    priority = Priority.find(self.priority_id)
-    designer = User.find(self.designer_id)  if self.designer_id  > 0
-    creator  = User.find(self.creator_id)   if self.creator_id   > 0
-    
-    logger.info "***********************DESIGN REVIEW **********************"
-    logger.info "NAME: #{self.design.name}"
-    logger.info "REVIEW TYPE: #{self.review_type.name}"
-    logger.info "ID: #{self.id}"
-    logger.info "POSTING COUNT: #{self.posting_count}"
-    logger.info "STATUS: #{self.review_status.name}"
-    logger.info "PRIORITY: #{priority.name}"
-
-    if designer
-      logger.info "DESIGNER: #{designer.name}"
-    else
-      logger.info "DESIGNER_ID: #{self.designer_id}"
-    end
-    if creator
-      logger.info "CREATED BY: #{creator.name}"
-    else
-      logger.info "CREATED BY ID: #{self.created_by}"
-    end
-    logger.info "##########################################################"
-  
+  ######################################################################
+  #
+  # on_hold?
+  #
+  # Description:
+  # This method checks to see if the design review is on hold
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A boolean value that indicates that design review is on hold
+  # when TRUE
+  #
+  ######################################################################
+  #
+  def on_hold?
+    self.review_status_id == ReviewStatus.find_by_name('Review On-Hold').id
   end
   
   
+  ######################################################################
+  #
+  # pending_repost?
+  #
+  # Description:
+  # This method checks to see if the design review is in the 
+  # 'pending repost' state
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A boolean value that indicates that design review is pending repost
+  # when TRUE
+  #
+  ######################################################################
+  #
+  def pending_repost?
+    self.review_status_id == ReviewStatus.find_by_name('Pending Repost').id
+  end
   
+  
+  ######################################################################
+  #
+  # in_review?
+  #
+  # Description:
+  # This method checks to see if the design review is in the 
+  # 'in review' state
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A boolean value that indicates that design review is in review
+  # when TRUE
+  #
+  ######################################################################
+  #
+  def in_review?
+    self.review_status_id == ReviewStatus.find_by_name('In Review').id
+  end
+  
+  
+  ######################################################################
+  #
+  # review_complete?
+  #
+  # Description:
+  # This method checks to see if the design review is in the 
+  # 'review completed' state
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A boolean value that indicates that design review is completed
+  # when TRUE
+  #
+  ######################################################################
+  #
+  def review_complete?
+    self.review_status_id == ReviewStatus.find_by_name('Review Completed').id
+  end
+  
+  
+  ######################################################################
+  #
+  # age_in_days
+  #
+  # Description:
+  # This method returns the age of a design_review in work days
+  #
+  # Parameters:
+  # current_time - the time stamp for the current time
+  #
+  # Return value:
+  # A string representing the number of days between the time the 
+  # design review was post and the current time.
+  #
+  ######################################################################
+  #
+  def age_in_days(current_time = Time.now)
+
+    delta = age_in_seconds(self.created_on, current_time)
+
+    sprintf("%4.1f", delta.to_f / 1.day)  
+
+  end
+  
+  
+  ######################################################################
+  #
+  # set_valor_reviewer
+  #
+  # Description:
+  # This method assigns the valor review to the peer auditor
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def set_valor_reviewer
+
+    valor_role = Role.find_by_name('Valor')
+    valor_review_result = self.design_review_results.detect do |rr|
+                            rr.role_id == valor_role.id
+                          end
+
+    valor_review_result.reviewer_id = self.design.peer_id
+    valor_review_result.update
+
+  end
+  
+  
+  ######################################################################
+  #
+  # post_review?
+  #
+  # Description:
+  # This method reports whether or not the design review can be 
+  # posted.
+  #
+  # Parameters:
+  # next_review - the next design review in the cycle
+  # user        - the current user
+  #
+  # Return value:
+  # A boolean value that indicates that the user can post the review 
+  # when TRUE.
+  #
+  ######################################################################
+  #
+  def post_review?(next_review, user)
+
+    (next_review                        && 
+     !self.review_locked?               && 
+     next_review.designer_id == user.id &&
+     next_review.review_type_id == next_review.design.phase_id)
+
+  end
+
+
+  ######################################################################
+  #
+  # review_locked?
+  #
+  # Description:
+  # This method determines whether or not the design review can be posted
+  # for review.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A boolean value that indicates that the design review is locked when
+  # TRUE.
+  #
+  ######################################################################
+  #
+  def review_locked?
+  
+    (self.review_type.name == "Final" && 
+     (!(self.design.audit.skip? || self.design.audit.auditor_complete?) ||
+      !self.design.work_assignments_complete?))
+
+  end
+  
+
+######################################################################
+######################################################################
+private
+######################################################################
+######################################################################
+
+
+  ######################################################################
+  #
+  # age_in_seconds
+  #
+  # Description:
+  # This method computes the number of seconds between the start_time 
+  # and the end_time.
+  #
+  # Parameters:
+  # start_time - the beginning of the time interval
+  # end_time   - the end of the time interval
+  #
+  # Return value:
+  # The number of seconds (representing work days) between the 
+  # start_time and the end_time.
+  #
+  ######################################################################
+  #
+  def age_in_seconds(start_time, end_time)
+
+    return 0 if start_time >= end_time
+    
+    # If the start time is a weekend, initialize the delta to 
+    # zero.  Otherwise, initialize delta to the number of seconds
+    # between the start time and midnight of the next day.
+    day = start_time.strftime("%w").to_i
+    if day == SUNDAY || day == SATURDAY
+      delta = 0
+    else
+      #delta = start_time.midnight.tomorrow - start_time
+      midnight_tomorrow = start_time.tomorrow.midnight
+      if end_time > midnight_tomorrow
+        delta = midnight_tomorrow - start_time
+      else
+        delta = end_time - start_time
+      end
+    end
+
+    # Advance start time to midnight.
+    start_time = start_time.tomorrow.midnight
+    
+    while (end_time - start_time) >= 1.day
+      day         = start_time.strftime("%w").to_i
+      # Only increment for a weekday
+      delta      += 1.day if SUNDAY < day && day < SATURDAY 
+      start_time += 1.day
+    end
+    
+    if end_time > start_time
+      # Pick up the remaining time
+      day    = start_time.strftime("%w").to_i
+      delta += end_time - start_time if SUNDAY < day && day < SATURDAY 
+    end
+    
+    delta.to_i
+  
+  end
+
+
 end
