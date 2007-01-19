@@ -45,6 +45,12 @@ a:active  { color: #ff0000; }
   background-color: #dfe9ff;
 }
 
+.note {
+  font-size: 10px;
+  font-style: bold;
+  text-align: center;
+}
+
 .keytable {
   border-collapse: colapse;
   border: 4px double #444;
