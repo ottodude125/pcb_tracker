@@ -34,7 +34,7 @@ class Ping < ActiveRecord::Base
       for review_result in design_review.design_review_results
         next if review_result.result != "No Response"
         design_review = review_result.design_review
-        age = design_review.age
+        age = design_review.age/1.day
 
         if ((age > 3)                                                 &&
             (design_review.priority.name == 'High')                   ||
