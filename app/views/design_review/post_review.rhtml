@@ -37,7 +37,11 @@
             <th align="left"
                 width="140">Location of Data:</th>
             <td>
-              <%= @design_review.design_center.name %>
+              <% if @design_review.design_center_id > 0 %>
+                <%= @design_review.design_center.name %>
+              <% else %>
+                <b>Not Set</b>
+              <% end %>
             </td>
           </tr>
           <tr>
