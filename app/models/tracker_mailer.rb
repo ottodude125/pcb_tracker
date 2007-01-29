@@ -175,6 +175,8 @@ class TrackerMailer < ActionMailer::Base
   # Parameters:
   #   user           - the user making the update
   #   design_review  - the design review that was updated
+  #   cc_list        - contains the email addresses for the designer and
+  #                    the peer auditor
   #   sent_at        - the timestamp for the mail header 
   #                    (defaults to Time.now)
   #
@@ -182,16 +184,26 @@ class TrackerMailer < ActionMailer::Base
   #
   def design_review_modification(user, 
                                  design_review, 
+                                 cc_list         = [],
                                  sent_at         = Time.now)
 
-    @subject    = "The #{design_review.design.name} #{design_review.review_name}" +
-                  " Design Review has been modified by #{user.name}"
-    @recipients = reviewer_list(design_review)
-    @from       = Pcbtr::SENDER
-    @sent_on    = sent_at
-    @headers    = {}
-    @bcc        = 'paul_altimonte@notes.teradyne.com'
-    @cc         = copy_to(design_review)
+    @subject     = "The #{design_review.design.name} #{design_review.review_name}" +
+                   " Design Review has been modified by #{user.name}"
+
+    @recipients  = reviewer_list(design_review)
+
+    design       = design_review.design
+    design.reload
+    
+    @recipients << design.designer.email   if design.designer_id  > 0
+    @recipients << design.peer.email       if design.peer_id      > 0
+    @recipients << design.input_gate.email if design.pcb_input_id > 0
+    @recipients  = @recipients.uniq
+    @from        = Pcbtr::SENDER
+    @sent_on     = sent_at
+    @headers     = {}
+    @bcc         = 'paul_altimonte@notes.teradyne.com'
+    @cc          = ((copy_to(design_review) + cc_list) - @recipients).uniq
 
     @body['user']             = user
     @body['comment']          = design_review.design_review_comments.shift
@@ -232,9 +244,7 @@ class TrackerMailer < ActionMailer::Base
       cc.push("STD_DC_ECO_Inbox@notes.teradyne.com") if !Pcbtr::DEVEL_SERVER
     when "Final"
       pcb_admin = Role.find_by_name("PCB Admin")
-      for user in pcb_admin.active_users
-        cc.push(user.email)
-      end
+      cc       += pcb_admin.active_users.collect { |u| u.email }
     when 'Pre-Artwork'
       cc.push(design_review.design.input_gate.email)
     end
@@ -281,9 +291,7 @@ class TrackerMailer < ActionMailer::Base
 
     if design_review.review_type.name == "Final"
       pcb_admin = Role.find_by_name("PCB Admin")
-      for user in pcb_admin.active_users
-        cc.push(user.email)
-      end
+      cc += pcb_admin.active_users.collect { |u| u.email }
     end
     @cc = cc.uniq
 
@@ -712,14 +720,12 @@ class TrackerMailer < ActionMailer::Base
     recipients << design_users[:designer].email  if design_users[:designer]
     recipients << design_users[:peer].email      if design_users[:peer]
     recipients << design_users[:pcb_input].email if design_users[:pcb_input]
-    for reviewer in design_users[:reviewers]
-      recipients << reviewer.email
-    end
+    recipients += design_users[:reviewers].collect { |reviewer| reviewer.email }
 
     @recipients = recipients.uniq
     
     @cc = cc.uniq
-    for copied_to in cc
+    cc.each do |copied_to|
       if recipients.detect { |sent_to| sent_to == copied_to }
         @cc.delete_if { |cc_mail| cc_mail == copied_to }
       end
@@ -1011,12 +1017,12 @@ class TrackerMailer < ActionMailer::Base
   
     cc_list = []
     role_list.each do |role_name|
-      Role.find_by_name(role_name).active_users.each do |member|
-        cc_list << member.email
+      cc_list += Role.find_by_name(role_name).active_users.collect do |member|
+        member.email
       end
     end
-    
-    return cc_list.uniq
+
+    cc_list.uniq
     
   end
   
@@ -1040,7 +1046,7 @@ class TrackerMailer < ActionMailer::Base
     design_review_results = 
       DesignReviewResult.find_all_by_design_review_id(design_review.id)
 
-    for dr_result in design_review_results
+    design_review_results.each do |dr_result|
       reviewer = User.find(dr_result.reviewer_id)
       reviewers << reviewer.email if reviewer.active?
     end
@@ -1067,7 +1073,7 @@ class TrackerMailer < ActionMailer::Base
 
     cc_list = [design_review.designer.email]
 
-    for cc in design_review.design.board.users
+    design_review.design.board.users.each do |cc|
       cc_list << cc.email if cc.active?
     end
 
