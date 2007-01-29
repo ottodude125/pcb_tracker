@@ -1611,7 +1611,7 @@ class DesignReviewController < ApplicationController
       else
         redirect_to(:action => "index", :controller => "tracker" )
       end
-    
+   
     elsif (!audit_skipped  &&
            (params[:designer][:id] != peer_id  ||
             (params[:designer][:id] == '' &&
@@ -1623,33 +1623,42 @@ class DesignReviewController < ApplicationController
       # Keep track of the updates for the comment update
       changes = { }
       
+      cc_list = []
+      cc_list << design.designer.email if design.designer_id > 0
+      cc_list << design.peer.email     if design.peer_id     > 0
+
       if (params[:priority][:id] != "" &&
           params[:priority][:id] != design.priority_id.to_s)
         changes[:priority] = { :old => design.priority.name, 
                                :new => Priority.find(params[:priority][:id]).name }
+        design.priority_id = params[:priority][:id]
       end
       if (params[:design_center][:id] != "" &&
           params[:design_center][:id] != design_review.design_center_id.to_s)
         changes[:design_center] = { :old => design_review.design_center.name, 
                                     :new => DesignCenter.find(params[:design_center][:id]).name }
       end
-      if (params[:designer][:id] != "" &&
+      if (params[:designer]            &&
+          params[:designer][:id] != "" &&
           params[:designer][:id] != design.designer_id.to_s)
+        new_designer       = User.find(params[:designer][:id])
         changes[:designer] = { :old => design.designer.name, 
-                               :new => User.find(params[:designer][:id]).name }
+                               :new => new_designer.name }
+        design.designer_id = new_designer.id
       end
       if (!audit_complete          && 
+          !audit_skipped           &&
+          params[:peer]            &&
           params[:peer][:id] != "" &&
           params[:peer][:id] != design.peer_id.to_s)
+        new_peer       = User.find(params[:peer][:id])
         changes[:peer] = { :old => design.peer.name, 
-                           :new => User.find(params[:peer][:id]).name }
+                           :new => new_peer.name }
+        design.peer_id = new_peer.id
       end
       
-      # Update the design record
-      design.designer_id = params[:designer][:id]
-      design.peer_id     = params[:peer][:id] if !(audit_skipped || audit_complete)
-      design.priority_id = params[:priority][:id]
       design.update
+
 
       if (params[:review_status]            &&
           params[:review_status][:id] != "" &&
@@ -1677,10 +1686,15 @@ class DesignReviewController < ApplicationController
               dr.designer_id = params[:designer][:id]
             end
           else
-            if (params[:pcb_input_gate][:id] != "" &&
+            if (params[:pcb_input_gate]            &&
+                params[:pcb_input_gate][:id] != "" &&
                 params[:pcb_input_gate][:id] != dr.designer_id.to_s)
               changes[:pcb_input_gate] = { :old => User.find(dr.designer_id).name, 
                                            :new => User.find(params[:pcb_input_gate][:id]).name }
+              dr.designer_id         = params[:pcb_input_gate][:id]
+              dr.design.pcb_input_id = params[:pcb_input_gate][:id]
+              dr.design.update
+              dr.design.reload
             end
             dr.designer_id = params[:pcb_input_gate][:id]
           end
@@ -1695,7 +1709,9 @@ class DesignReviewController < ApplicationController
         # Add a comment to the design review and send mail for the update
         create_comment(design_review, params[:post_comment][:comment], changes)
 
-        TrackerMailer::deliver_design_review_modification(session[:user], design_review)
+        TrackerMailer::deliver_design_review_modification(session[:user], 
+                                                          design_review, 
+                                                          cc_list)
 
         flash['notice'] = "#{design.name} has been updated - mail sent"
       end
@@ -1709,6 +1725,7 @@ class DesignReviewController < ApplicationController
       flash['notice'] = "The peer and the designer must be different - update not recorded"
       redirect_to(:action => "admin_update", :id => params[:id])
     end
+
   end
 
 
