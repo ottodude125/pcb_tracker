@@ -1,0 +1,91 @@
+<!-- View:    report                                            -->
+<!-- Purpose: Displays a report for the reviewer workload.      -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<% if @design_review %>
+  <% @heading = "#{@design_review.design.name} #{@design_review.review_type.name} Design Review - Reviewer Workload" %>
+<% else %>
+  <% @heading = "Reviewer Workload - All Reviewers" %>
+<% end %>
+
+<table align="center" border="0">
+  <% @reviewer_list.each do |entry| %>
+  <tr>
+    <td>
+      <table width="100%" border="1">
+        <tr bgcolor="#dfdfdf">
+          <td>
+            <table width="100%" border="0">
+              <tr>
+                <th align="left" width="33%">
+                  <%= entry[:user].name %>
+                </th>
+                <td align="center" width="34%">
+                  <% if @design_review %>
+                    <input type="button" value="Return to Design Review"
+                                onClick="parent.location='<%= url_for( :controller => 'design_review',
+                                                                       :action     => 'view',
+                                                                       :id         => @design_review.id ) %>'" />
+                  <% end %>
+                </td>
+                <td align="right" width="33%">
+                  <input type="button" value="Home"
+                              onClick="parent.location='<%= url_for( :controller => 'tracker',
+                                                                     :action     => 'index' ) %>'" />
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <table width="95%" align="right" border="0">
+              <tr>
+                <td class="smallheading">Design</td>
+                <td class="smallheading">Status</td>
+                <td class="smallheading">Criticality</td>
+                <td class="smallheading">Role</td>
+                <td class="smallheading">Result</td>
+                <td class="smallheading">Posting Date</td>
+                <td class="smallheading">Age</td>
+              </tr>
+              <% entry[:results].each do |rr| %>
+                <tr valign="top">
+                  <td width="145">
+                    <%= link_to(rr.design_review.design.name,
+                                { :controller => 'design_review',
+                                  :action     => :view,
+                                  :id         => rr.design_review.id })%>
+                    <%# rr.design_review.design.name %>
+                  </td>
+                  <td width="110">
+                    <%= rr.design_review.review_status.name %>
+                  </td>
+                  <td width="60">
+                    <%= rr.design_review.priority.name %>
+                  </td>
+                  <td width="180">
+                    <%= rr.role.name %>
+                  </td>
+                  <td width="110">
+                    <%= rr.result %>
+                  </td>
+                  <td width="120">
+                    <%= rr.design_review.created_on.strftime("%d-%b-%y") %>
+                  </td>
+                  <td>
+                    <%= rr.design_review.age_in_days %>
+                  </td>
+                </tr>
+              <% end %>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <% end %>
+</table>
