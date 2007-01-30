@@ -1,26 +1,53 @@
+<!-- View:    design_review                                     -->
+<!-- Purpose: Displays the reviewer results for a design        -->
+<!--          review.                                           -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
 
-<% if reviewer_list_stripes.result == "No Response" %>
-  <tr class="no_response">
-<% elsif reviewer_list_stripes.result == "APPROVED" %>
-  <tr class="approved">
-<% elsif reviewer_list_stripes.result == "WAIVED" %>
-  <tr class="approved">
-<% elsif reviewer_list_stripes.result == "REJECTED" %>
-  <tr class="rejected">
-<% else %>
-  <tr class="withdrawn">
-<% end %>
+<table border="1" width="80%" cellspacing="1" cellpadding="2">
+  <tr class="teraheader" >
+    <td colspan="4">
+      <table width="100%">
+        <tr>
+          <th align="left" width="50%">Review Results</th>
+            <td align="right" width="50%">
+              <input type="button" value="Reviewer Workload" title="View reviewer workload"
+                     onClick="parent.location='<%= url_for(:controller => 'report', 
+                                                           :action     => 'reviewer_workload',
+                                                           :id         => @design_review.id) %>'"
+                     class="small_font_wide_button" />
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
 
-  <td align="left">
-    <%= User.find(reviewer_list_stripes.reviewer_id).name %>
-  </td>
-  <td align="left">
-    <%= reviewer_list_stripes.role.display_name %>
-  </td>
-  <td align="left">
-    <%= reviewer_list_stripes.result %>
-  </td>
-  <td align="left">
-    <%= reviewer_list_stripes.reviewed_on.strftime("%d-%b-%y, %I:%M %p") %>
-  </td>
-</tr>
+  <% @review_results.each do |review_result| %>
+    <% if review_result.result == "No Response" %>
+    <tr class="no_response">
+    <% elsif review_result.result == "APPROVED" %>
+    <tr class="approved">
+    <% elsif review_result.result == "WAIVED" %>
+    <tr class="approved">
+    <% elsif review_result.result == "REJECTED" %>
+    <tr class="rejected">
+    <% else %>
+    <tr class="withdrawn">
+    <% end %>
+
+      <td align="left">
+        <%= User.find(review_result.reviewer_id).name %>
+      </td>
+      <td align="left">
+        <%= review_result.role.display_name %>
+      </td>
+      <td align="left">
+        <%= review_result.result %>
+      </td>
+      <td align="left">
+        <%= review_result.reviewed_on.strftime("%d-%b-%y, %I:%M %p") %>
+      </td>
+    </tr>
+  <% end %>
+</table>
