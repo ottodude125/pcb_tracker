@@ -182,6 +182,11 @@ class ReportController < ApplicationController
       end
     end
     
+    #Sort each of the review results by result and criticality
+    reviewer_list.each do |reviewer_id, user_results| 
+      user_results[:results] = user_results[:results].sort_by { |drr| [drr.result, drr.design_review.priority.value] }
+    end
+    
     reviewer_list  = reviewer_list.to_a.sort_by { |e| e[1][:user].last_name }
     @reviewer_list = reviewer_list.collect { |e| e[1] }
       
