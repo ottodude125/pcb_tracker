@@ -136,4 +136,56 @@ class ReportController < ApplicationController
   end
   
   
+  ######################################################################
+  #
+  # reviewer_workload
+  #
+  # Description:
+  # This method retrieves the information for the reviewer workload 
+  # view.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def reviewer_workload
+  
+    status_list = ReviewStatus.find_all
+  
+    # Get all of the design reviews that have not been completed
+    review_completed = status_list.detect { |rs| rs.name == 'Review Completed' }
+    review_skipped   = status_list.detect { |rs| rs.name == 'Review Skipped' }
+    not_started      = status_list.detect { |rs| rs.name == 'Not Started' }
+    condition        = "review_status_id != '#{review_completed.id}' AND " +
+                       "review_status_id != '#{not_started.id}' AND " +
+                       "review_status_id != '#{review_skipped.id}'"
+ 
+    design_reviews = DesignReview.find_all(condition)
+    
+    if params[:id]
+      @design_review = DesignReview.find(params[:id])
+      reviewer_ids  = @design_review.design_review_results.collect { |drr| drr.reviewer_id } 
+    end
+
+    reviewer_list = {}
+    design_reviews.each do |design_review|
+      design_review.design_review_results.each do |drr|
+        if !reviewer_ids ||
+           (reviewer_ids && reviewer_ids.include?(drr.reviewer_id) )
+          if !reviewer_list[drr.reviewer_id]
+            reviewer_list[drr.reviewer_id] = { :user    => User.find(drr.reviewer_id), 
+                                               :results => [] }
+          end
+          reviewer_list[drr.reviewer_id][:results] << drr
+        end
+      end
+    end
+    
+    reviewer_list  = reviewer_list.to_a.sort_by { |e| e[1][:user].last_name }
+    @reviewer_list = reviewer_list.collect { |e| e[1] }
+      
+  end
+  
+  
 end
