@@ -43,10 +43,23 @@
                width="80%"
                cellspacing="1"
                cellpadding="2">
-          <tr>
-            <th class="teraheader" colspan="4">
-              Review Results
-            </th>
+          <tr class="teraheader" >
+            <td colspan="4">
+              <table width="100%">
+                <tr>
+                  <th align="left" width="50%">
+                    Review Results
+                  </th>
+                  <td align="right" width="50%">
+                    <input type="button" value="Reviewer Workload" title="View reviewer workload"
+                           onClick="parent.location='<%= url_for(:controller => 'report', 
+                                                                 :action     => 'reviewer_workload',
+                                                                 :id         => @design_review.id) %>'"
+                     class="small_font_wide_button" />
+                  </td>
+                </tr>
+              </table>
+            </td>
           </tr>
 
 	        <%= render_collection_of_partials("reviewer_list_stripes",
