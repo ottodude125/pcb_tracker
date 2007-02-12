@@ -24,7 +24,7 @@
       Grade
     </th>
     <td width="30%">
-      <b><%= @current_score %></b>
+      <b><%= @current_score %> Rework</b>
     </td>
     <th class="teraheader" width="20%" align="left">
       Grade Update
@@ -33,9 +33,9 @@
       <select id='report_score' name='report[score]'>
         <% @scoring_table.each do |score| %>
           <% if score[0] == @assignment.oi_assignment_report.score %>
-            <option value="<%= score[0] %>" selected="selected"><%= score[1] %></option>
+            <option value="<%= score[0] %>" selected="selected"><%= score[1] %> Rework</option>
           <% else %>
-            <option value="<%= score[0] %>"><%= score[1] %></option>
+            <option value="<%= score[0] %>"><%= score[1] %> Rework</option>
           <% end %>
         <% end %>
         </select>
