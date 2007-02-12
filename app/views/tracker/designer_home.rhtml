@@ -7,11 +7,7 @@
 <% @title = "PCB Design Board/Data Tracker" %>
 <%# debug @session %>
 
-<table width="100%"
-       border="0"
-       cellspacing="2"
-       align="center"
-       rules="cols">
+<table width="100%" border="0" cellspacing="2" align="center" rules="cols">
   <tr>
     <td width="155" valign="top">
       <table align="center" rules="rows" cellpadding="5" border="0">
@@ -61,7 +57,7 @@
                   </th>
                 </tr>
 
-               <% if @design_list.size > 0 %>
+               <% if @designs.size > 0 %>
                   <tr>
                     <td align="left" width="60">
                       <font size="-2"><b>Criticality</b></font>
@@ -76,21 +72,18 @@
                   </tr>
                 <% end %>
                 
-                <% for design in @design_list %>
-                  <% next if (design[:next_review] != nil &&
-                              design[:next_review].review_type.name == "Pre-Artwork" && 
-                              design[:next_review].designer_id != @session[:user].id )%>
+                <% @designs.each do |design| %>
                   <tr>
                     <td align="center"
                         valign="top">
-                      <b><%= design[:design].priority_name %></b>
+                      <b><%= design.priority_name %></b>
                     </td>
                     <td class="teraheader">
                       <font color="#ffffff">
-                        <b><%= design[:design].name %> - 
-                        <%= design[:design].board.platform.name %> / 
-                        <%= design[:design].board.project.name %> /
-                        <%= design[:design].board.description %></b>
+                        <b><%= design.name %> - 
+                        <%= design.board.platform.name %> / 
+                        <%= design.board.project.name %> /
+                        <%= design.board.description %></b>
                       </font>
                     </td>
                   </tr>
@@ -98,7 +91,7 @@
                     <td>&nbsp;</td>
                     <td>
                       <table width="95%" align="right" border="0">
-                        <% if design[:reviews].size > 0 %>
+                        <% if design.design_reviews.size > 0 %>
                           <tr>
                             <td bgcolor="#ffffff">&nbsp;</td>
                             <td><font size="-2"><b>Posted</b></font></td>
@@ -109,22 +102,22 @@
                           </tr>
                         <% end %>
 
-                        <% for review in design[:reviews] %>
+                        <% design[:design_reviews].each do |review| %>
                           <tr>
                             <td>
-                              <%= link_to(review[:review].review_name,
+                              <%= link_to(review.review_name,
                                           { :controller => 'design_review',
                                             :action     => 'view',
-                                            :id         => review[:review].id }) %>
+                                            :id         => review.id }) %>
                             </td>
                             <td>
                               <font size="-1">
-                                <b><%= review[:review].created_on.strftime("%d-%b-%y") %></b>
+                                <b><%= review.created_on.strftime("%d-%b-%y") %></b>
                               </font>
                             </td>
                             <td>
                               <font size="-1">
-                                <b><%= review[:review].review_status.name %></b>
+                                <b><%= review.review_status.name %></b>
                               </font>
                             </td>
                             <td>
@@ -141,7 +134,7 @@
                               <td>
                                 <font size="-1">
 
-                                  <b><%= review[:review].completed_on.strftime("%d-%b-%y") %></b>
+                                  <b><%= review.completed_on.strftime("%d-%b-%y") %></b>
                                 </font>
                               </td>
                             <% else %>
@@ -150,26 +143,27 @@
                           </tr>
                         <% end %>
 
-                        <% if design[:next_review] && design[:next_review].review_locked? %>
+                        <% if final_review_locked?(design) %>
                           <tr bgcolor="#dfdfdf">
                             <td colspan="7">
                               Final Review can not be posted until the audit and all work assignments are complete.
                             </td>
                           </tr>
-
-                        <% elsif design[:next_review] && review[:review].post_review?(design[:next_review], session[:user]) %>
+                       
+                        <% elsif post_next_review_prompt?(design) %>
 
                           <tr bgcolor="#dfdfdf">
                             <td colspan="6">
                               <table width="100%" border="0">
                                 <tr>
                                   <td width="50%" align="left">
+
                                     <%= link_to('POST ' +
                                                 design[:next_review].review_type.name +
                                                 ' Review',
                                                 { :controller     => 'design_review',
                                                   :action         => 'posting_filter',
-                                                  :design_id      => design[:design].id,
+                                                  :design_id      => design.id,
                                                   :review_type_id => design[:next_review].review_type.id }) %>
                                   </td>
                                   <td width="50%" align="left">
@@ -178,7 +172,7 @@
                                                 ' Review',
                                                 { :controller     => 'design_review',
                                                   :action         => 'skip_review',
-                                                  :design_id      => design[:design].id,
+                                                  :design_id      => design.id,
                                                   :review_type_id => design[:next_review].review_type.id },
                                                 { :confirm => "This will cause the " +
                                                               design[:next_review].review_type.name +
@@ -195,7 +189,7 @@
                       <tr>
                         <td colspan="6">
                           <table width="100%" border="0">
-                            <% if design[:audit].skip? %>
+                            <% if design.audit.skip? %>
                               <tr>
                                 <td colspan="4">  
                                   <b>Design Audit Skipped</b>
@@ -216,18 +210,18 @@
                               </tr>
                               <tr>
                                 <td>
-                                  <% if design[:audit].auditor_complete? %>
+                                  <% if design.audit.auditor_complete? %>
                                     <%= link_to("Design Audit",
                                                 { :controller => 'audit',
                                                   :action     => 'print',
-                                                  :id         =>  design[:audit].id},
-                                                 :title => "Access to the completed #{design[:design].name} Peer Audit Review") %>
-                                  <% elsif design[:design].phase.name != 'Pre_Artwork' %>
+                                                  :id         =>  design.audit.id},
+                                                 :title => "Access to the completed #{design.name} Peer Audit Review") %>
+                                  <% elsif design.phase.name != 'Pre_Artwork' %>
                                     <%= link_to("Design Audit",
                                                 { :controller => 'audit',
                                                   :action     => 'show_sections',
-                                                  :id         =>  design[:audit].id},
-                                                 :title => "Access to the #{design[:design].name} Peer Audit Review")  %>
+                                                  :id         =>  design.audit.id},
+                                                 :title => "Access to the #{design.name} Peer Audit Review")  %>
                                   <% end %>
                                 </td>
                                 <td align="center">
@@ -235,11 +229,7 @@
                                                  design[:percent_complete]) %></b>
                                 </td>
                                 <td>
-                                  <% if design[:design].peer_id > 0 %>
-                                    <b><%= User.find(design[:design].peer_id).name %></b>
-                                  <% else %>
-                                    <b>Not Set</b>
-                                  <% end %>
+                                  <b><%= design.peer.name %></b>
                                 </td>
                                 <td align="center">
                                   <b><%= sprintf("%4.1f",
@@ -252,34 +242,33 @@
                                 <table border="0" width="100%">
                                   <tr>
                                     <td width="33%" align="left">
-                                      <input type="button" value='<%= "#{design[:design].name} In-Process Dialogue" %>'
+                                      <input type="button" value='<%= "#{design.name} In-Process Dialogue" %>'
                                              title="Initiate and discuss all in-process changes."
                                              onClick="parent.location='<%= url_for(:controller => 'ipd_post',
                                                                                    :action     => 'list',
-                                                                                   :design_id  => design[:design].id) %>'"
+                                                                                   :design_id  => design.id) %>'"
                                              class="small_font_wide_button" />
                                     </td>
                                     <td width="34%" align="center">
                                     <% if session[:user].has_access?(['Designer']) && session[:user].employee? %>
 
-                                      <input type="button" value='<%= "#{design[:design].name} Outsource Instructions" %>'
+                                      <input type="button" value='<%= "#{design.name} Outsource Instructions" %>'
                                              title="Create/View/Update Instructions to low cost regions"
                                              onClick="parent.location='<%= url_for(:controller => 'oi_instruction',
                                                                                    :action     => 'oi_category_selection',
-                                                                                   :design_id  => design[:design].id) %>'"
+                                                                                   :design_id  => design.id) %>'"
                                              class="small_font_wide_button" />
                                     <% else %>
                                       &nbsp;
                                     <% end %>
                                     </td>
                                     <td width="33%" align="right">
-                                      <% if !design[:audit].is_complete? && 
-                                            !design[:audit].skip? %>
-                                      <input type="button" value='<%= "#{design[:design].name} Audit Assignments" %>'
+                                      <% if !(design.audit.is_complete? || design.audit.skip?) %>
+                                      <input type="button" value='<%= "#{design.name} Audit Assignments" %>'
                                              title="Set the assignments for self and peer audits."
                                              onClick="parent.location='<%= url_for(:controller => 'audit',
                                                                                    :action     => 'auditor_list',
-                                                                                   :id         => design[:audit].id,
+                                                                                   :id         => design.audit.id,
                                                                                    :return_to  => { :controller => 'tracker',
                                                                                                     :action     => 'index' }) %>'"
                                              class="small_font_wide_button" />
