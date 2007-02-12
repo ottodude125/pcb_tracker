@@ -39,7 +39,7 @@
 </table>
 
 
-<table width="100%" border="0">
+<table width="100%" border="4">
 
   <tr>
     <td colspan="3" align="center" class="teraheader"><%= @category.name %> Steps</td>
@@ -48,15 +48,32 @@
   <% @sections.each do |section| %>
   
     <tr valign="top">
-      <td width="20">
-        <% if section_assigned?(@design.oi_instructions, section.id) %>
-          <%= check_box('section', section.id, { 'disabled' => 'disabled' }) %>
-        <% elsif !@section_selection || @section_selection[section.id.to_s] == "0" %>
-          <%= check_box('section', section.id) %>
-        <% else %>
-          <%= check_box('section', section.id, { 'checked' => 'checked' }) %>
-        <% end %>
+      <td width="45">&nbsp;</td>
+      <td>
+        <table width="100%" cellspacing="0" border="3">
+          <tr bgcolor='gray'>
+            <td width="30">
+              <% if section_assigned?(@design.oi_instructions, 
+                                      section.id) %>
+                <%= check_box('section', 
+                              section.id,
+                              { 'disabled' => 'disabled' }) %>
+              <% elsif !@section_selection || 
+                       @section_selection[section.id.to_s] == "0" %>
+                <%= check_box('section', section.id) %>
+              <% else %>
+                <%= check_box('section',
+                    section.id,
+                    { 'checked' => 'checked' }) %>
+              <% end %>
+            </td>
+            <th align="left">Select Task</th>
+          </tr>
+        </table>
       </td>
+    </tr>
+    <tr valign="top">
+      <th>Task:</th>
       <td>
         <table>
           <tr><td><%= section.name %></td></tr>
