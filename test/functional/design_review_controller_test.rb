@@ -1299,6 +1299,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #
   def test_get_attachment
 
+    post(:get_attachment)
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    assert_equal('Can not retrieve the attachment without an ID', flash['notice'])
     #post(:get_attachment, 
     #     :id => documents(:mx234a_stackup_document).id)
          
