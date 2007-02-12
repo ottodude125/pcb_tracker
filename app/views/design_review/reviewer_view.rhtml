@@ -4,11 +4,12 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% @title = "#{@design_review.review_name} Review::#{@design_review.design.name} - #{@design_review.design.board.platform.name} / #{@design_review.design.board.project.name}" %>
+<% @heading = "#{@design_review.review_name} Review::#{@design_review.design.name} - #{@design_review.design.board.platform.name} / #{@design_review.design.board.project.name}" %>
 
 <%= start_form_tag(:action => 'reviewer_results') %>
 <% submit_button = "Submit Comments" %>
 
+  <%= render_partial("design_review_nav") %>
   <hr class="div" />
 
   <%= hidden_field "design_review", "id" %>
