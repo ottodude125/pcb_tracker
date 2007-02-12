@@ -237,6 +237,11 @@ a:hover { color: #fff; background-color:#000; }
 .subheading {
   font-size: 12px;
 }
+.smallheading {
+  font-size:   10px;
+  font-weight: bold;
+  margin:      0px;
+}
 
 .notice { 
     color: red;
