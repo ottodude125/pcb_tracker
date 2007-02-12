@@ -39,8 +39,8 @@
           <% if @outline_drawing %>
             <%= link_to(@outline_drawing .document.name,
                         :controller => "design_review",
-	                      :action     => "get_attachment",
-		                    :id         => @outline_drawing.document.id) %>
+	                    :action     => "get_attachment",
+		                :id         => @outline_drawing.document.id) %>
           <% else %>
           No Outline Drawing attached
           <% end %>
@@ -92,11 +92,39 @@
       </td>
     </tr>
     
+    <tr><td width="100%" colspan="2"><hr class="div" /></td></tr>
+    
+    <tr>
+      <td>&nbsp;</td>
+      <td>
+        <table width="100%" border="0">
+          <tr>
+            <th align="left" width="125">Task Complexity:</th>
+            <td>
+              <select id='complexity_<%= step.id %>_id' name='complexity_<%= step.id %>[id]'>
+                <% OiAssignment.complexity_list().reverse.each do |complexity| %>
+                  <% if @step_complexities && 
+                        @step_complexities[step.id][1] == complexity[1] %>
+                    <option selected="selected" value="<%= complexity[1] %>"><%= complexity[0] %></option>
+                  <% else %>
+                    <option value="<%= complexity[1] %>"><%= complexity[0] %></option>
+                  <% end %>
+                <% end %>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    
+    <tr><td width="100%" colspan="2"><hr class="div" /></td></tr>
+    
     <tr>
       <td>&nbsp;</td>
       <td bgcolor="#efefef"><%= fmt_team_members(@team_members, 
                                                  step.id,
-                                                 flash[:team_members]) %></td>
+                                                 flash[:team_members],
+                                                 "Offshore Designers") %></td>
     </tr>
     
   </table>
@@ -122,4 +150,8 @@
 
 <%= end_form_tag %>
 
-<%# debug flash %>
+<%# debug flash[:step_complexities] %>
+<%# debug @step_complexities.class %>
+<%# debug @step_complexities %>
+<%# debug @step_instructions.class %>
+<%# debug @step_instructions.inspect %>
