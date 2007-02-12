@@ -38,6 +38,15 @@
       <%= @assignment.user.name %>
     </td>
   </tr>
+  
+  <tr valign="top">
+    <th class="teraheader" align="right">Task Complexity:</th>
+    <% line += 1 %>
+    <%= start_td(line) %>
+      <%= OiAssignment.complexity_name(@assignment.complexity_id) %>
+    </td>
+  </tr>
+  
   <% end %>
   
   <tr valign="top">
