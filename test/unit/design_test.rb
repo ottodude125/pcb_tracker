@@ -16,6 +16,7 @@ require File.dirname(__FILE__) + '/../test_helper'
 class DesignTest < Test::Unit::TestCase
   fixtures(:designs,
            :priorities,
+           :review_types,
            :users)
 
   def setup
@@ -274,6 +275,128 @@ class DesignTest < Test::Unit::TestCase
    assert(design.belongs_to(check_all))
    assert(!design.belongs_to(check_nothing))
  
+ end
+ 
+ 
+ ######################################################################
+ def test_increment_review
+ 
+  # Verify a design where no reviews are skipped.
+  mx234a = designs(:mx234a)
+  assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
+  mx234a.increment_review
+  mx234a.reload
+  assert_equal(review_types(:placement).id,   mx234a.phase_id)
+  mx234a.increment_review
+  mx234a.reload
+  assert_equal(review_types(:routing).id,     mx234a.phase_id)
+  mx234a.increment_review
+  mx234a.reload
+  assert_equal(review_types(:final).id,       mx234a.phase_id)
+  mx234a.increment_review
+  mx234a.reload
+  assert_equal(review_types(:release).id,     mx234a.phase_id)
+  mx234a.increment_review
+  mx234a.reload
+  assert_equal(Design::COMPLETE,              mx234a.phase_id)
+  
+  # Reset and try with the Placement and Routing reviews set to skipped.
+  mx234a.phase_id  = review_types(:pre_artwork).id
+  review_skipped   = ReviewStatus.find_by_name("Review Skipped")
+  placement_review = mx234a.design_reviews.detect { |dr| dr.review_type_id == review_types(:placement).id }
+  routing_review   = mx234a.design_reviews.detect { |dr| dr.review_type_id == review_types(:routing).id }
+  placement_review.review_status = review_skipped
+  placement_review.update
+  routing_review.review_status = review_skipped
+  routing_review.update
+  
+  assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
+  mx234a.increment_review
+  mx234a.reload
+  assert_equal(review_types(:final).id,       mx234a.phase_id)
+  mx234a.increment_review
+  mx234a.reload
+  assert_equal(review_types(:release).id,     mx234a.phase_id)
+  mx234a.increment_review
+  mx234a.reload
+  assert_equal(Design::COMPLETE,              mx234a.phase_id)
+
+  # Reset and try with all of the reviews set to skipped.
+  mx234a.phase_id  = review_types(:pre_artwork).id
+  mx234a.design_reviews.each do |dr|
+    dr.review_status = review_skipped
+    dr.update
+  end
+  
+  assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
+  mx234a.increment_review
+  mx234a.reload
+  assert_equal(Design::COMPLETE,              mx234a.phase_id)
+
+ end
+ 
+ 
+ ######################################################################
+ def test_next_review
+ 
+  # Verify a design where no reviews are skipped.
+  mx234a = designs(:mx234a)
+  assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
+  
+  next_review_id = mx234a.next_review
+  assert_equal(review_types(:placement).id,   next_review_id)
+  mx234a.phase_id = next_review_id
+
+  next_review_id  = mx234a.next_review
+  assert_equal(review_types(:routing).id,     next_review_id)
+  mx234a.phase_id = next_review_id
+  
+  next_review_id  = mx234a.next_review
+  assert_equal(review_types(:final).id,       next_review_id)
+  mx234a.phase_id = next_review_id
+  
+  next_review_id  = mx234a.next_review
+  assert_equal(review_types(:release).id,     next_review_id)
+  mx234a.phase_id = next_review_id
+  
+  next_review_id  = mx234a.next_review
+  assert_equal(Design::COMPLETE,              next_review_id)
+  
+  # Reset and try with the Placement and Routing reviews set to skipped.
+  mx234a.phase_id  = review_types(:pre_artwork).id
+  review_skipped   = ReviewStatus.find_by_name("Review Skipped")
+  placement_review = mx234a.design_reviews.detect { |dr| dr.review_type_id == review_types(:placement).id }
+  routing_review   = mx234a.design_reviews.detect { |dr| dr.review_type_id == review_types(:routing).id }
+  placement_review.review_status = review_skipped
+  placement_review.update
+  routing_review.review_status = review_skipped
+  routing_review.update
+  
+  assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
+  
+  next_review_id = mx234a.next_review
+  assert_equal(review_types(:final).id,       next_review_id)
+  mx234a.phase_id = next_review_id
+  
+  next_review_id = mx234a.next_review
+  assert_equal(review_types(:release).id,     next_review_id)
+  mx234a.phase_id = next_review_id
+  
+  next_review_id = mx234a.next_review
+  assert_equal(Design::COMPLETE,              next_review_id)
+
+  # Reset and try with all of the reviews set to skipped.
+  mx234a.phase_id  = review_types(:pre_artwork).id
+  mx234a.design_reviews.each do |dr|
+    dr.review_status = review_skipped
+    dr.update
+  end
+  
+  assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
+  
+  next_review_id = mx234a.next_review
+  assert_equal(Design::COMPLETE,              next_review_id)
+
  end
   
 
