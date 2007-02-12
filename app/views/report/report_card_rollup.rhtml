@@ -116,26 +116,13 @@
           <th class="keytitle">Score</th>
           <th class="keytitle">Percentage of Rework</th>
         </tr>
-        <tr>
-          <th class="keyscore">1</th>
-          <td class="keyvalue">90% - 100%</td>
-        </tr>
-        <tr>
-          <th class="keyscore">2</th>
-          <td class="keyvalue">64% - 89%</td>
-        </tr>
-        <tr>
-          <th class="keyscore">3</th>
-          <td class="keyvalue">34% - 63%</td>
-        </tr>
-        <tr>
-          <th class="keyscore">4</th>
-          <td class="keyvalue">11% - 33%</td>
-        </tr>
-        <tr>
-          <th class="keyscore">5</th>
-          <td class="keyvalue">0% - 10%</td>
-        </tr>
+        
+        <% OiAssignmentReport.report_card_scoring.each do |score| %>
+          <tr>
+            <th class="keyscore"><%= score[0] %></th>
+            <td class="keyvalue"><%= score[1] %></td>
+          </tr>
+        <% end %>
       </table>
     </td>
   </tr>
@@ -152,16 +139,19 @@
   <tr valign="top">
     <th class="teraheader" width="220" align="right">Distribution: </th>
     <td width="220" align="left">
+    <% min_score = OiAssignmentReport.min_score %>
+    <% max_score = OiAssignmentReport.max_score %>
+
       <table border="0">
         <tr>
           <th>Score: </th>
-          <% 1.upto(5) do |score| %>
+          <% min_score.upto(max_score) do |score| %>
             <td align='center' width="50"><%= score %></td>
           <% end %>
         </tr>
         <tr>
           <th>Count: </th>
-          <% 1.upto(5) do |score| %>
+          <% min_score.upto(max_score) do |score| %>
             <td align='center' width="50"><%= @score_distribution[score]  %></td>
           <% end %>
         </tr>
