@@ -84,18 +84,9 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     # Verify that a contractor PCB Designer can access the list.
     set_user(users(:siva_e).id, 'Designer')
     post(:oi_category_selection, :design_id => mx234a.id)
-    
-    assert_response(:success)
-    assert_not_nil(assigns(:design))
-    assert_equal(mx234a.id, assigns(:design).id)
-    assert_equal('mx234a',  assigns(:design).name)
-    
-    assert_not_nil(assigns(:oi_category_list))
-    oi_category_list = assigns(:oi_category_list)
-    assert_equal(categories.size, oi_category_list.size)
-    categories.each_index do |i| 
-      assert_equal(categories[i], oi_category_list[i].name) 
-    end
+
+    assert_redirected_to(:controller => 'tracker', :action     => 'index')
+    assert_equal("You are not authorized to access this page", flash['notice'])
 
   end
   
@@ -408,12 +399,15 @@ class OiInstructionControllerTest < Test::Unit::TestCase
          :category             => { :id => board_prep.id },
          :design               => { :id => mx234a.id },
          :allegro_board_symbol => { :name => 'ABS-1234' },
-         :team_member_5004_1   => { :selected => '0'},
-         :team_member_5005_1   => { :selected => '0'},
-         :team_member_5004_2   => { :selected => '0'},
-         :team_member_5005_2   => { :selected => '0'},
-         :team_member_5004_3   => { :selected => '0'},
-         :team_member_5005_3   => { :selected => '0'})
+         :team_member_5004_1   => { :selected => '0' },
+         :team_member_5005_1   => { :selected => '0' },
+         :team_member_5004_2   => { :selected => '0' },
+         :team_member_5005_2   => { :selected => '0' },
+         :team_member_5004_3   => { :selected => '0' },
+         :team_member_5005_3   => { :selected => '0' },
+         :complexity_1         => { :id => 1 },
+         :complexity_2         => { :id => 2 },
+         :complexity_3         => { :id => 3 })
     
     assert_redirected_to(:action      => 'process_assignments',
                          :design_id   => mx234a.id,
@@ -432,7 +426,10 @@ class OiInstructionControllerTest < Test::Unit::TestCase
          :team_member_5004_2   => { :selected => '0'},
          :team_member_5005_2   => { :selected => '0'},
          :team_member_5004_3   => { :selected => '0'},
-         :team_member_5005_3   => { :selected => '0'})
+         :team_member_5005_3   => { :selected => '0'},
+         :complexity_1         => { :id => 1 },
+         :complexity_2         => { :id => 2 },
+         :complexity_3         => { :id => 3 })
     
     assert_redirected_to(:action      => 'process_assignments',
                          :design_id   => mx234a.id,
@@ -462,19 +459,26 @@ class OiInstructionControllerTest < Test::Unit::TestCase
          :team_member_5005_2   => { :selected => '1'},
          :team_member_5004_3   => { :selected => '1'},
          :team_member_5005_3   => { :selected => '1'},
+         :complexity_1         => { :id => 1 },
+         :complexity_2         => { :id => 2 },
+         :complexity_3         => { :id => 3 },
          :step_instructions_1  => "Step 1 Instructions",
          :step_instructions_2  => "Step 2 Instructions",
          :step_instructions_3  => "Step 3 Instructions")
          
     expected_results = {
       1 => [{ :user_id           => 5004,
-              :step_instructions => "Step 1 Instructions" }],
+              :step_instructions => "Step 1 Instructions",
+              :complexity_id     => 1 }],
       2 => [{ :user_id           => 5005,
-              :step_instructions => "Step 2 Instructions" }],
+              :step_instructions => "Step 2 Instructions",
+              :complexity_id     => 2 }],
       3 => [{ :user_id           => 5004,
-              :step_instructions => "Step 3 Instructions" },
+              :step_instructions => "Step 3 Instructions",
+              :complexity_id     => 3 },
             { :user_id           => 5005,
-              :step_instructions => "Step 3 Instructions" }]
+              :step_instructions => "Step 3 Instructions",
+              :complexity_id     => 3 }]
     }
 
     # Verify the response.
@@ -501,7 +505,8 @@ class OiInstructionControllerTest < Test::Unit::TestCase
           index += 1
 
           assert_equal(i.id, a.oi_instruction_id)
-          assert_equal(expected_assignment[:user_id], a.user_id)
+          assert_equal(expected_assignment[:user_id],       a.user_id)
+          assert_equal(expected_assignment[:complexity_id], a.complexity_id)
           
           a.oi_assignment_comments.each do |ac|
             assert_equal(a.id,               ac.oi_assignment_id)
