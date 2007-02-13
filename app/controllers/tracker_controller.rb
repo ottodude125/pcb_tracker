@@ -180,9 +180,10 @@ class TrackerController < ApplicationController
       get_active_reviews.sort_by { |dr| [dr.priority.value, dr.age] }
     @design_reviews.reverse! if @params[:order] == 'DESC'
 
+    @submissions = BoardDesignEntry.count("state='submitted'")
     @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_list_by_priority',
-                            :order      => @params[:order]}
+                            :action => 'manager_list_by_priority',
+                            :order  => @params[:order]}
     render_action 'manager_home'
 
   end  
@@ -210,6 +211,7 @@ class TrackerController < ApplicationController
       @design_reviews = get_active_reviews.sort_by { |dr| dr.design.name }
       @design_reviews.reverse! if @params[:order] == 'DESC'
     
+      @submissions = BoardDesignEntry.count("state='submitted'")
       @session[:return_to] = {:controller => 'tracker',
                               :action     => 'manager_list_by_design',
                               :order      => @params[:order]}
@@ -242,6 +244,7 @@ class TrackerController < ApplicationController
       get_active_reviews.sort_by { |dr| [dr.review_type.name, dr.age] }
     @design_reviews.reverse! if @params[:order] == 'DESC'
     
+    @submissions = BoardDesignEntry.count("state='submitted'")
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'manager_list_by_type',
                             :order      => @params[:order]}
@@ -273,6 +276,7 @@ class TrackerController < ApplicationController
       get_active_reviews.sort_by { |dr| [dr.designer.last_name, dr.age] }
     @design_reviews.reverse! if @params[:order] == 'DESC'
     
+    @submissions = BoardDesignEntry.count("state='submitted'")
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'manager_list_by_designer',
                             :order      => @params[:order]}
@@ -304,6 +308,7 @@ class TrackerController < ApplicationController
       get_active_reviews.sort_by { |dr| [dr.design.peer.last_name, dr.age] }
     @design_reviews.reverse! if @params[:order] == 'DESC'
     
+    @submissions = BoardDesignEntry.count("state='submitted'")
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'manager_list_by_peer',
                             :order      => @params[:order]}
@@ -335,6 +340,7 @@ class TrackerController < ApplicationController
       get_active_reviews.sort_by { |dr| [dr.age, dr.priority.value] }
     @design_reviews.reverse! if @params[:order] == 'DESC'
     
+    @submissions = BoardDesignEntry.count("state='submitted'")
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'manager_list_by_age',
                             :order      => @params[:order]}
@@ -367,6 +373,7 @@ class TrackerController < ApplicationController
       get_active_reviews.sort_by { |dr| [dr.review_status.name, dr.age] }
     @design_reviews.reverse! if @params[:order] == 'DESC'
     
+    @submissions = BoardDesignEntry.count("state='submitted'")
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'manager_list_by_date',
                             :order      => @params[:order]}
@@ -419,7 +426,7 @@ class TrackerController < ApplicationController
   #
   def pcb_admin_home_setup
   
-    @designer = Hash.new
+    @designer = {}
 
     release_review = ReviewType.find_by_name('Release')
     designs = Design.find_all_by_phase_id(release_review.id,
@@ -427,21 +434,20 @@ class TrackerController < ApplicationController
 
     designs = designs.sort_by { |dr| dr.priority.value }
         
-    @design_list = Array.new
-    for design in designs
+    @design_list = []
+    designs.each do |design|
       
-      design_summary = Hash.new
-      design_summary[:design] = design
+      design_summary = {:design => design}
 
       design_reviews = DesignReview.find_all("design_id='#{design.id}'")
       reviews = design_reviews.sort_by{ |r| r.review_type.sort_order }
 
       # Go through the reviews until the first review that has not been
       # started is found.
-      review_list = Array.new
+      review_list = []
 	    reviews_started = 0
 
-      for review in reviews
+      reviews.each do |review|
 
         next_review = review
         
@@ -450,8 +456,7 @@ class TrackerController < ApplicationController
         
         reviews_started += 1
 
-        review_rec = Hash.new
-        review_rec[:review]    = review
+        review_rec = {:review => review}
         review_results = DesignReviewResult.find_all("design_review_id='#{review.id}'")
         review_rec[:reviewers] = review_results.size
         review_results.delete_if { |dr| dr.result != 'APPROVED' && dr.result != 'WAIVED' }
@@ -503,76 +508,43 @@ class TrackerController < ApplicationController
   #
   def designer_home_setup
 
-    @designer = Hash.new
-
-    designs = Design.find_all_by_designer_id(@session[:user].id,
-                                             'created_on ASC')
     pre_art_phase_id = ReviewType.find_by_name('Pre-Artwork').id
-    designs += Design.find_all_by_pcb_input_id_and_phase_id(@session[:user].id,
-                                                             pre_art_phase_id,
-                                                             'created_on ASC')
-    designs = designs.uniq
-    designs.delete_if { |design| design.phase_id == Design::COMPLETE}
 
-    designs = designs.sort_by { |dr| dr.priority.value }
-    designs.reverse!
+    designs  = Design.find_all("designer_id='#{session[:user].id}' AND phase_id!='#{Design::COMPLETE}' AND phase_id!='#{pre_art_phase_id}'",
+                               'created_on ASC') +
+               Design.find_all("pcb_input_id='#{session[:user].id}' AND phase_id='#{pre_art_phase_id}'",
+                               'created_on ASC')
+    @designs = designs.uniq.sort_by { |dr| dr.priority.value }
         
-    @design_list      = []
-    for design in designs 
+    @designs.each do |design|
 
-      design_summary = Hash.new
-      design_summary[:design] = design
-
-      design_reviews = design.design_reviews
-      reviews = design_reviews.sort_by{ |r| r.review_type.sort_order }
+      current_phase           = ReviewType.find(design.phase_id)
+      design[:next_review]    = design.design_reviews.detect{ |dr| dr.review_type_id == design.phase_id}
+      design.design_reviews.delete_if do |dr| 
+        (dr.review_status.name == "Not Started" || 
+         dr.review_type.sort_order > current_phase.sort_order)
+      end
+      design[:design_reviews] = design.design_reviews.sort_by{ |dr| dr.review_type.sort_order }
 
       # Go through the reviews until the first review that has not been
       # started is found.
-      review_list = Array.new
-	    reviews_started = 0
-
-      for review in reviews
-
-        next_review = review
-        
-        break if review.review_status.name == 'Not Started'
-        last_status = review.review_status.name
-        
-        reviews_started += 1
-
-        review_rec = Hash.new
-        review_rec[:review]    = review
-        review_results = DesignReviewResult.find_all("design_review_id='#{review.id}'")
-        review_rec[:reviewers] = review_results.size
+      design.design_reviews.each do |design_review|
+        review_results            = design_review.design_review_results
+        design_review[:reviewers] = review_results.size
         review_results.delete_if { |dr| dr.result != 'APPROVED' && dr.result != 'WAIVED' }
-        review_rec[:approvals] = review_results.size
-        review_list.push(review_rec)
-
+        design_review[:approvals] = review_results.size
       end
 
-      design_summary[:reviews]     = review_list
 
-	    if reviews_started == 0
-	      design_summary[:next_review] = reviews[0]
-	    elsif reviews.size == review_list.size
-          design_summary[:next_review] = nil
-	    elsif next_review && next_review.review_status.name == "Not Started"
-	      design_summary[:next_review] = next_review
-      else
-	      design_summary[:next_review] = nil
-	    end
-
-      audit = Audit.find_all("design_id='#{design.id}'").pop
-      design_summary[:audit] = audit
+      audit = design.audit
 
       num_checks = audit.check_count
 	
-      design_summary[:percent_complete]      = 
+      design[:percent_complete]      = 
         audit.designer_completed_checks * 100.0 / num_checks[:designer]
-      design_summary[:peer_percent_complete] = 
+      design[:peer_percent_complete] = 
         audit.auditor_completed_checks * 100.0 / num_checks[:peer]
 
-      @design_list.push(design_summary)
     end
 
     audits = {}
@@ -667,7 +639,7 @@ class TrackerController < ApplicationController
       design_reviews += DesignReview.find_all_by_review_status_id(review_status_id)
     end
 
-    design_reviews = design_reviews.sort_by { |dr| dr.priority.value }
+    design_reviews = design_reviews.sort_by { |dr| [dr.priority.value, (10000 - dr.age)] }
 
     @my_reviews    = []
     @other_reviews = []
@@ -729,36 +701,50 @@ class TrackerController < ApplicationController
     @design_reviews = get_active_reviews
     @design_reviews = @design_reviews.sort_by { |dr| [dr.priority.value, dr.age] }
 
+    @submissions = BoardDesignEntry.count("state='submitted'")
     @session[:return_to] = {:controller => 'tracker',
                             :action     => 'index'}
+    
   end
  
   
-  def get_design_reviews
-   in_process = ReviewStatus.find_by_name('In Review')
-   design_reviews = DesignReview.find_all("review_status_id=#{in_process.id}",
-                                           'created_on ASC')
-    for design_review in design_reviews
-      begin
-        design_review[:priority_name] = design_review.priority.name
-      rescue
-        design_review[:priority_name] = "Unset"
-      end
-      
-      design_review[:reviewers] = 
-        DesignReviewResult.find_all("design_review_id='#{design_review.id}'").size
-      design_review[:approvals] = DesignReviewResult.find_all("design_review_id='#{design_review.id}' and result='#{DesignReviewResult::APPROVED}'").size
-    end
-    return design_reviews
-  end
+#  def get_design_reviews
+#   in_process = ReviewStatus.find_by_name('In Review')
+#   design_reviews = DesignReview.find_all("review_status_id=#{in_process.id}",
+#                                           'created_on ASC')
+#    for design_review in design_reviews
+#      begin
+#        design_review[:priority_name] = design_review.priority.name
+#      rescue
+#        design_review[:priority_name] = "Unset"
+#      end
+#      
+#      design_review[:reviewers] = 
+#        DesignReviewResult.find_all("design_review_id='#{design_review.id}'").size
+#      design_review[:approvals] = DesignReviewResult.find_all("design_review_id='#{design_review.id}' and result='#{DesignReviewResult::APPROVED}'").size
+#    end
+#    return design_reviews
+#  end
   
   
+  ######################################################################
+  #
+  # get_active_reviews
+  #
+  # Description:
+  # This method retrieves all of the active design reviews.
+  #
+  # Parameters from @params
+  # None
+  #
+  ######################################################################
+  #
   def get_active_reviews
   
     design_reviews = []
-    designs          = Design.find_all("phase_id!=#{Design::COMPLETE}")
-    
-    for design in designs
+    designs        = Design.find_all("phase_id!=#{Design::COMPLETE}")
+
+    designs.each do |design|
     
       next if design.phase_id == 0
     
