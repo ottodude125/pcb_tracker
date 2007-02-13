@@ -12,8 +12,7 @@
 
 class AuditController < ApplicationController
 
-#  before_filter(:verify_admin_role,
-#                :except => [:designer_list]}
+  before_filter(:verify_logged_in, :except => :print)
 
 
   ######################################################################
