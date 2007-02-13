@@ -921,6 +921,11 @@ class DesignReviewController < ApplicationController
               :filename    => @document.name,
               :type        => @document.content_type,
               :disposition => "inline")
+  rescue
+  
+   flash['notice'] = 'Can not retrieve the attachment without an ID'
+   redirect_to(:controller => 'tracker', :action => 'index')
+   
   end
   
   
