@@ -189,7 +189,10 @@ class ReportController < ApplicationController
     
     reviewer_list  = reviewer_list.to_a.sort_by { |e| e[1][:user].last_name }
     @reviewer_list = reviewer_list.collect { |e| e[1] }
-      
+    
+  rescue
+    flash['notice'] = "Error: design review id not found in the database"
+    redirect_to(:controller => 'tracker', :action => 'index') 
   end
   
   
