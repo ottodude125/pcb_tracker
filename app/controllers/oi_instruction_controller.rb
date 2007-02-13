@@ -96,6 +96,7 @@ class OiInstructionController < ApplicationController
 
     flash[:section]   = params[:section] ? params[:section] : flash[:section]
     @instructions          = flash[:step_instructions]
+    @step_complexities     = flash[:step_complexities]
     @selected_team_members = flash[:team_members]
     sections = flash[:section]
 
@@ -119,7 +120,7 @@ class OiInstructionController < ApplicationController
     @design      = Design.find(design_id)
     @category    = OiCategory.find(category_id)
 
-    team_members  = Role.find_by_name('Designer').users.delete_if { |u| u.employee? }
+    team_members  = Role.find_by_name('Designer').users.delete_if { |u| !u.active? || u.employee? }
     @team_members = team_members.sort_by { |u| u.last_name }
 
     sections.each do |id, flag|
@@ -190,6 +191,13 @@ class OiInstructionController < ApplicationController
       step_instructions[key.split('_')[2].to_i] = value
     end
     
+    # Preserve the complexities
+    step_complexities = []
+    params.each do |key, value|
+      next if !(key =~ /\Acomplexity/)
+      step_complexities[key.split('_')[1].to_i] = value
+    end
+    
     missing_allegro_board_symbol = false
     if params[:allegro_board_symbol]
       if params[:allegro_board_symbol][:name] == ''
@@ -231,6 +239,7 @@ class OiInstructionController < ApplicationController
       flash[:allegro_board_symbol] = flash[:allegro_board_symbol]
       flash[:team_members]         = team_members
       flash[:step_instructions]    = step_instructions
+      flash[:step_complexities]    = step_complexities
 
       redirect_to(:action      => 'process_assignments',
                   :category_id => params[:category][:id],
@@ -245,9 +254,10 @@ class OiInstructionController < ApplicationController
       params.each do |key, value|
       
         next if (key == "action" || key== "controller")
-        
+
         team_member      = key.split('team_member_')
         step_instruction = key.split('step_instructions_')
+        complexity       = key.split('complexity_')
         if value[:selected] == '1' && team_member.size > 1
           user_id, section_id = team_member[1].split('_')
           instructions[section_id] = {} if !instructions[section_id]
@@ -256,6 +266,9 @@ class OiInstructionController < ApplicationController
         elsif step_instruction.size > 1
           instructions[step_instruction[1]] = {} if !instructions[step_instruction[1]]
           instructions[step_instruction[1]][:comment] = value
+        elsif complexity.size > 1
+          instructions[complexity[1]] = {} if !instructions[complexity[1]]
+          instructions[complexity[1]][:complexity] = value
         elsif key == 'design'
           design_id = value['id']
         elsif key == 'category'
@@ -285,12 +298,13 @@ class OiInstructionController < ApplicationController
         
           # Add the comments and team members and send the assignment notification.
           if oi_instruction.errors.empty?
-                
+
             value[:member_list].each do |member_id|
               assignment = OiAssignment.new(:oi_instruction_id => oi_instruction.id,
-                                            :user_id           => member_id)
+                                            :user_id           => member_id,
+                                            :complexity_id     => value[:complexity][:id])
               assignment.save
-            
+              
               if value[:comment] != ''
                 OiAssignmentComment.new(:oi_assignment_id => assignment.id,
                                         :user_id          => session[:user].id,
