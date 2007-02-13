@@ -27,4 +27,17 @@ class ReviewType < ActiveRecord::Base
 			    :only_integer => true)
   validates_presence_of   :name
 
+
+  ##############################################################################
+  #
+  # Instance Methods
+  # 
+  ##############################################################################
+
+  
+  def next
+    ReviewType.find_first("active = 1 AND sort_order > '#{self.sort_order}'", "sort_order ASC")
+  end
+
+
 end
