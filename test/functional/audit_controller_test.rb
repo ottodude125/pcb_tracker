@@ -797,10 +797,20 @@ class AuditControllerTest < Test::Unit::TestCase
   #
   def test_show_sections
 
+
     rich_m = users(:rich_m)
-    
     audit_mx234c = audits(:audit_mx234c)
 
+    # Verify that show_sections redirects to the home page if the user is not logged in.
+    get(:show_sections,
+        :id => audit_mx234c.id)
+
+    notice = "#{Pcbtr::PCBTR_BASE_URL}#{@request.parameters[:controller]}/" +
+             "#{@request.parameters[:action]} - unavailable unless logged in."
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    assert_equal(notice, flash['notice'])
+
+    
     user = User.find(rich_m.id)
     @request.session[:user]        = user
     @request.session[:active_role] = Role.find_by_name('Designer')
