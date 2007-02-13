@@ -18,6 +18,86 @@ class OiAssignment < ActiveRecord::Base
   
   belongs_to :oi_instruction
   belongs_to :user
+  
+  
+  ##############################################################################
+  #
+  # Constants
+  # 
+  ##############################################################################
+
+  COMPLEXITY = [ ['High',   1],
+                 ['Medium', 2], 
+                 ['Low',    3] ]
+
+
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+
+  ######################################################################
+  #
+  # complexity_list
+  #
+  # Description:
+  # This method returns the complexity list.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def self.complexity_list
+    COMPLEXITY
+  end
+  
+  
+  ######################################################################
+  #
+  # complexity_id
+  #
+  # Description:
+  # This method returns the id associated with the complexity name.
+  #
+  # Parameters:
+  # name - The complexity name
+  #
+  ######################################################################
+  #
+  def self.complexity_id(name)
+    COMPLEXITY.detect { |c| c[0] == name }[1]
+  rescue
+    0
+  end
+  
+  
+  ######################################################################
+  #
+  # complexity_name
+  #
+  # Description:
+  # This method returns the name associated with the complexity id.
+  #
+  # Parameters:
+  # id - The complexity identifier
+  #
+  ######################################################################
+  #
+  def self.complexity_name(id)
+    COMPLEXITY[id-1][0]
+  rescue
+    "Undefined"
+  end
+  
+  
+  ##############################################################################
+  #
+  # Instance Methods
+  # 
+  ##############################################################################
 
 
   ######################################################################
