@@ -81,6 +81,62 @@ module TrackerHelper
     return my_results
     
   end
+  
+  
+  ######################################################################
+  #
+  # post_next_review_prompt?
+  #
+  # Description:
+  # Returns a flag that indicates that the link to the next review 
+  # in the cycle should be displayed
+  #
+  ######################################################################
+  #
+  def post_next_review_prompt?(design)
+    
+    # Get the design review identified by the phase id
+    next_design_review = design.design_reviews.detect { |dr| design.phase_id == dr.review_type_id }
+    
+    review_states = ['In Review',
+                     'Pending Repost',
+                     'Review Completed',
+                     'Review On-Hold']
+    !next_design_review                                          ||
+    !review_states.detect { |rs| rs == next_design_review.review_status.name }
+     
+  end
+  
+  
+  ######################################################################
+  #
+  # final_review_locked?
+  #
+  # Description:
+  # Returns a flag that indicates that the final review is locked when
+  # TRUE.
+  #
+  ######################################################################
+  #
+  def final_review_locked?(design)
+
+    if design.phase_id != Design::COMPLETE
+
+      phase_review_type = ReviewType.find(design.phase_id)
+
+      if phase_review_type.name != "Final"
+        false
+      else
+        design.reload
+        final_design_review = design.design_reviews.detect { |dr| dr.review_type_id == phase_review_type.id }
+        final_design_review.review_locked?
+      end
+      
+    else
+      false
+    end
+    
+  end
 
 
 end
