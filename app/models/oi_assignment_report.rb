@@ -19,11 +19,12 @@ class OiAssignmentReport < ActiveRecord::Base
 #
 # Constants
 # 
-REPORT_CARD_SCORING_TABLE = [ [ 5,  '0% to 10% Rework'  ],
-                              [ 4, '11% to 33% Rework'  ],
-                              [ 3, '34% to 63% Rework'  ],
-                              [ 2, '64% to 89% Rework'  ],
-                              [ 1, '90% to 100% Rework' ] ]
+REPORT_CARD_SCORING_TABLE = [ [ 5,  '0% Rework' ],
+                              [ 4, 'Approximately 20% Rework' ],
+                              [ 3, 'Approximately 40% Rework' ],
+                              [ 2, 'Approximately 60% Rework' ],
+                              [ 1, 'Approximately 80% Rework' ],
+                              [ 0, '100% Rework'] ]
                               
                               
   ######################################################################
@@ -31,16 +32,50 @@ REPORT_CARD_SCORING_TABLE = [ [ 5,  '0% to 10% Rework'  ],
   # report_card_scoring
   #
   # Description:
-  # This method returns the REPORT_CARD_SCORING_TABLEk.
+  # This method returns the REPORT_CARD_SCORING_TABLE.
   #
   # Parameters:
   # None
   #
   ######################################################################
   #
-def OiAssignmentReport.report_card_scoring
-  REPORT_CARD_SCORING_TABLE
-end
+  def OiAssignmentReport.report_card_scoring
+    REPORT_CARD_SCORING_TABLE
+  end
+
+
+  ######################################################################
+  #
+  # min_score
+  #
+  # Description:
+  # This method returns minimum score in the REPORT_CARD_SCORING_TABLE.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def OiAssignmentReport.min_score
+    REPORT_CARD_SCORING_TABLE.collect { |score| score[0] }.min
+  end
+
+
+  ######################################################################
+  #
+  # max_score
+  #
+  # Description:
+  # This method returns maximum score in the REPORT_CARD_SCORING_TABLE.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def OiAssignmentReport.max_score
+    REPORT_CARD_SCORING_TABLE.collect { |score| score[0] }.max
+  end
 
 
 end
