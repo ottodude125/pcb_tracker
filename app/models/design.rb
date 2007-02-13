@@ -52,7 +52,7 @@ class Design < ActiveRecord::Base
   def work_assignments_complete?
 
     summary = self.work_assignment_data
-    
+  
     ( ( summary[:assignments] == summary[:completed_assignments] ) &&
       ( summary[:assignments] == summary[:report_cards] ) )
  
@@ -484,8 +484,7 @@ class Design < ActiveRecord::Base
   # increment_review
   #
   # Description:
-  # This method sets the phase of the design to the next available 
-  # review.
+  # This method sets the phase of the design to the next review.
   #
   # Parameters:
   # None
@@ -497,25 +496,45 @@ class Design < ActiveRecord::Base
   #
   def increment_review
 
-    review_types = ReviewType.find_all
-    review_types = review_types.sort_by { |rt| rt.sort_order }
-    
+    self.phase_id = self.next_review
+    self.update
+  
+  end
+  
+  
+  ######################################################################
+  #
+  # next_review
+  #
+  # Description:
+  # This method determines the next review in the review cycle.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # The review type id of the next review in the review cycle.
+  #
+  ######################################################################
+  #
+  def next_review
+
     current_review_type = ReviewType.find(self.phase_id)
+    review_types = ReviewType.find_all("active = 1 AND sort_order > '#{current_review_type.sort_order}'", 
+                                       "sort_order ASC")
 
     phase_id   = Design::COMPLETE
     next_review = nil
     review_types.each { |rt|
-      next if rt.sort_order <= current_review_type.sort_order
-      next_review = self.design_reviews.detect { |dr| dr.review_type_id == rt.id }
-      break if next_review.review_status.name != "Review Skipped"
+      next_review = self.design_reviews.detect { |dr| dr.review_type.id == rt.id }
+      break if !next_review || next_review.review_status.name != "Review Skipped"
     }
 
     if next_review && next_review.review_status.name != "Review Skipped"
       phase_id = next_review.review_type_id
-    end
+    end 
     
-    self.phase_id = phase_id
-    self.update
+    phase_id 
   
   end
   
@@ -626,55 +645,6 @@ class Design < ActiveRecord::Base
   
   end
   
-  
-  def dump_design
-  
-    review   = ReviewType.find(self.phase_id)
-    priority = Priority.find(self.priority_id)
-    designer = User.find(self.designer_id)  if self.designer_id  > 0
-    peer     = User.find(self.peer_id)      if self.peer_id      > 0
-    ig       = User.find(self.pcb_input_id) if self.pcb_input_id > 0
-    creator  = User.find(self.created_by)   if self.created_by   > 0
-    
-    logger.info "************************* DESIGN *************************"
-    logger.info "NAME: #{self.name}"
-    logger.info "TYPE: #{self.design_type}"
-    logger.info "ID: #{self.id}"
-    logger.info "BOARD_ID: #{self.board_id}"
-    if review
-      logger.info "PHASE: #{review.name}"
-    else
-      logger.info "PHASE_ID: #{self.phase_id}"
-    end
-    if priority
-      logger.info "PRIORITY: #{priority.name}"
-    else
-      logger.info "PRIORITY_ID: #{self.priority_id}"
-    end
-    if designer
-      logger.info "DESIGNER: #{designer.name}"
-    else
-      logger.info "DESIGNER_ID: #{self.designer_id}"
-    end
-    if peer
-      logger.info "PEER: #{peer.name}"
-    else
-      logger.info "PEER_ID: #{self.peer_id}"
-    end
-    if ig
-      logger.info "INPUT GATE: #{ig.name}"
-    else
-      logger.info "INPUT GATE ID: #{self.pcb_input_id}"
-    end
-    if creator
-      logger.info "CREATED BY: #{creator.name}"
-    else
-      logger.info "CREATED BY ID: #{self.created_by}"
-    end
-    logger.info "##########################################################"
-  
-  end
-
 
   COMPLETE = 255
   
