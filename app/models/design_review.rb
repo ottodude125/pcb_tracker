@@ -412,8 +412,10 @@ class DesignReview < ActiveRecord::Base
                             rr.role_id == valor_role.id
                           end
 
-    valor_review_result.reviewer_id = self.design.peer_id
-    valor_review_result.update
+    if valor_review_result
+      valor_review_result.reviewer_id = self.design.peer_id
+      valor_review_result.update
+    end
 
   end
   
