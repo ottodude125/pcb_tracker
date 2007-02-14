@@ -167,6 +167,35 @@ class TrackerMailerTest < Test::Unit::TestCase
 
 
   ##############################################################################
+  def test_final_review_warning
+  
+    design = @audit.design
+    
+    response = TrackerMailer.create_final_review_warning(@audit.design, @now)
+     
+    assert_equal("Notification of upcoming Final Review for #{@audit.design.name}", 
+                 response.subject)
+    assert_equal("Attention! Peer review is underway.  Final review/approval " +
+                 "will be required in a few days.",
+                 response.body)
+                 
+    reviewers = [ users(:espo),       users(:heng_k),
+                  users(:lisa_a),     users(:rich_a),
+                  users(:matt_d),     users(:jim_l),
+                  users(:anthony_g),  users(:tom_f),
+                  users(:lee_s) ].uniq.sort_by { |u| u.email }
+    to_list   = reviewers.collect { |u| u.email }      
+    assert_equal(to_list,          response.to.sort_by { |email| email })
+    assert_equal([Pcbtr::SENDER],  response.from)
+    assert_equal(@now.to_s,        response.date.to_s)
+    
+    expected_cc = [@cathy_m.email, @bob_g.email, @jan_k.email].sort_by { |address| address }
+    assert_equal(expected_cc, response.cc.sort_by { |email| email })
+    
+  end
+
+
+  ##############################################################################
   def test_design_review_update
   
     subject = "#{@mx234a_pre_art_dr.design.name}::" +
