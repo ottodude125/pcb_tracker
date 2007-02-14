@@ -21,6 +21,9 @@ class AuditControllerTest < Test::Unit::TestCase
     @controller = AuditController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+
+    @emails     = ActionMailer::Base.deliveries
+    @emails.clear
   end
 
   fixtures(:audit_comments,
@@ -180,7 +183,9 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(designer.id, audit.design.designer_id)
     assert(!audit.designer_complete?)
     assert(!audit.auditor_complete?)
-    assert(1, audit.audit_teammates.size)
+    assert_equal(1, audit.audit_teammates.size)
+    
+    assert_equal(0, @emails.size)
     
     start_time = Time.now
 
@@ -462,6 +467,18 @@ class AuditControllerTest < Test::Unit::TestCase
       assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
 
+    # Verify that audit is reporting that the self audit is complete, but the peer audit
+    # is not complete.
+    assert(assigns(:audit).designer_complete?)
+    assert(!assigns(:audit).auditor_complete?)
+    
+    # Verify the 2 emails are sent when the self audit
+    # completes
+    assert_equal(2, @emails.size)
+    email = @emails.pop
+    assert_equal("Notification of upcoming Final Review for mx234b",  email.subject)
+    email = @emails.pop
+    assert_equal("mx234b: The designer has completed the self-audit", email.subject)
 
     # Log in as an auditor and get the audit listing.
     user = User.find(users(:scott_g).id)
