@@ -258,6 +258,43 @@ class TrackerMailer < ActionMailer::Base
 
   ######################################################################
   #
+  # final_review_warning
+  #
+  # Description:
+  # This method generates the mail to alert the review community that the
+  # final review will be posted soon.
+  #
+  # Parameters:
+  #   design  - the design for which the final review will soon be posted.
+  #   sent_at - the timestamp for the mail header (defaults to Time.now)
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def final_review_warning(design, 
+                           sent_at = Time.now)
+
+    @subject    = "Notification of upcoming Final Review for #{design.name}"
+
+    final_review = design.design_reviews.detect { |dr| dr.review_type.name == "Final" }
+    @recipients  = final_review.design_review_results.collect { |rr|
+                     User.find(rr.reviewer_id).email }.uniq
+    @from        = Pcbtr::SENDER
+    @sent_on     = sent_at
+    @headers     = {}
+    @bcc         = 'paul_altimonte@notes.teradyne.com'
+    cc           = copy_to(final_review) + copy_to_on_milestone(final_review.design.board)
+    
+    # Remove any duplicates as well as any people who were already inserted into the 
+    # recipients list.
+    @cc          = (cc - @recipients).uniq
+
+  end
+
+
+  ######################################################################
+  #
   # design_review_posting_notification
   #
   # Description:
