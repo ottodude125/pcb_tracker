@@ -305,4 +305,58 @@ mx234c_pre_artwork_valor:
   reviewer_id:      7050
   role_id:          6
   result:           None
+mx234b_final_ce_dft:
+  id:               1300
+  design_review_id: 1003
+  reviewer_id:      7101
+  role_id:          7
+  result:           None
+mx234b_final_dfm:
+  id:               1301
+  design_review_id: 1003
+  reviewer_id:      7150
+  role_id:          8
+  result:           None
+mx234b_final_hw:
+  id:               1302
+  design_review_id: 1003
+  reviewer_id:      7001
+  role_id:          5
+  result:           None
+mx234b_final_mech:
+  id:               1303
+  design_review_id: 1003
+  reviewer_id:      7251
+  role_id:          10
+  result:           None
+mx234b_final_mech_mfg:
+  id:               1304
+  design_review_id: 1003
+  reviewer_id:      7300
+  role_id:          11
+  result:           None
+mx234b_final_pcb_design:
+  id:               1305
+  design_review_id: 1003
+  reviewer_id:      4001
+  role_id:          12
+  result:           None
+mx234b_final_plan:
+  id:               1306
+  design_review_id: 1003
+  reviewer_id:      7650
+  role_id:          13
+  result:           None
+mx234b_final_tde:
+  id:               1307
+  design_review_id: 1003
+  reviewer_id:      7200
+  role_id:          9
+  result:           None
+mx234b_final_valor:
+  id:               1308
+  design_review_id: 1003
+  reviewer_id:      7050
+  role_id:          6
+  result:           None
 
