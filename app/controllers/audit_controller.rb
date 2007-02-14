@@ -98,7 +98,11 @@ class AuditController < ApplicationController
               retry
             end
 
-            TrackerMailer.deliver_self_audit_complete(audit) if audit.designer_complete?
+            if audit.designer_complete?
+              TrackerMailer.deliver_self_audit_complete(audit)
+              TrackerMailer.deliver_final_review_warning(audit.design)
+            end
+            
           end
           result = design_check.update_attributes(
                      :designer_result     => result_update,
