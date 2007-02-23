@@ -60,6 +60,8 @@ class TrackerController < ApplicationController
       when "PCB Admin"
         pcb_admin_home_setup
         render_action('pcb_admin_home')
+      when "Basic User"
+        # Use the default home page
       else
         reviewer_home_setup
         render_action('reviewer_home')
