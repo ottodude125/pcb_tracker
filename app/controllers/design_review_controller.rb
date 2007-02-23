@@ -50,6 +50,8 @@ class DesignReviewController < ApplicationController
         render_action('manager_view')
       when 'Admin'
         render_action('admin_view')
+      else
+        render_action('safe_view')
       end
       
     else
