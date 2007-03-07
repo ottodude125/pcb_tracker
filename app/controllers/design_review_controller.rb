@@ -1003,7 +1003,7 @@ class DesignReviewController < ApplicationController
 
     # Get all of the users who are in the CC list for the board.
     users_on_cc_list = []
-    Board.find(@design.board_id).users.each { |user| users_on_cc_list.push(user.id) }
+    @design.board.users.each { |user| users_on_cc_list.push(user.id) }
 
     # Get all of the users, remove the reviewer names, and add the full name.
     users = User.find_all('active=1', 'last_name ASC')
@@ -1026,6 +1026,7 @@ class DesignReviewController < ApplicationController
     details[:reviewers]     = @reviewers
     details[:copied]        = @users_copied
     details[:not_copied]    = @users_not_copied
+    details[:action]        = params[:action]
     flash[:details]         = details
 
   end
@@ -1077,6 +1078,7 @@ class DesignReviewController < ApplicationController
 
     @users_copied     = details[:copied]
     @users_not_copied = details[:not_copied]
+    @action           = details[:action]
     
     flash[:details] = details
     flash[:ack]     = "Added #{user[:name]} to the CC list"
@@ -1132,6 +1134,7 @@ class DesignReviewController < ApplicationController
 
     @users_copied     = details[:copied]
     @users_not_copied = details[:not_copied]
+    @action           = details[:action]
 
     flash[:details] = details
     flash[:ack]     = "Removed #{user[:name]} from the CC list"
@@ -1430,6 +1433,182 @@ class DesignReviewController < ApplicationController
           @matching_roles << { :design_review => match }
         end
       end
+    end
+
+  end
+
+
+  ######################################################################
+  #
+  # perform_ftp_notification
+  #
+  # Description:
+  #   Creates the ftp notification that will be stored with the design 
+  #   and sent to the interested parties.
+  #
+  # Parameters from params
+  #   id - design identifier
+  #
+  ######################################################################
+  #
+  def perform_ftp_notification
+  
+    @design              = Design.find(params[:id])
+    final_design_review  = @design.design_reviews.detect { |dr| dr.review_type.name == "Final" }
+    @reviewers           = final_design_review.design_review_results.collect { |drr| User.find(drr.reviewer_id) }
+    @divisions           = Division.find(:all, :conditions => "active=1")
+    @design_centers      = DesignCenter.find(:all, :conditions => "active=1")
+    @fab_houses          = FabHouse.find(:all, :conditions => "active=1")
+
+
+    @ftp_notification = FtpNotification.new(:design_id => @design.id)
+
+    if params[:division_id]
+      @ftp_notification.division_id = params[:division_id].to_i
+    elsif @design.board_design_entry
+      @ftp_notification.division_id = @design.board_design_entry.division_id
+    else
+      @ftp_notification.division_id = 0
+    end
+    @ftp_notification.design_center_id = params[:design_center_id] ? params[:design_center_id].to_i : final_design_review.design_center_id
+    if params[:vendor_id]
+      @ftp_notification.fab_house_id = params[:vendor_id].to_i
+    elsif @design.fab_houses.size > 0
+      @ftp_notification.fab_house_id = @design.fab_houses[0].fab_house_id
+    else
+      @ftp_notification.fab_house_id = 0
+    end
+    
+    @ftp_notification.assembly_bom_number = params[:assembly_bom_number] ? params[:assembly_bom_number] : ''
+    @ftp_notification.revision_date       = params[:revision_date]       ? params[:revision_date]       : ''
+    @ftp_notification.file_data           = params[:file_data]           ? params[:file_data]           : ''
+    
+
+    # Grab the reviewer names, their functions and sort the list by the
+    # reviewer's last name.
+    reviewers = []
+    final_design_review.design_review_results.each do |review_result|
+      reviewers.push({ :name      => review_result.reviewer.name,
+                       :group     => review_result.role.name,
+                       :last_name => review_result.reviewer.last_name,
+                       :id        => review_result.reviewer_id })
+    end
+    @reviewers = reviewers.sort_by { |reviewer| reviewer[:last_name] }
+
+    # Identify the unique members for the FTP Notification FTP list.
+    if @design.board_design_entry
+      ops_manager = @design.board_design_entry.board_design_entry_users.detect { |u| u.role.name == 'Operations Manager'}
+    else
+      flash['notice'] = "" if !flash['notice']
+      flash['notice'] += "<br />WARNING: THE OPERATIONS MANAGER WAS NOT AUTOMATICALLY ADDED TO THE CC LIST"
+    end
+    ftp_cc_list = [User.find_by_login('ftpgrp'), User.find_by_login('cedftgrp')]
+    ftp_cc_list << ops_manager.user if ops_manager
+    ftp_cc_list.each { |cc| @design.board.users << cc if !@design.board.users.detect { |u| u.id == cc.id }}
+
+    # Get all of the users who are in the CC list for the board.
+    users_on_cc_list = []
+    @design.board.users.each { |user| users_on_cc_list.push(user.id) }
+
+    # Get all of the users, remove the reviewer names, and add the full name.
+    users = User.find_all('active=1', 'last_name ASC')
+    @reviewers.each { |reviewer| users.delete_if { |user| user.id == reviewer[:id] } }
+    
+    @users_copied     = []
+    @users_not_copied = []
+    users.each do |user|
+      next if user.id == @design.designer_id
+      if users_on_cc_list.include?(user.id)
+        @users_copied.push(user)
+      else
+        @users_not_copied.push(user)
+      end
+    end
+    
+    details = {}
+    details[:design]        = @design
+    details[:design_review] = final_design_review
+    details[:reviewers]     = @reviewers
+    details[:copied]        = @users_copied
+    details[:not_copied]    = @users_not_copied
+    details[:action]        = params[:action]
+    flash[:details]         = details
+
+   end
+
+
+  ######################################################################
+  #
+  # send_ftp_notification
+  #
+  # Description:
+  #   Gathers the information for the ftp notification comment/message
+  #
+  # Parameters from params
+  #   id - design review identifier
+  #
+  ######################################################################
+  #
+  def send_ftp_notification
+
+    # Verify that all of the information has been provided before processing.
+    if (params[:ftp_notification][:assembly_bom_number].strip == "" ||  
+        params[:ftp_notification][:file_data].strip           == "" ||
+        params[:ftp_notification][:revision_date].strip       == "" ||
+        params[:ftp_notification][:fab_house_id]     == '0'         ||
+        params[:ftp_notification][:division_id]      == '0'         ||
+        params[:ftp_notification][:design_center_id] == '0')
+
+      flash['notice'] = "Please provide all to the data requied for the FTP Notification.  The notification was not sent."
+      redirect_to(:action              => "perform_ftp_notification", 
+                  :id                  => params[:id],
+                  :assembly_bom_number => params[:ftp_notification][:assembly_bom_number],
+                  :file_data           => params[:ftp_notification][:file_data],
+                  :revision_date       => params[:ftp_notification][:revision_date],
+                  :division_id         => params[:ftp_notification][:division_id],
+                  :design_center_id    => params[:ftp_notification][:design_center_id],
+                  :vendor_id           => params[:ftp_notification][:fab_house_id])
+
+    else
+
+      design   = Design.find(params[:id])
+      if !design.ftp_notification
+      
+        ftp_notification = FtpNotification.new(params[:ftp_notification])
+        ftp_notification.design_id = design.id
+        ftp_notification.create
+        
+        message  = "NO RESPONSE IS REQUIRED!\n"
+        message += "NOTIFICATION THAT FILES HAVE BEEN FTP'D TO VENDOR FOR BOARD FABRICATION\n"
+        message += "Date: " + Time.now.to_s + "\n"
+        message += "Division: " + ftp_notification.division.name + "\n"
+        message += "Assembly/BOM Number: " + ftp_notification.assembly_bom_number + "\n"
+        message += "Design Files Located at: /hwnet/" + ftp_notification.design_center.pcb_path
+        message += "/" + ftp_notification.design.name + "/public/\n"
+        message += "Files Size, Date, and Name: " + ftp_notification.file_data + "\n"
+        message += "Rev Date: " + ftp_notification.revision_date + "\n"
+        message += "Vendor: " + ftp_notification.fab_house.name + "\n"
+        
+        TrackerMailer::deliver_ftp_notification(message, ftp_notification)
+
+        # Save the FTP Notification in the design's final review.
+        message += "\n\nThis notification was delivered to the following people.\n"
+        message += " - all of the reviewers\n"
+        design.board.users.each { |user| message += " - #{user.name}\n" }
+
+        design_review = design.design_reviews.detect { |dr| dr.review_type.name == 'Final'}
+        dr_comment = DesignReviewComment.new(:user_id          => session[:user][:id],
+                                             :design_review_id => design_review.id,
+                                             :highlight        => 1,
+                                             :comment          => message).create
+               
+        
+        flash['notice'] = "The FTP Notification has been sent"
+      else
+        flash['notice'] = "The FTP Notification has already been sent for this design.  " +
+                          "The notification was not sent."
+      end
+        redirect_to(:controller => 'tracker', :action => 'index')
     end
 
   end
