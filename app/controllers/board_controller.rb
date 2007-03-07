@@ -40,7 +40,7 @@ before_filter(:verify_admin_role,
   #
   def list
 
-    queried_boards = Board.find_all
+    queried_boards = Board.find(:all)
 
     prefix_list = []
     temp_boards = {}
@@ -96,7 +96,7 @@ before_filter(:verify_admin_role,
     end
 
     if conditions == ''
-      queried_boards = Board.find_all
+      queried_boards = Board.find(:all)
     else
       queried_boards = Board.find_all(conditions)
     end
@@ -228,7 +228,7 @@ before_filter(:verify_admin_role,
   #
   def show_boards
 
-    board_list = Board.find_all
+    board_list = Board.find(:all)
     
     boards = {} 
     board_list.each do |board|
@@ -354,7 +354,7 @@ before_filter(:verify_admin_role,
     
     case
     when !platform && !project
-      board_list = Board.find_all
+      board_list = Board.find(:all)
     when  platform && !project
       board_list = Board.find_all_by_platform_id(platform.id)
     when !platform &&  project
@@ -390,7 +390,7 @@ before_filter(:verify_admin_role,
 
     # If a phase of "Final" or "Release" was specified then filter the list.
     if params[:review_type][:phase] != 'All'
-      review_types          = ReviewType.find_all
+      review_types          = ReviewType.find(:all)
       completed_review_type = review_types.detect { |rt| 
                                 rt.name == params[:review_type][:phase] }
       review_types.delete_if { |rt| rt.sort_order <= completed_review_type.sort_order }
