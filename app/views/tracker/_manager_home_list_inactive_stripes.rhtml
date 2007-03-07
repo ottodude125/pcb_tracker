@@ -1,0 +1,97 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays the inactive reviews for the managers tracker view.  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<tr class="<%= manager_home_list_inactive_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
+
+  <td>
+    <%= link_to(manager_home_list_inactive_stripes.design.name,
+                :controller => 'design_review',
+                :action     => 'view',
+                :id         => manager_home_list_inactive_stripes.id)%>
+  </td>
+  <td align="left">
+    <font size="-1">
+      <b><%= manager_home_list_inactive_stripes[:priority_name] %></b>
+    </font>
+  </td>
+  <td>
+    <%= manager_home_list_inactive_stripes.designer.name %>
+  </td>
+  <td>
+    <%= manager_home_list_inactive_stripes.design.peer.name %>
+  </td>
+  <td>
+    <%= manager_home_list_inactive_stripes.review_name %>
+  </td>
+  <td>
+    <%= manager_home_list_inactive_stripes.review_status.name %>
+  </td>
+  <td align="right" rowspan="2">
+    <table border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" valign="top">
+          <input type="button" value="Updates"
+                 title='<%= "#{manager_home_list_inactive_stripes.design.name}: Make updates to the design review assignments" %>'
+                 onClick="parent.location='<%= url_for(:controller => 'design_review',
+                                                       :action     => 'admin_update',
+                                                       :id         => manager_home_list_inactive_stripes.id) %>'"
+                     class="small_font_button" />
+        </td>
+      </tr>
+      <tr>
+        <td align="center" valign="top">
+          <% if !(manager_home_list_inactive_stripes.design.audit.skip? || manager_home_list_inactive_stripes.design.audit.is_complete?) %>
+          <input type="button" value="Audit Assignments"
+                 title= '<%= "#{manager_home_list_inactive_stripes.design.name}: Set the assignments for self and peer audits" %>'
+                 onClick="parent.location='<%= url_for(:controller => 'audit',
+                                                       :action     => 'auditor_list',
+                                                       :id         => manager_home_list_inactive_stripes.design.audit.id,
+                                                       :return_to  => { :controller => 'tracker',
+                                                                        :action     => 'index' }) %>'"
+                 class="small_font_button" />
+          <% else %>
+            <b>Audit <%= manager_home_list_inactive_stripes.design.audit.skip? ? 'Skipped' : 'is Complete' %></b>
+          <% end %>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+
+<tr class="<%= manager_home_list_inactive_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
+  <td colspan="8">
+  
+    <div id="board_design_details-<%= manager_home_list_inactive_stripes.id %>">
+
+    <table width="95%" align="right" border="0">
+      <tr>
+        <td width="70%" align="left">
+          <% if !manager_home_list_inactive_stripes.design.audit.skip? %>
+            <table border="0">
+              <tr>
+                <td width="70">
+                  <%= link_to('Audit',
+                              :controller => 'audit',
+                              :action     => 'print',
+                              :id         => manager_home_list_inactive_stripes.design.audit.id)%>
+                </td>
+                <% stats = manager_home_list_inactive_stripes.design.audit.completion_stats %>
+                <th width="50" align="right">Self: </th>
+                <td width="140"> <%= sprintf("%3.f", stats[:self]) %>% Complete</td>
+                <th width="50" align="right">Peer: </th>
+                <td width="140"> <%= sprintf("%3.f", stats[:peer]) %>% Complete</td>
+              </tr>
+            </table
+          <% else %>
+            No Audit
+          <% end %>
+        </td>
+
+      </tr>
+    </table>
+    </div>
+  </td>
+</tr>
