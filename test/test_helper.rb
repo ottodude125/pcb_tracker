@@ -30,7 +30,7 @@ class Test::Unit::TestCase
   def set_admin
     user = User.find(users(:cathy_m).id)
     @request.session[:user]        = user
-    @request.session[:active_role] = 'Admin'
+    @request.session[:active_role] = Role.find_by_name('Admin')
     @request.session[:roles]       = user.roles
   end
 
@@ -38,7 +38,7 @@ class Test::Unit::TestCase
   def set_non_admin
     user = User.find(users(:rich_m).id)
     @request.session[:user]        = user
-    @request.session[:active_role] = 'Designer'
+    @request.session[:active_role] = Role.find_by_name('Designer')
     @request.session[:roles]       = user.roles
   end
 
@@ -46,7 +46,7 @@ class Test::Unit::TestCase
   def set_designer
     user = User.find(users(:rich_m).id)
     @request.session[:user]        = user
-    @request.session[:active_role] = 'Designer'
+    @request.session[:active_role] = Role.find_by_name('Designer')
     @request.session[:roles]       = user.roles
   end
 
@@ -54,7 +54,7 @@ class Test::Unit::TestCase
   def set_manager
     user = User.find(users(:jim_l).id)
     @request.session[:user]        = user
-    @request.session[:active_role] = 'Manager'
+    @request.session[:active_role] = Role.find_by_name('Manager')
     @request.session[:roles]       = user.roles
   end
 
@@ -62,7 +62,7 @@ class Test::Unit::TestCase
   def set_reviewer
     user = User.find(users(:pat_a).id)
     @request.session[:user]        = user
-    @request.session[:active_role] = 'Reviewer'
+    @request.session[:active_role] = Role.find_by_name('DFM')
     @request.session[:roles]       = user.roles
   end
 
@@ -70,7 +70,7 @@ class Test::Unit::TestCase
   def set_user(user_id, role)
     user = User.find(user_id)
     @request.session[:user]        = user
-    @request.session[:active_role] = role
+    @request.session[:active_role] = Role.find_by_name(role)
     @request.session[:roles]       = user.roles
   end
 
