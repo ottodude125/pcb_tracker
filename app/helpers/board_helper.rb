@@ -1,31 +1,31 @@
 module BoardHelper
 
 
-  def list_revisions(board_id)
+  def list_revisions(board)
 
     # Get the list of designs for the board.
-    designs = Design.find_all("board_id=#{board_id}")
+    designs = board.designs
 
-      if designs.size == 0
-        return "None"
-      else
-        revisions = Array.new
-        for design in designs
-          if design.design_type == 'New'
-            revisions.push(Revision.find(design.revision_id).name)
-          elsif design.design_type == 'Date Code'
-            revisions.push(Revision.find(design.revision_id).name +
-                           design.numeric_revision.to_s +
-                           '_eco' +
-                           design.eco_number)
-          elsif design.design_type == 'Dot Rev'
-            revisions.push(Revision.find(design.revision_id).name +
-                           design.numeric_revision.to_s)
-          end
+    if designs.size == 0
+      return "None"
+    else
+      revisions = Array.new
+      for design in designs
+        if design.design_type == 'New'
+          revisions.push(Revision.find(design.revision_id).name)
+        elsif design.design_type == 'Date Code'
+          revisions.push(Revision.find(design.revision_id).name +
+                         design.numeric_revision.to_s +
+                         '_eco' +
+                         design.eco_number)
+        elsif design.design_type == 'Dot Rev'
+          revisions.push(Revision.find(design.revision_id).name +
+                         design.numeric_revision.to_s)
         end
-        revisions.sort!
-        return revisions.join(', ')
       end
+      revisions.sort!
+      return revisions.join(', ')
+    end
   end
 
 
