@@ -55,9 +55,7 @@
             <td width="30">
               <% if section_assigned?(@design.oi_instructions, 
                                       section.id) %>
-                <%= check_box('section', 
-                              section.id,
-                              { 'disabled' => 'disabled' }) %>
+                &nbsp;
               <% elsif !@section_selection || 
                        @section_selection[section.id.to_s] == "0" %>
                 <%= check_box('section', section.id) %>
@@ -67,7 +65,12 @@
                     { 'checked' => 'checked' }) %>
               <% end %>
             </td>
-            <th align="left">Select Task</th>
+              <% if section_assigned?(@design.oi_instructions, 
+                                      section.id) %>
+                <th align="left">Task Already Assigned</th>
+              <% else %>
+                <th align="left">Select Task</th>
+              <% end %>
           </tr>
         </table>
       </td>
