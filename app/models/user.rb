@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
     #logger.info "    Login:            #{login}"
     #logger.info "    Password:         #{pass}"
     #logger.info "    Password(salted): #{sha1(pass)}"
-    find_first(["login = ? AND password = ?", login, sha1(pass)])
+    find_by_login_and_password(login, sha1(pass))
   end  
   
 
