@@ -19,11 +19,11 @@ p { margin: 0 }
   </tr>
   <tr>
     <td>Action</td>
-    <td><%= @params.delete('action') %></td>
+    <td><%= params.delete('action') %></td>
   </tr>
   <tr>
     <td>Controller</td>
-    <td><%= @params.delete('controller') %></td>
+    <td><%= params.delete('controller') %></td>
   </tr>
   <tr>
     <td>Query</td>
@@ -68,10 +68,10 @@ p { margin: 0 }
 <hr />
 <h3>Params</h3>
 <hr />
-<% for key, val in @params -%>
+<% for key, val in params -%>
   <p><b><%= key %></b></p>
   <p><%= val.to_yaml.to_a.join("</p>\n<p>    ") %></p>
-<% end if @params -%>
+<% end -%>
 
 <hr />
 <h3>Session</h3>
@@ -79,7 +79,7 @@ p { margin: 0 }
 <% for key, val in @session -%>
   <p><b><%= key %></b></p>
   <p><%= val.to_yaml.to_a.join("</p>\n<p>    ") %></p>
-<% end if @session -%>
+<% end -%>
   
 <hr />
 <h3>Environment</h3>
@@ -94,5 +94,5 @@ p { margin: 0 }
         <small><%= val %></small>
       </td>
     </tr>
-  <% end if @env -%>
+  <% end  -%>
 </table>
