@@ -30,7 +30,7 @@ class OiInstructionController < ApplicationController
   def oi_category_selection
 
     @design           = Design.find(params[:design_id])
-    @oi_category_list = OiCategory.find_all.sort_by { |c| c.id }
+    @oi_category_list = OiCategory.find(:all).sort_by { |c| c.id }
 
   end
   
@@ -125,7 +125,8 @@ class OiInstructionController < ApplicationController
 
     sections.each do |id, flag|
       @selected_steps = @category.oi_category_sections.delete_if do |section| 
-        section.id.to_s == id && flag == "0"
+        section.id.to_s == id && flag == "0" || 
+        @design.oi_instructions.detect { |i| i.oi_category_section_id == section.id }
       end
     end
 
@@ -183,6 +184,8 @@ class OiInstructionController < ApplicationController
   ######################################################################
   #
   def process_assignment_details
+
+    oi_assignments = {}
 
     # Preserve the step instructions for the redirect.
     step_instructions = []
@@ -279,7 +282,7 @@ class OiInstructionController < ApplicationController
         end
       
       end
-      
+            
       instructions.each do |section_id, value|
       
         # Check to make sure the instruction does not already exist.
@@ -305,6 +308,10 @@ class OiInstructionController < ApplicationController
                                             :complexity_id     => value[:complexity][:id])
               assignment.save
               
+              # Keep track of the assignments for each user
+              oi_assignments[member_id] = [] if !oi_assignments[member_id]
+              oi_assignments[member_id].push(assignment)
+              
               if value[:comment] != ''
                 OiAssignmentComment.new(:oi_assignment_id => assignment.id,
                                         :user_id          => session[:user].id,
@@ -313,12 +320,16 @@ class OiInstructionController < ApplicationController
             end
 
             flash['notice'] = "The work assignments have been recorded - mail was sent"
-            TrackerMailer::deliver_oi_assignment_notification(oi_instruction)
           
           end  #  If no errors storing the oi_instruction
         end  # not existing instruction
       end  # Each instruction
-   
+
+      # Send notification email for each of the assignments.
+      oi_assignments.each do |member_id, oi_assignment_list|
+        TrackerMailer::deliver_oi_assignment_notification(oi_assignment_list)
+      end
+
       redirect_to(:action    => 'oi_category_selection', 
                   :design_id => params[:design][:id])
     end
@@ -556,6 +567,7 @@ class OiInstructionController < ApplicationController
   def create_assignment_report
   
     @assignment    = OiAssignment.find(params[:id])
+    @complexity_id = @assignment.complexity_id
     @report        = OiAssignmentReport.new
     @comments      = @assignment.oi_assignment_comments.sort_by { |c| c.created_on }.reverse
     @scoring_table = OiAssignmentReport.report_card_scoring
@@ -586,9 +598,15 @@ class OiInstructionController < ApplicationController
     @report.user_id          = session[:user].id
     @report.oi_assignment_id = @assignment.id
     
-    if @report.score > 0
+    if @report.score != 256
+    
       @report.save
       flash['notice'] = "Your feedback has been recorded"
+      
+      # If the user updated the complexity of the task then record the update.
+      if @assignment.complexity_id != params[:complexity][:id].to_i
+        @assignment.update_attribute(:complexity_id, params[:complexity][:id].to_i)
+      end
     
       redirect_to(:action    => 'oi_category_selection',
                   :design_id => @assignment.oi_instruction.design.id)
@@ -596,6 +614,7 @@ class OiInstructionController < ApplicationController
       flash['notice'] = "Please select the grade - the report card was not created"
       @comments      = @assignment.oi_assignment_comments.sort_by { |c| c.created_on }.reverse
       @scoring_table = OiAssignmentReport.report_card_scoring
+      @complexity_id = params[:complexity][:id].to_i
       render_action('create_assignment_report')
     end
   
@@ -657,8 +676,9 @@ class OiInstructionController < ApplicationController
     update     = OiAssignmentReport.new(params[:report])
     assignment = OiAssignment.find(params[:assignment][:id])
     
-    score_update   = update.score != assignment.oi_assignment_report.score
-    comment_update = update.comment.size > 0
+    score_update      = update.score != assignment.oi_assignment_report.score
+    complexity_update = assignment.complexity_id != params[:complexity][:id].to_i
+    comment_update    = update.comment.size > 0
   
     flash['notice'] = ''
     
@@ -670,10 +690,17 @@ class OiInstructionController < ApplicationController
     if comment_update
       assignment.oi_assignment_report.comment += "<br />" + update.comment
       flash['notice'] += ', ' if score_update
-      flash['notice'] += 'Comment updated '
+      flash['notice'] += 'Comment updated'
     end
     
-    if score_update || comment_update
+    if complexity_update
+      assignment.complexity_id = params[:complexity][:id].to_i
+      flash['notice'] += ', ' if score_update
+      flash['notice'] += 'Task Complexity updated'
+    end
+    
+    if score_update || comment_update || complexity_update
+      assignment.update
       assignment.oi_assignment_report.update
       flash['notice'] += " - Report update recorded"
     else
