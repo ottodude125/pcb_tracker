@@ -30,7 +30,7 @@ class TrackerController < ApplicationController
   # This method determines which home page to display based on the 
   # user's role
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -42,8 +42,7 @@ class TrackerController < ApplicationController
   #
   def index
 
-    session[:return_to] = {:controller => 'tracker',
-                           :action     => 'index'}
+    session[:return_to] = {:controller => 'tracker', :action => 'index'}
     flash['notice'] = flash['notice']
     
     if session[:active_role] != nil
@@ -68,8 +67,7 @@ class TrackerController < ApplicationController
       end
     end
     
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'index'}
+    session[:return_to] = {:controller => 'tracker', :action => 'index'}
 
   end
   
@@ -81,7 +79,7 @@ class TrackerController < ApplicationController
   # Description:
   # This method redirects to index to accomodate an obsolete action.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   ######################################################################
@@ -98,7 +96,7 @@ class TrackerController < ApplicationController
   # Description:
   # This method redirects to index to accomodate an obsolete action.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   ######################################################################
@@ -115,7 +113,7 @@ class TrackerController < ApplicationController
   # Description:
   # This method redirects to index to accomodate an obsolete action.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   ######################################################################
@@ -132,7 +130,7 @@ class TrackerController < ApplicationController
   # Description:
   # This method redirects to index to accomodate an obsolete action.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   ######################################################################
@@ -149,7 +147,7 @@ class TrackerController < ApplicationController
   # Description:
   # This method redirects to index to accomodate an obsolete action.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   ######################################################################
@@ -166,7 +164,7 @@ class TrackerController < ApplicationController
   # Description:
   # This method manages the ordering of the list by the criticality.
   #
-  # Parameters from @params
+  # Parameters from params
   # order - the desired order, either ascending or descending, of the
   #         list by the criticality.
   #
@@ -175,17 +173,20 @@ class TrackerController < ApplicationController
   def manager_list_by_priority
   
     @sort_order            = get_sort_order
-    @sort_order[:priority] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+    @sort_order[:priority] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order]     = @sort_order
 
-    @design_reviews = 
-      get_active_reviews.sort_by { |dr| [dr.priority.value, dr.age] }
-    @design_reviews.reverse! if @params[:order] == 'DESC'
+    design_reviews = get_active_reviews
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.priority.value, dr.age] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.priority.value, dr.age] }
+    @active_reviews.reverse!   if params[:order] == 'DESC'
+    @inactive_reviews.reverse! if params[:order] == 'DESC'
 
+    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
     @submissions = BoardDesignEntry.count("state='submitted'")
-    @session[:return_to] = {:controller => 'tracker',
-                            :action => 'manager_list_by_priority',
-                            :order  => @params[:order]}
+    session[:return_to] = {:controller => 'tracker',
+                           :action => 'manager_list_by_priority',
+                           :order  => params[:order]}
     render_action 'manager_home'
 
   end  
@@ -198,7 +199,7 @@ class TrackerController < ApplicationController
   # Description:
   # This method manages the ordering of the list by the design number.
   #
-  # Parameters from @params
+  # Parameters from params
   # order - the desired order, either ascending or descending, of the
   #         list by the design number.
   #
@@ -206,18 +207,22 @@ class TrackerController < ApplicationController
   #
   def manager_list_by_design
   
-      @sort_order          = get_sort_order
-      @sort_order[:design] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
-      flash[:sort_order]   = @sort_order
+    @sort_order          = get_sort_order
+    @sort_order[:design] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
+    flash[:sort_order]   = @sort_order
     
-      @design_reviews = get_active_reviews.sort_by { |dr| dr.design.name }
-      @design_reviews.reverse! if @params[:order] == 'DESC'
+    design_reviews = get_active_reviews
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| dr.design.name }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| dr.design.name }
+    @active_reviews.reverse!   if params[:order] == 'DESC'
+    @inactive_reviews.reverse! if params[:order] == 'DESC'
     
-      @submissions = BoardDesignEntry.count("state='submitted'")
-      @session[:return_to] = {:controller => 'tracker',
-                              :action     => 'manager_list_by_design',
-                              :order      => @params[:order]}
-      render_action 'manager_home'
+    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
+    @submissions = BoardDesignEntry.count("state='submitted'")
+    session[:return_to] = {:controller => 'tracker',
+                           :action     => 'manager_list_by_design',
+                           :order      => params[:order]}
+    render_action 'manager_home'
 
   end  
   
@@ -230,7 +235,7 @@ class TrackerController < ApplicationController
   # This method manages the ordering of the list by the design review
   # type.
   #
-  # Parameters from @params
+  # Parameters from params
   # order - the desired order, either ascending or descending, of the
   #         list by the design review type.
   #
@@ -239,17 +244,20 @@ class TrackerController < ApplicationController
   def manager_list_by_type
     
     @sort_order        = get_sort_order
-    @sort_order[:type] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+    @sort_order[:type] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order] = @sort_order
     
-    @design_reviews = 
-      get_active_reviews.sort_by { |dr| [dr.review_type.name, dr.age] }
-    @design_reviews.reverse! if @params[:order] == 'DESC'
+    design_reviews = get_active_reviews
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.review_type.name, dr.age] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.review_type.name, dr.age] }
+    @active_reviews.reverse!   if params[:order] == 'DESC'
+    @inactive_reviews.reverse! if params[:order] == 'DESC'
     
+    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
     @submissions = BoardDesignEntry.count("state='submitted'")
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_list_by_type',
-                            :order      => @params[:order]}
+    session[:return_to] = {:controller => 'tracker',
+                           :action     => 'manager_list_by_type',
+                           :order      => params[:order]}
     render_action 'manager_home'
 
   end  
@@ -262,7 +270,7 @@ class TrackerController < ApplicationController
   # Description:
   # This method manages the ordering of the list by the designer.
   #
-  # Parameters from @params
+  # Parameters from params
   # order - the desired order, either ascending or descending, of the
   #         list by the designer.
   #
@@ -271,17 +279,20 @@ class TrackerController < ApplicationController
   def manager_list_by_designer
 
     @sort_order            = get_sort_order
-    @sort_order[:designer] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+    @sort_order[:designer] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order]     = @sort_order
     
-    @design_reviews = 
-      get_active_reviews.sort_by { |dr| [dr.designer.last_name, dr.age] }
-    @design_reviews.reverse! if @params[:order] == 'DESC'
+    design_reviews = get_active_reviews
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.design.designer.last_name, dr.age] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.design.designer.last_name, dr.age] }
+    @active_reviews.reverse!   if params[:order] == 'DESC'
+    @inactive_reviews.reverse! if params[:order] == 'DESC'
     
+    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
     @submissions = BoardDesignEntry.count("state='submitted'")
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_list_by_designer',
-                            :order      => @params[:order]}
+    session[:return_to] = {:controller => 'tracker',
+                           :action     => 'manager_list_by_designer',
+                           :order      => params[:order]}
     render_action 'manager_home'
 
   end  
@@ -294,7 +305,7 @@ class TrackerController < ApplicationController
   # Description:
   # This method manages the ordering of the list by the peer.
   #
-  # Parameters from @params
+  # Parameters from params
   # order - the desired order, either ascending or descending, of the
   #         list by the peer.
   #
@@ -303,17 +314,20 @@ class TrackerController < ApplicationController
   def manager_list_by_peer
   
     @sort_order        = get_sort_order
-    @sort_order[:peer] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+    @sort_order[:peer] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order] = @sort_order
     
-    @design_reviews = 
-      get_active_reviews.sort_by { |dr| [dr.design.peer.last_name, dr.age] }
-    @design_reviews.reverse! if @params[:order] == 'DESC'
+    design_reviews = get_active_reviews
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.design.peer.last_name, dr.age] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.design.peer.last_name, dr.age] }
+    @active_reviews.reverse!   if params[:order] == 'DESC'
+    @inactive_reviews.reverse! if params[:order] == 'DESC'
     
+    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
     @submissions = BoardDesignEntry.count("state='submitted'")
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_list_by_peer',
-                            :order      => @params[:order]}
+    session[:return_to] = {:controller => 'tracker',
+                           :action     => 'manager_list_by_peer',
+                           :order      => params[:order]}
     render_action 'manager_home'
     
   end  
@@ -326,7 +340,7 @@ class TrackerController < ApplicationController
   # Description:
   # This method manages the ordering of the list by the age in work days.
   #
-  # Parameters from @params
+  # Parameters from params
   # order - the desired order, either ascending or descending, of the
   #         list by age in work days..
   #
@@ -335,17 +349,20 @@ class TrackerController < ApplicationController
   def manager_list_by_age
   
     @sort_order        = get_sort_order
-    @sort_order[:date] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+    @sort_order[:date] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order] = @sort_order
     
-    @design_reviews = 
-      get_active_reviews.sort_by { |dr| [dr.age, dr.priority.value] }
-    @design_reviews.reverse! if @params[:order] == 'DESC'
+    design_reviews = get_active_reviews
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.age, dr.priority.value] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.age, dr.priority.value] }
+    @active_reviews.reverse!   if params[:order] == 'DESC'
+    @inactive_reviews.reverse! if params[:order] == 'DESC'
     
+    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
     @submissions = BoardDesignEntry.count("state='submitted'")
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_list_by_age',
-                            :order      => @params[:order]}
+    session[:return_to] = {:controller => 'tracker',
+                           :action     => 'manager_list_by_age',
+                           :order      => params[:order]}
     render_action 'manager_home'
 
   end  
@@ -359,7 +376,7 @@ class TrackerController < ApplicationController
   # This method manages the ordering of the list by the design review
   # status.
   #
-  # Parameters from @params
+  # Parameters from params
   # order - the desired order, either ascending or descending, of the
   #         list by the design review status.
   #
@@ -368,17 +385,20 @@ class TrackerController < ApplicationController
   def manager_list_by_status
   
     @sort_order          = get_sort_order
-    @sort_order[:status] = @params[:order] == 'ASC' ? 'DESC' : 'ASC'
+    @sort_order[:status] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order]   = @sort_order
     
-    @design_reviews = 
-      get_active_reviews.sort_by { |dr| [dr.review_status.name, dr.age] }
-    @design_reviews.reverse! if @params[:order] == 'DESC'
+    design_reviews = get_active_reviews
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.review_status.name, dr.age] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.review_status.name, dr.age] }
+    @active_reviews.reverse!   if params[:order] == 'DESC'
+    @inactive_reviews.reverse! if params[:order] == 'DESC'
     
+    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
     @submissions = BoardDesignEntry.count("state='submitted'")
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'manager_list_by_date',
-                            :order      => @params[:order]}
+    session[:return_to] = {:controller => 'tracker',
+                           :action     => 'manager_list_by_date',
+                           :order      => params[:order]}
     render_action 'manager_home'
 
   end  
@@ -405,8 +425,8 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def get_sort_order
-    if @session['flash'][:sort_order]
-      return @session['flash'][:sort_order]
+    if session['flash'][:sort_order]
+      return session['flash'][:sort_order]
     else
       return Hash.new('ASC')
     end
@@ -421,7 +441,7 @@ class TrackerController < ApplicationController
   # This method gathers the information to display the PCB Admin's 
   # home page.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   ######################################################################
@@ -503,7 +523,7 @@ class TrackerController < ApplicationController
   # This method gathers the information to display the Designer's 
   # home page.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   ######################################################################
@@ -512,10 +532,12 @@ class TrackerController < ApplicationController
 
     pre_art_phase_id = ReviewType.find_by_name('Pre-Artwork').id
 
-    designs  = Design.find_all("designer_id='#{session[:user].id}' AND phase_id!='#{Design::COMPLETE}' AND phase_id!='#{pre_art_phase_id}'",
-                               'created_on ASC') +
-               Design.find_all("pcb_input_id='#{session[:user].id}' AND phase_id='#{pre_art_phase_id}'",
-                               'created_on ASC')
+    designs  = Design.find(:all,
+                           :conditions => "designer_id='#{session[:user].id}' AND phase_id!='#{Design::COMPLETE}' AND phase_id!='#{pre_art_phase_id}'",
+                           :order      => 'created_on ASC') +
+               Design.find(:all,
+                           :conditions => "pcb_input_id='#{session[:user].id}' AND phase_id='#{pre_art_phase_id}'",
+                           :order      => 'created_on ASC')
     @designs = designs.uniq.sort_by { |dr| dr.priority.value }
         
     @designs.each do |design|
@@ -553,7 +575,7 @@ class TrackerController < ApplicationController
     #
     # Get the audits where the user is the member of an audit team.
     # 
-    my_audit_teams = AuditTeammate.find_all_by_user_id(@session[:user].id)
+    my_audit_teams = AuditTeammate.find_all_by_user_id(session[:user].id)
     for audit_team in my_audit_teams
       
       audit = audit_team.audit
@@ -572,12 +594,14 @@ class TrackerController < ApplicationController
     #
     # Get the audits where the user is listed as the lead peer.
     # 
-    peer_designs = Design.find_all("peer_id=#{@session[:user].id}",
-                                   'created_on ASC')
+    peer_designs = Design.find(:all,
+                               :conditions => "peer_id=#{session[:user].id}",
+                               :include    => :audit,
+                               :order      => 'created_on ASC')
 
     for peer_design in peer_designs
     
-      audit = Audit.find_all("design_id='#{peer_design.id}'").pop
+      audit = peer_design.audit
       next if audit.is_self_audit? && audits[audit.id]
       
       audit[:self] = false
@@ -603,7 +627,8 @@ class TrackerController < ApplicationController
     # associated with the design for the user.
     @work_assignments = false
     @my_assignments   = {}
-    active_designs = Design.find_all("phase_id != #{Design::COMPLETE}")
+    active_designs = Design.find(:all,
+                                 :conditions => "phase_id != #{Design::COMPLETE}")
     
     active_designs.each do |design|
       @work_assignments                 |= design.have_assignments(session[:user].id)
@@ -624,7 +649,7 @@ class TrackerController < ApplicationController
   # This method gathers the information to display the Reviewer's 
   # home page.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   ######################################################################
@@ -689,7 +714,7 @@ class TrackerController < ApplicationController
   # This method gathers the information to display the Manager's 
   # home page.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   ######################################################################
@@ -700,34 +725,16 @@ class TrackerController < ApplicationController
     @sort_order.default = 'ASC'
     flash[:sort_order] = @sort_order
       
-    @design_reviews = get_active_reviews
-    @design_reviews = @design_reviews.sort_by { |dr| [dr.priority.value, dr.age] }
+    design_reviews = get_active_reviews
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.priority.value, dr.age] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.priority.value, dr.age] }
 
+#    @submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
     @submissions = BoardDesignEntry.count("state='submitted'")
-    @session[:return_to] = {:controller => 'tracker',
-                            :action     => 'index'}
+    session[:return_to] = {:controller => 'tracker', :action => 'index'}
     
   end
  
-  
-#  def get_design_reviews
-#   in_process = ReviewStatus.find_by_name('In Review')
-#   design_reviews = DesignReview.find_all("review_status_id=#{in_process.id}",
-#                                           'created_on ASC')
-#    for design_review in design_reviews
-#      begin
-#        design_review[:priority_name] = design_review.priority.name
-#      rescue
-#        design_review[:priority_name] = "Unset"
-#      end
-#      
-#      design_review[:reviewers] = 
-#        DesignReviewResult.find_all("design_review_id='#{design_review.id}'").size
-#      design_review[:approvals] = DesignReviewResult.find_all("design_review_id='#{design_review.id}' and result='#{DesignReviewResult::APPROVED}'").size
-#    end
-#    return design_reviews
-#  end
-  
   
   ######################################################################
   #
@@ -736,7 +743,7 @@ class TrackerController < ApplicationController
   # Description:
   # This method retrieves all of the active design reviews.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   ######################################################################
@@ -744,15 +751,13 @@ class TrackerController < ApplicationController
   def get_active_reviews
   
     design_reviews = []
-    designs        = Design.find_all("phase_id!=#{Design::COMPLETE}")
-
-    designs.each do |design|
+    Design.find(:all,
+                :conditions => "phase_id!=#{Design::COMPLETE}",
+                :include    => :design_reviews).each do |design|
     
       next if design.phase_id == 0
     
-      design_review = DesignReview.find_by_design_id_and_review_type_id(
-                        design.id,
-                        design.phase_id)
+      design_review = design.design_reviews.detect { |dr| dr.review_type_id == design.phase_id }
            
       begin
         design_review[:priority_name] = design_review.priority.name
@@ -770,7 +775,17 @@ class TrackerController < ApplicationController
     
     end
     
-    return design_reviews
+    lists = { :active => [], :inactive => [] }
+    design_reviews.each do |design_review|
+      if design_review.review_status.name != 'Not Started'
+        lists[:active] << design_review
+      else
+        lists[:inactive] << design_review
+      end
+    end
+    
+    return lists
+    
   end
   
 
