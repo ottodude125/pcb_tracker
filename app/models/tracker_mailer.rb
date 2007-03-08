@@ -86,6 +86,41 @@ class TrackerMailer < ActionMailer::Base
 
   ######################################################################
   #
+  # ftp_notification
+  #
+  # Description:
+  # This method generates the mail to notify that the design data has
+  # been ftp'd
+  #
+  # Parameters:
+  #   message          - the user making the update
+  #   ftp_notification - the record containing the ftp notification details
+  #   sent_at          - the timestamp for the mail header (defaults to Time.now)
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def ftp_notification(message,
+                       ftp_notification,
+                       sent_at         = Time.now)
+
+    design_review = ftp_notification.design.design_reviews.detect { |dr| dr.review_type.name == "Final"}
+    
+    @subject    = "#{ftp_notification.design.name} Bare Board Files have been transmitted to #{ftp_notification.fab_house.name}"
+    @recipients      = reviewer_list(design_review)
+    @from            = Pcbtr::SENDER
+    @sent_on         = sent_at
+    @headers         = {}
+    @bcc             = 'paul_altimonte@notes.teradyne.com'
+    @cc              = copy_to(design_review) - recipients
+    @body['message'] = message
+
+  end
+  
+  
+  ######################################################################
+  #
   # design_review_update
   #
   # Description:
@@ -964,23 +999,28 @@ class TrackerMailer < ActionMailer::Base
   # has been assigned.
   #
   # Parameters:
-  #   oi_instruction - the outsource instruction that is being assigned
-  #   sent_at        - the time of the event
+  #   oi_assignment_list - the outsource assignment list 
+  #   sent_at            - the time of the event
   #
   ######################################################################
   #
-  def oi_assignment_notification(oi_instruction,
-                                 sent_on         = Time.now)
+  def oi_assignment_notification(oi_assignment_list,
+                                 sent_on = Time.now)
   
-    @subject    = "#{oi_instruction.design.name}:: Work Assignment Created"       
-    @recipients = oi_instruction.oi_assignments.collect { |i| i.user.email }
+    design = oi_assignment_list[0].oi_instruction.design
+    
+    assignment  = oi_assignment_list.size == 1 ? 'Assignment' : 'Assignments'
+    @subject    = "Work #{assignment} Created for the " + design.name
+    @recipients = oi_assignment_list[0].user.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_on
     @headers    = {}
     @bcc        = 'paul_altimonte@notes.teradyne.com'
     @cc         = add_role_members(['PCB Input Gate', 'Manager'])
 
-    @body['oi_instruction'] = oi_instruction
+    @body['lead_designer']      = oi_assignment_list[0].user
+    @body['design']             = design
+    @body['oi_assignment_list'] = oi_assignment_list
   
   end
   
