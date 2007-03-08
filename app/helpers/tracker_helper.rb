@@ -65,7 +65,7 @@ module TrackerHelper
 
     review_results = DesignReviewResult.find_all_by_design_review_id(review_id)
     my_review_results = review_results.delete_if { |r| 
-      r.reviewer_id != @session[:user].id 
+      r.reviewer_id != session[:user].id 
     }
 
     inlude_role = my_review_results.size > 1
@@ -105,6 +105,30 @@ module TrackerHelper
     !next_design_review                                          ||
     !review_states.detect { |rs| rs == next_design_review.review_status.name }
      
+  end
+  
+  
+  ######################################################################
+  #
+  # send_ftp_notification?
+  #
+  # Description:
+  # Returns a flag that indicates that the link to the next review 
+  # in the cycle should be displayed
+  #
+  ######################################################################
+  #
+  def send_ftp_notification?(design)
+
+    # Get the design review identified by the phase id
+    next_design_review = design.design_reviews.detect { |dr| design.phase_id == dr.review_type_id }
+
+    !design.ftp_notification &&
+    (!next_design_review ||
+     (next_design_review.review_type.name == "Release"       &&
+      next_design_review.review_status.name == 'Not Started' && 
+      !design.ftp_notification))
+
   end
   
   
