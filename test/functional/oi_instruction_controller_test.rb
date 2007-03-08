@@ -439,9 +439,9 @@ class OiInstructionControllerTest < Test::Unit::TestCase
                  flash['notice'])
 
 
-    pre_post = { :instructions        => OiInstruction.find_all,
-                 :assignments         => OiAssignment.find_all,
-                 :assignment_comments => OiAssignmentComment.find_all }
+    pre_post = { :instructions        => OiInstruction.find(:all),
+                 :assignments         => OiAssignment.find(:all),
+                 :assignment_comments => OiAssignmentComment.find(:all) }
     assert_equal(2, pre_post[:instructions].size)
     assert_equal(2, pre_post[:assignments].size)
     assert_equal(2, pre_post[:assignment_comments].size)
@@ -487,7 +487,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     assert_equal('The work assignments have been recorded - mail was sent', 
                  flash['notice'])
                  
-    oi_instructions = OiInstruction.find_all - pre_post[:instructions]
+    oi_instructions = OiInstruction.find(:all) - pre_post[:instructions]
     assert_equal(3, oi_instructions.size)
     
     expected_sections = board_prep_sections.dup
@@ -519,10 +519,10 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     
     end
 
-    oi_assignments = OiAssignment.find_all - pre_post[:assignments]
+    oi_assignments = OiAssignment.find(:all) - pre_post[:assignments]
     assert_equal(4, oi_assignments.size)
     
-    oi_assignment_comments = OiAssignmentComment.find_all - pre_post[:assignment_comments]
+    oi_assignment_comments = OiAssignmentComment.find(:all) - pre_post[:assignment_comments]
     assert_equal(4, oi_assignment_comments.size)
 
     # Verify the email that was generated
@@ -537,8 +537,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     @emails.each do |email|
       assert_equal(expected_to.shift,   email.to.sort)
       assert_equal(expected_cc_list,    email.cc.sort)
-      assert_equal("#{mx234a.name}:: Work Assignment Created",
-                   email.subject)
+      assert_equal("Work Assignments Created for the mx234a", email.subject)
     end
     @emails.clear
 

@@ -488,11 +488,11 @@ class BoardControllerTest < Test::Unit::TestCase
   #
   def test_search_options
   
-    platform_ids = Platform.find_all.collect { |p| p.id }
-    project_ids  = Project.find_all.collect  { |p| p.id }
-    users        = User.find_all
+    platform_ids = Platform.find(:all).collect { |p| p.id }
+    project_ids  = Project.find(:all).collect  { |p| p.id }
+    users        = User.find(:all)
 
-    designers = User.find_all.delete_if do |u| 
+    designers = User.find(:all).delete_if do |u| 
       !u.roles.detect { |r| r.name == "Designer" } 
     end
     designers = designers.sort_by { |d| d.id }

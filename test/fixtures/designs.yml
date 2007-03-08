@@ -71,7 +71,7 @@ la453b4_eco2:
   priority_id:      1
 mx234b:
   id:               7
-  phase_id:         0
+  phase_id:         4
   board_id:         1
   revision_id:      2
   numeric_revision: 0
@@ -82,7 +82,7 @@ mx234b:
   priority_id:      2
 la454c3:
   id:               8
-  phase_id:         0
+  phase_id:         4
   board_id:         3
   revision_id:      3
   numeric_revision: 3

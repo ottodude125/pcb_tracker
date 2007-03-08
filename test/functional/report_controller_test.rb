@@ -11,8 +11,15 @@ class ReportControllerTest < Test::Unit::TestCase
     @response   = ActionController::TestResponse.new
   end
 
-  # Replace this with your real tests.
-  def test_truth
-    assert true
+
+  fixtures(:design_reviews,
+           :review_status,
+           :users)
+
+
+  def test_reviewer_workload_report
+  
+    post(:reviewer_workload)
+    
   end
 end

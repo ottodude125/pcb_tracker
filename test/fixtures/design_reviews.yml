@@ -10,7 +10,7 @@ mx234a_pre_artwork:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
-  created_on:       2006-01-10 00:00:00
+  created_on:       2006-01-03 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2006-05-09 00:00:00
 mx234a_placement:
@@ -24,6 +24,7 @@ mx234a_placement:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 mx234a_routing:
   id:               3
@@ -36,6 +37,7 @@ mx234a_routing:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 mx234a_final:
   id:               4
@@ -48,6 +50,7 @@ mx234a_final:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 mx234a_release:
   id:               5
@@ -60,6 +63,7 @@ mx234a_release:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la455b_pre_artwork:
   id:               6
@@ -72,6 +76,7 @@ la455b_pre_artwork:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 la455b_placement:
@@ -85,7 +90,8 @@ la455b_placement:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
-  reposted_on:      2006-01-26 00:00:00
+  created_on:       2004-01-10 00:00:00
+  reposted_on:      2004-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 la455b_routing:
   id:               8
@@ -97,6 +103,7 @@ la455b_routing:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 la455b_final:
@@ -109,6 +116,7 @@ la455b_final:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 la455b_release:
@@ -121,6 +129,7 @@ la455b_release:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 mx600a_pre_artwork:
@@ -133,7 +142,8 @@ mx600a_pre_artwork:
   review_type_id_2: 0
   priority_id:      2
   creator_id:       0
-  reposted_on:      2006-01-26 00:00:00
+  created_on:       2004-03-15 00:00:00
+  reposted_on:      2004-03-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 mx600a_placement:
   id:               12
@@ -145,6 +155,7 @@ mx600a_placement:
   review_type_id_2: 0
   priority_id:      2
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 mx600a_routing:
@@ -157,6 +168,7 @@ mx600a_routing:
   review_type_id_2: 0
   priority_id:      2
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 mx600a_final:
@@ -169,6 +181,7 @@ mx600a_final:
   review_type_id_2: 0
   priority_id:      2
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 mx600a_release:
@@ -181,6 +194,7 @@ mx600a_release:
   review_type_id_2: 0
   priority_id:      2
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 mx700b_pre_artwork:
@@ -193,6 +207,7 @@ mx700b_pre_artwork:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 mx700b_placement:
@@ -205,6 +220,7 @@ mx700b_placement:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 mx700b_routing:
@@ -217,6 +233,7 @@ mx700b_routing:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 mx700b_final:
@@ -229,6 +246,7 @@ mx700b_final:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 mx700b_release:
@@ -241,6 +259,7 @@ mx700b_release:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 mx234c_pre_artwork:
@@ -254,6 +273,7 @@ mx234c_pre_artwork:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2000-04-09 00:00:00
 mx234c_placement:
@@ -267,6 +287,7 @@ mx234c_placement:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 mx234c_routing:
   id:               23
@@ -279,6 +300,7 @@ mx234c_routing:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 mx234c_final:
   id:               24
@@ -291,6 +313,7 @@ mx234c_final:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 mx234c_release:
   id:               25
@@ -303,6 +326,7 @@ mx234c_release:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453b_pre_artwork:
   id:               100
@@ -315,6 +339,7 @@ la453b_pre_artwork:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2000-04-09 00:00:00
 la453b_placement:
@@ -328,6 +353,7 @@ la453b_placement:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   created_on:       2006-02-03 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453b_routing:
@@ -341,6 +367,7 @@ la453b_routing:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453b_final:
   id:               103
@@ -353,6 +380,7 @@ la453b_final:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453b_release:
   id:               104
@@ -365,6 +393,7 @@ la453b_release:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453a_eco1_pre_artwork:
   id:               110
@@ -378,6 +407,7 @@ la453a_eco1_pre_artwork:
   priority_id:      1
   creator_id:       0
   reposted_on:      2006-01-26 00:00:00
+  created_on:       2006-01-10 00:00:00
   completed_on:     2000-04-09 00:00:00
 la453a_eco1_placement:
   id:               111
@@ -390,6 +420,7 @@ la453a_eco1_placement:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453a_eco1_routing:
   id:               112
@@ -402,6 +433,7 @@ la453a_eco1_routing:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453a_eco1_final:
   id:               113
@@ -414,7 +446,7 @@ la453a_eco1_final:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
-  created_on:       2006-02-05 00:00:00
+  created_on:       2006-01-09 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453a_eco1_release:
   id:               114
@@ -427,6 +459,7 @@ la453a_eco1_release:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453a1_pre_artwork:
   id:               120
@@ -439,6 +472,7 @@ la453a1_pre_artwork:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2000-04-09 00:00:00
 la453a1_placement:
@@ -453,6 +487,7 @@ la453a1_placement:
   priority_id:      2
   creator_id:       0
   created_on:       2006-03-05 00:00:00
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453a1_routing:
   id:               122
@@ -465,6 +500,7 @@ la453a1_routing:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453a1_final:
   id:               123
@@ -477,6 +513,7 @@ la453a1_final:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453a1_release:
   id:               124
@@ -489,6 +526,7 @@ la453a1_release:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453a2_pre_artwork:
   id:               130
@@ -501,6 +539,7 @@ la453a2_pre_artwork:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2000-04-09 00:00:00
 la453a2_placement:
@@ -514,6 +553,7 @@ la453a2_placement:
   review_type_id_2: 2
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453a2_routing:
   id:               132
@@ -526,6 +566,7 @@ la453a2_routing:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453a2_final:
   id:               133
@@ -538,6 +579,7 @@ la453a2_final:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 la453a2_release:
   id:               134
@@ -550,8 +592,8 @@ la453a2_release:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
-  reposted_on:      2006-01-26 00:00:00
-  
+  created_on:       2006-01-10 00:00:00
+  reposted_on:      2006-01-26 00:00:00  
 mx234b_pre_artwork:
   id:               1000
   posting_count:    1
@@ -577,6 +619,7 @@ mx234b_placement:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 mx234b_routing:
   id:               1002
@@ -589,6 +632,7 @@ mx234b_routing:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 mx234b_final:
   id:               1003
@@ -601,6 +645,7 @@ mx234b_final:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
 mx234b_release:
   id:               1004
@@ -613,5 +658,48 @@ mx234b_release:
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
+  created_on:       2006-01-10 00:00:00
   reposted_on:      2006-01-26 00:00:00
+mx999a_pre_artwork:
+  id:               1100
+  posting_count:    1
+  design_id:        13
+  designer_id:      4000
+  design_center_id: 1
+  review_status_id: 1
+  review_type_id:   3
+  review_type_id_2: 0
+  priority_id:      1
+  creator_id:       0
+  created_on:       2006-01-10 00:00:00
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2006-05-09 00:00:00
+mx999b_pre_artwork:
+  id:               1101
+  posting_count:    1
+  design_id:        14
+  designer_id:      4000
+  design_center_id: 1
+  review_status_id: 1
+  review_type_id:   3
+  review_type_id_2: 0
+  priority_id:      1
+  creator_id:       0
+  created_on:       2006-01-15 00:00:00
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2006-05-09 00:00:00
+mx999c_pre_artwork:
+  id:               1102
+  posting_count:    1
+  design_id:        15
+  designer_id:      4000
+  design_center_id: 1
+  review_status_id: 1
+  review_type_id:   3
+  review_type_id_2: 0
+  priority_id:      1
+  creator_id:       0
+  created_on:       2006-01-20 00:00:00
+  reposted_on:      2006-01-26 00:00:00
+  completed_on:     2006-05-09 00:00:00
 
