@@ -23,18 +23,40 @@
     <td class="teraheader" width="20%">
       <table width="100%" cellpadding="2" cellspacing="0">
         <tr valign="top">
-          <th width="15%">1.</th>
-          <th align="left">Select the grade</th>
+          <th width="15%" class="teraheader">1.</th>
+          <th align="left" class="teraheader">Select the grade</th>
         </tr>
       </table>
     </td>
     <td>
       <select id='report_score' name='report[score]'>
-        <option value="0">Please Select a Range</option>
+        <option value="256">Please Select a Range</option>
         <% @scoring_table.each do |score| %>
-          <option value="<%= score[0] %>"><%= score[1] %> Rework</option>
+          <option value="<%= score[0] %>"><%= score[1] %></option>
         <% end %>
         </select>
+    </td>
+  </tr>
+  
+  <tr valign="top">
+    <td class="teraheader" width="20%">
+      <table width="100%" cellpadding="2" cellspacing="0">
+        <tr valign="top">
+          <th width="15%" class="teraheader">2.</th>
+          <th align="left" class="teraheader">Modify Task Complexity (optional)</th>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <select id='complexity_id' name='complexity[id]'>
+        <% OiAssignment.complexity_list().reverse.each do |complexity| %>
+          <% if @complexity_id == complexity[1] %>
+            <option selected="selected" value="<%= complexity[1] %>"><%= complexity[0] %></option>
+          <% else %>
+            <option value="<%= complexity[1] %>"><%= complexity[0] %></option>
+          <% end %>
+        <% end %>
+      </select>
     </td>
   </tr>
   
@@ -42,8 +64,8 @@
     <td rowspan="2" class="teraheader" width="20%">
       <table width="100%" cellpadding="2" cellspacing="0">
         <tr valign="top">
-          <th width="15%">2.</th>
-          <th align="left">Enter a comment (optional)</th>
+          <th width="15%" class="teraheader">3.</th>
+          <th align="left" class="teraheader">Enter a comment (optional)</th>
         </tr>
       </table>
     </td>
@@ -55,12 +77,12 @@
     <td class="teraheader" width="20%">
       <table width="100%" cellpadding="2" cellspacing="0">
         <tr valign="top">
-          <th width="15%">3.</th>
-          <th align="left">Record the Grade</th>
+          <th width="15%" class="teraheader">4.</th>
+          <th align="left" class="teraheader">Record the Grade</th>
         </tr>
       </table>
     </td>
-    <td>
+    <td valign="bottom">
       <input title="Click here to record the grade." 
              class="tera_submit" type="submit" value="Submit" />
     </td>
