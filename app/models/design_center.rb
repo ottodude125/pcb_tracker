@@ -13,6 +13,7 @@
 class DesignCenter < ActiveRecord::Base
 
   has_many :design_reviews
+  has_many :ftp_notifications
   has_many :users
 
   validates_uniqueness_of :name
