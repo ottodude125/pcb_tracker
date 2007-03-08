@@ -91,7 +91,7 @@ module OiInstructionHelper
   def assignment_data(oi_instructions)
   
     assignments = {}
-    OiCategory.find_all.each { |c| assignments[c.id] = { :assigned => 0, :completed => 0 } }
+    OiCategory.find(:all).each { |c| assignments[c.id] = { :assigned => 0, :completed => 0 } }
     
     oi_instructions.each do |i|
       completed_list = i.oi_assignments.dup
