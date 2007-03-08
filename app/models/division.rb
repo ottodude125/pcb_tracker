@@ -16,6 +16,7 @@ class Division < ActiveRecord::Base
   validates_presence_of :name
 
 
+  has_many :ftp_notifications
   has_many :users
 
 end

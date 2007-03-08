@@ -12,6 +12,8 @@
 
 class FabHouse < ActiveRecord::Base
 
+  has_many :ftp_notifications
+
   has_and_belongs_to_many :boards
   has_and_belongs_to_many :designs
 
