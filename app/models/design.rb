@@ -25,6 +25,7 @@ class Design < ActiveRecord::Base
 
   has_one   :audit
   has_one   :board_design_entry
+  has_one   :ftp_notification
   
   
   NOT_SET = 'Not Set'
