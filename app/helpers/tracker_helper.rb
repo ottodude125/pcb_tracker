@@ -121,13 +121,13 @@ module TrackerHelper
   def send_ftp_notification?(design)
 
     # Get the design review identified by the phase id
-    next_design_review = design.design_reviews.detect { |dr| design.phase_id == dr.review_type_id }
+    design_reviews = DesignReview.find(:all, :conditions => "design_id=#{design.id}")
+    next_design_review = design_reviews.detect { |dr| design.phase_id == dr.review_type_id }
 
     !design.ftp_notification &&
-    (!next_design_review ||
-     (next_design_review.review_type.name == "Release"       &&
-      next_design_review.review_status.name == 'Not Started' && 
-      !design.ftp_notification))
+    (next_design_review                               && 
+     next_design_review.review_type.name == "Release" &&
+     next_design_review.review_status.name == 'Not Started') 
 
   end
   
