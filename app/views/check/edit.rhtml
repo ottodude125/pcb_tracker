@@ -119,7 +119,7 @@
     <% if @check.url != '' %>
       <tr>
         <td>&nbsp;</td>
-        <% url = @check.url %>
+        <% url = 'http://' + @check.url %>
         <td>
         <a href="<%= url %>" target="_blank">Online Reference</a>
         <% if @check.url.size < 25 %>
