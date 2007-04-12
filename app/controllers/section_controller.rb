@@ -22,7 +22,7 @@ class SectionController < ApplicationController
   # Description:
   # This method retrieves the section from the database for display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the section to be retrieved.
   #
   # Return value:
@@ -34,7 +34,7 @@ class SectionController < ApplicationController
   #
   def edit
 
-    @section = Section.find(@params['id'])
+    @section = Section.find(params['id'])
     @checklist = Checklist.find(@section.checklist_id)
 
   end
@@ -48,7 +48,7 @@ class SectionController < ApplicationController
   # This method is called when the user submits from the edit section
   # screen.  The database is updated with the changes made by the user.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['section] - Contains the udpated section data.
   #
   # Return value:
@@ -60,17 +60,18 @@ class SectionController < ApplicationController
   ######################################################################
   #
   def update
-    @section = Section.find(@params['section']['id'])
-    if @section.update_attributes(@params['section'])
+    @section = Section.find(params[:section][:id])
+    params[:section][:url] = params[:section][:url].sub(/http:\/\//, '')
+    if @section.update_attributes(params[:section])
       flash['notice'] = 'Section was successfully updated.'
       redirect_to(:controller => 'checklist',
                   :action     => 'edit',
-                  :id         => @params["section"]["checklist_id"])
+                  :id         => params[:section][:checklist_id])
     else
       flash['notice'] = 'Section not updated'
       redirect_to(:controller => 'checklist', 
                   :action     => 'edit',
-                  :id         => @params["section"]["checklist_id"])
+                  :id         => params[:section][:checklist_id])
     end
   end
 
@@ -84,7 +85,7 @@ class SectionController < ApplicationController
   # the modify checks screen.  The section  is swapped with the
   # preceeding section.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Identifies the section that moved up. 
   #
   # Return value:
@@ -97,7 +98,7 @@ class SectionController < ApplicationController
   #
   def move_up
 
-    section = Section.find(@params['id'])
+    section = Section.find(params['id'])
     next_sort = section.sort_order - 1
     next_section = Section.find(:first,
                                 :conditions => [
@@ -127,7 +128,7 @@ class SectionController < ApplicationController
   # the modify checks screen.  The section is swapped with the
   # section that follows.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Identifies the section that moved up. 
   #
   # Return value:
@@ -140,7 +141,7 @@ class SectionController < ApplicationController
   #
   def move_down
 
-    section = Section.find(@params['id'])
+    section = Section.find(params['id'])
     next_sort = section.sort_order + 1
     next_section = Section.find(:first,
                                 :conditions => [
@@ -171,7 +172,7 @@ class SectionController < ApplicationController
   # following the deleted section are updated to fill in the hole created 
   # by the deleted section.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Identifies the section to be deleted.
   #
   # Return value:
@@ -183,20 +184,22 @@ class SectionController < ApplicationController
   #
   def destroy
 
-    section = Section.find(@params['id'])
+    section = Section.find(params['id'])
     checklist_id = section.checklist_id
 
     sort_order = section.sort_order
-    sections   = 
-      Section.find_all("checklist_id=#{section.checklist_id} AND sort_order>#{sort_order}")
+    sections   = Section.find(:all,
+                              :conditions => "checklist_id=#{section.checklist_id} AND " +
+                                             "sort_order>#{sort_order}")
 
-      for sect in sections
+      sections.each do |sect|
         new_sort_order = sect.sort_order - 1
         sect.update_attribute('sort_order', new_sort_order)
       end
 
-    deleted_checks = Check.find_all("section_id=#{section.id}")
-      for check in deleted_checks
+    deleted_checks = Check.find(:all,
+                                :conditions => "section_id=#{section.id}")
+      deleted_checks.each do |check|
         section.checklist.increment_checklist_counters(check, -1)
       end
 
@@ -223,7 +226,7 @@ class SectionController < ApplicationController
   # for all the sections that follow the new section, and inserts the section in 
   # the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['section']['id'] - Identifies the existing section.  The new section will
   #                     be inserted in front of this section.
   # ['new_section']   - Contains the information to be stored with the new
@@ -239,9 +242,10 @@ class SectionController < ApplicationController
   #
   def insert_section
 
-    existing_sect = Section.find(@params['section']['id'])
+    existing_sect = Section.find(params['section']['id'])
 
-    sections = Section.find_all("checklist_id=#{existing_sect['checklist_id']}")
+    sections = Section.find(:all,
+                            :conditions => "checklist_id=#{existing_sect['checklist_id']}")
       # Go through all of the sections and bump sort order by 1
       for section in sections
         if section.sort_order >= existing_sect['sort_order']
@@ -249,10 +253,10 @@ class SectionController < ApplicationController
         end
       end
 
-    @params['new_section']['checklist_id'] = existing_sect['checklist_id']
-    @params['new_section']['sort_order']   = existing_sect['sort_order']
+    params['new_section']['checklist_id'] = existing_sect['checklist_id']
+    params['new_section']['sort_order']   = existing_sect['sort_order']
 
-    @new_section = Section.create(@params['new_section'])
+    @new_section = Section.create(params['new_section'])
 
     if @new_section.errors.empty?
       flash['notice'] = 'Section insert successful.'
@@ -277,7 +281,7 @@ class SectionController < ApplicationController
   # follow the new section in the list of sections.  The new section is created
   # and loaded with initial values and the insert screen is displayed.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the existing section; the new section
   #          will be inserted into the list before this section.
   #
@@ -290,7 +294,7 @@ class SectionController < ApplicationController
   #
   def insert
 
-    @section = Section.find(@params['id'])
+    @section = Section.find(params['id'])
     @checklist = Checklist.find(@section.checklist_id)
       
     @new_section = @section.dup
@@ -310,7 +314,7 @@ class SectionController < ApplicationController
   # for all the sections that follow the new section, and inserts the section
   # in the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['section']['id'] - Identifies the existing section.  The new section will
   #                     be inserted in front of this section.
   # ['new_section']   - Contains the information to be stored with the new
@@ -326,9 +330,10 @@ class SectionController < ApplicationController
   #
   def append_section
 
-    existing_sect = Section.find(@params['section']['id'])
+    existing_sect = Section.find(params['section']['id'])
 
-    sections = Section.find_all("checklist_id=#{existing_sect['checklist_id']}")
+    sections = Section.find(:all,
+                            :conditions => "checklist_id=#{existing_sect['checklist_id']}")
       # Go through all of the sections and bump sort order by 1
       for section in sections
         if section.sort_order > existing_sect['sort_order']
@@ -336,10 +341,10 @@ class SectionController < ApplicationController
         end
       end
 
-    @params['new_section']['checklist_id'] = existing_sect['checklist_id']
-    @params['new_section']['sort_order']   = existing_sect['sort_order'] + 1
+    params['new_section']['checklist_id'] = existing_sect['checklist_id']
+    params['new_section']['sort_order']   = existing_sect['sort_order'] + 1
 
-    @new_section = Section.create(@params['new_section'])
+    @new_section = Section.create(params['new_section'])
 
     if @new_section.errors.empty?
       flash['notice'] = 'Section appended successfully.'
@@ -366,7 +371,7 @@ class SectionController < ApplicationController
   # is created and loaded with initial values and the append screen is 
   # displayed.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the existing section; the new section
   #          will be inserted into the list after this section.
   #
@@ -379,7 +384,7 @@ class SectionController < ApplicationController
   #
   def append
 
-    @section = Section.find(@params['id'])
+    @section = Section.find(params['id'])
     @checklist = Checklist.find(@section.checklist_id)
       
     @new_section = @section.dup
