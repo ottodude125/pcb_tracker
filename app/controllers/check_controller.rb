@@ -73,9 +73,10 @@ class CheckController < ApplicationController
 
     # Update all of the checks that will follow the new check
     checks = 
-      Check.find_all("subsection_id=#{@existing_check.subsection_id} and " +
-                     "sort_order >= #{@existing_check.sort_order}",
-                     'sort_order ASC');
+      Check.find(:all,
+                 :conditions => "subsection_id=#{@existing_check.subsection_id} and " +
+                                "sort_order >= #{@existing_check.sort_order}",
+                 :order      => 'sort_order ASC');
 
     checks.each { |check| check.update_attribute('sort_order', (check.sort_order+1)) }
 
@@ -160,9 +161,10 @@ class CheckController < ApplicationController
 
     # Update all of the checks that will follow the new check
     checks = 
-      Check.find_all("subsection_id=#{@existing_check.subsection_id} and " +
-                     "sort_order >= #{@new_check['sort_order']}",
-                     'sort_order ASC');
+      Check.find(:all,
+                 :conditions => "subsection_id=#{@existing_check.subsection_id} and " +
+                                "sort_order >= #{@new_check['sort_order']}",
+                 :order      => 'sort_order ASC')
 
     checks.each { |check| check.update_attribute('sort_order', (check.sort_order+1)) }
 
@@ -513,12 +515,13 @@ class CheckController < ApplicationController
   #
   def update
 
-    @check = Check.find(params['check']['id'])
+    @check = Check.find(params[:check][:id])
+    params[:check][:url] = params[:check][:url].sub(/http:\/\//, '')
 
-    if not @check.section.checklist.released?
+    if ! @check.section.checklist.released?
       @check.section.checklist.increment_checklist_counters(@check, -1)
 
-      if @check.update_attributes(params['check'])
+      if @check.update_attributes(params[:check])
         @check.section.checklist.increment_checklist_counters(@check, 1)
         flash['notice'] = 'Check was successfully updated.'
         redirect_to(:action => 'modify_checks', :id => @check.subsection_id)
