@@ -55,13 +55,13 @@
       <td><%= subsection_count %></td>
       <td><%= check_count %></td>
       <td>
-        <%= link_to(image_tag('view'),
+        <%= link_to(image_tag('view.png'),
                     { :action => 'select_view',
                       :id     => checklist.id }) %>
         </td>
       <% if not checklist.released? %>
         <td>
-          <%= link_to(image_tag('edit'), 
+          <%= link_to(image_tag('edit.png'), 
                       { :action => 'edit', 
                         :id     => checklist.id }) %>
         </td>
@@ -70,7 +70,7 @@
       <% end %>
       <% if checklist.used == 0 and not checklist.released? %>
         <td>
-          <%= link_to(image_tag('delete'),
+          <%= link_to(image_tag('delete.png'),
                       { :action => 'destroy', 
                         :id     => checklist.id },
                       :confirm => 'Are you sure you want to delete revision ' +
@@ -85,14 +85,14 @@
                             checklist.major_rev_number.to_s + '.' + 
                             checklist.minor_rev_number.to_s + 
                             ' and create a new revision?' %>
-        <%= link_to(image_tag('copy'), 
+        <%= link_to(image_tag('copy.png'), 
                     { :action => 'copy', 
                       :id     => checklist.id },
                     :confirm => confirm_str) %>
       </td>
       <% if not checklist.released? %>
         <td>
-          <%= link_to(image_tag('release'),
+          <%= link_to(image_tag('release.png'),
                       { :action => 'release', 
                         :id     => checklist.id },
                       :confirm => 'Are you sure you want to release ' + 

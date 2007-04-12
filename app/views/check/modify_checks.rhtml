@@ -197,18 +197,18 @@
             <td>&nbsp;</td>
 
             <td>
-              <%= link_to(image_tag('edit'), 
+              <%= link_to(image_tag('edit.png'), 
                           { :action => 'edit',
                             :id     => check.id }) %>
             </td>
             <td>&nbsp;</td>
             <td>
-              <%= link_to(image_tag('insert'),
+              <%= link_to(image_tag('insert.png'),
                           { :action => 'insert',
                             :id     => check.id }) %>
             </td>
             <td>
-              <%= link_to(image_tag('append'),
+              <%= link_to(image_tag('append.png'),
                           { :action => 'append',
                             :id     => check.id }) %>
             </td>
@@ -216,7 +216,7 @@
             <td>&nbsp;</td>
             <% if check.sort_order > 1 %>
               <td>
-                <%= link_to(image_tag('arrow_up'),
+                <%= link_to(image_tag('arrow_up.png'),
                             { :action => 'move_up',
                               :id     => check.id }) %>
               </td>
@@ -225,7 +225,7 @@
             <% end %>
             <% if check.sort_order < @checks.size %>
               <td>
-                <%= link_to(image_tag('arrow_down'),
+                <%= link_to(image_tag('arrow_down.png'),
                             { :action => 'move_down',
                               :id     => check.id }) %>
               </td>
@@ -234,7 +234,7 @@
             <% end %>
             <td>&nbsp;</td>
             <td>
-              <%= link_to(image_tag('delete'), 
+              <%= link_to(image_tag('delete.png'), 
                           { :action => 'destroy',
                             :id     => check.id },
                           :confirm => 'Are you sure you want to delete this check?') %>
