@@ -77,14 +77,11 @@ class ChecklistControllerTest < Test::Unit::TestCase
     assert_equal(5, checklist.dr_designer_auditor_count)
 
     check_count = 0
-    sections = Section.find_all("checklist_id=#{checklist_1_0.id}")
-    for section in sections
-      check_count += Check.find_all("section_id=#{section.id}").size
-    end
+    sections = checklist.sections
+    sections.each { |section| check_count += section.checks.size }
     assert_equal(12, check_count)
 
-    checklists = Checklist.find_all("1")
-    assert_equal(3, checklists.size)
+    assert_equal(3, Checklist.count)
 
     set_admin
     post(:copy,
@@ -92,7 +89,7 @@ class ChecklistControllerTest < Test::Unit::TestCase
 
     assert_redirected_to(:action => 'list')
     
-    checklists = Checklist.find_all("1", "id ASC")
+    checklists = Checklist.find(:all, :order => "id ASC")
     assert_equal(4, checklists.size)
 
     checklist = checklists.pop
@@ -108,17 +105,15 @@ class ChecklistControllerTest < Test::Unit::TestCase
     assert_equal(5, checklist.dr_designer_auditor_count)
 
     check_count = 0
-    sections = Section.find_all("checklist_id=#{checklist.id}")
-    for section in sections
-      check_count += Check.find_all("section_id=#{section.id}").size
-    end
+    sections = checklist.sections
+    sections.each { |section| check_count += section.checks.size }
     assert_equal(12, check_count)
 
 
     post(:copy,
          :id      => checklist_1_0.id)
     
-    checklists = Checklist.find_all("1", "id ASC")
+    checklists = Checklist.find(:all, :order => "id ASC")
     assert_equal(5, checklists.size)
 
     checklist = checklists.pop
@@ -172,16 +167,15 @@ class ChecklistControllerTest < Test::Unit::TestCase
 
     # Try destroying from an Admin account
     check_count = 0
-    sections = Section.find_all("checklist_id=#{checklist_0_1.id}")
-    subsections = Subsection.find_all("checklist_id=#{checklist_0_1.id}")
-    for section in sections
-      check_count += Check.find_all("section_id=#{section.id}").size
-    end
+    sections = checklist_0_1.sections
+    subsections = checklist_0_1.subsections
+    sections.each { |section| check_count += section.checks.size }
+
     assert_equal(17, check_count)
     assert_equal( 4, sections.size)
     assert_equal( 7, subsections.size)
 
-    checklists = Checklist.find_all("1")
+    checklists = Checklist.find(:all)
     assert_equal(3, checklists.size)
 
     set_admin
@@ -190,14 +184,16 @@ class ChecklistControllerTest < Test::Unit::TestCase
 
     assert_redirected_to(:action => 'list')
 
-    checklists = Checklist.find_all("1")
+    checklists = Checklist.find(:all)
     assert_equal(2, checklists.size)
 
     check_count = 0
-    sections = Section.find_all("checklist_id=#{checklist_0_1.id}")
-    subsections = Subsection.find_all("checklist_id=#{checklist_0_1.id}")
-    for section in sections
-      check_count += Check.find_all("section_id=#{section.id}").size
+    sections = Section.find(:all,
+                            :conditions => "checklist_id=#{checklist_0_1.id}")
+    subsections = Subsection.find(:all,
+                                  :conditions => "checklist_id=#{checklist_0_1.id}")
+    sections.each do |section|
+      check_count += Check.count("section_id=#{section.id}")
     end
     assert_equal(0, check_count)
     assert_equal(0, sections.size)
@@ -351,7 +347,7 @@ class ChecklistControllerTest < Test::Unit::TestCase
                          :action     => 'login')
 
     # Try releasing from a non-Admin account.
-    checklists = Checklist.find_all('1')
+    checklists = Checklist.find(:all)
     assert_equal(3, checklists.size)
 
     checklist = Checklist.find(checklist_0_1.id)
@@ -372,7 +368,7 @@ class ChecklistControllerTest < Test::Unit::TestCase
     assert_redirected_to(:action => 'list')
     assert_equal('Checklist successfully released', flash['notice'])
 
-    checklists = Checklist.find_all('1')
+    checklists = Checklist.find(:all)
     assert_equal(3, checklists.size)
 
     checklist = Checklist.find(checklist_0_1.id)
