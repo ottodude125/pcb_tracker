@@ -65,20 +65,20 @@
           <td>&nbsp;</td>
 
           <td>
-            <%= link_to(image_tag('edit'),
+            <%= link_to(image_tag('edit.png'),
                         { :controller => 'section',
                           :action     => 'edit',
                           :id         => displaySection[0].id }) %>
           </td>
           <td>&nbsp;</td>
           <td>
-            <%= link_to(image_tag('insert'),
+            <%= link_to(image_tag('insert.png'),
                         { :controller => 'section',
                           :action     => 'insert',
                           :id         => displaySection[0].id }) %>
           </td>
           <td>
-            <%= link_to(image_tag('append'),
+            <%= link_to(image_tag('append.png'),
                         { :controller => 'section',
                           :action     => 'append',
                           :id         => displaySection[0].id }) %>
@@ -86,7 +86,7 @@
 	      <td>&nbsp;</td>
           <% if displaySection[0].sort_order > 1 %>
             <td>
-              <%= link_to(image_tag('arrow_up'), 
+              <%= link_to(image_tag('arrow_up.png'), 
                           { :controller => 'section',
                             :action     => 'move_up',
                             :id         => displaySection[0].id }) %>
@@ -97,7 +97,7 @@
 
           <% if displaySection[0].sort_order < @displaySections.size %>
             <td>
-              <%= link_to(image_tag('arrow_down'), 
+              <%= link_to(image_tag('arrow_down.png'), 
                           { :controller => 'section',
                             :action     => 'move_down',
                             :id => displaySection[0].id }) %>
@@ -108,7 +108,7 @@
 	      <td>&nbsp;</td>
           <% confirm_str = "Are you sure you want to delete this section and all of its subsections and checks? - #{displaySection[0].name} " %>
 	      <td>
-            <%= link_to(image_tag('delete'), 
+            <%= link_to(image_tag('delete.png'), 
                         { :controller => 'section',
                           :action     => 'destroy',
                           :id         => displaySection[0].id },
@@ -125,7 +125,7 @@
         <td align="right"><i><b>subsection:</b></i></td> 
         <td colspan="7">&nbsp;</td>
         <td>
-          <%= link_to(image_tag('edit'), 
+          <%= link_to(image_tag('edit.png'), 
                       { :controller => 'subsection',
                         :action     => 'create_first',
                         :id => displaySection[0].id }) %>
@@ -187,20 +187,20 @@
               <td>&nbsp;</td>
 
               <td>
-                <%= link_to(image_tag('edit'),
+                <%= link_to(image_tag('edit.png'),
                             { :controller => 'subsection',
                               :action     => 'edit', 
                               :id         => subsections[0].id }) %>
               </td>
               <td>&nbsp;</td>
               <td>
-                <%= link_to(image_tag('insert'),
+                <%= link_to(image_tag('insert.png'),
                             { :controller => 'subsection',
                               :action     => 'insert',
                               :id         => subsections[0].id }) %>
               </td>
               <td>
-                <%= link_to(image_tag('append'),
+                <%= link_to(image_tag('append.png'),
                             { :controller => 'subsection',
                               :action     => 'append',
                               :id         => subsections[0].id }) %>
@@ -208,7 +208,7 @@
               <td>&nbsp;</td>
               <% if subsections[0].sort_order > 1 %>
                 <td>
-                  <%= link_to(image_tag('arrow_up'), 
+                  <%= link_to(image_tag('arrow_up.png'), 
                               { :controller => 'subsection',
                                 :action     => 'move_up',
                                 :id         => subsections[0].id }) %>
@@ -219,7 +219,7 @@
 
               <% if subsections[0].sort_order < displaySection[1].size %>
                 <td>
-                  <%= link_to(image_tag('arrow_down'), 
+                  <%= link_to(image_tag('arrow_down.png'), 
                               { :controller => 'subsection',
                                 :action     => 'move_down', 
                                 :id         => subsections[0].id }) %>
@@ -231,7 +231,7 @@
               <td>&nbsp;</td>
               <% confirm_str = "Are you sure you want to delete this subsection and all of its checks? - #{subsections[0].name}" %>
               <td>
-                <%= link_to(image_tag('delete'), 
+                <%= link_to(image_tag('delete.png'), 
                             { :controller => 'subsection',
                               :action     => 'destroy', 
                               :id         => subsections[0].id },
@@ -259,7 +259,7 @@
             <% if not @checklist.released? %>
               <td colspan="4">&nbsp;</td>
               <td>
-                <%= link_to(image_tag('edit'),
+                <%= link_to(image_tag('edit.png'),
                             { :controller => 'check',
                               :action     => 'modify_checks',
                               :id         => subsections[0].id }) %>
@@ -269,7 +269,7 @@
               <% if subsections[1] > 0 %>
                 <% confirm_str = "Are you sure you want to delete all of the checks? - SUBSECTION: #{subsections[0].name}" %>
                 <td>
-                  <%= link_to(image_tag('delete'), 
+                  <%= link_to(image_tag('delete.png'), 
                               { :controller => 'check',
                                 :action => 'destroy_list', 
                                 :id => subsections[0].id }, 
