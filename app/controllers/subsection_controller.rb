@@ -25,7 +25,7 @@ class SubsectionController < ApplicationController
   # This method retrieves the subsection from the database for display
   # on the subsection edit screen.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the subsection to be retrieved.
   #
   # Return value:
@@ -37,7 +37,7 @@ class SubsectionController < ApplicationController
   #
   def edit
 
-    @subsection = Subsection.find(@params['id'])
+    @subsection = Subsection.find(params['id'])
 
   end
 
@@ -50,7 +50,7 @@ class SubsectionController < ApplicationController
   # This method is called when the user submits from the edit subsection
   # screen.  The database is updated with the changes made by the user.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['check'] - Contains the udpated subsection data.
   #
   # Return value:
@@ -62,17 +62,18 @@ class SubsectionController < ApplicationController
   ######################################################################
   #
   def update
-    @subsection = Subsection.find(@params['subsection']['id'])
-    if @subsection.update_attributes(@params['subsection'])
+    @subsection = Subsection.find(params[:subsection][:id])
+    params[:subsection][:url] = params[:subsection][:url].sub(/http:\/\//, '')
+    if @subsection.update_attributes(params[:subsection])
       flash['notice'] = 'Subsection was successfully updated.'
       redirect_to(:controller => 'checklist',
-		  :action     => 'edit',
-		  :id         => @params["subsection"]["checklist_id"])
+                  :action     => 'edit',
+                  :id         => params[:subsection][:checklist_id])
     else
       flash['notice'] = 'Subsection not updated'
       redirect_to(:controller => 'checklist', 
-		  :action     => 'edit',
-		  :id         => @params["subsection"]["checklist_id"])
+                  :action     => 'edit',
+                  :id         => params[:subsection][:checklist_id])
     end
   end
 
@@ -86,7 +87,7 @@ class SubsectionController < ApplicationController
   # the edit checklist screen.  The subsectio's sort_order is swapped with 
   # the preceeding subsection.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Identifies the subsection to moved up. 
   #
   # Return value:
@@ -99,7 +100,7 @@ class SubsectionController < ApplicationController
   #
   def move_up
 
-    subsection = Subsection.find(@params['id'])
+    subsection = Subsection.find(params['id'])
     next_sort = subsection.sort_order - 1
     other_sub = Subsection.find(:first,
                                 :conditions => [
@@ -129,7 +130,7 @@ class SubsectionController < ApplicationController
   # the edit checklist screen.  The subsection's sort_order is swapped with 
   # the subsection that follows the subsection.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Identifies the subsection to moved down. 
   #
   # Return value:
@@ -142,7 +143,7 @@ class SubsectionController < ApplicationController
   #
   def move_down
 
-    subsection = Subsection.find(@params['id'])
+    subsection = Subsection.find(params['id'])
     next_sort = subsection.sort_order + 1
     other_sub = Subsection.find(:first,
                                 :conditions => [
@@ -173,7 +174,7 @@ class SubsectionController < ApplicationController
   # that subsections following the deleted subsection are updated to fill 
   # in the hole created by the deleted subsection.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Identifies the subsection marked for deletion. 
   #
   # Return value:
@@ -185,19 +186,20 @@ class SubsectionController < ApplicationController
   #
   def destroy
 
-    subsection = Subsection.find(@params['id'])
+    subsection = Subsection.find(params['id'])
     checklist_id = subsection.checklist_id
     
     sort_order  = subsection.sort_order
     subsections =
-      Subsection.find_all("section_id=#{subsection.section_id} " +
-                          "AND sort_order>#{sort_order}")
-      for subsect in subsections
+      Subsection.find(:all,
+                      :conditions => "section_id=#{subsection.section_id} " +
+                                     "AND sort_order>#{sort_order}")
+      subsections.each do |subsect|
         new_sort_order = subsect.sort_order - 1
         subsect.update_attribute('sort_order', new_sort_order)
       end 
     
-      for check in subsection.checks
+      subsection.checks.each do |check|
         subsection.checklist.increment_checklist_counters(check, -1)
       end 
     if Check.destroy_all("subsection_id = #{subsection.id}") &&
@@ -221,7 +223,7 @@ class SubsectionController < ApplicationController
   # This method creates a new subsection, preloads data from the section, and
   # displays the add_first screen.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Identifies the section.
   #
   # Return value:
@@ -233,7 +235,7 @@ class SubsectionController < ApplicationController
   #
   def create_first
 
-    @section = Section.find(@params['id'])
+    @section = Section.find(params['id'])
 
     @new_subsection = Subsection.new
     @new_subsection.section_id   = @section.id   
@@ -256,7 +258,7 @@ class SubsectionController < ApplicationController
   # This method creates a new subsection and inserts the record in 
   # the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['section']    - Contains data used in the new check.
   # ['subsection'] - Contains data used in the new check.
   #
@@ -270,8 +272,8 @@ class SubsectionController < ApplicationController
   #
   def insert_first
     
-    section = Section.find(@params['section']['id'])
-    new_subsection = @params['new_subsection'].dup
+    section = Section.find(params['section']['id'])
+    new_subsection = params['new_subsection'].dup
     new_subsection['sort_order']   = 1
     new_subsection['checklist_id'] = section.checklist_id
     new_subsection['section_id']   = section.id
@@ -301,7 +303,7 @@ class SubsectionController < ApplicationController
   # sort_order for all the subsections that follow the new subsection, 
   # and inserts the subsection in the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['subsection']['id'] - Identifies the existing subsection.  The 
   #                        new subsection will be inserted in front of
   #                        this subsection.
@@ -318,9 +320,10 @@ class SubsectionController < ApplicationController
   #
   def insert_subsection
 
-    existing_sub = Subsection.find(@params['subsection']['id'])
+    existing_sub = Subsection.find(params['subsection']['id'])
 
-    subsections = Subsection.find_all("section_id=#{existing_sub.section_id}")
+    subsections = Subsection.find(:all,
+                                  :conditions => "section_id=#{existing_sub.section_id}")
       # Go through all of the subsections and bump sort order by 1
       # if the subsection follows the new subsection.
       for subsect in subsections
@@ -329,10 +332,10 @@ class SubsectionController < ApplicationController
         end
       end
 
-    @params['new_subsection']['checklist_id'] = existing_sub.checklist_id
-    @params['new_subsection']['section_id']   = existing_sub.section_id
-    @params['new_subsection']['sort_order']   = existing_sub.sort_order
-    new_subsect = Subsection.create(@params['new_subsection'])
+    params['new_subsection']['checklist_id'] = existing_sub.checklist_id
+    params['new_subsection']['section_id']   = existing_sub.section_id
+    params['new_subsection']['sort_order']   = existing_sub.sort_order
+    new_subsect = Subsection.create(params['new_subsection'])
 
     if new_subsect.errors.empty?
       flash['notice'] = 'Subsection insert successful.'
@@ -357,7 +360,7 @@ class SubsectionController < ApplicationController
   # subsection is created and loaded with initial values and the 
   # insert screen is displayed.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the existing subsection; the new subsection
   #          will be inserted into the list before this subsection.
   #
@@ -370,7 +373,7 @@ class SubsectionController < ApplicationController
   #
   def insert
 
-    @subsection = Subsection.find(@params['id'])
+    @subsection = Subsection.find(params['id'])
     @section    = Section.find(@subsection.section_id)
     @checklist  = Checklist.find(@subsection.checklist_id)
     
@@ -393,7 +396,7 @@ class SubsectionController < ApplicationController
   # all of the sort_order values for subsections that follow the 
   # new subsection in the list.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_subsection'] - the new subsection
   # ['subsection']     - the existing subsection 
   #
@@ -407,21 +410,22 @@ class SubsectionController < ApplicationController
   #
   def append_subsection
 
-    existing_sub = Subsection.find(@params['subsection']['id'])
+    existing_sub = Subsection.find(params['subsection']['id'])
 
     # Go through all of the subsections and bump sort order by 1
     # if the subsection follows the new subsection.
     subsections = 
-      Subsection.find_all("section_id=#{existing_sub.section_id} and " +
-                          "sort_order>#{existing_sub.sort_order}")
-      for subsect in subsections
+      Subsection.find(:all,
+                      :conditions => "section_id=#{existing_sub.section_id} and " +
+                                     "sort_order>#{existing_sub.sort_order}")
+      subsections.each do |subsect|
         subsect.update_attribute('sort_order', (subsect.sort_order+1))
       end
 
-    @params['new_subsection']['checklist_id'] = existing_sub.checklist_id
-    @params['new_subsection']['section_id']   = existing_sub.section_id
-    @params['new_subsection']['sort_order']   = existing_sub.sort_order + 1
-    subsect = Subsection.create(@params['new_subsection'])
+    params['new_subsection']['checklist_id'] = existing_sub.checklist_id
+    params['new_subsection']['section_id']   = existing_sub.section_id
+    params['new_subsection']['sort_order']   = existing_sub.sort_order + 1
+    subsect = Subsection.create(params['new_subsection'])
 
     if subsect.errors.empty?
       flash['notice'] = 'Appended subsection successfully.'
@@ -446,7 +450,7 @@ class SubsectionController < ApplicationController
   # subsection is created and loaded with initial values and the append
   # screen is displayed.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the existing subsection; the new subsection
   #          will be inserted into the list after this subsection.
   #
@@ -459,7 +463,7 @@ class SubsectionController < ApplicationController
   #
   def append
     
-    @subsection = Subsection.find(@params['id'])
+    @subsection = Subsection.find(params['id'])
       
     @new_subsection = @subsection.dup
       
