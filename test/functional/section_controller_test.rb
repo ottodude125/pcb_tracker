@@ -105,7 +105,8 @@ class SectionControllerTest < Test::Unit::TestCase
     section = { 'id' => sections(:section_01_1).id }
 
     checklist_0_1 = checklists(:checklist_0_1)
-    sections = Section.find_all("checklist_id=#{checklist_0_1.id}")
+    sections = Section.find(:all,
+                            :conditions => "checklist_id=#{checklist_0_1.id}")
     assert_equal(4, sections.size)
 
     post(:append_section,
@@ -113,8 +114,9 @@ class SectionControllerTest < Test::Unit::TestCase
          :section         => section)
     assert_equal('Section appended successfully.', flash['notice'])
 
-    sections = Section.find_all("checklist_id=#{checklist_0_1.id}",
-                                'sort_order ASC')
+    sections = Section.find(:all,
+                            :conditions => "checklist_id=#{checklist_0_1.id}",
+                            :order      => 'sort_order ASC')
     assert_equal(5, sections.size)
 
     1.upto(sections.size) { |x| assert_equal((x), sections[x-1][:sort_order])}
@@ -179,24 +181,26 @@ class SectionControllerTest < Test::Unit::TestCase
 
     set_admin
     checklist_0_1 = checklists(:checklist_0_1)
-    sections = Section.find_all("checklist_id=#{checklist_0_1.id}",
-                                'sort_order ASC')
+    sections = Section.find(:all,
+                            :conditions => "checklist_id=#{checklist_0_1.id}",
+                            :order      => 'sort_order ASC')
     assert_equal(4, sections.size)
     assert_equal(section_01_1.sort_order,            sections[0].sort_order)
     assert_equal(sections(:section_01_2).sort_order, sections[1].sort_order)
     assert_equal(sections(:section_01_3).sort_order, sections[2].sort_order)
 
-    checks = Check.find_all("section_id=#{section_01_1.id}")
+    checks = Check.find(:all,
+                        :conditions => "section_id=#{section_01_1.id}")
     assert_equal(6, checks.size)
 
     get(:destroy,
         :id       => section_01_1.id)
 
-    checks = Check.find_all("section_id=#{section_01_1.id}")
-    assert_equal(0, checks.size)
+    assert_equal(0, Check.count("section_id=#{section_01_1.id}"))
 
-    sections = Section.find_all("checklist_id=#{checklist_0_1.id}",
-                                'sort_order ASC')
+    sections = Section.find(:all,
+                            :conditions => "checklist_id=#{checklist_0_1.id}",
+                            :order      => 'sort_order ASC')
     assert_equal(3, sections.size)
     assert_equal(1, sections[0].sort_order)
     assert_equal(2, sections[1].sort_order)
@@ -332,7 +336,8 @@ class SectionControllerTest < Test::Unit::TestCase
 
     set_admin
     checklist_0_1 = checklists(:checklist_0_1)
-    sections = Section.find_all("checklist_id=#{checklist_0_1.id}")
+    sections = Section.find(:all,
+                            :conditions => "checklist_id=#{checklist_0_1.id}")
     assert_equal(4, sections.size)
 
     new_section = {
@@ -348,8 +353,9 @@ class SectionControllerTest < Test::Unit::TestCase
          :new_section => new_section,
          :section     => { 'id' => sections(:section_01_1).id })
 
-    sections = Section.find_all("checklist_id=#{checklist_0_1.id}",
-                                'sort_order ASC')
+    sections = Section.find(:all,
+                            :conditions => "checklist_id=#{checklist_0_1.id}",
+                            :order      => 'sort_order ASC')
     assert_equal(5, sections.size)
 
     assert_equal('New Section 01 2 4', sections[0].name)
@@ -384,8 +390,9 @@ class SectionControllerTest < Test::Unit::TestCase
   def test_move_down
 
     checklist_0_1 = checklists(:checklist_0_1)
-    sections = Section.find_all("checklist_id=#{checklist_0_1.id}",
-			                        	'sort_order ASC')
+    sections = Section.find(:all,
+                            :conditions => "checklist_id=#{checklist_0_1.id}",
+                            :order      => 'sort_order ASC')
     assert_equal(sections(:section_01_1).id, sections[0].id)
     assert_equal(sections(:section_01_2).id, sections[1].id)
     assert_equal(sections(:section_01_3).id, sections[2].id)
@@ -398,7 +405,7 @@ class SectionControllerTest < Test::Unit::TestCase
 
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
     assert_redirected_to(:controller => 'tracker',
-                  			 :action     => 'index')
+                  	     :action     => 'index')
 
     set_admin
     get(:move_down,
@@ -406,11 +413,12 @@ class SectionControllerTest < Test::Unit::TestCase
 
     assert('Sections were re-ordered', flash['notice'])
     assert_redirected_to(:controller => 'checklist',
-			                   :action     => 'edit',
+			             :action     => 'edit',
                          :id         => section_01_2.checklist_id)
     
-    sections = Section.find_all("checklist_id=#{section_01_2.checklist_id}",
-				'sort_order ASC')
+    sections = Section.find(:all,
+                            :conditions => "checklist_id=#{section_01_2.checklist_id}",
+				            :order      => 'sort_order ASC')
     assert_equal(sections(:section_01_1).id, sections[0].id)
     assert_equal(sections(:section_01_2).id, sections[2].id)
     assert_equal(sections(:section_01_3).id, sections[1].id)
@@ -443,8 +451,9 @@ class SectionControllerTest < Test::Unit::TestCase
   def test_move_up
 
     checklist_0_1 = checklists(:checklist_0_1)
-    sections = Section.find_all("checklist_id=#{checklist_0_1.id}",
-			                        	'sort_order ASC')
+    sections = Section.find(:all,
+                            :conditions => "checklist_id=#{checklist_0_1.id}",
+                            :order      => 'sort_order ASC')
     assert_equal(sections(:section_01_1).id, sections[0].id)
     assert_equal(sections(:section_01_2).id, sections[1].id)
     assert_equal(sections(:section_01_3).id, sections[2].id)
@@ -464,11 +473,12 @@ class SectionControllerTest < Test::Unit::TestCase
 
     assert('Sections were re-ordered', flash['notice'])
     assert_redirected_to(:controller => 'checklist',
-			                   :action     => 'edit',
+			             :action     => 'edit',
                          :id         => section_01_2.checklist_id)
     
-    sections = Section.find_all("checklist_id=#{section_01_2.checklist_id}",
-				                                        'sort_order ASC')
+    sections = Section.find(:all,
+                            :conditions => "checklist_id=#{section_01_2.checklist_id}",
+                            :order      => 'sort_order ASC')
     assert_equal(sections(:section_01_1).id, sections[1].id)
     assert_equal(sections(:section_01_2).id, sections[0].id)
     assert_equal(sections(:section_01_3).id, sections[2].id)
