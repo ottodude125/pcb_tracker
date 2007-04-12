@@ -120,8 +120,7 @@ class SubsectionControllerTest < Test::Unit::TestCase
     subsection = {'id' => subsections(:subsection_01_1_1).id}
 
     section_01_1 = sections(:section_01_1)
-    subsections = Subsection.find_all("section_id=#{section_01_1.id}")
-    assert_equal(2, subsections.size)
+    assert_equal(2, Subsection.count("section_id=#{section_01_1.id}"))
 
     post(:append_subsection,
          :new_subsection     => new_subsection,
@@ -132,8 +131,9 @@ class SubsectionControllerTest < Test::Unit::TestCase
                          :action     => 'edit',
                          :controller => 'checklist')
 
-    subsections = Subsection.find_all("section_id=#{section_01_1.id}",
-				                              'sort_order ASC')
+    subsections = Subsection.find(:all,
+                                  :conditions => "section_id=#{section_01_1.id}",
+                                  :order      => 'sort_order ASC')
     assert_equal(3, subsections.size)
 
     1.upto(subsections.size) { |x| assert_equal((x), subsections[x-1][:sort_order])}
@@ -239,8 +239,9 @@ class SubsectionControllerTest < Test::Unit::TestCase
 
     set_admin
     section_01_1 = sections(:section_01_1)
-    subsections = Subsection.find_all("section_id=#{section_01_1.id}",
-				      'sort_order ASC')
+    subsections = Subsection.find(:all,
+                                  :conditions => "section_id=#{section_01_1.id}",
+                                  :order      => 'sort_order ASC')
     assert_equal(2, subsections.size)
     assert_equal(subsections(:subsection_01_1_1).sort_order,
                  subsections[0].sort_order)
@@ -248,25 +249,21 @@ class SubsectionControllerTest < Test::Unit::TestCase
                  subsections[1].sort_order)
 
     subsection_01_1_1 = subsections(:subsection_01_1_1)
-    checks = Check.find_all("subsection_id=#{subsection_01_1_1.id}")
-    assert_equal(3, checks.size)
+    assert_equal(3, Check.count("subsection_id=#{subsection_01_1_1.id}"))
     section_01_1 = sections(:section_01_1)
-    checks = Check.find_all("section_id=#{section_01_1.id}")
-    assert_equal(6, checks.size)
+    assert_equal(6, Check.count("section_id=#{section_01_1.id}"))
 
     get(:destroy,
         :id            => subsection_01_1_1.id)
 
     assert_equal('Subsection deletion successful.', flash['notice'])
 
-    checks = Check.find_all("section_id=#{section_01_1.id}")
-    assert_equal(3, checks.size)
-    checks = Check.find_all("subsection_id=#{subsection_01_1_1.id}",
-			                      'sort_order ASC')
-    assert_equal(0, checks.size)
+    assert_equal(3, Check.count("section_id=#{section_01_1.id}"))
+    assert_equal(0, Check.count("subsection_id=#{subsection_01_1_1.id}"))
 
-    subsections = Subsection.find_all("section_id=#{section_01_1.id}",
-				      'sort_order ASC')
+    subsections = Subsection.find(:all,
+                                  :conditions => "section_id=#{section_01_1.id}",
+                                  :order      => 'sort_order ASC')
 
     assert_equal(1, subsections.size)
     assert_equal(subsections(:subsection_01_1_2).id, subsections[0].id)
@@ -284,17 +281,13 @@ class SubsectionControllerTest < Test::Unit::TestCase
     assert_equal(0, checklist.dr_designer_auditor_count)
 
     subsection_01_1_2 = subsections(:subsection_01_1_2)
-    checks = Check.find_all("subsection_id=#{subsection_01_1_2.id}")
-    assert_equal(3, checks.size)
+    assert_equal(3, Check.count("subsection_id=#{subsection_01_1_2.id}"))
 
     get(:destroy,
         :id            => subsection_01_1_2.id)
 
-    checks = Check.find_all("section_id=#{section_01_1.id}")
-    assert_equal(0, checks.size)
-    checks = Check.find_all("subsection_id=#{subsection_01_1_1.id}",
-			                      'sort_order ASC')
-    assert_equal(0, checks.size)
+    assert_equal(0, Check.count("section_id=#{section_01_1.id}"))
+    assert_equal(0, Check.count("subsection_id=#{subsection_01_1_1.id}"))
 
     checklist = Checklist.find(subsection_01_1_1.checklist_id)
     assert_equal(3, checklist.designer_only_count)
@@ -305,18 +298,14 @@ class SubsectionControllerTest < Test::Unit::TestCase
     assert_equal(0, checklist.dr_designer_auditor_count)
 
     subsection_01_2_1 = subsections(:subsection_01_2_1)
-    checks = Check.find_all("subsection_id=#{subsection_01_2_1.id}")
-    assert_equal(3, checks.size)
+    assert_equal(3, Check.count("subsection_id=#{subsection_01_2_1.id}"))
 
     get(:destroy,
         :id            => subsection_01_2_1.id)
 
     section_01_2 = sections(:section_01_2)
-    checks = Check.find_all("section_id=#{section_01_2.id}")
-    assert_equal(3, checks.size)
-    checks = Check.find_all("subsection_id=#{subsection_01_2_1.id}",
-			                      'sort_order ASC')
-    assert_equal(0, checks.size)
+    assert_equal(3, Check.count("section_id=#{section_01_2.id}"))
+    assert_equal(0, Check.count("subsection_id=#{subsection_01_2_1.id}"))
 
     checklist = Checklist.find(sections(:section_01_1).checklist_id)
     assert_equal(0, checklist.designer_only_count)
@@ -455,11 +444,11 @@ class SubsectionControllerTest < Test::Unit::TestCase
 
     set_admin
     section_01_3 = sections(:section_01_3)
-    subsections = Subsection.find_all("section_id=#{section_01_3.id}")
+    subsections = Subsection.find(:all,
+                                  :conditions => "section_id=#{section_01_3.id}")
     assert_equal(0, subsections.size)
     section_01_3 = sections(:section_01_3)
-    subsections_in_checklist = Subsection.find_all("checklist_id=#{section_01_3.checklist_id}")
-    assert_equal(7, subsections_in_checklist.size)
+    assert_equal(7, Subsection.count("checklist_id=#{section_01_3.checklist_id}"))
 
     new_subsection = {
       'name'   => 'subsection_01_3_1',
@@ -475,10 +464,10 @@ class SubsectionControllerTest < Test::Unit::TestCase
          :section        => { 'id' => sections(:section_01_3).id })
     
     section_01_3 = sections(:section_01_3)
-    subsections = Subsection.find_all("section_id=#{section_01_3.id}")
+    subsections = Subsection.find(:all,
+                                  :conditions => "section_id=#{section_01_3.id}")
     assert_equal(1, subsections.size)
-    subsections_in_checklist = Subsection.find_all("checklist_id=#{section_01_3.checklist_id}")
-    assert_equal(8, subsections_in_checklist.size)
+    assert_equal(8, Subsection.count("checklist_id=#{section_01_3.checklist_id}"))
 
     subsection = subsections.pop
 
@@ -521,8 +510,7 @@ class SubsectionControllerTest < Test::Unit::TestCase
 
     set_admin
     section_01_1 = sections(:section_01_1)
-    subsections = Subsection.find_all("section_id=#{section_01_1.id}")
-    assert_equal(2, subsections.size)
+    assert_equal(2, section_01_1.subsections.size)
 
     new_subsection = {
       'name'   => 'subsection_01_1_0.5',
@@ -537,8 +525,8 @@ class SubsectionControllerTest < Test::Unit::TestCase
          :new_subsection => new_subsection,
          :subsection     => { 'id' => subsections(:subsection_01_1_1).id })
 
-    subsections = Subsection.find_all("section_id=#{section_01_1.id}",
-				                              'sort_order ASC')
+    section_01_1.reload
+    subsections = section_01_1.subsections
     assert_equal(3, subsections.size)
 
     assert_equal('subsection_01_1_0.5', subsections[0].name)
@@ -570,8 +558,8 @@ class SubsectionControllerTest < Test::Unit::TestCase
   def test_move_down
 
     section_01_2 = sections(:section_01_2)
-    subsects = Subsection.find_all("section_id=#{section_01_2.id}",
-				                           'sort_order ASC')
+    subsects = section_01_2.subsections
+    
     assert_equal(subsections(:subsection_01_2_1).id, subsects[0].id)
     assert_equal(subsections(:subsection_01_2_2).id, subsects[1].id)
     assert_equal(subsections(:subsection_01_2_3).id, subsects[2].id)
@@ -593,8 +581,7 @@ class SubsectionControllerTest < Test::Unit::TestCase
     assert_redirected_to(:action => 'edit',
 			                   :id     => subsections(:subsection_01_2_2).checklist.id)
     
-    subsects = Subsection.find_all("section_id=#{section_01_2.id}",
-				   'sort_order ASC')
+    subsects.reload
     assert_equal(subsections(:subsection_01_2_2).id, subsects[0].id)
     assert_equal(subsections(:subsection_01_2_1).id, subsects[1].id)
     assert_equal(subsections(:subsection_01_2_3).id, subsects[2].id)
@@ -625,8 +612,8 @@ class SubsectionControllerTest < Test::Unit::TestCase
   def test_move_up
 
     section_01_2 = sections(:section_01_2)
-    subsects = Subsection.find_all("section_id=#{section_01_2.id}",
-			                             'sort_order ASC')
+    subsects = section_01_2.subsections
+    
     assert_equal(subsections(:subsection_01_2_1).id, subsects[0].id)
     assert_equal(subsections(:subsection_01_2_2).id, subsects[1].id)
     assert_equal(subsections(:subsection_01_2_3).id, subsects[2].id)
@@ -649,8 +636,7 @@ class SubsectionControllerTest < Test::Unit::TestCase
     assert_redirected_to(:action => 'edit',
 			                   :id     => subsections(:subsection_01_2_2).checklist.id)
     
-    subsects = Subsection.find_all("section_id=#{section_01_2.id}",
-				   'sort_order ASC')
+    subsects.reload
     assert_equal(subsections(:subsection_01_2_2).id, subsects[0].id)
     assert_equal(subsections(:subsection_01_2_1).id, subsects[1].id)
     assert_equal(subsections(:subsection_01_2_3).id, subsects[2].id)
