@@ -89,7 +89,7 @@
     <% if @subsection.url.size > 0%>
       <tr>
         <td>&nbsp;</td>
-        <% url = @subsection.url %>
+        <% url = 'http://' + @subsection.url %>
         <td>
           <a href="<%= url %>" target="_blank">Online Reference</a>
           <% if @subsection.url.size < 25 %>

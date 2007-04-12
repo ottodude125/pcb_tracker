@@ -43,9 +43,9 @@
     <% if @section.url.size > 0 %>
       <tr>
         <td>&nbsp;</td>
-        <% url = @section.url %>
+        <% reference_url = 'http://' + @section.url %>
         <td>
-          <a href="<%= url %>" target="_blank">Online Reference</a>
+          <a href="<%= reference_url %>" target="_blank">Online Reference</a>
           <% if @section.url.size < 25 %>
             (<%= @section.url %>)
           <% else %>
@@ -57,7 +57,7 @@
 
     <tr>
       <td colspan="2">
-        <hr class="div">
+        <hr class="div" />
         <table>
           <tr>
             <td><%= check_box "section", "full_review" %> </td>
@@ -83,6 +83,6 @@
   <% else %>
     <input type="submit" disabled="disabled" value="LOCKED - Checklist Released" />
   <% end %>
-  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @section.checklist_id )%>'">
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @section.checklist_id )%>'" />
 
 <%= end_form_tag %>
