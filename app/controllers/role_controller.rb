@@ -25,7 +25,7 @@ class RoleController < ApplicationController
   # display.  The list is paginated and is limited to the number 
   # passed to the ":per_page" argument.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -37,7 +37,7 @@ class RoleController < ApplicationController
   #
   def list
 
-    @roles = Role.find_all(nil, 'name ASC')
+    @roles = Role.find(:all, 'name ASC')
 
   end
 
@@ -48,7 +48,7 @@ class RoleController < ApplicationController
   # Description:
   # This method creates a role for the edit view.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -73,7 +73,7 @@ class RoleController < ApplicationController
   # This method uses the information passed back from the user
   # to create a new role in the database
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_role'] - the information to be stored for the new role.
   #
   # Return value:
@@ -83,7 +83,7 @@ class RoleController < ApplicationController
   #
   def create
 
-    @role = Role.create(@params['role'])
+    @role = Role.create(params[:role])
 
     if @role.errors.empty?
       flash['notice'] = "Role #{@role.display_name} added"
@@ -103,7 +103,7 @@ class RoleController < ApplicationController
   # Description:
   # This method retrieves the role from the database for display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the role to be retrieved.
   #
   # Return value:
@@ -112,7 +112,7 @@ class RoleController < ApplicationController
   ######################################################################
   #
   def edit 
-    @role = Role.find(@params['id'])
+    @role = Role.find(params[:id])
   end
 
 
@@ -124,7 +124,7 @@ class RoleController < ApplicationController
   # This method uses information passed back from the edit screen to
   # update the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['role'] - Used to identify the role to be updated.
   #
   # Return value:
@@ -133,16 +133,16 @@ class RoleController < ApplicationController
   ######################################################################
   #
   def update
-    @role = Role.find(@params['role']['id'])
+    @role = Role.find(params[:role][:id])
 
-    if @role.update_attributes(@params['role'])
+    if @role.update_attributes(params[:role])
       flash['notice'] = 'Role was successfully updated.'
       redirect_to :action => 'edit', 
-                  :id     => @params["role"]["id"]
+                  :id     => params[:role][:id]
     else
       flash['notice'] = 'Role not updated'
       redirect_to :action => 'edit', 
-                  :id     => @params["role"]["id"]
+                  :id     => params[:role][:id]
     end
     
 
@@ -156,7 +156,7 @@ class RoleController < ApplicationController
   # Description:
   # This method gathers the information to display the review roles.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -179,7 +179,7 @@ class RoleController < ApplicationController
   # This method processes the user input from the list_review_roles
   # screen.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -191,7 +191,7 @@ class RoleController < ApplicationController
 
     review_roles = Role.find_all('reviewer=1', 'name ASC')
     
-    updated_roles = @params['review_role']
+    updated_roles = params[:review_role]
 
     update = false
     for review_role in review_roles
