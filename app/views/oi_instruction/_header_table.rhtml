@@ -59,8 +59,8 @@
 
   <tr valign="top">
     <th class="teraheader" align="right">Date Assigned:</th>
-    <% line += 1 %>
-    <%= start_td(line) %>
+      <% line += 1 %>
+      <%= start_td(line) %>
       <%= @assignment.created_on.strftime("%d-%b-%y, %I:%M %p %Z") %>
     </td>
   </tr>
@@ -68,11 +68,19 @@
   <% if @assignment.complete? %>
     <tr valign="top">
       <th class="teraheader" align="right">Date Completed:</th>
-      <% line += 1 %>
-      <%= start_td(line) %>
+        <% line += 1 %>
+        <%= start_td(line) %>
         <%= @assignment.completed_on.strftime("%d-%b-%y, %I:%M %p %Z") %>
       </td>
     </tr>
   <% end %>
+
+  <tr valign="top">
+    <th class="teraheader" align="right">Due Date:</th>
+    <% line += 1 %>
+    <%= start_td(line) %>
+      <%= @assignment.due_date.strftime("%d-%b-%y") %>
+    </td>
+  </tr>
 
 </table>
