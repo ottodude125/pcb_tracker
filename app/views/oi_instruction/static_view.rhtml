@@ -81,8 +81,13 @@ function setFocus() {
     </tr>
 
     <tr valign="top">
-      <th class="teraheader" align="right">Report Card Score: </th>
+      <th class="teraheader" align="right">Percentage of Rework: </th>
       <td><%= @assignment.oi_assignment_report.score %></td>
+    </tr>
+  
+    <tr valign="top">
+      <th class="teraheader" align="right">Task Complexity: </th>
+      <td><%= @assignment.oi_assignment_report.oi_assignment.complexity_name %></td>
     </tr>
   
     <tr valign="top">
