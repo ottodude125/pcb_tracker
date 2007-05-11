@@ -1,0 +1,29 @@
+<!-- View:    pcb_mechanical_comments                           -->
+<!-- Purpose: Displays the pcb mechanical reviewer comments for -->
+<!--          for the design.                                   -->
+<!--                                                            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<p align="center">
+  <%= @design.name %> PCB Mechanical Comments
+</p>
+
+<p align="center">
+  <a href="javascript:window.close();">Close Window</a>
+</p>
+
+<% if @comments.size > 0 %>
+  <table border="0" cellspacing="0" width="100%" align="center">
+    <%= render_collection_of_partials("comment_list", @comments) %>
+  </table>
+<% else %>
+  <p align="center">
+    No comments
+  </p>
+<% end %>
+
+<p align="center">
+  <a href="javascript:window.close();">Close Window</a>
+</p>
