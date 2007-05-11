@@ -48,7 +48,7 @@
       <%= options_from_collection_for_select(@division_list,
                                              "id",
                                              "name",
-                                             @session[:user].division_id) %>
+                                             session[:user].division_id) %>
       </select>
     </td>
 
@@ -60,7 +60,7 @@
       <%= options_from_collection_for_select(@location_list,
                                              "id",
                                              "name",
-                                             @session[:user].location_id) %>
+                                             session[:user].location_id) %>
       </select>
     </td>
   </tr>

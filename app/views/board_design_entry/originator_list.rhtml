@@ -34,7 +34,7 @@
             <%= link_to('Submit Entry', 
                         {:action => 'submit',
                          :id     => entry.id,
-                         :return => @params[:action]},
+                         :return => params[:action]},
                         :title  => "Used to submit the PCB Engineering Entry to PCB Design",
                         :confirm => "Click 'OK' to submit the #{entry.design_name} to PCB Design for processing.  Otherwise, click 'Cancel'.") %>
           <% else %>
@@ -46,7 +46,7 @@
             <%= link_to('Delete Entry', 
                         {:action => 'destroy',
                          :id     => entry.id,
-                         :return => @params[:action]},
+                         :return => params[:action]},
                         :title  => "Used to delete the PDB Engineering Entry",
                         :confirm => "Do you really want to delete the #{entry.design_name}?  Click 'OK' to remove the entry, otherwise click 'Cancel'.") %>
           <% else %>
