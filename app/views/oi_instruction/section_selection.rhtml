@@ -12,8 +12,8 @@
 
 <%= start_form_tag(:action => 'process_assignments') %>
 
-<%= hidden_field("design",   "id") %>
-<%= hidden_field("category", "id") %>
+<%= hidden_field("design",      "id") %>
+<%= hidden_field("category",    "id") %>
 
 <table width="100%" border="0" cellspacing="0">
   <tr valign="top">
@@ -45,44 +45,28 @@
     <td colspan="3" align="center" class="teraheader"><%= @category.name %> Steps</td>
   </tr>
   
-  <% @sections.each do |section| %>
-  
+  <% @sections.each do |@section| %>
     <tr valign="top">
       <td width="45">&nbsp;</td>
       <td>
         <table width="100%" cellspacing="0" border="3">
           <tr bgcolor='gray'>
-            <td width="30">
-              <% if section_assigned?(@design.oi_instructions, 
-                                      section.id) %>
-                &nbsp;
-              <% elsif !@section_selection || 
-                       @section_selection[section.id.to_s] == "0" %>
-                <%= check_box('section', section.id) %>
-              <% else %>
-                <%= check_box('section',
-                    section.id,
-                    { 'checked' => 'checked' }) %>
-              <% end %>
+            <td width="25">
+              <%= radio_button_tag :section_id, @section.id, @section_id==@section.id %>
             </td>
-              <% if section_assigned?(@design.oi_instructions, 
-                                      section.id) %>
-                <th align="left">Task Already Assigned</th>
-              <% else %>
-                <th align="left">Select Task</th>
-              <% end %>
+              <td class="th1">Select Task</td>
           </tr>
         </table>
       </td>
     </tr>
     <tr valign="top">
-      <th>Task:</th>
+      <td class="th1">Task:</td>
       <td>
         <table>
-          <tr><td><%= section.name %></td></tr>
+          <tr><td><%= @section.name %></td></tr>
           
           <tr><td>
-            <% section_urls = section.urls %>
+            <% section_urls = @section.urls %>
             <% if section_urls.size > 0 %>
               <table width="100%" border='0'>
                 <% section_urls.each do |url| %>
