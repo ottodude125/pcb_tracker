@@ -14,7 +14,9 @@
 
 class DesignController < ApplicationController
 
-  before_filter(:verify_admin_role, :except => [:view])
+  before_filter(:verify_admin_role, 
+                :except => [:pcb_mechanical_comments, 
+                            :view])
 
   auto_complete_for :design, :name
 
@@ -250,6 +252,28 @@ class DesignController < ApplicationController
   
     @design         = Design.find(params[:id])
     @design_reviews = @design.design_reviews.sort_by { |dr| dr.review_type.sort_order}
+  
+  end
+  
+  
+  ######################################################################
+  #
+  # pcb_mechanical_comments
+  #
+  # Description:
+  # Provides the data for the design pcb_mechanical_comments.
+  #
+  # Parameters from params
+  # id - identifies the design
+  #
+  ######################################################################
+  #
+  def pcb_mechanical_comments
+
+    @design    = Design.find(params[:id])
+    @comments  = @design.comments_by_role("PCB Mechanical")
+
+    render(:layout => false)
   
   end
 
