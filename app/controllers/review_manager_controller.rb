@@ -22,7 +22,7 @@ class ReviewManagerController < ApplicationController
   # This method retrieves the review type role information to 
   # display for the user to modify.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -35,19 +35,23 @@ class ReviewManagerController < ApplicationController
   def review_type_role_assignment
 
     # Get all of the reviewer roles.
-    @roles        = Role.find_all('reviewer=1 and active=1', 'name ASC')
-    @review_types = ReviewType.find_all('active=1', 'sort_order ASC')
+    @roles        = Role.find(:all,
+                              :conditions => 'reviewer=1 AND active=1',
+                              :order      => 'name')
+    @review_types = ReviewType.find(:all,
+                                    :conditions => 'active=1',
+                                    :order      => 'sort_order')
 
-    for role in @roles
+    @roles.each do |role|
 
       rtypes = {}
-
-      for rtype in role.review_types
+      role.review_types.each do |rtype|
         rtypes[rtype.name] = rtype.id
       end
 
       role[:review_types] = rtypes
     end
+
   end
 
 
@@ -60,7 +64,7 @@ class ReviewManagerController < ApplicationController
   # This method make the assignments of the review groups to the review
   # types.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -74,7 +78,7 @@ class ReviewManagerController < ApplicationController
 
     # Go through the parameters and extract the role id and review id
     # from the keys.
-    @params['review_type'].each { | key, value |
+    params[:review_type].each { | key, value |
 
       role_id, review_type_id = key.split('_')
 
@@ -82,9 +86,9 @@ class ReviewManagerController < ApplicationController
       review_type = ReviewType.find(review_type_id)
 
       if review_type.roles.include?(role)
-	review_type.remove_roles(role) if value == '0'
+	   review_type.roles.delete(role) if value == '0'
       else
-	review_type.roles << role      if value == '1'
+	    review_type.roles << role     if value == '1'
       end
     }
 
