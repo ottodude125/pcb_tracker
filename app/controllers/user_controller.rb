@@ -40,11 +40,9 @@ class UserController < ApplicationController
   #
   def list
 
-    alpha = @params['alpha']
-    alpha = 'A' if !alpha
-
+    alpha = params[:alpha] ? params[:alpha] : 'A'
     
-    users = User.find_all(nil, 'last_name ASC')
+    users = User.find(:all, :order => 'last_name ASC')
 
     @alpha_list = {}
     for user in users
@@ -73,7 +71,7 @@ class UserController < ApplicationController
   #
   def send_password
   
-    user = User.find(@params['id'])
+    user = User.find(params[:id])
     TrackerMailer::deliver_user_password(user)
   
     redirect_to(:action  => 'login_information',
@@ -100,11 +98,11 @@ class UserController < ApplicationController
   #
   def login_information
   
-    if @params['user_id']
-      @user_list = [User.find(@params['user_id'])]
+    if params[:user_id]
+      @user_list = [User.find(params[:user_id])]
       flash['notice'] = 'Your password has been sent to the email address listed below'
     else
-      last_name  = @params['user']['last_name']
+      last_name  = params[:user][:last_name]
       @user_list = User.find_all_by_last_name(last_name)
     end
 
@@ -145,15 +143,15 @@ class UserController < ApplicationController
   # This method retrieves information from the database for
   # for the edit form.
   #
-  # Parameters from @params
+  # Parameters from params
   # id - the id of the user information that will be edited.
   #
   ######################################################################
   #
   def edit
 
-    @roles = Role.find_all(nil, 'display_name ASC')
-    @user = User.find(@params['id'])
+    @roles = Role.find(:all, :order => 'display_name ASC')
+    @user = User.find(params[:id])
     user_roles = @user.roles
 
     @uroles = {}
@@ -173,13 +171,13 @@ class UserController < ApplicationController
   # person identified in the 'id' parameter for display on the 
   # change password form.
   #
-  # Parameters from @params
+  # Parameters from params
   # id - the id of the user
   #
   ######################################################################
   #
   def change_password
-    @user = User.find(@params['id'])
+    @user = User.find(params[:id])
   end
 
 
@@ -193,7 +191,7 @@ class UserController < ApplicationController
   # are compared, if they are the same then the user's record is 
   # updated with the new password.
   #
-  # Parameters from @params
+  # Parameters from params
   # new_password - the new password for the user.
   # new_password_confirmation - used to verify that the user did not typo
   # user['id'] - the id number of the user record to be updated.
@@ -203,10 +201,10 @@ class UserController < ApplicationController
   def reset_password
   
     updated = false
-    if @params['new_password'] == @params['new_password_confirmation']
-      user = User.find(@params['user']['id'])
-      user.password = @params['new_password']
-      user.passwd   = @params['new_password']
+    if params[:new_password] == params[:new_password_confirmation]
+      user = User.find(params[:user][:id])
+      user.password = params[:new_password]
+      user.passwd   = params[:new_password]
      
       if user.update
         flash['notice'] = "The password for #{user.name} was updated"
@@ -222,7 +220,7 @@ class UserController < ApplicationController
       redirect_to(:action => :list)
     else
       redirect_to(:action => :change_password,
-                  :id     => @params['user']['id'])
+                  :id     => params[:user][:id])
     end
  
   end
@@ -240,15 +238,15 @@ class UserController < ApplicationController
   def user_store_password
 
     updated = false
-    if @params['new_password'].size < 5
+    if params[:new_password].size < 5
       flash['notice'] = 'No Update - the password must be at least 5 characters'
-    elsif @params['new_password'] == @params['new_password_confirmation']
-      user = User.find(@session[:user].id)
-      user.password = @params['new_password']
-      user.passwd   = @params['new_password'] if not @params['new_password'].empty?
+    elsif params[:new_password] == params[:new_password_confirmation]
+      user = User.find(session[:user].id)
+      user.password = params[:new_password]
+      user.passwd   = params[:new_password] if not params[:new_password].empty?
 
       if user.update
-        if not @params['new_password'].empty?
+        if not params[:new_password].empty?
           flash['notice'] = "The password for #{user.name} was updated"
           updated = true
         else
@@ -279,14 +277,14 @@ class UserController < ApplicationController
   # This method updates the user information in the database with 
   # the data passed back from the edit form
   #
-  # Parameters from @params
+  # Parameters from params
   # user - the user data from the edit form
   #
   ######################################################################
   #
   def update
 
-    user_form = @params['user']
+    user_form = params[:user]
     @user = User.find(user_form['id'])
 
     if user_form['email'] == ''
@@ -311,7 +309,7 @@ class UserController < ApplicationController
     # If no errors so far, update the roles for the user.
     if update_good
 
-      @params['role'].each { | role_id, value |
+      params[:role].each { | role_id, value |
         role = Role.find(role_id)
         if @user.roles.include?(role)
 	      @user.remove_roles(role) if value == '0'
@@ -343,7 +341,7 @@ class UserController < ApplicationController
   # Description:
   # Validate the user name and password.
   #
-  # Parameters from @params
+  # Parameters from params
   # user_login    - the user's name 
   # user_password - the user's password
   #
@@ -385,14 +383,14 @@ class UserController < ApplicationController
   # Description:
   # Sets the session role to the role that the user selected.
   #
-  # Parameters from @params
+  # Parameters from params
   # role id - identifies the role that the use selected 
   #
   ######################################################################
   #
   def set_role
 
-    session[:active_role] = session[:roles].find(params['role']['id'])
+    session[:active_role] = session[:roles].find(params[:role][:id])
     redirect_back_or_default(:controller => "tracker",
                              :action     => "index")
   end
@@ -405,7 +403,7 @@ class UserController < ApplicationController
   # Description:
   # Creates a new user in the database
   #
-  # Parameters from @params
+  # Parameters from params
   # user - information passed back from the view - goes into the 
   #        database.
   #
@@ -430,10 +428,10 @@ class UserController < ApplicationController
         '@notes.teradyne.com'
     end
 
-    if @request.post? and @user.save
+    if request.post? and @user.save
 
       role_count = 0
-      @params['role'].each { | role_id, value |
+      params[:role].each { | role_id, value |
         next if value == '0'
         @user.roles << Role.find(role_id)
         role_count += 1
