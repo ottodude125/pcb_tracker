@@ -21,35 +21,32 @@ module OiInstructionHelper
   # Displays a list of team members available for assignments.
   # 
   # team_members - The team members available for work assignments 
-  # step_id      - Used to build the unique check box label
   # selections   - Used to determine whether or not the check box 
   #                should be checked.
   # label        - The text string at the top of the table.
   #
   ######################################################################
   #
-  def fmt_team_members(team_members, step_id, selections, label)
+  def fmt_team_members(team_members, selections, label)
   
-    table  = '<table width="100%" border="0">'
-    table += '<tr><th colspan="6">' + label + '</th></tr>'
+    table  = "\n<table width='100%' border='0'>\n"
+    table += "<tr><th colspan='6'>" + label + "</th></tr>\n"
     
     count = 0
     team_members.each do |tm|
       table += "<tr>" if count == 0
-      table += '<td width="25">'
-      if (selections               &&
-          selections[step_id.to_s] &&
-          selections[step_id.to_s].detect{ |id| id == tm.id.to_s })
-        table += check_box("team_member_#{tm.id}_#{step_id}", "selected", { 'checked' => 'checked' })
+      table += "\n<td width='25'>"
+      if (selections && selections[tm.id.to_s] == '1')
+        table += check_box("team_member_#{tm.id}", "selected", { 'checked' => 'checked' })
       else
-        table += check_box("team_member_#{tm.id}_#{step_id}", "selected")
+        table += check_box("team_member", tm.id.to_s)
       end
       table += "</td>"
       table += '<td width="200">' + tm.name + '</td>'
       
       count += 1
       if count == 3
-        table += "</tr>"
+        table += "</tr>\n"
         count = 0
       end
     end
