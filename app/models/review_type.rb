@@ -36,7 +36,9 @@ class ReviewType < ActiveRecord::Base
 
   
   def next
-    ReviewType.find_first("active = 1 AND sort_order > '#{self.sort_order}'", "sort_order ASC")
+    ReviewType.find(:first,
+                    :conditions => "active = 1 AND sort_order > '#{self.sort_order}'",
+                    :order      => "sort_order ASC")
   end
 
 
