@@ -22,16 +22,16 @@
     <tr bgcolor="#9F9F9F">
       <td align="center"><%= select("filter",
                                     "prefix_id", 
-                                    Prefix.find_all('active=1', 'pcb_mnemonic ASC').collect { |p| [ p.pcb_mnemonic, p.id ] }, 
+                                    Prefix.get_all_active.collect { |p| [ p.pcb_mnemonic, p.id ] }, 
                                     { :include_blank => true}) %></td>
       <td>&nbsp;</td>
       <td align="center"><%= select("filter", 
                                     "platform_id", 
-                                    Platform.find_all('active=1', 'name ASC').collect { |p| [ p.name, p.id ] }, 
+                                    Platform.get_all_active.collect { |p| [ p.name, p.id ] }, 
                                     { :include_blank => true}) %></td>
       <td align="center"><%= select("filter", 
                                     "project_id", 
-                                    Project.find_all('active=1', 'name ASC').collect { |p| [ p.name, p.id ] }, 
+                                    Project.get_all_active.collect { |p| [ p.name, p.id ] }, 
                                     { :include_blank => true}) %></td>
       <td>&nbsp;</td>
       <td><input type="submit" value="Filter List" /></td>
