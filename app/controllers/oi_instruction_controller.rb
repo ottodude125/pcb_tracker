@@ -11,9 +11,11 @@
 #
 ########################################################################
 
+
 class OiInstructionController < ApplicationController
 
   before_filter(:verify_pcb_group)
+
 
   ######################################################################
   #
@@ -30,7 +32,7 @@ class OiInstructionController < ApplicationController
   def oi_category_selection
 
     @design           = Design.find(params[:design_id])
-    @oi_category_list = OiCategory.find(:all).sort_by { |c| c.id }
+    @oi_category_list = OiCategory.list
 
   end
   
@@ -59,10 +61,10 @@ class OiInstructionController < ApplicationController
     @design   = Design.find(params[:design_id])
 
     if @category.name != "Other"
-      @sections = @category.oi_category_sections.sort_by { |s| s.id }
-      @section_selection = flash[:section]
+      @sections   = @category.oi_category_sections
+      @section_id = flash[:assignment] ? flash[:assignment][:selected_step].id : 0
     else
-      flash[:section] = { '32' => '1' }
+      flash[:section] = { OiCategory.other_category_section_id.to_s => '1' }
 
       redirect_to(:action      => :process_assignments,
                   :category_id => @category.id,
@@ -83,8 +85,9 @@ class OiInstructionController < ApplicationController
   # for the process_assignments view is gathered.
   #
   # Parameters from params
-  # id        - the id oi_category
-  # design_id - the id of the design.
+  # id         - the id oi_category
+  # design_id  - the id of the design
+  # section_id - the outsource instruction category section identifier
   # 
   # Information flash (for returns from process_assignments)
   # section - the selected section
@@ -94,71 +97,67 @@ class OiInstructionController < ApplicationController
   #
   def process_assignments
 
-    flash[:section]   = params[:section] ? params[:section] : flash[:section]
-    @instructions          = flash[:step_instructions]
-    @step_complexities     = flash[:step_complexities]
-    @selected_team_members = flash[:team_members]
-    sections = flash[:section]
-
-    # Make sure the user entered all of the information.  If not, return to the 
-    # previous screen.  Verify that at least one section has been selected 
-    # before proceeding.
-    if !sections.detect { |k,v| v == '1'}   
-
-      flash['notice'] = 'Please select the step(s)'
+    # Verify that a section was selected before proceeding.
+    if !(params[:section_id] || flash[:assignment])
+    
+      flash['notice'] = 'Please select the step'
 
       redirect_to(:action    => 'section_selection',
                   :id        => params[:category][:id],
                   :design_id => params[:design][:id])
+                  
+      flash[:assignment] = flash[:assignment]
+      
       return
       
     end
-    
+
     # If processing makes it this far then there are no errors.
-    design_id   = params[:design]   ? params[:design][:id]   : params[:design_id]
-    category_id = params[:category] ? params[:category][:id] : params[:category_id]
-    @design      = Design.find(design_id)
-    @category    = OiCategory.find(category_id)
+    if !flash[:assignment]
+    
+      assignment = {}
+      @design       = Design.find(params[:design]       ? params[:design][:id]   : params[:design_id])
+      @category     = OiCategory.find(params[:category] ? params[:category][:id] : params[:category_id])
+      @team_members = Role.lcr_designers
+      @selected_step = @category.oi_category_sections.detect { |s| s.id == params[:section_id].to_i }
+      @instruction   = OiInstruction.new(:oi_category_section_id => @selected_step.id,
+                                         :design_id              => @design.id)
+      @assignment    = OiAssignment.new(:due_date      => Time.now+1.day,
+                                        :complexity_id => OiAssignment.complexity_id("Low"))
+      @comment       = OiAssignmentComment.new
+      
+      assignment[:design]        = @design
+      assignment[:category]      = @category
+      assignment[:team_members]  = @team_members
+      assignment[:selected_step] = @selected_step
+      assignment[:instruction]   = @instruction
+      assignment[:assignment]    = @assignment
+      assignment[:comment]       = @comment
 
-    team_members  = Role.find_by_name('Designer').users.delete_if { |u| !u.active? || u.employee? }
-    @team_members = team_members.sort_by { |u| u.last_name }
-
-    sections.each do |id, flag|
-      @selected_steps = @category.oi_category_sections.delete_if do |section| 
-        section.id.to_s == id && flag == "0" || 
-        @design.oi_instructions.detect { |i| i.oi_category_section_id == section.id }
-      end
-    end
-
-    @common_fields = {
-      :allegro_board_symbol_name => false,
-      :outline_drawing_link      => false
-    }
-
-    @step_instructions = []
-    @selected_steps.each do |step|
-      step[:instruction] = OiInstruction.new(:oi_category_section_id => step.id,
-                                             :design_id              => @design.id)
-      if !flash[:step_instructions]
-        step[:instruction].details = ""
-      else
-        step[:instruction].details = flash[:step_instructions][step.id]
+      if @selected_step.outline_drawing_link?
+        outline_drawing_document_type = DocumentType.find_by_name("Outline Drawing")
+        @outline_drawing = DesignReviewDocument.find(
+                             :first,
+                             :conditions => "design_id=#{@design.id} AND " +
+                                            "document_type_id=#{outline_drawing_document_type.id}",
+                             :order      => "id DESC")
+        assignment[:outline_drawing] = @outline_drawing
       end
       
-      @step_instructions[step.id] = step[:instruction]
+      flash[:assignment] = assignment
+    else
+      @design          = flash[:assignment][:design]
+      @category        = flash[:assignment][:category]
+      @team_members    = flash[:assignment][:team_members]
+      @selected_step   = flash[:assignment][:selected_step]
+      @instruction     = flash[:assignment][:instruction]
+      @assignment      = flash[:assignment][:assignment]
+      @comment         = flash[:assignment][:comment]
+      @outline_drawing = flash[:assignment][:outline_drawing]
 
-      @common_fields[:allegro_board_symbol_name] |= step.allegro_board_symbol?
-      @common_fields[:outline_drawing_link]      |= step.outline_drawing_link?
+      flash[:assignment] = flash[:assignment]
     end
-    
-    @common_field = @common_fields.detect { |k,v| v }
 
-    if @common_fields[:outline_drawing_link]
-      outline_drawing_document_type = DocumentType.find_by_name("Outline Drawing")
-      @outline_drawing = DesignReviewDocument.find_by_design_id_and_document_type_id(
-                           @design.id,
-                           outline_drawing_document_type.id)
-    end
 
   end
   
@@ -187,62 +186,39 @@ class OiInstructionController < ApplicationController
 
     oi_assignments = {}
 
-    # Preserve the step instructions for the redirect.
-    step_instructions = []
-    params.each do |key, value|
-      next if !(key =~ /\Astep_instruction/)
-      step_instructions[key.split('_')[2].to_i] = value
-    end
-    
-    # Preserve the complexities
-    step_complexities = []
-    params.each do |key, value|
-      next if !(key =~ /\Acomplexity/)
-      step_complexities[key.split('_')[1].to_i] = value
-    end
-    
+    instruction     = OiInstruction.new(params[:instruction])
+   
     missing_allegro_board_symbol = false
-    if params[:allegro_board_symbol]
-      if params[:allegro_board_symbol][:name] == ''
-        flash['notice'] = 'Please identify the Allegro Board Symbol'
-        missing_allegro_board_symbol = true
+    category_section = OiCategorySection.find(instruction.oi_category_section_id)
+    if (category_section.allegro_board_symbol? &&
+        instruction.allegro_board_symbol == '')
+      flash['notice'] = 'Please identify the Allegro Board Symbol'
+      missing_allegro_board_symbol = true
+    end
+    
+    team_members = []
+    params[:team_member].each do |user_id, value|
+      team_members << user_id.to_s if value == '1'
+    end
+
+    team_members_selected = team_members.size > 0
+    if !team_members_selected
+      member_message = 'Please select a team member or members'
+      if flash['notice']
+        flash['notice'] += '<br />' + member_message
       else
-        flash[:allegro_board_symbol] = params[:allegro_board_symbol][:name]      
+        flash['notice'] = member_message
       end
     end
     
-    team_members = {}
-    params.each do |key, value|
-
-      next if !(key =~ /\Ateam_member/)
-
-      a, b, user_id, section_id = key.split('_')
-      team_members[section_id] = []       if !team_members[section_id]
-      team_members[section_id] << user_id if value[:selected] == '1'
-    end
+    if missing_allegro_board_symbol || !team_members_selected
     
-    all_team_members_selected = true
-    team_members.each do |key, team_member_list|
-      all_team_members_selected = team_member_list.size > 0
-      if !all_team_members_selected
-        if flash['notice']
-          flash['notice'] += '<br />Please select team member(s) for each step'
-        else
-          flash['notice'] = 'Please select team member(s) for each step'
-        end
-        break
-      end
-    end
-    
+      flash[:assignment] = flash[:assignment]
 
-    if missing_allegro_board_symbol || !all_team_members_selected
-
-      flash[:section]              = flash[:section]
-      flash[:user]                 = flash[:user]
-      flash[:allegro_board_symbol] = flash[:allegro_board_symbol]
-      flash[:team_members]         = team_members
-      flash[:step_instructions]    = step_instructions
-      flash[:step_complexities]    = step_complexities
+      flash[:assignment][:instruction]       = instruction
+      flash[:assignment][:member_selections] = params[:team_member]
+      flash[:assignment][:comment]           = OiAssignmentComment.new(params[:comment])
+      flash[:assignment][:assignment]        = OiAssignment.new(params[:assignment])
 
       redirect_to(:action      => 'process_assignments',
                   :category_id => params[:category][:id],
@@ -250,81 +226,44 @@ class OiInstructionController < ApplicationController
         
     else # Process the information that the user passed in.
 
-      instructions         = {}
-      design_id            = ''
-      oi_category_id       = ''
-      allegro_board_symbol = ''
-      params.each do |key, value|
+      # Fill out the Outsource Instruction record and save it.
+      instruction.design_id = params[:design][:id]
+      instruction.user_id   = session[:user].id
+      instruction.save
       
-        next if (key == "action" || key== "controller")
-
-        team_member      = key.split('team_member_')
-        step_instruction = key.split('step_instructions_')
-        complexity       = key.split('complexity_')
-        if value[:selected] == '1' && team_member.size > 1
-          user_id, section_id = team_member[1].split('_')
-          instructions[section_id] = {} if !instructions[section_id]
-          instructions[section_id][:member_list] = [] if !instructions[section_id][:member_list]
-          instructions[section_id][:member_list] << user_id
-        elsif step_instruction.size > 1
-          instructions[step_instruction[1]] = {} if !instructions[step_instruction[1]]
-          instructions[step_instruction[1]][:comment] = value
-        elsif complexity.size > 1
-          instructions[complexity[1]] = {} if !instructions[complexity[1]]
-          instructions[complexity[1]][:complexity] = value
-        elsif key == 'design'
-          design_id = value['id']
-        elsif key == 'category'
-          oi_category_id = value[:id]
-          @category = OiCategory.find(value[:id])
-        elsif key == 'allegro_board_symbol'
-          allegro_board_symbol = value[:name]
-        end
+      # Create an assignment record and optional assignment comment for each of the 
+      # selected team members.
+      if instruction.errors.empty?
       
-      end
+        
+        oi_assignments = {}
+        team_members.each do |user_id|
+        
+          assignment                   = OiAssignment.new(params[:assignment])
+          assignment.oi_instruction_id = instruction.id
+          assignment.user_id           = user_id
+          assignment.save
+          
+          if assignment.errors.empty?
+          
+            oi_assignments[user_id] = [] if !oi_assignments[user_id]
+            oi_assignments[user_id].push(assignment)
             
-      instructions.each do |section_id, value|
-      
-        # Check to make sure the instruction does not already exist.
-        existing_instruction = 
-          OiInstruction.find_by_design_id_and_oi_category_section_id_and_user_id(
-            design_id, section_id, session[:user].id)
-
-        if !existing_instruction || @category.name == 'Other'
-      
-          oi_instruction = OiInstruction.new(:design_id              => design_id,
-                                             :oi_category_section_id => section_id,
-                                             :user_id                => session[:user].id)
-          oi_instruction.allegro_board_symbol = allegro_board_symbol if allegro_board_symbol.size > 0
-        
-          oi_instruction.save
-        
-          # Add the comments and team members and send the assignment notification.
-          if oi_instruction.errors.empty?
-
-            value[:member_list].each do |member_id|
-              assignment = OiAssignment.new(:oi_instruction_id => oi_instruction.id,
-                                            :user_id           => member_id,
-                                            :complexity_id     => value[:complexity][:id])
-              assignment.save
-              
-              # Keep track of the assignments for each user
-              oi_assignments[member_id] = [] if !oi_assignments[member_id]
-              oi_assignments[member_id].push(assignment)
-              
-              if value[:comment] != ''
-                OiAssignmentComment.new(:oi_assignment_id => assignment.id,
-                                        :user_id          => session[:user].id,
-                                        :comment          => value[:comment]).save
-              end
+            comment = OiAssignmentComment.new(params[:comment])
+            if comment.comment.lstrip != ''
+              comment.user_id          = session[:user].id
+              comment.oi_assignment_id = assignment.id
+              comment.save
             end
 
             flash['notice'] = "The work assignments have been recorded - mail was sent"
-          
-          end  #  If no errors storing the oi_instruction
-        end  # not existing instruction
-      end  # Each instruction
-
+            
+          end
+        
+        end # each team_member
+      
+      end
+      
       # Send notification email for each of the assignments.
       oi_assignments.each do |member_id, oi_assignment_list|
         TrackerMailer::deliver_oi_assignment_notification(oi_assignment_list)
@@ -342,7 +281,7 @@ class OiInstructionController < ApplicationController
   # category_details
   #
   # Description:
-  # This method retrieves the data needed for an category details view.
+  # This method retrieves the data needed for the category details view.
   #
   # Parameters from params
   #  id        - the id of the design record
@@ -419,7 +358,7 @@ class OiInstructionController < ApplicationController
     @assignment = OiAssignment.find(params[:id])
     @design     = @assignment.oi_instruction.design
     @category   = @assignment.oi_instruction.oi_category_section.oi_category
-    @comments   = @assignment.oi_assignment_comments.sort_by { |c| c.created_on }.reverse
+    @comments   = @assignment.oi_assignment_comments
   
     @post_comment = OiAssignmentComment.new
   
@@ -452,23 +391,17 @@ class OiInstructionController < ApplicationController
       assignment.update
     end
     
-    post_comment = ''
-    if params[:post_comment][:comment].size > 0 || completed || reset
-      case
-        when completed
-          post_comment = "-- TASK COMPLETE --\n"
-        when reset
-          post_comment = "-- TASK REOPENED --\n"
-      end
-      post_comment += params[:post_comment][:comment]
-       
+    post_comment = ""
+    post_comment = "-- TASK COMPLETE --\n" if completed
+    post_comment = "-- TASK REOPENED --\n" if reset
+    post_comment += params[:post_comment][:comment]
+    
+    if post_comment.size > 0
+    
       OiAssignmentComment.new(:comment          => post_comment,
                               :user_id          => session[:user].id,
                               :oi_assignment_id => assignment.id).save
-    end
-    
 
-    if (completed || reset || post_comment != '')
       flash['notice'] = 'The work assignment has been updated - mail sent'
       TrackerMailer.deliver_oi_task_update(assignment, 
                                            session[:user],
@@ -568,8 +501,8 @@ class OiInstructionController < ApplicationController
   
     @assignment    = OiAssignment.find(params[:id])
     @complexity_id = @assignment.complexity_id
-    @report        = OiAssignmentReport.new
-    @comments      = @assignment.oi_assignment_comments.sort_by { |c| c.created_on }.reverse
+    @report        = OiAssignmentReport.new(:score => OiAssignmentReport::NOT_SCORED)
+    @comments      = @assignment.oi_assignment_comments
     @scoring_table = OiAssignmentReport.report_card_scoring
     
   end
@@ -598,7 +531,7 @@ class OiInstructionController < ApplicationController
     @report.user_id          = session[:user].id
     @report.oi_assignment_id = @assignment.id
     
-    if @report.score != 256
+    if @report.score != OiAssignmentReport::NOT_SCORED
     
       @report.save
       flash['notice'] = "Your feedback has been recorded"
@@ -612,7 +545,7 @@ class OiInstructionController < ApplicationController
                   :design_id => @assignment.oi_instruction.design.id)
     else
       flash['notice'] = "Please select the grade - the report card was not created"
-      @comments      = @assignment.oi_assignment_comments.sort_by { |c| c.created_on }.reverse
+      @comments      = @assignment.oi_assignment_comments
       @scoring_table = OiAssignmentReport.report_card_scoring
       @complexity_id = params[:complexity][:id].to_i
       render_action('create_assignment_report')
@@ -635,21 +568,33 @@ class OiInstructionController < ApplicationController
   ######################################################################
   #
   def view_assignment_report
-    @assignment = OiAssignment.find(params[:id])
-    @comments      = @assignment.oi_assignment_comments.sort_by { |c| c.created_on }.reverse
+  
+    @assignment    = OiAssignment.find(params[:id])
+    @comments      = @assignment.oi_assignment_comments
     @scoring_table = OiAssignmentReport.report_card_scoring
-    @current_score = @scoring_table.detect { |entry| entry[0] == @assignment.oi_assignment_report.score }[1]
-    
-    @assignment.oi_assignment_report.score
+    @current_score = @assignment.oi_assignment_report.score_value
+ 
   end
   
   
+  ######################################################################
+  #
+  # static_view
+  #
+  # Description:
+  # This action retrieves the data for the static view
+  #
+  # Parameters from params
+  #  id - the oi_assignment record identifier
+  # 
+  ######################################################################
+  #
   def static_view 
   
     @assignment = OiAssignment.find(params[:id])
     @section    = @assignment.oi_instruction.oi_category_section
     @design     = @assignment.oi_instruction.design
-    @comments   = @assignment.oi_assignment_comments.sort_by { |c| c.created_on }.reverse
+    @comments   = @assignment.oi_assignment_comments
     
     render(:layout => false)
   
@@ -689,13 +634,13 @@ class OiInstructionController < ApplicationController
     
     if comment_update
       assignment.oi_assignment_report.comment += "<br />" + update.comment
-      flash['notice'] += ', ' if score_update
+      flash['notice'] += ', ' if flash['notice'] != ''
       flash['notice'] += 'Comment updated'
     end
     
     if complexity_update
       assignment.complexity_id = params[:complexity][:id].to_i
-      flash['notice'] += ', ' if score_update
+      flash['notice'] += ', ' if flash['notice'] != ''
       flash['notice'] += 'Task Complexity updated'
     end
     
