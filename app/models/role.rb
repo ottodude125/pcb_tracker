@@ -53,6 +53,36 @@ class Role < ActiveRecord::Base
 
   ######################################################################
   #
+  # lcr_designers
+  #
+  # Description:
+  # Provide a list of the LCR designers.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An array of user records
+  #
+  ######################################################################
+  #
+  def Role.lcr_designers
+  
+    list = Role.find_by_name('Designer').users.delete_if { |d| !d.active? || d.employee? }
+    list.sort_by { |d| d.last_name }
+    
+  end
+
+
+  ##############################################################################
+  #
+  # Instance Methods
+  # 
+  ##############################################################################
+
+  
+  ######################################################################
+  #
   # active_users
   #
   # Description:
@@ -100,6 +130,6 @@ class Role < ActiveRecord::Base
     self.send(design_type.downcase.sub(/ /, '_') + '_design_type?')
 
   end
-
-
+  
+  
 end
