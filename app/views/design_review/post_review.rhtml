@@ -4,7 +4,7 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% mode = @params[:action] == 'post_review' ? 'POST' : 'REPOST' %>
+<% mode = params[:action] == 'post_review' ? 'POST' : 'REPOST' %>
 
 <% @heading = "#{mode} #{@design_review.review_name} Review::#{@design_review.design.name} - #{@design_review.design.board.platform.name} / #{@design_review.design.board.project.name}" %>
 

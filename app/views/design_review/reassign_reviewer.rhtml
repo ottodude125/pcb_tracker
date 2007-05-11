@@ -46,7 +46,7 @@
           <td>
             <% role = match[:design_review].role %>
             <%= check_box("id_#{role.id}_assign_to_self",
-                          @session[:user].id,
+                          session[:user].id,
                           {},
                           'yes',
                           'no') %> 
