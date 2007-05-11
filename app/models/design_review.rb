@@ -473,6 +473,64 @@ class DesignReview < ActiveRecord::Base
 
   end
   
+  
+  ######################################################################
+  #
+  # role_reviewer
+  #
+  # Description:
+  # This method retrieves the reviewer for the role that is passed
+  # in
+  #
+  # Parameters:
+  # role - the role record
+  #
+  # Return value:
+  # A user record for the role reviewer.  If the design review does not
+  # have a reviewer for the identified role then nil is returned.
+  #
+  ######################################################################
+  #
+  def role_reviewer(role)
+    result = self.design_review_results.detect { |result| result.role_id == role.id }
+    return User.find(result.reviewer_id) if result
+  end
+  
+  
+  ######################################################################
+  #
+  # comments_by_role
+  #
+  # Description:
+  # This method retrieves the design review comments for the roles 
+  # identified in the role_list parameter.
+  #
+  # Parameters:
+  # role_list - a list of role names
+  #
+  # Return value:
+  # A list of design review comments associated with the design review 
+  # and the roles identified in the role_list.
+  #
+  ######################################################################
+  #
+  def comments_by_role(role_list)
+
+    role_names = (role_list.class == String) ? [role_list] : role_list
+    
+    role_users = []
+    role_names.each { |name| role_users += Role.find_by_name(name).users }
+    role_users.uniq!
+
+    comment_list = []
+    self.design_review_comments.each do |comment|
+      comment_list << comment if role_users.detect { |ru| ru.id == comment.user_id }
+    end
+    
+    comment_list
+  
+  end
+  
 
 ######################################################################
 ######################################################################
