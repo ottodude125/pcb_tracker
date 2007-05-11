@@ -283,8 +283,8 @@ class TrackerController < ApplicationController
     flash[:sort_order]     = @sort_order
     
     design_reviews = get_active_reviews
-    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.design.designer.last_name, dr.age] }
-    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.design.designer.last_name, dr.age] }
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.designer.last_name, dr.age] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.designer.last_name, dr.age] }
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
@@ -541,7 +541,6 @@ class TrackerController < ApplicationController
     @designs = designs.uniq.sort_by { |dr| dr.priority.value }
         
     @designs.each do |design|
-
       current_phase           = ReviewType.find(design.phase_id)
       design[:next_review]    = design.design_reviews.detect{ |dr| dr.review_type_id == design.phase_id}
       design.design_reviews.delete_if do |dr| 
@@ -729,10 +728,10 @@ class TrackerController < ApplicationController
     @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.priority.value, dr.age] }
     @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.priority.value, dr.age] }
 
-#    @submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
+    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
     @submissions = BoardDesignEntry.count("state='submitted'")
     session[:return_to] = {:controller => 'tracker', :action => 'index'}
-    
+
   end
  
   
@@ -749,16 +748,22 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def get_active_reviews
-  
+
     design_reviews = []
     Design.find(:all,
                 :conditions => "phase_id!=#{Design::COMPLETE}",
                 :include    => :design_reviews).each do |design|
-    
+
       next if design.phase_id == 0
-    
+      
       design_review = design.design_reviews.detect { |dr| dr.review_type_id == design.phase_id }
-           
+
+      design_review = DesignReview.find(design_review.id,
+                                        :include => [:priority, 
+                                                     :design,
+                                                     :design_review_results,
+                                                     :review_status])
+
       begin
         design_review[:priority_name] = design_review.priority.name
       rescue
@@ -783,7 +788,7 @@ class TrackerController < ApplicationController
         lists[:inactive] << design_review
       end
     end
-    
+
     return lists
     
   end
