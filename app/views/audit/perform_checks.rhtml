@@ -97,10 +97,10 @@
 
   <% for check in @checks %>
 
-    <% if @flash[check[:design_check].id] %>
+    <% if flash[check[:design_check].id] %>
       <p>
         <font color="red">
-          <b><%= @flash[check[:design_check].id] %></b>
+          <b><%= flash[check[:design_check].id] %></b>
         </font>
       </p>
     <% end %>
@@ -108,7 +108,7 @@
     <% i = check.id %>
     <table border="5" cellpadding="5" align="center" width="100%" >
       <tr>
-        <% if @flash[check[:design_check].id] %>
+        <% if flash[check[:design_check].id] %>
           <td width="100" bgcolor="red" rowspan="2">
         <% else %>
           <td width="100" rowspan="2">
@@ -160,7 +160,7 @@
               <td><label for='waived'>Waived</label></td>
             </tr>
             
-            <% if @audit.is_peer_audit? && @audit.is_peer_auditor?(@session[:user]) %>
+            <% if @audit.is_peer_audit? && @audit.is_peer_auditor?(session[:user]) %>
               <tr>
                 <td>
                   <%= audit_radio_button(check, @audit, 'Comment', !@able_to_check) %>
@@ -184,7 +184,7 @@
         </td>
       </tr>
       <tr>
-        <% if @flash[check[:design_check].id] %>
+        <% if flash[check[:design_check].id] %>
           <td valign="top" bgcolor="red">
         <% else %>
           <td valign="top" bgcolor=#<%= @subsection.section.background_color %> >
