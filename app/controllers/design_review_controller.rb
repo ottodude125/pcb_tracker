@@ -37,54 +37,62 @@ class DesignReviewController < ApplicationController
                            :action     => 'view',
                            :id         => params[:id]}
 
-    @design_review  = DesignReview.find(params[:id])
-    @review_results = @design_review.review_results_by_role_name
+    if params[:id]
 
-    active_role = session[:active_role]
-    if session[:active_role] && !active_role.reviewer?
+      @design_review  = DesignReview.find(params[:id])
+      @review_results = @design_review.review_results_by_role_name
+
+      active_role = session[:active_role]
+      if session[:active_role] && !active_role.reviewer?
     
-      case session[:active_role].name
-      when 'Designer'
-        render_action('designer_view')
-      when 'Manager'
-        render_action('manager_view')
-      when 'Admin'
-        render_action('admin_view')
-      else
-        render_action('safe_view')
-      end
+        case session[:active_role].name
+        when 'Designer'
+          render_action('designer_view')
+        when 'Manager'
+          render_action('manager_view')
+        when 'Admin'
+          render_action('admin_view')
+        else
+          render_action('safe_view')
+        end
       
-    else
-
-      if active_role && active_role.reviewer?
-        
-        @my_review_results = []
-        @review_results.each do |review_result|
-          @my_review_results << review_result if review_result.reviewer_id == session[:user].id
-        end
-
-        if pre_art_pcb(@design_review, @my_review_results)
-          @designers  = Role.find_by_name("Designer").active_users
-          @priorities = Priority.find_all(nil, 'value ASC')
-        else
-          @designers  = nil
-          @priorities = nil
-        end
-
-        if (@my_review_results.find { |rr| rr.role.name == "SLM-Vendor"})
-          design_fab_houses = {}
-          @design_review.design.fab_houses.each { |dfh| design_fab_houses[dfh.id] = dfh }
-          
-          @fab_houses = FabHouse.get_all_active
-          @fab_houses.each { |fh| fh[:selected] = design_fab_houses[fh.id] != nil }
-        else
-          @fab_houses = nil
-        end
-
-        render_action('reviewer_view')
       else
-        render_action('safe_view')
+
+        if active_role && active_role.reviewer?
+        
+          @my_review_results = []
+          @review_results.each do |review_result|
+            @my_review_results << review_result if review_result.reviewer_id == session[:user].id
+          end
+
+          if pre_art_pcb(@design_review, @my_review_results)
+            @designers  = Role.find_by_name("Designer").active_users
+            @priorities = Priority.find(:all, :order => 'value ASC')
+          else
+            @designers  = nil
+            @priorities = nil
+          end
+
+          if (@my_review_results.find { |rr| rr.role.name == "SLM-Vendor"})
+            design_fab_houses = {}
+            @design_review.design.fab_houses.each { |dfh| design_fab_houses[dfh.id] = dfh }
+          
+            @fab_houses = FabHouse.get_all_active
+            @fab_houses.each { |fh| fh[:selected] = design_fab_houses[fh.id] != nil }
+          else
+            @fab_houses = nil
+          end
+
+          render_action('reviewer_view')
+        else
+          render_action('safe_view')
+        end
       end
+    else
+    
+      flash['notice'] = "No ID was provided - unable to access the design review"
+      redirect_to(:controller => 'tracker', :action => 'index')
+    
     end
   end
   
@@ -248,7 +256,7 @@ class DesignReviewController < ApplicationController
     design_id = flash[:design_id]
     
     if params["combine"]["reviews"] == '1'
-      
+
       design_reviews = DesignReview.find_all_by_design_id(design_id)
       placement_review = design_reviews.find { |dr| dr.review_type.name == 'Placement' }
       routing_review   = design_reviews.find { |dr| dr.review_type.name == 'Routing' }
@@ -650,12 +658,13 @@ class DesignReviewController < ApplicationController
   def review_attachments
  
     @design_review = DesignReview.find(params[:design_review_id])
-    document_types = DocumentType.find_all(nil, 'name ASC')
+    document_types = DocumentType.find(:all, :order => 'name')
 
     @documents = []
     for doc_type in document_types
-      docs = DesignReviewDocument.find_all("board_id='#{@design_review.design.board_id}' " +
-                                           "and document_type_id='#{doc_type.id}'")
+      docs = DesignReviewDocument.find(:all,
+                                       :conditions => "board_id='#{@design_review.design.board_id}' " +
+                                                      "and document_type_id='#{doc_type.id}'")
       next if docs.size == 0
       
       if doc_type.name != "Other"
@@ -791,7 +800,9 @@ class DesignReviewController < ApplicationController
   def add_attachment
 
     @document       = Document.new
-    @document_types = DocumentType.find_all('active=1', 'name ASC')
+    @document_types = DocumentType.find(:all,
+                                        :conditions => 'active=1',
+                                        :order      => 'name ASC')
     
     if params[:design_review] != nil
       design_review_id = params[:design_review][:id]
@@ -804,7 +815,8 @@ class DesignReviewController < ApplicationController
     @board = Board.find(params[:id])
     
     # Eliminate document types that are already attached.
-    documents = DesignReviewDocument.find_all("design_id='#{@design_review.design_id}'")
+    documents = DesignReviewDocument.find(:all,
+                                          :conditions => "design_id='#{@design_review.design_id}'")
     other = DocumentType.find_by_name('Other')
 
     for doc in documents
@@ -953,8 +965,9 @@ class DesignReviewController < ApplicationController
   def list_obsolete
   
     @design_review = DesignReview.find(params[:id])
-    @docs = DesignReviewDocument.find_all("design_id='#{@design_review.design.id}' " +
-                                          "and document_type_id='#{params[:document_type_id]}'")
+    @docs = DesignReviewDocument.find(:all,
+                                      :conditions => ("design_id='#{@design_review.design.id}' " +
+                                                      "and document_type_id='#{params[:document_type_id]}'"))
                                           
     @docs.sort_by { |drd| drd.document.created_on}
     @docs.reverse!
@@ -1006,7 +1019,9 @@ class DesignReviewController < ApplicationController
     @design.board.users.each { |user| users_on_cc_list.push(user.id) }
 
     # Get all of the users, remove the reviewer names, and add the full name.
-    users = User.find_all('active=1', 'last_name ASC')
+    users = User.find(:all,
+                      :conditions => 'active=1',
+                      :order      => 'last_name ASC')
     @reviewers.each { |reviewer| users.delete_if { |user| user.id == reviewer[:id] } }
 
     @users_copied     = []
@@ -1114,7 +1129,7 @@ class DesignReviewController < ApplicationController
     user = User.find(params[:id])
 
     # Update the database.
-    details[:design].board.remove_users(user)
+    details[:design].board.users.delete(user)
     
     # Update the history
     cc_list_history = CcListHistory.new
@@ -1511,7 +1526,9 @@ class DesignReviewController < ApplicationController
     @design.board.users.each { |user| users_on_cc_list.push(user.id) }
 
     # Get all of the users, remove the reviewer names, and add the full name.
-    users = User.find_all('active=1', 'last_name ASC')
+    users = User.find(:all,
+                      :conditions => 'active=1',
+                      :order      => 'last_name ASC')
     @reviewers.each { |reviewer| users.delete_if { |user| user.id == reviewer[:id] } }
     
     @users_copied     = []
@@ -1642,7 +1659,11 @@ class DesignReviewController < ApplicationController
       new_reviewers.each { |role_name, user_id|
         next if user_id == ''
         role = Role.find_by_name(role_name)
-        design_review_result = DesignReviewResult.find_first("design_review_id='#{design_review_id}' and reviewer_id='#{session[:user].id}' and role_id='#{role.id}'")
+        design_review_result = DesignReviewResult.find(
+                                 :first,
+                                 :conditions => "design_review_id='#{design_review_id}' and " +
+                                                "reviewer_id='#{session[:user].id}' and "     +
+                                                "role_id='#{role.id}'")
 
         if design_review_result
           is_reviewer = session[:user].id == design_review_result.reviewer_id
@@ -1675,7 +1696,9 @@ class DesignReviewController < ApplicationController
       next if value[session[:user].id.to_s] == 'no'
 
       role = Role.find(key.split('_')[1])
-      design_review_result = DesignReviewResult.find_first("design_review_id='#{design_review_id}' and role_id='#{role.id}'")
+      design_review_result = DesignReviewResult.find(:first,
+                                                     :conditions => "design_review_id='#{design_review_id}' and" +
+                                                                    " role_id='#{role.id}'")
 
       if design_review_result
         peer = User.find(design_review_result.reviewer_id)
@@ -1737,7 +1760,7 @@ class DesignReviewController < ApplicationController
     @designers           = Role.find_by_name("Designer").active_users
     @peer_list           = @designers
     @pcb_input_gate_list = Role.find_by_name('PCB Input Gate').active_users
-    @priorities          = Priority.find_all(nil, 'value ASC')
+    @priorities          = Priority.find(:all, :order => 'value ASC')
     @design_centers      = DesignCenter.get_all_active
     
     @review_statuses = []
@@ -2103,7 +2126,7 @@ class DesignReviewController < ApplicationController
       # Update the design
       design = design_review.design
       if selected == '0' && design.fab_houses.include?(fab_house)
-        design.remove_fab_houses(fab_house)
+        design.fab_houses.delete(fab_house)
         if removed == ''
           removed = fab_house.name
         else
@@ -2121,7 +2144,7 @@ class DesignReviewController < ApplicationController
       # Update the board
       board = design.board
       if selected == '0' && board.fab_houses.include?(fab_house)
-        board.remove_fab_houses(fab_house)
+        board.fab_houses.delete(fab_house)
       elsif selected == '1' && !board.fab_houses.include?(fab_house)
         board.fab_houses << fab_house                                      
       end
