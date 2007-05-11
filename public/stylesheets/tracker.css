@@ -25,6 +25,11 @@ h2 {
   color: #023a94;
 }
 
+.th1 {
+  font: 11px Verdana, Geneva, Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+
 pre {
   background-color: #eee;
   padding: 10px;
