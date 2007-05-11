@@ -62,6 +62,35 @@ class Design < ActiveRecord::Base
 
   ######################################################################
   #
+  # comments_by_role
+  #
+  # Description:
+  # This method retrieves the design review comments for the roles 
+  # identified in the role_list parameter.
+  #
+  # Parameters:
+  # role_list - a list of role names
+  #
+  # Return value:
+  # A list of design review comments associated with the design review 
+  # and the roles identified in the role_list.
+  #
+  ######################################################################
+  #
+  def comments_by_role(role_list)
+
+    role_names = (role_list.class == String) ? [role_list] : role_list
+    
+    comment_list = []
+    self.design_reviews.each { |dr| comment_list += dr.comments_by_role(role_names) }
+    
+    comment_list.sort_by { |c| c.created_on }.reverse
+  
+  end
+
+
+  ######################################################################
+  #
   # get_associated_users_by_role
   #
   # Description:
@@ -521,8 +550,12 @@ class Design < ActiveRecord::Base
   def next_review
 
     current_review_type = ReviewType.find(self.phase_id)
-    review_types = ReviewType.find_all("active = 1 AND sort_order > '#{current_review_type.sort_order}'", 
-                                       "sort_order ASC")
+#    review_types = ReviewType.find_all("active = 1 AND sort_order > '#{current_review_type.sort_order}'", 
+#                                       "sort_order ASC")
+    review_types = ReviewType.find(:all,
+                                   :conditions => "active = 1 AND " +
+                                                  "sort_order > '#{current_review_type.sort_order}'", 
+                                   :order      => "sort_order ASC")
 
     phase_id   = Design::COMPLETE
     next_review = nil
