@@ -62,7 +62,7 @@ class OiCategorySection < ActiveRecord::Base
 
   ######################################################################
   #
-  # urls
+  # email_formatted_urls
   #
   # Description:
   # This method returns the urls associated with the category section
