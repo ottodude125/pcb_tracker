@@ -20,13 +20,11 @@ module DesignReviewHelper
 
   def design_review_reassignable(design_review)
 
-    incomplete = ['No Response', 'WITHDRAWN']
+    incomplete   = ['No Response', 'WITHDRAWN']
     reassignable = false
-    role_ids = []
-    @session[:user].roles.each { |role| role_ids.push(role.id) }
-    review_results = DesignReviewResult.find_all_by_design_review_id(
-                       design_review.id)
-    for review_result in review_results
+    role_ids     = session[:user].roles.collect { |role| role.id }
+    
+    design_review.design_review_results.each do |review_result|
       if role_ids.include?(review_result.role_id)
         reassignable = incomplete.include?(review_result.result)
       end
@@ -51,7 +49,7 @@ module DesignReviewHelper
 
   def reviewer_peer(review_results)
 
-    for my_role in @session[:roles]
+    session[:roles].each do |my_role|
       is_peer = review_results.find { |rr| rr.role_id == my_role.id }
       break if is_peer
     end
@@ -72,7 +70,7 @@ module DesignReviewHelper
   
   def permitted_to_remove_self_from_cc_list
   
-    return @users_copied.include?(@session[:user])
+    return @users_copied.include?(session[:user])
     
   end
 
@@ -80,7 +78,7 @@ module DesignReviewHelper
   def permitted_to_add_self_to_cc_list(reviewer_list)
   
     return ( !@users_copied.include?(@session[:user]) &&
-             !reviewer_list.find { |r| r[:id] == @session[:user].id } )
+             !reviewer_list.find { |r| r[:id] == session[:user].id } )
     
   end
 
