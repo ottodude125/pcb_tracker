@@ -30,7 +30,7 @@
     </td>
     <td>
       <select id='report_score' name='report[score]'>
-        <option value="256">Please Select a Range</option>
+        <option value="<%= OiAssignmentReport::NOT_SCORED %>">Please Select a Range</option>
         <% @scoring_table.each do |score| %>
           <option value="<%= score[0] %>"><%= score[1] %></option>
         <% end %>
