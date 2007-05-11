@@ -53,50 +53,52 @@
 
 <hr class="div" />
 
-  <% for box in @display %>
-    <% color = '#' + box[:section].background_color %>
+  <% @audit.checklist.sections.each do |section| %>
+    <% color = '#' + section.background_color %>
+    
+    <% section.subsections.each do |subsection| %>
 
-    <table rules="rows" class="peer_check_outer_box">
-      <tr>
-        <td colspan="2">
-          <% if box[:section].name != '' %>
-            <font size="+1"><b><%= h box[:section].name %><br/></b></font>
-          <% end %>
-        </td>
-      </tr>
-      <tr>
-        <td align="left">
-	  <% if box[:subsect].name != '' %>
-            <b><%= h box[:subsect].name %><br/></b>
-          <% end %>
-          <% if box[:subsect].note != '' %>
-            <b>Note:</b> <%= h box[:subsect].note %><br/>
-          <% end %>
-        </td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <table align="right" class="peer_check_inner_box" rules="all">
-            <% for check_info in box[:check_info] %>
-            <%# debug check_info %>
-              <% check = check_info[:check] %>
-              <tr>
-                <td width="60%" valign="top" rowspan="2">
-                  <% if check.title != '' %>
-                    <b><%= h check.title %></b>
-                  <% end %>
-                  <% if check.check != '' %>
-                    <%= h check.check %>
-                  <% end %>
-                </td>
-                <% if check_info[:design_check].designer_result != 'None' %>
-                  <td align="center" width="40%">
+      <table rules="rows" class="peer_check_outer_box">
+        <tr>
+          <td colspan="2">
+            <% if section.name != '' %>
+              <font size="+1"><b><%= h section.name %><br/></b></font>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td align="left">
+	        <% if subsection.name != '' %>
+              <b><%= h subsection.name %><br/></b>
+            <% end %>
+            <% if subsection.note != '' %>
+              <b>Note:</b> <%= h subsection.note %><br/>
+            <% end %>
+          </td>
+        </tr>
+        
+        <tr>
+          <td colspan="2">
+            <table align="right" class="peer_check_inner_box" rules="all">
+              <% subsection.checks.each do |check| %>
+
+                <tr>
+                  <td width="60%" valign="top" rowspan="2">
+                    <% if check.title != '' %>
+                      <b><%= h check.title %></b>
+                    <% end %>
+                    <% if check.check != '' %>
+                      <%= h check.check %>
+                    <% end %>
+                  </td>
+                  <% if check[:design_check].designer_result != 'None' %>
+                    <td align="center" width="40%">
                     <b><font size="-2">
-                      <%= check_info[:design_check].designer_result %>
+                      <%= check[:design_check].designer_result %>
                       by 
-                      <%= check_info[:design_check].self_auditor.name %>
+                      <%= check[:designer] %>
                       <br/>
-                      <%= check_info[:design_check].designer_checked_on.strftime("%a %b %d, %Y @ %I:%M %p") %>
+                      <%= check[:design_check].designer_checked_on.strftime("%a %b %d, %Y @ %I:%M %p") %>
                     </font></b></td>
                 <% else %>
                   <td width="40%" bgcolor="<%= color %>">&nbsp;</td>
@@ -104,14 +106,14 @@
               </tr>
               <% if check.designer_auditor? %>
                 <tr>
-                  <% if check_info[:design_check].auditor_result != 'None' %>
+                  <% if check[:design_check].auditor_result != 'None' %>
                     <td align="center" width="30%">
                       <b><font size="-2">
-                        <%= check_info[:design_check].auditor_result %>
+                        <%= check[:design_check].auditor_result %>
                         by
-                        <%= check_info[:design_check].peer_auditor.name %>
+                        <%= check[:auditor] %>
                         <br/>
-                        <%= check_info[:design_check].auditor_checked_on.strftime("%a %b %d, %Y @ %I:%M %p") %>
+                        <%= check[:design_check].auditor_checked_on.strftime("%a %b %d, %Y @ %I:%M %p") %>
                     </font></b></td>
                   <% else %>
                     <td width="30%" bgcolor="<%= color %>">&nbsp;</td>
@@ -122,7 +124,7 @@
                   <td width="30%" bgcolor="#000000">&nbsp;</td>
                 </tr>
               <% end %>
-              <% if check_info[:design_check].audit_comments.size > 0 %>
+              <% if check[:design_check].audit_comments.size > 0 %>
                 <tr>
                   <td colspan="2">
                     <table width="100%" border="0">
@@ -132,10 +134,10 @@
                       <tr>
                         <td>
                           <table width="95%" align="right" rules="all">
-                            <% for comment in check_info[:design_check].audit_comments %>
+                            <% check[:design_check].audit_comments.each do |comment| %>
                               <tr>
                                 <td>
-                                  <b><%= User.find(comment.user_id).name %> [<%= comment.created_on.strftime("%a %b %d, %Y @ %I:%M %p") %>] </b>
+                                  <b><%= @user_list.detect { |u| u.id == comment.user_id }.name %> [<%= comment.created_on.strftime("%a %b %d, %Y @ %I:%M %p") %>] </b>
                                   <br/>
                                   <%=h comment.comment %>
                                 </td>
@@ -153,7 +155,7 @@
         </td>
       </tr>
     </table>
-
+    <% end %>
   <% end %>
 <hr class="div" />
 
