@@ -26,7 +26,7 @@ class IpdPostController < ApplicationController
   # This method gathers the root level in-process dialogue posts
   # for a the design identified by params[:design_id]
   #
-  # Parameters from @params
+  # Parameters from params
   # design_id - identifies the design.
   # page      - used by the paginate library to determine the
   #             range of ipd dialogue posts to be displayed.
@@ -53,7 +53,7 @@ class IpdPostController < ApplicationController
   # This method uses the information passed in to create a reply to
   # a post.
   #
-  # Parameters from @params
+  # Parameters from params
   # reply_post[:body] - contains the reply entered by the user.
   # id - identifies the root post (the post that is being replied
   #      too).
@@ -73,7 +73,7 @@ class IpdPostController < ApplicationController
           last_reply_post.body != body)
         reply_post = IpdPost.new
         reply_post.parent_id = params[:id]
-        reply_post.user_id   = @session[:user].id
+        reply_post.user_id   = session[:user].id
         reply_post.body      = body
         if reply_post.save
           flash["notice"] = "Reply post sucessfully created"
@@ -98,7 +98,7 @@ class IpdPostController < ApplicationController
   # for a the design identified by params[:design_id].  It also
   # sets up a reply in-process dialogue post.
   #
-  # Parameters from @params
+  # Parameters from params
   # design_id - identifies the design.
   #
   ######################################################################
@@ -120,7 +120,7 @@ class IpdPostController < ApplicationController
   # This method creates a form to create aroot level in-process dialogue 
   # post for a the design identified by params[:design_id]
   #
-  # Parameters from @params
+  # Parameters from params
   # design_id - identifies the design.
   #
   ######################################################################
@@ -138,14 +138,14 @@ class IpdPostController < ApplicationController
   # Description:
   # This method creates a root level in-process dialogue post.
   #
-  # Parameters from @params
+  # Parameters from params
   # design_id - identifies the design.
   #
   ######################################################################
   #
   def create
     @ipd_post = IpdPost.new(params[:ipd_post])
-    @ipd_post.user_id = @session[:user].id
+    @ipd_post.user_id = session[:user].id
     if @ipd_post.save
       flash['notice'] = 'Post was successfully created'
       redirect_to(:action => 'manage_email_list',
@@ -164,7 +164,7 @@ class IpdPostController < ApplicationController
   # This method sets up the data structures to manage the email list of
   # a new thread.
   #
-  # Parameters from @params
+  # Parameters from params
   # id - identifies the root ipd post.
   #
   ######################################################################
@@ -183,8 +183,8 @@ class IpdPostController < ApplicationController
     @optional_cc_list = @ipd_post.users.dup
     
 
-    available_to_cc = User.find_all('active=1')
-    available_to_cc.delete_if { |user| user == @session[:user] }
+    available_to_cc = User.find_all_by_active(1)
+    available_to_cc.delete_if { |user| user == session[:user] }
     available_to_cc.delete_if { |user| user == @associated_users['HWENG'] }
     available_to_cc.delete_if { |user| user == @associated_users['Hardware Engineering Manager'] }
     for input_gate in @input_gate_list
@@ -216,7 +216,7 @@ class IpdPostController < ApplicationController
   # This method adds the user identified by the id paramater to the 
   # thread's email CC list.
   #
-  # Parameters from @params
+  # Parameters from params
   # id - the id of the user record to add to the list.
   #
   ######################################################################
@@ -230,7 +230,7 @@ class IpdPostController < ApplicationController
     @subtractions     = flash[:subtractions]
     @additions        = flash[:additions]
 
-    user_to_add = @available_to_cc.detect { |user| user.id == @params[:id].to_i }
+    user_to_add = @available_to_cc.detect { |user| user.id == params[:id].to_i }
     @available_to_cc.delete_if { |user| user == user_to_add }
 
     ipd_post.users << user_to_add
@@ -273,7 +273,7 @@ class IpdPostController < ApplicationController
   # This method removes the user identified by the id paramater from the 
   # thread's email CC list.
   #
-  # Parameters from @params
+  # Parameters from params
   # id - the id of the user record to remove from the list.
   #
   ######################################################################
@@ -287,7 +287,7 @@ class IpdPostController < ApplicationController
     @additions        = flash[:additions]
     @subtractions     = flash[:subtractions]
 
-    user_to_remove = @optional_cc_list.detect { |user| user.id == @params[:id].to_i }
+    user_to_remove = @optional_cc_list.detect { |user| user.id == params[:id].to_i }
     @optional_cc_list.delete_if { |user| user == user_to_remove}
 
     if (! @additions ||
@@ -301,7 +301,7 @@ class IpdPostController < ApplicationController
     end
     @additions.delete_if { |u| u == user_to_remove } if @additions
 
-    ipd_post.remove_users(user_to_remove)
+    ipd_post.users.delete(user_to_remove)
 
     @available_to_cc << user_to_remove
     @available_to_cc = @available_to_cc.sort_by { |user| user.last_name }
@@ -330,7 +330,7 @@ class IpdPostController < ApplicationController
   # This method delivers the email and then redirects back to the IPD
   # post.
   #
-  # Parameters from @params
+  # Parameters from params
   # id - identifies the root ipd post.
   #
   ######################################################################
