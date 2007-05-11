@@ -19,14 +19,23 @@ class OiAssignmentReport < ActiveRecord::Base
 #
 # Constants
 # 
-REPORT_CARD_SCORING_TABLE = [ [ 5,  '0% Rework' ],
-                              [ 4, 'Approximately 20% Rework' ],
-                              [ 3, 'Approximately 40% Rework' ],
-                              [ 2, 'Approximately 60% Rework' ],
-                              [ 1, 'Approximately 80% Rework' ],
-                              [ 0, '100% Rework'] ]
+NOT_SCORED = 256
+
+REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
+                              [  20, 'Approximately 20% Rework' ],
+                              [  40, 'Approximately 40% Rework' ],
+                              [  60, 'Approximately 60% Rework' ],
+                              [  80, 'Approximately 80% Rework' ],
+                              [ 100, '100% Rework'] ]
                               
                               
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+
   ######################################################################
   #
   # report_card_scoring
@@ -75,6 +84,30 @@ REPORT_CARD_SCORING_TABLE = [ [ 5,  '0% Rework' ],
   #
   def OiAssignmentReport.max_score
     REPORT_CARD_SCORING_TABLE.collect { |score| score[0] }.max
+  end
+  
+  
+  ##############################################################################
+  #
+  # Instance Methods
+  # 
+  ##############################################################################
+
+
+  ######################################################################
+  #
+  # score_value
+  #
+  # Description:
+  # This method returns the textual value for the score.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def score_value
+    REPORT_CARD_SCORING_TABLE[self.score/20][1]
   end
 
 
