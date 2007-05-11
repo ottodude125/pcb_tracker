@@ -12,7 +12,8 @@
 
 class OiAssignment < ActiveRecord::Base
 
-  has_many   :oi_assignment_comments
+  has_many(:oi_assignment_comments,
+           :order => "created_on DESC")
   
   has_one    :oi_assignment_report
   
@@ -102,6 +103,23 @@ class OiAssignment < ActiveRecord::Base
 
   ######################################################################
   #
+  # complexity_name
+  #
+  # Description:
+  # This method returns the complexity name for the oi_assigment.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def complexity_name
+    COMPLEXITY[self.complexity_id-1][0]
+  end
+  
+  
+  ######################################################################
+  #
   # task_duration
   #
   # Description:
@@ -115,9 +133,9 @@ class OiAssignment < ActiveRecord::Base
   def task_duration
 
     if self.complete?
-      sprintf("%4.1f Days", (self.completed_on - self.created_on) / 1.day)
+      sprintf("%4.1f", (self.completed_on - self.created_on) / 1.day)
     else
-      '0 Days'
+      '0'
     end
 
   end
