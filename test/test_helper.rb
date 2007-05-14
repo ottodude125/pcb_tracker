@@ -25,10 +25,9 @@ class Test::Unit::TestCase
   self.use_instantiated_fixtures  = false
 
   # Add more helper methods to be used by all tests here...
-
-
-  def set_admin
-    user = User.find(users(:cathy_m).id)
+  
+  def  set_admin
+    user = users(:cathy_m)
     @request.session[:user]        = user
     @request.session[:active_role] = Role.find_by_name('Admin')
     @request.session[:roles]       = user.roles
@@ -36,15 +35,15 @@ class Test::Unit::TestCase
 
 
   def set_non_admin
-    user = User.find(users(:rich_m).id)
+    user = users(:rich_m)
     @request.session[:user]        = user
     @request.session[:active_role] = Role.find_by_name('Designer')
     @request.session[:roles]       = user.roles
   end
 
-  
+
   def set_designer
-    user = User.find(users(:rich_m).id)
+    user = users(:rich_m)
     @request.session[:user]        = user
     @request.session[:active_role] = Role.find_by_name('Designer')
     @request.session[:roles]       = user.roles
@@ -52,7 +51,7 @@ class Test::Unit::TestCase
 
 
   def set_manager
-    user = User.find(users(:jim_l).id)
+    user = users(:jim_l)
     @request.session[:user]        = user
     @request.session[:active_role] = Role.find_by_name('Manager')
     @request.session[:roles]       = user.roles
@@ -60,7 +59,7 @@ class Test::Unit::TestCase
 
 
   def set_reviewer
-    user = User.find(users(:pat_a).id)
+    user = users(:pat_a)
     @request.session[:user]        = user
     @request.session[:active_role] = Role.find_by_name('DFM')
     @request.session[:roles]       = user.roles
@@ -72,8 +71,10 @@ class Test::Unit::TestCase
     @request.session[:user]        = user
     @request.session[:active_role] = Role.find_by_name(role)
     @request.session[:roles]       = user.roles
+    #@session = {:user        => user,
+    #            :active_role => role,
+    #            :roles       => user.roles}
   end
-
 
 
 end
