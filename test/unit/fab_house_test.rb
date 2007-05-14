@@ -36,7 +36,7 @@ class FabHouseTest < Test::Unit::TestCase
   #
   def test_access
   
-    fab_house_list = FabHouse.find_all
+    fab_house_list = FabHouse.find(:all)
     
     inactive_list = []
     fab_house_list.each do |expected_fab_house|
