@@ -174,7 +174,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     assert_equal(0,       new_entry.platform_id)
     assert_equal(0,       new_entry.project_id)
     assert_equal('',      new_entry.description)
-    assert_equal(10,      BoardDesignEntryUser.find_all.size)
+    assert_equal(10,      BoardDesignEntryUser.count)
 
 
     post(:create_board_design_entry, 
@@ -190,7 +190,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     assert_equal(2,              new_entry.platform_id)
     assert_equal(2,              new_entry.project_id)
     assert_equal('la455 design', new_entry.description)
-    assert_equal(18,             BoardDesignEntryUser.find_all.size)
+    assert_equal(18,             BoardDesignEntryUser.count)
     assert_redirected_to(:action      => 'new_entry',
                          :id          => new_entry.id,
                          :user_action => 'adding')
@@ -219,7 +219,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     assert_equal(14, assigns(:project_list).size)
     assert_equal(7,  assigns(:revision_list).size)
 
-    assert_equal(8, BoardDesignEntry.find_all.size)
+    assert_equal(8, BoardDesignEntry.count)
     assert_equal(3, BoardDesignEntry.find_all_by_originator_id(session[:user].id).size)
 
 
@@ -574,7 +574,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
                          :id          => new_entry.id,
                          :user_action => 'updating')
 
-    assert_equal(8, BoardDesignEntry.find_all.size)
+    assert_equal(8, BoardDesignEntry.count)
     assert_equal(3, BoardDesignEntry.find_all_by_originator_id(session[:user].id).size)
     
     post(:update_entry,
@@ -967,15 +967,15 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     }
 
 
-    assert_equal(19, BoardDesignEntryUser.find_all.size)
-    assert_equal(8,  BoardDesignEntry.find_all.size)
+    assert_equal(19, BoardDesignEntryUser.count)
+    assert_equal(8,  BoardDesignEntry.count)
     assert_equal(3,  BoardDesignEntry.find_all_by_originator_id(session[:user].id).size)
     
     post(:destroy, :id => new_entry.id)
 
-    assert_equal(7,  BoardDesignEntry.find_all.size)
+    assert_equal(7,  BoardDesignEntry.count)
     assert_equal(2,  BoardDesignEntry.find_all_by_originator_id(session[:user].id).size)
-    assert_equal(10, BoardDesignEntryUser.find_all.size)
+    assert_equal(10, BoardDesignEntryUser.count)
     
   end
   
@@ -993,7 +993,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
   def test_delete
 
     # Verify the number of Board Design Entries to start.
-    board_design_entries = BoardDesignEntry.find_all
+    board_design_entries = BoardDesignEntry.find(:all)
     assert_equal(6, board_design_entries.size)
   
     # Try listing from an account that does have an
@@ -1007,11 +1007,11 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     board_design_list = assigns(:board_design_entries)
     assert_equal(1, board_design_list.size)
     
-    assert_equal(4, Document.find_all.size)
+    assert_equal(4, Document.count)
 
     post(:destroy, :id => board_design_list[0].id)
 
-    assert_equal(1, Document.find_all.size)
+    assert_equal(1, Document.count)
 
     post(:originator_list)
     
@@ -1021,7 +1021,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     assert_equal(0, board_design_list.size)
 
     # Verify the number of Board Design Entries after deleting.
-    board_design_entries = BoardDesignEntry.find_all
+    board_design_entries = BoardDesignEntry.find(:all)
     assert_equal(5, board_design_entries.size)
   
     # Verify the number of entries seen by the processor.
