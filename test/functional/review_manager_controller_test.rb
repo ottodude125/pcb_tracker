@@ -18,6 +18,8 @@ require 'review_manager_controller'
 class ReviewManagerController; def rescue_action(e) raise e end; end
 
 class ReviewManagerControllerTest < Test::Unit::TestCase
+
+
   def setup
     @controller = ReviewManagerController.new
     @request    = ActionController::TestRequest.new
@@ -82,7 +84,7 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
     assert_equal(19, roles.size)
     assert_equal(5, review_types.size)
 
-    expected_values = Array[
+    expected_values = [
       {:name => 'CE-DFT',     
        :review_types => ['Final', 'Placement', 'Pre-Artwork', 'Routing']},
       {:name => 'Compliance - EMC',     
@@ -136,28 +138,38 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
 
     }
 
-    expected_values = Array[
+    expected_values = [
       {:name => 'Final',
-        :role_names => ['HWENG', 'Valor', 'CE-DFT', 'DFM', 'TDE', 'Mechanical', 'Mechanical-MFG', 'PCB Design', 'Planning']},
+        :role_names => ['CE-DFT',           'DFM',              'HWENG',
+                        'Mechanical',       'Mechanical-MFG',   'PCB Design',
+                        'Planning',         'TDE',              'Valor'] },
       {:name => 'Pre-Artwork',
-        :role_names => ['HWENG', 'Valor', 'CE-DFT', 'DFM', 'TDE', 'Mechanical', 'Mechanical-MFG', 'Planning', 'PCB Input Gate', 'Library', 'PCB Mechanical', 'SLM BOM', 'SLM-Vendor']},
+        :role_names => ['CE-DFT',           'DFM',              'HWENG', 
+                        'Library',          'Mechanical',       'Mechanical-MFG',
+                        'PCB Input Gate',   'PCB Mechanical',   'Planning',
+                        'SLM BOM',          'SLM-Vendor',       'TDE',
+                        'Valor' ]},
       {:name => 'Placement',
-        :role_names => ['HWENG', 'CE-DFT', 'DFM', 'TDE', 'Mechanical', 'Mechanical-MFG']},
+        :role_names => ['CE-DFT',           'DFM',              'HWENG',
+                        'Mechanical',       'Mechanical-MFG',   'TDE' ]},
       {:name => 'Routing',
-        :role_names => ['HWENG', 'CE-DFT', 'DFM', 'Mechanical-MFG', 'Library']},
+        :role_names => ['CE-DFT',           'DFM',              'HWENG',
+                        'Library',          'Mechanical-MFG' ]},
       {:name => 'Release',
-        :role_names => ['HWENG', 'PCB Design', 'Operations Manager']},
+        :role_names => ['HWENG',            'Operations Manager',
+                        'PCB Design' ]},
     ]
-    review_types.each { |review_type| 
-      expected_rt = expected_values.shift
+
+    review_types.each_with_index do |review_type, i|
+      expected_rt = expected_values[i]
       assert_equal(expected_rt[:name], review_type.name)
 
-      review_type.roles.each { |role|
+      review_type.roles.sort_by { |role| role.name }.each_with_index do |role, j|
         expected_role = expected_rt[:role_names]
-        expected_name = expected_role.shift
+        expected_name = expected_role[j]
         assert_equal(expected_name, role.name)
-      }
-    }
+      end
+    end
 
   end
 
@@ -216,7 +228,7 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
     assert_equal(19, roles.size)
     assert_equal(5, review_types.size)
 
-    expected_values = Array[
+    expected_values = [
       {:name => 'CE-DFT',
        :review_types => ['Final', 'Placement', 'Release', 'Routing']},
       {:name => 'Compliance - EMC',     
@@ -272,7 +284,7 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
 
     }
 
-    expected_values = Array[
+    expected_values = [
       {:name => 'Pre-Artwork',
         :role_names => ['DFM', 'HWENG', 'Mechanical', 'Mechanical-MFG', 'PCB Mechanical', 'Planning', 'SLM BOM', 'SLM-Vendor', 'TDE', 'Valor']},
       {:name => 'Placement', 

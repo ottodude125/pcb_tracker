@@ -84,7 +84,8 @@ class RoleControllerTest < Test::Unit::TestCase
   #
   def test_create
 
-   assert_equal(23, Role.find_all.size)
+   role_count = Role.count
+   assert_equal(23, role_count)
 
     new_role = {
       'active'       => '1',
@@ -95,17 +96,17 @@ class RoleControllerTest < Test::Unit::TestCase
     }
 
     set_admin
-    post(:create,
-         :role  => new_role);
+    post(:create, :role  => new_role);
 
-    assert_equal(24, Role.find_all.size)
+    role_count += 1
+    assert_equal(role_count, Role.count)
     assert_equal("Role #{new_role['display_name']} added", flash['notice'])
     assert_redirected_to(:action => 'list')
 
     post(:create,
          :role => new_role);
 
-    assert_equal(24, Role.find_all.size)
+    assert_equal(role_count, Role.count)
     assert_equal("Name has already been taken", flash['notice'])
     assert_redirected_to(:action => 'add')
 
@@ -132,14 +133,13 @@ class RoleControllerTest < Test::Unit::TestCase
 
     # Try editing from an Admin account
     set_admin
-    post(:edit,
-         :id     => roles(:designer).id)
+    post(:edit, :id => roles(:designer).id)
 
     assert_response 200
     assert_equal(roles(:designer).name, assigns(:role).name)
 
     assert_raise(ActiveRecord::RecordNotFound) {
-      post(:edit, :id     => 1000000)
+      post(:edit, :id => 1000000)
     }
   end
 
@@ -166,8 +166,7 @@ class RoleControllerTest < Test::Unit::TestCase
     role.name = 'Mazda'
 
     set_admin
-    get(:update,
-        :role => role.attributes)
+    get(:update, :role => role.attributes)
 
     assert_equal('Role was successfully updated.', flash['notice'])
     assert_redirected_to(:action => 'edit',

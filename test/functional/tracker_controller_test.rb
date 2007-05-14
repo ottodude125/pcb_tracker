@@ -18,6 +18,8 @@ require 'tracker_controller'
 class TrackerController; def rescue_action(e) raise e end; end
 
 class TrackerControllerTest < Test::Unit::TestCase
+
+
   def setup
     @controller = TrackerController.new
     @request    = ActionController::TestRequest.new
@@ -63,15 +65,20 @@ class TrackerControllerTest < Test::Unit::TestCase
     expected_active_design_reviews = [ design_reviews(:mx999c_pre_artwork),
                                        design_reviews(:mx999b_pre_artwork),
                                        design_reviews(:mx999a_pre_artwork),
+                                       design_reviews(:la454c3_placement),
                                        design_reviews(:mx234a_pre_artwork),
                                        design_reviews(:la453a1_placement),
                                        design_reviews(:mx600a_pre_artwork) ]
+
     assert_equal(expected_active_design_reviews.size, active_reviews.size)
     assert_equal(expected_active_design_reviews,      active_reviews)
 
-    expected_inactive_design_reviews = [ design_reviews(:la453b_placement),
+    expected_inactive_design_reviews = [ design_reviews(:mx234b_placement),
+                                         design_reviews(:mx234c_routing),
                                          design_reviews(:mx700b_pre_artwork),
-                                         design_reviews(:la453a_eco1_final) ]
+                                         design_reviews(:la453a_eco1_final),
+                                         design_reviews(:la453b_placement) ]
+                                         
     assert_equal(expected_inactive_design_reviews.size, inactive_reviews.size)
     assert_equal(expected_inactive_design_reviews,      inactive_reviews)
     
