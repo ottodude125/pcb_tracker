@@ -15,8 +15,10 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class DesignTest < Test::Unit::TestCase
   fixtures(:designs,
+           :design_review_comments,
            :priorities,
            :review_types,
+           :roles,
            :users)
 
   def setup
@@ -398,6 +400,81 @@ class DesignTest < Test::Unit::TestCase
   assert_equal(Design::COMPLETE,              next_review_id)
 
  end
+ 
+ 
+  ######################################################################
+  def test_role_functions
+
+    test_data = [ { :role     => roles(:admin),
+                    :comments => [design_review_comments(:comment_four),
+                                  design_review_comments(:comment_one)] },
+                  { :role     => roles(:designer),
+                    :comments => [design_review_comments(:comment_six),
+                                  design_review_comments(:comment_three)] },
+                  { :role     => roles(:manager),
+                    :comments => [design_review_comments(:comment_five),
+                                  design_review_comments(:comment_two)] },
+                  { :role     => roles(:hweng),
+                    :comments => [] },
+                  { :role     => roles(:valor),
+                    :comments => [design_review_comments(:comment_six),
+                                  design_review_comments(:comment_three)] },
+                  { :role     => roles(:ce_dft),
+                    :comments => [] },
+                  { :role     => roles(:dfm),
+                    :comments => [] },
+                  { :role     => roles(:tde),
+                    :comments => [] },
+                  { :role     => roles(:mechanical),
+                    :comments => [] },
+                  { :role     => roles(:pcb_design),
+                    :comments => [design_review_comments(:comment_five),
+                                  design_review_comments(:comment_two)] },
+                  { :role     => roles(:planning),
+                    :comments => [] },
+                  { :role     => roles(:pcb_input_gate),
+                    :comments => [design_review_comments(:comment_four),
+                                  design_review_comments(:comment_one)] },
+                  { :role     => roles(:library),
+                    :comments => [] },
+                  { :role     => roles(:pcb_mechanical),
+                    :comments => [] },
+                  { :role     => roles(:slm_bom),
+                    :comments => [] },
+                  { :role     => roles(:slm_vendor),
+                    :comments => [] },
+                  { :role     => roles(:operations_manager),
+                    :comments => [] },
+                  { :role     => roles(:pcb_admin),
+                    :comments => [] },
+                  { :role     => roles(:program_manager),
+                    :comments => [] },
+                  { :role     => roles(:compliance_emc),
+                    :comments => [] },
+                  { :role     => roles(:compliance_safety),
+                    :comments => [] },
+                  { :role     => roles(:hweng_manager),
+                    :comments => [] },
+                  { :role     => roles(:mechanical_manufacturing),
+                    :comments => [] } ]
   
+    test_data.each do |test|
+      assert_equal(test[:comments], @design.comments_by_role(test[:role].name))
+    end
+    
+    assert_equal([design_review_comments(:comment_six),
+                  design_review_comments(:comment_four),
+                  design_review_comments(:comment_three),
+                  design_review_comments(:comment_one)],
+                 @design.comments_by_role(['Designer',           'Valor', 
+                                           'Operations Manager', 'PCB Input Gate']))
+
+    assert_equal([design_review_comments(:comment_four),
+                  design_review_comments(:comment_one)],
+                 @design.comments_by_role(['PCB Admin',          'Operations Manager',
+                                           'PCB Input Gate']))
+  
+  end
+    
 
 end

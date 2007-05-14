@@ -38,6 +38,100 @@ class DesignReviewTest < Test::Unit::TestCase
 
 
   ######################################################################
+  def test_role_functions
+
+    test_data = [ { :role     => roles(:admin),
+                    :reviewer => nil,
+                    :comments => [design_review_comments(:comment_four),
+                                  design_review_comments(:comment_one)] },
+                  { :role     => roles(:designer),
+                    :reviewer => nil,
+                    :comments => [design_review_comments(:comment_three)] },
+                  { :role     => roles(:manager),
+                    :reviewer => nil,
+                    :comments => [design_review_comments(:comment_two)] },
+                  { :role     => roles(:hweng),
+                    :reviewer => users(:lee_s),
+                    :comments => [] },
+                  { :role     => roles(:valor),
+                    :reviewer => users(:lisa_a),
+                    :comments => [design_review_comments(:comment_three)] },
+                  { :role     => roles(:ce_dft),
+                    :reviewer => users(:espo),
+                    :comments => [] },
+                  { :role     => roles(:dfm),
+                    :reviewer => users(:heng_k),
+                    :comments => [] },
+                  { :role     => roles(:tde),
+                    :reviewer => users(:rich_a),
+                    :comments => [] },
+                  { :role     => roles(:mechanical),
+                    :reviewer => users(:tom_f),
+                    :comments => [] },
+                  { :role     => roles(:pcb_design),
+                    :reviewer => users(:jim_l),
+                    :comments => [design_review_comments(:comment_two)] },
+                  { :role     => roles(:planning),
+                    :reviewer => users(:matt_d),
+                    :comments => [] },
+                  { :role     => roles(:pcb_input_gate),
+                    :reviewer => users(:cathy_m),
+                    :comments => [design_review_comments(:comment_four),
+                                  design_review_comments(:comment_one)] },
+                  { :role     => roles(:library),
+                    :reviewer => users(:dave_m),
+                    :comments => [] },
+                  { :role     => roles(:pcb_mechanical),
+                    :reviewer => users(:john_g),
+                    :comments => [] },
+                  { :role     => roles(:slm_bom),
+                    :reviewer => users(:art_d),
+                    :comments => [] },
+                  { :role     => roles(:slm_vendor),
+                    :reviewer => users(:dan_g),
+                    :comments => [] },
+                  { :role     => roles(:operations_manager),
+                    :reviewer => nil,
+                    :comments => [] },
+                  { :role     => roles(:pcb_admin),
+                    :reviewer => nil,
+                    :comments => [] },
+                  { :role     => roles(:program_manager),
+                    :reviewer => nil,
+                    :comments => [] },
+                  { :role     => roles(:compliance_emc),
+                    :reviewer => nil,
+                    :comments => [] },
+                  { :role     => roles(:compliance_safety),
+                    :reviewer => nil,
+                    :comments => [] },
+                  { :role     => roles(:hweng_manager),
+                    :reviewer => nil,
+                    :comments => [] },
+                  { :role     => roles(:mechanical_manufacturing),
+                    :reviewer => users(:anthony_g),
+                    :comments => [] } ]
+  
+    test_data.each do |test|
+      assert_equal(test[:reviewer], @mx234a_pre_art_review.role_reviewer(test[:role]))
+      assert_equal(test[:comments], @mx234a_pre_art_review.comments_by_role(test[:role].name))
+    end
+    
+    assert_equal([design_review_comments(:comment_four),
+                  design_review_comments(:comment_three),
+                  design_review_comments(:comment_one)],
+                 @mx234a_pre_art_review.comments_by_role(['Designer',           'Valor', 
+                                                          'Operations Manager', 'PCB Input Gate']))
+
+    assert_equal([design_review_comments(:comment_four),
+                  design_review_comments(:comment_one)],
+                 @mx234a_pre_art_review.comments_by_role(['PCB Admin',          'Operations Manager',
+                                                          'PCB Input Gate']))
+  
+  end
+  
+  
+  ######################################################################
   def test_review_name
     assert_equal('Pre-Artwork',       @mx234a_pre_art_review.review_name)
     assert_equal('Routing',           @mx234a_routing_review.review_name)
@@ -216,41 +310,41 @@ class DesignReviewTest < Test::Unit::TestCase
     #
     #                                         year   mon   day hour minute second
     assert_equal(0, 
-                 design_review.age(Time.local(2006, "jan", 10,  0,   0,     0)))
+                 design_review.age(Time.local(2006, "jan",   3,  0,   0,     0)))
     assert_equal(' 0.0',
-                 design_review.age_in_days(Time.local(2006, "jan", 10,  0,   0,     0)))
+                 design_review.age_in_days(Time.local(2006, "jan", 3,  0,   0,     0)))
     assert_equal(10.hours,
-                 design_review.age(Time.local(2006, "jan", 10, 10,   0,     0)))
+                 design_review.age(Time.local(2006, "jan",  3, 10,   0,     0)))
     assert_equal(11.hours + 59.minutes + 59, 
-                 design_review.age(Time.local(2006, "jan", 10, 11,  59,    59)))
+                 design_review.age(Time.local(2006, "jan",  3, 11,  59,    59)))
     
     #                                         year   mon   day hour minute second
     assert_equal(12.hours, 
-                 design_review.age(Time.local(2006, "jan", 10, 12,   0,     0)))
+                 design_review.age(Time.local(2006, "jan",  3, 12,   0,     0)))
     assert_equal(' 0.5',
-                 design_review.age_in_days(Time.local(2006, "jan", 10, 12,   0,     0)))
+                 design_review.age_in_days(Time.local(2006, "jan", 3, 12,   0,     0)))
     assert_equal(12.hours + 1, 
-                 design_review.age(Time.local(2006, "jan", 10, 12,   0,     1)))
+                 design_review.age(Time.local(2006, "jan",  3, 12,   0,     1)))
     assert_equal(1.day,
-                 design_review.age(Time.local(2006, "jan", 11,  0,   0,     0)))
+                 design_review.age(Time.local(2006, "jan",  4,  0,   0,     0)))
     assert_equal(1.day + 11.hours + 59.minutes + 59, 
-                 design_review.age(Time.local(2006, "jan", 11, 11,  59,    59)))
+                 design_review.age(Time.local(2006, "jan",  4, 11,  59,    59)))
     assert_equal(1.day + 12.hours + 1, 
-                 design_review.age(Time.local(2006, "jan", 11, 12,   0,     1)))
+                 design_review.age(Time.local(2006, "jan",  4, 12,   0,     1)))
     assert_equal(2.days, 
-                 design_review.age(Time.local(2006, "jan", 12,  0,   0,     0)))
+                 design_review.age(Time.local(2006, "jan",  5,  0,   0,     0)))
     assert_equal(2.days + 12.hours + 1, 
-                 design_review.age(Time.local(2006, "jan", 12, 12,   0,     1)))
+                 design_review.age(Time.local(2006, "jan",  5, 12,   0,     1)))
     assert_equal(3.days + 12.hours + 1, 
-                 design_review.age(Time.local(2006, "jan", 13, 12,   0,     1)))
+                 design_review.age(Time.local(2006, "jan",  6, 12,   0,     1)))
     assert_equal(4.days, 
-                 design_review.age(Time.local(2006, "jan", 14, 12,   0,     1)))
+                 design_review.age(Time.local(2006, "jan",  7, 12,   0,     1)))
     assert_equal(4.days, 
-                 design_review.age(Time.local(2006, "jan", 15, 12,   0,     1)))
+                 design_review.age(Time.local(2006, "jan",  8, 12,   0,     1)))
     assert_equal(4.days + 12.hours + 1, 
-                 design_review.age(Time.local(2006, "jan", 16, 12,   0,     1)))
+                 design_review.age(Time.local(2006, "jan",  9, 12,   0,     1)))
     assert_equal(5.days + 12.hours + 1, 
-                 design_review.age(Time.local(2006, "jan", 17, 12,   0,     1)))
+                 design_review.age(Time.local(2006, "jan", 10, 12,   0,     1)))
 
   end
 
