@@ -110,36 +110,25 @@
                                             :action     => 'view',
                                             :id         => review.id }) %>
                             </td>
-                            <td>
-                              <font size="-1">
-                                <b><%= review.created_on.strftime("%d-%b-%y") %></b>
-                              </font>
+                            <td class="th1">
+                              <%= review.created_on.strftime("%d-%b-%y") %>
                             </td>
-                            <td>
-                              <font size="-1">
-                                <b><%= review.review_status.name %></b>
-                              </font>
+                            <td class="th1">
+                              <%= review.review_status.name %>
                             </td>
-                            <td>
-                              <font size="-1">
-                                <b><%= review[:reviewers] %></b>
-                              </font>
+                            <td class="th1">
+                              <%= review[:reviewers] %>
                             </td>
-                            <td>
-                              <font size="-1">
-                                <b><%= review[:approvals] %></b>
-                              </font>
+                            <td class="th1">
+                              <%= review[:approvals] %>
                             </td>
-                            <% if review[:approvals] == review[:reviewers] %>
-                              <td>
-                                <font size="-1">
-
-                                  <b><%= review.completed_on.strftime("%d-%b-%y") %></b>
-                                </font>
-                              </td>
-                            <% else %>
-                              <td><b>N/A</b></td>
-                            <% end %>
+                            <td class="th1">
+                              <% if review[:approvals] == review[:reviewers] %>
+                                <%= review.completed_on.strftime("%d-%b-%y") %>
+                              <% else %>
+                                N/A
+                              <% end %>
+                            </td>
                           </tr>
                         <% end %>
 
