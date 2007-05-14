@@ -4,56 +4,63 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
+<% design_review = DesignReview.find(manager_home_list_inactive_stripes.id,
+                                     :include => [:review_type,
+                                                  :priority,
+                                                  :review_status])%>
+<% design        = Design.find(design_review.design_id,
+                              :include => [:revision,
+                                           :audit]) %>
+<% design.board  = Board.find(design.board_id,
+                              :include => :prefix) %>
 <tr class="<%= manager_home_list_inactive_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
 
   <td>
-    <%= link_to(manager_home_list_inactive_stripes.design.name,
+    <%= link_to(design.name,
                 :controller => 'design_review',
                 :action     => 'view',
-                :id         => manager_home_list_inactive_stripes.id)%>
+                :id         => design_review.id)%>
   </td>
-  <td align="left">
-    <font size="-1">
-      <b><%= manager_home_list_inactive_stripes[:priority_name] %></b>
-    </font>
+  <td align="left" class="th1">
+    <%= design_review.priority.name %>
   </td>
   <td>
-    <%= manager_home_list_inactive_stripes.designer.name %>
+    <%= design_review.designer.name %>
   </td>
   <td>
-    <%= manager_home_list_inactive_stripes.design.peer.name %>
+    <%= design.peer.name %>
   </td>
   <td>
-    <%= manager_home_list_inactive_stripes.review_name %>
+    <%= design_review.review_name %>
   </td>
   <td>
-    <%= manager_home_list_inactive_stripes.review_status.name %>
+    <%= design_review.review_status.name %>
   </td>
   <td align="right" rowspan="2">
     <table border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="center" valign="top">
           <input type="button" value="Updates"
-                 title='<%= "#{manager_home_list_inactive_stripes.design.name}: Make updates to the design review assignments" %>'
+                 title='<%= "#{design.name}: Make updates to the design review assignments" %>'
                  onClick="parent.location='<%= url_for(:controller => 'design_review',
                                                        :action     => 'admin_update',
-                                                       :id         => manager_home_list_inactive_stripes.id) %>'"
+                                                       :id         => design_review.id) %>'"
                      class="small_font_button" />
         </td>
       </tr>
       <tr>
         <td align="center" valign="top">
-          <% if !(manager_home_list_inactive_stripes.design.audit.skip? || manager_home_list_inactive_stripes.design.audit.is_complete?) %>
+          <% if !(design.audit.skip? || design.audit.is_complete?) %>
           <input type="button" value="Audit Assignments"
-                 title= '<%= "#{manager_home_list_inactive_stripes.design.name}: Set the assignments for self and peer audits" %>'
+                 title= '<%= "#{design.name}: Set the assignments for self and peer audits" %>'
                  onClick="parent.location='<%= url_for(:controller => 'audit',
                                                        :action     => 'auditor_list',
-                                                       :id         => manager_home_list_inactive_stripes.design.audit.id,
+                                                       :id         => design.audit.id,
                                                        :return_to  => { :controller => 'tracker',
                                                                         :action     => 'index' }) %>'"
                  class="small_font_button" />
           <% else %>
-            <b>Audit <%= manager_home_list_inactive_stripes.design.audit.skip? ? 'Skipped' : 'is Complete' %></b>
+            <b>Audit <%= design.audit.skip? ? 'Skipped' : 'is Complete' %></b>
           <% end %>
         </td>
       </tr>
@@ -64,24 +71,24 @@
 <tr class="<%= manager_home_list_inactive_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
   <td colspan="8">
   
-    <div id="board_design_details-<%= manager_home_list_inactive_stripes.id %>">
+    <div id="board_design_details-<%= design_review.id %>">
 
     <table width="95%" align="right" border="0">
       <tr>
         <td width="70%" align="left">
-          <% if !manager_home_list_inactive_stripes.design.audit.skip? %>
+          <% if !design.audit.skip? %>
             <table border="0">
               <tr>
                 <td width="70">
                   <%= link_to('Audit',
                               :controller => 'audit',
                               :action     => 'print',
-                              :id         => manager_home_list_inactive_stripes.design.audit.id)%>
+                              :id         => design.audit.id)%>
                 </td>
-                <% stats = manager_home_list_inactive_stripes.design.audit.completion_stats %>
-                <th width="50" align="right">Self: </th>
+                <% stats = design.audit.completion_stats %>
+                <th width="50" align="right" class="th1">Self: </th>
                 <td width="140"> <%= sprintf("%3.f", stats[:self]) %>% Complete</td>
-                <th width="50" align="right">Peer: </th>
+                <th width="50" align="right" class="th1">Peer: </th>
                 <td width="140"> <%= sprintf("%3.f", stats[:peer]) %>% Complete</td>
               </tr>
             </table
