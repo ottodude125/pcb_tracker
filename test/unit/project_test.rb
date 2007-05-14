@@ -86,7 +86,7 @@ class ProjectTest < Test::Unit::TestCase
   #
   def test_access
   
-    project_list = Project.find_all
+    project_list = Project.find(:all)
     
     inactive_list = []
     project_list.each do |expected_project|

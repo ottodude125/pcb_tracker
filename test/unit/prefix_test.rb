@@ -36,7 +36,7 @@ class PrefixTest < Test::Unit::TestCase
   #
   def test_access
   
-    prefix_list = Prefix.find_all
+    prefix_list = Prefix.find(:all)
     
     inactive_list = []
     prefix_list.each do |expected_prefix|

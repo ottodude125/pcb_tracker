@@ -85,7 +85,7 @@ class PlatformTest < Test::Unit::TestCase
   #
   def test_access
   
-    platform_list = Platform.find_all
+    platform_list = Platform.find(:all)
     
     inactive_list = []
     platform_list.each do |expected_platform|
