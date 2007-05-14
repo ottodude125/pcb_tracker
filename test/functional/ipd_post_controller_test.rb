@@ -43,8 +43,7 @@ class IpdPostControllerTest < Test::Unit::TestCase
   #
   def test_list
 
-    ipd_posts = IpdPost.find_all
-    assert_equal(29, ipd_posts.size)
+    assert_equal(29, IpdPost.count)
 
     set_user(users(:scott_g).id, 'Designer')
     
@@ -371,7 +370,10 @@ class IpdPostControllerTest < Test::Unit::TestCase
     available_to_cc = assigns(:available_to_cc)
     
     available_to_cc = available_to_cc.sort_by { |u| u.last_name }
-    expected_available_cc_list = User.find_all('active=1', 'last_name ASC')
+    #expected_available_cc_list = User.find_all('active=1', 'last_name ASC')
+    expected_available_cc_list = User.find(:all,
+                                           :conditions => 'active=1',
+                                           :order      => 'last_name ASC')
     
     # Remove the people who are already on the mail list.
     remove_users = [
