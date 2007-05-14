@@ -18,11 +18,14 @@ require 'design_center_manager_controller'
 class DesignCenterManagerController; def rescue_action(e) raise e end; end
 
 class DesignCenterManagerControllerTest < Test::Unit::TestCase
+
+
   def setup
     @controller = DesignCenterManagerController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
   end
+
 
   fixtures(:design_centers,
            :roles,
@@ -76,7 +79,7 @@ class DesignCenterManagerControllerTest < Test::Unit::TestCase
     designers      = assigns(designers)['designers']
     design_centers = assigns(design_centers)['design_centers']
 
-    assert_equal(4,  designers.size)
+    assert_equal(5,  designers.size)
     assert_equal(2,  design_centers.size)
 
   end
@@ -108,7 +111,7 @@ class DesignCenterManagerControllerTest < Test::Unit::TestCase
     designers.delete_if { |designer| ! designer.active? }
 
     designer_list = {}
-    for designer in designers
+    designers.each do |designer|
       # They all start off based in Boston.
       assert_equal(design_centers(:boston_harrison).id,
                    designer.design_center_id)
@@ -118,16 +121,17 @@ class DesignCenterManagerControllerTest < Test::Unit::TestCase
     fridley = design_centers(:fridley)
     set_admin
     post(:assign_designers_to_centers,
-         'Esakky_' + users(:siva_e).id.to_s  => {'id' => fridley.id},
-         'Glover_' + users(:scott_g).id.to_s => {'id' => fridley.id},
-         'Miller_' + users(:rich_m).id.to_s  => {'id' => fridley.id},
-         'Goldin_' + users(:bob_g).id.to_s   => {'id' => fridley.id})
+         'Esakky_'    + users(:siva_e).id.to_s  => {'id' => fridley.id},
+         'Glover_'    + users(:scott_g).id.to_s => {'id' => fridley.id},
+         'Miller_'    + users(:rich_m).id.to_s  => {'id' => fridley.id},
+         'Nagarajan_' + users(:mathi_n).id.to_s => {'id' => fridley.id},
+         'Goldin_'    + users(:bob_g).id.to_s   => {'id' => fridley.id})
 
     # Verify the update.
     designers = Role.find_by_name("Designer").users
     designers.delete_if { |designer| ! designer.active? }
 
-    for designer in designers
+    designers.each do |designer|
       assert_equal(fridley.id, designer.design_center_id)
       assert_equal(designer_list[designer.id].password, designer.password)
     end
