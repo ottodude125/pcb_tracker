@@ -30,3 +30,18 @@ comment_four:
   user_id:          4000
   created_on:       20000904100000
   comment:          This is comment four
+
+comment_five:
+  id:               5
+  design_review_id: 2
+  user_id:          4001
+  created_on:       20010914100000
+  comment:          This is comment five
+
+comment_six:
+  id:               6
+  design_review_id: 3
+  user_id:          5000
+  created_on:       20040904100000
+  comment:          This is comment six
+  
