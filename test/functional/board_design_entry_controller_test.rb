@@ -1,3 +1,15 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: board_design_entry_controller_test.rb
+#
+# This file contains the functional tests for the board design entry controller
+#
+# $Id$
+#
+########################################################################
+#
 require File.dirname(__FILE__) + '/../test_helper'
 require 'board_design_entry_controller'
 
