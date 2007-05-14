@@ -27,7 +27,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     @emails.clear
     
     @review_types = {}
-    ReviewType.find_all.each { |rt| @review_types[rt.name] = rt }
+    ReviewType.find(:all).each { |rt| @review_types[rt.name] = rt }
     
     @review_complete = ReviewStatus.find_by_name("Review Completed")
     @in_review       = ReviewStatus.find_by_name("In Review")
@@ -113,6 +113,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     # logged in.
     mx234a_pre_art = design_reviews(:mx234a_pre_artwork)
     mx234a         = designs(:mx234a)
+    
     get(:view, :id => mx234a_pre_art.id)
     
     assert_response(:success)
@@ -123,6 +124,12 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(14,                assigns(:review_results).size)
     assert_equal(4,                 assigns(:design_review).design_review_comments.size)
     
+    get(:view)
+    
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    assert_equal('No ID was provided - unable to access the design review',
+                 flash['notice'])
+
   end
 
 
@@ -230,7 +237,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(mx234a.id,         assigns(:design_review).design.id)
     assert_equal(14,                assigns(:review_results).size)
     assert_equal(4,                 assigns(:design_review).design_review_comments.size)
-    assert_equal(4,                 assigns(:designers).size)
+    assert_equal(5,                 assigns(:designers).size)
     assert_equal(2,                 assigns(:priorities).size)
     assert_equal(nil,               assigns(:fab_houses))
     
@@ -303,7 +310,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #
   def test_posting_filter
 
-    review_types = ReviewType.find_all(nil, 'sort_order ASC')
+    review_types = ReviewType.find(:all, :order => 'sort_order ASC')
     base_url = "http://test.host/design_review/"
 
     for review_type in review_types
@@ -524,9 +531,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal(expected_val[:reviewer].id,        review_group.reviewer_id)
     end
 
-    pre_art_design_review = DesignReview.find_all(
-                              "design_id='#{mx234a.id}' and " +
-                              "review_type_id='#{pre_art_review.id}'").pop
+    pre_art_design_review = DesignReview.find(:first,
+                                              :conditions => "design_id='#{mx234a.id}' and " +
+                                                             "review_type_id='#{pre_art_review.id}'")
     assert_equal(0, pre_art_design_review.review_type_id_2)
 
     
@@ -573,9 +580,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal(expected_val[:reviewer].id,        review_group.reviewer_id)
     end
 
-    placement_design_review = DesignReview.find_all(
-                                "design_id='#{mx234a.id}' and " +
-                                "review_type_id='#{placement_review.id}'").pop
+    placement_design_review = DesignReview.find(:first,
+                                                :conditions => "design_id='#{mx234a.id}' and " +
+                                                               "review_type_id='#{placement_review.id}'")
     assert_equal(routing_review.id, placement_design_review.review_type_id_2)
     
 
@@ -630,9 +637,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       assert_equal(expected_val[:reviewer].id,        review_group.reviewer_id)
     end
 
-    pre_art_design_review = DesignReview.find_all(
-                              "design_id='#{mx234a.id}' and " +
-                              "review_type_id='#{pre_art_review.id}'").pop
+    pre_art_design_review = DesignReview.find(:first,
+                                              :conditions => "design_id='#{mx234a.id}' and " +
+                                                             "review_type_id='#{pre_art_review.id}'")
     assert_equal(0, pre_art_design_review.review_type_id_2)
 
   end
@@ -655,7 +662,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #
   def test_post
 
-    review_status_list = ReviewStatus.find_all
+    review_status_list = ReviewStatus.find(:all)
     statuses = {}
     for review_status in review_status_list
       statuses[review_status.name] = review_status.id
@@ -1350,8 +1357,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     
     expected_reviewer_list = []
     
-    expected_users_not_copied = User.find_all(nil, 'last_name')
-    for design_review_result in mx234a_pre_art.design_review_results
+    expected_users_not_copied = User.find(:all, :order => 'last_name')
+    mx234a_pre_art.design_review_results.each do |design_review_result|
       user     = User.find(design_review_result.reviewer_id)
       reviewer = {:id        => user.id,
                   :name      => user.name,
@@ -2052,7 +2059,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     assert_equal(reviewer_result_list.size,
                  mx234a_review_results.size)
-    assert_equal(0, 
+    assert_equal(1, 
                  DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
     for review_result in mx234a_review_results
       assert_equal("No Response", review_result.result)
@@ -3212,8 +3219,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     post(:admin_update, :id => mx234a_pre_artwork.id)
 
-    assert_equal(4, assigns(:designers).size)
-    assert_equal(4, assigns(:peer_list).size)
+    assert_equal(5, assigns(:designers).size)
+    assert_equal(5, assigns(:peer_list).size)
     assert_equal(2, assigns(:priorities).size)
     assert_equal(2, assigns(:design_centers).size)
     
