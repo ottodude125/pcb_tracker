@@ -35,6 +35,7 @@ class BoardControllerTest < Test::Unit::TestCase
            :prefixes,
            :priorities,
            :projects,
+           :review_types,
            :revisions,
            :users)
 
@@ -70,7 +71,7 @@ class BoardControllerTest < Test::Unit::TestCase
     set_admin
     post(:list, :page => 1)
 
-    assert_equal(Board.find_all.size, assigns(:boards).size)
+    assert_equal(Board.count, assigns(:boards).size)
   end
 
 
@@ -205,7 +206,7 @@ class BoardControllerTest < Test::Unit::TestCase
   #
   def test_show_boards
   
-    all_boards = Board.find_all
+    all_boards = Board.find(:all)
     board_list = {}
     all_boards.each do |board|
       board_list[board.prefix.pcb_mnemonic] = [] if !board_list[board.prefix.pcb_mnemonic]
