@@ -7,10 +7,8 @@
 
 <tr class="<%= reviewer_home_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
 
-  <td align="left">
-    <font size="-1">
-      <%= Priority.find(reviewer_home_list_stripes.priority_id).name %>
-    </font>
+  <td align="left" class="th1">
+    <%= Priority.find(reviewer_home_list_stripes.priority_id).name %>
   </td>
   <td>
     <%= link_to(reviewer_home_list_stripes.design.name,
