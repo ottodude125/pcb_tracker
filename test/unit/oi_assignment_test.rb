@@ -15,7 +15,18 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class OiAssignmentTest < Test::Unit::TestCase
-  fixtures :oi_assignments
+  fixtures(:designs,
+           :oi_assignments,
+           :oi_category_sections,
+           :oi_categories,
+           :oi_instructions,
+           :users)
+
+
+  def setup
+    @first_assignment = oi_assignments(:first)
+    @second_assignment = oi_assignments(:second)  
+  end
 
   ######################################################################
   def test_complexity_list
@@ -43,6 +54,52 @@ class OiAssignmentTest < Test::Unit::TestCase
     assert_equal(1, OiAssignment.complexity_id('High'))
     assert_equal(2, OiAssignment.complexity_id('Medium'))
     assert_equal(3, OiAssignment.complexity_id('Low'))
+    
+  end
+
+
+  ######################################################################
+  def test_complexity_name_instance
+  
+    assert_equal('High',   @first_assignment.complexity_name)
+    assert_equal('Medium', @second_assignment.complexity_name)
+    
+  end
+
+
+  ######################################################################
+  def test_task_duration
+  
+    assert_equal('0',    @first_assignment.task_duration)
+    assert_equal('21.2', @second_assignment.task_duration)
+    
+  end
+
+
+  ######################################################################
+  def test_task_email_update_header
+  
+    assert_equal("------------------------------------------------------------------------\n" +
+                 "         Design : mx234a\n"                                                 +
+                 "       Category : Placement\n"                                              +
+                 "           Step : Place components per instructions\n"                      +
+                 "      Team Lead : Scott Glover\n"                                           +
+                 "       Designer : Siva Esakky\n"                                            +
+                 "  Date Assigned : 15-Feb-07, 01:16 PM EST\n"                                +
+                 "       Complete : No\n"                                                     +
+                 "------------------------------------------------------------------------\n",
+                 @first_assignment.email_update_header)
+    assert_equal("------------------------------------------------------------------------\n" +
+                 "         Design : mx234a\n"                                                 +
+                 "       Category : Placement\n"                                              +
+                 "           Step : Place components per instructions\n"                      +
+                 "      Team Lead : Scott Glover\n"                                           +
+                 "       Designer : Mathi Nagarajan\n"                                        +
+                 "  Date Assigned : 16-Feb-07, 11:20 AM EST\n"                                +
+                 "       Complete : Yes\n"                                                    +
+                 "   Completed On : 09-Mar-07, 04:45 PM EST\n"                                +
+                 "------------------------------------------------------------------------\n",
+                 @second_assignment.email_update_header)
     
   end
 
