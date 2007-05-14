@@ -17,6 +17,8 @@ require 'audit_controller'
 class AuditController; def rescue_action(e) raise e end; end
 
 class AuditControllerTest < Test::Unit::TestCase
+
+
   def setup
     @controller = AuditController.new
     @request    = ActionController::TestRequest.new
@@ -24,7 +26,14 @@ class AuditControllerTest < Test::Unit::TestCase
 
     @emails     = ActionMailer::Base.deliveries
     @emails.clear
+    
+    @siva_e  = users(:siva_e)
+    @scott_g = users(:scott_g)
+    @bob_g   = users(:bob_g)
+    @rich_m  = users(:rich_m)
+    @mathi_n = users(:mathi_n)
   end
+
 
   fixtures(:audit_comments,
            :audit_teammates,
@@ -34,9 +43,11 @@ class AuditControllerTest < Test::Unit::TestCase
            :checks,
            :designs,
            :design_checks,
+           :design_review_results,
            :platforms,
            :projects,
            :prefixes,
+           :review_types,
            :revisions,
            :roles,
            :roles_users,
@@ -73,7 +84,7 @@ class AuditControllerTest < Test::Unit::TestCase
   def test_perform_checks
 
     # Log in as a designer and perform the checks.
-    user = User.find(users(:scott_g).id)
+    user = @scott_g
     @request.session[:user]        = user
     @request.session[:active_role] = Role.find_by_name('Designer')
     @request.session[:roles]       = user.roles
@@ -176,8 +187,8 @@ class AuditControllerTest < Test::Unit::TestCase
   def test_update_design_checks
 
     # Log in as a designer and get the audit listing.
-    designer = User.find(users(:rich_m).id)
-    set_user(users(:rich_m).id, 'Designer')
+    designer = @rich_m
+    set_user(@rich_m.id, 'Designer')
 
     audit = Audit.find(audits(:audit_mx234b).id)
     assert_equal(designer.id, audit.design.designer_id)
@@ -481,7 +492,7 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal("mx234b: The designer has completed the self-audit", email.subject)
 
     # Log in as an auditor and get the audit listing.
-    user = User.find(users(:scott_g).id)
+    user = @scott_g
     @request.session[:user]             = user
     @request.session[:active_role].name = 'Designer'
     @request.session[:roles]            = user.roles
@@ -694,74 +705,37 @@ class AuditControllerTest < Test::Unit::TestCase
         :id => audits(:audit_mx234b).id)
 
     audit = assigns(:audit)
-    assert_equal('mx234b',             audit.design.name)
-    assert_equal('2.0',                audit.checklist.revision)
-    assert_equal(users(:rich_m).name,  audit.design.designer.name)
-    assert_equal(users(:scott_g).name, audit.design.peer.name)
+    assert_equal('mx234b',      audit.design.name)
+    assert_equal('2.0',         audit.checklist.revision)
+    assert_equal(@rich_m.name,  audit.design.designer.name)
+    assert_equal(@scott_g.name, audit.design.peer.name)
 
-    display = assigns(:display)
+    #              Section      Subsection   Check IDs
+    #                ID             ID
+    validate = { '20000' => { '30000' => [10000, 10001, 10002, 10003],
+                              '30001' => [10004, 10005] } ,
+                 '20001' => { '30002' => [10006, 10007],
+                              '30003' => [10008, 10009, 10010, 10011],
+                              '30004' => [10012, 10013, 10014] } }
+    
+    validate_print_variables(validate, audit.checklist.sections)
 
-    validate = Array[
-      {:section => 20000, 
-       :subsect => 30000, 
-       :checks  => [10000, 10001, 10002, 10003]},
-      {:section => 20000, 
-       :subsect => 30001, 
-       :checks  => [10004, 10005]},
-      {:section => 20001, 
-       :subsect => 30002, 
-       :checks  => [10006, 10007]},
-      {:section => 20001,
-       :subsect => 30003,
-       :checks  => [10008, 10009, 10010, 10011]},
-      {:section => 20001,
-       :subsect => 30004,
-	:checks => [10012, 10013, 10014]}]
-
-    assert_equal(validate.size, display.size)
-    i = 0
-    display.each { |item|
-      summary = validate[i][:summary]
-      assert_equal(validate[i][:section],     item[:section].id)
-      assert_equal(validate[i][:subsect],     item[:subsect].id)
-      assert_equal(validate[i][:checks].size, item[:check_info].size)
-
-      0.upto(validate[i][:checks].size - 1) { |j|
-        assert_equal(validate[i][:checks][j],
-                     item[:check_info][j][:check][:id])
-      }
-      i += 1
-    }
 
     # Test a date code
     get(:print,
         :id => audits(:audit_la453b_eco2).id)
 
     audit = assigns(:audit)
-    assert_equal('la453b4_eco2',       audit.design.name)
-    assert_equal('1.0',                audit.checklist.revision)
-    assert_equal(users(:scott_g).name, audit.design.designer.name)
-    assert_equal(users(:rich_m).name,  audit.design.peer.name)
+    assert_equal('la453b4_eco2', audit.design.name)
+    assert_equal('1.0',          audit.checklist.revision)
+    assert_equal(@scott_g.name,  audit.design.designer.name)
+    assert_equal(@rich_m.name,   audit.design.peer.name)
 
-    display = assigns(:display)
+    #              Section      Subsection   Check IDs
+    #                ID             ID
+    validate = {'3' => { '5' => [13, 14] } }
 
-    validate = Array[
-      {:section => 3, :subsect =>  5, :checks => [13, 14]}]
-
-    assert_equal(1, display.size)
-    i = 0
-    display.each { |item| 
-      assert_equal(validate[i][:section],     item[:section].id)
-      assert_equal(validate[i][:subsect],     item[:subsect].id)
-      assert_equal(validate[i][:checks].size, item[:check_info].size)
-
-      0.upto(validate[i][:checks].size - 1) { |j|
-        assert_equal(validate[i][:checks][j],
-                     item[:check_info][j][:check][:id])
-      }
-      i += 1
-    }
-    assert_equal(1, display.size)
+    validate_print_variables(validate, audit.checklist.sections)
 
 
     # Test a dot rev
@@ -769,27 +743,13 @@ class AuditControllerTest < Test::Unit::TestCase
         :id => audits(:audit_la454c3).id)
 
     audit = assigns(:audit)
-    assert_equal('la454c3',            audit.design.name)
-    assert_equal('1.0',                audit.checklist.revision)
-    assert_equal(users(:rich_m).name,  audit.design.designer.name)
-    assert_equal(users(:scott_g).name, audit.design.peer.name)
+    assert_equal('la454c3',     audit.design.name)
+    assert_equal('1.0',         audit.checklist.revision)
+    assert_equal(@rich_m.name,  audit.design.designer.name)
+    assert_equal(@scott_g.name, audit.design.peer.name)
 
+    validate_print_variables(validate, audit.checklist.sections)
     display = assigns(:display)
-
-    assert_equal(1, display.size)
-    i = 0
-    display.each { |item| 
-      assert_equal(validate[i][:section],     item[:section].id)
-      assert_equal(validate[i][:subsect],     item[:subsect].id)
-      assert_equal(validate[i][:checks].size, item[:check_info].size)
-
-      0.upto(validate[i][:checks].size - 1) { |j|
-        assert_equal(validate[i][:checks][j],
-                     item[:check_info][j][:check][:id])
-      }
-      i += 1
-    }
-    assert_equal(1, display.size)
 
   end
 
@@ -814,13 +774,10 @@ class AuditControllerTest < Test::Unit::TestCase
   #
   def test_show_sections
 
-
-    rich_m = users(:rich_m)
     audit_mx234c = audits(:audit_mx234c)
 
     # Verify that show_sections redirects to the home page if the user is not logged in.
-    get(:show_sections,
-        :id => audit_mx234c.id)
+    get(:show_sections, :id => audit_mx234c.id)
 
     notice = "#{Pcbtr::PCBTR_BASE_URL}#{@request.parameters[:controller]}/" +
              "#{@request.parameters[:action]} - unavailable unless logged in."
@@ -828,7 +785,7 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(notice, flash['notice'])
 
     
-    user = User.find(rich_m.id)
+    user = User.find(@rich_m.id)
     @request.session[:user]        = user
     @request.session[:active_role] = Role.find_by_name('Designer')
     @request.session[:roles]       = user.roles
@@ -1116,7 +1073,7 @@ class AuditControllerTest < Test::Unit::TestCase
   def test_auditor_list
 
     mx234c_audit = audits(:audit_mx234c)
-    set_user(users(:rich_m).id, 'Designer')
+    set_user(@rich_m.id, 'Designer')
     
     post(:auditor_list, :id => mx234c_audit.id)
     
@@ -1130,15 +1087,15 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(lead_designer, auditor_list[:lead_designer])
     assert_equal(lead_peer,     auditor_list[:lead_peer])
     
-    expected_self_auditors = [users(:siva_e),
-                              users(:scott_g),
-                              users(:bob_g),
-                              users(:rich_m)]
+    expected_self_auditors = [@siva_e,
+                              @scott_g,
+                              @bob_g,
+                              @rich_m,
+                              @mathi_n]
     assert_equal(expected_self_auditors, auditor_list[:self_list])
     
-    expected_peer_auditors = [users(:siva_e),
-                              users(:scott_g),  
-                              users(:bob_g)]
+    # Remove the self auditor to get the list of peers
+    expected_peer_auditors = expected_self_auditors - [@rich_m]
     assert_equal(expected_peer_auditors, auditor_list[:peer_list])
 
     checklist_sections = [sections(:section_10_1), 
@@ -1152,16 +1109,13 @@ class AuditControllerTest < Test::Unit::TestCase
       assert_equal(expected_section.name, section[:section].name)
     end
     
-    bob_g   = users(:bob_g)
-    rich_m  = users(:rich_m)
-    scott_g = users(:scott_g)
     # No updates should have been made to audit teammates
     post(:update_auditor_list,
          :audit                => {:id => mx234c_audit.id},
-         :self_auditor         => {:section_id_3 => rich_m.id.to_s,
-                                   :section_id_4 => rich_m.id.to_s},
-         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
-                                   :section_id_4 => scott_g.id.to_s})
+         :self_auditor         => {:section_id_3 => @rich_m.id.to_s,
+                                   :section_id_4 => @rich_m.id.to_s},
+         :peer_auditor         => {:section_id_3 => @scott_g.id.to_s,
+                                   :section_id_4 => @scott_g.id.to_s})
 
     mx234c_audit.reload                    
     assert_equal(0, mx234c_audit.audit_teammates.size)
@@ -1170,10 +1124,10 @@ class AuditControllerTest < Test::Unit::TestCase
     # same person to be the peer and self auditor
     post(:update_auditor_list,
          :audit                => {:id => mx234c_audit.id},
-         :self_auditor         => {:section_id_3 => bob_g.id.to_s,
-                                   :section_id_4 => bob_g.id.to_s},
-         :peer_auditor         => {:section_id_3 => bob_g.id.to_s,
-                                   :section_id_4 => bob_g.id.to_s})
+         :self_auditor         => {:section_id_3 => @bob_g.id.to_s,
+                                   :section_id_4 => @bob_g.id.to_s},
+         :peer_auditor         => {:section_id_3 => @bob_g.id.to_s,
+                                   :section_id_4 => @bob_g.id.to_s})
 
     mx234c_audit.reload                    
     assert_equal(0, mx234c_audit.audit_teammates.size)
@@ -1187,27 +1141,27 @@ class AuditControllerTest < Test::Unit::TestCase
     # There should be 1 teammates record
     post(:update_auditor_list,
          :audit                => {:id => mx234c_audit.id},
-         :self_auditor         => {:section_id_3 => rich_m.id.to_s, 
-                                   :section_id_4 => bob_g.id.to_s},
-         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
-                                   :section_id_4 => scott_g.id.to_s})
+         :self_auditor         => {:section_id_3 => @rich_m.id.to_s, 
+                                   :section_id_4 => @bob_g.id.to_s},
+         :peer_auditor         => {:section_id_3 => @scott_g.id.to_s,
+                                   :section_id_4 => @scott_g.id.to_s})
 
     mx234c_audit.reload    
     teammates = mx234c_audit.audit_teammates
     assert_equal(1, teammates.size)
 
     teammate = teammates.pop
-    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(@bob_g.id,                  teammate.user_id)
     assert_equal(sections(:section_10_2).id, teammate.section_id)
-    assert_equal(true,                       teammate.self?)
+    assert(teammate.self?)
          
     # There should be no audit teammates records.
     post(:update_auditor_list,
          :audit                => {:id => mx234c_audit.id},
-         :self_auditor         => {:section_id_3 => rich_m.id.to_s,
-                                   :section_id_4 => rich_m.id.to_s},
-         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
-                                   :section_id_4 => scott_g.id.to_s})
+         :self_auditor         => {:section_id_3 => @rich_m.id.to_s,
+                                   :section_id_4 => @rich_m.id.to_s},
+         :peer_auditor         => {:section_id_3 => @scott_g.id.to_s,
+                                   :section_id_4 => @scott_g.id.to_s})
 
     mx234c_audit.reload    
     assert_equal(0, mx234c_audit.audit_teammates.size)
@@ -1216,199 +1170,150 @@ class AuditControllerTest < Test::Unit::TestCase
     # There should be 1 teammate record
     post(:update_auditor_list,
          :audit                => {:id => mx234c_audit.id},
-         :self_auditor         => {:section_id_3 => rich_m.id.to_s, 
-                                   :section_id_4 => rich_m.id.to_s},
-         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
-                                   :section_id_4 => bob_g.id.to_s})
+         :self_auditor         => {:section_id_3 => @rich_m.id.to_s, 
+                                   :section_id_4 => @rich_m.id.to_s},
+         :peer_auditor         => {:section_id_3 => @scott_g.id.to_s,
+                                   :section_id_4 => @bob_g.id.to_s})
 
     mx234c_audit.reload    
     teammates = mx234c_audit.audit_teammates
     assert_equal(1, teammates.size)
     teammate = teammates.pop
-    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(@bob_g.id,                  teammate.user_id)
     assert_equal(sections(:section_10_2).id, teammate.section_id)
-    assert_equal(false,                      teammate.self?)
+    assert(!teammate.self?)
          
     # There should be 1 teammates record
     post(:update_auditor_list,
          :audit                => {:id => mx234c_audit.id},
-         :self_auditor         => {:section_id_3 => rich_m.id.to_s, 
-                                   :section_id_4 => bob_g.id.to_s},
-         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
-                                   :section_id_4 => scott_g.id.to_s})
+         :self_auditor         => {:section_id_3 => @rich_m.id.to_s, 
+                                   :section_id_4 => @bob_g.id.to_s},
+         :peer_auditor         => {:section_id_3 => @scott_g.id.to_s,
+                                   :section_id_4 => @scott_g.id.to_s})
 
     mx234c_audit.reload    
     teammates = mx234c_audit.audit_teammates
     assert_equal(1, teammates.size)
     teammate = teammates.pop
-    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(@bob_g.id,                  teammate.user_id)
     assert_equal(sections(:section_10_2).id, teammate.section_id)
-    assert_equal(true,                       teammate.self?)
+    assert(teammate.self?)
          
     # There should be 1 teammate record
     post(:update_auditor_list,
          :audit                => {:id => mx234c_audit.id},
-         :self_auditor         => {:section_id_3 => rich_m.id.to_s, 
-                                   :section_id_4 => rich_m.id.to_s},
-         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
-                                   :section_id_4 => bob_g.id.to_s})
+         :self_auditor         => {:section_id_3 => @rich_m.id.to_s, 
+                                   :section_id_4 => @rich_m.id.to_s},
+         :peer_auditor         => {:section_id_3 => @scott_g.id.to_s,
+                                   :section_id_4 => @bob_g.id.to_s})
 
     mx234c_audit.reload    
     teammates = mx234c_audit.audit_teammates
     assert_equal(1, teammates.size)
     teammate = teammates.pop
-    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(@bob_g.id,                  teammate.user_id)
     assert_equal(sections(:section_10_2).id, teammate.section_id)
-    assert_equal(false,                      teammate.self?)
+    assert(!teammate.self?)
 
     # There should be 1 teammate record
     post(:update_auditor_list,
          :audit                => {:id => mx234c_audit.id},
-         :self_auditor         => {:section_id_3 => rich_m.id.to_s, 
-                                   :section_id_4 => rich_m.id.to_s},
-         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
-                                   :section_id_4 => bob_g.id.to_s})
+         :self_auditor         => {:section_id_3 => @rich_m.id.to_s, 
+                                   :section_id_4 => @rich_m.id.to_s},
+         :peer_auditor         => {:section_id_3 => @scott_g.id.to_s,
+                                   :section_id_4 => @bob_g.id.to_s})
 
     mx234c_audit.reload    
     teammates = mx234c_audit.audit_teammates
     assert_equal(1, teammates.size)
     teammate = teammates.pop
-    assert_equal(bob_g.id,                   teammate.user_id)
+    assert_equal(@bob_g.id,                  teammate.user_id)
     assert_equal(sections(:section_10_2).id, teammate.section_id)
-    assert_equal(false,                      teammate.self?)
+    assert(!teammate.self?)
 
 
     # There should be 2 teammate records
     post(:update_auditor_list,
          :audit                => {:id => mx234c_audit.id},
-         :self_auditor         => {:section_id_3 => bob_g.id.to_s, 
-                                   :section_id_4 => bob_g.id.to_s},
-         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
-                                   :section_id_4 => scott_g.id.to_s})
+         :self_auditor         => {:section_id_3 => @bob_g.id.to_s, 
+                                   :section_id_4 => @bob_g.id.to_s},
+         :peer_auditor         => {:section_id_3 => @scott_g.id.to_s,
+                                   :section_id_4 => @scott_g.id.to_s})
 
     mx234c_audit.reload    
     teammates = mx234c_audit.audit_teammates.sort_by { |at| at.section_id}
     assert_equal(2, teammates.size)
-    assert_equal(bob_g.id,                   teammates[0].user_id)
+    assert_equal(@bob_g.id,                  teammates[0].user_id)
     assert_equal(sections(:section_10_1).id, teammates[0].section_id)
-    assert_equal(true,                       teammates[0].self?)
-    assert_equal(bob_g.id,                   teammates[1].user_id)
+    assert(teammates[0].self?)
+    assert_equal(@bob_g.id,                  teammates[1].user_id)
     assert_equal(sections(:section_10_2).id, teammates[1].section_id)
-    assert_equal(true,                       teammates[1].self?)
+    assert(teammates[1].self?)
 
 
     # There should be 2 teammate records
     post(:update_auditor_list,
          :audit                => {:id => mx234c_audit.id},
-         :self_auditor         => {:section_id_3 => bob_g.id.to_s, 
-                                   :section_id_4 => bob_g.id.to_s},
-         :peer_auditor         => {:section_id_3 => scott_g.id.to_s,
-                                   :section_id_4 => scott_g.id.to_s})
+         :self_auditor         => {:section_id_3 => @bob_g.id.to_s, 
+                                   :section_id_4 => @bob_g.id.to_s},
+         :peer_auditor         => {:section_id_3 => @scott_g.id.to_s,
+                                   :section_id_4 => @scott_g.id.to_s})
 
     mx234c_audit.reload    
     teammates = mx234c_audit.audit_teammates.sort_by { |at| at.section_id}
     assert_equal(2, teammates.size)
-    assert_equal(bob_g.id,                   teammates[0].user_id)
+    assert_equal(@bob_g.id,                  teammates[0].user_id)
     assert_equal(sections(:section_10_1).id, teammates[0].section_id)
-    assert_equal(true,                       teammates[0].self?)
-    assert_equal(bob_g.id,                   teammates[1].user_id)
+    assert(teammates[0].self?)
+    assert_equal(@bob_g.id,                  teammates[1].user_id)
     assert_equal(sections(:section_10_2).id, teammates[1].section_id)
-    assert_equal(true,                       teammates[1].self?)
+    assert(teammates[1].self?)
          
   end
   
 
-  def test_zzzz
-  return
-    dump_audit(audits(:audit_in_peer_audit).id,
-                      "mx999b",
-                      true)
+private
+
+
+  def validate_print_variables(validate, sections)
   
-  end
+    assert_equal(validate.size, sections.size)
+    i = 0
+    
+    # Go through the sections that were sent to the view.
+    sections.each do |section|
+
+      # Verify the Section ID
+      section_key = section.id.to_s
+      assert_not_nil(validate[section_key])
+      
+      # Verify the number of subsections
+      expected_subsections = validate[section_key]
+      assert_equal(expected_subsections.size, section.subsections.size)
+
+      # Verify the Subsection IDs
+      expected_ids = expected_subsections.collect { |key, val| key.to_i }
+      actual_ids   = section.subsections.collect { |s| s.id }
+      assert_equal(expected_ids.sort, actual_ids.sort)
+      
+      
+      section.subsections.each do |subsection|
+
+        #Verify the subsection ID
+        subsection_key = subsection.id.to_s
+        expected_subsection = expected_subsections[subsection_key]
+        assert_not_nil(expected_subsection) 
+      
+        assert_equal(expected_subsection.size, subsection.checks.size)
+
+        check_ids = subsection.checks.collect { |ch| ch.id }
+        assert_equal(expected_subsection, check_ids)
+
+      end
+
+      i += 1
    
-  
-  private
-
-
-  def dump_audit(audit_id,
-                 msg     = '',
-                 details = false)
-
-    print "\n#################### DUMP AUDIT ####################\n"
-    print msg + "\n"
-
-    designer_results = {}
-    auditor_results  = {}
-
-    audit           = Audit.find(audit_id)
-    design_checks   = DesignCheck.find_all_by_audit_id(audit_id)
-    design_check_list = {}
-    for design_check in design_checks
-      design_check_list[design_check.check_id] = design_check
     end
-
-    print "\n### DUMP AUDIT for #{audit.design.name}   AUDIT ID: #{audit_id}\n"
-    print "    DESIGNER COMPLETE: #{audit.designer_complete?}\n"
-    designer = User.find(audit.design.designer_id).name
-    auditor  = User.find(audit.design.peer_id).name
-    print "    DESIGNER: #{designer}\n"
-    print "    DESIGNER COMPLETED CHECKS: #{audit.designer_completed_checks}\n"
-    print "    AUDITOR: #{auditor}\n"
-    print "    AUDITOR COMPLETE: #{audit.auditor_complete?}\n"
-    print "    AUDITOR COMPLETED CHECKS: #{audit.auditor_completed_checks}\n"
-    print "    CHECKLIST [#{audit.checklist_id}]\n"
-
-    sections = Section.find_all_by_checklist_id(audit.checklist_id, 
-                                                "sort_order ASC")
-    print "    NUMBER OF SECTIONS: #{sections.size}\n" if details
-    for section in sections
-      subsections = Subsection.find_all_by_section_id(section.id,
-                                                      "sort_order ASC")
-      if details
-        print "\n    SECTION ID: #{section.id}\n"
-        print "    NUMBER OF SUBSECTIONS: #{subsections.size}\n"     
-      end
-
-      for subsection in subsections
-        checks = Check.find_all_by_subsection_id(subsection.id,
-                                                 "sort_order ASC")
-        if details
-          print "\n    SUBSECTION ID: #{subsection.id}\n"
-          print "    NUMBER OF DESIGN CHECKS: [#{checks.size}]\n"
-        end
-
-        for check in checks
-
-          design_check = design_check_list[check.id]
-
-          if details
-            print "      DESIGN_CHECK ID: #{design_check.id}\n"
-            print "      AUDIT ID: #{design_check.audit_id}\n"
-            print "      CHECK ID: #{design_check.check_id}\n"
-            puts  "      TYPE:     #{check.check_type}"
-            auditor  = User.find(design_check.auditor_id).name
-            designer = User.find(design_check.designer_id).name
-            print "      AUDITOR: #{auditor}\n"
-            print "      DESIGNER: #{designer}\n"
-            print "      AUDITOR RESULT #{design_check.auditor_result}\n"
-            print "      DESIGNER RESULT #{design_check.designer_result}\n\n"
-          end
-
-          designer_results[design_check.designer_result] = 0 if !designer_results[design_check.designer_result]
-          auditor_results[design_check.auditor_result]   = 0 if !auditor_results[design_check.auditor_result]
-
-          designer_results[design_check.designer_result] += 1
-          auditor_results[design_check.auditor_result]   += 1
-
-        end
-      end
-    end
-
-    print "*********************** DESIGNER RESULTS \n"
-    designer_results.each { |k,v| print "   #{k} => #{v}\n" }
-
-    print "*********************** AUDITOR RESULTS \n"
-    auditor_results.each { |k,v| print "   #{k} => #{v}\n" }
 
   end
  
