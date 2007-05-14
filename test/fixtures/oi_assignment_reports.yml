@@ -1,5 +1,19 @@
+#
+# $Id$
+#
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
 first:
-  id: 1
-another:
-  id: 2
+  id:                1
+  oi_assignment_id:  1
+  score:             0
+  user_id:           5004
+  created_on:        20070215131651
+second:
+  id:                2
+  oi_assignment_id:  2
+  score:             20
+  user_id:           5005
+  created_on:        20070216112057
+
+  
