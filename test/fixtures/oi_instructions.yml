@@ -1,5 +1,51 @@
+#
+# $Id$
+#
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
 first:
   id: 1
 another:
   id: 2
+mx234a_1:
+  id:                     3
+  design_id:              1
+  oi_category_section_id: 6
+  user_id:                5001
+  created_on:             20070215131651
+  complete:               0
+  completed_on:           20070215131651
+mx234a_2:
+  id:                     4
+  design_id:              1
+  oi_category_section_id: 7
+  user_id:                5001
+  created_on:             20070215131652
+  complete:               0
+  completed_on:           20070215131652
+la453b_1:
+  id:                     5
+  design_id:              2
+  oi_category_section_id: 1
+  user_id:                5002
+  created_on:             20070216112057
+  complete:               0
+  completed_on:           20070216112057
+  allegro_board_symbol:   1234
+la453b_2:
+  id:                     6
+  design_id:              2
+  oi_category_section_id: 2
+  user_id:                5002
+  created_on:             20070216112057
+  complete:               0
+  completed_on:           20070216112057
+  allegro_board_symbol:   1234
+la453b_3:
+  id:                     7
+  design_id:              2
+  oi_category_section_id: 32
+  user_id:                5002
+  created_on:             20070309165611
+  complete:               0
+  completed_on:           20070309165611
