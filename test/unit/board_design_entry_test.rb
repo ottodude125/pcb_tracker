@@ -1,3 +1,16 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: board_design_entry_test.rb
+#
+# This file contains the unit tests for the board design entry model
+#
+# Revision History:
+#   $Id$
+#
+########################################################################
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class BoardDesignEntryTest < Test::Unit::TestCase
@@ -138,7 +151,7 @@ class BoardDesignEntryTest < Test::Unit::TestCase
 
     bde = BoardDesignEntry.find(board_design_entries(:av714b).id)
     assert_equal(0, bde.board_design_entry_users.size)
-    assert_equal(2, BoardDesignEntryUser.find_all.size)
+    assert_equal(2, BoardDesignEntryUser.count)
     assert_equal(0, bde.managers.size)
     assert_equal(0, bde.reviewers.size)
 
@@ -147,7 +160,7 @@ class BoardDesignEntryTest < Test::Unit::TestCase
     assert_equal(1,  bde.managers.size)
     assert_equal(7,  bde.reviewers.size)
     assert_equal(8,  bde.board_design_entry_users.size)
-    assert_equal(10, BoardDesignEntryUser.find_all.size)
+    assert_equal(10, BoardDesignEntryUser.count)
     
     default_user_list = { 'PCB Design'          => 'Light',
                           'Compliance - EMC'    => 'Bechard',
@@ -176,7 +189,7 @@ class BoardDesignEntryTest < Test::Unit::TestCase
   
     bde = BoardDesignEntry.find(board_design_entries(:mx234a).id)
     assert_equal(0,  bde.board_design_entry_users.size)
-    assert_equal(10, BoardDesignEntryUser.find_all.size)
+    assert_equal(10, BoardDesignEntryUser.count)
     assert_equal(0, bde.managers.size)
     assert_equal(0, bde.reviewers.size)
 
@@ -185,7 +198,7 @@ class BoardDesignEntryTest < Test::Unit::TestCase
     assert_equal(1, bde.managers.size)
     assert_equal(7, bde.reviewers.size)
     assert_equal( 8, bde.board_design_entry_users.size)
-    assert_equal(18, BoardDesignEntryUser.find_all.size)
+    assert_equal(18, BoardDesignEntryUser.count)
     
     default_user_list = { 'PCB Design'          => 'Light',
                           'Compliance - EMC'    => 'Bechard',
