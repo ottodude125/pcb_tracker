@@ -196,14 +196,14 @@ before_filter(:verify_admin_role,
       params['fab_house'].each do |fab_house_id, selected|
         fab_house = FabHouse.find(fab_house_id)
 
-        if ! @board.fab_houses.include?(fab_house)
+        if !@board.fab_houses.include?(fab_house)
           included_fab_houses << fab_house  if selected == '1'
         else
           excluded_fab_houses << fab_house  if selected == '0'
         end
       end
       @board.fab_houses << included_fab_houses
-      @board.remove_fab_houses(excluded_fab_houses)
+      @board.fab_houses.delete(excluded_fab_houses)
 
       flash['notice'] = 'Board was successfully updated.'
     else
@@ -300,8 +300,8 @@ before_filter(:verify_admin_role,
 
     designer_role = Role.find_by_name('Designer')
     @designers = designer_role.users.sort_by { |u| u.last_name }
-    @platforms = Platform.find_all.sort_by   { |p| p.name }
-    @projects  = Project.find_all.sort_by    { |p| p.name }
+    @platforms = Platform.find(:all, :order => :name)
+    @projects  = Project.find(:all,  :order => :name)
     
     if (session[:user] && 
         session[:user].roles.detect { |r| r.name == 'Designer' })

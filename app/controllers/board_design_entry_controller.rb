@@ -196,7 +196,7 @@ class BoardDesignEntryController < ApplicationController
                                                :location_id => session[:user].location_id)
 
     @prefix_list   = Prefix.find_all_by_active(1).sort_by { |p|  p.pcb_mnemonic }
-    @revision_list = Revision.find_all.sort_by            { |r|  r.name }
+    @revision_list = Revision.find(:all, :order => :name)
 
     @user_action = 'adding'
     @new_entry   = 'true'
@@ -230,7 +230,7 @@ class BoardDesignEntryController < ApplicationController
     @prefix_list       = Prefix.find_all_by_active(1).sort_by            { |p|  p.pcb_mnemonic }
     @product_type_list = ProductType.find_all_by_active(1).sort_by       { |pt| pt.name } 
     @project_list      = Project.find_all_by_active(1).sort_by           { |p|  p.name }
-    @revision_list     = Revision.find_all.sort_by                       { |r|  r.name }
+    @revision_list     = Revision.find(:all, :order => :name)
 
   end
   
@@ -294,7 +294,7 @@ class BoardDesignEntryController < ApplicationController
       flash['notice'] = notice
     
       @prefix_list   = Prefix.find_all_by_active(1).sort_by { |p|  p.pcb_mnemonic }
-      @revision_list = Revision.find_all.sort_by            { |r|  r.name }
+      @revision_list = Revision.find(:all, :order => :name)
 
       @user_action = 'adding'
       @new_entry   = 'true'
@@ -361,7 +361,7 @@ class BoardDesignEntryController < ApplicationController
     @prefix_list       = Prefix.find_all_by_active(1).sort_by            { |p|  p.pcb_mnemonic }
     @product_type_list = ProductType.find_all_by_active(1).sort_by       { |pt| pt.name } 
     @project_list      = Project.find_all_by_active(1).sort_by           { |p|  p.name }
-    @revision_list     = Revision.find_all.sort_by                       { |r|  r.name }
+    @revision_list     = Revision.find(:all, :order => :name)
     
     render(:action => 'new_entry')
   
@@ -416,7 +416,7 @@ class BoardDesignEntryController < ApplicationController
       @prefix_list       = Prefix.find_all_by_active(1).sort_by            { |p|  p.pcb_mnemonic }
       @product_type_list = ProductType.find_all_by_active(1).sort_by       { |pt| pt.name } 
       @project_list      = Project.find_all_by_active(1).sort_by           { |p|  p.name }
-      @revision_list     = Revision.find_all.sort_by                       { |r|  r.name }
+      @revision_list     = Revision.find(:all, :order => :name)
 
       @board_design_entry = bde
       @new_entry   = 'true'
