@@ -755,14 +755,13 @@ class TrackerController < ApplicationController
                 :include    => :design_reviews).each do |design|
 
       next if design.phase_id == 0
-      
       design_review = design.design_reviews.detect { |dr| dr.review_type_id == design.phase_id }
 
-      design_review = DesignReview.find(design_review.id,
-                                        :include => [:priority, 
-                                                     :design,
-                                                     :design_review_results,
-                                                     :review_status])
+#      design_review = DesignReview.find(design_review.id,
+#                                        :include => [:priority, 
+#                                                   #  :design,
+#                                                   # :design_review_results,
+#                                                     :review_status])
 
       begin
         design_review[:priority_name] = design_review.priority.name
