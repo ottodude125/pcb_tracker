@@ -28,9 +28,14 @@ class TrackerControllerTest < Test::Unit::TestCase
 
 
   fixtures(:audits,
+           :boards,
            :designs,
            :design_review_results,
            :design_reviews,
+           :prefixes,
+           :platforms,
+           :priorities,
+           :projects,
            :review_statuses,
            :roles,
            :users)
@@ -67,6 +72,7 @@ class TrackerControllerTest < Test::Unit::TestCase
                                        design_reviews(:mx999a_pre_artwork),
                                        design_reviews(:la454c3_placement),
                                        design_reviews(:mx234a_pre_artwork),
+                                       design_reviews(:design_reviews_129),
                                        design_reviews(:la453a1_placement),
                                        design_reviews(:mx600a_pre_artwork) ]
 

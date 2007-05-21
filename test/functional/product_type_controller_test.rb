@@ -127,14 +127,15 @@ class ProductTypeControllerTest < Test::Unit::TestCase
 
     # Verify that a product_type can be added.  The number of product_types
     # will increase by one.
-    assert_equal(4, ProductType.find_all.size)
+    product_type_count = ProductType.count
 
     new_product_type = { 'active' => '1', 'name'   => 'Thunderbird' }
 
     set_admin
     post(:create, :new_product_type => new_product_type)
 
-    assert_equal(5, ProductType.find_all.size)
+    product_type_count += 1
+    assert_equal(product_type_count, ProductType.count)
     assert_equal("Product Type #{new_product_type['name']} added", 
                  flash['notice'])
     assert_redirected_to(:action => 'list')
@@ -143,17 +144,16 @@ class ProductTypeControllerTest < Test::Unit::TestCase
     # It should not get added.
     post(:create, :new_product_type => new_product_type)
 
-    assert_equal(5, ProductType.find_all.size)
+    assert_equal(product_type_count,            ProductType.count)
     assert_equal("Name has already been taken", flash['notice'])
     assert_redirected_to(:action => 'add')
 
 
     # Try to add a platform withhout a name.
     # It should not get added.
-    post(:create,
-         :new_product_type => { 'active' => '1', 'name' => '' })
+    post(:create, :new_product_type => { 'active' => '1', 'name' => '' })
     
-    assert_equal(5, ProductType.find_all.size)
+    assert_equal(product_type_count,            ProductType.count)
     assert_equal("Name can't be blank", flash['notice'])
     assert_redirected_to(:action => 'add')
 

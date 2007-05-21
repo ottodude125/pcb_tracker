@@ -238,7 +238,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(14,                assigns(:review_results).size)
     assert_equal(4,                 assigns(:design_review).design_review_comments.size)
     assert_equal(5,                 assigns(:designers).size)
-    assert_equal(2,                 assigns(:priorities).size)
+    assert_equal(3,                 assigns(:priorities).size)
     assert_equal(nil,               assigns(:fab_houses))
     
     # Verify information for SLM Vendor during a pre-artwork review.
@@ -1965,7 +1965,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_placement_ce_dft).id,
        :role_id_tag      => 'role_id_7',
        :expected_results => {
-         :comments_count   => 1,
+         :comments_count   => 2,
          :review_status_id => @in_review.id,
          :mail_count       => 1,
          :mail_subject     => mail_subject + ' CE-DFT - APPROVED - See comments'
@@ -1979,7 +1979,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_placement_dfm).id,
        :role_id_tag      => ':role_id_8',
        :expected_results => {
-         :comments_count => 2,
+         :comments_count => 3,
          :review_status_id => @in_review.id,
          :mail_count       => 1,
          :mail_subject     => mail_subject + ' DFM - WAIVED - See comments'
@@ -1993,7 +1993,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_placement_hw).id,
        :role_id_tag      => ':role_id_5',
        :expected_results => {
-         :comments_count => 3,
+         :comments_count => 4,
          :review_status_id => @in_review.id,
          :mail_count       => 1,
          :mail_subject     => mail_subject + ' HWENG - APPROVED - See comments'
@@ -2007,7 +2007,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_placement_mech).id,
        :role_id_tag      => 'role_id_10',
        :expected_results => {
-         :comments_count => 4,
+         :comments_count => 5,
          :review_status_id => @in_review.id,
          :mail_count       => 1,
          :mail_subject     => mail_subject + ' Mechanical - APPROVED - See comments'
@@ -2021,7 +2021,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_placement_mech_mfg).id,
        :role_id_tag      => 'role_id_11',
        :expected_results => {
-         :comments_count => 4,
+         :comments_count => 5,
          :review_status_id => @in_review.id,
          :mail_count       => 1,
          :mail_subject     => mail_subject + ' Mechanical-MFG - APPROVED - No comments'
@@ -2035,7 +2035,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_placement_tde).id,
        :role_id_tag      => 'role_id_9',
        :expected_results => {
-         :comments_count => 4,
+         :comments_count => 5,
          :review_status_id => @review_complete.id,
          :mail_count       => 2,
          :mail_subject     => mail_subject + ' TDE - APPROVED - No comments'
@@ -2168,7 +2168,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_route_ce_dft).id,
        :role_id_tag      => 'role_id_7',
        :expected_results => {
-         :comments_count   => 1,
+         :comments_count   => 2,
          :review_status_id => @in_review.id,
          :mail_count       => 1,
          :mail_subject     => mail_subject + ' CE-DFT - APPROVED - See comments'
@@ -2182,7 +2182,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_routing_slm_v),
        :role_id_tag      => 'role_id_18',
        :expected_results => {
-         :comments_count   => 2,
+         :comments_count   => 3,
          :review_status_id => @in_review.id,
          :mail_count       => 1,
          :mail_subject     => mail_subject + ' SLM-Vendor - APPROVED - See comments'
@@ -2196,7 +2196,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_route_dfm).id,
        :role_id_tag      => ':role_id_8',
        :expected_results => {
-         :comments_count => 3,
+         :comments_count => 4,
          :review_status_id => @in_review.id,
          :mail_count       => 1,
          :mail_subject     => mail_subject + ' DFM - WAIVED - See comments'
@@ -2210,7 +2210,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_route_hw).id,
        :role_id_tag      => ':role_id_5',
        :expected_results => {
-         :comments_count => 4,
+         :comments_count => 5,
          :review_status_id => @in_review.id,
          :mail_count       => 1,
          :mail_subject     => mail_subject + ' HWENG - APPROVED - See comments'
@@ -2224,7 +2224,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :review_result_id => design_review_results(:mx234a_placement_mech_mfg).id,
        :role_id_tag      => 'role_id_11',
        :expected_results => {
-         :comments_count => 4,
+         :comments_count => 5,
          :review_status_id => @review_complete.id,
          :mail_count       => 2,
          :mail_subject     => mail_subject + ' Mechanical-MFG - APPROVED - No comments'
@@ -2248,7 +2248,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     assert_equal(reviewer_result_list.size,
                  mx234a_review_results.size)
-    assert_equal(0, 
+    assert_equal(1, 
                  DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
     for review_result in mx234a_review_results
       assert_equal("No Response", review_result.result)
@@ -3221,7 +3221,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     assert_equal(5, assigns(:designers).size)
     assert_equal(5, assigns(:peer_list).size)
-    assert_equal(2, assigns(:priorities).size)
+    assert_equal(3, assigns(:priorities).size)
     assert_equal(2, assigns(:design_centers).size)
     
   end

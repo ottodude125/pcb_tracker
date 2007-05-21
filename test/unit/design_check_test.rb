@@ -1,12 +1,29 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: design_check_test.rb
+#
+# This file contains the unit tests for the design check model
+#
+# Revision History:
+#   $Id$
+#
+########################################################################
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class DesignCheckTest < Test::Unit::TestCase
-  fixtures :design_checks
+
+  fixtures :checks,
+           :design_checks
 
   def setup
     @design_check = DesignCheck.find(design_checks(:first_design_check).id)
   end
 
+
+  ######################################################################
   def test_create
 
     assert_kind_of DesignCheck,  @design_check
@@ -28,6 +45,8 @@ class DesignCheckTest < Test::Unit::TestCase
                  @design_check.designer_checked_on)
   end
 
+
+  ######################################################################
   def test_update
     @design_check.audit_id            = 2
     @design_check.check_id            = 4
@@ -53,8 +72,37 @@ class DesignCheckTest < Test::Unit::TestCase
     
   end
 
+
+  ######################################################################
   def test_destroy
     @design_check.destroy
     assert_raise(ActiveRecord::RecordNotFound) { DesignCheck.find(@design_check.id) }
   end
+  
+  
+  ######################################################################
+  def test_comment_required
+  
+    dc_yes_no           = design_checks(:audit_109_design_check_15729)
+    dc_designer_only    = design_checks(:audit_109_design_check_15695)
+    dc_designer_auditor = design_checks(:audit_109_design_check_15778)
+    
+    assert(!dc_yes_no.comment_required?('Yes', ''))
+    assert( dc_yes_no.comment_required?('No',  ''))
+    
+    assert(!dc_designer_only.comment_required?('N/A',      ''))
+    assert(!dc_designer_only.comment_required?('Verified', ''))
+    assert( dc_designer_only.comment_required?('Waived',   ''))
+    
+    assert(!dc_designer_auditor.comment_required?('N/A',      ''))
+    assert(!dc_designer_auditor.comment_required?('Verified', ''))
+    assert( dc_designer_auditor.comment_required?('Waived',   ''))
+    assert(!dc_designer_auditor.comment_required?('', 'N/A'))
+    assert(!dc_designer_auditor.comment_required?('', 'Verified'))
+    assert( dc_designer_auditor.comment_required?('', 'Waived'))
+    assert( dc_designer_auditor.comment_required?('', 'Comment'))
+
+  end
+
+
 end

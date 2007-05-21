@@ -17,6 +17,8 @@ require 'project_controller'
 class ProjectController; def rescue_action(e) raise e end; end
 
 class ProjectControllerTest < Test::Unit::TestCase
+
+
   def setup
     @controller = ProjectController.new
     @request    = ActionController::TestRequest.new
@@ -25,7 +27,7 @@ class ProjectControllerTest < Test::Unit::TestCase
 
 
   fixtures(:projects,
-	   :users)
+	       :users)
 
 
   ######################################################################
@@ -148,45 +150,32 @@ class ProjectControllerTest < Test::Unit::TestCase
   #
   def test_create
 
-    assert_equal(15,
-		 Project.find_all.size)
+    project_count = Project.count
 
-    new_project = {
-      'active' => '1',
-      'name'   => 'Thunderbird'
-    }
+    new_project = { 'active' => '1',
+                    'name'   => 'Thunderbird' }
 
     set_admin
-    post(:create,
-	 :new_project => new_project)
+    post(:create, :new_project => new_project)
 
-
-    assert_equal(16,
-		 Project.find_all.size)
-    assert_equal("Project #{new_project['name']} added",
-		 flash['notice'])
+    project_count += 1
+    assert_equal(project_count,	                         Project.count)
+    assert_equal("Project #{new_project['name']} added", flash['notice'])
     assert_redirected_to(:action => 'list')
     
-    post(:create,
-	 :new_project => new_project)
+    post(:create, :new_project => new_project)
 
-    assert_equal(16,
-		 Project.find_all.size)
-    assert_equal("Name has already been taken",
-		 flash['notice'])
+    assert_equal(project_count,                 Project.count)
+    assert_equal("Name has already been taken", flash['notice'])
     assert_redirected_to(:action => 'add')
 
 
     post(:create,
-	 :new_project => {
-	   'active' => '1', 
-	   'name' => ''
-	 })
+         :new_project => { 'active' => '1', 
+	                       'name'   => '' })
     
-    assert_equal(16,
-		 Project.find_all.size)
-    assert_equal("Name can't be blank",
-		 flash['notice'])
+    assert_equal(project_count,         Project.count)
+    assert_equal("Name can't be blank", flash['notice'])
     assert_redirected_to(:action => 'add')
 
   end

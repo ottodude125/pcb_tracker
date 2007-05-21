@@ -145,26 +145,22 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
   #
   def test_create
 
+    status_count = ReviewStatus.count
+
     set_admin
-    assert_equal(6, ReviewStatus.find_all.size)
+    new_review_status = { 'active' => '1',
+                          'name'   => 'Yankee' }
 
-    new_review_status = {
-      'active' => '1',
-      'name'   => 'Yankee',
-    }
+    post(:create, :new_review_status => new_review_status)
 
-    post(:create,
-         :new_review_status => new_review_status)
-
-    assert_equal(7,              ReviewStatus.find_all.size)
+    status_count += 1
+    assert_equal(status_count,   ReviewStatus.count)
     assert_equal("Yankee added", flash['notice'])
     assert_redirected_to :action => 'list'
 
-    post(:create,
-         :new_review_status => new_review_status)
-    assert_equal(7, ReviewStatus.find_all.size)
-    assert_equal("Name already exists in the database",
-                 flash['notice'])
+    post(:create, :new_review_status => new_review_status)
+    assert_equal(status_count,                          ReviewStatus.count)
+    assert_equal("Name already exists in the database", flash['notice'])
     assert_redirected_to :action => 'add'
 
   end

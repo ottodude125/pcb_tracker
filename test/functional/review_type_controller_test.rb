@@ -17,6 +17,8 @@ require 'review_type_controller'
 class ReviewTypeController; def rescue_action(e) raise e end; end
 
 class ReviewTypeControllerTest < Test::Unit::TestCase
+
+
   def setup
     @controller = ReviewTypeController.new
     @request    = ActionController::TestRequest.new
@@ -143,9 +145,9 @@ class ReviewTypeControllerTest < Test::Unit::TestCase
   #
   def test_create
 
-    set_admin
-    assert_equal(6, ReviewType.find_all.size)
+    type_count = ReviewType.count
 
+    set_admin
     new_review_type = {
       'active'     => '1',
       'required'   => '1',
@@ -153,34 +155,30 @@ class ReviewTypeControllerTest < Test::Unit::TestCase
       'name'       => 'Yankee',
     }
 
-    post(:create,
-         :new_review_type => new_review_type)
+    post(:create, :new_review_type => new_review_type)
 
-    assert_equal(7,              ReviewType.find_all.size)
+    type_count += 1
+    assert_equal(type_count,     ReviewType.count)
     assert_equal("Yankee added", flash['notice'])
-    assert_redirected_to :action => 'list'
+    assert_redirected_to(:action => 'list')
 
-    post(:create,
-         :new_review_type => new_review_type)
-    assert_equal(7,                           ReviewType.find_all.size)
+    post(:create, :new_review_type => new_review_type)
+    assert_equal(type_count,                  ReviewType.count)
     assert_equal("Sort order must be unique", flash['notice'])
-    assert_redirected_to :action => 'add'
+    assert_redirected_to(:action => 'add')
 
     new_review_type['sort_order'] = 4555
-    post(:create,
-         :new_review_type => new_review_type)
-    assert_equal(7,
-                 ReviewType.find_all.size)
+    post(:create, :new_review_type => new_review_type)
+    assert_equal(type_count,                            ReviewType.count)
     assert_equal("Name already exists in the database", flash['notice'])
-    assert_redirected_to :action => 'add'
+    assert_redirected_to(:action => 'add')
 
     new_review_type['sort_order'] = 45.55
-    post(:create,
-         :new_review_type => new_review_type)
-    assert_equal(7,  ReviewType.find_all.size)
+    post(:create, :new_review_type => new_review_type)
+    assert_equal(type_count, ReviewType.count)
     assert_equal("Sort order - must be an integer greater than 0",  
                  flash['notice'])
-    assert_redirected_to :action => 'add'
+    assert_redirected_to(:action => 'add')
 
   end
 

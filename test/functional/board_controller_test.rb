@@ -212,8 +212,9 @@ class BoardControllerTest < Test::Unit::TestCase
       board_list[board.prefix.pcb_mnemonic] = [] if !board_list[board.prefix.pcb_mnemonic]
       board_list[board.prefix.pcb_mnemonic] << board
     end
-    board_list.each_value do |boards|
-      boards = boards.sort_by { |board| board.id }
+
+    board_list.each_key do |key|
+      board_list[key] = board_list[key].sort_by { |b| b.number }
     end
     
     post(:show_boards)
@@ -252,7 +253,12 @@ class BoardControllerTest < Test::Unit::TestCase
   #
   def test_board_design_search
   
-    all_boards = { 'mx234' => { :id           => boards(:mx234).id,
+    all_boards = { 'mx232' => { :id           => boards(:boards_027).id,
+                                :all_designs  => 1,
+                                :post_final   => 0,
+                                :post_release => 0,
+                                :sg_designs   => 1 },
+                   'mx234' => { :id           => boards(:mx234).id,
                                 :all_designs  => 3,
                                 :post_final   => 0,
                                 :post_release => 0,
@@ -299,7 +305,7 @@ class BoardControllerTest < Test::Unit::TestCase
     assert_equal('All Designers', assigns(:designer))
     
     board_list = assigns(:board_list)
-    assert_equal(7, board_list.size)
+    assert_equal(all_boards.size, board_list.size)
 
     board_list.each do |board|
       expected_brd = all_boards.detect { |k,v| k == board.name}
@@ -387,7 +393,7 @@ class BoardControllerTest < Test::Unit::TestCase
     assert_equal('Scott Glover',  assigns(:designer))
     
     board_list = assigns(:board_list)
-    assert_equal(7, board_list.size)
+    assert_equal(all_boards.size, board_list.size)
     
     board_list.each do |board|
       expected_brd = all_boards.detect { |k,v| k == board.name}
@@ -409,7 +415,7 @@ class BoardControllerTest < Test::Unit::TestCase
     assert_equal('All Designers', assigns(:designer))
     
     board_list = assigns(:board_list)
-    assert_equal(7, board_list.size)
+    assert_equal(all_boards.size, board_list.size)
     
     board_list.each do |board|
       expected_brd = all_boards.detect { |k,v| k == board.name}
@@ -431,7 +437,7 @@ class BoardControllerTest < Test::Unit::TestCase
     assert_equal('All Designers', assigns(:designer))
     
     board_list = assigns(:board_list)
-    assert_equal(7, board_list.size)
+    assert_equal(all_boards.size, board_list.size)
     
     board_list.each do |board|
       expected_brd = all_boards.detect { |k,v| k == board.name}

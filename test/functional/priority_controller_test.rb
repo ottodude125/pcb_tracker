@@ -60,7 +60,7 @@ class PriorityControllerTest < Test::Unit::TestCase
     post(:list,
          :page => 1)
 
-    assert_equal(2, assigns(:priorities).size)
+    assert_equal(3, assigns(:priorities).size)
   end
 
 
@@ -141,41 +141,35 @@ class PriorityControllerTest < Test::Unit::TestCase
   #
   def test_create
 
-    assert_equal(2, Priority.find_all.size)
+    priority_count = Priority.count
 
     set_admin
-    new_priority = {
-      'value'  => 2,
-      'name'   => 'Medium',
-    }
+    new_priority = { 'value' => 22, 'name' => 'Hottest' }
 
-    post(:create,
-         :new_priority => new_priority)
+    post(:create, :new_priority => new_priority)
 
-    assert_equal(3, Priority.find_all.size)
-    assert_equal("Medium added", flash['notice'])
-    assert_redirected_to :action => 'list'
+    priority_count += 1
+    assert_equal(priority_count, Priority.count)
+    assert_equal("Hottest added", flash['notice'])
+    assert_redirected_to(:action => 'list')
 
-    post(:create,
-         :new_priority => new_priority)
-    assert_equal(3, Priority.find_all.size)
+    post(:create, :new_priority => new_priority)
+    assert_equal(priority_count, Priority.count)
     assert_equal("Value must be unique", flash['notice'])
-    assert_redirected_to :action => 'add'
+    assert_redirected_to(:action => 'add')
 
     new_priority['value'] = 55
-    post(:create,
-         :new_priority => new_priority)
-    assert_equal(3, Priority.find_all.size)
+    post(:create, :new_priority => new_priority)
+    assert_equal(priority_count, Priority.count)
     assert_equal("Name already exists in the database", flash['notice'])
-    assert_redirected_to :action => 'add'
+    assert_redirected_to(:action => 'add')
 
     new_priority['value'] = 45.55
-    post(:create,
-         :new_priority => new_priority)
-    assert_equal(3, Priority.find_all.size)
+    post(:create, :new_priority => new_priority)
+    assert_equal(priority_count, Priority.count)
     assert_equal("Value - Review Priority must be an integer greater than 0",
                  flash['notice'])
-    assert_redirected_to :action => 'add'
+    assert_redirected_to(:action => 'add')
 
   end
 

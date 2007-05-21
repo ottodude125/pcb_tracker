@@ -142,27 +142,24 @@ class ReviewGroupControllerTest < Test::Unit::TestCase
   #
   def test_create
 
+    group_count = ReviewGroup.count
+    
     set_admin
-    assert_equal(3, ReviewGroup.find_all.size)
+    new_review_group = { 'active'   => '1',
+                         'cc_peers' => '1',
+                         'name'     => 'Yankee' }
 
-    new_review_group = {
-      'active'   => '1',
-      'cc_peers' => '1',
-      'name'     => 'Yankee',
-    }
+    post(:create, :new_review_group => new_review_group)
 
-    post(:create,
-         :new_review_group => new_review_group)
-
-    assert_equal(4,              ReviewGroup.find_all.size)
+    group_count += 1
+    assert_equal(group_count,    ReviewGroup.count)
     assert_equal("Yankee added", flash['notice'])
-    assert_redirected_to :action => 'list'
+    assert_redirected_to(:action => 'list')
 
-    post(:create,
-         :new_review_group => new_review_group)
-    assert_equal(4, ReviewGroup.find_all.size)
+    post(:create, :new_review_group => new_review_group)
+    assert_equal(group_count,                           ReviewGroup.count)
     assert_equal("Name already exists in the database", flash['notice'])
-    assert_redirected_to :action => 'add'
+    assert_redirected_to(:action => 'add')
 
   end
 
