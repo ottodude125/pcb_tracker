@@ -6,7 +6,7 @@
 
 <table border="0" width="100%">
   <tr>
-    <th align="left"  width="130">Design:</th>
+    <td width="130" class="th1">Design:</td>
     <td colspan="3">
       <%= @design_review.design.name %> -
       <%= @design_review.design.board.platform.name %> /
@@ -15,11 +15,11 @@
     </td>
   </tr>
   <tr>
-    <th align="left">Posted By:</th>
+    <td class="th1">Posted By:</td>
     <td width="220">
       <%= poster_name(@design_review) %>
     </td>
-    <th align="left" width="150">Design Center:</th>
+    <td width="150" class="th1">Design Center:</td>
     <td>
       <% if @design_review.design_center_id > 0 %>
         <%= link_to(@design_review.design_center.name,
@@ -30,34 +30,32 @@
     </td>
   </tr>
   <tr>
-    <th align="left">Criticality:</th>
+    <td class="th1">Criticality:</td>
     <td><%= @design_review.priority.name %></td>
-    <th align="left">Review Type:</th>
+    <td class="th1">Review Type:</td>
     <td><%= @design_review.review_name %></td>
   </tr>
   <tr>
-    <th align="left">Status:</th>
+    <td class="th1">Status:</td>
     <td><%= @design_review.review_status.name %></td>
-    <th align="left">Total Days On Hold:</th>
-    <td><%= sprintf("%4.1f", 
-                    @design_review.time_on_hold_total.to_f / 1.day) %></td>
+    <td class="th1">Total Days On Hold:</td>
+    <td><%= sprintf("%4.1f", @design_review.time_on_hold_total.to_f / 1.day) %></td>
   </tr> 
   
   <% if @design_review.on_hold? %>
   <tr>
-    <th align="left">Placed On Hold:</th>
+    <td class="th1">Placed On Hold:</td>
     <td><%= @design_review.placed_on_hold_on.strftime("%d-%b-%y, %I:%M %p") %></td>
-    <th align="left">Days On Hold:</th>
-    <td><%= sprintf("%4.1f",
-                    @design_review.time_on_hold.to_f / 1.day) %></td>
+    <td class="th1">Days On Hold:</td>
+    <td><%= sprintf("%4.1f", @design_review.time_on_hold.to_f / 1.day) %></td>
   </tr>
   <% end %>
 
   <tr>
-    <th align="left">Posting Number:</th>
+    <td class="th1">Posting Number:</td>
     <td><%= @design_review.posting_count %></td>
     <% if @design_review.posting_count > 0 %>
-      <th align="left">Originally Posted:</th>
+      <td class="th1">Originally Posted:</td>
       <td>
         <%= @design_review.created_on.strftime("%d-%b-%y, %I:%M %p") %>
       </td>
@@ -65,12 +63,12 @@
   </tr>
   <tr valign="top">
     <% if @design_review.design.fab_houses.size == 0 %>
-      <th align="left" colspan="2">No Fab House Selected</th>
+      <td class="th1" colspan="2">No Fab House Selected</td>
     <% else %>
       <% if @design_review.design.fab_houses.size == 1 %>
-        <th align="left">Fab House:</th>
+        <td class="th1">Fab House:</td>
       <% else %>
-        <th align="left">Fab Houses:</th>
+        <td class="th1">Fab Houses:</td>
       <% end %>
       <td>
         <table>
@@ -84,7 +82,7 @@
     <% end %>
     
     <% if @design_review.posting_count > 0 %>
-      <th align="left">Last Posted:</th>
+      <td class="th1">Last Posted:</td>
       <td>
         <%= @design_review.reposted_on.strftime("%d-%b-%y, %I:%M %p") %>
       </td>
