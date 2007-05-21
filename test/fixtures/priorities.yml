@@ -7,3 +7,8 @@ low:
   id:    2
   value: 3
   name:  Low
+medium:
+  id:    3
+  value: 2
+  name:  Medium
+  
