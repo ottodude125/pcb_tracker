@@ -22,7 +22,7 @@ class ReviewTypeController < ApplicationController
   # This method uses information passed back from the edit screen to
   # update the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['review_type'] - Used to identify the review type to be updated.
   #
   # Return value:
@@ -32,16 +32,16 @@ class ReviewTypeController < ApplicationController
   #
   def update
 
-    @review_type = ReviewType.find(@params['review_type']['id'])
+    @review_type = ReviewType.find(params[:review_type][:id])
 
-    if @review_type.update_attributes(@params['review_type'])
+    if @review_type.update_attributes(params[:review_type])
       flash['notice'] = 'Update recorded'
     else
       flash['notice'] = @review_type.errors.full_messages.pop
     end
 
     redirect_to(:action => 'edit',
-                :id     => @params["review_type"]["id"])
+                :id     => params[:review_type][:id])
   end
 
 
@@ -53,7 +53,7 @@ class ReviewTypeController < ApplicationController
   # This method uses the information passed back from the user
   # to create a new review type in the database
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_review_type'] - the information to be stored for the new 
   #                       reviw type.
   #
@@ -64,7 +64,7 @@ class ReviewTypeController < ApplicationController
   #
   def create
 
-    @review_type = ReviewType.create(@params['new_review_type'])
+    @review_type = ReviewType.create(params[:new_review_type])
 
     if @review_type.errors.empty?
       flash['notice'] = "#{@review_type.name} added"
@@ -86,7 +86,7 @@ class ReviewTypeController < ApplicationController
   # for display.  The list is paginated and is limited to the number 
   # passed to the ":per_page" argument.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -114,7 +114,7 @@ class ReviewTypeController < ApplicationController
   # This method retrieves the review type from the database for
   # display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the review type data to be retrieved.
   #
   # Return value:
@@ -126,7 +126,7 @@ class ReviewTypeController < ApplicationController
   #
   def edit 
 
-    @review_type = ReviewType.find(@params['id'])
+    @review_type = ReviewType.find(params[:id])
 
   end
 end

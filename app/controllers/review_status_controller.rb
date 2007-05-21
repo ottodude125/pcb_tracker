@@ -23,7 +23,7 @@ class ReviewStatusController < ApplicationController
   # This method uses information passed back from the edit screen to
   # update the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['review_status'] - Used to identify the review status to be 
   #                     updated.
   #
@@ -34,16 +34,16 @@ class ReviewStatusController < ApplicationController
   #
   def update
 
-    @review_status = ReviewStatus.find(@params['review_status']['id'])
+    @review_status = ReviewStatus.find(params[:review_status][:id])
 
-    if @review_status.update_attributes(@params['review_status'])
+    if @review_status.update_attributes(params[:review_status])
       flash['notice'] = 'Update recorded'
     else
       flash['notice'] = @review_status.errors.full_messages.pop
     end
 
     redirect_to(:action => 'edit',
-                :id     => @params["review_status"]["id"])
+                :id     => params[:review_status][:id])
   end
 
 
@@ -55,7 +55,7 @@ class ReviewStatusController < ApplicationController
   # This method uses the information passed back from the user
   # to create a new review status in the database
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_review_status'] - the information to be stored for the new 
   #                         review status.
   #
@@ -66,7 +66,7 @@ class ReviewStatusController < ApplicationController
   #
   def create
 
-    @review_status = ReviewStatus.create(@params['new_review_status'])
+    @review_status = ReviewStatus.create(params[:new_review_status])
 
     if @review_status.errors.empty?
       flash['notice'] = "#{@review_status.name} added"
@@ -88,7 +88,7 @@ class ReviewStatusController < ApplicationController
   # for display.  The list is paginated and is limited to the number 
   # passed to the ":per_page" argument.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -116,7 +116,7 @@ class ReviewStatusController < ApplicationController
   # This method retrieves the review status from the database for
   # display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the review status data to be retrieved.
   #
   # Return value:
@@ -128,7 +128,7 @@ class ReviewStatusController < ApplicationController
   #
   def edit 
 
-    @review_status = ReviewStatus.find(@params['id'])
+    @review_status = ReviewStatus.find(params[:id])
 
   end
 

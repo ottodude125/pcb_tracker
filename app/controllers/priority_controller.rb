@@ -22,7 +22,7 @@ class PriorityController < ApplicationController
   # This method uses information passed back from the edit screen to
   # update the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['priority'] - Used to identify the priority to be updated.
   #
   # Return value:
@@ -32,16 +32,16 @@ class PriorityController < ApplicationController
   #
   def update
 
-    @priority = Priority.find(@params['priority']['id'])
+    @priority = Priority.find(params[:priority][:id])
     
-    if @priority.update_attributes(@params['priority'])
+    if @priority.update_attributes(params[:priority])
       flash['notice'] = 'Update recorded'
     else
       flash['notice'] = 'Update failed'
     end
 
     redirect_to(:action => 'edit',
-                :id     => @params["priority"]["id"])
+                :id     => params[:priority][:id])
   end
 
 
@@ -53,7 +53,7 @@ class PriorityController < ApplicationController
   # This method uses the information passed back from the user
   # to create a new review type in the database
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_priority'] - the information to be stored for the new 
   #                       reviw type.
   #
@@ -64,7 +64,7 @@ class PriorityController < ApplicationController
   #
   def create
 
-    @priority = Priority.create(@params['new_priority'])
+    @priority = Priority.create(params[:new_priority])
     
     if @priority.errors.empty?
       flash['notice'] = "#{@priority.name} added"
@@ -86,7 +86,7 @@ class PriorityController < ApplicationController
   # for display.  The list is paginated and is limited to the number 
   # passed to the ":per_page" argument.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -113,7 +113,7 @@ class PriorityController < ApplicationController
   # Description:
   # This method retrieves the priority from the database for display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the priority data to be retrieved.
   #
   # Return value:
@@ -125,7 +125,7 @@ class PriorityController < ApplicationController
   #
   def edit 
 
-    @priority = Priority.find(@params['id'])
+    @priority = Priority.find(params[:id])
 
   end
 end

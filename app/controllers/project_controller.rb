@@ -24,7 +24,7 @@ class ProjectController < ApplicationController
   # display.  The list is paginated and is limited to the number 
   # passed to the ":per_page" argument.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -49,7 +49,7 @@ class ProjectController < ApplicationController
   # Description:
   # This method retrieves the project from the database for display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the project to be retrieved.
   #
   # Return value:
@@ -58,7 +58,7 @@ class ProjectController < ApplicationController
   ######################################################################
   #
   def edit 
-    @project = Project.find(@params['id'])
+    @project = Project.find(params[:id])
   end
 
 
@@ -70,7 +70,7 @@ class ProjectController < ApplicationController
   # This method uses information passed back from the edit screen to
   # update the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['project'] - Used to identify the project to be updated.
   #
   # Return value:
@@ -79,16 +79,16 @@ class ProjectController < ApplicationController
   ######################################################################
   #
   def update
-    @project = Project.find(@params['project']['id'])
+    @project = Project.find(params[:project][:id])
 
-    if @project.update_attributes(@params['project'])
+    if @project.update_attributes(params[:project])
       flash['notice'] = "Project #{@project.name} was successfully updated."
       redirect_to :action => 'edit', 
-                  :id     => @params["project"]["id"]
+                  :id     => params[:project][:id]
     else
       flash['notice'] = @project.errors.full_messages.pop
       redirect_to :action => 'edit', 
-                  :id     => @params["project"]["id"]
+                  :id     => params[:project][:id]
     end
 
   end
@@ -102,7 +102,7 @@ class ProjectController < ApplicationController
   # This method uses the information passed back from the user
   # to create a new project in the database
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_project'] - the information to be stored for the new project.
   #
   # Return value:
@@ -112,7 +112,7 @@ class ProjectController < ApplicationController
   #
   def create
 
-    @project = Project.create(@params['new_project'])
+    @project = Project.create(params[:new_project])
 
     if @project.errors.empty?
       flash['notice'] = "Project #{@project.name} added"

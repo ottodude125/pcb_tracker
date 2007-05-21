@@ -23,7 +23,7 @@ class ProductTypeController < ApplicationController
   # This method retrieves a list of product types from the database for 
   # display.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -48,7 +48,7 @@ class ProductTypeController < ApplicationController
   # Description:
   # This method retrieves the product type from the database for display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the product type to be retrieved.
   #
   # Return value:
@@ -59,7 +59,7 @@ class ProductTypeController < ApplicationController
   ######################################################################
   #
   def edit 
-    @product_type = ProductType.find(@params['id'])
+    @product_type = ProductType.find(params[:id])
   end
 
 
@@ -71,7 +71,7 @@ class ProductTypeController < ApplicationController
   # This method updates the database with the modified product type
   # information
   #
-  # Parameters from @params
+  # Parameters from params
   # ['product_type'] - Contains the information used to make the update.
   #
   # Return value:
@@ -82,16 +82,16 @@ class ProductTypeController < ApplicationController
   ######################################################################
   #
   def update
-    @product_type = ProductType.find(@params['product_type']['id'])
+    @product_type = ProductType.find(params[:product_type][:id])
 
-    if @product_type.update_attributes(@params['product_type'])
+    if @product_type.update_attributes(params[:product_type])
       flash['notice'] = 'Product Type was successfully updated.'
       redirect_to :action => 'edit', 
-                  :id     => @params["product_type"]["id"]
+                  :id     => params[:product_type][:id]
     else
       flash['notice'] = @product_type.errors.full_messages.pop
       redirect_to :action => 'edit', 
-                  :id     => @params["product_type"]["id"]
+                  :id     => params[:product_type][:id]
     end
 
   end
@@ -104,7 +104,7 @@ class ProductTypeController < ApplicationController
   # Description:
   # This method creates a new product type in the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_product_type'] - Contains the information used to make the
   #                        update.
   #
@@ -117,7 +117,7 @@ class ProductTypeController < ApplicationController
   #
   def create
 
-    @product_type = ProductType.create(@params['new_product_type'])
+    @product_type = ProductType.create(params[:new_product_type])
 
     if @product_type.errors.empty?
       flash['notice'] = "Product Type #{@product_type.name} added"

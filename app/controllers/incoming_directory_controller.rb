@@ -23,7 +23,7 @@ class IncomingDirectoryController < ApplicationController
   # This method retrieves a list of incoming directories from the 
   # database for display.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -49,7 +49,7 @@ class IncomingDirectoryController < ApplicationController
   # This method retrieves the incoming directory from the database for 
   # display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the incoming directory to be retrieved.
   #
   # Return value:
@@ -60,7 +60,7 @@ class IncomingDirectoryController < ApplicationController
   ######################################################################
   #
   def edit 
-    @incoming_directory = IncomingDirectory.find(@params['id'])
+    @incoming_directory = IncomingDirectory.find(params[:id])
   end
 
 
@@ -72,7 +72,7 @@ class IncomingDirectoryController < ApplicationController
   # This method updates the database with the modified incoming directory
   # information
   #
-  # Parameters from @params
+  # Parameters from params
   # ['incoming_directory'] - Contains the information used to make the 
   #                          update.
   #
@@ -85,16 +85,16 @@ class IncomingDirectoryController < ApplicationController
   #
   def update
     @incoming_directory = IncomingDirectory.find(
-                            @params['incoming_directory']['id'])
+                            params[:incoming_directory][:id])
 
-    if @incoming_directory.update_attributes(@params['incoming_directory'])
+    if @incoming_directory.update_attributes(params[:incoming_directory])
       flash['notice'] = 'Incoming Directory was successfully updated.'
       redirect_to :action => 'edit', 
-                  :id     => @params["incoming_directory"]["id"]
+                  :id     => params[:incoming_directory][:id]
     else
       flash['notice'] = @incoming_directory.errors.full_messages.pop
       redirect_to :action => 'edit', 
-                  :id     => @params["incoming_directory"]["id"]
+                  :id     => params[:incoming_directory][:id]
     end
 
   end
@@ -107,7 +107,7 @@ class IncomingDirectoryController < ApplicationController
   # Description:
   # This method creates a new incoming directory in the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_incoming_directory'] - Contains the information used to make the
   #                              update.
   #
@@ -120,8 +120,7 @@ class IncomingDirectoryController < ApplicationController
   #
   def create
 
-    @incoming_directory = IncomingDirectory.create(
-                            @params['new_incoming_directory'])
+    @incoming_directory = IncomingDirectory.create(params[:new_incoming_directory])
 
     if @incoming_directory.errors.empty?
       flash['notice'] = "Incoming Directory #{@incoming_directory[:name]} added"

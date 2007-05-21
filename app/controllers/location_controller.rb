@@ -24,7 +24,7 @@ class LocationController < ApplicationController
   # display.  The list is paginated and is limited to the number 
   # passed to the ":per_page" argument.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -49,7 +49,7 @@ class LocationController < ApplicationController
   # Description:
   # This method retrieves the location from the database for display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the location to be retrieved.
   #
   # Return value:
@@ -58,7 +58,7 @@ class LocationController < ApplicationController
   ######################################################################
   #
   def edit 
-    @location = Location.find(@params['id'])
+    @location = Location.find(params[:id])
   end
 
 
@@ -70,7 +70,7 @@ class LocationController < ApplicationController
   # This method uses information passed back from the edit screen to
   # update the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['location'] - Used to identify the location to be updated.
   #
   # Return value:
@@ -79,16 +79,16 @@ class LocationController < ApplicationController
   ######################################################################
   #
   def update
-    @location = Location.find(@params['location']['id'])
+    @location = Location.find(params[:location][:id])
 
-    if @location.update_attributes(@params['location'])
+    if @location.update_attributes(params[:location])
       flash['notice'] = "Location #{@location.name} was successfully updated."
       redirect_to :action => 'edit', 
-                  :id     => @params["location"]["id"]
+                  :id     => params[:location][:id]
     else
       flash['notice'] = @location.errors.full_messages.pop
       redirect_to :action => 'edit', 
-                  :id     => @params["location"]["id"]
+                  :id     => params[:location][:id]
     end
 
   end
@@ -102,7 +102,7 @@ class LocationController < ApplicationController
   # This method uses the information passed back from the user
   # to create a new location in the database
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_location'] - the information to be stored for the new location.
   #
   # Return value:
@@ -112,7 +112,7 @@ class LocationController < ApplicationController
   #
   def create
 
-    @location = Location.create(@params['new_location'])
+    @location = Location.create(params[:new_location])
 
     if @location.errors.empty?
       flash['notice'] = "Location #{@location.name} added"

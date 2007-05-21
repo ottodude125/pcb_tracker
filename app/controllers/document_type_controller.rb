@@ -23,7 +23,7 @@ class DocumentTypeController < ApplicationController
   # This method uses information passed back from the edit screen to
   # update the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['document_type'] - Used to identify the document type to be 
   #                     updated.
   #
@@ -34,16 +34,16 @@ class DocumentTypeController < ApplicationController
   #
   def update
 
-    @document_type = DocumentType.find(@params['document_type']['id'])
+    @document_type = DocumentType.find(params[:document_type][:id])
 
-    if @document_type.update_attributes(@params['document_type'])
+    if @document_type.update_attributes(params[:document_type])
       flash['notice'] = 'Update recorded'
     else
       flash['notice'] = 'Update failed'
     end
 
     redirect_to(:action => 'edit',
-		:id     => @params["document_type"]["id"])
+		:id     => params[:document_type][:id])
   end
 
 
@@ -55,7 +55,7 @@ class DocumentTypeController < ApplicationController
   # This method uses the information passed back from the user
   # to create a new document type in the database
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_document_type'] - the information to be stored for the new 
   #                         document type.
   #
@@ -66,7 +66,7 @@ class DocumentTypeController < ApplicationController
   #
   def create
 
-    @document_type = DocumentType.create(@params['new_document_type'])
+    @document_type = DocumentType.create(params[:new_document_type])
 
     if @document_type.errors.empty?
       flash['notice'] = "#{@document_type.name} added"
@@ -88,7 +88,7 @@ class DocumentTypeController < ApplicationController
   # for display.  The list is paginated and is limited to the number 
   # passed to the ":per_page" argument.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -115,7 +115,7 @@ class DocumentTypeController < ApplicationController
   # This method retrieves the document type from the database for
   # display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the document type data to be retrieved.
   #
   # Return value:
@@ -127,7 +127,7 @@ class DocumentTypeController < ApplicationController
   #
   def edit 
 
-    @document_type = DocumentType.find(@params['id'])
+    @document_type = DocumentType.find(params[:id])
 
   end
 

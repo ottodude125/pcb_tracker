@@ -23,7 +23,7 @@ class FabHouseController < ApplicationController
   # This method uses information passed back from the edit screen to
   # update the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['fab_house'] - Used to identify the fabrication house to be 
   #                 updated.
   #
@@ -34,16 +34,16 @@ class FabHouseController < ApplicationController
   #
   def update
 
-    @fab_house = FabHouse.find(@params['fab_house']['id'])
+    @fab_house = FabHouse.find(params[:fab_house][:id])
 
-    if @fab_house.update_attributes(@params['fab_house'])
+    if @fab_house.update_attributes(params[:fab_house])
       flash['notice'] = 'Update recorded'
     else
       flash['notice'] = @fab_house.errors.full_messages.pop
     end
 
     redirect_to(:action => 'edit',
-                :id     => @params["fab_house"]["id"])
+                :id     => params[:fab_house][:id])
   end
 
 
@@ -55,7 +55,7 @@ class FabHouseController < ApplicationController
   # This method uses the information passed back from the user
   # to create a new fabrication house in the database
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_fab_house'] - the information to be stored for the new 
   #                     fabrication house.
   #
@@ -66,7 +66,7 @@ class FabHouseController < ApplicationController
   #
   def create
 
-    @fab_house = FabHouse.create(@params['new_fab_house'])
+    @fab_house = FabHouse.create(params[:new_fab_house])
 
     if @fab_house.errors.empty?
       flash['notice'] = "#{@fab_house.name} added"
@@ -88,7 +88,7 @@ class FabHouseController < ApplicationController
   # for display.  The list is paginated and is limited to the number 
   # passed to the ":per_page" argument.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -115,7 +115,7 @@ class FabHouseController < ApplicationController
   # This method retrieves the fabrication house from the database for
   # display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the fabrication house data to be retrieved.
   #
   # Return value:
@@ -127,7 +127,7 @@ class FabHouseController < ApplicationController
   #
   def edit 
 
-    @fab_house = FabHouse.find(@params['id'])
+    @fab_house = FabHouse.find(params[:id])
 
   end
 

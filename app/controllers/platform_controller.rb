@@ -23,7 +23,7 @@ class PlatformController < ApplicationController
   # This method retrieves a list of platforms from the database for 
   # display.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -48,7 +48,7 @@ class PlatformController < ApplicationController
   # Description:
   # This method retrieves the platform from the database for display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the platform to be retrieved.
   #
   # Return value:
@@ -59,7 +59,7 @@ class PlatformController < ApplicationController
   ######################################################################
   #
   def edit 
-    @platform = Platform.find(@params['id'])
+    @platform = Platform.find(params[:id])
   end
 
 
@@ -71,7 +71,7 @@ class PlatformController < ApplicationController
   # This method updates the database with the modified platform
   # information
   #
-  # Parameters from @params
+  # Parameters from params
   # ['platform'] - Contains the information used to make the update.
   #
   # Return value:
@@ -82,16 +82,16 @@ class PlatformController < ApplicationController
   ######################################################################
   #
   def update
-    @platform = Platform.find(@params['platform']['id'])
+    @platform = Platform.find(params[:platform][:id])
 
-    if @platform.update_attributes(@params['platform'])
+    if @platform.update_attributes(params[:platform])
       flash['notice'] = 'Platform was successfully updated.'
       redirect_to :action => 'edit', 
-                  :id     => @params["platform"]["id"]
+                  :id     => params[:platform][:id]
     else
       flash['notice'] = @platform.errors.full_messages.pop
       redirect_to :action => 'edit', 
-                  :id     => @params["platform"]["id"]
+                  :id     => params[:platform][:id]
     end
 
   end
@@ -104,7 +104,7 @@ class PlatformController < ApplicationController
   # Description:
   # This method creates a new platform in the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_platform'] - Contains the information used to make the
   #                    update.
   #
@@ -117,7 +117,7 @@ class PlatformController < ApplicationController
   #
   def create
 
-    @platform = Platform.create(@params['new_platform'])
+    @platform = Platform.create(params[:new_platform])
 
     if @platform.errors.empty?
       flash['notice'] = "Platform #{@platform[:name]} added"
