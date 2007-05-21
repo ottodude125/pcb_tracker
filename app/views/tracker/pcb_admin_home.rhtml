@@ -5,7 +5,7 @@
 <!-- ********************************************************** -->
 
 <% @title = "PCB Design Board/Data Tracker" %>
-<%# debug @session %>
+<%# debug session %>
 
 <table width="100%"
        border="0" 
@@ -75,7 +75,7 @@
               <% for design in @design_list %>
                 <% next if (design[:next_review] != nil &&
                             design[:next_review].review_type.name == "Pre-Artwork" && 
-                            design[:next_review].designer_id != @session[:user].id )%>
+                            design[:next_review].designer_id != session[:user].id )%>
                 <tr>
                   <td align="center"
                       valign="top">
@@ -148,7 +148,7 @@
 
                       <% if (design[:next_review]                 &&
                              !design[:next_review].review_locked? &&
-                             design[:next_review].designer_id == @session[:user].id) %>
+                             design[:next_review].designer_id == session[:user].id) %>
                         <tr bgcolor="#dfdfdf">
                           <td colspan="6">
                               <table width="100%" border="0">

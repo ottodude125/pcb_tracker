@@ -42,8 +42,8 @@ p { margin: 0 }
     <td><%= @env['HTTP_USER_AGENT'] %></td>
   </tr>
   
-  <% if @session[:user] -%>
-    <% user = @session[:user] -%>
+  <% if session[:user] -%>
+    <% user = session[:user] -%>
     <tr>
       <td>User Id</td>
       <td><%= user.id %></td>
@@ -71,15 +71,15 @@ p { margin: 0 }
 <% for key, val in params -%>
   <p><b><%= key %></b></p>
   <p><%= val.to_yaml.to_a.join("</p>\n<p>    ") %></p>
-<% end -%>
+<% end if params -%>
 
 <hr />
 <h3>Session</h3>
 <hr />
-<% for key, val in @session -%>
+<% for key, val in session -%>
   <p><b><%= key %></b></p>
   <p><%= val.to_yaml.to_a.join("</p>\n<p>    ") %></p>
-<% end -%>
+<% end if session -%>
   
 <hr />
 <h3>Environment</h3>
@@ -94,5 +94,5 @@ p { margin: 0 }
         <small><%= val %></small>
       </td>
     </tr>
-  <% end  -%>
+  <% end if @env -%>
 </table>
