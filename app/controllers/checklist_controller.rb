@@ -36,9 +36,9 @@ class ChecklistController < ApplicationController
   def release
     
     checklist = Checklist.find(params['id'])
-    latest_release = Checklist.find(:all,
+    latest_release = Checklist.find(:first,
                                     :conditions => "released=1",
-                                    :order      => 'major_rev_number ASC').pop
+                                    :order      => 'major_rev_number DESC')
 
     checklist.minor_rev_number = 0
     checklist.major_rev_number = latest_release.major_rev_number + 1
