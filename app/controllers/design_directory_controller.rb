@@ -23,7 +23,7 @@ class DesignDirectoryController < ApplicationController
   # This method retrieves a list of design directories from the database for 
   # display.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -48,7 +48,7 @@ class DesignDirectoryController < ApplicationController
   # Description:
   # This method retrieves the design directory from the database for display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the design directory to be retrieved.
   #
   # Return value:
@@ -59,7 +59,7 @@ class DesignDirectoryController < ApplicationController
   ######################################################################
   #
   def edit 
-    @design_directory = DesignDirectory.find(@params['id'])
+    @design_directory = DesignDirectory.find(params[:id])
   end
 
 
@@ -71,7 +71,7 @@ class DesignDirectoryController < ApplicationController
   # This method updates the database with the modified design directory
   # information
   #
-  # Parameters from @params
+  # Parameters from params
   # ['design_directory'] - Contains the information used to make the update.
   #
   # Return value:
@@ -82,16 +82,16 @@ class DesignDirectoryController < ApplicationController
   ######################################################################
   #
   def update
-    @design_directory = DesignDirectory.find(@params['design_directory']['id'])
+    @design_directory = DesignDirectory.find(params[:design_directory][:id])
 
-    if @design_directory.update_attributes(@params['design_directory'])
+    if @design_directory.update_attributes(params[:design_directory])
       flash['notice'] = 'Design Directory was successfully updated.'
       redirect_to :action => 'edit', 
-                  :id     => @params["design_directory"]["id"]
+                  :id     => params[:design_directory][:id]
     else
       flash['notice'] = @design_directory.errors.full_messages.pop
       redirect_to :action => 'edit', 
-                  :id     => @params["design_directory"]["id"]
+                  :id     => params[:design_directory][:id]
     end
 
   end
@@ -104,7 +104,7 @@ class DesignDirectoryController < ApplicationController
   # Description:
   # This method creates a new design directory in the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_design_directory'] - Contains the information used to make the
   #                            update.
   #
@@ -117,7 +117,7 @@ class DesignDirectoryController < ApplicationController
   #
   def create
 
-    @design_directory = DesignDirectory.create(@params['new_design_directory'])
+    @design_directory = DesignDirectory.create(params[:new_design_directory])
 
     if @design_directory.errors.empty?
       flash['notice'] = "Design Directory #{@design_directory[:name]} added"

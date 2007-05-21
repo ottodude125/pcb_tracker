@@ -23,7 +23,7 @@ class DesignCenterController < ApplicationController
   # This method uses information passed back from the edit screen to
   # update the database.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['design_center'] - Used to identify the design center to be 
   #                     updated.
   #
@@ -34,16 +34,16 @@ class DesignCenterController < ApplicationController
   #
   def update
 
-    @design_center = DesignCenter.find(@params['design_center']['id'])
+    @design_center = DesignCenter.find(params[:design_center][:id])
 
-    if @design_center.update_attributes(@params['design_center'])
+    if @design_center.update_attributes(params[:design_center])
       flash['notice'] = 'Update recorded'
     else
       flash['notice'] = 'Update failed'
     end
 
     redirect_to(:action => 'edit',
-                :id     => @params["design_center"]["id"])
+                :id     => params[:design_center][:id])
   end
 
 
@@ -55,7 +55,7 @@ class DesignCenterController < ApplicationController
   # This method uses the information passed back from the user
   # to create a new design center in the database
   #
-  # Parameters from @params
+  # Parameters from params
   # ['new_design_center'] - the information to be stored for the new 
   #                         design center.
   #
@@ -66,7 +66,7 @@ class DesignCenterController < ApplicationController
   #
   def create
 
-    @design_center = DesignCenter.create(@params['new_design_center'])
+    @design_center = DesignCenter.create(params[:new_design_center])
 
     if @design_center.errors.empty?
       flash['notice'] = "#{@design_center.name} added"
@@ -88,7 +88,7 @@ class DesignCenterController < ApplicationController
   # for display.  The list is paginated and is limited to the number 
   # passed to the ":per_page" argument.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -115,7 +115,7 @@ class DesignCenterController < ApplicationController
   # This method retrieves the design center from the database for
   # display.
   #
-  # Parameters from @params
+  # Parameters from params
   # ['id'] - Used to identify the design center data to be retrieved.
   #
   # Return value:
@@ -127,7 +127,7 @@ class DesignCenterController < ApplicationController
   #
   def edit 
 
-    @design_center = DesignCenter.find(@params['id'])
+    @design_center = DesignCenter.find(params[:id])
 
   end
 

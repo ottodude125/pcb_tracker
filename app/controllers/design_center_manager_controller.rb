@@ -22,7 +22,7 @@ class DesignCenterManagerController < ApplicationController
   # This method retrieves the designers and design centers for the 
   # form to make the designer/designer center assignments.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -38,7 +38,7 @@ class DesignCenterManagerController < ApplicationController
     @designers = Role.find_by_name("Designer").active_users
 
     # Get all of the active design centers.
-    @design_centers = DesignCenter.find_all('active=1')
+    @design_centers = DesignCenter.find(:all, :conditions => 'active=1')
     @design_centers.delete_if { |dc| dc.name.include? "Archive" }
 
   end
@@ -51,7 +51,7 @@ class DesignCenterManagerController < ApplicationController
   # Description:
   # This method updates designer records with their design center ids.
   #
-  # Parameters from @params
+  # Parameters from params
   # None
   #
   # Return value:
@@ -65,7 +65,7 @@ class DesignCenterManagerController < ApplicationController
 
     # Go through the parameters passed back and assign the users to the
     # design centers.
-    @params.each { |form_tag, design_center_id|
+    params.each { |form_tag, design_center_id|
 
       next if (form_tag == "action" or form_tag == "controller")
 
