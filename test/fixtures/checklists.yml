@@ -50,3 +50,21 @@ checklist_2_0:
   dc_designer_auditor_count: 5
   dr_designer_only_count: 2
   dr_designer_auditor_count: 5
+  
+checklists_101: 
+  dr_designer_auditor_count: "18"
+  created_on:                2006-04-28 16:03:38
+  major_rev_number:          "13"
+  released_on:               2006-05-01 14:10:19
+  dr_designer_only_count:    "4"
+  created_by:                "0"
+  released_by:               "0"
+  dc_designer_only_count:    "4"
+  id:                        "101"
+  used:                      "0"
+  released:                  "1"
+  dc_designer_auditor_count: "14"
+  designer_auditor_count:    "143"
+  minor_rev_number:          "0"
+  designer_only_count:       "38"
+  
