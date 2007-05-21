@@ -40,10 +40,7 @@ class AuditController < ApplicationController
 
     audit = Audit.find(params[:audit][:id])
 
-    self_audit_update = (audit.is_self_auditor?(session[:user]) &&
-                         audit.is_self_audit?)
-    peer_audit_update = (audit.is_peer_auditor?(session[:user]) && 
-                         audit.is_peer_audit?)
+    update_type = audit.update_type(session[:user])
 
     # Go through the paramater list and pull out the checks.
     params.keys.grep(/^check_/).each { |params_key|
@@ -51,10 +48,10 @@ class AuditController < ApplicationController
       design_check_update = params[params_key]
       design_check = DesignCheck.find(design_check_update[:design_check_id])
 
-      if self_audit_update
+      if update_type == :self
         result        = design_check.designer_result
         result_update = design_check_update[:designer_result]
-      elsif peer_audit_update
+      elsif update_type == :peer
         result        = design_check.auditor_result
         result_update = design_check_update[:auditor_result]
       end
@@ -62,20 +59,14 @@ class AuditController < ApplicationController
       if result_update && result_update != result
 
         # Make sure that the required comment has been added.
-        if (design_check_update[:comment].strip.size == 0 &&
-            ((design_check.check.yes_no? &&
-              design_check_update[:designer_result] == 'No') ||
-             
-             ((design_check.check.designer_only? ||
-               design_check.check.designer_auditor?) &&
-              (design_check_update[:designer_result] == 'Waived' ||
-               design_check_update[:auditor_result] == 'Waived' ||
-               design_check_update[:auditor_result] == 'Comment'))))
+        if design_check_update[:comment].strip.size == 0 &&
+           design_check.comment_required?(design_check_update[:designer_result], 
+                                          design_check_update[:auditor_result])
          
-          if self_audit_update
+          if update_type == :self
             flash[design_check.id] = "A comment is required for a " +
               "#{design_check_update[:designer_result]} response."
-          elsif peer_audit_update
+          elsif update_type == :peer
             flash[design_check.id] = "A comment is required for a " +
               "#{design_check_update[:auditor_result]} response."
           end
@@ -84,7 +75,7 @@ class AuditController < ApplicationController
         end
 
         check_count = audit.check_count
-        if self_audit_update && !audit.designer_complete?
+        if update_type == :self && !audit.designer_complete?
 
           if result == "None"
             begin
@@ -109,7 +100,7 @@ class AuditController < ApplicationController
                      :designer_checked_on => Time.now,
                      :designer_id         => session[:user].id)
                      
-        elsif peer_audit_update && !audit.auditor_complete?
+        elsif update_type == :peer && !audit.auditor_complete?
 
           complete   = ['Verified', 'N/A', 'Waived']
           incomplete = ['None', 'Comment']
@@ -200,26 +191,8 @@ class AuditController < ApplicationController
     checklist       = @subsection.checklist
     
     # Build the navigation information.
-    nav_sections  = checklist.sections.dup
-    if @audit.design.date_code?
-      nav_sections.delete_if { |sec| !sec.date_code_check? }
-      nav_sections.each do |section|
-        section.subsections.delete_if { |subsec| !subsec.date_code_check? }
-      end
-    elsif @audit.design.dot_rev?
-      nav_sections.delete_if { |sec| !sec.dot_rev_check? }
-      nav_sections.each do |section|
-        section.subsections.delete_if { |subsec| !subsec.dot_rev_check? }
-      end
-    end
-    
-    if @audit.is_peer_audit? && @audit.is_peer_auditor?(session[:user])
-      nav_sections.delete_if { |sec| sec.designer_auditor_checks == 0 }
-      nav_sections.each do |section|
-        section.subsections.delete_if { |subsec| subsec.designer_auditor_checks == 0 }
-      end
-    end
-
+    @audit.filtered_checklist(session[:user])
+    nav_sections  = @audit.checklist.sections
     nav_section_i = nav_sections.index(current_section)
 
     if nav_section_i
@@ -238,33 +211,10 @@ class AuditController < ApplicationController
         @arrows[:next] = nav_sections[nav_section_i+1].subsections.shift
       end
 
-      design_checks = []
-      @subsection.checks.each do |check|
-        design_check = DesignCheck.find_by_audit_id_and_check_id(@audit.id, check.id)
-        design_checks << design_check if design_check 
-      end
+      @completed_self_checks = @audit.completed_self_audit_check_count(@subsection)
+      @completed_peer_checks = @audit.completed_peer_audit_check_count(@subsection)
 
-      @completed_self_checks = design_checks.find_all { |dc| 
-                                 dc.designer_result != 'None' }.size
-      @completed_peer_checks = design_checks.find_all { |dc|
-                                 dc.auditor_result != 'None' &&
-                                 dc.auditor_result != 'Comment' }.size
-    
-
-      teammate = AuditTeammate.find_by_audit_id_and_section_id_and_self(
-                   @audit.id,
-                   @subsection.section.id,
-                   @audit.is_self_audit? ? 1 : 0)
-      user_id = session[:user].id
-
-      if @audit.is_self_audit?
-        @able_to_check = ((!teammate && user_id == @audit.design.designer_id) ||
-                          ( teammate && user_id == teammate.user_id))
-      else
-        @able_to_check = ((!teammate && user_id == @audit.design.peer_id) ||
-                          ( teammate && user_id == teammate.user_id))  &&
-                         !@audit.is_complete?
-      end
+      @able_to_check = @audit.section_auditor?(@subsection.section, session[:user])
 
       condition = ''
       if @audit.design.date_code?
@@ -274,14 +224,15 @@ class AuditController < ApplicationController
       end
     
       if @audit.is_self_audit? || @audit.design.designer_id == session[:user].id
-        @checks = Check.find_all("subsection_id=#{@subsection.id}" +
-                                 condition,
-                                 'sort_order ASC')
+        @checks = Check.find(:all,
+                             :conditions => "subsection_id=#{@subsection.id}#{condition}",
+                             :order      => 'sort_order ASC')
       else
-        @checks = Check.find_all("subsection_id=#{@subsection.id} and " +
-                                 "check_type='designer_auditor'" +
-                                 condition,
-                                 'sort_order ASC')
+        @checks = Check.find(:all,
+                             :conditions => "subsection_id=#{@subsection.id} and " +
+                                            "check_type='designer_auditor'"        +
+                                            condition,
+                             :order      => 'sort_order ASC')
       end
 
       # Add the design checks and comments for each of the checks.
@@ -355,15 +306,14 @@ class AuditController < ApplicationController
         end
         
         if @audit.is_self_audit? || @audit.design.designer_id == session[:user].id
-          subsection_checks = 
-            Check.find_all("subsection_id=#{subsection.id}" +
-                           condition)
-        #elsif @audit.is_peer_audit?
+          subsection_checks = Check.find(:all,
+                                         :conditions => "subsection_id=#{subsection.id}" +
+                                                        condition)
         else
-          subsection_checks = 
-            Check.find_all("subsection_id=#{subsection.id} and " +
-                           "check_type='designer_auditor'" +
-                           condition)
+          subsection_checks = Check.find(:all,
+                                         :conditions => "subsection_id=#{subsection.id} and " +
+                                                        "check_type='designer_auditor'" +
+                                                        condition)
         end
         subsect['checks'] = subsection_checks.size
         
