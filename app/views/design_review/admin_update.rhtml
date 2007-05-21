@@ -16,7 +16,7 @@
       <td align="left">
         <% if session[:return_to] %>
           <input class="form_return" type="button" value="Return - No Changes" 
-                 onClick="parent.location='<%= url_for(@session[:return_to]) %>'" />
+                 onClick="parent.location='<%= url_for(session[:return_to]) %>'" />
         <% else %>
           <input class="form_return" type="button" value="Return - No Changes" 
                  onClick="parent.location='<%= url_for( :action => 'index', :controller => 'tracker' ) %>'" />
