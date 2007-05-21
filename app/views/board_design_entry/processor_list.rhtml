@@ -48,7 +48,7 @@
           <%= link_to('Return Entry to Originator', 
                       {:action => 'send_back',
                        :id     => entry.id,
-                       :return => @params[:action]},
+                       :return => params[:action]},
                       :title  => "Return to #{User.find(entry.originator_id).name} for more information",
                       :confirm => "Do you really want to send the entry back to the originator?  Click 'OK' to remove the entry, otherwise click 'Cancel'.") %>
         </td>
@@ -58,7 +58,7 @@
           <%= link_to('Delete', 
                       {:action => 'destroy',
                        :id     => entry.id,
-                       :return => @params[:action]},
+                       :return => params[:action]},
                       :title  => "Delete the PDB Engineering Entry",
                       :confirm => "Do you really want to delete the #{entry.design_name}?  Click 'OK' to remove the entry, otherwise click 'Cancel'.") %>
         </td>
@@ -81,5 +81,3 @@
 </table>
 
 <%= end_form_tag %>
-
-<%# debug @params %>
