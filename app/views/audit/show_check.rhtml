@@ -7,12 +7,12 @@
 <% @heading = "#{@board_name} - Peer Audit Check: #{@checker}" %>
 
 <%# debug "@current_check: #{@current_check}" %>
-<%# debug @session %>
+<%# debug session %>
 <%# debug @design_check.audit %>
 <%# debug @check %>
 <%# debug @design_check %>
 <%# debug @design_check.audit.auditor_id %>
-<%# debug @session[:user].id %>
+<%# debug session[:user].id %>
 <%# debug @design_check.audit.designer_id %>
 
 
@@ -179,7 +179,7 @@
             </table>
           </td>
         </tr>
-      <% elsif @design_check.audit.designer_id  == @session[:user].id %>
+      <% elsif @design_check.audit.designer_id  == session[:user].id %>
         <tr>
           <td>
             <table>
@@ -231,7 +231,7 @@
             </table>
           </td>
         </tr>
-      <% elsif @design_check.audit.auditor_id  == @session[:user].id %>
+      <% elsif @design_check.audit.auditor_id  == session[:user].id %>
         <tr>
           <td>
             <table>

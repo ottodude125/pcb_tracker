@@ -65,6 +65,6 @@
 
   <hr class="div" />
   <input type="submit" value="Update Audit" />
-  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list', :page => @session[:page] ) %>'" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list', :page => session[:page] ) %>'" />
 
 <%= end_form_tag %>
