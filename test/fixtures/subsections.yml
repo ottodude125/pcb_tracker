@@ -178,3 +178,334 @@ subsect_30_004:
   date_code_check: 1
   dot_rev_check: 1
   full_review: 1
+
+subsection_546: 
+  date_code_check: "0"
+  name: bom_XX.mkpl
+  full_review: "1"
+  sort_order: "4"
+  checklist_id: "101"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: ""
+  id: "546"
+  note: ""
+subsection_535: 
+  date_code_check: "0"
+  name: ICT
+  full_review: "1"
+  sort_order: "2"
+  checklist_id: "101"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "535"
+  note: Refer to Teradyne DFT guideline for ICT information (DFT-300-00)
+subsection_547: 
+  date_code_check: "0"
+  name: Format
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "339"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
+  id: "547"
+  note: Refer to PCB Design/Document Control Release Package Standard
+subsection_536: 
+  date_code_check: "0"
+  name: ""
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "333"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "536"
+  note: Refer to Teradyne DFM guideline for additional information (DFM-303-00)
+subsection_548: 
+  date_code_check: "0"
+  name: Mechanical Items Shown
+  full_review: "1"
+  sort_order: "2"
+  checklist_id: "101"
+  section_id: "339"
+  dot_rev_check: "0"
+  url: ""
+  id: "548"
+  note: ""
+subsection_537: 
+  date_code_check: "0"
+  name: ""
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "334"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "537"
+  note: Refer to Teradyne DFM guideline for additional information (DFM-303-00)
+subsection_526: 
+  date_code_check: "1"
+  name: ""
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "330"
+  dot_rev_check: "1"
+  url: ""
+  id: "526"
+  note: ""
+subsection_550: 
+  date_code_check: "0"
+  name: Format
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "340"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
+  id: "550"
+  note: Refer to PCB Design/Document Control Release Package Standard
+subsection_549: 
+  date_code_check: "0"
+  name: Testpoints
+  full_review: "1"
+  sort_order: "3"
+  checklist_id: "101"
+  section_id: "339"
+  dot_rev_check: "0"
+  url: ""
+  id: "549"
+  note: testpoint symbols are driven from the schematic
+subsection_538: 
+  date_code_check: "0"
+  name: ""
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "335"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "538"
+  note: Refer to Teradyne DFM guideline for additional information
+subsection_527: 
+  date_code_check: "1"
+  name: Format
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: etg.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
+  id: "527"
+  note: Refer to PCB Design/Document Control Release Package Standard
+subsection_551: 
+  date_code_check: "1"
+  name: ""
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "341"
+  dot_rev_check: "1"
+  url: ""
+  id: "551"
+  note: ""
+subsection_540: 
+  date_code_check: "0"
+  name: Etch
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "540"
+  note: ""
+subsection_539: 
+  date_code_check: "0"
+  name: ""
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "336"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "539"
+  note: Refer to Teradyne DFM guideline for additional information
+subsection_528: 
+  date_code_check: "1"
+  name: Documentation List
+  full_review: "1"
+  sort_order: "2"
+  checklist_id: "101"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ate-es.teradyne.com/PCB/Layout/DataPrep/PCB DESIGN_DOC CONTROL_CHECKLIST.doc
+  id: "528"
+  note: Refer to PCB Design/Document Control Release Package Standard
+subsection_552: 
+  date_code_check: "1"
+  name: ""
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "342"
+  dot_rev_check: "1"
+  url: ""
+  id: "552"
+  note: ""
+subsection_541: 
+  date_code_check: "0"
+  name: Assembly Text
+  full_review: "1"
+  sort_order: "2"
+  checklist_id: "101"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "541"
+  note: ""
+subsection_530: 
+  date_code_check: "0"
+  name: Sheet 2
+  full_review: "1"
+  sort_order: "4"
+  checklist_id: "101"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ate-es.teradyne.com/PCB/Layout/DataPrep/fabdrawing_right.shtml
+  id: "530"
+  note: Refer to Fabrication Drawing Standard
+subsection_529: 
+  date_code_check: "0"
+  name: Notes
+  full_review: "1"
+  sort_order: "3"
+  checklist_id: "101"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ate-es.teradyne.com/PCB/Layout/DataPrep/fabdrawing_right.shtml
+  id: "529"
+  note: Refer to Fabrication Drawing Standard
+subsection_553: 
+  date_code_check: "1"
+  name: ""
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "343"
+  dot_rev_check: "1"
+  url: ""
+  id: "553"
+  note: ""
+subsection_542: 
+  date_code_check: "0"
+  name: Silkscreen
+  full_review: "1"
+  sort_order: "3"
+  checklist_id: "101"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "542"
+  note: Minimum text height to be per Teradyne DFM Guidelines
+subsection_531: 
+  date_code_check: "0"
+  name: Stackup
+  full_review: "1"
+  sort_order: "5"
+  checklist_id: "101"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ate-es.teradyne.com/PCB/Layout/DataPrep/fabdrawing_right.shtml
+  id: "531"
+  note: Refer to Fabrication Drawing Standard and DFM Guidelines
+subsection_543: 
+  date_code_check: "0"
+  name: gnbms.lst
+  full_review: "1"
+  sort_order: "3"
+  checklist_id: "101"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: ""
+  id: "543"
+  note: ""
+subsection_532: 
+  date_code_check: "0"
+  name: Impedance Chart
+  full_review: "1"
+  sort_order: "6"
+  checklist_id: "101"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/layout/fab/fabdrawing_right.html
+  id: "532"
+  note: Refer to Fabrication Drawing Standard
+subsection_555: 
+  date_code_check: "1"
+  name: General
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "344"
+  dot_rev_check: "1"
+  url: ""
+  id: "555"
+  note: ""
+subsection_544: 
+  date_code_check: "0"
+  name: pl_com.dtg
+  full_review: "1"
+  sort_order: "2"
+  checklist_id: "101"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
+  id: "544"
+  note: Refer to PCB Design/Document Control Release Package Standard
+subsection_533: 
+  date_code_check: "0"
+  name: Hole Schedule
+  full_review: "1"
+  sort_order: "7"
+  checklist_id: "101"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/layout/fab/fabdrawing_right.html
+  id: "533"
+  note: Refer to Fabrication Drawing Standard
+subsection_556: 
+  date_code_check: "0"
+  name: Outline
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: ""
+  id: "556"
+  note: ""
+subsection_545: 
+  date_code_check: "0"
+  name: cvr_00.mkpl
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
+  id: "545"
+  note: Refer to PCB Design/Document Control Release Package Standard
+subsection_534: 
+  date_code_check: "0"
+  name: Part Placement
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "534"
+  note: Refer to Teradyne DFM guideline for additional information

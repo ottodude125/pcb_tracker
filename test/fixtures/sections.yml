@@ -79,3 +79,165 @@ section_20_001:
   date_code_check: 1
   dot_rev_check: 1
   full_review: 1
+  
+section_337: 
+  date_code_check: "0"
+  background_color: FF97FD
+  name: Nomenclature
+  full_review: "1"
+  sort_order: "9"
+  checklist_id: "101"
+  dot_rev_check: "0"
+  url: ""
+  id: "337"
+section_338: 
+  date_code_check: "0"
+  background_color: E935F7
+  name: BOM
+  full_review: "1"
+  sort_order: "10"
+  checklist_id: "101"
+  dot_rev_check: "0"
+  url: ""
+  id: "338"
+section_339: 
+  date_code_check: "0"
+  background_color: 1DCF13
+  name: Assembly Drawing Check
+  full_review: "1"
+  sort_order: "11"
+  checklist_id: "101"
+  dot_rev_check: "0"
+  url: ""
+  id: "339"
+section_340: 
+  date_code_check: "0"
+  background_color: 2BA4E7
+  name: Schematic Drawing Check
+  full_review: "1"
+  sort_order: "12"
+  checklist_id: "101"
+  dot_rev_check: "0"
+  url: ""
+  id: "340"
+section_341: 
+  date_code_check: "1"
+  background_color: 2DCF8F
+  name: PCB Design Database Validation Audit
+  full_review: "1"
+  sort_order: "14"
+  checklist_id: "101"
+  dot_rev_check: "1"
+  url: ""
+  id: "341"
+section_330: 
+  date_code_check: "1"
+  background_color: CF572D
+  name: Design Report Check
+  full_review: "1"
+  sort_order: "13"
+  checklist_id: "101"
+  dot_rev_check: "1"
+  url: ""
+  id: "330"
+section_342: 
+  date_code_check: "1"
+  background_color: 2DCF8F
+  name: README
+  full_review: "1"
+  sort_order: "15"
+  checklist_id: "101"
+  dot_rev_check: "1"
+  url: etg.teradyne.com/boarddev/mfggate/bareboardTech/Readme
+  id: "342"
+section_331: 
+  date_code_check: "1"
+  background_color: B7B7B7
+  name: Fabrication Drawing Check
+  full_review: "1"
+  sort_order: "8"
+  checklist_id: "101"
+  dot_rev_check: "1"
+  url: ""
+  id: "331"
+section_343: 
+  date_code_check: "1"
+  background_color: 2DCF8F
+  name: PCB Design Directory
+  full_review: "1"
+  sort_order: "16"
+  checklist_id: "101"
+  dot_rev_check: "1"
+  url: ""
+  id: "343"
+section_332: 
+  date_code_check: "0"
+  background_color: FFFF77
+  name: Placement
+  full_review: "1"
+  sort_order: "3"
+  checklist_id: "101"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "332"
+section_344: 
+  date_code_check: "1"
+  background_color: A8E78F
+  name: Board Preparation
+  full_review: "1"
+  sort_order: "1"
+  checklist_id: "101"
+  dot_rev_check: "1"
+  url: ""
+  id: "344"
+section_333: 
+  date_code_check: "0"
+  background_color: 95EFE5
+  name: Design Constraints
+  full_review: "1"
+  sort_order: "4"
+  checklist_id: "101"
+  dot_rev_check: "0"
+  url: ""
+  id: "333"
+section_345: 
+  date_code_check: "0"
+  background_color: A8a78F
+  name: Outline Drawing and Allegro Board Symbol
+  full_review: "1"
+  sort_order: "2"
+  checklist_id: "101"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/
+  id: "345"
+section_334: 
+  date_code_check: "0"
+  background_color: 95EFE5
+  name: Vias
+  full_review: "1"
+  sort_order: "5"
+  checklist_id: "101"
+  dot_rev_check: "0"
+  url: ""
+  id: "334"
+section_335: 
+  date_code_check: "0"
+  background_color: F78e54
+  name: Route - Signal
+  full_review: "1"
+  sort_order: "6"
+  checklist_id: "101"
+  dot_rev_check: "0"
+  url: ""
+  id: "335"
+section_336: 
+  date_code_check: "0"
+  background_color: F78E54
+  name: Route - Planes
+  full_review: "1"
+  sort_order: "7"
+  checklist_id: "101"
+  dot_rev_check: "0"
+  url: ""
+  id: "336"
+  

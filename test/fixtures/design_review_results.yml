@@ -5,84 +5,98 @@ mx234a_pre_artwork_ce_dft:
   reviewer_id:      7101
   role_id:          7
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_pre_artwork_dfm:
   id:               2
   design_review_id: 1
   reviewer_id:      7150
   role_id:          8
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_pre_artwork_hw:
   id:               3
   design_review_id: 1
   reviewer_id:      7001
   role_id:          5
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_pre_artwork_lib:
   id:               4
   design_review_id: 1
   reviewer_id:      7400
   role_id:          15
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_pre_artwork_mech:
   id:               5
   design_review_id: 1
   reviewer_id:      7251
   role_id:          10
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_pre_artwork_mech_mfg:
   id:               6
   design_review_id: 1
   reviewer_id:      7300
   role_id:          11
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_pre_artwork_pcb_ig:
   id:               7
   design_review_id: 1
   reviewer_id:      4000
   role_id:          14
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_pre_artwork_pcb_mech:
   id:               8
   design_review_id: 1
   reviewer_id:      7451
   role_id:          16
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_pre_artwork_plan:
   id:               9
   design_review_id: 1
   reviewer_id:      7650
   role_id:          13
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_pre_artwork_slm_bom:
   id:               10
   design_review_id: 1
   reviewer_id:      7500
   role_id:          17
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_pre_artwork_pcb_design:
   id:               100
   design_review_id: 1
   reviewer_id:      4001
   role_id:          12
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_pre_artwork_slm_v:
   id:               11
   design_review_id: 1
   reviewer_id:      7550
   role_id:          18
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_pre_artwork_tde:
   id:               12
   design_review_id: 1
   reviewer_id:      7200
   role_id:          9
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_pre_artwork_valor:
   id:               13
   design_review_id: 1
   reviewer_id:      7050
   role_id:          6
   result:           None
+  reviewed_on:      2006-09-15 09:33:57
 mx234a_placement_ce_dft:
   id:               14
   design_review_id: 2
