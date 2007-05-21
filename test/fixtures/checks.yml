@@ -530,3 +530,2209 @@ check_10_014:
   dot_rev_check: 0
   sort_order: 3
   check_type: designer_auditor
+
+check_2854: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Title Block
+  subsection_id: "550"
+  section_id: "340"
+  dot_rev_check: "0"
+  url: ""
+  id: "2854"
+  check_type: designer_auditor
+  check: Sheet 1
+check_2825: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: MADE IN USA and Part Number
+  subsection_id: "540"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "2825"
+  check_type: designer_auditor
+  check: Ensure "MADE IN USA" and board part number (XXX-XXX-A0) are in etch on secondary side of the board.
+check_2740: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "15"
+  title: Pad Suppression
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2740"
+  check_type: designer_auditor
+  check: Ensure at least one box is checked and that artwork matches selection
+check_2799: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: ""
+  subsection_id: "535"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: ""
+  id: "2799"
+  check_type: designer_only
+  check: ICT not required
+check_2712: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "1"
+  title: DBDOCTOR Log
+  subsection_id: "526"
+  section_id: "330"
+  dot_rev_check: "1"
+  url: ""
+  id: "2712"
+  check_type: designer_auditor
+  check: Clean and board not corrupted
+check_2910: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Plated Holes
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: ""
+  id: "2910"
+  check_type: designer_auditor
+  check: "Plated holes (example: coldplate holes) are placed per the Outline Drawing. Keepouts are correct."
+check_2855: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Title Block
+  subsection_id: "550"
+  section_id: "340"
+  dot_rev_check: "0"
+  url: ""
+  id: "2855"
+  check_type: designer_auditor
+  check: Continuation sheets
+check_2826: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Secondary Side Designation
+  subsection_id: "540"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "2826"
+  check_type: designer_auditor
+  check: "\"SECONDARY\" in etch on secondary side of board"
+check_2741: 
+  date_code_check: "0"
+  full_review: "0"
+  sort_order: "16"
+  title: Dot Rev
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ""
+  id: "2741"
+  check_type: designer_auditor
+  check: "Check the appropriate box in Note 2 and update text (example: \"from 959-123-A0 REV A to 959-123-A1\")"
+check_2713: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: DRC Report
+  subsection_id: "526"
+  section_id: "330"
+  dot_rev_check: "0"
+  url: ""
+  id: "2713"
+  check_type: designer_auditor
+  check: All drcs reported in README.txt file
+check_2856: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Revision Block
+  subsection_id: "550"
+  section_id: "340"
+  dot_rev_check: "0"
+  url: ""
+  id: "2856"
+  check_type: designer_auditor
+  check: Sheet 1, Release number correct and date code correct
+check_2827: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Reference Designators
+  subsection_id: "541"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "2827"
+  check_type: designer_auditor
+  check: All rotated correctly
+check_2742: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Primary Side
+  subsection_id: "530"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2742"
+  check_type: designer_auditor
+  check: "\"PRIMARY SIDE\" nomenclature shown below image"
+check_2714: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Summary Report
+  subsection_id: "526"
+  section_id: "330"
+  dot_rev_check: "0"
+  url: ""
+  id: "2714"
+  check_type: designer_auditor
+  check: All dangling lines reported in README.txt file
+check_2770: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "7"
+  title: Impedance Tolerance
+  subsection_id: "532"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2770"
+  check_type: designer_auditor
+  check: Tolerance entered in percentage
+check_2885: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "1"
+  title: Fabrication Issue Report (FIRs)
+  subsection_id: "555"
+  section_id: "344"
+  dot_rev_check: "1"
+  url: ""
+  id: "2885"
+  check_type: designer_only
+  check: If board is a rev or make from, all previous FIRs addressed
+check_2857: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Revision Block
+  subsection_id: "550"
+  section_id: "340"
+  dot_rev_check: "0"
+  url: ""
+  id: "2857"
+  check_type: designer_auditor
+  check: Continuation sheets
+check_2828: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Pin 1 Indicators
+  subsection_id: "541"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "2828"
+  check_type: designer_auditor
+  check: All clear and rotated correctly
+check_2771: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "8"
+  title: Impedance Style
+  subsection_id: "532"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2771"
+  check_type: designer_auditor
+  check: SINGLE, EDGE COUPLED OR BROADSIDE DIFF PAIR
+check_2743: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Tooling Holes
+  subsection_id: "530"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2743"
+  check_type: designer_auditor
+  check: Tooling holes present, have a drill figure inside board outline, cleared .100
+check_2886: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "2"
+  title: README.txt
+  subsection_id: "555"
+  section_id: "344"
+  dot_rev_check: "1"
+  url: ""
+  id: "2886"
+  check_type: designer_only
+  check: If board is a rev or make from, all issues in README.txt addressed
+check_2829: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Reference Designators
+  subsection_id: "541"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "2829"
+  check_type: designer_auditor
+  check: All shown and readable
+check_2715: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "1"
+  title: Title Block
+  subsection_id: "527"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ""
+  id: "2715"
+  check_type: designer_auditor
+  check: Sheet 1
+check_2772: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Line Width (Mils) - Edge Coupled Diff Pair
+  subsection_id: "532"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2772"
+  check_type: designer_auditor
+  check: Indicate line/space/line
+check_2744: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Edge View
+  subsection_id: "530"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2744"
+  check_type: designer_auditor
+  check: Edge view present
+check_2887: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "3"
+  title: Tracker
+  subsection_id: "555"
+  section_id: "344"
+  dot_rev_check: "1"
+  url: ""
+  id: "2887"
+  check_type: designer_only
+  check: All attachments and engineering instructions addressed
+check_2858: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Padstacks Purged
+  subsection_id: "551"
+  section_id: "341"
+  dot_rev_check: "0"
+  url: ""
+  id: "2858"
+  check_type: designer_auditor
+  check: All unused padstacks to be purged.
+check_2716: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "2"
+  title: Title Block
+  subsection_id: "527"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ""
+  id: "2716"
+  check_type: designer_auditor
+  check: Continuation sheets
+check_2773: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "6"
+  title: Impedance Value
+  subsection_id: "532"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2773"
+  check_type: designer_auditor
+  check: Entered in OHMS
+check_2745: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: 0,0 Location
+  subsection_id: "530"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2745"
+  check_type: designer_auditor
+  check: 0,0 location shown
+check_2800: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: ""
+  subsection_id: "535"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: ""
+  id: "2800"
+  check_type: designer_only
+  check: "Double-sided clam shell "
+check_2888: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "4"
+  title: Symbol and Padstack Update
+  subsection_id: "555"
+  section_id: "344"
+  dot_rev_check: "1"
+  url: ""
+  id: "2888"
+  check_type: designer_only
+  check: If board is a rev or make from, were refreshes addressed
+check_2859: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Valor Review
+  subsection_id: "551"
+  section_id: "341"
+  dot_rev_check: "1"
+  url: etg.teradyne.com/boarddev/mfggate/bareboardTech/Valor/
+  id: "2859"
+  check_type: designer_auditor
+  check: ""
+check_2717: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "3"
+  title: Default Angle
+  subsection_id: "527"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ""
+  id: "2717"
+  check_type: designer_auditor
+  check: "Tolerance in title block +/- 0.5 degrees. All chamfers and score line angles should be called out on the face of the drawing as +/- 5 degrees. "
+check_2774: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Thru Hole
+  subsection_id: "533"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2774"
+  check_type: designer_auditor
+  check: Legend and drill data exists for thru-hole features
+check_2746: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "5"
+  title: Chamfers and Fillets
+  subsection_id: "530"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2746"
+  check_type: designer_auditor
+  check: Chamfers & fillets dimensioned
+check_2801: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: ""
+  subsection_id: "535"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: ""
+  id: "2801"
+  check_type: designer_only
+  check: No test attribute property added to database
+check_2889: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: File Name
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#naming
+  id: "2889"
+  check_type: designer_only
+  check: "Outline Symbol file name matches Outline Drawing number and rev, i.e. ol39366601c_100.bsm per \"Outline Naming Conventions\" "
+check_2830: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Discretes
+  subsection_id: "542"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "2830"
+  check_type: designer_auditor
+  check: Reference designators not allowed
+check_2718: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "4"
+  title: Revision Block
+  subsection_id: "527"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ""
+  id: "2718"
+  check_type: designer_auditor
+  check: Sheet 1, Release number and date code correct
+check_2775: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Blind and Buried Vias
+  subsection_id: "533"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2775"
+  check_type: designer_auditor
+  check: Legend and drill data exists for blind/buried vias
+check_2747: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "6"
+  title: Details
+  subsection_id: "530"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2747"
+  check_type: designer_auditor
+  check: Required details exist and referenced
+check_2802: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: ""
+  subsection_id: "535"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: ""
+  id: "2802"
+  check_type: designer_only
+  check: No Probe keep-out areas defined
+check_2831: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Rotation and Clarity
+  subsection_id: "542"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "2831"
+  check_type: designer_auditor
+  check: Reference designators, pin 1 markings and polarity markings are correctly rotated, clear & readable
+check_2719: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "5"
+  title: Revision Block
+  subsection_id: "527"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ""
+  id: "2719"
+  check_type: designer_auditor
+  check: Continuation sheets
+check_2776: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Blind and Buried Vias
+  subsection_id: "533"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2776"
+  check_type: designer_auditor
+  check: Separate fabrication drawing sheet for each. From Layer - To Layer is referenced
+check_2860: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "3"
+  title: ODB++ File
+  subsection_id: "551"
+  section_id: "341"
+  dot_rev_check: "1"
+  url: etg.teradyne.com/boarddev/mfggate/bareboardTech/Valor/index.php?file=odbbrdimport.html
+  id: "2860"
+  check_type: designer_auditor
+  check: Exists
+check_2832: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Cable Tie-Downs
+  subsection_id: "542"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "2832"
+  check_type: designer_auditor
+  check: Clearly shown
+check_2777: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Drill Figures
+  subsection_id: "533"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2777"
+  check_type: designer_auditor
+  check: All drill figures legible and no duplicates
+check_2748: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "7"
+  title: Slots and Cutouts
+  subsection_id: "530"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2748"
+  check_type: designer_auditor
+  check: Detailed if necessary
+check_2803: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "5"
+  title: ""
+  subsection_id: "535"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: ""
+  id: "2803"
+  check_type: designer_only
+  check: Single-sided test fixture
+check_2861: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "1"
+  title: Title Block
+  subsection_id: "552"
+  section_id: "342"
+  dot_rev_check: "1"
+  url: ""
+  id: "2861"
+  check_type: designer_auditor
+  check: Completed correctly
+check_2833: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Labels
+  subsection_id: "542"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "2833"
+  check_type: designer_auditor
+  check: Bar code, Assembly, Static & Shock labels designated on primary side silkscreen
+check_2778: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "5"
+  title: Blind (laser) Hole/Drill Sizes
+  subsection_id: "533"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/layout/fab/laservia.pdf
+  id: "2778"
+  check_type: designer_auditor
+  check: Drill size is same as finished hole
+check_2749: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "8"
+  title: Dimensions
+  subsection_id: "530"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2749"
+  check_type: designer_auditor
+  check: Dimensions are per mechanical outline drawing
+check_2804: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: ""
+  subsection_id: "536"
+  section_id: "333"
+  dot_rev_check: "0"
+  url: ""
+  id: "2804"
+  check_type: yes_no
+  check: All constraints embedded in design
+check_2890: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Parameters
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#begin
+  id: "2890"
+  check_type: designer_only
+  check: Check status, user units mils, accuracy 2
+check_2862: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Items
+  subsection_id: "552"
+  section_id: "342"
+  dot_rev_check: "0"
+  url: ""
+  id: "2862"
+  check_type: designer_auditor
+  check: |-
+    All items addressed	
+
+    (i.e. opens, stubs and dangles listed)
+check_2834: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "5"
+  title: Fiducials
+  subsection_id: "542"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "2834"
+  check_type: designer_auditor
+  check: Clear of silkscreen & soldermask
+check_2720: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "1"
+  title: Part Number Suffix's
+  subsection_id: "528"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ""
+  id: "2720"
+  check_type: designer_auditor
+  check: All part number suffix's referenced
+check_2779: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "6"
+  title: Quantities
+  subsection_id: "533"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/mfggate/bareboardTech/Valor/index.php?file=drillcheck.html
+  id: "2779"
+  check_type: designer_auditor
+  check: Hole/drill quantities match Drill Tool Manager in Valor
+check_2805: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: ""
+  subsection_id: "536"
+  section_id: "333"
+  dot_rev_check: "0"
+  url: ""
+  id: "2805"
+  check_type: yes_no
+  check: If design constraints are not fully embedded is there an explanation in the README.txt file
+check_2891: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Parameters
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=mastertext.html
+  id: "2891"
+  check_type: designer_only
+  check: Check text parameters, per "Text Guidelines for master_*.brd and master_outline_*.dra.
+check_2863: 
+  date_code_check: "1"
+  full_review: "0"
+  sort_order: "3"
+  title: Dot Rev/Date Code
+  subsection_id: "552"
+  section_id: "342"
+  dot_rev_check: "1"
+  url: ""
+  id: "2863"
+  check_type: designer_auditor
+  check: |-
+    Add Dot Rev or Date Code change in appropriate section	
+
+    
+
+    (Add Dot Rev or Date Code change in appropriate section)
+check_2835: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "6"
+  title: Soldermask
+  subsection_id: "542"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "2835"
+  check_type: designer_auditor
+  check: All Silkscreen is over soldermask
+check_2721: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "2"
+  title: Outline Drawing
+  subsection_id: "528"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ""
+  id: "2721"
+  check_type: designer_auditor
+  check: "Drawing number referenced. Revision is the released Outline Dimension Drawing revision for the design. "
+check_2806: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Default Via
+  subsection_id: "537"
+  section_id: "334"
+  dot_rev_check: "0"
+  url: ""
+  id: "2806"
+  check_type: yes_no
+  check: Appropriate thru hole via selected
+check_2892: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Board Geometry/Outline
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#outline
+  id: "2892"
+  check_type: designer_only
+  check: Compare all outline shape lengths and geometries to outline drawing. Width 0 mils, per "Creating the Outline"
+check_2864: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "1"
+  title: Clean
+  subsection_id: "553"
+  section_id: "343"
+  dot_rev_check: "1"
+  url: ""
+  id: "2864"
+  check_type: designer_auditor
+  check: All files that are not needed are deleted. The /public directories have the correct files
+check_2807: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Micro Via Level 1
+  subsection_id: "537"
+  section_id: "334"
+  dot_rev_check: "0"
+  url: ""
+  id: "2807"
+  check_type: yes_no
+  check: Appropriate via selected
+check_2750: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "9"
+  title: Tolerances
+  subsection_id: "530"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2750"
+  check_type: designer_auditor
+  check: Tolerances identified
+check_2722: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "3"
+  title: N/A Artwork Items
+  subsection_id: "528"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ""
+  id: "2722"
+  check_type: designer_auditor
+  check: All Artwork Items that do not apply have the Part Number Suffix "N/A"
+check_2893: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "5"
+  title: Board Geometry/Outline
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: ""
+  id: "2893"
+  check_type: designer_only
+  check: Check all dimensions on all features per mechanical outline and ensure that dimensions are on the BOARD GEOMETRY/DIMENSION subclass
+check_2836: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: No New Use
+  subsection_id: "543"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: ""
+  id: "2836"
+  check_type: designer_auditor
+  check: Issues resolved
+check_2808: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "5"
+  title: Blind Via (Mechanical; CDD, Sequential Lam)
+  subsection_id: "537"
+  section_id: "334"
+  dot_rev_check: "0"
+  url: ""
+  id: "2808"
+  check_type: yes_no
+  check: Appropriate via selected. Pads not suppressed on from and to layers
+check_2751: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "10"
+  title: Breakaways
+  subsection_id: "530"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2751"
+  check_type: designer_auditor
+  check: Breakaways identified / clearances (micro drills)
+check_2723: 
+  date_code_check: "0"
+  full_review: "0"
+  sort_order: "4"
+  title: Dot Rev
+  subsection_id: "528"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ""
+  id: "2723"
+  check_type: designer_auditor
+  check: Change only the layers that were revised to the new part number suffix (example:A0 to A1)
+check_2894: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "6"
+  title: Board Geometry/Outline
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=mastertext.html
+  id: "2894"
+  check_type: designer_only
+  check: Check dimension and note text heights, per "Text Requirements"
+check_2837: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Description Warnings
+  subsection_id: "543"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: ""
+  id: "2837"
+  check_type: designer_auditor
+  check: All description issues resolved
+check_2780: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "7"
+  title: Filled Vias
+  subsection_id: "533"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2780"
+  check_type: designer_auditor
+  check: Check filled vias are shown & remove +/- tolerance; leave blank; filled via diameters cannot be inspected by pin gauges
+check_2809: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "6"
+  title: Buried Via
+  subsection_id: "537"
+  section_id: "334"
+  dot_rev_check: "0"
+  url: ""
+  id: "2809"
+  check_type: yes_no
+  check: Appropriate via selected. Pads not suppressed on from and to layers.
+check_2752: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "11"
+  title: Scores
+  subsection_id: "530"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2752"
+  check_type: designer_auditor
+  check: Scores identified / clearances (Clearance .040 min)
+check_2724: 
+  date_code_check: "0"
+  full_review: "0"
+  sort_order: "5"
+  title: Dot Rev (Etch Cut)
+  subsection_id: "528"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ""
+  id: "2724"
+  check_type: designer_auditor
+  check: Add copper layers to Documentation List and reference new part number suffix
+check_2895: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "7"
+  title: Board Geometry/Outline
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#slots
+  id: "2895"
+  check_type: designer_only
+  check: Slots are drawn and dimensioned, per "Slots and Cutouts" and "Figure 1"
+check_2838: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Bare Board Part Number
+  subsection_id: "544"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: ""
+  id: "2838"
+  check_type: designer_auditor
+  check: Shown correctly with XREF 1
+check_2781: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "8"
+  title: Countersinks and Counterbores
+  subsection_id: "533"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2781"
+  check_type: designer_auditor
+  check: Noted
+check_2753: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "12"
+  title: Datum's
+  subsection_id: "530"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2753"
+  check_type: designer_auditor
+  check: A, B & C present
+check_2725: 
+  date_code_check: "1"
+  full_review: "1"
+  sort_order: "6"
+  title: XX Designations
+  subsection_id: "528"
+  section_id: "331"
+  dot_rev_check: "1"
+  url: ""
+  id: "2725"
+  check_type: designer_auditor
+  check: All XX designations for Artwork Items completed (example GMASKXX should be changed to GMASK12 for a 12 layer board)
+check_2896: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "8"
+  title: Board Geometry/Outline
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: ""
+  id: "2896"
+  check_type: designer_only
+  check: Image is placed properly to ensure space for Hole Schedule on Fabrication Drawing.
+check_2839: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Outline Drawing Number
+  subsection_id: "544"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: ""
+  id: "2839"
+  check_type: designer_auditor
+  check: Referenced properly
+check_2782: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "9"
+  title: Legend
+  subsection_id: "533"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2782"
+  check_type: designer_auditor
+  check: Legend is in inches
+check_2754: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "13"
+  title: Countersinks and Counterbores
+  subsection_id: "530"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2754"
+  check_type: designer_auditor
+  check: |
+    Detailed if necessary. Secondary drills, tolerance +/-.015, geometric tolerance +/-.010.
+
+
+check_2897: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "9"
+  title: Location Of All Holes
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: ""
+  id: "2897"
+  check_type: designer_only
+  check: Show Element > pins on all holes. Check padstack, padstack location and keepouts
+check_2783: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "10"
+  title: Legend Title
+  subsection_id: "533"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2783"
+  check_type: designer_auditor
+  check: Legend title is "TERADYNE HOLE SCHEDULE"
+check_2755: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "5"
+  title: Maximum Thickness
+  subsection_id: "531"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/ateopsdocuments/Operating%20Procedures/Design%20For%20Guidelines/Design%20For%20Manufacturability%20(DFM)/DFM-303-00%20Printed%20Circuit%20Board%20Fabrication%20Guidelines.pdf
+  id: "2755"
+  check_type: designer_auditor
+  check: Correct
+check_2810: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Micro Via Level 2
+  subsection_id: "537"
+  section_id: "334"
+  dot_rev_check: "0"
+  url: ""
+  id: "2810"
+  check_type: yes_no
+  check: Appropriate via selected. No connections on center layer.
+check_2726: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Mandatory Notes
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2726"
+  check_type: designer_auditor
+  check: All used
+check_2898: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "10"
+  title: Location Of All Holes
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#tooling
+  id: "2898"
+  check_type: designer_only
+  check: "Tooling holes, countersunk holes are shown, per \xE2\x80\x9CTooling Holes, Countersinks and Counterbores\xE2\x80\x9D"
+check_2784: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "11"
+  title: Stub Drilled Vias
+  subsection_id: "533"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2784"
+  check_type: designer_auditor
+  check: Indicated with appropriate optional note used and referenced
+check_2756: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Nominal Thickness
+  subsection_id: "531"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/ateopsdocuments/Operating%20Procedures/Design%20For%20Guidelines/Design%20For%20Manufacturability%20(DFM)/DFM-303-00%20Printed%20Circuit%20Board%20Fabrication%20Guidelines.pdf
+  id: "2756"
+  check_type: designer_auditor
+  check: Correct (tolerance +/- 10%)
+check_2811: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "7"
+  title: Control Depth Via (CDD)
+  subsection_id: "537"
+  section_id: "334"
+  dot_rev_check: "0"
+  url: ""
+  id: "2811"
+  check_type: yes_no
+  check: Appropriate via selected. Pads not suppressed on from and to layers.
+check_2727: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Mandatory Note Options
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2727"
+  check_type: designer_auditor
+  check: Requirements in mandatory notes with options are indicated
+check_2899: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "11"
+  title: Location Of All Holes
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#outline
+  id: "2899"
+  check_type: designer_only
+  check: "0/0 location at lower left hand tooling hole, per \xE2\x80\x9CCreating an Outline\xE2\x80\x9D"
+check_2840: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Mechanical Parts
+  subsection_id: "544"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: ""
+  id: "2840"
+  check_type: designer_auditor
+  check: All mechanical parts that are on the Mechanical Outline Drawing are in the pl_com.dtg file with appropriate XREFs
+check_2757: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Nomenclature
+  subsection_id: "531"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2757"
+  check_type: designer_auditor
+  check: Copper layers, silkscreen, soldermask; order and naming convention correct
+check_2812: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Micro Vias - Unconnected (Dummy) pads
+  subsection_id: "537"
+  section_id: "334"
+  dot_rev_check: "0"
+  url: ""
+  id: "2812"
+  check_type: yes_no
+  check: If used, pads not suppressed. Do not ignore "Extra Holes" error in Valor Drill Checks.
+check_2728: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Optional Notes
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2728"
+  check_type: designer_auditor
+  check: Check for optional notes that should be used
+check_2785: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "12"
+  title: Hole Tolerances
+  subsection_id: "533"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2785"
+  check_type: designer_auditor
+  check: Exist and are per DFM Guidelines. If the Mechanical Outline Drawing allows for a looser tolerance the looser tolerance is indicated.
+check_2841: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Descriptions
+  subsection_id: "544"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: ""
+  id: "2841"
+  check_type: designer_auditor
+  check: No descriptions entered except for bare board
+check_2758: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Balanced Layers
+  subsection_id: "531"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2758"
+  check_type: designer_auditor
+  check: |
+    Prepreg and core materials balanced. Prepreg and core material thicknesses balanced. Copper weights balanced. Signal and plane layers balanced.
+
+
+check_2813: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: BGAs
+  subsection_id: "538"
+  section_id: "335"
+  dot_rev_check: "0"
+  url: ""
+  id: "2813"
+  check_type: designer_auditor
+  check: Do not route on primary side except to vias on outer perimeter
+check_2729: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Optional Notes
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2729"
+  check_type: designer_auditor
+  check: Requirements in optional notes with sub-options are indicated
+check_2786: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "13"
+  title: Press Fit Holes
+  subsection_id: "533"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2786"
+  check_type: designer_auditor
+  check: Press Fit Component holes indicated with note number in NOTES column. Tolerance removed/left blank.
+check_2842: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Approvals
+  subsection_id: "545"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: ""
+  id: "2842"
+  check_type: designer_auditor
+  check: Filled in properly
+check_2787: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Mechanical Parts
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: ""
+  id: "2787"
+  check_type: designer_auditor
+  check: Placed per outline drawing
+check_2843: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Release and Change Order History
+  subsection_id: "545"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: ""
+  id: "2843"
+  check_type: designer_auditor
+  check: Filled in properly
+check_2759: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Aspect Ratio
+  subsection_id: "531"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/ateopsdocuments/Operating%20Procedures/Design%20For%20Guidelines/Design%20For%20Manufacturability%20(DFM)/DFM-303-00%20Printed%20Circuit%20Board%20Fabrication%20Guidelines.pdf
+  id: "2759"
+  check_type: designer_auditor
+  check: Correct per DFM Guidelines
+check_2814: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Fineline
+  subsection_id: "538"
+  section_id: "335"
+  dot_rev_check: "0"
+  url: ""
+  id: "2814"
+  check_type: designer_auditor
+  check: No fineline traces on 2 oz copper layers
+check_2788: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Fixed Components
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: ""
+  id: "2788"
+  check_type: designer_auditor
+  check: Placed and locked by attaching the FIXED property to each refdes
+check_2844: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Electrical Parts
+  subsection_id: "546"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: ""
+  id: "2844"
+  check_type: designer_auditor
+  check: Check that all electrical parts, quantites and reference designators appear correctly. Especially Connectors and parts that have been added to the pl_com.dtg file
+check_2815: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: BGAs
+  subsection_id: "538"
+  section_id: "335"
+  dot_rev_check: "0"
+  url: ""
+  id: "2815"
+  check_type: designer_auditor
+  check: Do not route directly from ball pads
+check_2730: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "5"
+  title: Numbering Notes
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2730"
+  check_type: designer_auditor
+  check: Check numbers. Notes are numbered sequentially from top to bottom, left to right
+check_2789: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "5"
+  title: BGAs
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: ""
+  id: "2789"
+  check_type: designer_auditor
+  check: All BGAs are on primary side
+check_2900: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "12"
+  title: Marker Locations
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#pin1
+  id: "2900"
+  check_type: designer_only
+  check: "Check location of markers for connector reference points, per \xE2\x80\x9CPin 1 Locations\xE2\x80\x9D"
+check_2845: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Mechanical Parts
+  subsection_id: "546"
+  section_id: "338"
+  dot_rev_check: "0"
+  url: ""
+  id: "2845"
+  check_type: designer_auditor
+  check: Check that all mechanical parts appear correctly with the appropriate XREFs.
+check_2816: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Islands (Connected)
+  subsection_id: "539"
+  section_id: "336"
+  dot_rev_check: "0"
+  url: ""
+  id: "2816"
+  check_type: designer_auditor
+  check: If connected islands exist, "Suppress Shape Fill (-S)" option used
+check_2731: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "6"
+  title: Boxed Notes
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2731"
+  check_type: designer_auditor
+  check: Check Note references. All notes that are boxed should show up on the face of the drawing
+check_2901: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "13"
+  title: Route Keepin
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#keepins
+  id: "2901"
+  check_type: designer_only
+  check: Check to mechanical outline drawing and/or PC Design Standards
+check_2846: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Title Block
+  subsection_id: "547"
+  section_id: "339"
+  dot_rev_check: "0"
+  url: ""
+  id: "2846"
+  check_type: designer_auditor
+  check: Sheet 1
+check_2817: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Suppress Shape Fill (-S) Option
+  subsection_id: "539"
+  section_id: "336"
+  dot_rev_check: "0"
+  url: ""
+  id: "2817"
+  check_type: designer_auditor
+  check: anti-etch subclasses included in the artwork layer
+check_2760: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "6"
+  title: Copper Thickness
+  subsection_id: "531"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2760"
+  check_type: designer_auditor
+  check: Identified in ounces (OZ).
+check_2732: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "7"
+  title: Material
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2732"
+  check_type: designer_auditor
+  check: |
+    Ensure that at least one box is checked for Flammability Rating. Ensure that at least one box is checked for Dielectric Base Material
+
+    
+
+    If non-FR4 material is used check to be sure material is listed in the "NOTE" column of the stackup diagram.
+
+
+check_2818: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "5"
+  title: Current Requirements
+  subsection_id: "539"
+  section_id: "336"
+  dot_rev_check: "0"
+  url: ""
+  id: "2818"
+  check_type: designer_auditor
+  check: All planes meet current (Voltage) requirements
+check_2761: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "8"
+  title: Dielectric Thickness
+  subsection_id: "531"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/ateopsdocuments/Operating%20Procedures/Design%20For%20Guidelines/Design%20For%20Manufacturability%20(DFM)/DFM-303-00%20Printed%20Circuit%20Board%20Fabrication%20Guidelines.pdf
+  id: "2761"
+  check_type: designer_auditor
+  check: Sufficient for voltages
+check_2733: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "8"
+  title: Finish
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2733"
+  check_type: designer_auditor
+  check: |-
+    Ensure at least one box is checked
+
+    
+
+    
+
+    If "selective" nickel/gold is checked then there needs to be a second finish check.
+check_2902: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "14"
+  title: Package Keepin
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#packkeepins
+  id: "2902"
+  check_type: designer_only
+  check: Check to mechanical outline drawing and/or PC Design Standards
+check_2847: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Title Block
+  subsection_id: "547"
+  section_id: "339"
+  dot_rev_check: "0"
+  url: ""
+  id: "2847"
+  check_type: designer_auditor
+  check: Continuation sheets
+check_2762: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "9"
+  title: 2 Plies Prepreg
+  subsection_id: "531"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/ateopsdocuments/Operating%20Procedures/Design%20For%20Guidelines/Design%20For%20Manufacturability%20(DFM)/DFM-303-00%20Printed%20Circuit%20Board%20Fabrication%20Guidelines.pdf
+  id: "2762"
+  check_type: designer_auditor
+  check: If applicable, add note for 2 plies of prepreg (prepeg must be at least .004"; if 2 oz. Copper planes, increase to .006".)
+check_2734: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "9"
+  title: Soldermask
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2734"
+  check_type: designer_auditor
+  check: Ensure at least one box is checked. If ball grid arrays are used, ensure that the overlap and encroachment notes are checked. If features are present on the "SMASKPOSXX" layer(S) select the "POSITIVE SOLDERMASK..." note. If features are present on the "SMASKPLUGXX" layer(s) select the "USE PLUG MASK..." note.
+check_2790: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "6"
+  title: Summary Report
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: ""
+  id: "2790"
+  check_type: designer_auditor
+  check: "All parts placed \xE2\x80\x93 Summary report to state 100% placed"
+check_2819: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "7"
+  title: Slivers and Acid Traps
+  subsection_id: "539"
+  section_id: "336"
+  dot_rev_check: "0"
+  url: ""
+  id: "2819"
+  check_type: designer_auditor
+  check: Resolved
+check_2903: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "15"
+  title: Route Keepouts
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#keepouts
+  id: "2903"
+  check_type: designer_only
+  check: Check to mechanical outline drawing and/or PC Design standards
+check_2848: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Revision Block
+  subsection_id: "547"
+  section_id: "339"
+  dot_rev_check: "0"
+  url: ""
+  id: "2848"
+  check_type: designer_auditor
+  check: Sheet 1, Release number correct and date code correct
+check_2763: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "10"
+  title: Sequential Lamination
+  subsection_id: "531"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2763"
+  check_type: designer_auditor
+  check: Sublam section integrated for sequentially laminated boards
+check_2735: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "10"
+  title: Conductor Tolerance
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2735"
+  check_type: designer_auditor
+  check: "Ensure at least one box is checked. Use \"Detail A\" option for microwave boards and select appropriate \"Detail A\" based on finish selection in note #5."
+check_2791: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "7"
+  title: Global Fiducials
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "2791"
+  check_type: designer_auditor
+  check: Placed and quantity correct per DFM guidelines (DFM-300-00 Section 5.1.7 and 5.1.8)
+check_2904: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "16"
+  title: Via Keepouts
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#viakeepouts
+  id: "2904"
+  check_type: designer_only
+  check: Check to mechanical outline drawing and/or PC Design Standards
+check_2849: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Revision Block
+  subsection_id: "547"
+  section_id: "339"
+  dot_rev_check: "0"
+  url: ""
+  id: "2849"
+  check_type: designer_auditor
+  check: Continuation sheets
+check_2736: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "11"
+  title: Copper Pattern
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2736"
+  check_type: designer_auditor
+  check: Ensure at least one box is checked for inner and outer layers
+check_2792: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "8"
+  title: Local Fiducials
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "2792"
+  check_type: designer_auditor
+  check: Placed and quantity correct per DFM guidelines (DFM-300-00 Section 5.1.7 and 5.1.9)
+check_2764: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "11"
+  title: Notes
+  subsection_id: "531"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2764"
+  check_type: designer_auditor
+  check: All stackup applicable notes identified
+check_2905: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "17"
+  title: Thieving Keepouts
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#thieving
+  id: "2905"
+  check_type: designer_only
+  check: Check to mechanical outline drawing and/or PC Design Standards
+check_2820: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "6"
+  title: Clearances
+  subsection_id: "539"
+  section_id: "336"
+  dot_rev_check: "0"
+  url: ""
+  id: "2820"
+  check_type: designer_auditor
+  check: Acceptable clearances between split planes
+check_2793: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "9"
+  title: All Fiducials
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "2793"
+  check_type: designer_auditor
+  check: Check DFM guidelines for clearance to board edge and clearance for silkscreen and soldermask (DFM-300-00 Section 5.1.7)
+check_2765: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "7"
+  title: Copper Thickness
+  subsection_id: "531"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/ateopsdocuments/Operating%20Procedures/Design%20For%20Guidelines/Design%20For%20Manufacturability%20(DFM)/DFM-303-00%20Printed%20Circuit%20Board%20Fabrication%20Guidelines.pdf
+  id: "2765"
+  check_type: designer_auditor
+  check: If blind vias are used, the primary and secondary copper foil should be ".375 OZ MIN".
+check_2906: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "18"
+  title: Package Keepouts
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#packkeepouts
+  id: "2906"
+  check_type: designer_only
+  check: "Check package keepout; height package text, for height requirements, per \xE2\x80\x9CPackage Keepouts: Top or Bottom, or All and Height Restrictions\xE2\x80\x9D"
+check_2737: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "12"
+  title: Bow and Twist
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2737"
+  check_type: designer_auditor
+  check: Ensure at least one box is checked
+check_2794: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "10"
+  title: Master Library
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: ""
+  id: "2794"
+  check_type: designer_auditor
+  check: Master Library All components are from the master library
+check_2766: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Signal Layer
+  subsection_id: "532"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2766"
+  check_type: designer_auditor
+  check: Layers entered where impedance control trace appears
+check_2821: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Suppress Shape Fill (-S) Option - VOIDS
+  subsection_id: "539"
+  section_id: "336"
+  dot_rev_check: "0"
+  url: ""
+  id: "2821"
+  check_type: designer_auditor
+  check: If the Suppress Shape Fill option is used, voids (cleared planes) are created using anti-etch. Anti-etch must be created using lines NOT shapes
+check_2907: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "19"
+  title: Soldermask Clearance
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: ""
+  id: "2907"
+  check_type: designer_only
+  check: Check to mechanical outline drawing and/or PC Design standards
+check_2850: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: XREFs Match BOM
+  subsection_id: "548"
+  section_id: "339"
+  dot_rev_check: "0"
+  url: ""
+  id: "2850"
+  check_type: designer_auditor
+  check: All mechanical items on BOM referenced (XREF) to assembly drawing
+check_2738: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "13"
+  title: Dielectric Spacing
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2738"
+  check_type: designer_auditor
+  check: Ensure at least one box is checked; class A or class B
+check_2795: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "11"
+  title: Labels
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: ""
+  id: "2795"
+  check_type: designer_auditor
+  check: Place Barcode, Assembly, Static and Shock Labels on primary side
+check_2767: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Ref Layer
+  subsection_id: "532"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2767"
+  check_type: designer_auditor
+  check: Plane layers referenced; planes entered above and/or below impedance control signal layers
+check_2822: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Check Plots
+  subsection_id: "539"
+  section_id: "336"
+  dot_rev_check: "0"
+  url: ""
+  id: "2822"
+  check_type: designer_auditor
+  check: Ensure that black voids on planes are legitimate. Black voids on plots indicate no copper.
+check_2908: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "20"
+  title: Panel Drawing
+  subsection_id: "556"
+  section_id: "345"
+  dot_rev_check: "0"
+  url: ""
+  id: "2908"
+  check_type: designer_only
+  check: Check to mechanical outline drawing and/or PC Design standards
+check_2851: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Mechanical Details
+  subsection_id: "548"
+  section_id: "339"
+  dot_rev_check: "0"
+  url: ""
+  id: "2851"
+  check_type: designer_auditor
+  check: All appropriate mechanical details shown (voltage regulators, thermal pads, hardware stackups)
+check_2739: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "14"
+  title: Component Markings
+  subsection_id: "529"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2739"
+  check_type: designer_auditor
+  check: Ensure at least one box is checked for "Color" and one for "on exposed metal surfaces"
+check_2796: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "12"
+  title: Secondary Side
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "2796"
+  check_type: designer_auditor
+  check: SMT to Thru Hole part spacing correct per DFM Guidelines (DFM-300-00 Section 5.1)
+check_2768: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Line Width (Mils)
+  subsection_id: "532"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2768"
+  check_type: designer_auditor
+  check: Impedance control trace width(s) entered
+check_2823: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Teradyne Logo and Part Number
+  subsection_id: "540"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "2823"
+  check_type: designer_auditor
+  check: Ensure "TERADYNE" logo and board part number (XXX-XXX-A0) are in etch on primary side of the board.
+check_2909: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Connector(s)
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: ""
+  id: "2909"
+  check_type: designer_auditor
+  check: "Pin 1 and orientation of all connectors are placed per the Outline Drawing. "
+check_2852: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "1"
+  title: Testpoint Sheet
+  subsection_id: "549"
+  section_id: "339"
+  dot_rev_check: "0"
+  url: ""
+  id: "2852"
+  check_type: designer_auditor
+  check: Additional Sheet added to show reference designators of testpoints
+check_2824: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "3"
+  title: Primary Side Designation
+  subsection_id: "540"
+  section_id: "337"
+  dot_rev_check: "0"
+  url: ""
+  id: "2824"
+  check_type: designer_auditor
+  check: "\"PRIMARY\" in etch on primary side of board"
+check_2797: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "13"
+  title: Waved Component Orientation
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "2797"
+  check_type: designer_auditor
+  check: Actives (DFM-300-00 Section 5.1)
+check_2710: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "4"
+  title: Summary Report
+  subsection_id: "526"
+  section_id: "330"
+  dot_rev_check: "0"
+  url: ""
+  id: "2710"
+  check_type: designer_auditor
+  check: 0 unplaced components
+check_2769: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "5"
+  title: Line Widths
+  subsection_id: "532"
+  section_id: "331"
+  dot_rev_check: "0"
+  url: ""
+  id: "2769"
+  check_type: designer_auditor
+  check: |
+    Specified line widths in chart are on appropriate layers in design (Chart does not include line widths that do not exist on the specific layer).
+
+    Run "Line widths" DTG app
+
+
+check_2853: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "2"
+  title: Reference Designators
+  subsection_id: "549"
+  section_id: "339"
+  dot_rev_check: "0"
+  url: ""
+  id: "2853"
+  check_type: designer_auditor
+  check: All testpoint designators rotated correctly and clear
+check_2798: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "14"
+  title: Waved Component Orientation
+  subsection_id: "534"
+  section_id: "332"
+  dot_rev_check: "0"
+  url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
+  id: "2798"
+  check_type: designer_auditor
+  check: Passives (DFM-300-00 Section 5.1)
+check_2711: 
+  date_code_check: "0"
+  full_review: "1"
+  sort_order: "5"
+  title: Summary Report
+  subsection_id: "526"
+  section_id: "330"
+  dot_rev_check: "0"
+  url: ""
+  id: "2711"
+  check_type: designer_auditor
+  check: 100% connected
