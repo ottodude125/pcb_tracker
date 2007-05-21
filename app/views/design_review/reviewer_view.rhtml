@@ -36,7 +36,7 @@
                   
                   <table width="100%"
                          rules="all">
-                    <tr>
+                    <tr class="th1">
                       <th width="20%">Role</th>
                       <th>APPROVE</th>
                       <th>WAIVE</th>
@@ -46,7 +46,7 @@
                     <% for review_result in @my_review_results %>
                       <% if display_role(review_result) %>
                         <tr>
-                          <th><%= review_result.role.display_name %></th>
+                          <th class="th1"><%= review_result.role.display_name %></th>
                           <td align="center">
                             <%= radio_button("role_id_#{review_result.role.id}",
                                              "#{review_result.id}",
@@ -331,7 +331,7 @@
 
   <%= end_form_tag %>
 
-<%# debug @session %>
+<%# debug session %>
 <%# debug @design_review %>
 <%# debug @my_review_results %>
 <%# debug @designers %>
