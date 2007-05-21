@@ -77,7 +77,7 @@ module DesignReviewHelper
 
   def permitted_to_add_self_to_cc_list(reviewer_list)
   
-    return ( !@users_copied.include?(@session[:user]) &&
+    return ( !@users_copied.include?(session[:user]) &&
              !reviewer_list.find { |r| r[:id] == session[:user].id } )
     
   end
