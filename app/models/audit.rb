@@ -155,7 +155,7 @@ PEER_AUDIT       = 2
   #
   def is_peer_auditor?(user)
     self.design.peer_id == user.id ||
-    self.audit_teammates.detect { |teammate| teammate.user_id == user.id && !teammate.self? }
+    self.audit_teammates.detect { |t| t.user_id == user.id && !t.self? }
   end
   
   
@@ -180,7 +180,7 @@ PEER_AUDIT       = 2
     checklist.sections.each do |section|
       section.subsections.each do |subsection|
         subsection.checks.each do |check|
-          if ((design.new?)                          ||
+          if ((design.new?)                                 ||
               (design.date_code? && check.date_code_check?) ||
               (design.dot_rev?   && check.dot_rev_check?))
             design_check = DesignCheck.new(:audit_id => self.id, :check_id => check.id)
@@ -258,4 +258,181 @@ PEER_AUDIT       = 2
   end
   
   
+  ######################################################################
+  #
+  # completed_self_audit_check_count
+  #
+  # Description:
+  # This method provides the number of self audit design checks that
+  # have been completed for the subsection.
+  #
+  # Parameters:
+  # subsection - the subsection record that is used to group the design
+  #              checks.
+  #
+  ######################################################################
+  #
+  def completed_self_audit_check_count(subsection)
+
+    design_checks = []
+    self.design_checks.each { |dc| design_checks << dc if dc.self_auditor_checked? }
+    design_checks.delete_if { |dc| !subsection.checks.include?(dc.check) }
+
+    design_checks.size
+
+  end
+  
+  ######################################################################
+  #
+  # completed_peer_audit_check_count
+  #
+  # Description:
+  # This method provides the number of peer audit design checks that
+  # have been completed for the subsection.
+  #
+  # Parameters:
+  # subsection - the subsection record that is used to group the design
+  #              checks.
+  #
+  ######################################################################
+  #
+  def completed_peer_audit_check_count(subsection)
+
+    design_checks = []
+    self.design_checks.each { |dc| design_checks << dc if dc.peer_auditor_checked? }
+    design_checks.delete_if { |dc| !subsection.checks.include?(dc.check) }
+
+    design_checks.size
+
+  end
+  
+  
+  ######################################################################
+  #
+  # get_section_teammate
+  #
+  # Description:
+  # Retrieves the teammate for the audit section.
+  #
+  # Parameters:
+  # section - a record that identifies the section
+  #
+  # Return value:
+  # A user record for the teammate, if one exists.  Otherwise a nil 
+  # is returned.
+  #
+  ######################################################################
+  #
+  def get_section_teammate(section)
+  
+    teammate = self.audit_teammates.detect do |at| 
+      at.section_id == section.id && at.self == (self.is_self_audit? ? 1 : 0)
+    end
+  
+    # If a teammate was located, return the user record.
+    teammate ? teammate.user : nil
+    
+  end
+  
+  
+  ######################################################################
+  #
+  # section_auditor?
+  #
+  # Description:
+  # Indicates that the user can perform the audit for the audit section.
+  #
+  # Parameters:
+  # section - a record that identifies the section
+  # user    - a record that identifies the user
+  #
+  # Return value:
+  # TRUE  - the user can perform the audit for the section
+  # FALSE - the user can not perform the audit for the section
+  #
+  ######################################################################
+  #
+  def section_auditor?(section, user)
+
+    teammate = self.get_section_teammate(section)
+
+    if self.is_self_audit?
+      ((!teammate && user.id == self.design.designer_id) || ( teammate && user == teammate))
+    else
+      (!self.is_complete? &&
+       ((!teammate && user.id == self.design.peer_id) || ( teammate && user == teammate)))
+    end
+    
+  end
+
+
+  ######################################################################
+  #
+  # filtered_checklist
+  #
+  # Description:
+  # The method will removed sections and subsections based on whether
+  # the audit is a full, date code, or dot rev audit
+  #
+  # Parameters:
+  # user - a user record that identifies the person who is logged in.
+  #
+  # Return value:
+  # The audit's checklist will be modified as described above.
+  #
+  ######################################################################
+  #
+  def filtered_checklist(user)
+
+    sections = self.checklist.sections
+    
+    if self.design.date_code?
+      sections.delete_if { |sec| !sec.date_code_check? }
+      sections.each do |section|
+        section.subsections.delete_if { |subsec| !subsec.date_code_check? }
+      end
+    elsif self.design.dot_rev?
+      sections.delete_if { |sec| !sec.dot_rev_check? }
+      sections.each do |section|
+        section.subsections.delete_if { |subsec| !subsec.dot_rev_check? }
+      end
+    end
+    
+    if self.is_peer_audit? && self.is_peer_auditor?(user)
+      sections.delete_if { |sec| sec.designer_auditor_checks == 0 }
+      sections.each do |section|
+        section.subsections.delete_if { |subsec| subsec.designer_auditor_checks == 0 }
+      end
+    end
+    
+  end
+  
+  
+  ######################################################################
+  #
+  # update_type
+  #
+  # Description:
+  # The method returns the update type based on the user and the state
+  # of the audit (self audit vs. peer audit).
+  #
+  # Parameters:
+  # user - a user record that identifies the person who is logged in.
+  #
+  # Return value:
+  # A symbol that indicates the state of audit - self, peer, or none
+  #
+  ######################################################################
+  #
+  def update_type(user)
+    if    (self.is_self_auditor?(user) && self.is_self_audit?)
+      :self
+    elsif (self.is_peer_auditor?(user) && self.is_peer_audit?)
+      :peer
+    else
+      :none
+    end
+  end
+
+
 end
