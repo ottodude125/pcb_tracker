@@ -60,3 +60,12 @@ mx999:
   project_id:  1
   active:      1
 
+boards_027: 
+  platform_id: "2"
+  name: mx232
+  project_id: "11"
+  number: "232"
+  id: 50
+  description: Flex 2070 AWP
+  prefix_id: "1"
+  active: "1"

@@ -129,3 +129,24 @@ audit_complete:
   auditor_completed_checks:  4
 
 
+audit_109: 
+  checklist_id: "101"
+  lock_version: "181"
+  auditor_completed_checks: "0"
+  id: "109"
+  designer_complete: "1"
+  designer_completed_checks: "181"
+  auditor_complete: "0"
+  skip: "0"
+  design_id: "116"
+--- 
+audit_117: 
+  checklist_id: "101"
+  lock_version: "166"
+  auditor_completed_checks: "0"
+  id: "117"
+  designer_complete: "0"
+  designer_completed_checks: "166"
+  auditor_complete: "0"
+  skip: "0"
+  design_id: "124"
