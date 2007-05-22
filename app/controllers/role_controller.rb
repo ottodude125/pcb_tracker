@@ -37,7 +37,7 @@ class RoleController < ApplicationController
   #
   def list
 
-    @roles = Role.find(:all, 'name ASC')
+    @roles = Role.find(:all, :order => 'name')
 
   end
 
