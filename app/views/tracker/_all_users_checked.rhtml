@@ -1,0 +1,19 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays a checkbox for all users.  The checkbox  -->
+<!--          is checked.                                       -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<table border='0' align="center" width="800">
+  <tr valign="top">
+    <td class='th1' width="120">All Tracker Users:</td>
+    <td>
+      <%= check_box("mail_to", "all_users", :checked=>"checked") %>
+    </td>
+  </tr>
+</table>
+
+<%= observe_field("mail_to_all_users",
+                  :update => "send_to",
+                  :url => { :action => :display_roles }) %>

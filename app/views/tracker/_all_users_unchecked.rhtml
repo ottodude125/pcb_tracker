@@ -1,0 +1,54 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays a checkbox for all users.  The checkbox  -->
+<!--          is unchecked.  A list of roles with associated    -->
+<!--          checkboxes.                                       -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<table border='0' align="center" width="800">
+  <tr valign="top">
+    <td class='th1' width="120">All Tracker Users:</td>
+    <td>
+      <%= check_box("mail_to", "all_users") %>
+    </td>
+  </tr>
+</table>
+
+<%= observe_field("mail_to_all_users",
+                  :update => "send_to",
+                  :url => { :action => :remove_roles }) %>
+                  
+
+<table border='0' align="center" width="750">
+
+  <% start_row_i = 0 %>
+  <% end_row_i   = 2 %>
+  <% @active_roles.each_with_index do |role, i| %>
+  
+    <% if i == start_row_i %>
+      <tr valign="top">
+      <% start_row_i += 3 %>
+    <% end %>
+    
+    <td class='th1' width="120" align="right">
+      <%= role.display_name %>:
+    </td>
+    <td width="30">
+      <% if !flash[:roles] || flash[:roles][role.id.to_s] == '0' %>
+        <%= check_box("roles", role.id.to_s) %>
+      <% else %>
+        <%= check_box("roles", role.id.to_s, :checked => 'checked' ) %>
+      <% end %>
+    </td>
+     
+    <% if i == end_row_i %>
+      </tr>
+      <% end_row_i += 3 %>
+    <% end %>
+   
+  <% end %>
+
+</table>
+
+                  
