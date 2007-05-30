@@ -9,16 +9,28 @@ first_teammate:
   section_id: 4000
   user_id:    4000
   self:       1
-mx999a_self_auditor:
+mx999a_self_auditor_1:
   id:         4500
   audit_id:   2000
   section_id:  100
   user_id:    5001
   self:          1
-mx999a_peer_auditor:
+mx999a_peer_auditor_1:
   id:         4501
   audit_id:   2000
   section_id:  100
   user_id:    5001
   self:          0
-  
+mx999a_self_auditor_2:
+  id:         4502
+  audit_id:   2000
+  section_id:  101
+  user_id:    5004
+  self:          1
+mx999a_peer_auditor_2:
+  id:         4503
+  audit_id:   2000
+  section_id:  101
+  user_id:    4000
+  self:          0
+
