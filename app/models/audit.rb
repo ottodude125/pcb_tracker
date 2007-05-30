@@ -28,6 +28,77 @@ SELF_AUDIT       = 1
 PEER_AUDIT       = 2
 
 
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+
+  ######################################################################
+  #
+  # find_incomplete_audits
+  #
+  # Description:
+  # This method retrieves all of the audits that are not complete
+  # and returns them in a list.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of incomplete audits
+  #
+  ######################################################################
+  #
+  def self.find_incomplete_audits
+    self.find(:all,
+              :conditions => "auditor_complete=0",
+              :order      => "id")
+  end
+  
+  
+  ######################################################################
+  #
+  # active_audits
+  #
+  # Description:
+  # This method retrieves a list of all the user's active audits
+  #
+  # Parameters:
+  # user - a user record for the current user.
+  #
+  # Return value:
+  # A list of active audits
+  #
+  ######################################################################
+  #
+  def self.active_audits(user)
+  
+    audits = self.find_incomplete_audits
+    
+    audits.delete_if do |a|
+      if a.is_self_audit?
+        !(a.audit_teammates.detect { |at|  at.user_id == user.id } || 
+          a.design.peer == user)
+      else
+        !(a.audit_teammates.detect { |at| at.user_id == user.id && !at.self? } ||
+          a.design.peer == user)
+      end
+    end
+    
+    audits.sort_by { |a| a.design.priority.value }
+  
+  end
+  
+  
+  ##############################################################################
+  #
+  # Instance Methods
+  # 
+  ##############################################################################
+
+  
   ######################################################################
   #
   # audit_state
@@ -234,6 +305,100 @@ PEER_AUDIT       = 2
   
   ######################################################################
   #
+  # peer_check_count
+  #
+  # Description:
+  # This method returns the number of checks for the peer audit team
+  # based on the design type.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def peer_check_count
+  
+    checklist = self.checklist
+
+    case self.design.design_type
+    when 'New'
+      checklist.designer_auditor_count
+    when 'Date Code'
+      checklist.dc_designer_auditor_count
+    when 'Dot Rev'
+      checklist.dr_designer_auditor_count
+    end
+
+  end
+  
+  
+  ######################################################################
+  #
+  # peer_percent_complete
+  #
+  # Description:
+  # This method returns percent complete statistics for the 
+  # peer audit team.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def peer_percent_complete
+    self.auditor_completed_checks * 100.0 / self.peer_check_count
+  end
+  
+  
+  ######################################################################
+  #
+  # self_check_count
+  #
+  # Description:
+  # This method returns the number of checks for the self audit team
+  # based on the design type.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def self_check_count
+  
+    checklist = self.checklist
+
+    case self.design.design_type
+    when 'New'
+      checklist.designer_only_count + checklist.designer_auditor_count
+    when 'Date Code'
+      checklist.dc_designer_only_count + checklist.dc_designer_auditor_count
+    when 'Dot Rev'
+      checklist.dr_designer_only_count + checklist.dr_designer_auditor_count
+    end
+
+  end
+  
+  
+  ######################################################################
+  #
+  # self_percent_complete
+  #
+  # Description:
+  # This method returns percent complete statistics for the 
+  # self audit team.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def self_percent_complete
+    self.designer_completed_checks * 100.0 / self.self_check_count
+  end
+  
+  
+  ######################################################################
+  #
   # completion_stats
   #
   # Description:
@@ -420,7 +585,7 @@ PEER_AUDIT       = 2
   # user - a user record that identifies the person who is logged in.
   #
   # Return value:
-  # A symbol that indicates the state of audit - self, peer, or none
+  # A string that indicates the state of audit - self, peer, or none
   #
   ######################################################################
   #
@@ -433,6 +598,6 @@ PEER_AUDIT       = 2
       :none
     end
   end
-
-
+  
+  
 end
