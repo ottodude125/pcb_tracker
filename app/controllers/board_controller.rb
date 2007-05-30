@@ -367,8 +367,7 @@ before_filter(:verify_admin_role,
     final_rt   = ReviewType.find_by_name('Final')
     board_list.each do |board|
       board.designs.each do |design|
-        if !(design.phase_id == Design::COMPLETE ||
-             design.phase_id == release_rt.id)
+        if !(design.complete? || design.in_phase?(release_rt))
           design[:designer_name] = design.designer.name
           design[:designer_id]   = design.designer.id
         else 
@@ -397,8 +396,7 @@ before_filter(:verify_admin_role,
 
       board_list.each do |board|
         board.designs.delete_if do |design| 
-          (design.phase_id != Design::COMPLETE &&
-           !review_types.detect { |rt| rt.id == design.phase_id })
+          (!design.complete? && !review_types.detect { |rt| rt.id == design.phase_id })
         end
       end
     
