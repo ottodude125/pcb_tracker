@@ -46,8 +46,10 @@ class Role < ActiveRecord::Base
   #
   ######################################################################
   #
-  def Role.get_review_roles
-    Role.find_all_by_reviewer(1).sort_by { |r| r.display_name}
+  def self.get_review_roles
+    self.find(:all, 
+              :conditions => 'reviewer=1 AND active=1',
+              :order      => 'display_name')
   end
 
 
@@ -66,11 +68,31 @@ class Role < ActiveRecord::Base
   #
   ######################################################################
   #
-  def Role.lcr_designers
+  def self.lcr_designers
   
-    list = Role.find_by_name('Designer').users.delete_if { |d| !d.active? || d.employee? }
-    list.sort_by { |d| d.last_name }
+    self.find(:first, 
+              :conditions => "name='Designer'").active_users.delete_if { |d| d.employee? }
     
+  end
+  
+  
+  ######################################################################
+  #
+  # find_all_active
+  #
+  # Description:
+  # This method returns a list of all active roles
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An array of review role records
+  #
+  ######################################################################
+  #
+  def self.find_all_active
+    self.find(:all, :conditions => 'active=1', :order => 'display_name' )
   end
 
 
@@ -98,12 +120,7 @@ class Role < ActiveRecord::Base
   ######################################################################
   #
   def active_users
-
-    users = self.users
-    users.delete_if { |u| !u.active? }
-
-    return users.sort_by { |u| u.last_name}
-
+    self.users.delete_if { |u| !u.active? }.sort_by { |usr| usr.last_name }
   end
 
 
