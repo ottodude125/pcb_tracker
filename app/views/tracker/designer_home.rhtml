@@ -233,15 +233,17 @@
                                   <% end %>
                                 </td>
                                 <td align="center">
-                                  <b><%= sprintf("%4.1f",
-                                                 design[:percent_complete]) %></b>
+                                  <b>
+                                    <%= sprintf("%4.1f", design.audit.self_percent_complete) %>
+                                  </b>
                                 </td>
                                 <td>
                                   <b><%= design.peer.name %></b>
                                 </td>
                                 <td align="center">
-                                  <b><%= sprintf("%4.1f",
-                                                 design[:peer_percent_complete]) %></b>
+                                  <b>
+                                    <%= sprintf("%4.1f", design.audit.peer_percent_complete) %>
+                                  </b>
                                 </td>
                               </tr>                                
                             <% end %>
@@ -378,18 +380,16 @@
                   <tr>
                     <td>&nbsp;</td>
                     <td>
-                      <table width="95%"
-                             align="right"
-                             border="0">
+                      <table align="right" border="0">
                         <tr>
-                          <td width="100">&nbsp;</td>
-                          <td align="center">
+                          <td width="200">&nbsp;</td>
+                          <td align="center" width="150">
                             <font size="-2"><b>% Complete</b></font>
                           </td>
-                          <td>
+                          <td align="center" width="250">
                             <font size="-2"><b>Designer</b></font>
                           </td>
-                          <td align="center">
+                          <td align="center" width="150">
                             <font size="-2"><b>Designer % Complete</b></font>
                           </td>
                         </tr>
@@ -411,15 +411,17 @@
                             <% end %>
                           </td>
                           <td align="center">
-                            <b><%= sprintf("%4.1f",
-                                           audit[:percent_complete]) %></b>
+                            <b>
+                              <%= sprintf("%4.1f", audit.peer_percent_complete) %>
+                            </b>
                           </td>
                           <td>
                             <%= audit.design.designer.name %>
                           </td>
                           <td align="center">
-                            <b><%= sprintf("%4.1f",
-                                           audit[:designer_percent_complete]) %></b>
+                            <b>
+                              <%= sprintf("%4.1f", audit.self_percent_complete) %>
+                            </b>
                           </td>
                         </tr>
                         
