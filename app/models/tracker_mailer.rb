@@ -1077,6 +1077,36 @@ class TrackerMailer < ActionMailer::Base
   end
   
   
+  ######################################################################
+  #
+  # broadcast_message
+  #
+  # Description:
+  # This method generates a broadcast mail message to the users in the
+  # recipient list.
+  #
+  # Parameters:
+  #   subject    - the mail subject
+  #   message    - the mail message
+  #   recipients - a list of users to send the message too
+  #
+  ######################################################################
+  #
+  def broadcast_message(subject,
+                        message,
+                        recipients,
+                        sent_on     = Time.now)
+  
+    @subject         = subject
+    @from            = Pcbtr::SENDER
+    @sent_on         = sent_on
+    @headers         = {}
+    @bcc             = recipients.uniq.collect { |u| u.email }
+    @body['message'] = message
+    
+  end
+  
+  
   private
   
   
