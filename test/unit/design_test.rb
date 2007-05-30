@@ -21,6 +21,7 @@ class DesignTest < Test::Unit::TestCase
            :roles,
            :users)
 
+
   def setup
     @design = Design.find(1)
   end
@@ -475,6 +476,43 @@ class DesignTest < Test::Unit::TestCase
                                            'PCB Input Gate']))
   
   end
-    
+  
+  
+ ######################################################################
+ def test_find
+ 
+   active_designs = Design.find_all_active
+   all_designs    = Design.find(:all)
+   assert(active_designs.size < all_designs.size)
+   
+   active_designs.each { |d| assert(!d.complete?) }
+ 
+   complete_designs = all_designs - active_designs
+   assert(all_designs.size == (complete_designs.size + active_designs.size))
+   complete_designs.each { |d| assert(d.complete?) }
+ 
+ end
+ 
+ 
+ ######################################################################
+ def test_phase
+ 
+   review_type_list = ReviewType.find(:all)
+   complete_design  = designs(:la453a2)
+ 
+   review_type_list.each { |rt| assert(!complete_design.in_phase?(rt)) }
+   
+   design_in_placement = designs(:la453a1)
+   
+   review_type_list.each do |rt|
+     if rt.name != 'Placement'
+       assert(!design_in_placement.in_phase?(rt))
+     else
+       assert(design_in_placement.in_phase?(rt))
+     end
+   end
+ 
+ end
+
 
 end

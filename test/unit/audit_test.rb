@@ -22,6 +22,9 @@ class AuditTest < Test::Unit::TestCase
            :checks,
            :designs,
            :design_checks,
+           :prefixes,
+           :priorities,
+           :revisions,
            :sections,
            :subsections,
            :users
@@ -41,6 +44,7 @@ class AuditTest < Test::Unit::TestCase
     @rich_m  = users(:rich_m)
     @scott_g = users(:scott_g)
     @siva_e  = users(:siva_e)
+    @cathy_m = users(:cathy_m)
 
   end
 
@@ -151,12 +155,12 @@ class AuditTest < Test::Unit::TestCase
 
     assert(@audit_in_self_audit.is_self_auditor?(@bob_g))
     assert_nil(@audit_in_self_audit.is_self_auditor?(@rich_m))
-    assert_equal(audit_teammates(:mx999a_self_auditor),
+    assert_equal(audit_teammates(:mx999a_self_auditor_1),
                  @audit_in_self_audit.is_self_auditor?(@scott_g))
     
     assert(@audit_in_self_audit.is_peer_auditor?(@rich_m))
     assert_nil(@audit_in_self_audit.is_peer_auditor?(@bob_g))
-    assert_equal(audit_teammates(:mx999a_peer_auditor),
+    assert_equal(audit_teammates(:mx999a_peer_auditor_1),
                  @audit_in_self_audit.is_peer_auditor?(@scott_g))
   
   end
@@ -201,14 +205,20 @@ class AuditTest < Test::Unit::TestCase
   
     assert_equal(11, @audit_in_self_audit.check_count[:designer])
     assert_equal(4,  @audit_in_self_audit.check_count[:peer])
+    assert_equal(11, @audit_in_self_audit.self_check_count)
+    assert_equal(4,  @audit_in_self_audit.peer_check_count)
     
     la454c3_audit = audits(:audit_la454c3)
     assert_equal(7, la454c3_audit.check_count[:designer])
     assert_equal(5, la454c3_audit.check_count[:peer])
+    assert_equal(7, la454c3_audit.self_check_count)
+    assert_equal(5, la454c3_audit.peer_check_count)
     
     la453b_eco2_audit = audits(:audit_la453b_eco2)
     assert_equal(7, la453b_eco2_audit.check_count[:designer])
     assert_equal(5, la453b_eco2_audit.check_count[:peer])
+    assert_equal(7, la453b_eco2_audit.self_check_count)
+    assert_equal(5, la453b_eco2_audit.peer_check_count)
     
   end
   
@@ -219,16 +229,28 @@ class AuditTest < Test::Unit::TestCase
                  sprintf("%3.f", @audit_in_self_audit.completion_stats[:self]))
     assert_equal("  0", 
                  sprintf("%3.f", @audit_in_self_audit.completion_stats[:peer]))
+    assert_equal(" 91", 
+                 sprintf("%3.f", @audit_in_self_audit.self_percent_complete))
+    assert_equal("  0", 
+                 sprintf("%3.f", @audit_in_self_audit.peer_percent_complete))
     
     assert_equal("100", 
                  sprintf("%3.f", @audit_in_peer_audit.completion_stats[:self]))
     assert_equal(" 75", 
                  sprintf("%3.f", @audit_in_peer_audit.completion_stats[:peer]))
+    assert_equal("100", 
+                 sprintf("%3.f", @audit_in_peer_audit.self_percent_complete))
+    assert_equal(" 75", 
+                 sprintf("%3.f", @audit_in_peer_audit.peer_percent_complete))
 
     assert_equal("100", 
                  sprintf("%3.f", @audit_complete.completion_stats[:self]))
     assert_equal("100", 
                  sprintf("%3.f", @audit_complete.completion_stats[:peer]))
+    assert_equal("100", 
+                 sprintf("%3.f", @audit_complete.self_percent_complete))
+    assert_equal("100", 
+                 sprintf("%3.f", @audit_complete.peer_percent_complete))
 
   end
   
@@ -541,6 +563,94 @@ class AuditTest < Test::Unit::TestCase
     assert_equal(:none, @audit_109.update_type(@rich_m))    
     
   end
+
+  ######################################################################
+  def test_class_methods
   
+    incomplete_audits = Audit.find_incomplete_audits
+    assert(incomplete_audits.size < Audit.count)  
+
+    incomplete_audits.each { |a|  assert(!a.is_complete?) }
+  
+    jims_audits = Audit.active_audits(users(:jim_l))
+    assert(jims_audits.size == 0)
+    
+    bobs_expected_audits = [audits(:audit_mx700b), 
+                            audits(:audit_la453a1), 
+                            audits(:audit_109)]
+    bobs_audits = Audit.active_audits(@bob_g)
+    assert_equal(bobs_expected_audits.size, bobs_audits.size)
+    
+    bobs_expected_audits.each_with_index do |a,i| 
+      assert_equal(a.design.name, bobs_audits[i].design.name) 
+    end
+  
+    scotts_expected_audits = [audits(:audit_mx234a), 
+                              audits(:audit_in_self_audit), 
+                              audits(:audit_la454c3),
+                              audits(:audit_mx234b), 
+                              audits(:audit_mx600a), 
+                              audits(:audit_mx234c)]
+    scotts_audits = Audit.active_audits(@scott_g)
+    assert_equal(scotts_expected_audits.size, scotts_audits.size)
+    
+    scotts_expected_audits.each_with_index do |a,i| 
+      assert_equal(a.design.name, scotts_audits[i].design.name) 
+    end
+  
+    richs_expected_audits = [audits(:audit_in_peer_audit), 
+                             audits(:audit_in_self_audit), 
+                             audits(:audit_la455b),
+                             audits(:audit_la453b_eco2), 
+                             audits(:audit_la453a2), 
+                             audits(:audit_la453a_eco1),
+                             audits(:audit_la453b)]
+    richs_audits = Audit.active_audits(@rich_m)
+    assert_equal(richs_expected_audits.size, richs_audits.size)
+    
+    richs_expected_audits.each_with_index do |a,i| 
+      assert_equal(a.design.name, richs_audits[i].design.name) 
+    end
+  
+    cathys_expected_audits = [audits(:audit_in_self_audit), 
+                              audits(:audit_mx234b)]
+    cathys_audits = Audit.active_audits(@cathy_m)
+    assert_equal(cathys_expected_audits.size, cathys_audits.size)
+    
+    cathys_expected_audits.each_with_index do |a,i| 
+      assert_equal(a.design.name, cathys_audits[i].design.name) 
+    end
+  
+  end
+  
+  ######################################################################
+  def no_test_dump_audits
+  
+    audits = Audit.find(:all)
+    
+    puts
+    audits.each do |a|
+    
+      puts("================================================")
+      puts("ID:                  #{a.id}")
+      puts("DESIGN:              #{a.design.name}")
+      puts("LEAD DESIGNER:       #{a.design.designer.name}")
+      puts("LEAD PEER:           #{a.design.peer.name}")
+      puts("SELF AUDIT:          Yes") if a.is_self_audit?
+      puts("PEER AUDIT:          Yes") if a.is_peer_audit?
+      puts("COMPLETE:            Yes") if a.is_complete?
+      puts("NUMBER OF TEAMMATES: #{a.audit_teammates.size}")
+      
+      a.audit_teammates.each do |at|
+        puts("  AUDITOR:           #{at.user.name}")
+        puts("  SELF:              YES") if at.self?
+        puts("  PEER:              YES") if !at.self?
+      end
+    
+    end
+    
+    puts("================================================")
+  
+  end
 
 end
