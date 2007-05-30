@@ -91,6 +91,13 @@
   </tr>
   <tr>
     <th width="35%" align="left" valign="top">
+      <%= link_to("Message Broadcast",
+                  { :controller => 'tracker', :action => 'message_broadcast' }) %>
+    </th>
+    <td valign="top">Send email to the PCB Design Tracker users</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
       <%= link_to("Peer Audit Checklist",
                   { :controller => 'checklist', :action => 'list' })%>
     </th>
