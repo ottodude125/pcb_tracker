@@ -3,21 +3,27 @@
 #
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 in_review:
-  id:   1
-  name: In Review
+  id:     1
+  name:   In Review
+  active: 1
 review_complete:
-  id:   2
-  name: Review Completed
+  id:    2
+  name:   Review Completed
+  active: 1
 not_started:
-  id:   3
-  name: Not Started
+  id:     3
+  name:   Not Started
+  active: 1
 review_skipped:
-  id:   4
-  name: Review Skipped
+  id:     4
+  name:   Review Skipped
+  active: 1
 pending_repost:
-  id:   5
-  name: Pending Repost
+  id:     5
+  name:   Pending Repost
+  active: 1
 on_hold:
-  id:   6
-  name: Review On-Hold
+  id:     6
+  name:   Review On-Hold
+  active: 1
 
