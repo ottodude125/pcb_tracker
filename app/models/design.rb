@@ -28,9 +28,37 @@ class Design < ActiveRecord::Base
   has_one   :ftp_notification
   
   
-  NOT_SET = 'Not Set'
+  NOT_SET  = 'Not Set'
+  COMPLETE = 255
 
 
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+
+  ######################################################################
+  #
+  # find_all_active
+  #
+  # Description:
+  # This method retrieves a list of all active designs.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of active designs.
+  #
+  ######################################################################
+  #
+  def self.find_all_active
+    Design.find(:all, :conditions => "phase_id != #{COMPLETE}")
+  end
+  
+  
   def work_assignment_data
   
     totals = { :assignments            => 0,
@@ -252,6 +280,49 @@ class Design < ActiveRecord::Base
     end
   
   end
+  
+  
+  ######################################################################
+  #
+  # complete?
+  #
+  # Description:
+  # This method reports on the completion of a design
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # True if the design is completed, otherwise False.
+  #
+  ######################################################################
+  #
+  def complete?
+    self.phase_id == COMPLETE
+  end
+  
+  
+  ######################################################################
+  #
+  # in_phase?
+  #
+  # Description:
+  # This method reports if the design is in the phase identified
+  # by the review type.
+  #
+  # Parameters:
+  # review_type - a review type record that represents the review
+  #               type to check against.
+  #
+  # Return value:
+  # True if the design is in the same phase as the review type,
+  # otherwise False.
+  #
+  ######################################################################
+  #
+  def in_phase?(review_type)
+    self.phase_id == review_type.id
+  end
 
 
   ######################################################################
@@ -273,7 +344,7 @@ class Design < ActiveRecord::Base
   #
   def phase
   
-    if self.phase_id == Design::COMPLETE
+    if self.phase_id == COMPLETE
       ReviewType.new(:name => 'Complete')
     elsif self.phase_id > 0
       ReviewType.find(self.phase_id)
@@ -557,7 +628,7 @@ class Design < ActiveRecord::Base
                                                   "sort_order > '#{current_review_type.sort_order}'", 
                                    :order      => "sort_order ASC")
 
-    phase_id   = Design::COMPLETE
+    phase_id    = COMPLETE
     next_review = nil
     review_types.each { |rt|
       next_review = self.design_reviews.detect { |dr| dr.review_type.id == rt.id }
@@ -678,9 +749,6 @@ class Design < ActiveRecord::Base
     
   
   end
-  
-
-  COMPLETE = 255
   
 
 end
