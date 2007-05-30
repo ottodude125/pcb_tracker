@@ -404,6 +404,129 @@ class TrackerController < ApplicationController
   end  
   
   
+  ######################################################################
+  #
+  # message_broadcast
+  #
+  # Description:
+  # This method manages the ordering of the list by the design review
+  # status.
+  #
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def message_broadcast
+  
+    @subject      = params[:subject] ? params[:subject] : 'IMPORTANT - Please Read'
+    @message      = params[:message] ? params[:message] : ''
+    @active_roles = Role.find_all_active if params[:show_roles]
+    
+  end
+  
+  
+  ######################################################################
+  #
+  # display_roles
+  #
+  # Description:
+  # This method responds to an AJAX call to populate the roles table
+  # on the message_broadcast view.
+  #
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def display_roles
+  
+    @active_roles = Role.find_all_active
+    
+    render(:layout => false)
+    
+  end
+  
+
+  ######################################################################
+  #
+  # remove_roles
+  #
+  # Description:
+  # This method responds to an AJAX call to remove the roles table
+  # on the message_broadcast view.
+  #
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def remove_roles
+    render(:layout => false)
+  end  
+
+
+  ######################################################################
+  #
+  # deliver_broadcast_message
+  #
+  # Description:
+  # This method verifies that the user provided all of the information
+  # to generate a mail message.  If the information is complete the 
+  # mail is sent.  If not, the message broadcast view is displayed with
+  # the error message displayed.
+  #
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def deliver_broadcast_message
+  
+    if params[:mail][:message].strip.size == 0
+    
+      flash[:roles] = params[:roles]
+      
+      flash['notice'] = 'The mail message was not sent - there was no message'
+      redirect_to(:action     => 'message_broadcast', 
+                  :subject    => params[:mail][:subject],
+                  :show_roles => params[:mail_to][:all_users] == '0')
+    else
+    
+      if params[:mail_to][:all_users] == '1'
+        recipients = User.find_all_by_active(1)
+      else
+        recipients = []
+        params[:roles].each do |role|
+          entry = role.to_a
+          
+          if entry[1] == '1'
+            recipients += Role.find(entry[0]).active_users
+          end
+          
+        end
+      end
+      
+      if recipients.size > 0
+
+        TrackerMailer::deliver_broadcast_message(params[:mail][:subject],
+                                                 params[:mail][:message],
+                                                 recipients)
+
+        flash['notice'] = 'The message has been sent'
+        redirect_to(:controller => 'tracker', :action => 'index')
+      else
+        flash['notice'] = 'The mail message was not sent - no recipient roles were selected'
+        redirect_to(:action  => 'message_broadcast', 
+                    :subject    => params[:mail][:subject],
+                    :message    => params[:mail][:message],
+                    :show_roles => true)
+      end
+    end
+  
+  end
+  
+  
   private
   
   
@@ -458,20 +581,21 @@ class TrackerController < ApplicationController
         
     @design_list = []
     designs.each do |design|
-      
+
       design_summary = {:design => design}
 
-      design_reviews = DesignReview.find_all("design_id='#{design.id}'")
-      reviews = design_reviews.sort_by{ |r| r.review_type.sort_order }
+      reviews = design.design_reviews.sort_by{ |r| r.review_type.sort_order }
 
       # Go through the reviews until the first review that has not been
       # started is found.
-      review_list = []
-	    reviews_started = 0
+      review_list     = []
+	  reviews_started = 0
+	  next_review     = nil
 
       reviews.each do |review|
 
         next_review = review
+
         
         break if review.review_status.name == 'Not Started'
         last_status = review.review_status.name
@@ -484,20 +608,20 @@ class TrackerController < ApplicationController
         review_results.delete_if { |dr| dr.result != 'APPROVED' && dr.result != 'WAIVED' }
         review_rec[:approvals] = review_results.size
         review_list.push(review_rec)
-
+        
       end
 
       design_summary[:reviews]     = review_list
 
-	    if reviews_started == 0
-	      design_summary[:next_review] = reviews[0]
-	    elsif reviews.size == review_list.size
-          design_summary[:next_review] = nil
-	    elsif next_review && next_review.review_status.name == "Not Started"
-	      design_summary[:next_review] = next_review
+      if reviews_started == 0
+        design_summary[:next_review] = reviews[0]
+      elsif reviews.size == review_list.size
+        design_summary[:next_review] = nil
+      elsif next_review && next_review.review_status.name == "Not Started"
+        design_summary[:next_review] = next_review
       else
-	      design_summary[:next_review] = nil
-	    end
+        design_summary[:next_review] = nil
+      end
 
       audit = Audit.find_all("design_id='#{design.id}'").pop
       design_summary[:audit] = audit
@@ -558,16 +682,6 @@ class TrackerController < ApplicationController
         design_review[:approvals] = review_results.size
       end
 
-
-      audit = design.audit
-
-      num_checks = audit.check_count
-	
-      design[:percent_complete]      = 
-        audit.designer_completed_checks * 100.0 / num_checks[:designer]
-      design[:peer_percent_complete] = 
-        audit.auditor_completed_checks * 100.0 / num_checks[:peer]
-
     end
 
     audits = {}
@@ -575,17 +689,12 @@ class TrackerController < ApplicationController
     # Get the audits where the user is the member of an audit team.
     # 
     my_audit_teams = AuditTeammate.find_all_by_user_id(session[:user].id)
-    for audit_team in my_audit_teams
+    my_audit_teams.each do |audit_team|
       
       audit = audit_team.audit
       next if audit.is_peer_audit? & audit_team.self?
  
       audit[:self] = audit_team.self?
-      num_checks = audit.check_count
-      audit[:percent_complete]          = audit.auditor_completed_checks *
-        100.0 / num_checks[:peer]
-      audit[:designer_percent_complete] = audit.designer_completed_checks *
-        100.0 / num_checks[:designer]
       audits[audit.id] = audit
       
     end
@@ -593,22 +702,19 @@ class TrackerController < ApplicationController
     #
     # Get the audits where the user is listed as the lead peer.
     # 
+    # TODO Add a class method to Design - find_all_peer_designs(peer)
     peer_designs = Design.find(:all,
                                :conditions => "peer_id=#{session[:user].id}",
                                :include    => :audit,
-                               :order      => 'created_on ASC')
+                               :order      => 'created_on')
 
-    for peer_design in peer_designs
+    peer_designs.each do |peer_design|
     
       audit = peer_design.audit
       next if audit.is_self_audit? && audits[audit.id]
       
       audit[:self] = false
-      num_checks = audit.check_count
-      audit[:percent_complete]          = audit.auditor_completed_checks *
-        100.0 / num_checks[:peer]
-      audit[:designer_percent_complete] = audit.designer_completed_checks *
-        100.0 / num_checks[:designer]
+
       audits[audit.id] = audit
       
     end
@@ -625,11 +731,8 @@ class TrackerController < ApplicationController
     # Get all of the active designs and determine if there are any work assignments
     # associated with the design for the user.
     @work_assignments = false
-    @my_assignments   = {}
-    active_designs = Design.find(:all,
-                                 :conditions => "phase_id != #{Design::COMPLETE}")
-    
-    active_designs.each do |design|
+    @my_assignments   = {}    
+    Design.find_all_active.each do |design|
       @work_assignments                 |= design.have_assignments(session[:user].id)
       my_assignments                     = design.my_assignments(session[:user].id)
       @my_assignments[design.created_on] = my_assignments if my_assignments.size > 0
