@@ -64,11 +64,10 @@ class OiInstructionController < ApplicationController
       @sections   = @category.oi_category_sections
       @section_id = flash[:assignment] ? flash[:assignment][:selected_step].id : 0
     else
-      flash[:section] = { OiCategory.other_category_section_id.to_s => '1' }
-
       redirect_to(:action      => :process_assignments,
                   :category_id => @category.id,
-                  :design_id   => @design.id)
+                  :design_id   => @design.id,
+                  :section_id  => OiCategory.other_category_section_id)
     end
 
   end
