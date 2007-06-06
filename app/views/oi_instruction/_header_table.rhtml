@@ -1,12 +1,16 @@
 <table width="800" align="center" border="0">
 
-  <tr valign="top">
-    <th class="teraheader" align="right" width="20%">Step:</th>
-    <% line = 1 %>
-    <%= start_td(line) %>
-      <%= @assignment.oi_instruction.oi_category_section.name %>
-    </td>
-  </tr>
+  <% line = 0%>
+
+  <% if @assignment.oi_instruction.oi_category_section.name.size > 0 %>
+    <tr valign="top">
+      <th class="teraheader" align="right" width="20%">Step:</th>
+      <% line += 1 %>
+      <%= start_td(line) %>
+        <%= @assignment.oi_instruction.oi_category_section.name %>
+      </td>
+    </tr>
+  <% end %>
 
   <tr valign="top">
     <th class="teraheader" align="right">Reference(s):</th>
