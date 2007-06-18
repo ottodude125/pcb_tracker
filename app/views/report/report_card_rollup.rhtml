@@ -145,13 +145,13 @@
       <table border="0">
         <tr>
           <th>Score: </th>
-          <% min_score.upto(max_score) do |score| %>
+          <% min_score.step(max_score, 20) do |score| %>
             <td align='center' width="50"><%= score %></td>
           <% end %>
         </tr>
         <tr>
           <th>Count: </th>
-          <% min_score.upto(max_score) do |score| %>
+          <% min_score.step(max_score, 20) do |score| %>
             <td align='center' width="50"><%= @score_distribution[score]  %></td>
           <% end %>
         </tr>
