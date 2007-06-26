@@ -16,8 +16,9 @@ class Board < ActiveRecord::Base
   belongs_to :project
   belongs_to :prefix
 
-  has_many   :designs
+  has_many(:designs,       :order => 'name' )
   has_many   :board_reviewers
+  has_many   :design_review_documents
   has_one    :audit
 
   has_and_belongs_to_many :fab_houses
@@ -45,6 +46,35 @@ class Board < ActiveRecord::Base
     if new_board
       errors.add("Board #{new_board.name} already exists - creation")
     end
+  end
+  
+
+  ##############################################################################
+  #
+  # Instance Methods
+  # 
+  ##############################################################################
+
+  
+  ######################################################################
+  #
+  # role_reviewer
+  #
+  # Description:
+  # This method locates the board reviewer for the role_id that is
+  # passed in.
+  #
+  # Parameters:
+  # role_id - role record id
+  #
+  # Return value:
+  # A board_reviewer record if there is a board reviewer for the role.
+  # Otherwise, nil is returned.
+  #
+  ######################################################################
+  #
+  def role_reviewer(role_id)
+    self.board_reviewers.detect { |br| br.role_id == role_id }
   end
   
 
