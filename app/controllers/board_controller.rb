@@ -79,20 +79,20 @@ before_filter(:verify_admin_role,
     conditions = ''
 
     # Save the filter information for paging
-    flash[:prefix_filter]   = flash[:prefix_filter]   ? flash[:prefix_filter]   : params['filter']['prefix_id']
-    flash[:platform_filter] = flash[:platform_filter] ? flash[:platform_filter] : params['filter']['platform_id']
-    flash[:project_filter]  = flash[:project_filter]  ? flash[:project_filter]  : params['filter']['project_id']
+    flash[:prefix_filter]   = flash[:prefix_filter]   ? flash[:prefix_filter]   : params[:filter][:prefix_id]
+    flash[:platform_filter] = flash[:platform_filter] ? flash[:platform_filter] : params[:filter][:platform_id]
+    flash[:project_filter]  = flash[:project_filter]  ? flash[:project_filter]  : params[:filter][:project_id]
 
     if flash[:prefix_filter] != ''
-      conditions = "prefix_id=#{params['filter']['prefix_id']}"
+      conditions = "prefix_id=#{params[:filter][:prefix_id]}"
     end
     if flash[:platform_filter] != ''
       conditions += ' and ' if conditions != ''
-      conditions += "platform_id=#{params['filter']['platform_id']}"
+      conditions += "platform_id=#{params[:filter][:platform_id]}"
     end
     if flash[:project_filter] != ''
       conditions += ' and ' if conditions != ''
-      conditions += "project_id=#{params['filter']['project_id']}"
+      conditions += "project_id=#{params[:filter][:project_id]}"
     end
 
     if conditions == ''
@@ -129,7 +129,7 @@ before_filter(:verify_admin_role,
   #
   def edit
 
-    @board         = Board.find(params['id'])
+    @board         = Board.find(params[:id])
     
     @fab_house_ids = @board.fab_houses.collect { |fh| fh.id }
     @fab_houses    = FabHouse.get_all_active
@@ -167,17 +167,15 @@ before_filter(:verify_admin_role,
   #
   def update
 
-    @board = Board.find(params['board']['id'])
+    @board = Board.find(params[:board][:id])
 
-    params['board'][:name] = Prefix.find(params['board']['prefix_id']).pcb_mnemonic +
-      params['board'][:number]
-    if @board.update_attributes(params['board'])
+    params[:board][:name] = Prefix.find(params[:board][:prefix_id]).pcb_mnemonic + params[:board][:number]
+    
+    if @board.update_attributes(params[:board])
       
-      params['board_reviewers'].each do |role_id, reviewer_id|
+      params[:board_reviewers].each do |role_id, reviewer_id|
 
-        board_reviewer = @board.board_reviewers.detect do |br| 
-          br.board_id == @board.id && br.role_id == role_id.to_i
-        end
+        board_reviewer = @board.role_reviewer(role_id.to_i)
   
         if board_reviewer
           if board_reviewer.reviewer_id != reviewer_id
@@ -188,12 +186,13 @@ before_filter(:verify_admin_role,
                             :reviewer_id => reviewer_id,
                             :role_id     => role_id).save
         end
+        
       end
 
       # Process the fab houses.
       included_fab_houses = []
       excluded_fab_houses = []
-      params['fab_house'].each do |fab_house_id, selected|
+      params[:fab_house].each do |fab_house_id, selected|
         fab_house = FabHouse.find(fab_house_id)
 
         if !@board.fab_houses.include?(fab_house)
@@ -210,7 +209,7 @@ before_filter(:verify_admin_role,
       flash['notice'] = 'Board not updated'
     end
     
-    redirect_to(:action => 'edit', :id => params["board"]["id"])
+    redirect_to(:action => 'edit', :id => params[:board][:id])
     
   end
 
@@ -263,12 +262,11 @@ before_filter(:verify_admin_role,
     if params[:board] != nil
       @board = Board.find_by_name(params[:board][:name])
     else
-      @board = Board.find(params['board_id'])
+      @board = Board.find(params[:board_id])
     end
     
     # First sort the designs by name, then sort the reviews by review order.
     if @board
-      @board.designs.sort_by { |d| d.name }
       @board.designs.each do |design|
         design[:sorted_design_reviews] = 
           design.design_reviews.sort_by { |dr| dr.review_type.sort_order }
