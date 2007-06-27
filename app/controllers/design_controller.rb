@@ -15,7 +15,9 @@
 class DesignController < ApplicationController
 
   before_filter(:verify_admin_role, 
-                :except => [:pcb_mechanical_comments, 
+                :except => [:design_review_reviewers,
+                            :pcb_mechanical_comments, 
+                            :process_reviewer_modifications,
                             :view])
 
   auto_complete_for :design, :name
@@ -206,13 +208,13 @@ class DesignController < ApplicationController
   #
   def initial_attachments
 
+    # TODO: See review_attachments() in the design review controller.
     @design        = Design.find(params[:design_id])
-    document_types = DocumentType.find_all(nil, 'name ASC')
     @pre_art       = ReviewType.find_by_name("Pre-Artwork")
     @design_review = @design.design_reviews.detect { |dr| dr.review_type_id == @pre_art.id }
     
     @documents = []
-    for doc_type in document_types
+    for doc_type in DocumentType.find(:all, :order => 'name')
 
       docs = DesignReviewDocument.find_all("board_id='#{@design.board.id}' " +
                                            " and document_type_id='#{doc_type.id}'")
@@ -276,6 +278,91 @@ class DesignController < ApplicationController
     render(:layout => false)
   
   end
+  
+  
+  ######################################################################
+  #
+  # design_review_reviewers
+  #
+  # Description:
+  # Gathers the data to provide the user with a view to change
+  # the reviewers for a design's reviews.
+  #
+  # Parameters from params
+  # id - identifies the design
+  #
+  ######################################################################
+  #
+  def design_review_reviewers
+  
+    @design         = Design.find(params[:id])
+    @design_reviews = @design.design_reviews.sort_by { |dr| dr.review_type.sort_order } 
+    @review_roles   = Role.get_review_roles
+    
+    # Do not display a review role that is not set up to review the
+    # design.
+    @review_roles.delete_if { |r| @design.role_review_count(r) == 0 }
+    
+    @review_roles_locked    = []
+    @review_roles.each_with_index do |r, i|
+      @review_roles_locked[i] = @design.role_open_review_count(r) == 0
+    end
+    
+  end
+  
+  
+  ######################################################################
+  #
+  # process_reviewer_modifications
+  #
+  # Description:
+  # Processes any changes that the user made on the 
+  # design_review_reviewers screen.
+  #
+  # Parameters from params
+  # id        - identifies the design
+  # role_id_# - the role ids that are paired with user ids that
+  #             identify the role reviewer.
+  #
+  ######################################################################
+  #
+  def process_reviewer_modifications
+    
+    design = Design.find(params[:id])
+    
+    updated_reviewers = false
+    review_in_review  = nil
+    params.each do |key, value|
 
+      # Pass over any parameter keys not addressing the role id
+      # or the user if the reviewer's user id is set to 0.
+      next if !(key =~ /^role_id/) || (value == '0')
+      
+      new_reviewer = User.find(value)
+      role         = Role.find(key.split('_')[2])
+
+      if !design.is_role_reviewer?(role, new_reviewer)
+        review_in_review = design.set_role_reviewer(role, new_reviewer, session[:user])
+        updated_reviewers = true
+      end
+      
+
+    end
+    
+    flash["notice"] = ''
+    if updated_reviewers
+      flash["notice"]  = "The reviewer list has been modified"
+      flash["notice"] += "<br />Mail has been sent to the #{review_in_review} reviewers impacted" if review_in_review
+    end
+    
+    if design.inactive_reviewers?
+      flash["notice"] += "<br />The names in red indicate that the user is inactive."
+      redirect_to(:action => "design_review_reviewers", :id => design.id)
+    else
+      redirect_to(session[:return_to])
+    end
+    
+  end
+  
 
 end
