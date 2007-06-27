@@ -40,18 +40,16 @@ class AuditController < ApplicationController
 
     audit = Audit.find(params[:audit][:id])
 
-    update_type = audit.update_type(session[:user])
-
     # Go through the paramater list and pull out the checks.
     params.keys.grep(/^check_/).each { |params_key|
 
       design_check_update = params[params_key]
       design_check = DesignCheck.find(design_check_update[:design_check_id])
 
-      if update_type == :self
+      if audit.self_update?(session[:user])
         result        = design_check.designer_result
         result_update = design_check_update[:designer_result]
-      elsif update_type == :peer
+      elsif audit.peer_update?(session[:user])
         result        = design_check.auditor_result
         result_update = design_check_update[:auditor_result]
       end
@@ -63,10 +61,10 @@ class AuditController < ApplicationController
            design_check.comment_required?(design_check_update[:designer_result], 
                                           design_check_update[:auditor_result])
          
-          if update_type == :self
+          if audit.self_update?(session[:user])
             flash[design_check.id] = "A comment is required for a " +
               "#{design_check_update[:designer_result]} response."
-          elsif update_type == :peer
+          elsif audit.peer_update?(session[:user])
             flash[design_check.id] = "A comment is required for a " +
               "#{design_check_update[:auditor_result]} response."
           end
@@ -75,71 +73,17 @@ class AuditController < ApplicationController
         end
 
         check_count = audit.check_count
-        if update_type == :self && !audit.designer_complete?
+        if !audit.designer_complete? && audit.self_update?(session[:user])
 
-          if result == "None"
-            begin
-              completed_checks = audit.designer_completed_checks + 1
-              total_checks     = check_count[:designer]
-              audit.update_attributes(
-                :designer_completed_checks => completed_checks,
-                :designer_complete         => (completed_checks == total_checks))
-            rescue ActiveRecord::StaleObjectError
-              audit.reload
-              retry
-            end
-
-            if audit.designer_complete?
-              TrackerMailer.deliver_self_audit_complete(audit)
-              TrackerMailer.deliver_final_review_warning(audit.design)
-            end
-            
-          end
-          result = design_check.update_attributes(
-                     :designer_result     => result_update,
-                     :designer_checked_on => Time.now,
-                     :designer_id         => session[:user].id)
+          audit.process_self_audit_update(result_update, design_check, session[:user])
                      
-        elsif update_type == :peer && !audit.auditor_complete?
+        elsif !audit.auditor_complete? && audit.peer_update?(session[:user])
 
-          complete   = ['Verified', 'N/A', 'Waived']
-          incomplete = ['None', 'Comment']
+          audit.process_peer_audit_update(result_update, 
+                                          design_check_update[:comment], 
+                                          design_check, 
+                                          session[:user])
 
-          if result_update == 'Comment' && complete.include?(result)
-            incr = -1
-          elsif complete.include?(result_update) && incomplete.include?(result)
-            incr = 1
-          else
-            incr = 0
-          end
-
-          if incr != 0
-            begin
-              completed_checks = audit.auditor_completed_checks + incr
-              total_checks     = check_count[:peer]
-              audit.update_attributes(
-                :auditor_completed_checks => completed_checks,
-                :auditor_complete         => (completed_checks == total_checks))
-            rescue ActiveRecord::StaleObjectError
-              audit.reload
-              retry
-            end
-
-            if audit.auditor_complete?
-              TrackerMailer.deliver_peer_audit_complete(audit)
-              AuditTeammate.delete_all(["audit_id = ?", audit.id])
-            end
-          end
-
-          result = design_check.update_attributes(
-                     :auditor_result     => result_update,
-                     :auditor_checked_on => Time.now,
-                     :auditor_id         => session[:user].id)
-                     
-          TrackerMailer::deliver_audit_update(design_check,
-                                              design_check_update[:comment],
-                                              audit.design.designer,
-                                              session[:user]) if result_update == 'Comment'
         end
 
       end
