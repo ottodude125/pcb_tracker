@@ -546,14 +546,18 @@ class DesignReviewController < ApplicationController
   #
   def add_comment
 
-    if params[:post_comment][:comment] != ""
-      DesignReviewComment.new(:comment          => params[:post_comment][:comment],
-                              :user_id          => session[:user][:id],
-                              :design_review_id => params[:design_review][:id]).create
+    user_comment = params[:post_comment][:comment]
+    if user_comment != ""
+ 
+      design_review = DesignReview.find(params[:design_review][:id])
+      comment       = DesignReviewComment.new(:comment => user_comment,
+                                              :user_id => session[:user][:id])
+      design_review.design_review_comments << comment
 
       TrackerMailer::deliver_design_review_update(session[:user],
-                                                  DesignReview.find(params[:design_review][:id]),
+                                                  design_review,
                                                   true)
+                                                  
     end
 
     flash['notice'] = "Comment added - mail has been sent"
@@ -611,27 +615,14 @@ class DesignReviewController < ApplicationController
   
     design_review = DesignReview.find(params[:design_review][:id])
 
-    changes = { }
-    if (params[:design_center][:location] != "" &&
-        params[:design_center][:location] != design_review.design_center_id.to_s)
-      changes[:design_center] = { :old => design_review.design_center.name, 
-                                  :new => DesignCenter.find(params[:design_center][:location]).name }
-      end
-      
-    design_review.design_center_id = params[:design_center][:location]
+    updates = {}
+    updates[:design_center]  = DesignCenter.find(params[:design_center][:location])
     
-    if design_review.update
-      flash['notice'] = 'The design center has been updated.'
-      
-      create_comment(design_review, '', changes)
-
-      TrackerMailer::deliver_design_review_modification(session[:user], design_review)
-
-    else
-      flash['notice'] = 'Error: The design center was not updated.'
-    end
-  
+    flash['notice'] = design_review.design.admin_updates(updates, 
+                                                         '', 
+                                                         session[:user])
     redirect_to(:action => :view, :id => design_review.id)
+
   end
   
   
@@ -658,13 +649,13 @@ class DesignReviewController < ApplicationController
   def review_attachments
  
     @design_review = DesignReview.find(params[:design_review_id])
-    document_types = DocumentType.find(:all, :order => 'name')
+    board_docs     = @design_review.design.board.design_review_documents
 
     @documents = []
-    for doc_type in document_types
-      docs = DesignReviewDocument.find(:all,
-                                       :conditions => "board_id='#{@design_review.design.board_id}' " +
-                                                      "and document_type_id='#{doc_type.id}'")
+    DocumentType.get_all.each do |doc_type|
+    
+      docs = board_docs.collect { |d| d if d.document_type_id == doc_type.id }.compact
+
       next if docs.size == 0
       
       if doc_type.name != "Other"
@@ -674,9 +665,7 @@ class DesignReviewController < ApplicationController
         display_doc[:multiple_docs] = (docs.size > 0)
         @documents.push(display_doc)
       else
-        docs.sort_by { |drd| drd.document.name }
-        docs.reverse!
-        for display_doc in docs
+        docs.reverse.each do |display_doc|
           display_doc[:multiple_docs] = false
           @documents.push(display_doc)
         end
@@ -966,9 +955,9 @@ class DesignReviewController < ApplicationController
   
     @design_review = DesignReview.find(params[:id])
     @docs = DesignReviewDocument.find(:all,
-                                      :conditions => ("design_id='#{@design_review.design.id}' " +
-                                                      "and document_type_id='#{params[:document_type_id]}'"))
-                                          
+                                      :conditions => ("board_id='#{@design_review.design.board.id}' " +
+                                                      "AND document_type_id='#{params[:document_type_id]}'"))
+                                        
     @docs.sort_by { |drd| drd.document.created_on}
     @docs.reverse!
                               
@@ -1671,10 +1660,16 @@ class DesignReviewController < ApplicationController
           design_review_result.update
           peer         = User.find(user_id)
           new_reviewer = peer.name
+
+          design_review.record_update(role.display_name, 
+                                      session[:user].name, 
+                                      peer.name,
+                                      session[:user])
+                                      
           if flash_msg == ''
-            flash_msg = "#{new_reviewer} is assigned to the #{role_name} review"
+            flash_msg = "#{new_reviewer} is assigned to the #{role.display_name} review"
           else
-            flash_msg += " and #{new_reviewer} is assigned to the #{role_name} review"
+            flash_msg += " and #{new_reviewer} is assigned to the #{role.display_name} review"
           end
 
           if is_reviewer
@@ -1704,6 +1699,11 @@ class DesignReviewController < ApplicationController
         peer = User.find(design_review_result.reviewer_id)
         design_review_result.reviewer_id = session[:user].id
         design_review_result.update
+        
+        design_review.record_update(role.display_name, 
+                                    peer.name, 
+                                    session[:user].name,
+                                    session[:user])
 
         new_reviewer = session[:user].name
         if flash_msg == ''
@@ -1757,8 +1757,9 @@ class DesignReviewController < ApplicationController
     
     @design_review = DesignReview.find(params[:id])
     
-    @designers           = Role.find_by_name("Designer").active_users
-    @peer_list           = @designers
+    @designers           = Role.active_designers
+    @designer_list       = @designers - [@design_review.design.peer]
+    @peer_list           = @designers - [@design_review.design.designer]
     @pcb_input_gate_list = Role.find_by_name('PCB Input Gate').active_users
     @priorities          = Priority.find(:all, :order => 'value ASC')
     @design_centers      = DesignCenter.get_all_active
@@ -1769,12 +1770,12 @@ class DesignReviewController < ApplicationController
       @review_statuses << ReviewStatus.find_by_name('Review On-Hold')
     end
 
-    @pcb_input_gate    = @design_review.design.input_gate.name
-    @pcb_input_gate_id = @design_review.design.pcb_input_id
+    @release_poster = @design_review.design.get_design_review('Release').designer
     
-    if @design_review.design.designer_id > 0
-      @designer = @design_review.design.designer
-    end
+    selects = { :designer  => @design_review.design.designer, 
+                :peer      => @design_review.design.peer,
+                :designers => @designers }
+    flash[:selects] = selects
 
   end
 
@@ -1801,140 +1802,50 @@ class DesignReviewController < ApplicationController
       session['flash'][:sort_order] = session['flash'][:sort_order]
     end
     
-    design_review  = DesignReview.find(params[:id])
-    audit_skipped  = design_review.design.audit.skip?
-    audit_complete = design_review.design.audit.is_complete?
+    # Normally this logic would go in the model.  But the admin update
+    # screen is designed to prevent the user from designating the same
+    # person as both the designer and the peer auditor.  There is a remote
+    # chance that the user could select the same person for both roles.
+    # Since te chance is remote I am dealing with it here.
+    if params[:peer] && params[:peer][:id] == params[:designer][:id]
+      redirect_to(:action => 'admin_update', :id => params[:id])
+      flash['notice'] = 'The peer and the designer must be different - update not recorded'
+      return
+    end
     
-    peer_id = params[:peer] ? params[:peer][:id] : design_review.design.peer_id
+    design = DesignReview.find(params[:id]).design
 
-    if !params[:designer]
-
-      for dsg_review in design_review.design.design_reviews
-        dsg_review.design_center_id = params[:design_center][:id]
-        dsg_review.update
-      end
-
-      flash['notice'] = "#{design_review.design.name} has been updated"
-      if session[:return_to]
-        redirect_to(session[:return_to])
-      else
-        redirect_to(:action => "index", :controller => "tracker" )
-      end
-   
-    elsif (!audit_skipped  &&
-           (params[:designer][:id] != peer_id  ||
-            (params[:designer][:id] == '' &&
-             peer_id                == '')))  ||
-          audit_skipped 
-          
-      design = design_review.design
-
-      # Keep track of the updates for the comment update
-      changes = { }
-      
-      cc_list = []
-      cc_list << design.designer.email if design.designer_id > 0
-      cc_list << design.peer.email     if design.peer_id     > 0
-
-      if (params[:priority][:id] != "" &&
-          params[:priority][:id] != design.priority_id.to_s)
-        changes[:priority] = { :old => design.priority.name, 
-                               :new => Priority.find(params[:priority][:id]).name }
-        design.priority_id = params[:priority][:id]
-      end
-      if (params[:design_center][:id] != "" &&
-          params[:design_center][:id] != design_review.design_center_id.to_s)
-        changes[:design_center] = { :old => design_review.design_center.name, 
-                                    :new => DesignCenter.find(params[:design_center][:id]).name }
-      end
-      if (params[:designer]            &&
-          params[:designer][:id] != "" &&
-          params[:designer][:id] != design.designer_id.to_s)
-        new_designer       = User.find(params[:designer][:id])
-        changes[:designer] = { :old => design.designer.name, 
-                               :new => new_designer.name }
-        design.designer_id = new_designer.id
-      end
-      if (!audit_complete          && 
-          !audit_skipped           &&
-          params[:peer]            &&
-          params[:peer][:id] != "" &&
-          params[:peer][:id] != design.peer_id.to_s)
-        new_peer       = User.find(params[:peer][:id])
-        changes[:peer] = { :old => design.peer.name, 
-                           :new => new_peer.name }
-        design.peer_id = new_peer.id
-      end
-      
-      design.update
-
-
-      if (params[:review_status]            &&
-          params[:review_status][:id] != "" &&
-          params[:review_status][:id] != design_review.review_status_id.to_s)
-
-        changes[:review_status] = { :old => design_review.review_status.name,
-                                    :new => ReviewStatus.find(params[:review_status][:id]).name }
-
-        on_hold = ReviewStatus.find_by_name('Review On-Hold')
-        if params[:review_status][:id] == on_hold.id.to_s
-          design_review.place_on_hold
-        else
-          design_review.remove_from_hold(params[:review_status][:id])
-        end
-
-      end
-      
-      # Update all design reviews that are not complete
-      pre_art_review = ReviewType.find_by_name('Pre-Artwork')
-      release_review = ReviewType.find_by_name('Release')
-      design.design_reviews.each do |dr|
-        if dr.review_status.name != 'Review Completed'
-          if dr.review_type_id != pre_art_review.id
-            if dr.review_type_id != release_review.id
-              dr.designer_id = params[:designer][:id]
-            end
-          else
-            if (params[:pcb_input_gate]            &&
-                params[:pcb_input_gate][:id] != "" &&
-                params[:pcb_input_gate][:id] != dr.designer_id.to_s)
-              changes[:pcb_input_gate] = { :old => User.find(dr.designer_id).name, 
-                                           :new => User.find(params[:pcb_input_gate][:id]).name }
-              dr.designer_id         = params[:pcb_input_gate][:id]
-              dr.design.pcb_input_id = params[:pcb_input_gate][:id]
-              dr.design.update
-              dr.design.reload
-            end
-            dr.designer_id = params[:pcb_input_gate][:id]
-          end
-          dr.priority_id = params[:priority][:id]
-        end
-        dr.design_center_id = params[:design_center][:id]
-        dr.update
-
-      end
-     
-      if changes.size > 0 || params[:post_comment][:comment].size > 0
-        # Add a comment to the design review and send mail for the update
-        create_comment(design_review, params[:post_comment][:comment], changes)
-
-        TrackerMailer::deliver_design_review_modification(session[:user], 
-                                                          design_review, 
-                                                          cc_list)
-
-        flash['notice'] = "#{design.name} has been updated - mail sent"
-      end
-      
-      if session[:return_to]
-        redirect_to(session[:return_to])
-      else
-        redirect_to(:action => "index", :controller => "tracker" )
-      end
-    else
-      flash['notice'] = "The peer and the designer must be different - update not recorded"
-      redirect_to(:action => "admin_update", :id => params[:id])
+    updates = {}
+    if params[:pcb_input_gate]
+      updates[:pcb_input_gate] = User.find(params[:pcb_input_gate][:id])
+    end
+    if params[:designer][:id] != ''
+      updates[:designer]       = User.find(params[:designer][:id])
+    end
+    if params[:peer] && params[:peer][:id] != ''
+      updates[:peer]           = User.find(params[:peer][:id])
+    end
+    if params[:review_status]
+      updates[:status]         = ReviewStatus.find(params[:review_status][:id])
+    end
+    if params[:release_poster]
+      updates[:release_poster] = User.find(params[:release_poster][:id])
     end
 
+    updates[:design_center]  = DesignCenter.find(params[:design_center][:id])
+    updates[:criticality]    = Priority.find(params[:priority][:id])
+
+    
+    flash['notice'] = design.admin_updates(updates, 
+                                           params[:post_comment][:comment], 
+                                           session[:user])
+   
+    if session[:return_to]
+      redirect_to(session[:return_to])
+    else
+      redirect_to(:action => "index", :controller => "tracker" )
+    end
+    
   end
 
 
@@ -2015,6 +1926,66 @@ class DesignReviewController < ApplicationController
 
     redirect_to(:controller => 'tracker', :action => 'index')
     
+  end
+  
+  
+  ######################################################################
+  #
+  # display_designer_select
+  #
+  # Description:
+  # Redisplays the designer selection box with the name of the peer
+  # that was selected removed from the list of designers.
+  # 
+  # This method is called in response to an AJAX call when the user
+  # makes a selection from the Peer Select box.
+  #
+  # Parameters from params
+  # id - the user id of the peer that was selected.
+  #
+  ######################################################################
+  #
+  def display_designer_select
+  
+    selects         = flash[:selects]
+    selects[:peer]  = selects[:designers].detect { |d| d.id==params[:id].to_i}
+    flash[:selects] = selects
+    
+    @designers   = selects[:designers] - [selects[:peer]]
+    @designer_id = selects[:designer].id
+    
+    render(:layout => false)
+  
+  end
+  
+  
+  ######################################################################
+  #
+  # display_peer_auditor_select
+  #
+  # Description:
+  # Redisplays the peer selection box with the name of the designer
+  # that was selected removed from the list of peers.
+  # 
+  # This method is called in response to an AJAX call when the user
+  # makes a selection from the Designer Select box.
+  #
+  # Parameters from params
+  # id - the user id of the designer that was selected.
+  #
+  ######################################################################
+  #
+  def display_peer_auditor_select
+  
+    selects            = flash[:selects]
+    selects[:designer] = selects[:designers].detect { |d| d.id==params[:id].to_i}
+    flash[:selects]    = selects
+    
+    @peer_list = selects[:designers] - [selects[:designer]]
+    @peer_id   = selects[:peer].id
+    
+    render(:layout => false)
+  
   end 
 
 
