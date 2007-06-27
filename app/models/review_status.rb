@@ -20,6 +20,9 @@ class ReviewStatus < ActiveRecord::Base
   validates_presence_of   :name
 
 
+  CLOSED_REVIEWS = [self.find_by_name('Review Completed'), 
+                    self.find_by_name('Review Skipped')]
+
   ##############################################################################
   #
   # Class Methods
@@ -44,6 +47,27 @@ class ReviewStatus < ActiveRecord::Base
   #
   def ReviewStatus.get_all_active(sort = 'name ASC')
     ReviewStatus.find_all_by_active(1, sort)
+  end
+  
+  
+  ######################################################################
+  #
+  # closed_reviews
+  #
+  # Description:
+  # This method returns an array of the review statuses that indicate
+  # the review is closed for reviewer updates.
+  #
+  # Parameters:
+  # none
+  #
+  # Return value:
+  # An array of closed review status records
+  #
+  ######################################################################
+  #
+  def ReviewStatus.closed_reviews
+    CLOSED_REVIEWS
   end
   
 
