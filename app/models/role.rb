@@ -78,6 +78,26 @@ class Role < ActiveRecord::Base
   
   ######################################################################
   #
+  # active_designers
+  #
+  # Description:
+  # Provide a list of the active designers.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An array of user records for the active designers
+  #
+  ######################################################################
+  #
+  def self.active_designers
+    self.find(:first, :conditions => "name='Designer'").active_users
+  end
+  
+  
+  ######################################################################
+  #
   # find_all_active
   #
   # Description:
