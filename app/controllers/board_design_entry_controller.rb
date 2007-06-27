@@ -1391,7 +1391,7 @@ class BoardDesignEntryController < ApplicationController
   
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @review_types       = ReviewType.find_all_by_active(1, 'sort_order ASC')
-    @priorities         = Priority.find_all(nil, 'value ASC')
+    @priorities         = Priority.find(:all, :order => 'value')
   
   end
   
