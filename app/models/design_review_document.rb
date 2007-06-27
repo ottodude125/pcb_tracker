@@ -11,6 +11,7 @@
 ########################################################################
 class DesignReviewDocument < ActiveRecord::Base
 
+  belongs_to :board
   belongs_to :design
   belongs_to :document
   belongs_to :document_type
