@@ -14,7 +14,10 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class ChecklistTest < Test::Unit::TestCase
-  fixtures :checklists
+  fixtures :checks,
+           :checklists,
+           :sections,
+           :subsections
 
   def setup
     @checklist = Checklist.find(checklists(:checklist_0_1).id)
@@ -70,21 +73,14 @@ class ChecklistTest < Test::Unit::TestCase
     assert @checklist.save
     @checklist.reload
 
-    assert_equal(4,
-		 @checklist.major_rev_number)
-    assert_equal(1,
-		 @checklist.minor_rev_number)
-    assert_equal(0,
-		 @checklist.released)
-    assert_equal(0,
-		 @checklist.used)
-# FIXME ????
-#    assert_equal("2005-05-23 00:00:00",
-#		 @checklist.released_on)
-    assert_equal(3,
-		 @checklist.released_by)
-    assert_equal(4,
-		 @checklist.created_by)
+    assert_equal(4, @checklist.major_rev_number)
+    assert_equal(1, @checklist.minor_rev_number)
+    assert_equal(0, @checklist.released)
+    assert_equal(0, @checklist.used)
+    assert_equal(Time.local(2005, "may", 23, 0, 0, 0).to_i,
+                 @checklist.released_on.to_i)
+    assert_equal(3, @checklist.released_by)
+    assert_equal(4, @checklist.created_by)
 
   end
   
@@ -181,6 +177,21 @@ class ChecklistTest < Test::Unit::TestCase
     expected_results.each { |field, value|
       assert_equal(value[0], checklist.send(field)) }
 
+  end
+  
+  
+  def test_each_check
+    expected_checks = [
+      checks(:check_10_000),     checks(:check_10_001),     checks(:check_10_002),
+      checks(:check_10_003),     checks(:check_10_004),     checks(:check_10_005),
+      checks(:check_10_006),     checks(:check_10_007),     checks(:check_10_008),
+      checks(:check_10_009),     checks(:check_10_010),     checks(:check_10_011),
+      checks(:check_10_012),     checks(:check_10_013),     checks(:check_10_014)]
+    i = 0
+    checklists(:checklist_2_0).each_check do |c|
+      assert_equal(expected_checks[i], c)
+      i += 1
+    end
   end
   
 

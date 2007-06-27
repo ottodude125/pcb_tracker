@@ -14,13 +14,39 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class CheckTest < Test::Unit::TestCase
-  fixtures :checks
+  fixtures :checks,
+           :designs
 
   def setup
     @check = Check.find(checks(:check_18).id)
   end
 
 
+  ######################################################################
+  def test_belongs_to
+  
+    new_design       = Design.new(:design_type => "New")
+    date_code_design = Design.new(:design_type => "Date Code")
+    dot_rev_design   = Design.new(:design_type => "Dot Rev")
+    
+    full_review_check = Check.new(:full_review     => 1)
+    date_code_check   = Check.new(:date_code_check => 1)
+    dot_rev_check     = Check.new(:dot_rev_check   => 1)
+    
+    assert(full_review_check.belongs_to?(new_design))
+    assert(date_code_check.belongs_to?(new_design))
+    assert(dot_rev_check.belongs_to?(new_design))
+    
+    assert(!full_review_check.belongs_to?(date_code_design))
+    assert( date_code_check.belongs_to?(date_code_design))
+    assert(!dot_rev_check.belongs_to?(date_code_design))
+    
+    assert(!full_review_check.belongs_to?(dot_rev_design))
+    assert(!date_code_check.belongs_to?(dot_rev_design))
+    assert( dot_rev_check.belongs_to?(dot_rev_design))
+    
+  end
+  
   ######################################################################
   def test_create
     assert_kind_of Check,  @check

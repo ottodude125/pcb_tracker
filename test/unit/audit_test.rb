@@ -22,9 +22,13 @@ class AuditTest < Test::Unit::TestCase
            :checks,
            :designs,
            :design_checks,
+           :design_reviews,
+           :design_review_results,
            :prefixes,
            :priorities,
+           :review_types,
            :revisions,
+           :roles,
            :sections,
            :subsections,
            :users
@@ -555,12 +559,26 @@ class AuditTest < Test::Unit::TestCase
     assert_equal(:peer, @audit_109.update_type(@bob_g))
     assert_equal(:none, @audit_109.update_type(@scott_g))
     assert_equal(:none, @audit_109.update_type(@rich_m))
+    
+    assert(!@audit_109.self_update?(@bob_g))
+    assert(!@audit_109.self_update?(@scott_g))
+    assert(!@audit_109.self_update?(@rich_m))
+    assert( @audit_109.peer_update?(@bob_g))
+    assert(!@audit_109.peer_update?(@scott_g))
+    assert(!@audit_109.peer_update?(@rich_m))
   
     @audit_109.designer_complete = 0
     
     assert_equal(:none, @audit_109.update_type(@bob_g))
     assert_equal(:self, @audit_109.update_type(@scott_g))
     assert_equal(:none, @audit_109.update_type(@rich_m))    
+
+    assert(!@audit_109.self_update?(@bob_g))
+    assert( @audit_109.self_update?(@scott_g))
+    assert(!@audit_109.self_update?(@rich_m))
+    assert(!@audit_109.peer_update?(@bob_g))
+    assert(!@audit_109.peer_update?(@scott_g))
+    assert(!@audit_109.peer_update?(@rich_m))
     
   end
 
@@ -624,33 +642,183 @@ class AuditTest < Test::Unit::TestCase
   end
   
   ######################################################################
-  def no_test_dump_audits
+  def test_process_audit_updates
   
-    audits = Audit.find(:all)
-    
-    puts
-    audits.each do |a|
-    
-      puts("================================================")
-      puts("ID:                  #{a.id}")
-      puts("DESIGN:              #{a.design.name}")
-      puts("LEAD DESIGNER:       #{a.design.designer.name}")
-      puts("LEAD PEER:           #{a.design.peer.name}")
-      puts("SELF AUDIT:          Yes") if a.is_self_audit?
-      puts("PEER AUDIT:          Yes") if a.is_peer_audit?
-      puts("COMPLETE:            Yes") if a.is_complete?
-      puts("NUMBER OF TEAMMATES: #{a.audit_teammates.size}")
+    # Validate self updates
+    design_check_1        = design_checks(:design_check_20_2000)
+    completed_self_checks = @audit_mx234b.designer_completed_checks
       
-      a.audit_teammates.each do |at|
-        puts("  AUDITOR:           #{at.user.name}")
-        puts("  SELF:              YES") if at.self?
-        puts("  PEER:              YES") if !at.self?
-      end
+    assert_equal('None', design_check_1.designer_result)
+
+
+    start_time = Time.now
+    @audit_mx234b.process_self_audit_update('Verified', design_check_1, @rich_m)
     
+    completed_self_checks += 1
+    design_check_1.reload
+    assert_equal(completed_self_checks, @audit_mx234b.designer_completed_checks)
+    assert_equal('Verified',            design_check_1.designer_result)
+    assert_equal(@rich_m.id,            design_check_1.designer_id)
+    assert(start_time.to_i <= design_check_1.designer_checked_on.to_i)
+    assert(Time.now.to_i   >= design_check_1.designer_checked_on.to_i)
+    checked_on = design_check_1.designer_checked_on
+
+    @audit_mx234b.process_self_audit_update('N/A', design_check_1, @scott_g)
+    
+    design_check_1.reload
+    assert_equal(completed_self_checks, @audit_mx234b.designer_completed_checks)
+    assert_equal('N/A',                 design_check_1.designer_result)
+    assert_equal(@scott_g.id,           design_check_1.designer_id)
+    
+    assert(checked_on.to_i == design_check_1.designer_checked_on.to_i)
+    
+    
+    audit_mx234b_other = Audit.find(@audit_mx234b.id)
+    design_check_2 = DesignCheck.find(design_checks(:design_check_20_2001).id)
+    design_check_3 = DesignCheck.find(design_checks(:design_check_20_2005).id)
+    design_check_4 = DesignCheck.find(design_checks(:design_check_20_2002).id)
+    
+    assert_equal('None',                design_check_2.designer_result)
+    assert_equal('None',                design_check_3.designer_result)
+    assert_equal(completed_self_checks, audit_mx234b_other.designer_completed_checks)
+
+    # Verify the exception handling works when one instance of an audit contains
+    # stale information.  @audit_mx234b contains stale information after 
+    # audit_mx234b_other.process_self_audit_update is called.
+    audit_mx234b_other.process_self_audit_update('Verified', design_check_2, @rich_m)
+    
+    assert_equal(completed_self_checks, @audit_mx234b.designer_completed_checks)
+
+    completed_self_checks += 1
+    design_check_2.reload
+    assert_equal(completed_self_checks, audit_mx234b_other.designer_completed_checks)
+    assert_equal('Verified',            design_check_2.designer_result)
+    assert_equal(@rich_m.id,            design_check_2.designer_id)
+    assert(completed_self_checks != @audit_mx234b.designer_completed_checks)
+    
+    @audit_mx234b.process_self_audit_update('Verified', design_check_3, @rich_m)
+    
+    completed_self_checks += 1
+    assert_equal(completed_self_checks, @audit_mx234b.designer_completed_checks)
+
+    audit_mx234b_other.reload
+    assert_equal(completed_self_checks, audit_mx234b_other.designer_completed_checks)
+    
+    @audit_mx234b.design_checks.each do |design_check|
+      assert(!@audit_mx234b.designer_complete?)
+      @audit_mx234b.process_self_audit_update('Verified', design_check, @rich_m)
     end
+    completed_self_checks = @audit_mx234b.design_checks.size
+    assert(@audit_mx234b.designer_complete?)
+    assert_equal(completed_self_checks, @audit_mx234b.designer_completed_checks)
+
+
+    # Validate peer updates
+    completed_peer_checks = @audit_mx234b.auditor_completed_checks
     
-    puts("================================================")
+    assert_equal('None', design_check_1.auditor_result)
+
+    start_time = Time.now
+    comment    = 'Peer Reviewer Comment'
+    @audit_mx234b.process_peer_audit_update('Verified', comment, design_check_1, @bob_g)
+    
+    completed_peer_checks += 1
+    design_check_1.reload
+    assert_equal(completed_peer_checks, @audit_mx234b.auditor_completed_checks)
+    assert_equal('Verified',            design_check_1.auditor_result)
+    assert_equal(@bob_g.id,             design_check_1.auditor_id)
+    assert(start_time.to_i <= design_check_1.auditor_checked_on.to_i)
+    assert(Time.now.to_i   >= design_check_1.auditor_checked_on.to_i)
+    checked_on = design_check_1.auditor_checked_on
+
+    @audit_mx234b.process_peer_audit_update('N/A', comment, design_check_1, @bob_g)
+    
+    design_check_1.reload
+    assert_equal('N/A',     design_check_1.auditor_result)
+    assert_equal(@bob_g.id, design_check_1.auditor_id)
+    assert(checked_on.to_i == design_check_1.auditor_checked_on.to_i)
+    assert(completed_peer_checks, @audit_mx234b.auditor_completed_checks)
+    
+    @audit_mx234b.process_peer_audit_update('Comment', comment, design_check_1, @bob_g)
+    
+    completed_peer_checks -= 1
+    design_check_1.reload
+    assert_equal('Comment', design_check_1.auditor_result)
+    assert_equal(@bob_g.id, design_check_1.auditor_id)
+    assert(checked_on.to_i == design_check_1.auditor_checked_on.to_i)
+    assert(completed_peer_checks, @audit_mx234b.auditor_completed_checks)
+    
+    
+    audit_mx234b_other = Audit.find(@audit_mx234b.id)
+
+    assert_equal('None', design_check_2.auditor_result)
+    assert_equal('None', design_check_4.auditor_result)
+
+    # Verify the exception handling works when one instance of an audit contains
+    # stale information.  @audit_mx234b contains stale information after 
+    # audit_mx234b_other.process_self_audit_update is called.
+    audit_mx234b_other.process_peer_audit_update('Verified', comment, design_check_2, @bob_g)
+    
+    # @audit_mx234b has stale information. So it's completed check count is off - which is OK.
+    assert_equal(completed_peer_checks, @audit_mx234b.auditor_completed_checks)
+
+    completed_peer_checks += 1
+    design_check_2.reload
+    assert_equal(completed_peer_checks, audit_mx234b_other.auditor_completed_checks)
+    assert_equal('Verified',            design_check_2.auditor_result)
+    assert_equal(@bob_g.id,             design_check_2.auditor_id)
+    assert(completed_peer_checks != @audit_mx234b.auditor_completed_checks)
+    
+    @audit_mx234b.process_peer_audit_update('Verified', comment, design_check_4, @bob_g)
+    
+    completed_peer_checks += 1
+    assert_equal(completed_peer_checks, @audit_mx234b.auditor_completed_checks)
+
+    audit_mx234b_other.reload
+    assert_equal(completed_peer_checks, audit_mx234b_other.auditor_completed_checks)
+    
+    @audit_mx234b.design_checks.each do |design_check|
+      assert(!@audit_mx234b.auditor_complete?)
+      @audit_mx234b.process_peer_audit_update('Verified', comment, design_check, @bob_g)
+    end
+    assert(@audit_mx234b.auditor_complete?)
+
+  end
   
+  ######################################################################
+  def dump_audits
+  
+    Audit.find(:all).each { |a| dump_audit(a) }
+    
+  end
+  
+  ######################################################################
+  def dump_audit(a)
+
+    puts("================================================")
+    puts("ID:                  #{a.id}")
+    puts("DESIGN:              #{a.design.name}")
+    puts("LEAD DESIGNER:       #{a.design.designer.name}")
+    puts("LEAD PEER:           #{a.design.peer.name}")
+    puts("SELF AUDIT:          Yes") if a.is_self_audit?
+    puts("PEER AUDIT:          Yes") if a.is_peer_audit?
+    puts("COMPLETE:            Yes") if a.is_complete?
+    puts("NUMBER OF TEAMMATES: #{a.audit_teammates.size}")
+      
+    a.audit_teammates.each do |at|
+      puts("  AUDITOR:           #{at.user.name}")
+      puts("  SELF:              YES") if at.self?
+      puts("  PEER:              YES") if !at.self?
+    end
+      
+    a.design_checks.each do |dc|
+      puts("  Design Check ID: #{dc.id}              Check ID: #{dc.check_id}")
+      puts("    DESIGNER: #{User.find(dc.designer_id).name}  RESULT: #{dc.designer_result}") if dc.designer_id > 0
+      puts("    AUDITOR:  #{User.find(dc.auditor_id).name}   RESULT: #{dc.auditor_result}")  if dc.auditor_id  > 0
+    end
+
+    puts("================================================")
+
   end
 
 end

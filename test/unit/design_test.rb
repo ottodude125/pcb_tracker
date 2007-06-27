@@ -15,8 +15,12 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class DesignTest < Test::Unit::TestCase
   fixtures(:designs,
+           :design_centers,
+           :design_reviews,
            :design_review_comments,
+           :design_review_results,
            :priorities,
+           :review_statuses,
            :review_types,
            :roles,
            :users)
@@ -27,18 +31,6 @@ class DesignTest < Test::Unit::TestCase
   end
 
   ######################################################################
-  #
-  # test_people
-  #
-  # Description:
-  # Validates the behaviour of the following methods.
-  #
-  #   designer()
-  #   peer()
-  #   input_gate()
-  #
-  ######################################################################
-  #
   def test_people
   
     # Verify the behavior when the IDs are not set.
@@ -56,16 +48,6 @@ class DesignTest < Test::Unit::TestCase
   
   
   ######################################################################
-  #
-  # test_all_reviewers
-  #
-  # Description:
-  # Validates the behaviour of the following methods.
-  #
-  #   all_reviewers()
-  #
-  ######################################################################
-  #
   def test_all_reviewers
   
     expected_reviewers =
@@ -75,27 +57,18 @@ class DesignTest < Test::Unit::TestCase
         users(:art_d),     users(:dan_g),     users(:rich_a),
         users(:lisa_a),    users(:jim_l),     users(:eileen_c) ]
 
-    assert_equal(expected_reviewers, designs(:mx234a).all_reviewers)
+    #assert_equal(expected_reviewers, designs(:mx234a).all_reviewers)
     
-    sorted = true
-    expected_reviewers =
-      expected_reviewers.sort_by { |u| u.last_name }
-    assert_equal(expected_reviewers, designs(:mx234a).all_reviewers(sorted))
+    expected_reviewers = expected_reviewers.sort_by { |u| u.last_name }
+    reviewers          = designs(:mx234a).all_reviewers
+    
+    assert_equal(expected_reviewers.size, reviewers.size)
+    assert_equal(expected_reviewers, designs(:mx234a).all_reviewers)
     
   end
   
   
   ######################################################################
-  #
-  # test_get_associated_users
-  #
-  # Description:
-  # Validates the behaviour of the following methods.
-  #
-  #   get_associated_users()
-  #
-  ######################################################################
-  #
   def test_get_associated_users
   
     mx234a_users = designs(:mx234a).get_associated_users
@@ -118,16 +91,6 @@ class DesignTest < Test::Unit::TestCase
   
 
   ######################################################################
-  #
-  # test_get_associated_users_by_role
-  #
-  # Description:
-  # Validates the behaviour of the following methods.
-  #
-  #   get_associated_users_by_role()
-  #
-  ######################################################################
-  #
   def test_get_associated_users_by_role
   
     mx234a_users = designs(:mx234a).get_associated_users_by_role
@@ -168,18 +131,6 @@ class DesignTest < Test::Unit::TestCase
   
   
   ######################################################################
-  #
-  # test_types
-  #
-  # Description:
-  # Validates the behaviour of the following methods.
-  #
-  #   new?()
-  #   date_code?()
-  #   dot_rev?()
-  #
-  ######################################################################
-  #
   def test_types 
   
     assert_equal(true,  designs(:mx234a).new?)
@@ -198,20 +149,7 @@ class DesignTest < Test::Unit::TestCase
 
 
   ######################################################################
-  #
-  # test_accessors
-  #
-  # Description:
-  # Validates the behaviour of the following methods.
-  #
-  #   name()
-  #   phase()
-  #   priority_name()
-  #   belongs_to()
-  #
-  ######################################################################
-  #
- def test_accessors
+  def test_accessors
  
    design = Design.new
 
@@ -281,126 +219,126 @@ class DesignTest < Test::Unit::TestCase
  end
  
  
- ######################################################################
- def test_increment_review
+  ######################################################################
+  def test_increment_review
  
-  # Verify a design where no reviews are skipped.
-  mx234a = designs(:mx234a)
-  assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
-  mx234a.increment_review
-  mx234a.reload
-  assert_equal(review_types(:placement).id,   mx234a.phase_id)
-  mx234a.increment_review
-  mx234a.reload
-  assert_equal(review_types(:routing).id,     mx234a.phase_id)
-  mx234a.increment_review
-  mx234a.reload
-  assert_equal(review_types(:final).id,       mx234a.phase_id)
-  mx234a.increment_review
-  mx234a.reload
-  assert_equal(review_types(:release).id,     mx234a.phase_id)
-  mx234a.increment_review
-  mx234a.reload
-  assert_equal(Design::COMPLETE,              mx234a.phase_id)
+    # Verify a design where no reviews are skipped.
+    mx234a = designs(:mx234a)
+    assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
+    mx234a.increment_review
+    mx234a.reload
+    assert_equal(review_types(:placement).id,   mx234a.phase_id)
+    mx234a.increment_review
+    mx234a.reload
+    assert_equal(review_types(:routing).id,     mx234a.phase_id)
+    mx234a.increment_review
+    mx234a.reload
+    assert_equal(review_types(:final).id,       mx234a.phase_id)
+    mx234a.increment_review
+    mx234a.reload
+    assert_equal(review_types(:release).id,     mx234a.phase_id)
+    mx234a.increment_review
+    mx234a.reload
+    assert_equal(Design::COMPLETE,              mx234a.phase_id)
   
-  # Reset and try with the Placement and Routing reviews set to skipped.
-  mx234a.phase_id  = review_types(:pre_artwork).id
-  review_skipped   = ReviewStatus.find_by_name("Review Skipped")
-  placement_review = mx234a.design_reviews.detect { |dr| dr.review_type_id == review_types(:placement).id }
-  routing_review   = mx234a.design_reviews.detect { |dr| dr.review_type_id == review_types(:routing).id }
-  placement_review.review_status = review_skipped
-  placement_review.update
-  routing_review.review_status = review_skipped
-  routing_review.update
+    # Reset and try with the Placement and Routing reviews set to skipped.
+    mx234a.phase_id  = review_types(:pre_artwork).id
+    review_skipped   = ReviewStatus.find_by_name("Review Skipped")
+    placement_review = mx234a.design_reviews.detect { |dr| dr.review_type_id == review_types(:placement).id }
+    routing_review   = mx234a.design_reviews.detect { |dr| dr.review_type_id == review_types(:routing).id }
+    placement_review.review_status = review_skipped
+    placement_review.update
+    routing_review.review_status = review_skipped
+    routing_review.update
   
-  assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
-  mx234a.increment_review
-  mx234a.reload
-  assert_equal(review_types(:final).id,       mx234a.phase_id)
-  mx234a.increment_review
-  mx234a.reload
-  assert_equal(review_types(:release).id,     mx234a.phase_id)
-  mx234a.increment_review
-  mx234a.reload
-  assert_equal(Design::COMPLETE,              mx234a.phase_id)
+    assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
+    mx234a.increment_review
+    mx234a.reload
+    assert_equal(review_types(:final).id,       mx234a.phase_id)
+    mx234a.increment_review
+    mx234a.reload
+    assert_equal(review_types(:release).id,     mx234a.phase_id)
+    mx234a.increment_review
+    mx234a.reload
+    assert_equal(Design::COMPLETE,              mx234a.phase_id)
 
-  # Reset and try with all of the reviews set to skipped.
-  mx234a.phase_id  = review_types(:pre_artwork).id
-  mx234a.design_reviews.each do |dr|
-    dr.review_status = review_skipped
-    dr.update
+    # Reset and try with all of the reviews set to skipped.
+    mx234a.phase_id  = review_types(:pre_artwork).id
+    mx234a.design_reviews.each do |dr|
+      dr.review_status = review_skipped
+      dr.update
+    end
+  
+    assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
+    mx234a.increment_review
+    mx234a.reload
+    assert_equal(Design::COMPLETE,              mx234a.phase_id)
+
   end
-  
-  assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
-  mx234a.increment_review
-  mx234a.reload
-  assert_equal(Design::COMPLETE,              mx234a.phase_id)
-
- end
  
  
- ######################################################################
- def test_next_review
+  ######################################################################
+  def test_next_review
  
-  # Verify a design where no reviews are skipped.
-  mx234a = designs(:mx234a)
-  assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
+    # Verify a design where no reviews are skipped.
+    mx234a = designs(:mx234a)
+    assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
   
-  next_review_id = mx234a.next_review
-  assert_equal(review_types(:placement).id,   next_review_id)
-  mx234a.phase_id = next_review_id
+    next_review_id = mx234a.next_review
+    assert_equal(review_types(:placement).id,   next_review_id)
+    mx234a.phase_id = next_review_id
 
-  next_review_id  = mx234a.next_review
-  assert_equal(review_types(:routing).id,     next_review_id)
-  mx234a.phase_id = next_review_id
+    next_review_id  = mx234a.next_review
+    assert_equal(review_types(:routing).id,     next_review_id)
+    mx234a.phase_id = next_review_id
   
-  next_review_id  = mx234a.next_review
-  assert_equal(review_types(:final).id,       next_review_id)
-  mx234a.phase_id = next_review_id
+    next_review_id  = mx234a.next_review
+    assert_equal(review_types(:final).id,       next_review_id)
+    mx234a.phase_id = next_review_id
   
-  next_review_id  = mx234a.next_review
-  assert_equal(review_types(:release).id,     next_review_id)
-  mx234a.phase_id = next_review_id
+    next_review_id  = mx234a.next_review
+    assert_equal(review_types(:release).id,     next_review_id)
+    mx234a.phase_id = next_review_id
   
-  next_review_id  = mx234a.next_review
-  assert_equal(Design::COMPLETE,              next_review_id)
+    next_review_id  = mx234a.next_review
+    assert_equal(Design::COMPLETE,              next_review_id)
   
-  # Reset and try with the Placement and Routing reviews set to skipped.
-  mx234a.phase_id  = review_types(:pre_artwork).id
-  review_skipped   = ReviewStatus.find_by_name("Review Skipped")
-  placement_review = mx234a.design_reviews.detect { |dr| dr.review_type_id == review_types(:placement).id }
-  routing_review   = mx234a.design_reviews.detect { |dr| dr.review_type_id == review_types(:routing).id }
-  placement_review.review_status = review_skipped
-  placement_review.update
-  routing_review.review_status = review_skipped
-  routing_review.update
+    # Reset and try with the Placement and Routing reviews set to skipped.
+    mx234a.phase_id  = review_types(:pre_artwork).id
+    review_skipped   = ReviewStatus.find_by_name("Review Skipped")
+    placement_review = mx234a.design_reviews.detect { |dr| dr.review_type_id == review_types(:placement).id }
+    routing_review   = mx234a.design_reviews.detect { |dr| dr.review_type_id == review_types(:routing).id }
+    placement_review.review_status = review_skipped
+    placement_review.update
+     routing_review.review_status = review_skipped
+    routing_review.update
   
-  assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
+    assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
   
-  next_review_id = mx234a.next_review
-  assert_equal(review_types(:final).id,       next_review_id)
-  mx234a.phase_id = next_review_id
+    next_review_id = mx234a.next_review
+    assert_equal(review_types(:final).id,       next_review_id)
+    mx234a.phase_id = next_review_id
   
-  next_review_id = mx234a.next_review
-  assert_equal(review_types(:release).id,     next_review_id)
-  mx234a.phase_id = next_review_id
+    next_review_id = mx234a.next_review
+    assert_equal(review_types(:release).id,     next_review_id)
+    mx234a.phase_id = next_review_id
   
-  next_review_id = mx234a.next_review
-  assert_equal(Design::COMPLETE,              next_review_id)
+    next_review_id = mx234a.next_review
+    assert_equal(Design::COMPLETE,              next_review_id)
 
-  # Reset and try with all of the reviews set to skipped.
-  mx234a.phase_id  = review_types(:pre_artwork).id
-  mx234a.design_reviews.each do |dr|
-    dr.review_status = review_skipped
-    dr.update
+    # Reset and try with all of the reviews set to skipped.
+    mx234a.phase_id  = review_types(:pre_artwork).id
+    mx234a.design_reviews.each do |dr|
+      dr.review_status = review_skipped
+      dr.update
+    end
+  
+    assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
+  
+    next_review_id = mx234a.next_review
+    assert_equal(Design::COMPLETE,              next_review_id)
+
   end
-  
-  assert_equal(review_types(:pre_artwork).id, mx234a.phase_id)
-  
-  next_review_id = mx234a.next_review
-  assert_equal(Design::COMPLETE,              next_review_id)
-
- end
  
  
   ######################################################################
@@ -512,6 +450,423 @@ class DesignTest < Test::Unit::TestCase
      end
    end
  
+ end
+ 
+ 
+ def test_admin_updates
+ 
+ 
+    la455b = designs(:la455b)
+    mx234c = designs(:mx234c)
+   
+    cathy_m   = users(:cathy_m)
+    bob_g     = users(:bob_g)
+    jan_k     = users(:jan_k)
+    jim_l     = users(:jim_l)
+    patrice_m = users(:patrice_m)
+    rich_m    = users(:rich_m)
+    scott_g   = users(:scott_g)
+   
+    high = priorities(:high)
+    low  = priorities(:low)
+    
+    boston = design_centers(:boston_harrison)
+    oregon = design_centers(:oregon)
+   
+    in_review       = review_statuses(:in_review)
+    not_started     = review_statuses(:not_started)
+    review_complete = review_statuses(:review_complete)
+    review_skipped  = review_statuses(:review_skipped)
+    pending_repost  = review_statuses(:pending_repost)
+    on_hold         = review_statuses(:on_hold)
+   
+    existing_design_updates = DesignUpdate.find(:all)
+   
+    gold_design = { :designer       => scott_g,
+                    :peer           => rich_m,
+                    :pcb_input_gate => cathy_m,
+                    :criticality    => high }
+   
+    gold_design_reviews = { 'Pre-Artwork' => { :designer      => cathy_m,
+                                               :design_center => boston,
+                                               :criticality   => high,
+                                               :status        => review_complete },
+                            'Placement'   => { :designer      => scott_g,
+                                               :design_center => boston,
+                                               :criticality   => high,
+                                               :status        => in_review },
+                            'Routing'     => { :designer      => scott_g,
+                                               :design_center => boston,
+                                               :criticality   => high,
+                                               :status        => not_started },
+                            'Final'       => { :designer      => scott_g,
+                                               :design_center => boston,
+                                               :criticality   => high,
+                                               :status        => not_started },
+                            'Release'     => { :designer      => patrice_m,
+                                               :design_center => boston,
+                                               :criticality   => high,
+                                               :status        => not_started } }
+   
+    # The Pre-Art review is complete.  This should not change the design or the 
+    # Pre-Art design review.
+    update = { :pcb_input_gate => jan_k }
+    la455b.admin_updates(update, "", jim_l)
+ 
+    validate_design(gold_design, la455b)
+    validate_design_reviews(gold_design_reviews, la455b.design_reviews)
+   
+    design_updates = DesignUpdate.find(:all) - existing_design_updates
+    assert_equal(0, design_updates.size)
+    existing_design_updates += design_updates
+
+   
+    # Update the designer
+    update = { :designer => bob_g }
+   
+    # The design and design reviews will be changed as described below.
+    gold_design[:designer] = bob_g
+    gold_design_reviews['Placement'][:designer] = bob_g
+    gold_design_reviews['Routing'][:designer]   = bob_g
+    gold_design_reviews['Final'][:designer]     = bob_g
+ 
+    la455b.admin_updates(update, "", jim_l)
+ 
+    validate_design(gold_design, la455b)
+    validate_design_reviews(gold_design_reviews, la455b.design_reviews)
+   
+    design_updates = DesignUpdate.find(:all) - existing_design_updates
+    assert_equal(4, design_updates.size)
+    
+    # Seperate the design updates into the one for the design and the 3
+    # for the design reviews
+    design_review_updates = []
+    design_updates.each { |du| design_review_updates << du if du.design_id == 0 }
+    
+    assert_equal(3, design_review_updates.size)
+    design_review_id_list = [9, 7, 8]
+    design_review_updates.sort_by { |dru| dru.design_review.review_type.name }.each_with_index do |dru, i|
+      assert_equal(la455b.name,     dru.design_review.design.name)
+      assert_equal(0,               dru.design_id)
+      assert_equal(jim_l.name,      dru.user.name)
+      assert_equal('Designer',      dru.what)
+      assert_equal(scott_g.name,    dru.old_value)
+      assert_equal(bob_g.name,      dru.new_value)
+      assert(design_review_id_list.include?(dru.design_review_id))
+      design_review_id_list.delete_if { |drid| drid == dru.design_review_id }
+    end
+    
+    design_update_list = design_updates - design_review_updates
+    assert_equal(1, design_update_list.size)
+    design_update = design_update_list[0]
+    assert_equal(la455b.name,  design_update.design.name)
+    assert_equal(0,            design_update.design_review_id)
+    assert_equal(jim_l.name,   design_update.user.name)
+    assert_equal('Designer',   design_update.what)
+    assert_equal(scott_g.name, design_update.old_value)
+    assert_equal(bob_g.name,   design_update.new_value)
+    existing_design_updates += design_updates
+
+    # Update the peer
+    update = { :peer => scott_g }
+   
+    # The design will be changed as described below.
+    gold_design[:peer] = scott_g
+
+    # Verify that the valor reviewer is not scott prior to the update.
+    valor_design_review_result =
+      la455b.get_design_review('Final').get_review_result('Valor')
+    assert_not_equal(scott_g.name, valor_design_review_result.reviewer.name)
+
+    la455b.admin_updates(update, "", jim_l)
+ 
+    validate_design(gold_design, la455b)
+    validate_design_reviews(gold_design_reviews, la455b.design_reviews)
+    # Verify that the valor reviewer is scott after the update.
+    valor_design_review_result.reload
+    assert_equal(scott_g.name, valor_design_review_result.reviewer.name)
+    
+    valor_design_review_result.reload
+    assert_equal(scott_g.name, valor_design_review_result.reviewer.name)
+
+    design_updates = DesignUpdate.find(:all) - existing_design_updates
+
+    lisa_a = users(:lisa_a)
+    assert_equal(2, design_updates.size)
+    design_update = design_updates[1]
+    assert_equal(la455b.name,    design_update.design.name)
+    assert_equal(jim_l.name,     design_update.user.name)
+    assert_equal('Peer Auditor', design_update.what)
+    assert_equal(rich_m.name,    design_update.old_value)
+    assert_equal(scott_g.name,   design_update.new_value)
+    design_update = design_updates[0]
+    assert_equal(la455b.name,        design_update.design_review.design.name)
+    assert_equal(jim_l.name,         design_update.user.name)
+    assert_equal('Valor Reviewer',   design_update.what)
+    assert_equal(lisa_a.name,        design_update.old_value)
+    assert_equal(scott_g.name,       design_update.new_value)
+    existing_design_updates += design_updates
+
+    # Update the release poster
+    update = { :release_poster => cathy_m}
+    gold_design_reviews['Release'][:designer] = cathy_m
+    
+    la455b.admin_updates(update, "", jim_l)
+ 
+    validate_design(gold_design, la455b)
+    validate_design_reviews(gold_design_reviews, la455b.design_reviews)
+    
+    design_updates = DesignUpdate.find(:all) - existing_design_updates
+    assert_equal(1, design_updates.size)
+    assert_equal('Release',          design_updates[0].design_review.review_type.name)
+    assert_equal(0,                  design_updates[0].design_id)
+    assert_equal('Release Poster',   design_updates[0].what)
+    assert_equal('Patrice Michaels', design_updates[0].old_value)
+    assert_equal('Cathy McLaren',    design_updates[0].new_value)
+
+    existing_design_updates += design_updates
+
+
+    # Update the criticality
+    update = { :criticality => low }
+    gold_design[:criticality] = low
+    gold_design_reviews['Placement'][:criticality] = low
+    gold_design_reviews['Routing'][:criticality]   = low
+    gold_design_reviews['Final'][:criticality]     = low
+    gold_design_reviews['Release'][:criticality]   = low
+
+    la455b.admin_updates(update, "", jim_l)
+ 
+    validate_design(gold_design, la455b)
+    validate_design_reviews(gold_design_reviews, la455b.design_reviews)
+
+    design_updates = DesignUpdate.find(:all) - existing_design_updates
+    assert_equal(4, design_updates.size)
+    assert_equal('Placement',   design_updates[0].design_review.review_type.name)
+    assert_equal(0,             design_updates[0].design_id)
+    assert_equal('Criticality', design_updates[0].what)
+    assert_equal('High',        design_updates[0].old_value)
+    assert_equal('Low',         design_updates[0].new_value)
+    assert_equal('Routing',     design_updates[1].design_review.review_type.name)
+    assert_equal(0,             design_updates[1].design_id)
+    assert_equal('Criticality', design_updates[1].what)
+    assert_equal('High',        design_updates[1].old_value)
+    assert_equal('Low',         design_updates[1].new_value)
+    assert_equal('Final',       design_updates[2].design_review.review_type.name)
+    assert_equal(0,             design_updates[2].design_id)
+    assert_equal('Criticality', design_updates[2].what)
+    assert_equal('High',        design_updates[2].old_value)
+    assert_equal('Low',         design_updates[2].new_value)
+    assert_equal('Release',     design_updates[3].design_review.review_type.name)
+    assert_equal(0,             design_updates[3].design_id)
+    assert_equal('Criticality', design_updates[3].what)
+    assert_equal('High',        design_updates[3].old_value)
+    assert_equal('Low',         design_updates[3].new_value)
+    design_updates.each { |update| assert_equal(jim_l.name, update.user.name) }
+    existing_design_updates += design_updates
+
+    # Update the design center
+    update = { :design_center => oregon }
+    gold_design[:design_center] = oregon
+    gold_design_reviews['Pre-Artwork'][:design_center] = oregon
+    gold_design_reviews['Placement'][:design_center]   = oregon
+    gold_design_reviews['Routing'][:design_center]     = oregon
+    gold_design_reviews['Final'][:design_center]       = oregon
+    gold_design_reviews['Release'][:design_center]     = oregon
+
+    la455b.admin_updates(update, "", jim_l)
+  
+    validate_design(gold_design, la455b)
+    validate_design_reviews(gold_design_reviews, la455b.design_reviews)
+ 
+    design_updates = DesignUpdate.find(:all) - existing_design_updates
+    assert_equal(5, design_updates.size)
+    assert_equal('Pre-Artwork',       design_updates[0].design_review.review_type.name)
+    assert_equal('Design Center',     design_updates[0].what)
+    assert_equal('Boston (Harrison)', design_updates[0].old_value)
+    assert_equal('Oregon',            design_updates[0].new_value)
+    assert_equal('Placement',         design_updates[1].design_review.review_type.name)
+    assert_equal('Design Center',     design_updates[1].what)
+    assert_equal('Boston (Harrison)', design_updates[1].old_value)
+    assert_equal('Oregon',            design_updates[1].new_value)
+    assert_equal('Routing',           design_updates[2].design_review.review_type.name)
+    assert_equal('Design Center',     design_updates[2].what)
+    assert_equal('Boston (Harrison)', design_updates[2].old_value)
+    assert_equal('Oregon',            design_updates[2].new_value)
+    assert_equal('Final',             design_updates[3].design_review.review_type.name)
+    assert_equal('Design Center',     design_updates[3].what)
+    assert_equal('Boston (Harrison)', design_updates[3].old_value)
+    assert_equal('Oregon',            design_updates[3].new_value)
+    assert_equal('Release',           design_updates[4].design_review.review_type.name)
+    assert_equal('Design Center',     design_updates[4].what)
+    assert_equal('Boston (Harrison)', design_updates[4].old_value)
+    assert_equal('Oregon',            design_updates[4].new_value)
+    existing_design_updates += design_updates
+    0.upto(design_updates.size-1) do |i| 
+      assert_equal(jim_l.name, design_updates[i].user.name)
+      assert_equal(0,          design_updates[i].design_id)
+    end
+
+    # Update the status
+    update = { :status => on_hold 
+    }
+    gold_design_reviews['Placement'][:status] = on_hold
+
+    la455b.admin_updates(update, "", jim_l)
+ 
+    validate_design(gold_design, la455b)
+    validate_design_reviews(gold_design_reviews, la455b.design_reviews)
+
+    design_updates = DesignUpdate.find(:all) - existing_design_updates
+    assert_equal(1, design_updates.size)
+    design_update = design_updates[0]
+    assert_equal(0,                design_update.design_id)
+    assert_equal('Placement',      design_update.design_review.review_type.name)
+    assert_equal(jim_l.name,       design_update.user.name)
+    assert_equal('Review Status',  design_update.what)
+    assert_equal('In Review',      design_update.old_value)
+    assert_equal('Review On-Hold', design_update.new_value)
+    existing_design_updates += design_updates
+
+
+    # Verify that the PCB Input Gate can be updated
+    gold_design = { :designer       => rich_m,
+                    :peer           => scott_g,
+                    :pcb_input_gate => cathy_m,
+                    :criticality    => low }
+   
+    gold_design_reviews = { 'Pre-Artwork' => { :designer      => cathy_m,
+                                               :design_center => boston,
+                                               :criticality   => low,
+                                               :status        => not_started },
+                            'Placement'   => { :designer      => rich_m,
+                                               :design_center => boston,
+                                               :criticality   => low,
+                                               :status        => not_started },
+                            'Routing'     => { :designer      => rich_m,
+                                               :design_center => boston,
+                                               :criticality   => low,
+                                               :status        => not_started },
+                            'Final'       => { :designer      => rich_m,
+                                               :design_center => boston,
+                                               :criticality   => low,
+                                               :status        => not_started },
+                            'Release'     => { :designer      => patrice_m,
+                                               :design_center => boston,
+                                               :criticality   => low,
+                                               :status        => not_started } }
+                                               
+    # Put everything in a known state.
+    update = { :designer      => rich_m,
+               :peer          => scott_g,
+               :criticality   => low,
+               :design_center => boston }
+               
+    mx234c.admin_updates(update, "", jim_l)
+ 
+    validate_design(gold_design, mx234c)
+    validate_design_reviews(gold_design_reviews, mx234c.design_reviews)
+    
+    design_updates = DesignUpdate.find(:all) - existing_design_updates
+    existing_design_updates += design_updates
+    
+    
+    # Verify that the Pre-Art designer (PCB input) can be changed
+    update = { :pcb_input_gate => jan_k }
+    
+    gold_design[:pcb_input_gate] = jan_k
+    gold_design_reviews['Pre-Artwork'][:designer] = jan_k
+    
+    mx234c.admin_updates(update, "", jim_l)
+ 
+    validate_design(gold_design, mx234c)
+    validate_design_reviews(gold_design_reviews, mx234c.design_reviews)
+    
+    design_updates = DesignUpdate.find(:all) - existing_design_updates
+
+    assert_equal(1, design_updates.size)
+    assert_equal('Pre-Artwork',        design_updates[0].design_review.review_type.name)
+    assert_equal(0,                    design_updates[0].design_id)
+    assert_equal(jim_l.name,           design_updates[0].user.name)
+    assert_equal('Pre-Artwork Poster', design_updates[0].what)
+    assert_equal('Cathy McLaren',      design_updates[0].old_value)
+    assert_equal('Jan Kasting',        design_updates[0].new_value)
+
+ end
+ 
+ 
+ def validate_design(gold, design)
+
+   msg = "#{design.name} - design - "
+   am  = msg + "DESIGNER"
+   assert_equal(gold[:designer].name,       design.designer.name,   am)
+   am = msg + "PEER"
+   assert_equal(gold[:peer].name,           design.peer.name,       am)
+   am = msg + "PCB INPUT ID"
+   assert_equal(gold[:pcb_input_gate].name, design.input_gate.name, am)
+   am = msg + "CRITICALITY"
+   assert_equal(gold[:criticality].name,    design.priority.name,   am)
+   
+ end
+ 
+ 
+ def validate_design_reviews(gold, design_reviews)
+ 
+   design_reviews.each do |dr|
+   
+     review = dr.review_type.name
+     msg    = "#{dr.design.name} - REVIEW: #{review}"
+
+     check_val = gold[review]
+
+     am = msg + "DESIGNER"
+     assert_equal(check_val[:designer].name,      dr.designer.name,      am)
+     am = msg + "DESIGN CITY"
+     assert_equal(check_val[:design_center].name, dr.design_center.name, am)
+     am = msg + 'CRITICALITY'
+     assert_equal(check_val[:criticality].name,   dr.priority.name,      am)
+     am = msg + 'STATUS'
+     assert_equal(check_val[:status].name,        dr.review_status.name, am)
+   
+   end
+ 
+ end
+ 
+ 
+ def dump_all
+ 
+   Design.find(:all).each { |d| dump(d) }
+ 
+ end
+ 
+ 
+ def dump(d, msg = '')
+ 
+   puts("****************************************************************")
+   puts("****************************************************************")
+   puts(msg)
+   puts("****************************************************************")
+   puts("****************************************************************")
+ 
+   puts("----------------------------------------------------------------")
+   puts("NAME:     #{d.name}\t\tID:        #{d.id}")
+   puts("DESIGNER: #{d.designer.name}\tPEER: #{d.peer.name}\tPCB INPUT: #{d.input_gate.name}")
+   puts("CRITICALTY: #{d.priority.name}\tPHASE ID: #{d.phase_id}")
+   puts("----------------------------------------------------------------")
+ 
+   puts("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+   d.design_reviews.each do |dr|
+     puts("\tID: #{dr.id}\tTYPE: #{dr.review_type.name}")
+     puts("\t  @@@@ PLACMENT/ROUTING COMBINED") if dr.review_type_id_2 > 0
+     puts("\t  STATUS:      #{dr.review_status.name}")
+     begin
+       puts("\t  DESIGNER:    #{dr.designer.name}")
+     rescue 
+       puts("\t  DESIGNER:    NOT FOUND FOR ID #{dr.designer_id}")
+     end
+     puts("\t  CRITICALITY: #{dr.priority.name}")
+     puts("\t  DESIGN CTR:  #{dr.design_center.name}")
+   end
  end
 
 

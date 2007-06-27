@@ -43,6 +43,7 @@ class AuditControllerTest < Test::Unit::TestCase
            :checks,
            :designs,
            :design_checks,
+           :design_reviews,
            :design_review_results,
            :platforms,
            :projects,

@@ -30,10 +30,13 @@ class DesignReviewTest < Test::Unit::TestCase
 
   ######################################################################
   def setup
-    @mx234a_pre_art_review = DesignReview.find(
-                               design_reviews(:mx234a_pre_artwork).id)
-    @mx234a_routing_review = DesignReview.find(
-                               design_reviews(:mx234a_routing).id)
+    @mx234a_pre_art_review   = design_reviews(:mx234a_pre_artwork)
+    @mx234a_placement_review = design_reviews(:mx234a_placement)
+    @mx234a_routing_review   = design_reviews(:mx234a_routing)
+    @mx234a_final_review     = design_reviews(:mx234a_final)
+    @mx234a_release_review   = design_reviews(:mx234a_release)
+    
+    @cathy_m = users(:cathy_m)
   end
 
 
@@ -249,11 +252,9 @@ class DesignReviewTest < Test::Unit::TestCase
     reviewer_list = @mx234a_pre_art_review.generate_reviewer_selection_list
     assert_equal(gold_list.size, reviewer_list.size)
     
-    i = 0
-    reviewer_list.each do |reviewer|
+    reviewer_list.each_with_index do |reviewer, i|
     
       gold = gold_list[i]
-      i   += 1
 
       keys.each do |key|
         case key
@@ -281,20 +282,16 @@ class DesignReviewTest < Test::Unit::TestCase
     reviewer_list = @mx234a_pre_art_review.reviewers([], true)
     assert_equal(gold_list.size, reviewer_list.size)
     
-    i = 0
-    reviewer_list.each do |reviewer|
+    reviewer_list.each_with_index do |reviewer, i|
       assert_equal(gold_reviewers[i].name, reviewer_list[i].name)
-      i += 1
     end
 
     # Verify the list is the same size - reviewers() removes duplicates.
-    reviewer_list = @mx234a_pre_art_review.reviewers(reviewer_list, true)
+    reviewer_list = @mx234a_pre_art_review.reviewers(reviewer_list)
     assert_equal(gold_list.size, reviewer_list.size)
     
-    i = 0
-    reviewer_list.each do |reviewer|
+    reviewer_list.each_with_index do |reviewer, i|
       assert_equal(gold_reviewers[i].name, reviewer_list[i].name)
-      i += 1
     end
     
 
@@ -705,6 +702,346 @@ class DesignReviewTest < Test::Unit::TestCase
 
   end
 
+
+  ######################################################################
+  def test_update_methods
   
+    oregon = design_centers(:oregon)
+    boston = design_centers(:boston_harrison)
+
+    reviews = { 
+      :pre_artwork => { :review  => @mx234a_pre_art_review,
+                        :updates => @mx234a_pre_art_review.design_updates },
+      :placement   => { :review  => @mx234a_placement_review,
+                        :updates => @mx234a_placement_review.design_updates },
+      :routing     => { :review  => @mx234a_routing_review,
+                        :updates => @mx234a_routing_review.design_updates },
+      :final       => { :review  => @mx234a_final_review,
+                        :updates => @mx234a_final_review.design_updates },
+      :release     => { :review  => @mx234a_release_review,
+                        :updates => @mx234a_release_review.design_updates } }
+         
+    ###
+    ###  Test update_design_center(design_center, user)
+    ###
+
+    reviews.each { |key, dr_data| assert_equal(boston, dr_data[:review].design_center) }
+    
+    reviews.each do |key, dr_data|
+    
+      dr_data[:review].design_updates.clear
+    
+      assert(!dr_data[:review].update_design_center(nil, @cathy_m))
+      
+      assert_equal(boston, dr_data[:review].design_center) 
+      dr_data[:review].reload
+      assert_equal(boston, dr_data[:review].design_center)
+      
+      assert_equal(0, dr_data[:review].design_updates.size)
+
+    end
+
+    reviews.each do |key, dr_data| 
+      assert(!dr_data[:review].update_design_center(boston, @cathy_m))
+      
+      assert_equal(boston, dr_data[:review].design_center)
+      dr_data[:review].reload
+      assert_equal(boston, dr_data[:review].design_center)
+      
+      assert_equal(0, dr_data[:review].design_updates.size)
+
+    end
+
+    reviews.each do |key, dr_data| 
+      assert(dr_data[:review].update_design_center(oregon, @cathy_m))
+      
+      assert_equal(oregon, dr_data[:review].design_center)
+      dr_data[:review].reload
+      assert_equal(oregon, dr_data[:review].design_center)
+      assert_equal(1, dr_data[:review].design_updates.size)
+      update_list = dr_data[:review].design_updates
+
+      update = update_list[0]
+      assert_equal(dr_data[:review], update.design_review)
+      assert_equal('Design Center',  update.what)
+      assert_equal(boston.name,      update.old_value)
+      assert_equal(oregon.name,      update.new_value)
+      assert_equal(@cathy_m,         update.user)
+    end
+
+    ###
+    ###  Test update_criticality(criticality, user)
+    ###
+
+    high   = priorities(:high)
+    medium = priorities(:medium)
+
+    # At this point, none of the review status values is "Review Completed".
+    # Go through all of the design reviews and verify that the criticality
+    # is not updated if a new one is not supplied.
+    reviews.each do |key, dr_data| 
+    
+      dr_data[:review].design_updates.clear
+    
+      assert(!dr_data[:review].update_criticality(nil, @cathy_m))
+      
+      assert_equal(high, dr_data[:review].priority) 
+      dr_data[:review].reload
+      assert_equal(high, dr_data[:review].priority)
+      assert_equal(0, dr_data[:review].design_updates.size)
+    end
+    
+    # Go through all of the design reviews and verify that the criticality
+    # is not updated if the new value is the same as the existing value.
+    reviews.each do |key, dr_data| 
+      assert(!dr_data[:review].update_criticality(high, @cathy_m))
+      
+      assert_equal(high, dr_data[:review].priority) 
+      dr_data[:review].reload
+      assert_equal(high, dr_data[:review].priority)
+      assert_equal(0, dr_data[:review].design_updates.size)
+    end
+    
+    # Go through all of the design reviews and verify that the criticality
+    # is updated if the new value is different from the existing value.
+    reviews.each do |key, dr_data| 
+      assert(dr_data[:review].update_criticality(medium, @cathy_m))
+      
+      assert_equal(medium, dr_data[:review].priority)
+      dr_data[:review].reload
+      assert_equal(medium, dr_data[:review].priority)
+      assert_equal(1, dr_data[:review].design_updates.size)
+      update_list = dr_data[:review].design_updates
+
+      update = update_list[0]
+      assert_equal(dr_data[:review], update.design_review)
+      assert_equal('Criticality',    update.what)
+      assert_equal(high.name,        update.old_value)
+      assert_equal(medium.name,      update.new_value)
+      assert_equal(@cathy_m,         update.user)
+    end
+    
+    # Go through all of the design reviews and set the review status
+    # to 'Review Completed' and verify that the design review does
+    # not get reset.
+    original_review_status = {}
+    review_completed       = ReviewStatus.find_by_name('Review Completed')
+    reviews.each do |key, dr_data| 
+    
+      dr_data[:review].design_updates.clear
+    
+      original_review_status[key] = dr_data[:review].review_status.id
+      dr_data[:review].review_status = review_completed
+      
+      assert(!dr_data[:review].update_criticality(high, @cathy_m))
+      
+      assert_equal(medium, dr_data[:review].priority) 
+      dr_data[:review].reload
+      assert_equal(medium, dr_data[:review].priority)
+      assert_equal(0,      dr_data[:review].design_updates.size)
+
+      
+      dr_data[:review].review_status_id = original_review_status[key]
+      
+    end
+  
+    ###
+    ###  Test update_review_status(..., user)
+    ###
+
+    on_hold           = ReviewStatus.find_by_name('Review On-Hold')
+    in_review         = ReviewStatus.find_by_name('In Review')
+    
+    # Attempt to update a design review that is not started and
+    # verify that there are no changes.
+    assert_equal('Not Started', @mx234a_placement_review.review_status.name)
+    
+    assert(!@mx234a_placement_review.update_review_status(on_hold, @cathy_m))
+    
+    assert_equal('Not Started', @mx234a_placement_review.review_status.name)
+    assert_equal(0,             @mx234a_placement_review.design_updates.size)
+    
+    # Attempt to update a design review that is 'In Review' to 'In Review' and 
+    # verify that nothing happens
+    assert_equal(in_review.name, @mx234a_pre_art_review.review_status.name)
+    
+    assert(!@mx234a_pre_art_review.update_review_status(in_review, @cathy_m))
+    assert_equal(in_review.name, @mx234a_pre_art_review.review_status.name)
+    assert_equal(0,              @mx234a_pre_art_review.design_updates.size)
+    
+    # Attempt to update a design review that is 'In Review' to 'On Hold' and 
+    # verify the review status is updated and the change is recorded.
+    assert(@mx234a_pre_art_review.update_review_status(on_hold, @cathy_m))
+    assert_equal(on_hold.name, @mx234a_pre_art_review.review_status.name)
+    assert_equal(1,            @mx234a_pre_art_review.design_updates.size)
+    
+    update_list = @mx234a_pre_art_review.design_updates
+
+    update = update_list[0]
+    assert_equal(@mx234a_pre_art_review, update.design_review)
+    assert_equal('Review Status',        update.what)
+    assert_equal(in_review.name,         update.old_value)
+    assert_equal(on_hold.name,           update.new_value)
+    assert_equal(@cathy_m,               update.user)
+
+    # Attempt to update a design review that is 'On Hold' to 'In Review' and 
+    # verify the review status is updated and the change is recorded.
+    @mx234a_pre_art_review.design_updates.clear
+    
+    assert(@mx234a_pre_art_review.update_review_status(in_review, @cathy_m))
+    assert_equal(in_review.name, @mx234a_pre_art_review.review_status.name)
+    assert_equal(1,              @mx234a_pre_art_review.design_updates.size)
+    
+    update_list = @mx234a_pre_art_review.design_updates
+
+    update = update_list[0]
+    assert_equal(@mx234a_pre_art_review, update.design_review)
+    assert_equal('Review Status',        update.what)
+    assert_equal(on_hold.name,           update.old_value)
+    assert_equal(in_review.name,         update.new_value)
+    assert_equal(@cathy_m,               update.user)
+
+    @mx234a_pre_art_review.design_updates.clear
+
+  
+    ###
+    ###  Test update_pcb_input_gate(pcb_input_gate, user)
+    ###
+
+    jan_k = users(:jan_k)
+    bob_g = users(:bob_g)
+    # Attempt to update a design review that is not a Pre-Artwork design
+    assert_equal(bob_g.name,    @mx234a_placement_review.designer.name)
+    
+    assert(!@mx234a_placement_review.update_pcb_input_gate(@cathy_m, @cathy_m))
+    
+    assert_equal(bob_g.name, @mx234a_placement_review.designer.name)
+    assert_equal(0,          @mx234a_placement_review.design_updates.size)
+    
+    # Attempt to update the pre-art review with the person who is already
+    # the input gate.
+    assert_equal(@cathy_m.name, @mx234a_pre_art_review.designer.name)
+    
+    assert(!@mx234a_pre_art_review.update_pcb_input_gate(@cathy_m, @cathy_m))
+    assert_equal(@cathy_m.name, @mx234a_pre_art_review.designer.name)
+    assert_equal(0,             @mx234a_pre_art_review.design_updates.size)
+    
+    # Attempt to update a pre-art review with a new pcb input gate.
+    assert(@mx234a_pre_art_review.update_pcb_input_gate(jan_k, @cathy_m))
+    assert_equal(jan_k.name, @mx234a_pre_art_review.designer.name)
+    assert_equal(1,           @mx234a_pre_art_review.design_updates.size)
+    
+    update_list = @mx234a_pre_art_review.design_updates
+
+    update = update_list[0]
+    assert_equal(@mx234a_pre_art_review, update.design_review)
+    assert_equal('Pre-Artwork Poster',   update.what)
+    assert_equal(@cathy_m.name,          update.old_value)
+    assert_equal(jan_k.name,             update.new_value)
+    assert_equal(@cathy_m,               update.user)
+
+    # Attempt to update a pre-art review that is complete with a new pcb input gate.
+    @mx234a_pre_art_review.design_updates.clear
+    @mx234a_pre_art_review.review_status = review_completed
+    
+    assert(!@mx234a_pre_art_review.update_pcb_input_gate(@cathy_m, @cathy_m))
+    assert_equal(jan_k.name, @mx234a_pre_art_review.designer.name)
+    assert_equal(0,          @mx234a_pre_art_review.design_updates.size)
+    
+    ###
+    ###  Test update_release_review_poster(release_reviewer, user)
+    ###
+    patrice_m = users(:patrice_m)
+
+    # Attempt to update a design review that is not a Release design review
+    assert(!@mx234a_placement_review.update_release_review_poster(@cathy_m, @cathy_m))
+    
+    assert_equal(bob_g.name, @mx234a_placement_review.designer.name)
+    assert_equal(0,          @mx234a_placement_review.design_updates.size)
+    
+    # Attempt to update the release review with the person who is already
+    # the poster.
+    assert_equal(patrice_m.name, @mx234a_release_review.designer.name)
+    
+    assert(!@mx234a_release_review.update_release_review_poster(patrice_m, @cathy_m))
+    assert_equal(patrice_m.name, @mx234a_release_review.designer.name)
+    assert_equal(0,              @mx234a_release_review.design_updates.size)
+    
+    # Attempt to update a release review with a new pcb input gate.
+    assert(@mx234a_release_review.update_release_review_poster(jan_k, @cathy_m))
+    assert_equal(jan_k.name, @mx234a_release_review.designer.name)
+    assert_equal(1,          @mx234a_release_review.design_updates.size)
+    
+    update_list = @mx234a_release_review.design_updates
+
+    update = update_list[0]
+    assert_equal(@mx234a_release_review, update.design_review)
+    assert_equal('Release Poster',       update.what)
+    assert_equal(patrice_m.name,         update.old_value)
+    assert_equal(jan_k.name,             update.new_value)
+    assert_equal(@cathy_m,               update.user)
+
+    # Attempt to update a pre-art review that is complete with a new pcb input gate.
+    @mx234a_release_review.design_updates.clear
+    @mx234a_release_review.review_status = review_completed
+    
+    assert(!@mx234a_release_review.update_release_review_poster(@cathy_m, @cathy_m))
+    assert_equal(jan_k.name, @mx234a_release_review.designer.name)
+    assert_equal(0,          @mx234a_release_review.design_updates.size)
+
+    ###
+    ###  update_reviews_designer_poster(designer, user)
+    ###
+
+    # Attempt to update the pre-art review
+    assert_equal(jan_k.name, @mx234a_pre_art_review.designer.name)
+    
+    assert(!@mx234a_pre_art_review.update_reviews_designer_poster(@cathy_m, @cathy_m))
+    assert_equal(jan_k.name, @mx234a_pre_art_review.designer.name)
+    assert_equal(0,          @mx234a_pre_art_review.design_updates.size)
+    
+    # Attempt to update the Release design review
+    assert_equal(jan_k.name, @mx234a_release_review.designer.name)
+    assert(!@mx234a_release_review.update_reviews_designer_poster(@cathy_m, @cathy_m))
+    
+    assert_equal(jan_k.name, @mx234a_release_review.designer.name)
+    assert_equal(0,          @mx234a_release_review.design_updates.size)
+    
+    # Attempt to update the placement review with the person who is already
+    # the poster.
+    assert_equal(bob_g.name, @mx234a_placement_review.designer.name)
+    
+    assert(!@mx234a_placement_review.update_reviews_designer_poster(bob_g, @cathy_m))
+    assert_equal(bob_g.name, @mx234a_placement_review.designer.name)
+    assert_equal(0,          @mx234a_placement_review.design_updates.size)
+    
+    # Attempt to update the placement review with nil value for the designer
+    assert(!@mx234a_placement_review.update_reviews_designer_poster(nil, @cathy_m))
+    assert_equal(bob_g.name, @mx234a_placement_review.designer.name)
+    assert_equal(0,          @mx234a_placement_review.design_updates.size)
+    
+    # Attempt to update a placement review with a new designer.
+    assert(@mx234a_placement_review.update_reviews_designer_poster(jan_k, @cathy_m))
+    assert_equal(jan_k.name, @mx234a_placement_review.designer.name)
+    assert_equal(1,          @mx234a_placement_review.design_updates.size)
+    
+    update_list = @mx234a_placement_review.design_updates
+
+    update = update_list[0]
+    assert_equal(@mx234a_placement_review, update.design_review)
+    assert_equal('Designer',               update.what)
+    assert_equal(bob_g.name,               update.old_value)
+    assert_equal(jan_k.name,               update.new_value)
+    assert_equal(@cathy_m,                 update.user)
+
+    # Attempt to update a pre-art review that is complete with a new pcb input gate.
+    @mx234a_placement_review.design_updates.clear
+    @mx234a_placement_review.review_status = review_completed
+    
+    assert(!@mx234a_placement_review.update_reviews_designer_poster(@cathy_m, @cathy_m))
+    assert_equal(jan_k.name, @mx234a_placement_review.designer.name)
+    assert_equal(0,          @mx234a_placement_review.design_updates.size)
+
+  end
 
 end

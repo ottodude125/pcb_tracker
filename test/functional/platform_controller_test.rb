@@ -150,40 +150,31 @@ class PlatformControllerTest < Test::Unit::TestCase
 
     # Verify that a platform can be added.  The number of platforms will
     # increase by one.
-    assert_equal(5, Platform.find_all.size)
+    assert_equal(5, Platform.count)
 
-    new_platform = {
-      'active' => '1',
-      'name'   => 'Thunderbird'
-    }
+    new_platform = { 'active' => '1', 'name'   => 'Thunderbird' }
 
     set_admin
-    post(:create,
-         :new_platform => new_platform)
+    post(:create, :new_platform => new_platform)
 
-    assert_equal(6, Platform.find_all.size)
+    assert_equal(6, Platform.count)
     assert_equal("Platform #{new_platform['name']} added", flash['notice'])
     assert_redirected_to(:action => 'list')
     
     # Try to add a second platform with the same name.
     # It should not get added.
-    post(:create,
-         :new_platform => new_platform)
+    post(:create, :new_platform => new_platform)
 
-    assert_equal(6, Platform.find_all.size)
+    assert_equal(6, Platform.count)
     assert_equal("Name has already been taken", flash['notice'])
     assert_redirected_to(:action => 'add')
 
 
     # Try to add a platform withhout a name.
     # It should not get added.
-    post(:create,
-         :new_platform => {
-           'active' => '1', 
-           'name' => ''
-         })
+    post(:create, :new_platform => { 'active' => '1', 'name' => '' })
     
-    assert_equal(6, Platform.find_all.size)
+    assert_equal(6, Platform.count)
     assert_equal("Name can't be blank", flash['notice'])
     assert_redirected_to(:action => 'add')
 

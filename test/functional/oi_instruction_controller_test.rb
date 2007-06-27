@@ -247,11 +247,10 @@ class OiInstructionControllerTest < Test::Unit::TestCase
          :id        => @other.id,
          :design_id => @mx234a.id)
          
-    assert_equal({ oi_category_sections(:other_1).id.to_s => '1' }, 
-                 flash[:section])
     assert_redirected_to(:action      => :process_assignments,
                          :category_id => @other.id,
-                         :design_id   => @mx234a.id)
+                         :design_id   => @mx234a.id,
+                         :section_id  => OiCategory.other_category_section_id)
          
     # Section Selection - Board Prep
     post(:section_selection,
@@ -307,7 +306,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     allegro_board_symbol = '10987654321'
     assignment_comment   = 'This is a test'
     medium_complexity_id = OiAssignment.complexity_id('Medium')
-    due_date             = "Tue May 01 00:00:00 EDT 2007"
+    due_date             = Time.local(2007, "May", 1)
     
     # Process Assignment Details - No allegro board symbol provided.
     post(:process_assignment_details,
@@ -326,7 +325,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     assignment = flash[:assignment]
     
     assert_equal(medium_complexity_id, assignment[:assignment].complexity_id)
-    assert_equal(due_date,             assignment[:assignment].due_date.to_s)
+    assert_equal(due_date.to_i,        assignment[:assignment].due_date.to_i)
     
     assert_not_nil(assignment[:design])
     assert_equal(@mx234a.id, assignment[:design].id)
@@ -384,7 +383,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     assignment = flash[:assignment]
     
     assert_equal(medium_complexity_id, assignment[:assignment].complexity_id)
-    assert_equal(due_date,             assignment[:assignment].due_date.to_s)
+    assert_equal(due_date.to_i,        assignment[:assignment].due_date.to_i)
     
     assert_not_nil(assignment[:design])
     assert_equal(@mx234a.id, assignment[:design].id)
@@ -446,7 +445,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     assignment = flash[:assignment]
     
     assert_equal(medium_complexity_id, assignment[:assignment].complexity_id)
-    assert_equal(due_date,             assignment[:assignment].due_date.to_s)
+    assert_equal(due_date.to_i,        assignment[:assignment].due_date.to_i)
     
     assert_not_nil(assignment[:design])
     assert_equal(@mx234a.id, assignment[:design].id)
@@ -535,13 +534,13 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     assert(!siva_assignment.complete?)
     assert_equal(@siva_e.id,           siva_assignment.user_id)
     assert_equal(last_instruction.id,  siva_assignment.oi_instruction_id)
-    assert_equal(due_date,             siva_assignment.due_date.to_s)
+    assert_equal(due_date.to_i,        siva_assignment.due_date.to_i)
     assert_equal(medium_complexity_id, siva_assignment.complexity_id)
 
     assert(!mathi_assignment.complete?)
     assert_equal(@mathi_n.id,          mathi_assignment.user_id)
     assert_equal(last_instruction.id,  mathi_assignment.oi_instruction_id)
-    assert_equal(due_date,             mathi_assignment.due_date.to_s)
+    assert_equal(due_date.to_i,        mathi_assignment.due_date.to_i)
     assert_equal(medium_complexity_id, mathi_assignment.complexity_id)
     
     assert_equal(assignment_comment_count+2, OiAssignmentComment.count)

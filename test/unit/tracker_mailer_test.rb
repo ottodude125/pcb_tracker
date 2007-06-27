@@ -221,7 +221,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     assert_equal(@now.to_s,       response.date.to_s)
     
     response_cc = response.cc.sort_by { |address| address }
-    expected_cc = @manager_email_list + @input_gate_email_list
+    expected_cc = (@manager_email_list + @input_gate_email_list) - expected_to
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
@@ -254,7 +254,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     assert_equal(@now.to_s,       response.date.to_s)
     
     response_cc = response.cc.sort_by { |address| address }
-    expected_cc = @manager_email_list + @input_gate_email_list
+    expected_cc = (@manager_email_list + @input_gate_email_list) - expected_to
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
@@ -287,7 +287,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     assert_equal(@now.to_s,       response.date.to_s)
     
     response_cc = response.cc.sort_by { |address| address }
-    expected_cc = @manager_email_list + @input_gate_email_list
+    expected_cc = (@manager_email_list + @input_gate_email_list) - expected_to
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
@@ -657,15 +657,22 @@ class TrackerMailerTest < Test::Unit::TestCase
   
   
   ##############################################################################
-  def test_design_review_modification
+  def test_design_modification
   
     cc_list = []
-    response = TrackerMailer.create_design_review_modification(@cathy_m,
-                                                               @mx234a_pre_art_dr,
-                                                               cc_list)
+    comment = 'design modifcation test comment'
+    
+    expected_body    = comment + "\n\n\n" +
+                       "NOTE: The design information is located at <%= Pcbtr::PCBTR_BASE_URL %>design_review/view/<%= @design_review_id%>"
+                       
+    expected_subject = "The mx234a Pre-Artwork Design Review has been modified by Cathy McLaren"
 
-    assert_equal("The mx234a Pre-Artwork Design Review has been modified by Cathy McLaren", 
-                 response.subject)
+    response = TrackerMailer.create_design_modification(@cathy_m,
+                                                        @mx234a_pre_art_dr.design,
+                                                        comment,
+                                                        cc_list)
+
+    assert_equal(expected_subject, response.subject)
 
     response_to = response.to.sort_by { |address| address }
     expected_to = @mx234a_pre_art_dr_emails
@@ -681,12 +688,12 @@ class TrackerMailerTest < Test::Unit::TestCase
     assert_equal([@jan_k.email], response_cc)
 
     cc_list = [@rich_m.email, @siva_e.email, @jan_k.email].sort_by { |address| address }
-    response = TrackerMailer.create_design_review_modification(@cathy_m,
-                                                               @mx234a_pre_art_dr,
-                                                               cc_list)
+    response = TrackerMailer.create_design_modification(@cathy_m,
+                                                        @mx234a_pre_art_dr.design,
+                                                        comment,
+                                                        cc_list)
 
-    assert_equal("The mx234a Pre-Artwork Design Review has been modified by Cathy McLaren", 
-                 response.subject)
+    assert_equal(expected_subject, response.subject)
 
     response_to = response.to.sort_by { |address| address }
     

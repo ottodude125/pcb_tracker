@@ -27,6 +27,7 @@ class BoardControllerTest < Test::Unit::TestCase
            :board_reviewers,
            :boards,
            :design_review_documents,
+           :design_review_results,
            :design_reviews,
            :designs,
            :fab_houses,
@@ -35,6 +36,7 @@ class BoardControllerTest < Test::Unit::TestCase
            :prefixes,
            :priorities,
            :projects,
+           :review_statuses,
            :review_types,
            :revisions,
            :users)
@@ -71,7 +73,9 @@ class BoardControllerTest < Test::Unit::TestCase
     set_admin
     post(:list, :page => 1)
 
+    # TODO ????
     assert_equal(Board.count, assigns(:boards).size)
+    assert_equal(assigns(:reviewers), assigns(:jpa_reviewers))
   end
 
 

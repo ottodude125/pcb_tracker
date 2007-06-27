@@ -80,11 +80,12 @@ class TrackerControllerTest < Test::Unit::TestCase
     assert_equal(expected_active_design_reviews,      active_reviews)
 
     expected_inactive_design_reviews = [ design_reviews(:mx234b_placement),
-                                         design_reviews(:mx234c_routing),
                                          design_reviews(:mx700b_pre_artwork),
+                                         design_reviews(:la455b_final),
+                                         design_reviews(:mx234c_routing),
                                          design_reviews(:la453a_eco1_final),
                                          design_reviews(:la453b_placement) ]
-                                         
+ 
     assert_equal(expected_inactive_design_reviews.size, inactive_reviews.size)
     assert_equal(expected_inactive_design_reviews,      inactive_reviews)
     

@@ -102,6 +102,7 @@ la455b_routing:
   posting_count:    0
   design_id:        10
   designer_id:      5001
+  design_center_id: 1
   review_status_id: 3
   review_type_id:   2
   review_type_id_2: 0
@@ -115,12 +116,13 @@ la455b_final:
   posting_count:    0
   design_id:        10
   designer_id:      5001
+  design_center_id: 1
   review_status_id: 3
   review_type_id:   1
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
-  created_on:       2006-01-10 00:00:00
+  created_on:       2006-01-10 14:20:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 la455b_release:
@@ -128,8 +130,9 @@ la455b_release:
   posting_count:    0
   design_id:        10
   designer_id:      8000
+  design_center_id: 1
   review_status_id: 3
-  review_type_id:   1
+  review_type_id:   5
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
@@ -142,6 +145,7 @@ mx600a_pre_artwork:
   design_id:        11
   designer_id:      4000
   review_status_id: 1
+  design_center_id: 2
   review_type_id:   3
   review_type_id_2: 0
   priority_id:      2
@@ -154,6 +158,7 @@ mx600a_placement:
   posting_count:    0
   design_id:        11
   designer_id:      5000
+  design_center_id: 2
   review_status_id: 3
   review_type_id:   4
   review_type_id_2: 0
@@ -167,6 +172,7 @@ mx600a_routing:
   posting_count:    0
   design_id:        11
   designer_id:      5000
+  design_center_id: 2
   review_status_id: 3
   review_type_id:   2
   review_type_id_2: 0
@@ -180,6 +186,7 @@ mx600a_final:
   posting_count:    0
   design_id:        11
   designer_id:      5000
+  design_center_id: 2
   review_status_id: 3
   review_type_id:   1
   review_type_id_2: 0
@@ -193,6 +200,7 @@ mx600a_release:
   posting_count:    0
   design_id:        11
   designer_id:      8000
+  design_center_id: 1
   review_status_id: 3
   review_type_id:   5
   review_type_id_2: 0
@@ -206,12 +214,13 @@ mx700b_pre_artwork:
   posting_count:    1
   design_id:        12
   designer_id:      4000
+  design_center_id: 3
   review_status_id: 3
   review_type_id:   3
   review_type_id_2: 0
   priority_id:      1
   creator_id:       0
-  created_on:       2006-01-10 00:00:00
+  created_on:       2006-01-10 15:40:00
   reposted_on:      2006-01-26 00:00:00
   completed_on:     2004-04-09 00:00:00
 mx700b_placement:
@@ -219,6 +228,7 @@ mx700b_placement:
   posting_count:    2
   design_id:        12
   designer_id:      5002
+  design_center_id: 3
   review_status_id: 3
   review_type_id:   4
   review_type_id_2: 0
@@ -232,6 +242,7 @@ mx700b_routing:
   posting_count:    1
   design_id:        12
   designer_id:      5002
+  design_center_id: 3
   review_status_id: 3
   review_type_id:   2
   review_type_id_2: 0
@@ -245,6 +256,7 @@ mx700b_final:
   posting_count:    2
   design_id:        12
   designer_id:      5002
+  design_center_id: 3
   review_status_id: 3
   review_type_id:   1
   review_type_id_2: 0
@@ -258,6 +270,7 @@ mx700b_release:
   posting_count:    1
   design_id:        12
   designer_id:      8000
+  design_center_id: 3
   review_status_id: 1
   review_type_id:   5
   review_type_id_2: 0

@@ -79,25 +79,29 @@ class OiAssignmentTest < Test::Unit::TestCase
   ######################################################################
   def test_task_email_update_header
   
+    date_assigned = Time.local(2007, 'feb', 15, 13, 16).strftime("%d-%b-%y, %I:%M %p %Z")
     assert_equal("------------------------------------------------------------------------\n" +
                  "         Design : mx234a\n"                                                 +
                  "       Category : Placement\n"                                              +
                  "           Step : Place components per instructions\n"                      +
                  "      Team Lead : Scott Glover\n"                                           +
                  "       Designer : Siva Esakky\n"                                            +
-                 "  Date Assigned : 15-Feb-07, 01:16 PM EST\n"                                +
+                 "  Date Assigned : #{date_assigned}\n"                                       +
                  "       Complete : No\n"                                                     +
                  "------------------------------------------------------------------------\n",
                  @first_assignment.email_update_header)
+ 
+    date_assigned  = Time.local(2007, 'feb', 16, 11, 20).strftime("%d-%b-%y, %I:%M %p %Z")
+    date_completed = Time.local(2007, 'mar',  9, 16, 45).strftime("%d-%b-%y, %I:%M %p %Z")
     assert_equal("------------------------------------------------------------------------\n" +
                  "         Design : mx234a\n"                                                 +
                  "       Category : Placement\n"                                              +
                  "           Step : Place components per instructions\n"                      +
                  "      Team Lead : Scott Glover\n"                                           +
                  "       Designer : Mathi Nagarajan\n"                                        +
-                 "  Date Assigned : 16-Feb-07, 11:20 AM EST\n"                                +
+                 "  Date Assigned : #{date_assigned}\n"                                       +
                  "       Complete : Yes\n"                                                    +
-                 "   Completed On : 09-Mar-07, 04:45 PM EST\n"                                +
+                 "   Completed On : #{date_completed}\n"                                      +
                  "------------------------------------------------------------------------\n",
                  @second_assignment.email_update_header)
     

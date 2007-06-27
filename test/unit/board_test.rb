@@ -15,16 +15,21 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class BoardTest < Test::Unit::TestCase
 
+
   fixtures(:boards,
            :platforms,
            :prefixes,
            :projects,
+           :roles,
            :users)
+
 
   def setup
     @board = Board.find(boards(:mx234).id)
   end
+  
 
+  ######################################################################
   def test_create
 
     assert_kind_of Board,  @board
@@ -39,6 +44,8 @@ class BoardTest < Test::Unit::TestCase
     
   end
 
+
+  ######################################################################
   def test_update
 
     @board.prefix_id   = prefixes(:mx).id
@@ -59,6 +66,8 @@ class BoardTest < Test::Unit::TestCase
     assert_equal(0,                   @board.active)
   end
 
+
+  ######################################################################
   def test_destroy
     @board.destroy
     assert_raise(ActiveRecord::RecordNotFound) { Board.find(@board.id) }
@@ -73,6 +82,7 @@ class BoardTest < Test::Unit::TestCase
   
   end
   
+
   ######################################################################
   def test_creation_validation
 
@@ -88,5 +98,23 @@ class BoardTest < Test::Unit::TestCase
                  next_board.errors.full_messages.pop)
 
   end
+  
+  
+  ######################################################################
+  def test_reviewer_functions
+  
+    la753  = boards(:la453)
+    valor  = roles(:valor)
+    lisa_a = users(:lisa_a)
+    
+    assert_nil(la753.role_reviewer(roles(:admin).id))
+    
+    board_reviewer = la753.role_reviewer(valor.id)
+    assert_equal(valor.id,  board_reviewer.role_id)
+    assert_equal(lisa_a.id, board_reviewer.reviewer_id)
+    assert_equal(la753.id,  board_reviewer.board_id)
+    
+  end
+
 
 end

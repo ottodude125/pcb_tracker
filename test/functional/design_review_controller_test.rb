@@ -78,22 +78,46 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     
   end
 
-  fixtures(:board_design_entry_users,
+  fixtures(:audit_comments,
+           :audit_teammates,
+           :audits,
+           :board_design_entries,
+           :board_design_entry_users,
            :board_reviewers,
            :boards,
+           :boards_fab_houses,
+           :boards_users,
+           :checklists,
+           :checks,
            :design_centers,
+           :design_checks,
+           :design_directories,
            :design_review_comments,
            :design_review_documents,
            :design_review_results,
            :design_reviews,
            :designs,
            :designs_fab_houses,
-           :documents,
+           :divisions,
            :document_types,
+           :documents,
            :fab_houses,
+           :ipd_posts,
+           :ipd_posts_users,
+           :locations,
+           :platforms,
+           :prefixes,
            :priorities,
+           :projects,
+           :review_groups,
            :review_statuses,
+           :review_types,
+           :review_types_roles,
+           :revisions,
            :roles,
+           :roles_users,
+           :sections,
+           :subsections,
            :users)
            
 
@@ -1104,9 +1128,9 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     mx234a = DesignReview.find(mx234a_pre_artwork.id)
     assert_equal(fridley_dc.id, mx234a.design_center.id)
-    assert_equal('The design center has been updated.', flash['notice'])
-    assert_redirected_to(:action => :view,
-                         :id     => mx234a.id)
+    assert_equal('mx234a has been updated - the updates were recorded and mail was sent', 
+                 flash['notice'])
+    assert_redirected_to(:action => :view, :id => mx234a.id)
 
   end
 
@@ -1288,7 +1312,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #
   ######################################################################
   #
-  def test_save_attachment
+  def notest_save_attachment
     
     #post(:save_attahment,
     #    :document_type => {:id => ''})
@@ -1325,7 +1349,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #
   ######################################################################
   #
-  def test_list_obsolete
+  def notest_list_obsolete
     assert true
   end
 
@@ -3073,8 +3097,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     
     designer_email = User.find(mx234a.design.pcb_input_id).email
 
-    found_email = email.cc.detect { |addr| addr == designer_email }
-    assert_equal(designer_email, found_email)
+    assert(!email.cc.detect { |addr| addr == designer_email })
     
     mx234a_pre_art_dr = DesignReview.find(mx234a.id)
     mx234a_design     = Design.find(mx234a_pre_art_dr.design_id)
@@ -3219,10 +3242,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     post(:admin_update, :id => mx234a_pre_artwork.id)
 
-    assert_equal(5, assigns(:designers).size)
-    assert_equal(5, assigns(:peer_list).size)
-    assert_equal(3, assigns(:priorities).size)
-    assert_equal(2, assigns(:design_centers).size)
+    designers = Role.active_designers
+    assert_equal(designers.size,   assigns(:designers).size)
+    assert_equal(designers.size-1, assigns(:peer_list).size)
+    assert_equal(3,                assigns(:priorities).size)
+    assert_equal(2,                assigns(:design_centers).size)
     
   end
 
@@ -3261,14 +3285,22 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_redirected_to(:controller => 'tracker', :action => 'index')
     assert_equal('Update not allowed - Must be admin or manager',
                  flash['notice'])
+                 
+    pre_art_design_review = mx234a_pre_artwork.design.get_design_review('Pre-Artwork')
+    release_design_review = mx234a_pre_artwork.design.get_design_review('Release')
 
     # Verify the redirect when the user tries to set the designer and 
     # peer as the same person.
     set_user(@jim_l.id, 'Manager')
     post(:process_admin_update,
-         :id       => mx234a_pre_artwork.id,
-         :designer => {:id => scott_g.id.to_s},
-         :peer     => {:id => scott_g.id.to_s})
+         :id             => mx234a_pre_artwork.id,
+         :designer       => {:id => scott_g.id.to_s},
+         :peer           => {:id => scott_g.id.to_s},
+         :pcb_input_gate => {:id => pre_art_design_review.designer_id},
+         :design_center  => {:id => mx234a_pre_artwork.design_center_id},
+         :priority       => {:id => mx234a_pre_artwork.priority_id},
+         :release_poster => {:id => release_design_review.designer_id},
+         :post_comment   => {:comment => ''})
 
     assert_redirected_to(:action => "admin_update",
                          :id     => mx234a_pre_artwork.id.to_s)
@@ -3308,11 +3340,12 @@ class DesignReviewControllerTest < Test::Unit::TestCase
          :peer           => {:id      => scott_g.id.to_s},
          :review_status  => {:id      => review_statuses(:in_review).id.to_s},
          :priority       => {:id      => @low_priority.id.to_s},
+         :release_poster => {:id      => release_design_review.designer_id},
          :design_center  => {:id      => @fridley.id.to_s},
          :post_comment   => {:comment => "This is a test"})
          
     mx234a.reload
-    
+ 
     assert(1, @emails.size)
     email = @emails.pop
     assert("The mx234a Pre-Artwork Design Review has been modified by James Light",
@@ -3370,11 +3403,12 @@ class DesignReviewControllerTest < Test::Unit::TestCase
          :peer           => {:id      => scott_g.id.to_s},
          :review_status  => {:id      => review_statuses(:in_review).id.to_s},
          :priority       => {:id      => @low_priority.id.to_s},
+         :release_poster => {:id      => release_design_review.designer_id},
          :design_center  => {:id      => @fridley.id.to_s},
          :post_comment   => {:comment => "This is a test"})
          
     mx234a.reload
-    
+
     assert_equal(1, @emails.size)
     email = @emails.pop
     assert_equal("The mx234a Pre-Artwork Design Review has been modified by James Light",
@@ -3425,21 +3459,25 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a_pre_artwork.update
     mx234a_pre_artwork.reload
     
+    mx234a.phase_id = ReviewType.find_by_name('Placement').id
+    mx234a.update
+    
     mx234a_placement = design_reviews(:mx234a_placement)
 
     @emails.clear
     post(:process_admin_update,
          :id             => mx234a_placement.id,
          :designer       => {:id      => scott_g.id.to_s},
-        # :pcb_input_gate => {:id     => jan_k.id.to_s},
+         :pcb_input_gate => {:id      => jan_k.id.to_s},
          :peer           => {:id      => rich_m.id.to_s},
          :review_status  => {:id      => review_statuses(:in_review).id.to_s},
          :priority       => {:id      => @high_priority.id.to_s},
+         :release_poster => {:id      => release_design_review.designer_id},
          :design_center  => {:id      => @fridley.id.to_s},
          :post_comment   => {:comment => "Placement Update"})
          
     mx234a.reload
-    
+
     assert_equal(1, @emails.size)
     email = @emails.pop
     assert_equal("The mx234a Placement Design Review has been modified by James Light",
@@ -3451,12 +3489,12 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     expected_to_list  = mx234a_placement_reviewers.collect { |r| r.email }
     expected_to_list += [scott_g.email, rich_m.email, jan_k.email]
     expected_to_list  = expected_to_list.uniq.sort
-    expected_cc_list  = [bob_g.email, @jim_l.email, @cathy_m.email].sort
-    
+    expected_cc_list  = [bob_g.email, @cathy_m.email, @jim_l.email, @lisa_a.email].sort
+
     assert_equal(expected_cc_list, email.cc.sort)
     assert_equal(expected_to_list, email.to.sort)       
     
-    assert_equal(scott_g.name,   mx234a.designer.name)
+    assert_equal(scott_g.name, mx234a.designer.name)
     assert_equal(rich_m.name,  mx234a.peer.name)
     assert_equal(jan_k.name,   mx234a.input_gate.name)
     
@@ -3492,17 +3530,21 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a_placement.review_status = @review_complete
     mx234a_placement.update
     mx234a_placement.reload
-
+    
+    mx234a.phase_id = ReviewType.find_by_name('Routing').id
+    mx234a.update
+    
     mx234a_routing = design_reviews(:mx234a_routing)
 
     @emails.clear
     post(:process_admin_update,
          :id             => mx234a_routing.id,
          :designer       => {:id      => rich_m.id.to_s},
-        # :pcb_input_gate => {:id     => jan_k.id.to_s},
+         :pcb_input_gate => {:id      => jan_k.id.to_s},
          :peer           => {:id      => bob_g.id.to_s},
          :review_status  => {:id      => review_statuses(:in_review).id.to_s},
          :priority       => {:id      => @low_priority.id.to_s},
+         :release_poster => {:id      => release_design_review.designer_id},
          :design_center  => {:id      => @oregon.id.to_s},
          :post_comment   => {:comment => "Placement Update"})
          
@@ -3560,7 +3602,10 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a_routing.review_status = @review_complete
     mx234a_routing.update
     mx234a_routing.reload
-
+   
+    mx234a.phase_id = ReviewType.find_by_name('Final').id
+    mx234a.update
+    
     mx234a_final = design_reviews(:mx234a_final)
 
     @emails.clear
@@ -3569,10 +3614,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     post(:process_admin_update,
          :id             => mx234a_final.id,
          :designer       => {:id      => bob_g.id.to_s},
-        # :pcb_input_gate => {:id     => jan_k.id.to_s},
+         :pcb_input_gate => {:id      => jan_k.id.to_s},
          :peer           => {:id      => scott_g.id.to_s},
          :review_status  => {:id      => review_statuses(:in_review).id.to_s},
          :priority       => {:id      => @high_priority.id.to_s},
+         :release_poster => {:id      => release_design_review.designer_id},
          :design_center  => {:id      => @boston.id.to_s},
          :post_comment   => {:comment => "Final Review Update"})
          
@@ -3583,10 +3629,10 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal("The mx234a Final Design Review has been modified by James Light",
                  email.subject)
 
-    mx234a_routing_reviewers = [@espo,      @heng_k,    @lee_s,     @anthony_g, 
-                                @jim_l,     @tom_f,     @matt_d,    @rich_a,    @lisa_a]
+    mx234a_final_reviewers = [@espo,      @heng_k,    @lee_s,     @anthony_g, 
+                              @jim_l,     @tom_f,     @matt_d,    @rich_a,    bob_g]
 
-    expected_to_list  = mx234a_routing_reviewers.collect { |r| r.email }
+    expected_to_list  = mx234a_final_reviewers.collect { |r| r.email }
     expected_to_list += [bob_g.email, scott_g.email, jan_k.email]
     expected_to_list  = expected_to_list.uniq.sort
     expected_cc_list  = [rich_m.email, @cathy_m.email].sort
@@ -3631,19 +3677,23 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a_final.update
     mx234a_final.reload
     
+    mx234a.phase_id = ReviewType.find_by_name('Release').id
+    mx234a.update
+
     mx234a_release = design_reviews(:mx234a_release)
 
     @emails.clear
     # Change the priority from high to low and the design center from boston to oregon.
     post(:process_admin_update,
          :id             => mx234a_release.id,
-          :designer       => {:id      => bob_g.id.to_s},
-        # :pcb_input_gate => {:id     => jan_k.id.to_s},
-        # :peer           => {:id      => bob_g.id.to_s},
+         :designer       => {:id      => bob_g.id.to_s},
+         :pcb_input_gate => {:id      => jan_k.id.to_s},
+         :peer           => {:id      => scott_g.id.to_s},
          :review_status  => {:id      => review_statuses(:in_review).id.to_s},
          :priority       => {:id      => @low_priority.id.to_s},
+         :release_poster => {:id      => release_design_review.designer_id},
          :design_center  => {:id      => @oregon.id.to_s},
-         :post_comment   => {:comment => "Release Design Review Update"})
+         :post_comment   => {:comment => "Final Review Update"})
          
     mx234a.reload
     

@@ -11,11 +11,11 @@
 #
 ########################################################################
 #
-# TO DO:
+# TODO:
 # 
 # 1) Verify you can not modify a check that is part of a 
 #    released checklist.
-#
+# TODO - DEPRECATION ISSUES - count
 
 require File.dirname(__FILE__) + '/../test_helper'
 require 'check_controller'
@@ -339,22 +339,20 @@ class CheckControllerTest < Test::Unit::TestCase
     assert_equal(0, checklist.dr_designer_only_count)
     assert_equal(3, checklist.dr_designer_auditor_count)
 
-    new_check = {
-      'date_code_check' => '1',
-      'full_review'     => '1',
-      'title'           => 'New Check APPEND',
-      'dot_rev_check'   => '1',
-      'url'             => '',
-      'check'           => 'text',
-      'check_type'      => 'designer_auditor'
-    }
+    new_check = { 'date_code_check' => '1',
+                  'full_review'     => '1',
+                  'title'           => 'New Check APPEND',
+                  'dot_rev_check'   => '1',
+                  'url'             => '',
+                  'check'           => 'text',
+                  'check_type'      => 'designer_auditor' }
+                  
     check = {'id' => checks(:check_03).id}
+    
     assert_equal(3, Check.count("subsection_id=#{subsection_01_1_1.id}"))
     assert_equal(6, Check.count("section_id=#{section_01_1.id}"))
 
-    post(:append_check,
-         :new_check => new_check,
-         :check     => check)
+    post(:append_check, :new_check => new_check, :check => check)
 	 
     assert_equal('Appended check successfully.', flash['notice'])
     assert_redirected_to(:id     => subsection_01_1_1.id,
@@ -376,10 +374,10 @@ class CheckControllerTest < Test::Unit::TestCase
     assert_equal(0, checklist.dr_designer_only_count)
     assert_equal(4, checklist.dr_designer_auditor_count)
 
-    assert_equal(checks(:check_01).id,        checks[0][:id])
-    assert_equal(checks(:check_02).id,        checks[1][:id])
-    assert_equal(checks(:check_03).id,        checks[2][:id])
-    assert_equal('New Check APPEND',          checks[3][:title])
+    assert_equal(checks(:check_01).id, checks[0][:id])
+    assert_equal(checks(:check_02).id, checks[1][:id])
+    assert_equal(checks(:check_03).id, checks[2][:id])
+    assert_equal('New Check APPEND',   checks[3][:title])
 
   end
 
@@ -754,19 +752,15 @@ class CheckControllerTest < Test::Unit::TestCase
     @request.session[:active_role] = nil
     @request.session[:roles]       = nil
 
-    get(:destroy,
-        :id            => checks(:check_02).id)
+    get(:destroy, :id => checks(:check_02).id)
     
-    assert_redirected_to(:controller => 'user',
-                         :action     => 'login')
+    assert_redirected_to(:controller => 'user', :action => 'login')
     assert_equal('Please log in', flash[:notice])
 
     set_non_admin
-    get(:destroy,
-        :id            => checks(:check_02).id)
+    get(:destroy, :id => checks(:check_02).id)
     
-    assert_redirected_to(:controller => 'tracker',
-                         :action     => 'index')
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
     set_admin
@@ -775,8 +769,7 @@ class CheckControllerTest < Test::Unit::TestCase
     assert_equal(3, Check.count("subsection_id=#{subsection_id}"))
     assert_equal(6, Check.count("section_id=#{section_01_1.id}"))
 
-    get(:destroy,
-        :id            => checks(:check_02).id)
+    get(:destroy, :id => checks(:check_02).id)
 
     assert_equal('Check deletion successful.', flash['notice'])
     assert_equal(5, Check.count("section_id=#{section_01_1.id}"))
