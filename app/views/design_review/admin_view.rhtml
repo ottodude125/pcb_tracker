@@ -81,6 +81,18 @@
 
           <tr>
             <td>
+             <input type="button"
+                    value="Reviewer Updates"
+                    title="Use to update users assigned to perform reviews"
+                    onClick="parent.location='<%= url_for(:controller => 'design', 
+                                                          :action     => 'design_review_reviewers',
+                                                          :id         => @design_review.design_id) %>'"
+                    class="small_font_wide_button" />
+            </td>
+          </tr>
+
+          <tr>
+            <td>
               <input type="button" 
                      value="In-Process Dialogue"
                      title="Hardware/Designer communication log"
