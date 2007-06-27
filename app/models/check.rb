@@ -79,5 +79,29 @@ class Check < ActiveRecord::Base
   def designer_auditor?
     self.check_type == 'designer_auditor'
   end
+  
+  
+  ######################################################################
+  #
+  # belongs_to?
+  #
+  # Description:
+  # This method determines if a check should be included in a design's
+  # audit checks.
+  #
+  # Parameters:
+  # design - a design record.
+  #
+  # Return value:
+  # TRUE if the check belongs, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def belongs_to?(design)
+    design.new?                                  ||
+    (design.date_code? && self.date_code_check?) ||
+    (design.dot_rev?   && self.dot_rev_check?)
+  end
+  
 
 end
