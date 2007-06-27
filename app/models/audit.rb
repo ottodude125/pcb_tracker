@@ -52,9 +52,7 @@ PEER_AUDIT       = 2
   ######################################################################
   #
   def self.find_incomplete_audits
-    self.find(:all,
-              :conditions => "auditor_complete=0",
-              :order      => "id")
+    self.find(:all, :conditions => "auditor_complete=0", :order => "id")
   end
   
   
@@ -245,20 +243,10 @@ PEER_AUDIT       = 2
   #
   def create_checklist
 
-    design    = self.design
-    checklist = self.checklist
-
-    checklist.sections.each do |section|
-      section.subsections.each do |subsection|
-        subsection.checks.each do |check|
-          if ((design.new?)                                 ||
-              (design.date_code? && check.date_code_check?) ||
-              (design.dot_rev?   && check.dot_rev_check?))
-            design_check = DesignCheck.new(:audit_id => self.id, :check_id => check.id)
-
-            fail 'Design check not saved' unless design_check.save
-          end
-        end
+    self.checklist.each_check do |check|
+      if check.belongs_to? self.design
+        design_check = DesignCheck.new(:audit_id => self.id, :check_id => check.id)
+        fail 'Design check not saved' unless design_check.save        
       end
     end
     
@@ -599,5 +587,162 @@ PEER_AUDIT       = 2
     end
   end
   
+  
+  ######################################################################
+  #
+  # self_update?
+  #
+  # Description:
+  # The method determines if the update that is being processed is a
+  # self audit update.
+  #
+  # Parameters:
+  # user - a user record that identifies the person who is logged in.
+  #
+  # Return value:
+  # True if the update is to the self audit.  Otherwise, false
+  #
+  ######################################################################
+  #
+  def self_update?(user)
+    self.is_self_audit? && self.is_self_auditor?(user)
+  end
+  
+  
+  ######################################################################
+  #
+  # peer_update?
+  #
+  # Description:
+  # The method determines if the update that is being processed is a
+  # peer audit update.
+  #
+  # Parameters:
+  # user - a user record that identifies the person who is logged in.
+  #
+  # Return value:
+  # True if the update is to the peer audit.  Otherwise, false
+  #
+  ######################################################################
+  #
+  def peer_update?(user)
+    self.is_peer_audit? && self.is_peer_auditor?(user)
+  end
+  
+  
+  ######################################################################
+  #
+  # process_self_audit_update
+  #
+  # Description:
+  # The method processes self audit input.  If the result is anything
+  # than "None" then the designer completed checks is incremented and 
+  # the design_check.designer_result is updated with the new result.
+  # If the self audit is complete then email is sent indicating that
+  # the self audit is complete and another is sent to indicate that the
+  # final review will be posted shortly.
+  #
+  # Parameters:
+  # result_update - the result for the design check entered by the user
+  # design_check  - the design check that is being updated
+  # user          - a user record that identifies the person who is 
+  #                 logged in.
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def process_self_audit_update(result_update, design_check, user)
+
+    if design_check.designer_result == "None"
+
+      begin
+        completed_checks = self.designer_completed_checks + 1
+        self.update_attributes(
+          :designer_completed_checks => completed_checks,
+          :designer_complete         => (completed_checks == self.self_check_count))
+      rescue ActiveRecord::StaleObjectError
+        self.reload
+        retry
+      end
+
+      if self.designer_complete?
+        TrackerMailer.deliver_self_audit_complete(self)
+        TrackerMailer.deliver_final_review_warning(self.design)
+      end
+      
+      self.reload
+      
+    end
+
+    design_check.update_attributes(:designer_result     => result_update,
+                                   :designer_checked_on => Time.now,
+                                   :designer_id         => user.id)
+  end
+  
+  
+  ######################################################################
+  #
+  # process_peer_audit_update
+  #
+  # Description:
+  # The method processes peer audit input.  If the result is anything
+  # than "None" or "Comment then the auditor completed checks is 
+  # incremented and the design_check.auditor_result is updated with the 
+  # new result.  If the peer audit is complete then email is sent indicating 
+  # that the peer audit is complete.
+  #
+  # Parameters:
+  # result_update - the result for the design check entered by the user
+  # comment       - the optional comment entered by the reviewer
+  # design_check  - the design check that is being updated
+  # user          - a user record that identifies the person who is 
+  #                 logged in.
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def process_peer_audit_update(result_update, comment, design_check, user)
+  
+    return if design_check.check.check_type != 'designer_auditor'
+
+    complete   = ['Verified', 'N/A', 'Waived']
+    incomplete = ['None', 'Comment']
+
+    incr = 0
+    incr = -1 if result_update == 'Comment'       && complete.include?(design_check.auditor_result)
+    incr = 1  if complete.include?(result_update) && incomplete.include?(design_check.auditor_result)
+
+    if incr != 0
+      begin
+        completed_checks = self.auditor_completed_checks + incr
+        self.update_attributes(
+          :auditor_completed_checks => completed_checks,
+          :auditor_complete         => (completed_checks == self.peer_check_count))
+      rescue ActiveRecord::StaleObjectError
+        self.reload
+        retry
+      end
+
+      if self.auditor_complete?
+        TrackerMailer.deliver_peer_audit_complete(self)
+        #TODO - candidate for an audit method .delete_audit_teammates
+        AuditTeammate.delete_all(["audit_id = ?", self.id])
+      end
+    end
+
+    design_check.update_attributes(:auditor_result     => result_update,
+                                   :auditor_checked_on => Time.now,
+                                   :auditor_id         => user.id)
+                     
+    TrackerMailer::deliver_audit_update(design_check,
+                                        comment,
+                                        self.design.designer,
+                                        user) if result_update == 'Comment'
+   end
+
   
 end
