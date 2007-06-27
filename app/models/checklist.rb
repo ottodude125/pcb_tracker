@@ -64,6 +64,28 @@ class Checklist < ActiveRecord::Base
   def revision
     self.major_rev_number.to_s + '.' + self.minor_rev_number.to_s
   end
+  
+  
+  ######################################################################
+  #
+  # each_check
+  #
+  # Description:
+  # This method iterates over all of the checks associates with this
+  # checklist.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def each_check
+    self.sections.each do |section|
+      section.subsections.each do |subsection|
+        subsection.checks.each { |check| yield check }
+      end
+    end
+  end
 
 
 end
