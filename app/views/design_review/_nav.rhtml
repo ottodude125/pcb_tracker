@@ -6,6 +6,15 @@
                                                     :action     => 'index' ) %>'" />
     </td>
   </tr>
+  <tr>
+    <td>
+      <%= link_to("Modifications", 
+                  { :controller => "design_update",
+                    :action     => "list",
+                    :id         => @design_review.id },
+                  :popup      => ['new_window', 
+                                  'height=400,width=800,scrollbars=yes,resizable=1']) %>    </td>
+  </tr>
   <% if params[:search] %>
   <tr>
     <td>
