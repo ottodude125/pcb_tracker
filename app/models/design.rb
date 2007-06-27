@@ -18,10 +18,11 @@ class Design < ActiveRecord::Base
 
   has_and_belongs_to_many :fab_houses
 
-  has_many  :design_review_documents
-  has_many  :design_reviews
-  has_many  :ipd_posts
-  has_many  :oi_instructions
+  has_many :design_review_documents
+  has_many :design_reviews
+  has_many :design_updates
+  has_many :ipd_posts
+  has_many :oi_instructions
 
   has_one   :audit
   has_one   :board_design_entry
@@ -30,6 +31,7 @@ class Design < ActiveRecord::Base
   
   NOT_SET  = 'Not Set'
   COMPLETE = 255
+  COMPLETED_RESULTS = ['APPROVED', 'WAIVED']
 
 
   ##############################################################################
@@ -353,6 +355,24 @@ class Design < ActiveRecord::Base
     end
   
   end
+  
+  
+  ######################################################################
+  #
+  # get_phase_design_review
+  #
+  # Description:
+  # This method returns the design review identified by the phase_id
+  #
+  # Return value:
+  # A design review record if the design is not in the complete phase.
+  # Otherwise, nil is returned.
+  #
+  ######################################################################
+  #
+  def get_phase_design_review
+    self.design_reviews.detect { |dr| self.phase_id == dr.review_type_id }
+  end
 
 
   ######################################################################
@@ -479,17 +499,14 @@ class Design < ActiveRecord::Base
   #
   ######################################################################
   #
-  def all_reviewers(sorted = false)
+  def all_reviewers(sorted = true)
   
     reviewer_list = []
     self.design_reviews.each do |design_review|
       reviewer_list = design_review.reviewers(reviewer_list)
     end
 
-    reviewer_list = 
-      reviewer_list.sort_by { |reviewer| reviewer.last_name } if sorted
-    
-    reviewer_list.uniq
+    reviewer_list.sort_by { |reviewer| reviewer.last_name } if sorted
     
   end
   
@@ -750,5 +767,389 @@ class Design < ActiveRecord::Base
   
   end
   
+  
+  ######################################################################
+  #
+  # record_update
+  #
+  # Description:
+  # This method stores the design update
+  #
+  # Parameters:
+  # what      - the attribute that is being updated 
+  # user      - the user that made the update
+  # old_value - the value of the attribute before the update
+  # new_value - the value of the attribute afer the update
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def record_update(what, old_value, new_value, user)
+    self.design_updates << DesignUpdate.new(:what      => what, 
+                                            :user_id   => user.id,
+                                            :old_value => old_value,
+                                            :new_value => new_value)
+  end
+  
+  
+  def update_valor_reviewer(peer, user)
+  
+    final_review = self.get_design_review('Final')
+  
+    if final_review.review_status.name != "Review Completed"
+    
+      valor_review_result = final_review.get_review_result('Valor')
+      if valor_review_result.reviewer_id != peer.id
+        final_review.record_update('Valor Reviewer',
+                                   valor_review_result.reviewer.name,
+                                   peer.name,
+                                   user)
+        valor_review_result.reviewer_id = peer_id
+        valor_review_result.update
+        
+        true
+      else
+        false
+      end
+    else
+      false
+    end
 
+  end
+  
+  
+  ######################################################################
+  #
+  # admin_updates
+  #
+  # Description:
+  # This method processes the admin update
+  #
+  # Parameters:
+  # update  - a hash of the attributes to be updated
+  # comment - the user's comment associated with the update
+  # user    -
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def admin_updates(update, comment, user)
+
+    audit= self.audit
+    
+    changes = {}
+    cc_list = []
+    set_pcb_input_designer = false
+
+    # Update the design reviews
+    self.design_reviews.each do |dr|
+
+      # All design reviews will get any update to the design center.
+      if dr.update_design_center(update[:design_center], user)
+        changes[:design_center] = { :old => dr.design_center.name, 
+                                    :new => update[:design_center].name }
+      end
+
+      next if dr.review_status.name == "Review Completed"
+
+      if dr.update_criticality(update[:criticality], user)
+        changes[:criticality] = { :old => dr.priority.name, 
+                                  :new => update[:criticality].name}
+      end
+      
+      if dr.update_review_status(update[:status], user)
+        changes[:review_status] = { :old => dr.review_status.name, 
+                                    :new => update[:status].name}
+      end 
+      
+
+      # If the design review is "Pre-Artwork" that is not complete
+      # then process any PCB Input Gate change.
+      if dr.update_pcb_input_gate(update[:pcb_input_gate], user)
+        cc_list << dr.designer.email             if dr.designer_id != 0
+        cc_list << update[:pcb_input_gate].email if update[:pcb_input_gate].id != 0
+
+        changes[:pcb_input_gate] = { :old => dr.designer.name, 
+                                     :new => update[:pcb_input_gate].name}
+
+        set_pcb_input_designer = true
+
+      elsif dr.update_release_review_poster(update[:release_poster], user)
+
+        cc_list << dr.designer.email             if dr.designer_id != 0
+        cc_list << update[:release_poster].email if update[:release_poster].id != 0
+        changes[:release_poster] = { :old => dr.designer.name, 
+                                     :new => update[:release_poster].name }
+        
+      elsif dr.update_reviews_designer_poster(update[:designer], user)
+
+        cc_list << dr.designer.email       if dr.designer_id != 0
+        cc_list << update[:designer].email if update[:designer].id != 0
+        changes[:designer] = { :old => dr.designer.name, 
+                               :new => update[:designer].name }
+        
+      end
+      
+      dr.reload if changes.size > 0
+
+    end
+    
+    # Update the design.
+    cc_list << self.input_gate.email               if self.pcb_input_id != 0
+    cc_list << self.designer.email                 if self.designer_id  != 0
+    if set_pcb_input_designer && 
+       update[:pcb_input_gate] && 
+       self.pcb_input_id != update[:pcb_input_gate].id
+      self.pcb_input_id = update[:pcb_input_gate].id
+    end
+    
+    if update[:designer] && self.designer_id != update[:designer].id
+      self.record_update('Designer', 
+                          self.designer.name, 
+                          update[:designer].name,
+                          user)
+     self.designer_id = update[:designer].id
+    end
+    
+    if update[:criticality] && self.priority_id != update[:criticality].id
+      self.priority  = update[:criticality] 
+    end
+    
+    audit = self.audit
+    if update[:peer] && self.peer_id != update[:peer].id 
+      
+      final_design_review = self.get_design_review('Final')
+      valor_review_result = final_design_review.get_review_result('Valor')
+      
+      if valor_review_result.reviewer_id != update[:peer].id
+          
+        cc_list << valor_review_result.reviewer.email if valor_review_result.reviewer_id != 0
+        changes[:valor] = { :old => valor_review_result.reviewer.name,
+                            :new => update[:peer].name }
+        final_design_review.record_update('Valor Reviewer',
+                                          valor_review_result.reviewer.name,
+                                          update[:peer].name,
+                                          user)
+                          
+        valor_review_result.reviewer_id = update[:peer].id
+        valor_review_result.update
+           
+      end
+      
+      if !audit.skip?  && !audit.is_complete?
+        changes[:peer] = { :old => self.peer.name, :new => update[:peer].name }
+        self.record_update('Peer Auditor', 
+                            self.peer.name, 
+                            update[:peer].name,
+                            user)
+      
+        self.peer_id = update[:peer].id
+      end
+      
+    end
+
+        
+    if changes.size > 0 || comment.size > 0 
+
+      self.update
+      self.reload
+
+      TrackerMailer::deliver_design_modification(
+        user,
+        self,
+        modification_comment(comment, changes), 
+        cc_list)
+
+      "#{self.name} has been updated - the updates were recorded and mail was sent"
+      
+    else
+      "Nothing was changed - no updates were recorded"
+    end
+
+  end
+  
+  
+  ######################################################################
+  #
+  # get_design_review
+  #
+  # Description:
+  # This method returns the design review for the review type identified
+  # by name.
+  #
+  # Parameters:
+  # name - the review type name
+  #
+  # Return value:
+  # The design review record for the desired review type.
+  #
+  ######################################################################
+  #
+  def get_design_review(name)
+    self.design_reviews.detect { |dr| dr.review_type.name == name }
+  end
+  
+  
+  def role_review_count(role)
+      role_count = 0
+    self.design_reviews.each do |dr|
+      role_count += 1 if dr.design_review_results.detect { |drr| drr.role_id == role.id }
+    end
+    role_count
+  end
+  
+  
+  def role_open_review_count(role)
+    open_reviews = 0
+    closed_reviews = ReviewStatus.closed_reviews
+    self.design_reviews.each do |dr|
+      next if closed_reviews.detect { |rvw| rvw == dr.review_status }
+      review_result = dr.design_review_results.detect { |drr| drr.role_id == role.id }
+      open_reviews += 1 if review_result && !COMPLETED_RESULTS.include?(review_result.result)
+    end
+    open_reviews
+  end
+  
+  
+  def get_role_reviewer(role)
+    reviewer = nil
+    self.design_reviews.sort_by { |dr| dr.review_type.sort_order }.each do |dr|
+      result   = dr.design_review_results.detect { |drr| drr.role == role}
+      reviewer = result.reviewer if result
+    end
+
+    return reviewer
+  end
+  
+  
+  def is_role_reviewer?(role, user)
+    user == self.get_role_reviewer(role)
+  end
+  
+  
+  def set_role_reviewer(role, new_reviewer, user)
+
+    completed_results = ['APPROVED', 'WAIVED']
+    in_review = nil
+    self.design_reviews.each do |dr|
+
+      next if dr.review_status.name == 'Review Completed'
+
+      review_result = dr.design_review_results.detect { |drr| drr.role_id == role.id }
+      
+      if review_result && !completed_results.include?(review_result.result)
+        old_reviewer              = review_result.reviewer
+        review_result.reviewer_id = new_reviewer.id
+        review_result.update
+        
+        dr.record_update(role.display_name + 'Reviewer', 
+                         old_reviewer.name, 
+                         new_reviewer.name, 
+                         user)
+
+        if dr.review_status.name == 'In Review'
+          TrackerMailer::deliver_reviewer_modification_notification(dr, 
+                                                                    role,
+                                                                    old_reviewer,
+                                                                    new_reviewer,
+                                                                    user)
+          in_review = dr.review_type.name
+        end
+      end
+      
+    end
+  
+    in_review
+    
+  end
+  
+  
+  def reviewers
+    reviewer_list = []
+    self.design_reviews.each { |dr| reviewer_list = dr.reviewers(reviewer_list) }
+    reviewer_list.sort_by { |r| r.last_name }
+  end
+  
+  
+  def reviewers_remaining_reviews
+    reviewer_list = []
+    self.design_reviews.each do |dr|
+      next if dr.review_status.name == 'Review Completed' || dr.review_status.name == 'Review Skipped'
+      reviewer_list = dr.reviewers(reviewer_list)
+    end
+    reviewer_list.sort_by { |r| r.last_name }
+  end
+  
+  
+  def inactive_reviewers?
+    self.reviewers_remaining_reviews.each { |r| return true if !r.active? }
+    return false
+  end
+  
+  
+  def detailed_name
+    brd = self.board
+    "#{self.name} - #{brd.platform.name} / #{brd.project.name} / #{brd.description}"
+  end
+  
+
+########################################################################
+########################################################################
+  private
+########################################################################
+########################################################################
+  
+  
+  ######################################################################
+  #
+  # modification_comment
+  #
+  # Description:
+  # This method creates the comment for design modifications made
+  # by the managers and designers
+  #
+  # Parameters
+  # post_comment  - the associated comment entered by the user
+  # changes       - contains the modifications that were made to the 
+  #                 design review
+  #
+  ######################################################################
+  #
+  def modification_comment(post_comment, changes)
+
+    msg = ''
+    
+    if changes[:designer]
+      msg += "The Lead Designer was changed from #{changes[:designer][:old]} to #{changes[:designer][:new]}\n"
+    end
+    if changes[:peer]
+      msg += "The Peer Auditor was changed from #{changes[:peer][:old]} to #{changes[:peer][:new]}\n"
+    end
+    if changes[:pcb_input_gate]
+      msg += "The PCB Input Gate was changed from #{changes[:pcb_input_gate][:old]} to #{changes[:pcb_input_gate][:new]}\n"
+    end
+    if changes[:release_poster]
+      msg += "The Release Poster was changed from #{changes[:release_poster][:old]} to #{changes[:release_poster][:new]}\n"
+    end
+    if changes[:criticality]
+      msg += "The Criticality was changed from #{changes[:criticality][:old]} to #{changes[:criticality][:new]}\n"
+    end
+    if changes[:design_center]
+      msg += "The Design Center was changed from #{changes[:design_center][:old]} to #{changes[:design_center][:new]}\n"
+    end
+    if changes[:review_status]
+      msg += "The design review status was changed from #{changes[:review_status][:old]} to #{changes[:review_status][:new]}\n"
+    end
+
+    msg += "\n\n" + post_comment if post_comment.size > 0
+    
+    msg
+
+  end
+  
+  
 end
