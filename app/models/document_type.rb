@@ -17,4 +17,13 @@ class DocumentType < ActiveRecord::Base
   validates_uniqueness_of(:name,
                           :message => 'already exists in the database')
 
+  def self.get_all
+    self.find(:all, :order => 'name')
+  end
+  
+  
+  def self.get_all_active
+    self.find(:all, :conditions => 'active=1', :order => 'name')
+  end
+
 end
