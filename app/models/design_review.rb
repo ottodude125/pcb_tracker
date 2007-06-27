@@ -20,12 +20,34 @@ class DesignReview < ActiveRecord::Base
 
   has_many(:design_review_comments, :order => 'created_on DESC')
   has_many(:design_review_results)
+  has_many(:design_updates)
   
   
   SUNDAY   = 0
   SATURDAY = 6
 
 
+  ######################################################################
+  #
+  # get_review_result
+  #
+  # Description:
+  # This method returns the design review result for the role identified
+  # by name.
+  #
+  # Parameters:
+  # name - the role name
+  #
+  # Return value:
+  # The design review result record for the desired role.
+  #
+  ######################################################################
+  #
+  def get_review_result(name)
+    self.design_review_results.detect { |drr| drr.role.name == name }
+  end
+  
+  
   ######################################################################
   #
   # review_name
@@ -116,8 +138,9 @@ class DesignReview < ActiveRecord::Base
   ######################################################################
   #
   def place_on_hold(current_time = Time.now)
-    self.review_status_id  = ReviewStatus.find_by_name('Review On-Hold').id
+    self.review_status     = ReviewStatus.find_by_name('Review On-Hold')
     self.placed_on_hold_on = current_time
+
     self.update
   end
   
@@ -141,11 +164,12 @@ class DesignReview < ActiveRecord::Base
   ######################################################################
   #
   def remove_from_hold(review_status_id, current_time = Time.now)
-  
-    if self.review_status_id == ReviewStatus.find_by_name('Review On-Hold').id
+
+    if self.review_status.name == 'Review On-Hold'
       self.review_status_id    = review_status_id
       self.total_time_on_hold += age_in_seconds(self.placed_on_hold_on, current_time)
       self.update
+      self.reload
     end
 
   end
@@ -212,18 +236,50 @@ class DesignReview < ActiveRecord::Base
   #
   ######################################################################
   #
-  def reviewers(reviewer_list = [], sorted = false)
+  def reviewers(reviewer_list = [], sorted = true)
   
-    self.design_review_results.each do |review_result|
-      if not reviewer_list.detect { |reviewer| reviewer.id == review_result.reviewer_id }
-        reviewer_list << User.find(review_result.reviewer_id)
-      end
+    reviewers = self.design_review_results.collect { |drr| drr.reviewer }
+    if reviewer_list.size > 0
+      new_reviewers  = reviewers - reviewer_list
+      reviewer_list += new_reviewers
+    else
+      reviewer_list = reviewers
     end
     
-    reviewer_list = reviewer_list.sort_by { |reviewer| reviewer.last_name } if sorted
-    
-    reviewer_list.uniq
-    
+    if sorted
+      reviewer_list.sort_by { |reviewer| reviewer.last_name }
+    else
+      reviewer_list
+    end
+
+  end
+  
+  
+  ######################################################################
+  #
+  # active_reviewers
+  #
+  # Description:
+  # This method takes the list returned from reviewers and removes the
+  # users who are no longer active and returns the results to the 
+  # caller.
+  #
+  # Parameters:
+  # sorted        - A flag that indicates whether or not to sort the 
+  #                 reviewer_list by the last names
+  #
+  # Return value:
+  # A list of active reviewers (user records) for the design review
+  #
+  ######################################################################
+  #
+  def active_reviewers(sorted = false)
+
+#    reviewers = self.reviewers([], sorted)
+#    reviewers.delete_if { |r| !r.active? }
+#    return reviewers
+    self.reviewers([], sorted).delete_if { |r| !r.active? }
+  
   end
   
   
@@ -531,6 +587,270 @@ class DesignReview < ActiveRecord::Base
   
   end
   
+  
+  def reviewer_locked_in?
+    ReviewStatus.closed_reviews.include?(self.review_status)
+  end
+  
+  
+  ######################################################################
+  #
+  # update_design_center
+  #
+  # Description:
+  # This method updates the design center attribute and records the 
+  # update.
+  #
+  # Parameters:
+  # design_center - the new value for the design center attribute
+  # user          - the use who made the update
+  #
+  # Return value:
+  # TRUE if the attribute was updated, otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def update_design_center(design_center, user)
+
+    if design_center && self.design_center_id != design_center.id
+      self.record_update('Design Center', 
+                         self.design_center.name, 
+                         design_center.name, 
+                         user)
+      self.design_center = design_center
+      self.update
+      
+      true
+    else
+      false
+    end
+
+  end
+  
+  
+  ######################################################################
+  #
+  # update_criticality
+  #
+  # Description:
+  # This method updates the criticality (priority) attribute and 
+  # records the  update.
+  #
+  # Parameters:
+  # criticality - the new value for the criticality attribute
+  # user        - the use who made the update
+  #
+  # Return value:
+  # TRUE if the attribute was updated, otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def update_criticality(criticality, user)
+  
+    if criticality && self.priority_id != criticality.id &&
+       self.review_status.name != "Review Completed"
+       
+      self.record_update('Criticality', 
+                         self.priority.name, 
+                         criticality.name,
+                         user)
+
+      self.priority = criticality
+      self.update
+      
+      true
+    else
+      false
+    end
+    
+  end
+  
+  
+  ######################################################################
+  #
+  # update_review_status
+  #
+  # Description:
+  # This method updates the review status attribute and records the
+  # update.
+  #
+  # Parameters:
+  # status - the new value for the review status attribute
+  # user   - the use who made the update
+  #
+  # Return value:
+  # TRUE if the attribute was updated, otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def update_review_status(status, user)
+  
+      if status && status.id != self.review_status_id &&
+         (self.review_status.name == 'Review On-Hold' ||
+          self.review_status.name == 'In Review')
+
+        self.record_update('Review Status', 
+                           self.review_status.name, 
+                           status.name,
+                           user)
+
+        if self.review_status.name == 'Review On-Hold'
+          self.remove_from_hold(status.id)
+        elsif self.review_status.name == 'In Review'
+          self.place_on_hold
+        end
+        self.update
+        
+        true
+      else
+        false
+      end 
+    
+  end
+  
+  
+  ######################################################################
+  #
+  # update_pcb_input_gate
+  #
+  # Description:
+  # This method updates the designer attribute of a Pre-Artwork review
+  # and records the update.
+  #
+  # Parameters:
+  # pcb_input_gate - the new value for the designer (pcb_input_gate)
+  #                  attribute
+  # user           - the use who made the update
+  #
+  # Return value:
+  # TRUE if the attribute was updated, otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def update_pcb_input_gate(pcb_input_gate, user)
+
+    if self.review_type.name == "Pre-Artwork" && 
+       self.review_status.name != "Review Completed" &&
+       pcb_input_gate && self.designer_id != pcb_input_gate.id
+
+      self.record_update('Pre-Artwork Poster', 
+                          self.designer.name, 
+                          pcb_input_gate.name,
+                          user)
+
+      self.designer_id = pcb_input_gate.id
+      self.update
+        
+      true
+    else
+      false
+    end
+  end
+  
+  
+  ######################################################################
+  #
+  # update_release_review_poster
+  #
+  # Description:
+  # This method updates the designer attribute of a Release review
+  # and records the update.
+  #
+  # Parameters:
+  # release_reviewer - the new value for the designer (release poster)
+  #                    attribute
+  # user             - the use who made the update
+  #
+  # Return value:
+  # TRUE if the attribute was updated, otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def update_release_review_poster(release_reviewer, user)
+
+    if self.review_type.name == "Release" &&
+       self.review_status.name != "Review Completed" &&
+       release_reviewer && self.designer_id != release_reviewer.id
+
+      self.record_update('Release Poster', 
+                         self.designer.name, 
+                         release_reviewer.name,
+                         user)
+
+      self.designer_id = release_reviewer.id
+      self.update
+      
+      true
+    else
+      false
+    end
+
+  end
+
+
+  ######################################################################
+  #
+  # update_reviews_designer_poster
+  #
+  # Description:
+  # This method updates the designer attribute of a design review.
+  #
+  # Parameters:
+  # release_reviewer - the new value for the designer attribute
+  # user             - the use who made the update
+  #
+  # Return value:
+  # TRUE if the attribute was updated, otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def update_reviews_designer_poster(designer, user)
+
+    if self.review_type.name != "Pre-Artwork" && 
+       self.review_type.name != "Release"     &&
+       self.review_status.name != "Review Completed" &&
+       designer && self.designer_id != designer.id
+
+      self.record_update('Designer', 
+                         self.designer.name, 
+                         designer.name,
+                         user)
+      self.designer_id = designer.id
+      self.update
+
+      true
+    else
+      false
+    end
+
+  end
+
+
+  ######################################################################
+  #
+  # record_update
+  #
+  # Description:
+  # This method stores the design review update
+  #
+  # Parameters:
+  # what      - the attribute that is being updated 
+  # user      - the user that made the update
+  # old_value - the value of the attribute before the update
+  # new_value - the value of the attribute afer the update
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def record_update(what, old_value, new_value, user)
+    self.design_updates << DesignUpdate.new(:what      => what,
+                                            :user_id   => user.id,
+                                            :old_value => old_value,
+                                            :new_value => new_value)
+  end
+
 
 ######################################################################
 ######################################################################
@@ -596,6 +916,6 @@ private
     delta.to_i
   
   end
-
-
+  
+  
 end
