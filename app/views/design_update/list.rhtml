@@ -1,0 +1,45 @@
+<!-- View:    pcb_mechanical_comments                           -->
+<!-- Purpose: Displays the pcb mechanical reviewer comments for -->
+<!--          for the design.                                   -->
+<!--                                                            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<!DOCTYPE HTML PUBLIC "HTML 4.01 Transitional" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title><%= @design_review.design.name %> <%= @design_review.review_type.name %> Modifications</title>
+  <%= stylesheet_link_tag 'tracker' %>
+</head>
+
+<body>
+ 
+  <p align="center">
+    <a href="javascript:window.close();">Close Window</a>
+  </p>
+
+<table width="100%" border="2" cellpadding="4">
+  <tr class="teraheader">
+    <th>Attribute</th>
+    <th>Old Value</th>
+    <th>New Value</th>
+    <th>Changed By</th>
+    <th>Changed On</th>
+  </tr>
+  <% @updates.each do |update| %>
+    <tr valign="top">
+      <td><%= update.what %></td>
+      <td><%= update.old_value %></td>
+      <td><%= update.new_value %></td>
+      <td><%= update.user.name %></td>
+      <td><%= update.created_on.strftime("%d-%b-%y, %I:%M %p %Z") %></td>
+    </tr>
+  <% end %>
+</table>
+
+  <p align="center">
+    <a href="javascript:window.close();">Close Window</a>
+  </p>
+</body>
+</html>
