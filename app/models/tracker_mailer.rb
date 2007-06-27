@@ -175,8 +175,7 @@ class TrackerMailer < ActionMailer::Base
     @sent_on    = sent_at
     @headers    = {}
     @bcc        = blind_cc
-    @cc         = copy_to(design_review)
-
+    @cc         = copy_to(design_review) - @recipients
     @body['user'] = user
 
     if comment_update
@@ -203,34 +202,32 @@ class TrackerMailer < ActionMailer::Base
   
   ######################################################################
   #
-  # design_review_modification
+  # design_modifications
   #
   # Description:
-  # This method generates the mail indicate that a design review 
-  # has been modifed
+  # This method generates the mail indicate that a design has been 
+  # modifed
   #
   # Parameters:
-  #   user           - the user making the update
-  #   design_review  - the design review that was updated
-  #   cc_list        - contains the email addresses for the designer and
-  #                    the peer auditor
-  #   sent_at        - the timestamp for the mail header 
-  #                    (defaults to Time.now)
+  #   user    - the user making the update
+  #   cc_list - contains the email addresses for the designer and the 
+  #             peer auditor
+  #   design  - the record for the design that has been modified   
+  #   sent_at - the timestamp for the mail header (defaults to Time.now)
   #
   ######################################################################
   #
-  def design_review_modification(user, 
-                                 design_review, 
-                                 cc_list         = [],
-                                 sent_at         = Time.now)
+  def design_modification(user,
+                          design,
+                          comment,
+                          cc_list = [],
+                          sent_at = Time.now)
 
-    @subject     = "The #{design_review.design.name} #{design_review.review_name}" +
-                   " Design Review has been modified by #{user.name}"
+    design_review = design.get_phase_design_review
+    @subject      = "The #{design.name} #{design_review.review_type.name} Design Review has been modified by #{user.name}"
 
-    @recipients  = reviewer_list(design_review)
-
+    @recipients  = design_review.active_reviewers.collect { |r| r.email }
     design       = design_review.design
-    design.reload
     
     @recipients << design.designer.email   if design.designer_id  > 0
     @recipients << design.peer.email       if design.peer_id      > 0
@@ -243,7 +240,7 @@ class TrackerMailer < ActionMailer::Base
     @cc          = ((copy_to(design_review) + cc_list) - @recipients).uniq
 
     @body['user']             = user
-    @body['comment']          = design_review.design_review_comments.shift
+    @body['comment']          = comment
     @body['design_review_id'] = design_review.id
 
   end
@@ -994,6 +991,50 @@ class TrackerMailer < ActionMailer::Base
   
   ######################################################################
   #
+  # reviewer_modification_notification
+  #
+  # Description:
+  # This method generates mail to let both the new review and the old
+  # reviewer know that they design review has been reassigned.
+  #
+  # Parameters:
+  #   design_review - the design review record
+  #   role          - the role record
+  #   old_reviewer  - the user record for the old reviewer
+  #   new_reviewer  - the user record for the new reviewer
+  #   sent_at            - the time of the event
+  #
+  ######################################################################
+  #
+  def reviewer_modification_notification(design_review, 
+                                         role, 
+                                         old_reviewer, 
+                                         new_reviewer,
+                                         user,
+                                         sent_at = Time.now)
+  
+    @subject    = role.display_name + " reviewer changed for " +
+                  design_review.design.name + ' ' + design_review.review_type.name +
+                  " Design Review"
+    
+    @recipients = [new_reviewer.email]
+    @from       = Pcbtr::SENDER
+    @sent_on    = sent_at
+    @headers    = {}
+    @bcc        = blind_cc
+    @cc         = [old_reviewer.email] + add_role_members(['PCB Input Gate', 'Manager'])
+
+    @body['new_reviewer']  = new_reviewer.name
+    @body['old_reviewer']  = old_reviewer.name
+    @body['design_review'] = design_review
+    @body['user']          = user
+    @body['role']          = role
+    
+  end
+  
+  
+  ######################################################################
+  #
   # oi_assignment_notification
   #
   # Description:
@@ -1207,11 +1248,9 @@ class TrackerMailer < ActionMailer::Base
   ######################################################################
   #
   def copy_to_on_milestone(board)
-
     add_board_reviewer(board,
                        ['Program Manager',
                         'Hardware Engineering Manager'])
-    
   end
   
   
