@@ -38,9 +38,7 @@ class ReviewManagerController < ApplicationController
     @roles        = Role.find(:all,
                               :conditions => 'reviewer=1 AND active=1',
                               :order      => 'name')
-    @review_types = ReviewType.find(:all,
-                                    :conditions => 'active=1',
-                                    :order      => 'sort_order')
+    @review_types = ReviewType.get_active_review_types
 
     @roles.each do |role|
 

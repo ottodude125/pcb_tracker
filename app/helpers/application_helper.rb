@@ -131,7 +131,7 @@ module ApplicationHelper
   #
   def pre_artwork_complete(design)
 
-    pre_art_review_type = ReviewType.find_by_name('Pre-Artwork')
+    pre_art_review_type = ReviewType.get_pre_artwork
     pre_art_design_review = design.design_reviews.detect { |dr| 
       dr.review_type_id == pre_art_review_type.id
     }
