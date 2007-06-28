@@ -64,7 +64,7 @@ class BoardDesignEntryController < ApplicationController
     bde += BoardDesignEntry.find_all_by_state('ready_to_post').sort_by { |e| e.design_name }
     @board_design_entries = bde
     
-    @pre_art_review = ReviewType.find_by_name('Pre-Artwork')
+    @pre_art_review = ReviewType.get_pre_artwork
   end
 
 
@@ -1305,7 +1305,7 @@ class BoardDesignEntryController < ApplicationController
       type = 'Date Code'
     end
     
-    review_types = ReviewType.find_all_by_active(1, 'sort_order ASC')
+    review_types = get_active_review_types
     
     phase_id = Design::COMPLETE
     for review_type in review_types
@@ -1390,8 +1390,8 @@ class BoardDesignEntryController < ApplicationController
   def design_setup
   
     @board_design_entry = BoardDesignEntry.find(params[:id])
-    @review_types       = ReviewType.find_all_by_active(1, 'sort_order ASC')
-    @priorities         = Priority.find(:all, :order => 'value')
+    @review_types       = ReviewType.get_active_review_types
+    @priorities         = Priority.get_priorities
   
   end
   
