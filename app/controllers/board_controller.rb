@@ -143,6 +143,7 @@ before_filter(:verify_admin_role,
 
     @reviewers = []
     @review_roles.each do |role|
+      board_reviewer = @board.role_reviewer(role.id)
       @reviewers.push({ :group       => role.name,
                         :id          => role.id,
                         :reviewers   => Role.find_by_name(role.name).active_users,
@@ -361,8 +362,8 @@ before_filter(:verify_admin_role,
       board_list = Board.find_all_by_platform_id_and_project_id(platform.id, project.id)
     end
    
-    release_rt = ReviewType.find_by_name('Release')
-    final_rt   = ReviewType.find_by_name('Final')
+    release_rt = ReviewType.get_release
+    final_rt   = ReviewType.get_final
     board_list.each do |board|
       board.designs.each do |design|
         if !(design.complete? || design.in_phase?(release_rt))
@@ -387,7 +388,7 @@ before_filter(:verify_admin_role,
 
     # If a phase of "Final" or "Release" was specified then filter the list.
     if params[:review_type][:phase] != 'All'
-      review_types          = ReviewType.find(:all)
+      review_types          = ReviewType.get_review_types
       completed_review_type = review_types.detect { |rt| 
                                 rt.name == params[:review_type][:phase] }
       review_types.delete_if { |rt| rt.sort_order <= completed_review_type.sort_order }

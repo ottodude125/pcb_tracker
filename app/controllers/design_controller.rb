@@ -210,7 +210,7 @@ class DesignController < ApplicationController
 
     # TODO: See review_attachments() in the design review controller.
     @design        = Design.find(params[:design_id])
-    @pre_art       = ReviewType.find_by_name("Pre-Artwork")
+    @pre_art       = ReviewType.get_pre_artwork
     @design_review = @design.design_reviews.detect { |dr| dr.review_type_id == @pre_art.id }
     
     @documents = []
