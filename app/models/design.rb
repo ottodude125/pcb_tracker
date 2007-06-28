@@ -61,6 +61,24 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # work_assignment_data
+  #
+  # Description:
+  # This method computes the following outsource instruction statistics
+  #   - the total number of assignments
+  #   - the total number of completed assignments
+  #   - the total number of assignments that have report cards
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A hash with the outsource instruction statistics
+  #
+  ######################################################################
+  #
   def work_assignment_data
   
     totals = { :assignments            => 0,
@@ -80,6 +98,23 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # work_assignments_complete
+  #
+  # Description:
+  # This method determines if all of the work assignment have been
+  # completed and evaluated by the designer.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A boolean that indicates that all work assignments have been
+  # completed and have been evaluated when TRUE.
+  #
+  ######################################################################
+  #
   def work_assignments_complete?
 
     summary = self.work_assignment_data
@@ -171,6 +206,22 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # have_assignments
+  #
+  # Description:
+  # This method determines if the user has any outsource instruction
+  # assignments.
+  #
+  # Parameters:
+  # user_id - to identify the user 
+  #
+  # Return value:
+  # TRUE if the user has any outsource instruction assignments
+  #
+  ######################################################################
+  #
   def have_assignments(user_id)
     
     self.oi_instructions.each do |instruction|
@@ -184,6 +235,21 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # my_assignments
+  #
+  # Description:
+  # This method retrieves the user's outsource instruction assignments
+  #
+  # Parameters:
+  # user_id - to identify the user 
+  #
+  # Return value:
+  # A list of outsource instruction assignments
+  #
+  ######################################################################
+  #
   def my_assignments(user_id)
   
     my_assignments  = []    
@@ -198,6 +264,24 @@ class Design < ActiveRecord::Base
   end
 
 
+  ######################################################################
+  #
+  # all_assignments
+  #
+  # Description:
+  # This method retrieves all of the design's outsource instruction 
+  # assignments.  If the category_id is provided then the list is 
+  # limited to the outsource instruction assignments for the category.
+  #
+  # Parameters:
+  # category_id - to identify the category to provide outsource 
+  #               instruction assignments when greater than 0
+  #
+  # Return value:
+  # A list of outsource instruction assignments
+  #
+  ######################################################################
+  #
   def all_assignments(category_id = 0)
 
     assignments  = []
@@ -495,7 +579,7 @@ class Design < ActiveRecord::Base
   # None
   #
   # Return value:
-  # A list of User records.  One for each of the reviewers.
+  # A list of unique User records.  One for each of the reviewers.
   #
   ######################################################################
   #
@@ -503,6 +587,8 @@ class Design < ActiveRecord::Base
   
     reviewer_list = []
     self.design_reviews.each do |design_review|
+      # design_review.reviewers will not add duplicate
+      # records to reviewer_list
       reviewer_list = design_review.reviewers(reviewer_list)
     end
 
@@ -695,7 +781,7 @@ class Design < ActiveRecord::Base
     
     not_started    = ReviewStatus.find_by_name('Not Started')
     review_skipped = ReviewStatus.find_by_name('Review Skipped')
-    review_types   = ReviewType.find_all_by_active(1)
+    review_types   = ReviewType.get_active_review_types
 
     pcb_input_gate_role = Role.find_by_name('PCB Input Gate')
     
@@ -794,6 +880,22 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # update_valor_reviewer
+  #
+  # Description:
+  # This method updates the person assigned to perform the valor review
+  #
+  # Parameters:
+  # peer - the user record for the new peer reviewer
+  # user - the user that made the update
+  #
+  # Return value:
+  # TRUE if the Valor reviewer was updated.
+  #
+  ######################################################################
+  #
   def update_valor_reviewer(peer, user)
   
     final_review = self.get_design_review('Final')
