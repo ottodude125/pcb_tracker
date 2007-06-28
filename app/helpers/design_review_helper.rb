@@ -94,7 +94,7 @@ module DesignReviewHelper
   def get_design_info(design)
 
     # Find the first design review that is not a Pre-Artwork
-    pre_art = ReviewType.find_by_name("Pre-Artwork")
+    pre_art = ReviewType.get_pre_artwork
     
     for design_review in design.design_reviews
 
