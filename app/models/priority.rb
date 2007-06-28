@@ -24,4 +24,32 @@ class Priority < ActiveRecord::Base
                             :message => '- Review Priority must be an integer greater than 0',
                             :only_integer => true)
 
+
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+
+  ######################################################################
+  #
+  # get_priorities
+  #
+  # Description:
+  # This method retrieves all of the priority records
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of priorities ordered by value
+  #
+  ######################################################################
+  #
+  def self.get_priorities
+    self.find(:all, :order => 'value')
+  end
+  
+  
 end
