@@ -403,7 +403,7 @@ class TrackerMailer < ActionMailer::Base
       recipients.push(root_post.design.designer.email)
     end
 
-    pre_artwork = ReviewType.find_by_name("Pre-Artwork")
+    pre_artwork = ReviewType.get_pre_artwork
     pre_artwork_design_review = 
       DesignReview.find_by_design_id_and_review_type_id(root_post.design_id,
                                                         pre_artwork.id)

@@ -155,7 +155,7 @@ class DesignTest < Test::Unit::TestCase
 
    assert_equal('Not Started', design.phase.name)
 
-   design.phase_id = ReviewType.find_by_name('Final').id
+   design.phase_id = ReviewType.get_final.id
    assert_equal('Final', design.phase.name)
    
    design.phase_id = Design::COMPLETE
@@ -435,7 +435,7 @@ class DesignTest < Test::Unit::TestCase
  ######################################################################
  def test_phase
  
-   review_type_list = ReviewType.find(:all)
+   review_type_list = ReviewType.get_review_types
    complete_design  = designs(:la453a2)
  
    review_type_list.each { |rt| assert(!complete_design.in_phase?(rt)) }

@@ -428,8 +428,8 @@ class DesignReviewTest < Test::Unit::TestCase
   ######################################################################
   def test_review_locked
   
-    final_review_type = ReviewType.find_by_name("Final")
-    release_review_type = ReviewType.find_by_name("Release")
+    final_review_type = ReviewType.get_final
+    release_review_type = ReviewType.get_release
     
     design_review = DesignReview.new(:review_type_id => release_review_type.id)
     assert(!design_review.review_locked?)
@@ -523,12 +523,12 @@ class DesignReviewTest < Test::Unit::TestCase
   ######################################################################
   def test_post_review
  
-    release_review_type = ReviewType.find_by_name("Release")
+    release_review_type = ReviewType.get_release
 
     design = Design.new(:phase_id => release_review_type.id)
     design.save
 
-    final_review_type = ReviewType.find_by_name("Final")
+    final_review_type = ReviewType.get_final
     design_review = DesignReview.new(:review_type_id => final_review_type.id,
                                      :design_id      => design.id)
     design_review.save
