@@ -67,7 +67,7 @@ class DesignReviewController < ApplicationController
 
           if pre_art_pcb(@design_review, @my_review_results)
             @designers  = Role.find_by_name("Designer").active_users
-            @priorities = Priority.find(:all, :order => 'value ASC')
+            @priorities = Priority.get_priorities
           else
             @designers  = nil
             @priorities = nil
@@ -313,7 +313,7 @@ class DesignReviewController < ApplicationController
     # Handle the combined Placement/Routing reviews
     if params[:combine_placement_routing] == '1'
 
-      routing_review = ReviewType.find_by_name('Routing')
+      routing_review = ReviewType.get_routing
       
       @design_review.review_type_id_2 = routing_review.id
       @design_review.update
@@ -397,7 +397,7 @@ class DesignReviewController < ApplicationController
       reviewer_list[role_id.to_i] = reviewer_id.to_i
     }
 
-    pre_art_review = ReviewType.find_by_name('Pre-Artwork')
+    pre_art_review = ReviewType.get_pre_artwork
     
     if design_review.review_type.name == 'Pre-Artwork'
       design_review.design.board_design_entry.complete
@@ -1761,7 +1761,7 @@ class DesignReviewController < ApplicationController
     @designer_list       = @designers - [@design_review.design.peer]
     @peer_list           = @designers - [@design_review.design.designer]
     @pcb_input_gate_list = Role.find_by_name('PCB Input Gate').active_users
-    @priorities          = Priority.find(:all, :order => 'value ASC')
+    @priorities          = Priority.get_priorities
     @design_centers      = DesignCenter.get_all_active
     
     @review_statuses = []
