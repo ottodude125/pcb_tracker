@@ -334,7 +334,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   #
   def test_posting_filter
 
-    review_types = ReviewType.find(:all, :order => 'sort_order ASC')
+    review_types = ReviewType.get_review_types
     base_url = "http://test.host/design_review/"
 
     for review_type in review_types
@@ -385,7 +385,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     end
     assert_equal(37, results_count)
 
-    placement_review_id = ReviewType.find_by_name('Placement').id
+    placement_review_id = ReviewType.get_placement.id
     post(:posting_filter,
          :design_id      => designs(:mx234a).id,
          :review_type_id => placement_review_id)
@@ -434,7 +434,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     design_reviews = DesignReview.find_all_by_design_id(designs(:mx234a).id)
     assert_equal(5, design_reviews.size)
 
-    placement_review_id = ReviewType.find_by_name('Placement').id
+    placement_review_id = ReviewType.get_placement.id
 
     results_count = 0
     for design_review in design_reviews
@@ -489,7 +489,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   def test_post_review
 
     mx234a = designs(:mx234a)
-    pre_art_review = ReviewType.find_by_name('Pre-Artwork')
+    pre_art_review = ReviewType.get_pre_artwork
     
     post(:post_review,
          :combine_placement_routing => '0',
@@ -561,8 +561,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(0, pre_art_design_review.review_type_id_2)
 
     
-    placement_review = ReviewType.find_by_name('Placement')
-    routing_review   = ReviewType.find_by_name('Routing')
+    placement_review = ReviewType.get_placement
+    routing_review   = ReviewType.get_routing
     
     post(:post_review,
          :combine_placement_routing => '1',
@@ -610,7 +610,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(routing_review.id, placement_design_review.review_type_id_2)
     
 
-    final_review_type = ReviewType.find_by_name('Final')
+    final_review_type = ReviewType.get_final
     
     post(:post_review,
          :combine_placement_routing => '0',
@@ -841,7 +841,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
   def test_repost_review
     
     mx234a_pre_artwork = design_reviews(:mx234a_pre_artwork)
-    pre_art_review = ReviewType.find_by_name('Pre-Artwork')
+    pre_art_review = ReviewType.get_pre_artwork
     
     post(:repost_review,
          :design_review_id => mx234a_pre_artwork.id)
@@ -1825,8 +1825,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(5000,     mx234a_design.designer_id)
     assert_equal(5001,     mx234a_design.peer_id)
 
-    release_review = ReviewType.find_by_name('Release')
-    pre_art_review = ReviewType.find_by_name('Pre-Artwork')
+    release_review = ReviewType.get_release
+    pre_art_review = ReviewType.get_pre_artwork
     for mx234a_dr in mx234a_design.design_reviews
       assert_equal(high.id,  mx234a_dr.priority_id)
       if release_review.id === mx234a_dr.review_type_id
@@ -1838,7 +1838,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       end
     end
 
-    assert_equal(ReviewType.find_by_name("Pre-Artwork").id,
+    assert_equal(ReviewType.get_pre_artwork.id,
                  mx234a_design.phase_id)
 
     # Handle special processing cases
@@ -1941,7 +1941,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       end
     end
 
-    assert_equal(ReviewType.find_by_name("Placement").id,
+    assert_equal(ReviewType.get_placement.id,
                  mx234a_design.phase_id)
     assert_equal('Review Completed', mx234a_pre_art_dr.review_status.name)
     assert_equal(Time.now.strftime('%d-%m-%y'),
@@ -2164,7 +2164,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     mx234a_design.reload
     mx234a_placement_dr = DesignReview.find(mx234a.id)
-    assert_equal(ReviewType.find_by_name("Routing").id,
+    assert_equal(ReviewType.get_routing.id,
                  mx234a_design.phase_id)
     assert_equal('Review Completed', 
                  mx234a_placement_dr.review_status.name)
@@ -2353,7 +2353,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     mx234a_design.reload
     mx234a_routing_dr = DesignReview.find(mx234a.id)
-    assert_equal(ReviewType.find_by_name("Final").id,
+    assert_equal(ReviewType.get_final.id,
                  mx234a_design.phase_id)
     assert_equal('Review Completed', 
                  mx234a_routing_dr.review_status.name)
@@ -2611,7 +2611,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     mx234a_design.reload
     mx234a_final_dr = DesignReview.find(mx234a.id)
-    assert_equal(ReviewType.find_by_name("Release").id,
+    assert_equal(ReviewType.get_release.id,
                  mx234a_design.phase_id)
     assert_equal('Review Completed', 
                  mx234a_final_dr.review_status.name)
@@ -2949,8 +2949,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(5000,     mx234a_design.designer_id)
     assert_equal(5001,     mx234a_design.peer_id)
 
-    release_review = ReviewType.find_by_name('Release')
-    pre_art_review = ReviewType.find_by_name('Pre-Artwork')
+    release_review = ReviewType.get_release
+    pre_art_review = ReviewType.get_pre_artwork
     for mx234a_dr in mx234a_design.design_reviews
       assert_equal(high.id,  mx234a_dr.priority_id)
       if release_review.id === mx234a_dr.review_type_id
@@ -2962,7 +2962,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       end
     end
 
-    assert_equal(ReviewType.find_by_name("Pre-Artwork").id,
+    assert_equal(ReviewType.get_pre_artwork.id,
                  mx234a_design.phase_id)
 
     # Handle special processing cases
@@ -3459,7 +3459,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a_pre_artwork.update
     mx234a_pre_artwork.reload
     
-    mx234a.phase_id = ReviewType.find_by_name('Placement').id
+    mx234a.phase_id = ReviewType.get_placement.id
     mx234a.update
     
     mx234a_placement = design_reviews(:mx234a_placement)
@@ -3531,7 +3531,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a_placement.update
     mx234a_placement.reload
     
-    mx234a.phase_id = ReviewType.find_by_name('Routing').id
+    mx234a.phase_id = ReviewType.get_routing.id
     mx234a.update
     
     mx234a_routing = design_reviews(:mx234a_routing)
@@ -3603,7 +3603,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a_routing.update
     mx234a_routing.reload
    
-    mx234a.phase_id = ReviewType.find_by_name('Final').id
+    mx234a.phase_id = ReviewType.get_final.id
     mx234a.update
     
     mx234a_final = design_reviews(:mx234a_final)
@@ -3677,7 +3677,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     mx234a_final.update
     mx234a_final.reload
     
-    mx234a.phase_id = ReviewType.find_by_name('Release').id
+    mx234a.phase_id = ReviewType.get_release.id
     mx234a.update
 
     mx234a_release = design_reviews(:mx234a_release)
