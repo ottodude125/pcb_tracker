@@ -644,24 +644,6 @@ class DesignReviewTest < Test::Unit::TestCase
   
   
   ######################################################################
-  def test_set_valor_reviewer
-  
-    valor_role = Role.find_by_name("Valor")
-    lisa_a     = users(:lisa_a)
-    scott_g    = users(:scott_g)
-    final_dr   = design_reviews(:mx234a_final)
-    assert_equal(scott_g.name, User.find(final_dr.design.peer_id).name)
-    
-    valor_rr = final_dr.design_review_results.detect { |rr| rr.role_id == valor_role.id }
-    assert_equal(lisa_a.name, User.find(valor_rr.reviewer_id).name)
-    
-    final_dr.set_valor_reviewer
-    assert_equal(scott_g.name, User.find(valor_rr.reviewer_id).name)
-  
-  end
-  
-  
-  ######################################################################
   def test_review_status_methods
   
     in_review       = ReviewStatus.find_by_name('In Review')
