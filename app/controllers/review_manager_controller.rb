@@ -35,9 +35,7 @@ class ReviewManagerController < ApplicationController
   def review_type_role_assignment
 
     # Get all of the reviewer roles.
-    @roles        = Role.find(:all,
-                              :conditions => 'reviewer=1 AND active=1',
-                              :order      => 'name')
+    @roles        = Role.get_review_roles
     @review_types = ReviewType.get_active_review_types
 
     @roles.each do |role|
