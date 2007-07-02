@@ -22,7 +22,7 @@
     <tr bgcolor="#9F9F9F">
       <td align="center"><%= select("filter",
                                     "prefix_id", 
-                                    Prefix.get_all_active.collect { |p| [ p.pcb_mnemonic, p.id ] }, 
+                                    Prefix.get_active_prefixes.collect { |p| [ p.pcb_mnemonic, p.id ] }, 
                                     { :include_blank => true}) %></td>
       <td>&nbsp;</td>
       <td align="center"><%= select("filter", 
@@ -31,7 +31,7 @@
                                     { :include_blank => true}) %></td>
       <td align="center"><%= select("filter", 
                                     "project_id", 
-                                    Project.get_all_active.collect { |p| [ p.name, p.id ] }, 
+                                    Project.get_active_projects.collect { |p| [ p.name, p.id ] }, 
                                     { :include_blank => true}) %></td>
       <td>&nbsp;</td>
       <td><input type="submit" value="Filter List" /></td>
