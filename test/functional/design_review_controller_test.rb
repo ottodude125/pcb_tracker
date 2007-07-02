@@ -647,7 +647,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        :reviewer       => @rich_a},
       {:group          => @valor,
        :reviewer_count => 4,
-       :reviewer       => users(:scott_g)}
+       :reviewer       => @lisa_a}
     ]
 
     reviewer_list = assigns(:reviewers)
