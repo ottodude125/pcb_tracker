@@ -44,7 +44,7 @@ class PrefixTest < Test::Unit::TestCase
     end
     
     # Verify the list sizes.
-    active_list = Prefix.get_all_active
+    active_list = Prefix.get_active_prefixes
     assert_equal(prefix_list.size, (inactive_list.size + active_list.size))
     assert_equal(nil,              active_list.detect { |p| !p.active })
     
@@ -55,9 +55,13 @@ class PrefixTest < Test::Unit::TestCase
       pcb_mnemonic = prefix.pcb_mnemonic
     end
     
-    pcb_mnemonic = 'zzz'
-    Prefix.get_all_active('pcb_mnemonic DESC').each do |prefix|
-      assert(prefix.pcb_mnemonic < pcb_mnemonic)
+    all_prefixes = Prefix.get_prefixes
+    expected_prefixes = Prefix.find(:all, :order => 'pcb_mnemonic')
+    assert_equal(expected_prefixes, all_prefixes)
+          
+    pcb_mnemonic = ''
+    all_prefixes.each do |prefix|
+      assert(prefix.pcb_mnemonic > pcb_mnemonic)
       pcb_mnemonic = prefix.pcb_mnemonic
     end
   
