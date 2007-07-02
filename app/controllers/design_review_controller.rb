@@ -306,10 +306,6 @@ class DesignReviewController < ApplicationController
     design_reviews = Design.find(params[:design_id]).design_reviews
     @design_review = design_reviews.detect { |dr| dr.review_type_id == review_type.id }
 
-    # TODO: GET A DSR FOR THIS UPDATE
-    @design_review.set_valor_reviewer  if @design_review.review_type.name == 'Final'
-    @design_review.reload
-       
     # Handle the combined Placement/Routing reviews
     if params[:combine_placement_routing] == '1'
 
@@ -652,7 +648,7 @@ class DesignReviewController < ApplicationController
     board_docs     = @design_review.design.board.design_review_documents
 
     @documents = []
-    DocumentType.get_all.each do |doc_type|
+    DocumentType.get_document_types.each do |doc_type|
     
       docs = board_docs.collect { |d| d if d.document_type_id == doc_type.id }.compact
 
@@ -789,9 +785,7 @@ class DesignReviewController < ApplicationController
   def add_attachment
 
     @document       = Document.new
-    @document_types = DocumentType.find(:all,
-                                        :conditions => 'active=1',
-                                        :order      => 'name ASC')
+    @document_types = DocumentType.get_active_document_types
     
     if params[:design_review] != nil
       design_review_id = params[:design_review][:id]
