@@ -312,7 +312,7 @@ class UserController < ApplicationController
       params[:role].each { | role_id, value |
         role = Role.find(role_id)
         if @user.roles.include?(role)
-	      @user.remove_roles(role) if value == '0'
+	      @user.roles.delete(role) if value == '0'
 	    else
 	      @user.roles << role      if value == '1'
 	    end
