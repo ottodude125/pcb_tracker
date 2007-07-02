@@ -136,14 +136,14 @@ class UserControllerTest < Test::Unit::TestCase
 	       :user_login => "bob", 
          :user_password => "test")
 
-    assert_session_has :user
-    assert_equal "bob", @response.session[:user].login
+    assert(@response.has_session_object?(:user))
+    assert_equal("bob", @response.session[:user].login)
 
-    assert_session_has :active_role
-    assert_equal 'Admin', @response.session[:active_role].name
+    assert(@response.has_session_object?(:active_role))
+    assert_equal('Admin', @response.session[:active_role].name)
 
-    assert_session_has :roles
-    assert_redirect_url "http://localhost/bogus/location"
+    assert(@response.has_session_object?(:roles))
+    assert_equal("http://localhost/bogus/location", @response.redirect_url)
   end
 
  
@@ -176,7 +176,7 @@ class UserControllerTest < Test::Unit::TestCase
 
 
     assert_equal("Administrators only!  Check your role.", flash['notice'])
-    assert_redirect_url "http://localhost/tracker"
+    assert_equal("http://localhost/tracker",               @response.redirect_url)
 
     # Make sure that an admin can create a new user.
     set_admin
@@ -258,7 +258,7 @@ class UserControllerTest < Test::Unit::TestCase
             :login                 => "yo",
             :password              => "newpassword", 
             :password_confirmation => "newpassword" }
-    assert_success
+    assert_response(:success)
 
   end
 
@@ -276,8 +276,8 @@ class UserControllerTest < Test::Unit::TestCase
 
     post :login, :user_login => "bob", :user_password => "not_correct"
      
-    assert_session_has_no :user
-    assert_template_has "login"
+    assert(!@response.has_session_object?(:user))
+    assert(@response.has_template_object?("login"))
   end
   
 
@@ -294,10 +294,10 @@ class UserControllerTest < Test::Unit::TestCase
   def test_login_logoff
 
     post :login, :user_login => "bob", :user_password => "test"
-    assert_session_has :user
+    assert(@response.has_session_object?(:user))
 
     get :logout
-    assert_session_has_no :user
+    assert(!@response.has_session_object?(:user))
 
   end
 
@@ -345,7 +345,7 @@ class UserControllerTest < Test::Unit::TestCase
     post(:change_password, :id => users(:rich_m).id)
 
     assert_response 200
-    assert_session_has :user
+    assert(@response.has_session_object?(:user))
     assert_equal(users(:rich_m).last_name, assigns(:user).last_name)
     assert_template "change_password"
     
