@@ -86,7 +86,7 @@ class ProjectTest < Test::Unit::TestCase
   #
   def test_access
   
-    project_list = Project.find(:all)
+    project_list = Project.get_projects
     
     inactive_list = []
     project_list.each do |expected_project|
@@ -94,7 +94,7 @@ class ProjectTest < Test::Unit::TestCase
     end
     
     # Verify the list sizes.
-    active_list = Project.get_all_active
+    active_list = Project.get_active_projects
     assert_equal(project_list.size, (inactive_list.size + active_list.size))
     assert_equal(nil,               active_list.detect { |p| !p.active })
     
@@ -105,12 +105,6 @@ class ProjectTest < Test::Unit::TestCase
       name = project.name
     end
 
-    name = 'zzz'
-    Project.get_all_active('name DESC').each do |project|
-      assert(project.name < name)
-      name = project.name
-    end
-  
   end
 
 
