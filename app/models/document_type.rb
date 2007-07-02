@@ -17,12 +17,49 @@ class DocumentType < ActiveRecord::Base
   validates_uniqueness_of(:name,
                           :message => 'already exists in the database')
 
-  def self.get_all
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+
+  ######################################################################
+  #
+  # get_document_types
+  #
+  # Description:
+  # This method retrieves all of the document type records
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of document type records ordered by name
+  #
+  ######################################################################
+  #
+  def self.get_document_types
     self.find(:all, :order => 'name')
   end
   
   
-  def self.get_all_active
+  ######################################################################
+  #
+  # get_active_document_types
+  #
+  # Description:
+  # This method retrieves all of the active document type records
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of active document type records ordered by name
+  #
+  ######################################################################
+  #
+  def self.get_active_document_types
     self.find(:all, :conditions => 'active=1', :order => 'name')
   end
 
