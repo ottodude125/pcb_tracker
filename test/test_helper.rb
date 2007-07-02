@@ -71,7 +71,7 @@ class Test::Unit::TestCase
     @request.session[:user]        = user
     @request.session[:active_role] = Role.find_by_name(role)
     @request.session[:roles]       = user.roles
-    #@session = {:user        => user,
+    #session = {:user        => user,
     #            :active_role => role,
     #            :roles       => user.roles}
   end
