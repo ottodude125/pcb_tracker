@@ -195,8 +195,8 @@ class BoardDesignEntryController < ApplicationController
                                                :division_id => session[:user].division_id,
                                                :location_id => session[:user].location_id)
 
-    @prefix_list   = Prefix.find_all_by_active(1).sort_by { |p|  p.pcb_mnemonic }
-    @revision_list = Revision.find(:all, :order => :name)
+    @prefix_list   = Prefix.get_active_prefixes
+    @revision_list = Revision.get_revisions
 
     @user_action = 'adding'
     @new_entry   = 'true'
@@ -227,10 +227,10 @@ class BoardDesignEntryController < ApplicationController
     @incoming_dir_list = IncomingDirectory.find_all_by_active(1).sort_by { |id| id.name }
     @location_list     = Location.find_all_by_active(1).sort_by          { |l|  l.name }
     @platform_list     = Platform.find_all_by_active(1).sort_by          { |p|  p.name }
-    @prefix_list       = Prefix.find_all_by_active(1).sort_by            { |p|  p.pcb_mnemonic }
+    @prefix_list       = Prefix.get_active_prefixes
     @product_type_list = ProductType.find_all_by_active(1).sort_by       { |pt| pt.name } 
-    @project_list      = Project.find_all_by_active(1).sort_by           { |p|  p.name }
-    @revision_list     = Revision.find(:all, :order => :name)
+    @project_list      = Project.get_active_projects
+    @revision_list     = Revision.get_revisions
 
   end
   
@@ -293,8 +293,8 @@ class BoardDesignEntryController < ApplicationController
       notice += "</ul>"
       flash['notice'] = notice
     
-      @prefix_list   = Prefix.find_all_by_active(1).sort_by { |p|  p.pcb_mnemonic }
-      @revision_list = Revision.find(:all, :order => :name)
+      @prefix_list   = Prefix.get_active_prefixes
+      @revision_list = Revision.get_revisions
 
       @user_action = 'adding'
       @new_entry   = 'true'
@@ -358,10 +358,10 @@ class BoardDesignEntryController < ApplicationController
     @incoming_dir_list = IncomingDirectory.find_all_by_active(1).sort_by { |id| id.name }
     @location_list     = Location.find_all_by_active(1).sort_by          { |l|  l.name }
     @platform_list     = Platform.find_all_by_active(1).sort_by          { |p|  p.name }
-    @prefix_list       = Prefix.find_all_by_active(1).sort_by            { |p|  p.pcb_mnemonic }
+    @prefix_list       = Prefix.get_active_prefixes
     @product_type_list = ProductType.find_all_by_active(1).sort_by       { |pt| pt.name } 
-    @project_list      = Project.find_all_by_active(1).sort_by           { |p|  p.name }
-    @revision_list     = Revision.find(:all, :order => :name)
+    @project_list      = Project.get_active_projects
+    @revision_list     = Revision.get_revisions
     
     render(:action => 'new_entry')
   
@@ -413,10 +413,10 @@ class BoardDesignEntryController < ApplicationController
       @incoming_dir_list = IncomingDirectory.find_all_by_active(1).sort_by { |id| id.name }
       @location_list     = Location.find_all_by_active(1).sort_by          { |l|  l.name }
       @platform_list     = Platform.find_all_by_active(1).sort_by          { |p|  p.name }
-      @prefix_list       = Prefix.find_all_by_active(1).sort_by            { |p|  p.pcb_mnemonic }
+      @prefix_list       = Prefix.get_active_prefixes
       @product_type_list = ProductType.find_all_by_active(1).sort_by       { |pt| pt.name } 
-      @project_list      = Project.find_all_by_active(1).sort_by           { |p|  p.name }
-      @revision_list     = Revision.find(:all, :order => :name)
+      @project_list      = Project.get_active_projects
+      @revision_list     = Revision.get_revisions
 
       @board_design_entry = bde
       @new_entry   = 'true'
