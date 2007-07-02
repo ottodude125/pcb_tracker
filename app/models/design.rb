@@ -1096,6 +1096,23 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # role_review_count
+  #
+  # Description:
+  # This method returns the count of the number of reviews assigned
+  # to the role over all of the design reviews for the design.
+  #
+  # Parameters:
+  # role - record for the role of interest
+  #
+  # Return value:
+  # The number of roles that have been assigned in all of the design's
+  # reviews.
+  #
+  ######################################################################
+  #
   def role_review_count(role)
       role_count = 0
     self.design_reviews.each do |dr|
@@ -1105,6 +1122,23 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # role_open_review_count
+  #
+  # Description:
+  # This method returns the count of the number of open reviews assigned
+  # to the role over all of the design reviews for the design.
+  #
+  # Parameters:
+  # role - record for the role of interest
+  #
+  # Return value:
+  # The number of roles that have been assigned in all of the design's
+  # reviews that are open.
+  #
+  ######################################################################
+  #
   def role_open_review_count(role)
     open_reviews = 0
     closed_reviews = ReviewStatus.closed_reviews
@@ -1117,6 +1151,22 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # get_role_reviewer
+  #
+  # Description:
+  # This method returns the reviewer for the role
+  #
+  # Parameters:
+  # role - record for the role of interest
+  #
+  # Return value:
+  # The user record assigned to the reviewer role identified by the 
+  # role argument.
+  #
+  ######################################################################
+  #
   def get_role_reviewer(role)
     reviewer = nil
     self.design_reviews.sort_by { |dr| dr.review_type.sort_order }.each do |dr|
@@ -1128,11 +1178,48 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # is_role_reviewer?
+  #
+  # Description:
+  # This method indicates if the user is assigned to perform the review
+  # for the role
+  #
+  # Parameters:
+  # role - record for the role of interest
+  # user - record for the user of interest
+  #
+  # Return value:
+  # True if the user is assigned to perform the review for the role.
+  # Otherwise False
+  #
+  ######################################################################
+  #
   def is_role_reviewer?(role, user)
     user == self.get_role_reviewer(role)
   end
   
   
+  ######################################################################
+  #
+  # set_role_reviewer
+  #
+  # Description:
+  # This method updates the design review result with a new reviewer.
+  #
+  # Parameters:
+  # role         - record for the role that is being updated
+  # new_reviewer - record for the user that will be assigned to
+  #                perform the review for the role
+  # user         - record for the user that is performing the update
+  #
+  # Return value:
+  # Nil if no role was updated, otherwise the review type name
+  # of the last design review that was updated.
+  #
+  ######################################################################
+  #
   def set_role_reviewer(role, new_reviewer, user)
 
     completed_results = ['APPROVED', 'WAIVED']
@@ -1170,6 +1257,23 @@ class Design < ActiveRecord::Base
   end
   
   
+
+  ######################################################################
+  #
+  # reviewers
+  #
+  # Description:
+  # This method provides a list of all of the users assigned to perform
+  # all of the reviews for the design.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A unique list of users assigned to perform all of the reviews
+  #
+  ######################################################################
+  #
   def reviewers
     reviewer_list = []
     self.design_reviews.each { |dr| reviewer_list = dr.reviewers(reviewer_list) }
@@ -1177,6 +1281,23 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # reviewers_remaining_reviews
+  #
+  # Description:
+  # This method provides a list of all of the users assigned to perform
+  # all of the remaining reviews for the design.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A unique list of users assigned to perform all of the reviews for
+  # the remaining reviews.
+  #
+  ######################################################################
+  #
   def reviewers_remaining_reviews
     reviewer_list = []
     self.design_reviews.each do |dr|
@@ -1187,12 +1308,44 @@ class Design < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # inactive_reviewers?
+  #
+  # Description:
+  # This method indicates if an inactive reviewer is assigned to perform
+  # any of the remaining reviews for the design.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # True if any of the remaining reviews is assigned to a user that is
+  # inactive, otherwise False.
+  #
+  ######################################################################
+  #
   def inactive_reviewers?
     self.reviewers_remaining_reviews.each { |r| return true if !r.active? }
     return false
   end
   
   
+  ######################################################################
+  #
+  # detailed_name
+  #
+  # Description:
+  # This method returns the detailed name for the design
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A string with the design's detailed name
+  #
+  ######################################################################
+  #
   def detailed_name
     brd = self.board
     "#{self.name} - #{brd.platform.name} / #{brd.project.name} / #{brd.description}"
