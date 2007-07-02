@@ -143,7 +143,7 @@ class PrefixControllerTest < Test::Unit::TestCase
   #
   def test_create
 
-    assert_equal(7, Prefix.find_all.size)
+    assert_equal(7, Prefix.count)
 
     new_prefix = {
       'active'       => '1',
@@ -154,13 +154,13 @@ class PrefixControllerTest < Test::Unit::TestCase
     post(:create,
          :new_prefix => new_prefix)
 
-    assert_equal(8,                 Prefix.find_all.size)
+    assert_equal(8,                 Prefix.count)
     assert_equal("Prefix nh added", flash['notice'])
     assert_redirected_to :action => 'list'
 
     post(:create,
          :new_prefix => new_prefix)
-    assert_equal(8, Prefix.find_all.size)
+    assert_equal(8, Prefix.count)
     assert_equal("Pcb mnemonic has already been taken", flash['notice'])
     assert_redirected_to :action => 'add'
 
