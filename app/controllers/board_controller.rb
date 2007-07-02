@@ -134,8 +134,8 @@ before_filter(:verify_admin_role,
     @fab_house_ids = @board.fab_houses.collect { |fh| fh.id }
     @fab_houses    = FabHouse.get_all_active
     @platforms     = Platform.get_all_active
-    @projects      = Project.get_all_active
-    @prefixes      = Prefix.get_all_active
+    @projects      = Project.get_active_projects
+    @prefixes      = Prefix.get_active_prefixes
     @review_roles  = Role.get_review_roles
 
     board_reviewers = {}
@@ -300,7 +300,7 @@ before_filter(:verify_admin_role,
     designer_role = Role.find_by_name('Designer')
     @designers = designer_role.users.sort_by { |u| u.last_name }
     @platforms = Platform.find(:all, :order => :name)
-    @projects  = Project.find(:all,  :order => :name)
+    @projects  = Project.get_projects
     
     if (session[:user] && 
         session[:user].roles.detect { |r| r.name == 'Designer' })
