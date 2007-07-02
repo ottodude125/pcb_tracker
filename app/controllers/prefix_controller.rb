@@ -99,7 +99,7 @@ class PrefixController < ApplicationController
   #
   def list
     
-    @prefixes = Prefix.find_all(nil, 'pcb_mnemonic ASC')
+    @prefixes = Prefix.get_prefixes
 
   end
 
