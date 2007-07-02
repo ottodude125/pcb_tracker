@@ -1059,7 +1059,7 @@ class TrackerMailer < ActionMailer::Base
     @sent_on    = sent_on
     @headers    = {}
     @bcc        = blind_cc
-    @cc         = add_role_members(['PCB Input Gate', 'Manager']) +
+    @cc         = add_role_members(['PCB Input Gate', 'Manager', 'HCL Manager']) +
                   [oi_assignment_list[0].oi_instruction.user.email]
 
     @body['lead_designer']      = oi_assignment_list[0].user
@@ -1103,7 +1103,7 @@ class TrackerMailer < ActionMailer::Base
     @sent_on    = sent_on
     @headers    = {}
     @bcc        = blind_cc
-    @cc         = add_role_members(['PCB Input Gate', 'Manager'])
+    @cc         = add_role_members(['PCB Input Gate', 'Manager', 'HCL Manager'])
     @cc << originator.email
 
     @body['assignment'] = assignment
