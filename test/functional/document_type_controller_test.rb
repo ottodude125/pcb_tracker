@@ -143,7 +143,7 @@ class DocumentTypeControllerTest < Test::Unit::TestCase
   #
   def test_create
 
-    assert_equal(5, DocumentType.find_all.size)
+    assert_equal(5, DocumentType.count)
 
     new_document_type = {
       'active' => '1',
@@ -154,13 +154,13 @@ class DocumentTypeControllerTest < Test::Unit::TestCase
     post(:create,
          :new_document_type => new_document_type)
 
-    assert_equal(6, DocumentType.find_all.size)
+    assert_equal(6, DocumentType.count)
     assert_equal("Yankee added", flash['notice'])
     assert_redirected_to :action => 'list'
 
     post(:create,
          :new_document_type => new_document_type)
-    assert_equal(6, DocumentType.find_all.size)
+    assert_equal(6, DocumentType.count)
     assert_equal("Name already exists in the database", flash['notice'])
     assert_redirected_to :action => 'add'
 
