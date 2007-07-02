@@ -448,36 +448,6 @@ class DesignReview < ActiveRecord::Base
   
   ######################################################################
   #
-  # set_valor_reviewer
-  #
-  # Description:
-  # This method assigns the valor review to the peer auditor
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
-  #
-  ######################################################################
-  #
-  def set_valor_reviewer
-
-    valor_role = Role.find_by_name('Valor')
-    valor_review_result = self.design_review_results.detect do |rr|
-                            rr.role_id == valor_role.id
-                          end
-
-    if valor_review_result
-      valor_review_result.reviewer_id = self.design.peer_id
-      valor_review_result.update
-    end
-
-  end
-  
-  
-  ######################################################################
-  #
   # post_review?
   #
   # Description:
@@ -588,6 +558,22 @@ class DesignReview < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # reviewer_locked_in?
+  #
+  # Description:
+  # This method checks the design review status and indicates whether
+  # or not the reviewer is locked 
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the design review is closed, otherwise FALSE. 
+  #
+  ######################################################################
+  #
   def reviewer_locked_in?
     ReviewStatus.closed_reviews.include?(self.review_status)
   end
