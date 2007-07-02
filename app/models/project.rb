@@ -29,21 +29,41 @@ class Project < ActiveRecord::Base
   
   ######################################################################
   #
-  # get_all_active
+  # get_projects
   #
   # Description:
-  # This method returns a list of the active projects
+  # This method returns a list of the project records
   #
   # Parameters:
-  # sort - specifies the field(s) and sort order
+  # None
   #
   # Return value:
-  # An array of active project records
+  # A list of project records
   #
   ######################################################################
   #
-  def Project.get_all_active(sort = 'name ASC')
-    Project.find_all_by_active(1, sort)
+  def self.get_projects
+    self.find(:all, :order => 'name')
+  end
+
+
+  ######################################################################
+  #
+  # get_active_projects
+  #
+  # Description:
+  # This method returns a list of the active project records
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of active project records
+  #
+  ######################################################################
+  #
+  def self.get_active_projects
+    self.find(:all, :conditions => 'active=1', :order => 'name')
   end
 
 
