@@ -214,7 +214,7 @@ class DesignController < ApplicationController
     @design_review = @design.design_reviews.detect { |dr| dr.review_type_id == @pre_art.id }
     
     @documents = []
-    for doc_type in DocumentType.find(:all, :order => 'name')
+    DocumentType.get_document_types.each do |doc_type|
 
       docs = DesignReviewDocument.find_all("board_id='#{@design.board.id}' " +
                                            " and document_type_id='#{doc_type.id}'")
