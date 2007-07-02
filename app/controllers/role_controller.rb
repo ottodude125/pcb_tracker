@@ -166,7 +166,7 @@ class RoleController < ApplicationController
   #
   def list_review_roles
 
-    @review_roles = Role.find_all('reviewer=1 and active=1', 'name ASC')
+    @review_roles = Role.get_review_roles
 
   end
 
