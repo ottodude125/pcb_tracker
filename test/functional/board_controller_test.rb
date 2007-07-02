@@ -499,8 +499,8 @@ class BoardControllerTest < Test::Unit::TestCase
   #
   def test_search_options
   
-    platform_ids = Platform.find(:all).collect { |p| p.id }
-    project_ids  = Project.find(:all).collect  { |p| p.id }
+    platform_ids = Platform.find(:all).collect   { |p| p.id }
+    project_ids  = Project.get_projects.collect  { |p| p.id }
     users        = User.find(:all)
 
     designers = User.find(:all).delete_if do |u| 
