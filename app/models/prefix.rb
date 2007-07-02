@@ -26,21 +26,41 @@ class Prefix < ActiveRecord::Base
   
   ######################################################################
   #
-  # get_all_active
+  # get_prefixes
+  #
+  # Description:
+  # This method returns a list of the prefixes
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An array of prefix records
+  #
+  ######################################################################
+  #
+  def self.get_prefixes
+    self.find(:all, :order => 'pcb_mnemonic')
+  end
+  
+  
+  ######################################################################
+  #
+  # get_active_prefixes
   #
   # Description:
   # This method returns a list of the active prefixes
   #
   # Parameters:
-  # sort - specifies the field(s) and sort order
+  # None
   #
   # Return value:
   # An array of active prefix records
   #
   ######################################################################
   #
-  def Prefix.get_all_active(sort = 'pcb_mnemonic ASC')
-    Prefix.find_all_by_active(1, sort)
+  def self.get_active_prefixes
+    self.find(:all, :conditions => 'active=1', :order => 'pcb_mnemonic')
   end
   
   
