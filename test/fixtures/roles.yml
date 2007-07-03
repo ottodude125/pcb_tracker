@@ -202,4 +202,12 @@ compliance_safety:
   cc_peers:              0
   display_name:          Compliance - Safety
   new_design_type:       1
+hcl_manager:
+  id:                    25
+  name:                  HCL Manager
+  active:                1
+  reviewer:              0
+  cc_peers:              0
+  display_name:          HCL Manager
+  new_design_type:       1
  
