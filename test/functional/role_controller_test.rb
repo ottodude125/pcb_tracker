@@ -61,7 +61,7 @@ class RoleControllerTest < Test::Unit::TestCase
     post(:list, 
          :page => 1)
 
-    assert_equal(23, assigns(:roles).size)
+    assert_equal(Role.find_all_active.size, assigns(:roles).size)
 
   end
 
@@ -85,7 +85,6 @@ class RoleControllerTest < Test::Unit::TestCase
   def test_create
 
    role_count = Role.count
-   assert_equal(23, role_count)
 
     new_role = {
       'active'       => '1',
