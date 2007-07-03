@@ -137,6 +137,21 @@ mathi_n:
   updated_on: 20050510104114
   access:     20050510104114
 
+bala_g:
+  id:         5006
+  login:      bala_g
+  first_name: Balakrishnan
+  last_name:  Gopalakrishnan
+  design_center_id: 1
+  email:      bala@hcl.teradyne.com
+  password:   b3facc7d4e1d43cf484615efa6fffba2372fdb65
+  passwd:     designer
+  active:     1
+  employee:   0
+  created_on: 20050510104114
+  updated_on: 20050510104114
+  access:     20050510104114
+
 
 ben_b:
   id:         6000
