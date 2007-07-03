@@ -141,3 +141,6 @@ al_o_program_mgr:
 mark_f_program_mgr:
   role_id: 21
   user_id: 19001
+bala_hcl_manager:
+  role_id: 25
+  user_id: 5006
