@@ -6,6 +6,16 @@
                                                     :action     => 'index' ) %>'" />
     </td>
   </tr>
+  <% if params[:search] %>
+  <tr>
+    <td>
+      <input type="button" value="Back" 
+             onClick="parent.location='<%= url_for( :controller => 'design', 
+                                                    :action     => 'view',
+                                                    :id         => @design_review.design.id ) %>'" />
+    </td>
+  </tr>
+  <% end %>
   <tr>
     <td>
       <%= link_to("Modifications", 
@@ -15,14 +25,4 @@
                   :popup      => ['new_window', 
                                   'height=400,width=800,scrollbars=yes,resizable=1']) %>    </td>
   </tr>
-  <% if params[:search] %>
-  <tr>
-    <td>
-      <input type="button" value="Back" 
-             onClick="parent.location='<%= url_for( :controller => 'design', 
-                                                    :action     => 'view',
-                                                    :id         => @design.id ) %>'" />
-    </td>
-  </tr>
-  <% end %>
 </table>
