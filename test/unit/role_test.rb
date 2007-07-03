@@ -119,11 +119,19 @@ class RoleTest < Test::Unit::TestCase
     
     assert(all_roles.size > active_roles.size)
     
-    role_name = ""
-    active_roles.each do |role| 
+    expected_role_name = ['EE Manager',               'Hardware Engineer (EE)',
+                          'HCL Manager',              'Mechanical Engineer',
+                          'Mechanical Mfg Engineer',  'New Product Planner',
+                          'Operations Manager',       'PCB Admin',
+                          'PCB Design Input Gate',    'PCB Design Manager',
+                          'PCB Designer',             'PCB Mechanical Engineer',
+                          'Program Manager',          'SLM BOM',
+                          'SLM Vendor',               'TDE Engineer',
+                          'Tracker Admin',            'Tracker PCB Management',
+                          'Valor']
+    active_roles.each_with_index do |role, i| 
       assert(role.active?)
-      assert(role.display_name >= role_name)
-      role_name = role.display_name
+      assert_equal(expected_role_name[i], role.display_name)
     end
     
     all_roles.delete_if { |r| !r.active? }
