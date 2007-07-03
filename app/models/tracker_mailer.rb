@@ -1059,8 +1059,8 @@ class TrackerMailer < ActionMailer::Base
     @sent_on    = sent_on
     @headers    = {}
     @bcc        = blind_cc
-    @cc         = add_role_members(['PCB Input Gate', 'Manager', 'HCL Manager']) +
-                  [oi_assignment_list[0].oi_instruction.user.email]
+    @cc         = (add_role_members(['PCB Input Gate', 'Manager', 'HCL Manager']) +
+                   [oi_assignment_list[0].oi_instruction.user.email]) - [@recipients]
 
     @body['lead_designer']      = oi_assignment_list[0].user
     @body['design']             = design
@@ -1099,21 +1099,22 @@ class TrackerMailer < ActionMailer::Base
     @subject   += " - Completed" if completed
     @subject   += " - Reopened"  if reset
 
+    case
+    when assignment.oi_instruction.user_id == originator.id
+      @recipients = [assignment.user.email]
+    when assignment.user_id == originator.id
+      @recipients = [assignment.oi_instruction.user.email]
+    end
+
     @from       = Pcbtr::SENDER
     @sent_on    = sent_on
     @headers    = {}
     @bcc        = blind_cc
-    @cc         = add_role_members(['PCB Input Gate', 'Manager', 'HCL Manager'])
-    @cc << originator.email
+    @cc         = (add_role_members(['PCB Input Gate', 'Manager', 'HCL Manager']) +
+                   [originator.email]) - @recipients
 
     @body['assignment'] = assignment
     
-    case
-      when assignment.oi_instruction.user_id == originator.id
-        @recipients = [assignment.user.email]
-      when assignment.user_id == originator.id
-        @recipients = [assignment.oi_instruction.user.email]
-      end
                   
   end
   
