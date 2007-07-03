@@ -580,7 +580,8 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     
     expected_cc_list = [@scott_g.email,
                         @jim_l.email, 
-                        @jan_k.email, 
+                        @jan_k.email,
+                        users(:bala_g).email,
                         @cathy_m.email].sort
                        
     assert_equal(2, @emails.size) 
