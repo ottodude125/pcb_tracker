@@ -14,6 +14,7 @@ class Design < ActiveRecord::Base
 
   belongs_to :board
   belongs_to :priority
+  belongs_to :part_number
   belongs_to :revision
 
   has_and_belongs_to_many :fab_houses
