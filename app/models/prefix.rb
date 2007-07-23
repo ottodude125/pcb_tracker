@@ -92,7 +92,12 @@ class Prefix < ActiveRecord::Base
                  revision, 
                  numeric_revision)
                  
-    self.unloaded_prefix + '-' + number + '-' + revision + numeric_revision.to_s
+    if self.pcb_mnemonic != 'bt'
+      dash_number = revision + numeric_revision.to_s
+    else
+      dash_number = numeric_revision.to_s + revision
+    end
+    self.unloaded_prefix + '-' + number + '-' + dash_number
     
   end
 
@@ -118,10 +123,8 @@ class Prefix < ActiveRecord::Base
   def pcb_a_part_number(number,
                         revision, 
                         numeric_revision)
-                       
-    rev_table = ('a'..'z').collect
-  
-    self.loaded_prefix + '-' + number + '-' + rev_table.index(revision).to_s + numeric_revision.to_s
+
+    self.loaded_prefix + '-' + number + '-00'
   
   end
 
