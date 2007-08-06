@@ -42,7 +42,7 @@
         </tr>
         <tr>
           <td>
-            <table width="95%" align="right" border="0">
+            <table width="95%" align="right" border="0" cellspacing="0">
               <tr>
                 <td class="smallheading">Design</td>
                 <td class="smallheading">Status</td>
@@ -53,7 +53,8 @@
                 <td class="smallheading">Age</td>
               </tr>
               <% entry[:results].each do |rr| %>
-                <tr valign="top">
+			    <% bgcolor = rr.result == "No Response" ? '#ef7787' : '#c7df8b' %>
+                <tr valign="top" bgcolor="<%= bgcolor %>">
                   <td width="145">
                     <%= link_to(rr.design_review.design.name,
                                 { :controller => 'design_review',
