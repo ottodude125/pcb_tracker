@@ -151,15 +151,17 @@ class ReportController < ApplicationController
   #
   def reviewer_workload
   
-    status_list = ReviewStatus.find_all
+    status_list = ReviewStatus.find(:all)
   
     # Get all of the design reviews that have not been completed
     review_completed = status_list.detect { |rs| rs.name == 'Review Completed' }
     review_skipped   = status_list.detect { |rs| rs.name == 'Review Skipped' }
     not_started      = status_list.detect { |rs| rs.name == 'Not Started' }
+    terminated       = status_list.detect { |rs| rs.name == 'Review Terminate'}
     condition        = "review_status_id != '#{review_completed.id}' AND " +
-                       "review_status_id != '#{not_started.id}' AND " +
-                       "review_status_id != '#{review_skipped.id}'"
+                       "review_status_id != '#{not_started.id}'      AND " +
+                       "review_status_id != '#{review_skipped.id}'   AND " +
+                       "review_status_id != '#{terminated.id}'"
  
     design_reviews = DesignReview.find_all(condition)
     
