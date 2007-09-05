@@ -473,25 +473,12 @@ class Design < ActiveRecord::Base
   ######################################################################
   #
   def name
-
-    base_name = self.board.name + self.revision.name
-
-    if self.date_code?
-      if self.numeric_revision?
-        base_name + self.numeric_revision.to_s + '_eco' + self.eco_number
-      else
-        base_name + '_eco' + self.eco_number
-      end
-    elsif self.dot_rev?
-      if self.numeric_revision?
-        base_name + self.numeric_revision.to_s
-      else
-        base_name
-      end
-    else
-      base_name
-    end
-  
+    logger.info("#################################")
+    logger.info("#################################")
+    logger.info("Design.name called")
+    logger.info("#################################")
+    logger.info("#################################")
+    self.part_number.pcb_display_name
   end
   
   
@@ -801,7 +788,7 @@ class Design < ActiveRecord::Base
         design_review.designer_id      = self.pcb_input_id
         design_review.design_center_id = User.find(self.pcb_input_id).design_center_id
       elsif review_type.name == 'Release'
-        #TO Do: This assumes there is only one PCB ADMIN - fix
+        #TODO: This assumes there is only one PCB ADMIN - fix
         pcb_admin = User.find_by_first_name_and_last_name('Patrice', 'Michaels')
         design_review.designer_id      = pcb_admin.id
         design_review.design_center_id = pcb_admin.design_center_id
@@ -1067,7 +1054,8 @@ class Design < ActiveRecord::Base
         modification_comment(comment, changes), 
         cc_list)
 
-      "#{self.name} has been updated - the updates were recorded and mail was sent"
+      self.part_number.pcb_display_name + 
+      ' has been updated - the updates were recorded and mail was sent'
       
     else
       "Nothing was changed - no updates were recorded"
@@ -1349,7 +1337,8 @@ class Design < ActiveRecord::Base
   #
   def detailed_name
     brd = self.board
-    "#{self.name} - #{brd.platform.name} / #{brd.project.name} / #{brd.description}"
+    self.part_number.pcb_display_name + ' - ' + brd.platform.name + ' / ' +
+    brd.project.name + ' / ' + brd.description
   end
   
 
