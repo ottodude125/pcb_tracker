@@ -30,7 +30,8 @@ class TrackerMailer < ActionMailer::Base
   def peer_audit_complete(audit,
                           sent_at = Time.now)
     
-    @subject    = "#{audit.design.name}: The peer auditor has completed the audit"
+    @subject    = audit.design.part_number.pcb_display_name +
+                  ": The peer auditor has completed the audit"
 
     designer = audit.design.designer
     peer     = audit.design.peer
@@ -65,7 +66,8 @@ class TrackerMailer < ActionMailer::Base
   #
   def self_audit_complete(audit,
                           sent_at = Time.now)
-    @subject    = "#{audit.design.name}: The designer has completed the self-audit"
+    @subject    = audit.design.part_number.pcb_display_name +
+                  ": The designer has completed the self-audit"
 
     designer = audit.design.designer
     peer     = audit.design.peer
@@ -105,9 +107,11 @@ class TrackerMailer < ActionMailer::Base
                        ftp_notification,
                        sent_at         = Time.now)
 
-    design_review = ftp_notification.design.design_reviews.detect { |dr| dr.review_type.name == "Final"}
+    design_review = ftp_notification.design.get_design_review("Final")
     
-    @subject    = "#{ftp_notification.design.name} Bare Board Files have been transmitted to #{ftp_notification.fab_house.name}"
+    @subject         = ftp_notification.design.part_number.pcb_display_name +
+                       ": Bare Board Files have been transmitted to "         +
+                       ftp_notification.fab_house.name
     @recipients      = reviewer_list(design_review)
     @from            = Pcbtr::SENDER
     @sent_on         = sent_at
@@ -146,7 +150,8 @@ class TrackerMailer < ActionMailer::Base
                            sent_at         = Time.now)
 
     review_results = ''
-    subject        = "#{design_review.design.name}::#{design_review.review_name}"
+    subject        = design_review.design.part_number.pcb_display_name +
+                     '::' + design_review.review_name
 
     if comment_update && result_update == {}
       @subject    = "#{subject} - Comments added"
@@ -182,7 +187,7 @@ class TrackerMailer < ActionMailer::Base
       design_review_comments =
         DesignReviewComment.find_all_by_design_review_id(design_review.id,
                                                          'created_on DESC')
-      comments = Array.new
+      comments = []
       count = design_review_comments.size < 4 ? design_review_comments.size : 4
       0.upto(count-1) { |i|
         comments[i] = {:comment => design_review_comments[i].comment,
@@ -224,7 +229,9 @@ class TrackerMailer < ActionMailer::Base
                           sent_at = Time.now)
 
     design_review = design.get_phase_design_review
-    @subject      = "The #{design.name} #{design_review.review_type.name} Design Review has been modified by #{user.name}"
+    @subject      = 'The ' + design.part_number.pcb_display_name + ' ' +
+                    design_review.review_type.name +
+                    ' Design Review has been modified by ' + user.name
 
     @recipients  = design_review.active_reviewers.collect { |r| r.email }
     design       = design_review.design
@@ -265,7 +272,8 @@ class TrackerMailer < ActionMailer::Base
   def design_review_complete_notification(design_review,
                                           sent_at        = Time.now)
 
-    @subject    = "#{design_review.design.name}: #{design_review.review_name} Review is complete"
+    @subject    = design_review.design.part_number.pcb_display_name + ': ' +
+                  design_review.review_name + ' Review is complete'
 
     @recipients = reviewer_list(design_review)
     @from       = Pcbtr::SENDER
@@ -309,7 +317,8 @@ class TrackerMailer < ActionMailer::Base
   def final_review_warning(design, 
                            sent_at = Time.now)
 
-    @subject    = "Notification of upcoming Final Review for #{design.name}"
+    @subject    = 'Notification of upcoming Final Review for ' +
+                  design.part_number.pcb_display_name
 
     final_review = design.design_reviews.detect { |dr| dr.review_type.name == "Final" }
     @recipients  = final_review.design_review_results.collect { |rr|
@@ -349,8 +358,8 @@ class TrackerMailer < ActionMailer::Base
                                          repost         = false,
                                          sent_at        = Time.now)
 
-    @subject    = "#{design_review.design.name}: " +
-                  "The #{design_review.review_name} review has been "
+    @subject    = design_review.design.part_number.pcb_display_name +
+                  ': The ' + design_review.review_name + ' review has been '
     @subject += repost ? "reposted" : "posted"
 
     @recipients = reviewer_list(design_review)
@@ -393,7 +402,7 @@ class TrackerMailer < ActionMailer::Base
 
     poster = User.find(root_post.user_id)
     
-    @subject    = root_post.design.name + ' [IPD] - ' +
+    @subject    = root_post.design.part_number.pcb_display_name + ' [IPD] - ' +
                    root_post.subject
     @body       = {:root_post => root_post}
 
@@ -423,19 +432,14 @@ class TrackerMailer < ActionMailer::Base
     @headers    = {}
     @bcc        = blind_cc
 
-    cc         = [poster.email] + 
+    cc          = [poster.email] + 
                    add_role_members(['Manager', 'PCB Input Gate']) +
                    add_board_reviewer(root_post.design.board,
                                       ['Hardware Engineering Manager'])
     
-    for child in root_post.direct_children
-      cc.push(child.user.email)
-    end
-    
-    for user in root_post.users
-      cc.push(user.email)
-    end
-    
+    cc += root_post.users.collect { |user| user.email } +
+          root_post.direct_children.collect { |child| child.user.email }
+
     @cc = cc.uniq
 
   end
@@ -463,33 +467,31 @@ class TrackerMailer < ActionMailer::Base
                          team_update_lists,
                          sent_at = Time.now)
 
-    @subject = "The audit team for the #{audit.design.name} has been updated"
+    @subject = 'The audit team for the ' + 
+               audit.design.part_number.pcb_display_name + ' has been updated'
 
     recipients = []
-    team_update_lists.each { |key, list|
-    
-      team_update_lists[key] = list.sort_by { |t| t[:teammate].section.sort_order }
-
-      for teammate in list
-        recipients.push(teammate[:teammate].user.email)
-      end
-    }
+    team_update_lists.each do |key, list|
+      team_update_lists[key] = list.sort_by { |t| t[:teammate].section.position }
+      recipients += list.collect { |teammate| teammate[:teammate].user.email }
+    end
     
     audit_team_lists = { 'self' => [], 'peer' => [] }
-    for member in audit.audit_teammates
+    audit.audit_teammates.each do |member|
       key = member.self? ? 'self' : 'peer'
       audit_team_lists[key] << member
     end
 
-    audit_team_lists.each { |key, list|
+    audit_team_lists.each do |key, list|
 
-      audit_team_lists[key] = list.sort_by { |t| t.section.sort_order }
+      audit_team_lists[key] = list.sort_by { |t| t.section.position }
 
-      for teammate in list
-        recipients.push(teammate.user.email)
-      end
+      #for teammate in list
+      #  recipients.push(teammate.user.email)
+      #end
+      recipients += list.collect { |teammate| teammate.user.email }
     
-    }
+    end
 
     @body = {:updated_by => updated_by,
              :audit      => audit,
@@ -623,8 +625,9 @@ class TrackerMailer < ActionMailer::Base
                                      role,
                                      sent_at = Time.now)
 
-    @subject    = design_review.design.name +
-                    ": You have been assigned to perform the #{role.display_name} review"
+    @subject    = design_review.design.part_number.pcb_display_name +
+                  ': You have been assigned to perform the ' +
+                  role.display_name + ' review'
     @recipients = peer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
@@ -671,8 +674,9 @@ class TrackerMailer < ActionMailer::Base
                                        role,
                                        sent_at = Time.now)
 
-    @subject    = design_review.design.name +
-                    ": The #{role.display_name} review has been reassigned to #{user.name}"
+    @subject    = design_review.design.part_number.pcb_display_name + ': The ' +
+                  role.display_name + ' review has been reassigned to ' +
+                  user.name
     @recipients = peer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
@@ -703,19 +707,20 @@ class TrackerMailer < ActionMailer::Base
   #
   # Parameters:
   #   design_review - the design object
-  #   session       - the session object
+  #   user          - the user object, identifies the user who skipped
+  #                   the review.
   #   sent_at       - the timestamp for the mail header 
   #                   (defaults to Time.now)
   #
   ######################################################################
   #
   def notify_design_review_skipped(design_review,
-                                   session,
+                                   user,
                                    sent_at = Time.now)
 
-    @subject    = design_review.design.name +
-                    ": The #{design_review.review_type.name} " +
-                    "design review has been skipped"
+    @subject    = design_review.design.part_number.pcb_display_name +
+                  ': The ' + design_review.review_type.name +
+                  ' design review has been skipped'
     @recipients = add_role_members(['Manager', 'PCB Input Gate'])
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
@@ -723,7 +728,7 @@ class TrackerMailer < ActionMailer::Base
     @bcc        = blind_cc
     @cc         = [design_review.design.designer.email]
 
-    @body['user_name']          = session[:user].name
+    @body['user_name']          = user.name
     @body['design_name']        = design_review.design.name
     @body['design_review_name'] = design_review.review_type.name
 
@@ -776,8 +781,9 @@ class TrackerMailer < ActionMailer::Base
                         user,
                         sent_at = Time.now)
 
-    @subject    = "A document has been attached for the " +
-                    "#{design_review_document.design.name} design"
+    @subject    = 'A document has been attached for the ' +
+                  design_review_document.design.part_number.pcb_display_name + 
+                  ' design'
     @recipients = []
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
@@ -827,9 +833,9 @@ class TrackerMailer < ActionMailer::Base
                    peer,
                    sent_at = Time.now)
 
-    @subject    = design_check.audit.design.name +
-                    " PEER AUDIT: A comment has been entered that requires " +
-                    "your attention"
+    @subject    = design_check.audit.design.part_number.pcb_display_name +
+                  ' PEER AUDIT: A comment has been entered that requires ' +
+                  'your attention'
     @recipients = designer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
@@ -863,8 +869,8 @@ class TrackerMailer < ActionMailer::Base
                                              originator,
                                              sent_at = Time.now)
 
-    @subject    = "The #{board_design_entry_name} has been removed from the" +
-                  " PCB Engineering Entry list"
+    @subject    = 'The ' + board_design_entry_name + 
+                  ' has been removed from the PCB Engineering Entry list'
                   
     @recipients = add_role_members(['PCB Input Gate'])
     @from       = Pcbtr::SENDER
@@ -898,7 +904,8 @@ class TrackerMailer < ActionMailer::Base
                                               processor,
                                               sent_at = Time.now)
 
-    @subject    = "The #{board_design_entry.design_name} design entry has been returned by PCB"
+    @subject    = 'The ' + board_design_entry.part_number.pcb_display_name +
+                  ' design entry has been returned by PCB'
     
     originator  = User.find(board_design_entry.originator_id)          
     @recipients = [originator.email]
@@ -933,15 +940,15 @@ class TrackerMailer < ActionMailer::Base
                                     
     originator = User.find(board_design_entry.originator_id)
 
-    @subject    = "The #{board_design_entry.design_name} has been submitted for " +
-                  "entry to PCB Design"
+    @subject    = 'The ' + board_design_entry.part_number.pcb_display_name +
+                  ' has been submitted for entry to PCB Design'
                   
     @recipients = add_role_members(['PCB Input Gate', 'Manager'])
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
     @bcc        = blind_cc
-    @cc         = [originator.email, 'lisa_austin@notes.teradyne.com']
+    @cc         = [originator.email]
 
     @body['board_design_entry'] = board_design_entry
     @body['originator']         = originator
@@ -1013,9 +1020,9 @@ class TrackerMailer < ActionMailer::Base
                                          user,
                                          sent_at = Time.now)
   
-    @subject    = role.display_name + " reviewer changed for " +
-                  design_review.design.name + ' ' + design_review.review_type.name +
-                  " Design Review"
+    @subject    = role.display_name + ' reviewer changed for ' +
+                  design_review.design.part_number.pcb_display_name + ' ' +
+                  design_review.review_type.name + ' Design Review'
     
     @recipients = [new_reviewer.email]
     @from       = Pcbtr::SENDER
@@ -1053,7 +1060,8 @@ class TrackerMailer < ActionMailer::Base
     design = oi_assignment_list[0].oi_instruction.design
     
     assignment  = oi_assignment_list.size == 1 ? 'Assignment' : 'Assignments'
-    @subject    = "Work #{assignment} Created for the " + design.name
+    @subject    = "Work #{assignment} Created for the " + 
+                  design.part_number.pcb_display_name
     @recipients = oi_assignment_list[0].user.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_on
@@ -1094,10 +1102,9 @@ class TrackerMailer < ActionMailer::Base
                      reset,
                      sent_on     = Time.now)
   
-    @subject    = "#{assignment.oi_instruction.design.name}:: " + 
-                  'Work Assignment Update'
-    @subject   += " - Completed" if completed
-    @subject   += " - Reopened"  if reset
+    @subject    = assignment.oi_instruction.design.part_number.pcb_display_name +
+                  ':: Work Assignment Update'
+    @subject += completed ? " - Completed" : (reset ? " - Reopened" : '')
 
     case
     when assignment.oi_instruction.user_id == originator.id
