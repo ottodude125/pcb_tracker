@@ -12,11 +12,38 @@
 
 class Checklist < ActiveRecord::Base
 
-  has_many(:sections,     :order => 'sort_order ASC')
-  has_many :subsections
+  has_many(:sections,     :order => :position)
   has_many :audits
 
 
+  ######################################################################
+  #
+  # latest_release
+  #
+  # Description:
+  # This method locates the most recently released checklist.
+  #
+  # Parameters:
+  # None
+  #
+  # Return:
+  # A checklist record.  If there are released checklists then the 
+  # latest released checklist is returned.  Otherwise a new checklist
+  # is returned.
+  #
+  ######################################################################
+  #
+  def self.latest_release
+    
+    checklist = Checklist.find(:first,
+                               :conditions => "released=1",
+                               :order      => 'major_rev_number DESC')
+
+    return checklist ? checklist : Checklist.new
+
+  end
+
+  
   ######################################################################
   #
   # increment_checklist_counters
@@ -26,24 +53,30 @@ class Checklist < ActiveRecord::Base
   # changes are made to a check or when a check is added or destroyed.
   #
   # Parameters:
-  # new_check       - The check that is being added or destroyed.
-  # increment_value - Either 1 or -1 depending on whether a check is 
+  # checklist       - A list of checks that are being added or destroyed.
+  # increment_value - Either 1 or -1 depending on whether the check(s) are
   #                   being added or destroyed.
   #
   ######################################################################
   #
-  def increment_checklist_counters(check, increment)
+  def increment_checklist_counters(checklist, increment)
 
-    if check.designer_auditor?
-      self.designer_auditor_count    += increment if check.full_review?
-      self.dc_designer_auditor_count += increment if check.date_code_check?
-      self.dr_designer_auditor_count += increment if check.dot_rev_check?
-    else
-      self.designer_only_count       += increment if check.full_review?
-      self.dc_designer_only_count    +=	increment if check.date_code_check?
-      self.dr_designer_only_count    += increment if check.dot_rev_check?
+    checklist = [checklist] if checklist.class == Check
+
+    checklist.each do |check|
+
+      if check.designer_auditor?
+        self.designer_auditor_count    += increment if check.full_review?
+        self.dc_designer_auditor_count += increment if check.date_code_check?
+        self.dr_designer_auditor_count += increment if check.dot_rev_check?
+      else
+        self.designer_only_count       += increment if check.full_review?
+        self.dc_designer_only_count    +=	increment if check.date_code_check?
+        self.dr_designer_only_count    += increment if check.dot_rev_check?
+      end
+
     end
-
+    
     self.update
 
   end
@@ -85,6 +118,76 @@ class Checklist < ActiveRecord::Base
         subsection.checks.each { |check| yield check }
       end
     end
+  end
+  
+  
+  ######################################################################
+  #
+  # release
+  #
+  # Description:
+  # This method sets the release field to indicate that the checklist
+  # has been released.
+  #
+  # Parameters:
+  # None
+  #
+  # Return:
+  # A message indicating the result of the update.
+  #
+  ######################################################################
+  #
+  def release
+    
+    latest_release = Checklist.latest_release
+
+    self.minor_rev_number = 0
+    self.major_rev_number = latest_release.major_rev_number + 1
+    self.released         = 1
+    self.released_on      = ''
+
+    if self.update
+      return 'Checklist successfully released'
+    else
+      return 'Checklist release failed - Contact DTG.'
+    end
+
+  end
+
+
+  ######################################################################
+  #
+  # locked?
+  #
+  # Description:
+  # Reports whether or not the object is available for modification and
+  # deletion.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the object can not be deleted or modified, otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def locked?
+
+    self.released?
+
+  end
+
+
+  def remove
+
+   removed = true
+   self.sections.each do |section|
+     removed = section.remove
+     break if !removed
+   end
+
+   return removed && self.destroy
+    
   end
 
 
