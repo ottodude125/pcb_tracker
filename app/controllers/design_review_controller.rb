@@ -1584,7 +1584,7 @@ class DesignReviewController < ApplicationController
         message += "Division: " + ftp_notification.division.name + "\n"
         message += "Assembly/BOM Number: " + ftp_notification.assembly_bom_number + "\n"
         message += "Design Files Located at: /hwnet/" + ftp_notification.design_center.pcb_path
-        message += "/" + ftp_notification.design.name + "/public/\n"
+        message += "/" + ftp_notification.design.part_number.pcb_display_name + "/public/\n"
         message += "Files Size, Date, and Name: " + ftp_notification.file_data + "\n"
         message += "Rev Date: " + ftp_notification.revision_date + "\n"
         message += "Vendor: " + ftp_notification.fab_house.name + "\n"
