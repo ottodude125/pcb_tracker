@@ -744,5 +744,248 @@ PEER_AUDIT       = 2
                                         user) if result_update == 'Comment'
    end
 
+
+  ######################################################################
+  #
+  # manage_auditor_list
+  #
+  # Description:
+  # The method processes updates to the audit team.  Audit Teammate 
+  # records are added and removed from the database based on the user's
+  # input.
+  #
+  # Parameters:
+  # self_auditor_list - a hash of self audit assignments.  The hash
+  #                     is accessed by section ids (key) to provide
+  #                     the user of id of the self auditor
+  # peer_auditor_list - a hash of peer audit assignments.  The hash
+  #                     is accessed by section ids (key) to provide
+  #                     the user of id of the peer auditor
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+   def manage_auditor_list(self_auditor_list, peer_auditor_list, user)
+
+    lead_designer_assignments = {}
+    self_auditor_list.each do |key, auditor|
+      lead_designer_assignments[key] = (self.design.designer_id == auditor.to_i)
+    end
+
+    lead_peer_assignments = {}
+    peer_auditor_list.each do |key, auditor|
+      lead_peer_assignments[key] = (self.design.peer_id == auditor.to_i)
+    end
+
+
+    self_auditor_list.delete_if { |k,v| v.to_i == self.design.designer_id }
+    peer_auditor_list.delete_if { |k,v| v.to_i == self.design.peer_id }
+
+    audit_teammates = self.audit_teammates
+    
+    # Remove any teammates if the section has been reassign back to the lead
+    teammate_list_updates = { 'self' => [], 'peer' => [] }
+    audit_teammates.each do |audit_teammate|
+      if ((audit_teammate.self? &&
+           lead_designer_assignments[audit_teammate.section_id]) ||
+          (!audit_teammate.self? &&
+           lead_peer_assignments[audit_teammate.section_id]))
+
+        key = audit_teammate.self? ? 'self' : 'peer'
+
+        teammate_list_updates[key] << { :action   => 'Removed ',
+                                        :teammate => audit_teammate }
+        audit_teammate.destroy
+      end
+    end
+
+    # Go through the assignments and make sure the same person has
+    # not been assigned to the same section for peer and self audits.
+    self.clear_message
+    self_auditor_list.each do |section_id, self_auditor|
+
+      next if self_auditor == ''
+
+      if ((self_auditor == peer_auditor_list[section_id]) ||
+          (!peer_auditor_list[section_id] && self_auditor.to_i == self.design.peer_id))
+        self.set_message('WARNING: Assignments not made <br />') if !self.message
+        section = Section.find(section_id)
+        auditor = User.find(self_auditor)
+        self.set_message('         ' + auditor.name + ' can not be both ' +
+                         'self and peer auditor for ' + section.name + '<br />',
+                         'append')
+        self_auditor_list[section_id] = ''
+        peer_auditor_list[section_id] = ''
+      end
+
+    end
+
+    self_auditor_list.each do |section_id, self_auditor|
+    
+      next if self_auditor == ''
+      audit_teammate = audit_teammates.detect do |t|
+        t.self? && t.section_id.to_i == section_id.to_i
+      end
+
+     if !audit_teammate
+        audit_teammate = AuditTeammate.new(:audit_id   => self.id,
+                                           :section_id => section_id,
+                                           :user_id    => self_auditor,
+                                           :self       => 1)
+        audit_teammate.save
+        teammate_list_updates['self'] << { :action   => 'Added ',
+                                           :teammate => audit_teammate }
+      elsif audit_teammate.user_id != self_auditor.to_i
+        #old_teammate = audit_teammate.dup
+        old_teammate = AuditTeammate.new(:audit_id   => self.id,
+                                         :section_id => section_id,
+                                         :user_id    => audit_teammate.user_id,
+                                         :self       => 1)
+        teammate_list_updates['self'] << { :action   => 'Removed ',
+                                           :teammate => old_teammate }
+        audit_teammate.update_attribute(:user_id, self_auditor)
+
+        teammate_list_updates['self'] << { :action   => 'Added ',
+                                           :teammate => audit_teammate }
+      end
+
+    end
+
+    peer_auditor_list.each do |section_id, peer_auditor|
+    
+      next if peer_auditor == ''
+      audit_teammate = audit_teammates.detect do |t|
+        !t.self? && t.section_id.to_i == section_id.to_i
+      end 
+
+      if !audit_teammate
+        audit_teammate = AuditTeammate.new(:audit_id   => self.id,
+                                           :section_id => section_id,
+                                           :user_id    => peer_auditor,
+                                           :self       => 0)
+        audit_teammate.save
+        teammate_list_updates['peer'] << { :action   => 'Added ',
+                                           :teammate => audit_teammate }
+      elsif audit_teammate.user_id != peer_auditor.to_i
+        #old_teammate = audit_teammate.dup
+        old_teammate = AuditTeammate.new(:audit_id   => self.id,
+                                         :section_id => section_id,
+                                         :user_id    => audit_teammate.user_id,
+                                         :self       => 0)
+        teammate_list_updates['peer'] << { :action   => 'Removed ',
+                                           :teammate => old_teammate }
+        audit_teammate.update_attribute(:user_id, peer_auditor)
+
+        teammate_list_updates['peer'] << { :action   => 'Added ',
+                                           :teammate => audit_teammate }    
+      end
+    end
+
+    if (teammate_list_updates['self'].size + teammate_list_updates['peer'].size) > 0
+    
+      self.set_message('Updates to the audit team for the ' +
+                       self.design.part_number.pcb_display_name +
+                       ' have been recorded - mail was sent',
+                       'append')
+    
+      self.reload
+      TrackerMailer::deliver_audit_team_updates(user,
+                                                self,
+                                                teammate_list_updates)
+    end
+
+   end
+
+
+  ######################################################################
+  #
+  # clear_message
+  #
+  # Description:
+  # The method clears all of the  error messages
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+   def clear_message
+     errors.clear
+   end
+   
+   
+  ######################################################################
+  #
+  # message?
+  #
+  # Description:
+  # The method indicates if there is an error message available for the
+  # object
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # True if an error message exists.  Otherwise False
+  #
+  ######################################################################
+  #
+   def message?
+     errors.on(:message) != nil
+   end
+   
+   
+  ######################################################################
+  #
+  # set_message
+  #
+  # Description:
+  # Creates or appends the message to the error message depending on the
+  # append flag
+  #
+  # Parameters:
+  # append - a flag that indicates the message should be appended to any
+  # existing error message when True
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+   def set_message(message, append=false)
+     errors.clear if !append
+     errors.add(:message, message)
+   end
+   
+   
+  ######################################################################
+  #
+  # set_message
+  #
+  # Description:
+  # Returns the error message that is stored with the object
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A string representing the store error message.
+  #
+  ######################################################################
+  #
+   def message
+     message = errors.on(:message)
+     if message.class == String
+       message
+     elsif message.class == Array
+       message.join
+     end
+   end
+
   
 end
