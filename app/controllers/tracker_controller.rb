@@ -182,8 +182,7 @@ class TrackerController < ApplicationController
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
 
-    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
-    @submissions = BoardDesignEntry.count("state='submitted'")
+    @submissions = BoardDesignEntry.submission_count
     session[:return_to] = {:controller => 'tracker',
                            :action => 'manager_list_by_priority',
                            :order  => params[:order]}
@@ -212,13 +211,12 @@ class TrackerController < ApplicationController
     flash[:sort_order]   = @sort_order
     
     design_reviews = get_active_reviews
-    @active_reviews   = design_reviews[:active].sort_by   { |dr| dr.design.name }
-    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| dr.design.name }
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| dr.design.part_number.pcb_display_name }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| dr.design.part_number.pcb_display_name }
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
-    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
-    @submissions = BoardDesignEntry.count("state='submitted'")
+    @submissions = BoardDesignEntry.submission_count
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'manager_list_by_design',
                            :order      => params[:order]}
@@ -253,8 +251,7 @@ class TrackerController < ApplicationController
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
-    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
-    @submissions = BoardDesignEntry.count("state='submitted'")
+    @submissions = BoardDesignEntry.submission_count
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'manager_list_by_type',
                            :order      => params[:order]}
@@ -288,8 +285,7 @@ class TrackerController < ApplicationController
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
-    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
-    @submissions = BoardDesignEntry.count("state='submitted'")
+    @submissions = BoardDesignEntry.submission_count
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'manager_list_by_designer',
                            :order      => params[:order]}
@@ -323,8 +319,7 @@ class TrackerController < ApplicationController
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
-    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
-    @submissions = BoardDesignEntry.count("state='submitted'")
+    @submissions = BoardDesignEntry.submission_count
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'manager_list_by_peer',
                            :order      => params[:order]}
@@ -358,8 +353,7 @@ class TrackerController < ApplicationController
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
-    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
-    @submissions = BoardDesignEntry.count("state='submitted'")
+    @submissions = BoardDesignEntry.submission_count
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'manager_list_by_age',
                            :order      => params[:order]}
@@ -394,8 +388,7 @@ class TrackerController < ApplicationController
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
-    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
-    @submissions = BoardDesignEntry.count("state='submitted'")
+    @submissions = BoardDesignEntry.submission_count
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'manager_list_by_date',
                            :order      => params[:order]}
@@ -573,7 +566,7 @@ class TrackerController < ApplicationController
   
     @designer = {}
 
-    release_review = ReviewType.find_by_name('Release')
+    release_review = ReviewType.get_release
     designs = Design.find_all_by_phase_id(release_review.id,
                                           'created_on ASC')
 
@@ -654,7 +647,7 @@ class TrackerController < ApplicationController
   #
   def designer_home_setup
 
-    pre_art_phase_id = ReviewType.find_by_name('Pre-Artwork').id
+    pre_art_phase_id = ReviewType.get_pre_artwork.id
 
     designs  = Design.find(:all,
                            :conditions => "designer_id='#{session[:user].id}' AND phase_id!='#{Design::COMPLETE}' AND phase_id!='#{pre_art_phase_id}'",
@@ -831,8 +824,7 @@ class TrackerController < ApplicationController
     @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.priority.value, dr.age] }
     @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.priority.value, dr.age] }
 
-    #@submissions = BoardDesignEntry.count(:all, :conditions => "state='submitted'")
-    @submissions = BoardDesignEntry.count("state='submitted'")
+    @submissions = BoardDesignEntry.submission_count
     session[:return_to] = {:controller => 'tracker', :action => 'index'}
 
   end
