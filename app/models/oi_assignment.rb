@@ -156,7 +156,7 @@ class OiAssignment < ActiveRecord::Base
   def email_update_header
     col  = 18
     hdr  = "------------------------------------------------------------------------\n" +
-           'Design : '.rjust(col)        + self.oi_instruction.design.name                          + "\n" +
+           'Design : '.rjust(col)        + self.oi_instruction.design.part_number.pcb_display_name                          + "\n" +
            'Category : '.rjust(col)      + self.oi_instruction.oi_category_section.oi_category.name + "\n" +
            'Step : '.rjust(col)          + self.oi_instruction.oi_category_section.name             + "\n" +
            'Team Lead : '.rjust(col)     + self.oi_instruction.user.name                            + "\n" +
