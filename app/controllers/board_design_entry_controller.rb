@@ -31,11 +31,7 @@ class BoardDesignEntryController < ApplicationController
   ######################################################################
   #
   def originator_list
-    bde  = BoardDesignEntry.find_all_by_originator_id_and_state(
-             session[:user].id, 'originated').sort_by { |e| e.design_name }
-    bde += BoardDesignEntry.find_all_by_originator_id_and_state(
-             session[:user].id, 'submitted').sort_by { |e| e.design_name }
-    @board_design_entries = bde
+    @board_design_entries = BoardDesignEntry.get_user_entries(session[:user])
   end
 
 
@@ -178,7 +174,7 @@ class BoardDesignEntryController < ApplicationController
 
   ######################################################################
   #
-  # get_design_id
+  # get_part_number
   #
   # Description:
   # This method gathers the data for the first screen displayed when 
@@ -189,20 +185,30 @@ class BoardDesignEntryController < ApplicationController
   #
   ######################################################################
   #
-  def get_design_id
-
-    @board_design_entry = BoardDesignEntry.new(:entry_type  => 'new',
-                                               :division_id => session[:user].division_id,
-                                               :location_id => session[:user].location_id)
-
-    @prefix_list   = Prefix.get_active_prefixes
-    @revision_list = Revision.get_revisions
-
-    @user_action = 'adding'
-    @new_entry   = 'true'
+  def get_part_number
+    @user_action    = 'adding'
+    @new_entry      = 'true'
+    @initial_prompt = true
     
+    @pcb_part_number  = PartNumber.new( :pcb_dash_number  => '00' )
   end
-  
+
+  ######################################################################
+  #
+  # pcba_part_number_prompt
+  #
+  # Description:
+  # This method provides the prompt for the PCBA part number.
+  # 
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def pcba_part_number_prompt
+    @pcba_part_number = PartNumber.new( :pcba_dash_number  => '00' )
+    render(:layout => false)
+  end
   
   ######################################################################
   #
@@ -227,7 +233,6 @@ class BoardDesignEntryController < ApplicationController
     @incoming_dir_list = IncomingDirectory.find_all_by_active(1).sort_by { |id| id.name }
     @location_list     = Location.find_all_by_active(1).sort_by          { |l|  l.name }
     @platform_list     = Platform.find_all_by_active(1).sort_by          { |p|  p.name }
-    @prefix_list       = Prefix.get_active_prefixes
     @product_type_list = ProductType.find_all_by_active(1).sort_by       { |pt| pt.name } 
     @project_list      = Project.get_active_projects
     @revision_list     = Revision.get_revisions
@@ -278,49 +283,38 @@ class BoardDesignEntryController < ApplicationController
   ######################################################################
   #
   def create_board_design_entry
-  
-    @board_design_entry = BoardDesignEntry.new(params[:board_design_entry])
-    @board_design_entry.entry_type = 'new'
-    
+
     # Verify before continuing.
     #  - the required information was entered
-    if !(@board_design_entry.prefix_id && @board_design_entry.valid_number?)
-
-      notice = "The following information must be provided in order to proceed <br />"
-      notice += "<ul>"
-      notice += "  <li>PCB Mnemonic</li>"              if !@board_design_entry.prefix_id
-      notice += "  <li>Number (must be 3 digits)</li>" if !@board_design_entry.valid_number?
-      notice += "</ul>"
-      flash['notice'] = notice
+    @part_number = PartNumber.initial_part_number
     
-      @prefix_list   = Prefix.get_active_prefixes
-      @revision_list = Revision.get_revisions
+    @part_number.pcb_prefix       = params[:pcb_prefix]
+    @part_number.pcb_number       = params[:pcb_number]
+    @part_number.pcb_dash_number  = params[:pcb_dash_number]
+    @part_number.pcb_revision     = params[:part_number][:pcb_revision]
+    @part_number.pcba_prefix      = params[:pcba_prefix]      if params[:pcba_prefix]
+    @part_number.pcba_number      = params[:pcba_number]      if params[:pcba_number]
+    @part_number.pcba_dash_number = params[:pcba_dash_number] if params[:pcba_dash_number]
+    @part_number.pcba_revision    = params[:part_number][:pcba_revision] if params[:part_number][:pcba_revision]
 
+    if !@part_number.valid?(params[:new][:part_number] == "1")
+      
+      flash['notice'] = @part_number.error_message
+    
       @user_action = 'adding'
       @new_entry   = 'true'
       
-      render(:action => 'get_design_id')
+      render(:action => 'get_part_number')
       return
+      
     end
 
     
-    board = Board.find_by_prefix_id_and_number(@board_design_entry.prefix_id,
-                                               @board_design_entry.number)
-                           
-    if board
-      @board_design_entry.platform_id = board.platform_id
-      @board_design_entry.project_id  = board.project_id
-      @board_design_entry.description = board.description
-    end
-    @board_design_entry.originator_id = session[:user].id
-  
-    @board_design_entry.save
-    
-    if @board_design_entry.errors.empty?
+    @board_design_entry = BoardDesignEntry.add_entry(@part_number, session[:user])
+      
+    if @board_design_entry
       
       flash['notice'] = "The design entry has been stored in the database"
-        
-      @board_design_entry.load_design_team
         
       redirect_to(:action      => 'new_entry', 
                   :id          => @board_design_entry.id,
@@ -385,26 +379,24 @@ class BoardDesignEntryController < ApplicationController
     @board_design_entry = BoardDesignEntry.find(params[:id])
     bde                 = BoardDesignEntry.new(params[:board_design_entry])
     bde.id              = params[:id]
+    bde.part_number_id  = @board_design_entry.part_number_id
     @viewer             = params[:viewer]
     
     # Verify that the required information was submitted before proceeding.
     if !bde.division_id   || !bde.location_id           ||
-       !bde.prefix_id     || !bde.revision_id           ||
+       !bde.revision_id   ||
        !bde.platform_id   || !bde.product_type_id       ||
-       !bde.project_id    ||  bde.description.size == 0 ||
-       !bde.valid_number?
+       !bde.project_id    ||  bde.description.size == 0
        
       notice = "The following information must be provided in order to proceed <br />"
       notice += "<ul>"
       notice += "  <li>Board Description</li>"         if bde.description.size == 0
       notice += "  <li>Division</li>"                  if !bde.division_id
       notice += "  <li>Location</li>"                  if !bde.location_id
-      notice += "  <li>PCB Mnemonic</li>"              if !bde.prefix_id
       notice += "  <li>Platform</li>"                  if !bde.platform_id
       notice += "  <li>Product Type</li>"              if !bde.product_type_id
       notice += "  <li>Project</li>"                   if !bde.project_id
       notice += "  <li>Revision</li>"                  if !bde.revision_id?
-      notice += "  <li>Number (must be 3 digits)</li>" if !bde.valid_number?
       notice += "</ul>"
       flash['notice'] = notice
       
@@ -426,28 +418,6 @@ class BoardDesignEntryController < ApplicationController
       return
       
     end
-    
-    if params[:user_action] == 'adding'
-      # Verify that there is not another entry for the same design
-      message = "find_by_prefix_id_and_number_and_revision_id_and_" +
-                "numeric_revision_and_entry_type_and_eco_number"
-      existing_entry = BoardDesignEntry.send(message,
-                                             bde.prefix_id,
-                                             bde.number,
-                                             bde.revision_id,
-                                             bde.numeric_revision,
-                                             bde.entry_type,
-                                             bde.eco_number)
-      if existing_entry
-       flash['notice'] = 'No update was made - the entry already exists'
-       redirect_to(:action      => 'edit_entry',
-                   :id          => @board_design_entry.id,
-                   :user_action => 'adding',
-                   :viewer      => @viewer)
-        return
-      end  
-    end
-
 
     board = Board.find_by_prefix_id_and_number(bde.prefix_id, bde.number)  
     
@@ -456,7 +426,7 @@ class BoardDesignEntryController < ApplicationController
         last_design = board.designs.sort_by { |d| d.revision.name }.pop
         
         if last_design.revision.name > bde.revision.name
-          flash['notice'] = "#{bde.design_name} not created - a newer revision exists in the system"    
+          flash['notice'] = "#{bde.part_number.full_display_name} not created - a newer revision exists in the system"    
           redirect_to(:action      => 'edit_entry',
                       :id          => @board_design_entry.id,
                       :user_action => 'adding',
@@ -489,7 +459,7 @@ class BoardDesignEntryController < ApplicationController
       }
 
       if design
-        flash['notice'] = "#{bde.design_name} duplicates an existing design - the database was not updated"
+        flash['notice'] = "#{bde.part_number.full_display_name} duplicates an existing design - the database was not updated"
         redirect_to(:action      => 'edit_entry',
                     :id          => @board_design_entry.id,
                     :user_action => 'adding',
@@ -506,25 +476,9 @@ class BoardDesignEntryController < ApplicationController
       
     end
     
-    existing_entry = BoardDesignEntry.find_by_prefix_id_and_number_and_revision_id_and_numeric_revision_and_entry_type(
-                       bde.prefix_id,
-                       bde.number,
-                       bde.revision_id,
-                       bde.numeric_revision,
-                       bde.entry_type)
-                       
-    if existing_entry && existing_entry.id != @board_design_entry.id
+    if @board_design_entry.update_attributes(params[:board_design_entry])
 
-      flash['notice'] = "Update duplicates existing entry - changes were not saved"
-
-      redirect_to(:action      => 'edit_entry',
-                  :id          => @board_design_entry.id,
-                  :user_action => 'adding',
-                  :viewer      => @viewer)
-  
-    elsif @board_design_entry.update_attributes(params[:board_design_entry])
-
-      flash['notice'] = "Entry #{@board_design_entry.design_name} has been updated"
+      flash['notice'] = "Entry #{@board_design_entry.part_number.full_display_name} has been updated"
 
       #Update the user's division and/or location if it has changed.
        if (session[:user].division_id != @board_design_entry.division_id ||
@@ -554,26 +508,6 @@ class BoardDesignEntryController < ApplicationController
   
     end
   
-  end
-
-
-  ######################################################################
-  #
-  # entry_type_selected
-  #
-  # Description:
-  # This action updates the entry type div when the user selects the 
-  # entry type in an edit entry view.  
-  # 
-  # Parameters from params
-  # None
-  #
-  ######################################################################
-  #
-  def entry_type_selected
-    @board_design_entry = BoardDesignEntry.find(params[:id])
-    @board_design_entry.entry_type = params[:type]
-    render(:layout => false)
   end
 
 
@@ -652,28 +586,12 @@ class BoardDesignEntryController < ApplicationController
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @user_action        = params[:user_action]
         
-    reviewer_roles  = Role.find_all_by_reviewer_and_manager_and_active(1, 0, 1).delete_if { |m| 
-                        !m.send(@board_design_entry.entry_type+'_design_type?') }
-
-    # TO DO: Add a way to for the tracker admins to specify roles with a 
-    # default user.  If a role has a default user then do not present it to 
-    # the originator for selection.  Use it to replace the following
-    skip_roles = ['Compliance - EMC',
-                  'Compliance - Safety',
-                  'Library',
-                  'PCB Input Gate',
-                  'PCB Mechanical',
-                  'SLM BOM',
-                  'SLM-Vendor']
-    reviewer_roles.delete_if { |rr| skip_roles.detect { |sr|  sr == rr.name} }
-    
     @reviewers = []
-    for role in reviewer_roles.sort_by { |r| r.display_name }
+    Role.get_open_reviewer_roles.each do |role|
       entry_user = @board_design_entry.board_design_entry_users.detect{ |eu| eu.role_id == role.id }
-      reviewer_id = entry_user ? entry_user.user_id : 0
       @reviewers << { :role          => role,
                       :reviewer_list => role.active_users,
-                      :reviewer_id   => reviewer_id,
+                      :reviewer_id   => entry_user ? entry_user.user_id : 0,
                       :required      => !entry_user || (entry_user && entry_user.required?) }
     end
 
@@ -698,21 +616,12 @@ class BoardDesignEntryController < ApplicationController
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @user_action        = params[:user_action]
     
-    manager_roles = Role.find_all_by_manager_and_active(1, 1).delete_if { |m| 
-                      !m.send(@board_design_entry.entry_type+'_design_type?') }
-
-    # TO DO: Add a way to for the tracker admins to specify roles with a 
-    # default user.  If a role has a default user then do not present it to 
-    # the originator for selection.  Use it to replace the following
-    manager_roles.delete_if { |r| r.name == "PCB Design"}
-    
     @managers = []
-    for role in manager_roles.sort_by { |r| r.display_name }
+    Role.get_open_manager_reviewer_roles.each do |role|
       entry_user = @board_design_entry.board_design_entry_users.detect{ |eu| eu.role_id == role.id }
-      manager_id =  entry_user ? entry_user.user_id : 0
       @managers << { :role         => role,
                      :manager_list => role.active_users,
-                     :manager_id   => manager_id }
+                     :manager_id   => entry_user ? entry_user.user_id : 0 }
     end
 
   end
@@ -1231,44 +1140,21 @@ class BoardDesignEntryController < ApplicationController
     board_design_entry = BoardDesignEntry.find(params[:id])
     flash['notice'] = ''
     
-    # Check to see if the board exists,  if it does not exist, then create
-    # the board.
-    board = Board.find_by_prefix_id_and_number(board_design_entry.prefix_id,
-                                               board_design_entry.number)
-    
-    if board
-      design = board.designs.detect { |d| 
-        d.revision_id      == board_design_entry.revision_id &&
-        d.numeric_revision == board_design_entry.numeric_revision &&
-        d.eco_number       == board_design_entry.eco_number }
-    end
-    
-    if board && design
-      flash['notice'] = "The board and the design already exist - no action taken"
+    board = Board.new( :platform_id => board_design_entry.platform_id,
+                       :project_id  => board_design_entry.project_id,
+                       :description => board_design_entry.description,
+                       :active      => 1 )
+    if board.save
+      flash['notice'] = "Board created ... "
+    else
+      flash['notice'] = "The board already exists - this should never occur"
       redirect_to(:action => 'processor_list')
       return
     end
     
-    # If the board does not exist then create.
-    if !board
-      board = Board.new(:prefix_id   => board_design_entry.prefix_id,
-                        :number      => board_design_entry.number,
-                        :platform_id => board_design_entry.platform_id,
-                        :project_id  => board_design_entry.project_id,
-                        :description => board_design_entry.description,
-                        :active      => 1)
-      if board.save
-        flash['notice'] = "Board created ... "
-      else
-        flash['notice'] = "The board already exists - this should never occur"
-        redirect_to(:action => 'processor_list')
-        return
-      end
-    end
-    
     # Update the board reviewers table for this board.
     ig_role = Role.find_by_name('PCB Input Gate')
-    for reviewer_record in board_design_entry.board_design_entry_users
+    board_design_entry.board_design_entry_users.each do |reviewer_record|
 
       next if !reviewer_record.required?
 
@@ -1305,10 +1191,10 @@ class BoardDesignEntryController < ApplicationController
       type = 'Date Code'
     end
     
-    review_types = get_active_review_types
+    review_types = ReviewType.get_active_review_types
     
     phase_id = Design::COMPLETE
-    for review_type in review_types
+    review_types.each do |review_type|
       if params[:review_type][review_type.name] == '1'
         phase_id = review_type.id
         break
@@ -1316,6 +1202,7 @@ class BoardDesignEntryController < ApplicationController
     end
     
     design = Design.new(:board_id         => board.id,
+                        :part_number_id   => board_design_entry.part_number_id,
                         :phase_id         => phase_id,
                         :revision_id      => board_design_entry.revision_id,
                         :numeric_revision => board_design_entry.numeric_revision,
@@ -1394,8 +1281,8 @@ class BoardDesignEntryController < ApplicationController
     @priorities         = Priority.get_priorities
   
   end
-  
-  
+
+
   private
   
   def allow_access
