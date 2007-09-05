@@ -35,24 +35,16 @@ class ChecklistController < ApplicationController
   #
   def release
     
-    checklist = Checklist.find(params['id'])
-    latest_release = Checklist.find(:first,
-                                    :conditions => "released=1",
-                                    :order      => 'major_rev_number DESC')
-
-    checklist.minor_rev_number = 0
-    checklist.major_rev_number = latest_release.major_rev_number + 1
-    checklist.released         = 1
-    checklist.released_on      = ''
-
-    if checklist.update_attributes(checklist.attributes)
-      flash['notice'] = 'Checklist successfully released'
+    checklist = Checklist.find(params[:id])
+    
+    if checklist
+      flash['notice'] = checklist.release
     else
-      flash['notice'] = 'Checklist release failed - Contact DTG.'
+      flash['notice'] = 'No checklist was found with the id=' + params[:id] +
+                        ' - No updates were made'
     end
 
-    redirect_to :action => 'list'
-
+    redirect_to(:action => 'list')
   end
 
 
@@ -75,7 +67,7 @@ class ChecklistController < ApplicationController
   ######################################################################
   #
   def select_view
-    @checklist = Checklist.find(params['id'])
+    @checklist = Checklist.find(params[:id])
   end
 
 
@@ -116,17 +108,16 @@ class ChecklistController < ApplicationController
   #
   def display_list
 
-    @review_type = params['review']['review_type']
+    @review_type = params[:review][:review_type]
 
-    @checklist = Checklist.find(params['checklist']['id'])
+    @checklist = Checklist.find(params[:checklist][:id])
     @sections  = @checklist.sections
 
     @display_boxes = []
     @sections.each do |section|
       
-      subsections = Subsection.find(:all,
-                                    :conditions => "section_id=#{section.id}",
-                                    :order      => 'sort_order ASC')
+      subsections = section.subsections
+      
       if displayable(@review_type,
                      section.full_review,
                      section.date_code_check,
@@ -142,9 +133,7 @@ class ChecklistController < ApplicationController
             display_box[0] = section.dup
             display_box[1] = subsection.dup
             
-            checks = 
-              Check.find_all("section_id=#{section.id} AND subsection_id=#{subsection.id}",
-                             'sort_order ASC')
+            checks =  subsection.checks
             peer_checks = []
             for check in checks
               if displayable(@review_type,
@@ -218,7 +207,7 @@ class ChecklistController < ApplicationController
   ######################################################################
   #
   def view
-    @checklist = Checklist.find(params["id"])
+    @checklist = Checklist.find(params[:id])
     sections   = @checklist.sections
 
     @displaySections = []
@@ -251,7 +240,7 @@ class ChecklistController < ApplicationController
   #
   def edit
 
-    @checklist = Checklist.find(params["id"])
+    @checklist = Checklist.find(params[:id])
     
     @displaySections = []
     @checklist.sections.each do |section|
@@ -263,8 +252,7 @@ class ChecklistController < ApplicationController
       section.subsections.each do |subsection|
         sub = []
         sub[0] = subsection
-#        checks = Check.find_all("subsection_id=#{subsection.id}", 
-#                                'sort_order')
+#        checks = subsection.checks
 #        sub[1] = checks.size
 	    sub[1] = subsection.checks.size
 	
@@ -296,11 +284,8 @@ class ChecklistController < ApplicationController
   #
   def destroy
 
-    checklist = Checklist.find(params['id'])
-    checklist.sections.each { |section| section.checks.destroy_all }
-    checklist.subsections.destroy_all
-    checklist.sections.destroy_all
-    checklist.destroy
+    checklist = Checklist.find(params[:id])
+    checklist.remove
         
     redirect_to(:action => 'list') 
 
@@ -327,7 +312,7 @@ class ChecklistController < ApplicationController
   def copy
 
     # Copy the checklist.
-    existing_checklist = Checklist.find(params['id']).attributes
+    existing_checklist = Checklist.find(params[:id]).attributes
     existing_checklist['released']    = 0
     existing_checklist['used']        = 0
     existing_checklist['released_by'] = 0
@@ -347,29 +332,19 @@ class ChecklistController < ApplicationController
     new_checklist = Checklist.create(existing_checklist)
     
     # Copy all of the sections
-    Checklist.find(params['id']).sections.each do |section|
+    Checklist.find(params[:id]).sections.each do |section|
     
-#    sections = Section.find_all("checklist_id=#{params['id']}")
-#    for section in sections
       section.checklist_id = new_checklist['id']
       new_section = Section.create(section.attributes)
 
       # Copy all of the subsections
-#      subsections = 
-#        Subsection.find_all("checklist_id=#{params['id']} AND section_id=#{section.id}")
-#        for subsection in subsections
         section.subsections.each do |subsection|
-          subsection.checklist_id = new_checklist.id
+          
           subsection.section_id   = new_section.id
           new_subsection = Subsection.create(subsection.attributes)
 
           # Copy all of the checks.
-#          checks = 
-#            Check.find_all("section_id=#{section.id} AND subsection_id=#{subsection.id}")
-
-#            for check in checks
             subsection.checks.each do |check|
-              check.section_id    = new_section.id
               check.subsection_id = new_subsection.id
               new_check = Check.create(check.attributes)
             end
