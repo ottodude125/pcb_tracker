@@ -1,4 +1,6 @@
-<% @heading = "PCB Engineering - #{@board_design_entry.design_name} Design Entry - Setup"%>
+<% @heading = 'PCB Engineering - ' +
+              @board_design_entry.part_number.full_display_name + 
+              ' Design Entry - Setup' %>
 
 <%= start_form_tag({ :action        => 'create_tracker_entry', 
                      :id            => params[:id] }) %>

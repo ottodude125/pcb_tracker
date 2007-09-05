@@ -1,4 +1,6 @@
-<% @heading = "PCB Engineering - #{@board_design_entry.design_name} - Design Constraints"%>
+<% @heading = 'PCB Engineering - ' +
+              @board_design_entry.part_number.full_display_name + 
+              ' - Design Constraints' %>
 
 <%= render(:partial => 'nav_bar',
            :locals  => { :back_action => 'edit_entry',
