@@ -6,7 +6,8 @@
 
 <table align="center" border="0" cellpadding="4">
   <tr>
-    <th>Design</th>
+    <th>PCB Part Number</th>
+    <th>Revision</th>
     <th>Originated By</th>
     <th>Submitted</th>
     <th align="left">Submit Date</th>
@@ -14,9 +15,10 @@
   </tr>
   <% for entry in @board_design_entries %>
     <tr>
-      <td><%= entry.design_name %></td>
+      <td align="center"><%= entry.part_number.pcb_name %></td>
+      <td align="center"><%= entry.part_number.pcb_revision %></td>
       <td><%= User.find(entry.originator_id).name %></td>
-      <td><%= (entry.submitted? || entry.ready_to_post?) ? 'Yes' : 'No' %></td>
+      <td align="center"><%= (entry.submitted? || entry.ready_to_post?) ? 'Yes' : 'No' %></td>
       <td><%= entry.submitted_on.strftime("%B %d, %Y") if entry.submitted? || entry.ready_to_post? %></td>
       <td align="center">
         <% label = entry.modifiable? ? 'View/Update' : 'View' %>

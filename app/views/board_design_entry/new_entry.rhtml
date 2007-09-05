@@ -32,19 +32,19 @@
 
 <hr class="div" />
 
-<table width="90%" align="center" border="1" cellspacing="0">
+<table width="90%" align="center" border="2" cellspacing="0">
 
 <!-- ********************************************************** -->
   <tr>
   
-    <td class="label" width="150">Originator: </td>
+    <td class="label">Originator: </td>
     <td class="data"  colspan="2"><%= session[:user].name %></td>
     
     <td class="label">Division: </td>
     <td class="data">
       <select id="board_design_entry_division_id"
               name="board_design_entry[division_id]">
-      <option value=""></option>
+      <option value="0"></option>
       <%= options_from_collection_for_select(@division_list,
                                              "id",
                                              "name",
@@ -56,7 +56,7 @@
     <td class="data">
       <select id="board_design_entry_location_id"
               name="board_design_entry[location_id]">
-      <option value=""></option>
+      <option value="0"></option>
       <%= options_from_collection_for_select(@location_list,
                                              "id",
                                              "name",
@@ -67,111 +67,39 @@
 
 <!-- ********************************************************** -->
   <tr>
-    <td class="label" valign="top">Design: </td>
-
-    <td class="label" width="141">PCB Mnemonic:</td>
-    <td class="data">
-      <%= select("board_design_entry", 
-                 "prefix_id", 
-                 @prefix_list.collect { |p| [ p.pcb_mnemonic, p.id ] }, 
-                 { :include_blank => true } ) %>
+    <td class="label">PCB Part Number: </td>
+    <td class="data" colspan="2">
+      <%= @board_design_entry.part_number.pcb_name %>
     </td>
-
-    <td class="label">Number:</td>
-    <td class="data">
-      <%= text_field("board_design_entry", "number", "size" => 3, "maxlength" => 3) %>
-    </td>
-
-    <td class="label">Revison:</td>
-    <td class="data">
-      <%= select("board_design_entry", 
-                 "revision_id", 
-                 @revision_list.collect { |r| [ r.name, r.id ] }, 
-                 { :include_blank => true } ) %>
-    </td>
-    <td>
+    <td class="label">Revision: </td>
+    <td class="data" colspan="3">
+      <%= @board_design_entry.part_number.pcb_revision %>
     </td>
   </tr>
   
 <!-- ********************************************************** -->
+  <% if @board_design_entry.new? %>
   <tr>
-    <td class="label" valign="top">Entry Type: </td>
-    <td class="data" colspan="6" valign="top">
-      <div id="entry_type">
-        <table width="100%" cellpadding="0" cellspacing="0" border="0">
-          <tr>
-            <td class="label" width="140">New Design: </td>
-            <td class="data" align="left" width="30">
-              <%= radio_button(:board_design_entry, :entry_type, 'new') %>
- 
-              <%= observe_field('board_design_entry_entry_type_new',
-                                :update    => :entry_type,
-                                :url       => { :action => :entry_type_selected,
-                                                :id     => @board_design_entry.id,
-                                                :type   => 'new' }) %>
-            </td>
-          </tr>
-          <tr>
-            <td class="label">Dot Rev: </td>
-            <td class="data" align="left">
-              <%= radio_button(:board_design_entry, :entry_type, 'dot_rev') %>
-
-              <%= observe_field('board_design_entry_entry_type_dot_rev',
-                                :update    => :entry_type,
-                                :url       => { :action => :entry_type_selected,
-                                                :id     => @board_design_entry.id,
-                                                :type   => 'dot_rev' }) %>
-            </td>
-            
-            <% if @board_design_entry.entry_type != 'new' %>
-              <td class="label" width="150" valign="top"
-                  title="Numeric Revision is required for a Dot Rev">
-                Numeric Revision: 
-              </td>
-              <td class="data" valign="top">
-                <%= select("board_design_entry", 
-                           "numeric_revision", 
-                           (1..9).collect { |i| [ i, i ] }, 
-                           { :include_blank => true } ) %>
-              </td>
-            <% else %>
-              <td>&nbsp;</td>
-            <% end %>
-    
-          </tr>
-          <tr>
-            <td class="label">Date Code: </td>
-            <td class="data" align="left">
-              <%= radio_button(:board_design_entry, :entry_type, 'date_code') %>
-
-              <%= observe_field('board_design_entry_entry_type_date_code',
-                                :update    => :entry_type,
-                                :url       => { :action => :entry_type_selected,
-                                                :id     => @board_design_entry.id,
-                                                :type   => 'date_code' }) %>
-            </td>
-            
-            <% if @board_design_entry.entry_type == 'date_code' %>
-              <td class="label" width="150" 
-                  title="ECO Number is required for a Date Code entry">
-                ECO Number: 
-              </td>
-              <td class="data">
-                <%= text_field("board_design_entry", 
-                               "eco_number",
-                               "size" => 7, 
-                               "maxlength" => 7) %>
-              </td>
-            <% else %>
-              <td>&nbsp;</td>
-            <% end %>
-            
-          </tr>
-        </table>
-      </div>
+    <td class="label" valign="top">PCBA Part Number: </td>
+    <td class="data" colspan="2">
+      <%= @board_design_entry.part_number.pcba_name %>
+    </td>
+    <td class="label">Revision: </td>
+    <td class="data" colspan="3">
+      <%= @board_design_entry.part_number.pcba_revision %>
     </td>
   </tr>
-
+  <% end %>
+  
+<!-- ********************************************************** -->
+  <% if !@board_design_entry.new? %>
+  <tr>
+    <td class="label" valign="top">ECO Number (if applicable): </td>
+    <td class="data" colspan="6">
+      <%= text_field("board_design_entry", "eco_number", "size" => 40, "maxlength" => 10) %>
+    </td>
+  </tr>
+  <% end %>
 <!-- ********************************************************** -->
   <tr>
     <td class="label" valign="top">Platform: </td>
@@ -179,7 +107,8 @@
       <%= select("board_design_entry", 
                  "platform_id", 
                  @platform_list.collect { |p| [ p.name, p.id ] }, 
-                 { :include_blank => true } ) %>
+                 { :include_blank => true },
+                 "class" => 'wide_select' ) %>
     </td>
   </tr>
 
@@ -190,7 +119,8 @@
       <%= select("board_design_entry", 
                  "project_id", 
                  @project_list.collect { |p| [ p.name, p.id ] }, 
-                 { :include_blank => true } ) %>
+                 { :include_blank => true },
+                 "class" => 'wide_select' ) %>
     </td>
   </tr>
 
@@ -209,15 +139,18 @@
       <%= select("board_design_entry", 
                  "product_type_id", 
                  @product_type_list.collect { |p| [ p.name, p.id ] }, 
-                 { :include_blank => true } ) %>
+                 { :include_blank => true },
+                 "class" => 'wide_select' ) %>
+
     </td>
   </tr>
   
 <!-- ********************************************************** -->
-  <tr>
+  <tr valign="top">
     <td class="label" valign="top">Location of Review Documents: <br />(\\server_name\...)</td>
     <td class="data" colspan="6">
-      <%= text_area("board_design_entry",
+      <%= text_field("board_design_entry", "review_doc_location", "size" => 100, "maxlength" => 100) %>
+      <%# text_area("board_design_entry",
                     "review_doc_location",
                     { :rows => '2', :cols => '60' }) %>
     </td>
@@ -230,7 +163,8 @@
       <%= select("board_design_entry", 
                  "design_directory_id", 
                  @design_dir_list.collect { |dd| [ dd.name, dd.id ] }, 
-                 { :include_blank => true } ) %>
+                 { :include_blank => true },
+                 "class" => 'wide_select' ) %>
     </td>
   </tr>
 
@@ -241,7 +175,8 @@
       <%= select("board_design_entry", 
                  "incoming_directory_id", 
                  @incoming_dir_list.collect { |id| [ id.name, id.id ] }, 
-                 { :include_blank => true } ) %>
+                 { :include_blank => true },
+                 "class" => 'wide_select' ) %>
     </td>
   </tr>
 
@@ -434,7 +369,7 @@
 
 <%= end_form_tag %>
 
-<%# debug @board_design_entry %>
+<%# debug @board_design_entry.new? %>
 <%# debug @user_action %>
 <%# debug @viewer %>
 <%# debug @division_list %>

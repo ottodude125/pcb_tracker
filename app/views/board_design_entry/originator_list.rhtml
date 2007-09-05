@@ -1,22 +1,23 @@
 <% @heading = "PCB Engineering Entry List"%>
 
-<%= start_form_tag(:action => 'get_design_id') %>
+<%= start_form_tag(:action => 'get_part_number') %>
 
 <hr class="div" />
 
 <% if @board_design_entries.size > 0 %>
   <table align="center" border="0" cellpadding="4">
     <tr>
-      <th>Design</th>
+      <th>PCB Part Number</th>
+      <th>Revision</th>
       <th>Submitted</th>
       <th align="left">Submission Date</th>
       <td colspan="3">&nbsp;</td>
     </tr>
-    <% for entry in @board_design_entries %>
+    <% @board_design_entries.each do |entry| %>
       <tr>
-        <td><%= entry.design_name %>
-        </td>
-        <td><%= entry.submitted? ? "Yes" : "No" %></td>
+        <td align="center"><%= entry.part_number.pcb_name %></td>
+        <td align="center"><%= entry.part_number.pcb_revision %></td>
+        <td align="center"><%= entry.submitted? ? "Yes" : "No" %></td>
         <% if entry.submitted? %>
           <td><%= entry.submitted_on.strftime("%B %d, %Y") %></td>
         <% else %>
@@ -30,13 +31,15 @@
                       :title => "View the PCB Engineering Entry") %>
         </td>
         <td align="center">
-          <% if !entry.submitted? %>
+          <% if !entry.submitted? && entry.ready_for_submission? %>
             <%= link_to('Submit Entry', 
                         {:action => 'submit',
                          :id     => entry.id,
                          :return => params[:action]},
                         :title  => "Used to submit the PCB Engineering Entry to PCB Design",
-                        :confirm => "Click 'OK' to submit the #{entry.design_name} to PCB Design for processing.  Otherwise, click 'Cancel'.") %>
+                        :confirm => "Click 'OK' to submit the " + 
+                                    entry.part_number.pcb_display_name +
+                                    " to PCB Design for processing.  Otherwise, click 'Cancel'.") %>
           <% else %>
             &nbsp;
           <% end%>
@@ -48,11 +51,18 @@
                          :id     => entry.id,
                          :return => params[:action]},
                         :title  => "Used to delete the PDB Engineering Entry",
-                        :confirm => "Do you really want to delete the #{entry.design_name}?  Click 'OK' to remove the entry, otherwise click 'Cancel'.") %>
+                        :confirm => 'Do you really want to delete the ' +
+                                    entry.part_number.pcb_display_name + '  Click ' +
+                                    "'OK' to remove the entry, otherwise click 'Cancel'.") %>
           <% else %>
             &nbsp;
           <% end %> 
         </td>
+        <% if !entry.ready_for_submission? %>
+          <td>
+            <b>Submission disabled.  View the entry for details.</b>
+          </td>
+        <% end %>
       </tr>
     <% end %>
   </table>

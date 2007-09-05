@@ -1,4 +1,6 @@
-<% @heading = "PCB Engineering - #{@board_design_entry.design_name} Design Entry - Return to Originator"%>
+<% @heading = 'PCB Engineering - ' +
+              @board_design_entry.part_number.full_display_name +
+              ' Design Entry - Return to Originator' %>
 
 <%= start_form_tag(:action      => 'return_entry_to_originator', 
                    :id          => @board_design_entry.id,
