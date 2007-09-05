@@ -170,13 +170,13 @@ class AuditController < ApplicationController
       if @audit.is_self_audit? || @audit.design.designer_id == session[:user].id
         @checks = Check.find(:all,
                              :conditions => "subsection_id=#{@subsection.id}#{condition}",
-                             :order      => 'sort_order ASC')
+                             :order      => 'position')
       else
         @checks = Check.find(:all,
                              :conditions => "subsection_id=#{@subsection.id} and " +
                                             "check_type='designer_auditor'"        +
                                             condition,
-                             :order      => 'sort_order ASC')
+                             :order      => 'position')
       end
 
       # Add the design checks and comments for each of the checks.
@@ -214,7 +214,7 @@ class AuditController < ApplicationController
   def show_sections
 
     @audit      = Audit.find(params[:id])
-    @board_name = @audit.design.name
+    @board_name = @audit.design.part_number.pcb_display_name
     
     @lead = @audit.designer_complete? ? @audit.design.peer : @audit.design.designer
     
@@ -409,12 +409,12 @@ class AuditController < ApplicationController
     
     @audit = Audit.find(params[:id])
     
-    self_list = Role.find_by_name('Designer').active_users
+    self_list = Role.active_designers
     peer_list = self_list.dup
     peer_list.delete_if { |u| u.id == @audit.design.designer_id }
     
     sections = []
-    @audit.checklist.sections.sort_by { |s| s.sort_order }.each do |section|
+    @audit.checklist.sections.each do |section|
    
       next if ((@audit.design.date_code? && !section.date_code_check?) ||
                (@audit.design.dot_rev?   && !section.dot_rev_check?))
@@ -464,118 +464,20 @@ class AuditController < ApplicationController
   
     audit = Audit.find(params[:audit][:id])
     
-    self_auditor_list = params[:self_auditor]
-    peer_auditor_list = params[:peer_auditor]
-
-    lead_designer_assignments = {}
-    lead_designer_assignments.default = false
-    self_auditor_list.each do |key, self_auditor|
-      if audit.design.designer_id == self_auditor.to_i
-        lead_designer_assignments[key.split('_')[2].to_i] = true
-      end
-    end
-
-    lead_peer_assignments = {}
-    lead_peer_assignments.default = false
-    peer_auditor_list.each do |key, peer_auditor|
-      if audit.design.peer_id == peer_auditor.to_i
-        lead_peer_assignments[key.split('_')[2].to_i] = true
-      end
+    self_auditor_list = {}
+    params[:self_auditor].each do |section_id_string, self_auditor|
+      section_id                    = section_id_string.split('_')[2].to_i
+      self_auditor_list[section_id] = self_auditor
     end
     
-    teammate_list_updates = { 'self' => [], 'peer' => [] }
-
-    self_auditor_list.delete_if { |k,v| v.to_i == audit.design.designer_id }
-    peer_auditor_list.delete_if { |k,v| v.to_i == audit.design.peer_id }
-
-    audit_teammates = audit.audit_teammates
-    audit_teammates.each do |audit_teammate|
-      if ((audit_teammate.self? &&
-           lead_designer_assignments[audit_teammate.section_id]) ||
-          (!audit_teammate.self? &&
-           lead_peer_assignments[audit_teammate.section_id]))
-
-        key = audit_teammate.self? ? 'self' : 'peer'
-
-        teammate_list_updates[key] << { :action   => 'Removed ',
-                                        :teammate => audit_teammate.dup }
-        audit_teammate.destroy
-      end
+    peer_auditor_list = {}
+    params[:peer_auditor].each do |section_id_string, peer_auditor|
+      section_id                    = section_id_string.split('_')[2].to_i
+      peer_auditor_list[section_id] = peer_auditor
     end
-
-    # Go through the assignments and make sure the same person has
-    # not been assigned to the same section for peer and self audits.
-    flash['notice'] = ''
-    self_auditor_list.each do |key, self_auditor|
-
-      next if self_auditor == ''
-
-      if ((self_auditor == peer_auditor_list[key]) ||
-          (!peer_auditor_list[key] && self_auditor.to_i == audit.design.peer_id))
-
-        flash['notice']  = 'WARNING: Assignments not made <br />' if flash['notice'] == ''
-        section = Section.find(key.split('_')[2].to_i)
-        auditor = User.find(self_auditor)
-        flash['notice'] += "         #{auditor.name} can not be both " +
-                           "self and peer auditor for #{section.name}<br />"
-        self_auditor_list[key] = ''
-        peer_auditor_list[key] = ''
-      end
-
-    end
-
-
-    self_auditor_list.each do |key, self_auditor|
     
-      next if self_auditor == ''
-      section_id = key.split('_')[2].to_i
-      
-      next if audit_teammates.detect do |t|
-        t.self? && t.section_id == section_id && t.user_id == self_auditor.to_i
-      end
-
-      audit_teammate = AuditTeammate.new(:audit_id   => audit.id,
-                                         :section_id => section_id,
-                                         :user_id    => self_auditor,
-                                         :self       => 1)
-      
-      teammate_list_updates['self'] << { :action   => 'Added ',
-                                         :teammate => audit_teammate }
-      audit_teammate.save
-
-    end
-
-    peer_auditor_list.each do |key, peer_auditor|
-    
-      next if peer_auditor == ''
-      section_id = key.split('_')[2].to_i
-
-      next if audit_teammates.detect do |t|
-        !t.self? && t.section_id == section_id && t.user_id == peer_auditor.to_i
-      end 
-
-      audit_teammate = AuditTeammate.new(:audit_id   => audit.id,
-                                         :section_id => section_id,
-                                         :user_id    => peer_auditor,
-                                         :self       => 0)
-
-      teammate_list_updates['peer'] << {:action   => 'Added ',
-                                        :teammate => audit_teammate}
-      audit_teammate.save
-      
-    end
-
-    if (teammate_list_updates['self'].size + teammate_list_updates['peer'].size) > 0
-    
-      flash['notice'] += "Updates to the audit team for the " +
-                         "#{audit.design.name} have been recorded - " +
-                         "mail was sent"
-    
-      audit.reload
-      TrackerMailer::deliver_audit_team_updates(session[:user],
-                                                audit,
-                                                teammate_list_updates)
-    end
+    audit.manage_auditor_list(self_auditor_list, peer_auditor_list, session[:user])
+    flash['notice'] = audit.message if audit.message?
 
     redirect_to(:action => 'auditor_list', :id => audit.id)
   
