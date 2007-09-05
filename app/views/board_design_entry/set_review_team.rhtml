@@ -1,4 +1,6 @@
-<% @heading = "PCB Engineering - #{@board_design_entry.design_name} Design Entry - Review Team"%>
+<% @heading = 'PCB Engineering - ' +
+              @board_design_entry.part_number.full_display_name +
+              ' Design Entry - Review Team' %>
 
 <%= render(:partial => 'nav_bar',
            :locals  => { :back_action => 'set_management_team',
