@@ -600,7 +600,7 @@ class DesignReview < ActiveRecord::Base
 
     if design_center && self.design_center_id != design_center.id
       self.record_update('Design Center', 
-                         self.design_center.name, 
+                         self.design_center_id > 0 ? self.design_center.name : 'Not Set', 
                          design_center.name, 
                          user)
       self.design_center = design_center
@@ -837,6 +837,11 @@ class DesignReview < ActiveRecord::Base
                                             :new_value => new_value)
   end
 
+
+  def display_header
+    self.design.part_number.pcb_display_name + ' - ' +
+    self.design.board.platform.name + ' / ' + self.design.board.project.name
+  end
 
 ######################################################################
 ######################################################################
