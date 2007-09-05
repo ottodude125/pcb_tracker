@@ -34,7 +34,7 @@ class SectionController < ApplicationController
   #
   def edit
 
-    @section = Section.find(params['id'])
+    @section = Section.find(params[:id])
     @checklist = Checklist.find(@section.checklist_id)
 
   end
@@ -98,16 +98,9 @@ class SectionController < ApplicationController
   #
   def move_up
 
-    section = Section.find(params['id'])
-    next_sort = section.sort_order - 1
-    next_section = Section.find(:first,
-                                :conditions => [
-                                  "checklist_id = ? AND sort_order = ?",
-                                  section.checklist_id,
-                                  next_sort])
-
-    if section.update_attribute('sort_order', next_sort) &&
-        next_section.update_attribute('sort_order', (next_sort + 1))
+    section = Section.find(params[:id])
+    index   = section.checklist.sections.index(section)
+    if section.checklist.sections[index].move_higher
       flash['notice'] = 'Sections were re-ordered'
     else
       flash['notice'] = 'Section re-order failed'
@@ -141,16 +134,10 @@ class SectionController < ApplicationController
   #
   def move_down
 
-    section = Section.find(params['id'])
-    next_sort = section.sort_order + 1
-    next_section = Section.find(:first,
-                                :conditions => [
-                                  "checklist_id = ? AND sort_order = ?",
-                                  section.checklist_id,
-                                  next_sort])
+    section = Section.find(params[:id])
+    index   = section.checklist.sections.index(section)
 
-    if section.update_attribute('sort_order', next_sort) &&
-        next_section.update_attribute('sort_order', (next_sort - 1))
+    if section.checklist.sections[index].move_lower
       flash['notice'] = 'Sections were re-ordered'
     else
       flash['notice'] = 'Section re-order failed'
@@ -168,7 +155,7 @@ class SectionController < ApplicationController
   #
   # Description:
   # This method is called when the user clicks the "delete" icon on
-  # the modify checks screen.  The sort_order for the sections that 
+  # the modify checks screen.  The position for the sections that 
   # following the deleted section are updated to fill in the hole created 
   # by the deleted section.
   #
@@ -184,28 +171,10 @@ class SectionController < ApplicationController
   #
   def destroy
 
-    section = Section.find(params['id'])
+    section = Section.find(params[:id])
     checklist_id = section.checklist_id
 
-    sort_order = section.sort_order
-    sections   = Section.find(:all,
-                              :conditions => "checklist_id=#{section.checklist_id} AND " +
-                                             "sort_order>#{sort_order}")
-
-      sections.each do |sect|
-        new_sort_order = sect.sort_order - 1
-        sect.update_attribute('sort_order', new_sort_order)
-      end
-
-    deleted_checks = Check.find(:all,
-                                :conditions => "section_id=#{section.id}")
-      deleted_checks.each do |check|
-        section.checklist.increment_checklist_counters(check, -1)
-      end
-
-    if Check.destroy_all("section_id = #{section.id}")       &&
-        Subsection.destroy_all("section_id = #{section.id}") &&
-        section.destroy
+    if section.remove
       flash['notice'] = 'Section deletion successful.'
     else
       flash['notice'] = 'Section deletion failed - Contact DTG'
@@ -222,7 +191,7 @@ class SectionController < ApplicationController
   # insert_section
   #
   # Description:
-  # This method takes the new section from the browser, adjusts the sort_order
+  # This method takes the new section from the browser, adjusts the position
   # for all the sections that follow the new section, and inserts the section in 
   # the database.
   #
@@ -242,32 +211,22 @@ class SectionController < ApplicationController
   #
   def insert_section
 
-    existing_sect = Section.find(params['section']['id'])
+    new_section      = Section.new(params[:new_section])
+    existing_section = Section.find(params[:section][:id])
 
-    sections = Section.find(:all,
-                            :conditions => "checklist_id=#{existing_sect['checklist_id']}")
-      # Go through all of the sections and bump sort order by 1
-      for section in sections
-        if section.sort_order >= existing_sect['sort_order']
-          section.update_attribute('sort_order', (section.sort_order+1))
-        end
-      end
+    new_section.insert(existing_section.checklist_id,
+                       existing_section.position)
 
-    params['new_section']['checklist_id'] = existing_sect['checklist_id']
-    params['new_section']['sort_order']   = existing_sect['sort_order']
-
-    @new_section = Section.create(params['new_section'])
-
-    if @new_section.errors.empty?
+    if new_section.errors.empty?
       flash['notice'] = 'Section insert successful.'
-      redirect_to :controller => 'checklist', 
-        :action     => 'edit',
-        :id         => existing_sect['checklist_id']
+      redirect_to(:controller => 'checklist',
+                  :action     => 'edit',
+                  :id         => existing_section.checklist_id)
     else
       flash['notice'] = 'Section insert failed - Contact DTG'
-      redirect_to :controller => 'section',
-        :action     => 'insert',
-        :id         => existing_sect['id']
+      redirect_to(:controller => 'section',
+                  :action     => 'insert',
+                  :id         => existing_section.id)
     end
   end
 
@@ -294,7 +253,7 @@ class SectionController < ApplicationController
   #
   def insert
 
-    @section = Section.find(params['id'])
+    @section = Section.find(params[:id])
     @checklist = Checklist.find(@section.checklist_id)
       
     @new_section = @section.dup
@@ -310,7 +269,7 @@ class SectionController < ApplicationController
   # append_section
   #
   # Description:
-  # This method takes the new section from the browser, adjusts the sort_order
+  # This method takes the new section from the browser, adjusts the position
   # for all the sections that follow the new section, and inserts the section
   # in the database.
   #
@@ -330,32 +289,22 @@ class SectionController < ApplicationController
   #
   def append_section
 
-    existing_sect = Section.find(params['section']['id'])
+    new_section      = Section.new(params[:new_section])
+    existing_section = Section.find(params[:section][:id])
+    
+    new_section.insert(existing_section.checklist_id, 
+                       existing_section.position + 1) 
 
-    sections = Section.find(:all,
-                            :conditions => "checklist_id=#{existing_sect['checklist_id']}")
-      # Go through all of the sections and bump sort order by 1
-      for section in sections
-        if section.sort_order > existing_sect['sort_order']
-          section.update_attribute('sort_order', (section.sort_order+1))
-        end
-      end
-
-    params['new_section']['checklist_id'] = existing_sect['checklist_id']
-    params['new_section']['sort_order']   = existing_sect['sort_order'] + 1
-
-    @new_section = Section.create(params['new_section'])
-
-    if @new_section.errors.empty?
+    if new_section.errors.empty?
       flash['notice'] = 'Section appended successfully.'
       redirect_to :controller => 'checklist', 
         :action     => 'edit',
-        :id         => existing_sect['checklist_id']
+        :id         => existing_section.checklist_id
     else
       flash['notice'] = 'Section append failed - Contact DTG'
       redirect_to :controller => 'section',
         :action     => 'append',
-        :id         => existing_sect['id']
+        :id         => existing_section.id
 
     end
   end
@@ -384,7 +333,7 @@ class SectionController < ApplicationController
   #
   def append
 
-    @section = Section.find(params['id'])
+    @section = Section.find(params[:id])
     @checklist = Checklist.find(@section.checklist_id)
       
     @new_section = @section.dup
