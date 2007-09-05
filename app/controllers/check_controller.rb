@@ -33,9 +33,8 @@ class CheckController < ApplicationController
   ######################################################################
   #
   def edit
-
-    @check = Check.find(params['id'])
-
+    @check = Check.find(params[:id])
+    @section = @check.section
   end
 
 
@@ -44,7 +43,7 @@ class CheckController < ApplicationController
   # insert_check
   #
   # Description:
-  # This method takes the new check from the browser, adjusts the sort_order
+  # This method takes the new check from the browser, adjusts the position
   # for all the checks the follow the new check, and inserts the check in 
   # the database.
   #
@@ -64,33 +63,21 @@ class CheckController < ApplicationController
   #
   def insert_check
 
-    @new_check = params['new_check']
+    @new_check      = Check.new(params[:new_check])
+    @existing_check = Check.find(params[:check][:id])
 
-    @existing_check = Check.find(params['check']['id'])
-    @new_check['section_id']    = @existing_check.section_id
-    @new_check['subsection_id'] = @existing_check.subsection_id
-    @new_check['sort_order']    = @existing_check.sort_order
+    @new_check.insert(@existing_check.subsection_id, @existing_check.position)
 
-    # Update all of the checks that will follow the new check
-    checks = 
-      Check.find(:all,
-                 :conditions => "subsection_id=#{@existing_check.subsection_id} and " +
-                                "sort_order >= #{@existing_check.sort_order}",
-                 :order      => 'sort_order ASC');
-
-    checks.each { |check| check.update_attribute('sort_order', (check.sort_order+1)) }
-
-    new_ch = Check.create(params['new_check'])
-
-    if new_ch.errors.empty?
-      new_ch.section.checklist.increment_checklist_counters(new_ch, 1)
-
+    if @new_check.errors.empty?
       flash['notice'] = 'Inserted check successfully.'
-      redirect_to(:action => 'modify_checks',
-                  :id     => params['new_check']['subsection_id'])
+      redirect_to(:action => 'modify_checks', :id => @new_check.subsection_id)
     else
-      flash['notice'] = 'Insert check failed - contact DTG'
-      redirect_to(:action => 'insert', :id => params['check']['id'])
+      if @new_check.errors[:base]
+        flash['notice'] = @new_check.errors[:base]
+      else
+        flash['notice'] = 'Insert check failed - contact DTG'
+      end
+      redirect_to(:action => 'insert', :id => params[:check][:id])
     end
   end
 
@@ -117,7 +104,8 @@ class CheckController < ApplicationController
   #
   def insert
 
-    @check = Check.find(params['id'])
+    @check   = Check.find(params[:id])
+    @section = @check.section
       
     @new_check = @check.dup
     @new_check.title = ''
@@ -132,7 +120,7 @@ class CheckController < ApplicationController
   # append_check
   #
   # Description:
-  # This method takes the new check from the browser, adjusts the sort_order
+  # This method takes the new check from the browser, adjusts the position
   # for all the checks the follow the new check, and inserts the check in 
   # the database.
   #
@@ -152,32 +140,22 @@ class CheckController < ApplicationController
   #
   def append_check
 
-    @new_check = params['new_check']
+    @new_check      = Check.new(params[:new_check])
+    @existing_check = Check.find(params[:check][:id])
+    
+    @new_check.insert(@existing_check.subsection_id, @existing_check.position + 1)
 
-    @existing_check = Check.find(params['check']['id'])
-    @new_check['section_id']    = @existing_check.section_id
-    @new_check['subsection_id'] = @existing_check.subsection_id
-    @new_check['sort_order']    = @existing_check.sort_order + 1
-
-    # Update all of the checks that will follow the new check
-    checks = 
-      Check.find(:all,
-                 :conditions => "subsection_id=#{@existing_check.subsection_id} and " +
-                                "sort_order >= #{@new_check['sort_order']}",
-                 :order      => 'sort_order ASC')
-
-    checks.each { |check| check.update_attribute('sort_order', (check.sort_order+1)) }
-
-    new_ch = Check.create(params['new_check'])
-
-    if new_ch.errors.empty?
-      new_ch.section.checklist.increment_checklist_counters(new_ch, 1)
+    if @new_check.errors.empty?
       flash['notice'] = 'Appended check successfully.'
-      redirect_to(:action => 'modify_checks',
-                  :id => params['new_check']['subsection_id'])
+      redirect_to(:action => 'modify_checks', :id => @new_check.subsection_id)
     else
-      flash['notice'] = 'Append check failed - contact DTG'
-      redirect_to(:action => 'append', :id => params['check']['id'])
+      if @new_check.errors[:base]
+        flash['notice'] = @new_check.errors[:base]
+      else
+        #TODO - mail the contents of @new_ch.errors to DTG
+        flash['notice'] = 'Append check failed - contact DTG'
+      end
+      redirect_to(:action => 'append', :id => params[:check][:id])
     end
 
   end
@@ -205,7 +183,8 @@ class CheckController < ApplicationController
   #
   def append
 
-    @check = Check.find(params['id'])
+    @check   = Check.find(params[:id])
+    @section = @check.section
 
     @new_check = @check.dup
     @new_check.title = ''
@@ -236,8 +215,9 @@ class CheckController < ApplicationController
   #
   def modify_checks
 
-    @subsection = Subsection.find(params['id'])
-    @checks = @subsection.checks.sort_by { |check| check.sort_order }
+    @subsection = Subsection.find(params[:id])
+    @checks     = @subsection.checks
+    @checklist  = @subsection.section.checklist
 
     redirect_to(:action =>'add_first', :id => @subsection.id) if @checks.size == 0
 
@@ -264,16 +244,14 @@ class CheckController < ApplicationController
   #
   def add_first
 
-    @subsection = Subsection.find(params['id'])
+    @subsection = Subsection.find(params[:id])
     @section    = @subsection.section
 
     @new_check = Check.new(:title           => '',
                            :check           => '',
                            :dot_rev_check   => @subsection.dot_rev_check,
                            :date_code_check => @subsection.date_code_check,
-                           :section_id      => @subsection.section_id,
-                           :subsection_id   => @subsection.id,
-                           :sort_order      => 1)
+                           :subsection_id   => @subsection.id)
 
   end
 
@@ -301,22 +279,18 @@ class CheckController < ApplicationController
   #
   def insert_first
 
-    new_check                  = params['new_check']
-    new_check['section_id']    = params['section']['id']
-    new_check['subsection_id'] = params['subsection']['id']
-    new_check['sort_order']    = 1
-    new_ch                     = Check.create(new_check)
+    new_check = Check.new(params[:new_check])
+    new_check.insert(params[:subsection][:id], 1)
 
-    if new_ch.errors.empty?
-       new_ch.section.checklist.increment_checklist_counters(new_ch, 1)
+    if new_check.errors.empty?
       flash['notice'] = 'Added first check successfully.'
       redirect_to(:controller => 'checklist', 
                   :action     => 'edit', 
-                  :id         => params['section']['checklist_id'])
+                  :id         => params[:section][:checklist_id])
     else
       flash['notice'] = 'Add first check failed - contact DTG'
       redirect_to(:action => 'add_first', 
-                  :id     => params['subsection']['id'])
+                  :id     => params[:subsection][:id])
     end
   end
 
@@ -327,7 +301,7 @@ class CheckController < ApplicationController
   #
   # Description:
   # This method is called when the user clicks the "move down" icon on
-  # the modify checks screen.  The check's sort_order is swapped with 
+  # the modify checks screen.  The check's position is swapped with 
   # the next check.
   #
   # Parameters from params
@@ -343,16 +317,11 @@ class CheckController < ApplicationController
   #
   def move_down
 
-    check      = Check.find(params['id'])
-    next_sort  = check.sort_order + 1
-    next_check = Check.find(:first,
-                            :conditions => [
-                              "subsection_id = ? AND sort_order = ?", 
-                              check.subsection.id, 
-                              next_sort])
+    check = Check.find(params[:id])
 
-    if check.update_attribute('sort_order', next_sort) && 
-       next_check.update_attribute('sort_order', (next_sort - 1))
+    index = check.subsection.checks.index(check)
+
+    if check.subsection.checks[index].move_lower
       flash['notice'] = 'Checks were re-ordered'
     else
       flash['notice'] = 'Check re-order failed'
@@ -368,7 +337,7 @@ class CheckController < ApplicationController
   #
   # Description:
   # This method is called when the user clicks the "move up" icon on
-  # the modify checks screen.  The check's sort_order is swapped with 
+  # the modify checks screen.  The check's position is swapped with 
   # the preceeding check.
   #
   # Parameters from params
@@ -384,16 +353,11 @@ class CheckController < ApplicationController
   #
   def move_up
 
-    check      = Check.find(params['id'])
-    next_sort  = check.sort_order - 1
-    next_check = Check.find(:first,
-                            :conditions => [
-                              "subsection_id = ? and sort_order = ?", 
-                              check.subsection.id, 
-                              next_sort])
-    
-    if check.update_attribute('sort_order', next_sort) &&
-       next_check.update_attribute('sort_order', (next_sort + 1))
+    check = Check.find(params[:id])
+
+    index = check.subsection.checks.index(check)
+
+    if check.subsection.checks[index].move_higher
       flash['notice'] = 'Checks were re-ordered'
     else
       flash['notice'] = 'Check re-order failed'
@@ -409,7 +373,7 @@ class CheckController < ApplicationController
   #
   # Description:
   # This method is called when the user clicks the "delete" icon on
-  # the modify checks screen.  The sort_order for the checks that 
+  # the modify checks screen.  The position for the checks that 
   # following the deleted check are updated to fill in the hole created 
   # by the deleted check.
   #
@@ -425,29 +389,19 @@ class CheckController < ApplicationController
   #
   def destroy
 
-    check           = Check.find(params['id'])
-    check_dup       = check.dup
-    subsection_id   = check.subsection_id
-    omit_sort_order = check.sort_order
-    
-    if check.destroy
-      check_dup.section.checklist.increment_checklist_counters(check_dup, -1)
+    check = Check.find(params[:id])
+
+    if check.remove
       flash['notice'] = 'Check deletion successful.'
     else
       flash['notice'] = 'Check deletion failed - Contact DTG'
     end
 
-    # Update all of the checks that follow the deleted check
-    checks = Check.find_all("subsection_id=#{subsection_id} and " +
-                            "sort_order>#{omit_sort_order}")
-    
-    checks.each { |chk| chk.update_attribute('sort_order', (chk.sort_order-1)) }
-    
-    redirect_to(:action => 'modify_checks', :id => subsection_id)
+    redirect_to(:action => 'modify_checks', :id => check.subsection_id)
   end
 
 
-  ######################################################################
+  ########## ############################################################
   #
   # destroy_list
   #
@@ -468,29 +422,29 @@ class CheckController < ApplicationController
   #
   def destroy_list
     
-    subsection = Subsection.find(params['id'])
+    subsection = Subsection.find(params[:id])
 
-    if not subsection.checklist.released?
+    if !subsection.locked?
 
+      removed = false
       subsection.checks.each do |check|
-        subsection.checklist.increment_checklist_counters(check, -1)
+        removed = check.remove
+        break if !removed
       end
         
-      if Check.destroy_all("subsection_id=#{subsection.id}")
+      if removed
         flash['notice'] = 'All checks deleted successfully'
       else
         flash['notice'] = 'Failure while deleting all checks - contact DTG'
       end
         
-      redirect_to(:controller => 'checklist',
-                  :action     => 'edit',
-                  :id         => subsection.checklist_id)
     else
       flash['notice'] = 'This is a released checklist.  No checks were deleted.'
-      redirect_to(:controller => 'checklist',
-                  :action     => 'edit',
-                  :id         => subsection.checklist_id)
     end
+
+    redirect_to(:controller => 'checklist',
+                :action     => 'edit',
+                :id         => subsection.checklist.id)
   end
 
 
@@ -518,11 +472,11 @@ class CheckController < ApplicationController
     @check = Check.find(params[:check][:id])
     params[:check][:url] = params[:check][:url].sub(/http:\/\//, '')
 
-    if ! @check.section.checklist.released?
-      @check.section.checklist.increment_checklist_counters(@check, -1)
+    if ! @check.checklist.released?
+      @check.checklist.increment_checklist_counters(@check, -1)
 
       if @check.update_attributes(params[:check])
-        @check.section.checklist.increment_checklist_counters(@check, 1)
+        @check.checklist.increment_checklist_counters(@check, 1)
         flash['notice'] = 'Check was successfully updated.'
         redirect_to(:action => 'modify_checks', :id => @check.subsection_id)
       else
