@@ -23,7 +23,65 @@ class BoardDesignEntry < ActiveRecord::Base
   
   has_many   :board_design_entry_users
   
+  belongs_to :part_number
+  
   NOT_SET = '<font color="red"><b>Not Set</b></font>'
+  
+
+  def new?
+    self.part_number ? self.part_number.new? : true  
+  end
+  
+  
+  def self.get_user_entries(user)
+    conditions = "state='originated' OR state='submitted'"
+    BoardDesignEntry.find(:all,
+                          :conditions => conditions)
+  end
+  
+  
+  def get_entry(part_number)
+    BoardDesignEntry.find(:first,
+                          :conditions => "part_number='part_number.get_id'")
+  end
+
+  
+  def self.submission_count
+    @submissions = BoardDesignEntry.find(:all, :conditions => "state='submitted'").size
+    #@submissions = BoardDesignEntry.count(:conditions => "state='submitted'")
+    
+  end
+  
+  
+  def self.add_entry(part_number, user)
+    if part_number.exists?
+      bde = BoardDesignEntry.find(:first,
+                                  :conditions => "part_number_id='#{part_number.get_id}'")
+    end
+
+    # Verify that the entry does not exist before 
+    # creating a new part number
+    if !bde
+      bde = BoardDesignEntry.new(:originator_id => user.id,
+                                 :entry_type    => part_number.new? ? 'new' : 'dot_rev',
+                                 :division_id   => user.division_id,
+                                 :location_id   => user.location_id)
+      if !part_number.exists?
+        part_number.create
+      else
+        part_number.get_id
+      end
+      
+      bde.part_number_id = part_number.id
+      bde.create
+      bde.load_design_team
+      bde
+
+    else
+      nil
+    end
+    
+  end
 
 
   ######################################################################
@@ -69,25 +127,34 @@ class BoardDesignEntry < ActiveRecord::Base
   # design_name
   #
   # Description:
-  # This method returns the design name.
+  # This method returns the design name if the part number 
+  # has not been specified, otherwise the part number is
+  # returned
   #
   ######################################################################
   #
   def design_name
 
-    design_name  = self.prefix.pcb_mnemonic + self.number
-    design_name += self.revision.name  if self.revision && self.revision_id > 0
+    if self.part_number_id == 0
+      design_name  = self.prefix.pcb_mnemonic + self.number
+      design_name += self.revision.name  if self.revision && self.revision_id > 0
   
-    case self.entry_type
-    when 'dot_rev'
-    design_name += self.numeric_revision.to_s if self.numeric_revision > 0
-    when 'date_code'
-    design_name += self.numeric_revision.to_s if self.numeric_revision && self.numeric_revision > 0
-    design_name += '_eco'
-    design_name += self.eco_number
-    end
+      case self.entry_type
+      when 'dot_rev'
+        design_name += self.numeric_revision.to_s if self.numeric_revision > 0
+      when 'date_code'
+        design_name += self.numeric_revision.to_s if self.numeric_revision && self.numeric_revision > 0
+        design_name += '_eco'
+        design_name += self.eco_number
+      end
     
-    return design_name
+      "#{design_name} (" + 
+      self.prefix.pcb_number(self.number,
+                             self.revision.name,
+                             self.numeric_revision) + ')'
+    else
+      self.part_number.name
+    end
     
   end
   
@@ -416,7 +483,7 @@ class BoardDesignEntry < ActiveRecord::Base
   # None
   #
   # Return value:
-  # TRUE if the board design entry state is 'complete'.  
+  # TRUE if the board design entry state is 'ready_to_post'.  
   #
   ######################################################################
   #
@@ -483,64 +550,17 @@ class BoardDesignEntry < ActiveRecord::Base
   #
   def load_design_team
             
-    #To Do: Come up with a better way to specify default users.          
-    default_assignments = { 'PCB Design' => 'Light' } 
-
-    Role.find_all_by_active_and_manager(1, 1).each do |role|    
-      board_design_entry_user = BoardDesignEntryUser.new(
-                                  :board_design_entry_id => self.id,
-                                  :role_id               => role.id)
-                                  
-      if default_assignments[role.name]
-        board_design_entry_user.user_id = User.find_by_last_name(default_assignments[role.name]).id
-      end
-      board_design_entry_user.save if board_design_entry_user.user_id?
+    default_reviewers = []
+    defaulted_roles = Role.get_defaulted_manager_reviewer_roles + 
+                      Role.get_defaulted_reviewer_roles
+    defaulted_roles.each do |role|
+      default_reviewers << BoardDesignEntryUser.new( :role_id => role.id, 
+                                                     :user_id => role.default_reviewer_id )
     end
-
-    #To Do: Come up with a better way to specify default users.          
-    default_assignments = { 'Compliance - EMC'    => 'Bechard',
-                            'Compliance - Safety' => 'Pallotta',
-                            'Library'             => 'Ohara',
-                            'PCB Input Gate'      => 'Kasting',
-                            'PCB Mechanical'      => 'Khoras',
-                            'SLM BOM'             => 'Seip',
-                            'SLM-Vendor'          => 'Gough' }
-
-    Role.find_all_by_active_and_reviewer_and_manager(1, 1, 0).each do |role|     
-      board_design_entry_user = BoardDesignEntryUser.new(
-                                  :board_design_entry_id => self.id,
-                                  :role_id               => role.id)
-      if default_assignments[role.name]
-        begin
-          board_design_entry_user.user_id = 
-            User.find_by_last_name(default_assignments[role.name]).id
-        rescue
-          board_design_entry_user.user_id = 0   
-        end
-      end
-      board_design_entry_user.save if board_design_entry_user.user_id?
-    end
+    self.board_design_entry_users << default_reviewers
     
     self.board_design_entry_users(true)
   
-    existing_board = Board.find_by_prefix_id_and_number(self.prefix_id, self.number)
-
-    if existing_board
-
-      existing_board.board_reviewers.each do |board_reviewer|
-   
-        bde_user = self.board_design_entry_users.detect { |bdeu| 
-          bdeu.role_id == board_reviewer.role_id
-        }
-
-        if bde_user
-          bde_user.user_id = board_reviewer.reviewer_id
-          bde_user.save
-        end 
-            
-      end
-      
-    end
   end
   
   
@@ -591,6 +611,38 @@ class BoardDesignEntry < ActiveRecord::Base
     reviewers.delete_if { |bde_user| !bde_user.role.reviewer? || bde_user.role.manager? }
     return reviewers.sort_by { |m| m.role.display_name }
   
+  end
+
+
+  def all_roles_assigned?(roles)
+    
+    all_roles_assigned = false
+    self.board_design_entry_users.reload
+    
+    roles.each do | role|
+      all_roles_assigned = self.board_design_entry_users.detect { |user| 
+      user.role_id == role.id 
+      }
+      break if !all_roles_assigned
+    end
+
+    all_roles_assigned != nil
+    
+  end
+  
+  
+  def all_reviewers_assigned?
+    self.all_roles_assigned?(Role.get_open_reviewer_roles)
+  end
+  
+  
+  def all_manager_reviewers_assigned?
+    self.all_roles_assigned?(Role.get_open_manager_reviewer_roles)
+  end
+  
+  
+  def ready_for_submission?
+    self.all_reviewers_assigned? && self.all_manager_reviewers_assigned?
   end
 
 
