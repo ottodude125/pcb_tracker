@@ -228,7 +228,7 @@ before_filter(:verify_admin_role,
   #
   def show_boards
 
-    board_list = Board.find(:all)
+    board_list = Board.find(:all, :conditions => 'prefix_id>0')
     
     boards = {} 
     board_list.each do |board|
@@ -351,16 +351,10 @@ before_filter(:verify_admin_role,
       @project = project.name
     end
     
-    case
-    when !platform && !project
-      board_list = Board.find(:all)
-    when  platform && !project
-      board_list = Board.find_all_by_platform_id(platform.id)
-    when !platform &&  project
-      board_list = Board.find_all_by_project_id(project.id)
-    else
-      board_list = Board.find_all_by_platform_id_and_project_id(platform.id, project.id)
-    end
+    conditions  = 'prefix_id>0'
+    conditions += " AND platform_id=#{platform.id}" if platform
+    conditions += " and project_id=#{project.id}"   if project
+    board_list = Board.find(:all, :conditions => conditions)
    
     release_rt = ReviewType.get_release
     final_rt   = ReviewType.get_final
@@ -400,7 +394,7 @@ before_filter(:verify_admin_role,
       end
     
     end
-    
+
     @board_list = board_list.sort_by { |b| b.name }
     
   end
