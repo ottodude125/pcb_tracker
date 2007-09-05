@@ -36,20 +36,132 @@ class Role < ActiveRecord::Base
   # get_review_roles
   #
   # Description:
-  # This method returns a list of the review roles
+  # This method returns a list of the non-manager review roles
   #
   # Parameters:
   # None
   #
   # Return value:
-  # An array of review role records
+  # An array of role records
   #
   ######################################################################
   #
   def self.get_review_roles
     self.find(:all, 
-              :conditions => 'reviewer=1 AND active=1',
+              :conditions => 'reviewer=1 AND active=1 AND manager=0',
               :order      => 'display_name')
+  end
+
+
+  ######################################################################
+  #
+  # get_defaulted_reviewer_roles
+  #
+  # Description:
+  # This method returns a list of defaulted non-manager the review roles
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An array of role records
+  #
+  ######################################################################
+  #
+  def self.get_defaulted_reviewer_roles
+    drr_list = self.get_review_roles
+    drr_list.delete_if { |role| role.default_reviewer_id == 0 }
+    drr_list
+  end
+
+
+  ######################################################################
+  #
+  # get_open_reviewer_roles
+  #
+  # Description:
+  # This method returns a list of non-manager review roles that
+  # do not have a default reviewer assigned
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An array of role records
+  #
+  ######################################################################
+  #
+  def self.get_open_reviewer_roles
+    drr_list = self.get_review_roles
+    drr_list.delete_if { |role| role.default_reviewer_id != 0 }
+    drr_list
+  end
+
+
+  ######################################################################
+  #
+  # get_manager_review_roles
+  #
+  # Description:
+  # This method returns a list of the manager review roles
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An array of role records
+  #
+  ######################################################################
+  #
+  def self.get_manager_review_roles
+    self.find(:all, 
+              :conditions => 'reviewer=1 AND active=1 AND manager=1',
+              :order      => 'display_name')
+  end
+
+
+  ######################################################################
+  #
+  # get_defaulted_manager reviewer_roles
+  #
+  # Description:
+  # This method returns a list of defaulted manager the review roles
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An array of role records
+  #
+  ######################################################################
+  #
+  def self.get_defaulted_manager_reviewer_roles
+    drr_list = self.get_manager_review_roles
+    drr_list.delete_if { |role| role.default_reviewer_id == 0 }
+    drr_list
+  end
+
+
+  ######################################################################
+  #
+  # get_open_manager_reviewer_roles
+  #
+  # Description:
+  # This method returns a list of manager review roles that
+  # do not have a default reviewer assigned
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An array of role records
+  #
+  ######################################################################
+  #
+  def self.get_open_manager_reviewer_roles
+    drr_list = self.get_manager_review_roles
+    drr_list.delete_if { |role| role.default_reviewer_id != 0 }
+    drr_list
   end
 
 
