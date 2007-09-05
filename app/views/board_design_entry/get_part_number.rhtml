@@ -1,0 +1,193 @@
+<!-- View:    board_design_entry                                -->
+<!-- Purpose: Displays a form to add a new PCB Engineering      -->
+<!--          Entry.                                            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<SCRIPT type="text/javascript">
+<!-- This code makes the jump from the part number prefix to the -->
+<!-- part number number.                                         -->
+function check_pcb_prefix()
+{
+var prefix_length = document.part_number_entry.pcb_prefix.value.length + 1;
+if (prefix_length <= 3)
+{ document.part_number_entry.pcb_prefix.focus() }
+else
+{ document.part_number_entry.pcb_number.focus() }
+}
+
+function check_pcb_number()
+{
+var number_length = document.part_number_entry.pcb_number.value.length + 1;
+if (number_length <= 3)
+{ document.part_number_entry.pcb_number.focus() }
+else
+{ document.part_number_entry.pcb_dash_number.focus() }
+}
+
+function check_pcba_prefix()
+{
+var prefix_length = document.part_number_entry.pcba_prefix.value.length + 1;
+if (prefix_length <= 3)
+{ document.part_number_entry.pcba_prefix.focus() }
+else
+{ document.part_number_entry.pcba_number.focus() }
+}
+
+function check_pcba_number()
+{
+var number_length = document.part_number_entry.pcba_number.value.length + 1;
+if (number_length <= 3)
+{ document.part_number_entry.pcba_number.focus() }
+else
+{ document.part_number_entry.pcba_dash_number.focus() }
+}
+
+</SCRIPT>
+
+<% if @user_action == 'updating' %>
+
+  <% @heading = "PCB Engineering - Updating #{@board_design_entry.design_name}"%>
+
+  <%= start_form_tag({ :action      => 'update_entry', 
+                       :id          => @board_design_entry.id,
+                       :user_action => 'updating',
+                       :viewer      => @viewer },
+                     { :name => "part_number_entry" }) %>
+
+<% elsif @user_action == 'adding' %>
+
+  <% @heading = "PCB Engineering - New Entry"%>
+  
+  <% if @new_entry %>
+    <%= start_form_tag({ :action => 'create_board_design_entry' },
+                       { :name => "part_number_entry" }) %>
+  <% else %>
+    <%= start_form_tag({ :action      => 'update_entry', 
+                         :id          => @board_design_entry.id,
+                         :user_action => 'adding' },
+                        {:name => "part_number_entry" }) %>
+  
+  <% end %>
+                      
+<% end %>
+
+
+<hr class="div" />
+
+<table align="center" border="0" cellspacing="0">
+
+<!-- ********************************************************** -->
+  <tr>
+    <td width="200" class="label">PCB Number:</td>
+    <td width="140" class="data">
+      <table cellspacing="1">
+        <tr>
+        
+          <% if @initial_prompt || @pcb_part_number.valid_pcb_prefix? %>
+            <td>
+          <% else %>
+            <td bgcolor="red">
+          <% end %>
+		        <INPUT TYPE="text" 
+			           name="pcb_prefix"
+				       size="3" 
+				       MAXLENGTH="3"
+				       value="<%= @pcb_part_number[:pcb_prefix] %>"
+				       onKeyUp="check_pcb_prefix()" />
+	        </td>
+        
+		    <td>-</td>
+          
+          <% if @initial_prompt ||@pcb_part_number.valid_pcb_number? %>
+  		    <td>
+          <% else %>
+            <td bgcolor="red">
+          <% end %>
+		      	<INPUT TYPE="text" 
+			             name="pcb_number" 
+				         size="3" 
+				         MAXLENGTH="3" 
+				         value="<%= @pcb_part_number[:pcb_number] %>"
+				         onKeyUp="check_pcb_number()" />
+	        </td>
+          
+		    <td>-</td>
+          
+          <% if @pcb_part_number.valid_pcb_dash_number? %>
+      		  <td>
+          <% else %>
+            <td bgcolor="red">
+          <% end %>
+            <INPUT TYPE="text" 
+			             name="pcb_dash_number" 
+				         size="2" 
+				         MAXLENGTH="2" 
+				         value=<%= @pcb_part_number[:pcb_dash_number] %> />  
+		    </td>
+      	</tr>
+      </table>
+    </td>
+
+    <td width="120" class="label">Revision:</td>
+	<td class="data">
+      <%= select("part_number", "pcb_revision", ('a'..'z').collect { |c| [c,c] }) %>
+	</td>
+  </tr>
+
+  <tr>
+    <td class="label">New Part Number?:</td>
+    <td><%= check_box("new", "part_number") %></td>	
+  </tr>
+
+</table>
+  
+<div id="pcb_part_number_prompt">
+
+</div>
+  
+<%= observe_field("new_part_number",
+                  :update => "pcb_part_number_prompt",
+                  :url    => { :action => :pcba_part_number_prompt },
+                  :with   => "'prompt=' + escape(value)" ) %>
+<!-- ********************************************************** -->
+
+<hr class="div" />
+
+<table width="80%" align="center" border='0'>
+  <tr>
+    <td align="left">
+      <% if @user_action == 'updating' %>
+        <input type="button" 
+               value="Return"
+               onClick="parent.location='<%= url_for( :action => 'view_entry', 
+                                                      :id     => @board_design_entry.id,
+                                                      :viewer => @viewer) %>'" />
+      <% elsif @user_action == 'adding' %>
+        <input type="button" class="form_return" 
+               value="Cancel / Return to PCB Engineering Entry List"
+               onClick="parent.location='<%= url_for( :action => 'originator_list' ) %>'" />
+      <% end %>
+    </td>
+    
+
+    <td align="right">
+      <% if @user_action == 'updating'%>
+        <input type="submit" value="Update Entry" />
+      <% elsif @user_action == 'adding' %>
+        <input type="submit" class="form_submit" value="Next -->" />
+      <% end %>
+    </td>
+  </tr>
+</table>
+
+<%= end_form_tag %>
+
+<%# debug @part_number %>
+<%# debug @viewer %>
+<%# debug @division_list %>
+<%# debug @part_number.valid? %>
+<%# debug @part_number.valid_prefix? %>
+<%# debug @part_number.valid_number? %>
+<%# debug @part_number.valid_dash_number? %>

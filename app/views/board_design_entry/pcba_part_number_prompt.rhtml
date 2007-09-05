@@ -1,0 +1,57 @@
+<!-- View:    board_design_entry                                -->
+<!-- Purpose: Displays a form to add a new PCB Engineering      -->
+<!--          Entry.                                            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% if params[:prompt] == '1'%>
+<table align="center" border="0" cellspacing="0">
+
+  <tr>
+    <td width="200" class="label">PCBA Number:</td>
+    <td width="140" class="data">
+      <table cellspacing="1">
+        <tr>
+        
+          <td>
+            <INPUT TYPE="text" 
+	               name="pcba_prefix"
+                   size="3" 
+                   MAXLENGTH="3"
+                   value="<%= @pcba_part_number[:pcba_prefix] %>"
+                   onKeyUp="check_pcba_prefix()" />
+	      </td>
+        
+		  <td>-</td>
+          
+          <td>
+            <INPUT TYPE="text" 
+                   name="pcba_number" 
+                   size="3" 
+                   MAXLENGTH="3" 
+                   value="<%= @pcba_part_number[:pcba_number] %>"
+                   onKeyUp="check_pcba_number()" />
+	      </td>
+          
+		  <td>-</td>
+          
+          <td>
+            <INPUT TYPE="text" 
+                   name="pcba_dash_number" 
+                   size="2" 
+                   MAXLENGTH="2" 
+                   value=<%= @pcba_part_number[:pcba_dash_number] %> />  
+          </td>
+      	</tr>
+      </table>
+    </td>
+
+    <td width="120" class="label">Revision:</td>
+	<td class="data">
+      <%= select("part_number", "pcba_revision", ('a'..'z').collect { |c| [c,c] }) %>
+	</td>
+  </tr>
+ 
+</table>
+<% end %>
