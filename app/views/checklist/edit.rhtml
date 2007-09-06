@@ -84,7 +84,7 @@
                           :id         => displaySection[0].id }) %>
           </td>
 	      <td>&nbsp;</td>
-          <% if displaySection[0].sort_order > 1 %>
+          <% if displaySection[0].position > 1 %>
             <td>
               <%= link_to(image_tag('arrow_up.png'), 
                           { :controller => 'section',
@@ -95,7 +95,7 @@
             <td>&nbsp;</td>
           <% end %>
 
-          <% if displaySection[0].sort_order < @displaySections.size %>
+          <% if displaySection[0].position < @displaySections.size %>
             <td>
               <%= link_to(image_tag('arrow_down.png'), 
                           { :controller => 'section',
@@ -206,7 +206,7 @@
                               :id         => subsections[0].id }) %>
               </td>
               <td>&nbsp;</td>
-              <% if subsections[0].sort_order > 1 %>
+              <% if subsections[0].position > 1 %>
                 <td>
                   <%= link_to(image_tag('arrow_up.png'), 
                               { :controller => 'subsection',
@@ -217,7 +217,7 @@
                 <td colspan="1">&nbsp;</td>
               <% end %>
 
-              <% if subsections[0].sort_order < displaySection[1].size %>
+              <% if subsections[0].position < displaySection[1].size %>
                 <td>
                   <%= link_to(image_tag('arrow_down.png'), 
                               { :controller => 'subsection',

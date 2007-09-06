@@ -160,6 +160,6 @@
   <hr class="div" />
 
   <input type="submit" value="Add Check" />
-  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @subsection.checklist_id ) %>'">
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @subsection.checklist.id ) %>'">
 
 <%= end_form_tag %>

@@ -110,7 +110,7 @@
         <td>&nbsp;</td>
         <th><font size="-1">Type</font></th>
         <th colspan="3"><font size="-1">Include<br>in</font></th>
-        <% if not @subsection.checklist.released? %>
+        <% if not @checklist.released? %>
           <th colspan="3">&nbsp;</th>
 	  <th colspan="2"><font size="-1">New<br>Checks</font></th>
           <th>&nbsp;</th>
@@ -124,7 +124,7 @@
         <th><font size="-1">Date<br>Code</font></th>
         <th><font size="-1">Dot<br>Rev</font></th>
         <td colspan="3">&nbsp;</td>
-        <% if not @subsection.checklist.released? %>
+        <% if not @checklist.released? %>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
           <td>&nbsp;</td>
@@ -193,7 +193,7 @@
           <% end %>
           </td>
 
-          <% if not @subsection.checklist.released? %>
+          <% if not @checklist.released? %>
             <td>&nbsp;</td>
 
             <td>
@@ -214,7 +214,7 @@
             </td>
           
             <td>&nbsp;</td>
-            <% if check.sort_order > 1 %>
+            <% if check.position > 1 %>
               <td>
                 <%= link_to(image_tag('arrow_up.png'),
                             { :action => 'move_up',
@@ -223,7 +223,7 @@
             <% else %>
               <td>&nbsp;</td>
             <% end %>
-            <% if check.sort_order < @checks.size %>
+            <% if check.position < @checks.size %>
               <td>
                 <%= link_to(image_tag('arrow_down.png'),
                             { :action => 'move_down',
@@ -248,7 +248,7 @@
 
   <hr class="div" />
 
-  <input type="button" value="Return to subsection view" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @subsection.checklist_id ) %>'">
+  <input type="button" value="Return to subsection view" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @subsection.checklist.id ) %>'">
 
 <%= end_form_tag %>
 
