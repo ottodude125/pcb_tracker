@@ -29,7 +29,6 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
   self.use_transactional_fixtures = false
   self.use_instantiated_fixtures  = true
   
-  
   ######################################################################
   #
   # test_list

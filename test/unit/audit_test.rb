@@ -24,6 +24,7 @@ class AuditTest < Test::Unit::TestCase
            :design_checks,
            :design_reviews,
            :design_review_results,
+           :part_numbers,
            :prefixes,
            :priorities,
            :review_types,
@@ -49,6 +50,9 @@ class AuditTest < Test::Unit::TestCase
     @scott_g = users(:scott_g)
     @siva_e  = users(:siva_e)
     @cathy_m = users(:cathy_m)
+
+    @emails     = ActionMailer::Base.deliveries
+    @emails.clear
 
   end
 
@@ -192,7 +196,7 @@ class AuditTest < Test::Unit::TestCase
     actual_checks = {}
     @audit_in_self_audit.design_checks.each do |design_check|
       assert_equal(@audit_in_self_audit.id, design_check.audit_id)
-      section_id    = design_check.check.section_id
+      section_id    = design_check.check.subsection.section_id
       subsection_id = design_check.check.subsection_id
       actual_checks[section_id] = {} if !actual_checks[section_id]
       actual_checks[section_id][subsection_id] = [] if !actual_checks[section_id][subsection_id]
@@ -598,7 +602,7 @@ class AuditTest < Test::Unit::TestCase
                             audits(:audit_109)]
     bobs_audits = Audit.active_audits(@bob_g)
     assert_equal(bobs_expected_audits.size, bobs_audits.size)
-    
+
     bobs_expected_audits.each_with_index do |a,i| 
       assert_equal(a.design.name, bobs_audits[i].design.name) 
     end
@@ -784,6 +788,165 @@ class AuditTest < Test::Unit::TestCase
     assert(@audit_mx234b.auditor_complete?)
 
   end
+
+
+  ######################################################################
+  def test_manage_auditor_list
+    
+    assert_equal(0, @audit_109.audit_teammates.size)
+    
+    scott = @scott_g.id.to_s
+    bob   = @bob_g.id.to_s
+    
+    update_message = 'Updates to the audit team for the ' +
+                     @audit_109.design.part_number.pcb_display_name +
+                     ' have been recorded - mail was sent'
+    
+    subj_audit_team_updated = 'The audit team for the 252-232-b0 e has been updated'
+    
+    self_auditors = { 330 => scott, 331 => scott, 332 => scott,
+                      333 => scott, 334 => scott, 335 => scott,
+                      336 => scott, 337 => scott, 338 => scott,
+                      339 => scott, 340 => scott, 341 => scott,
+                      342 => scott, 343 => scott, 344 => scott,
+                      345 => scott }
+    peer_auditors = { 330 => bob,   331 => bob,   332 => bob,
+                      333 => bob,   334 => bob,   335 => bob,
+                      336 => bob,   337 => bob,   338 => bob,
+                      339 => bob,   340 => bob,   341 => bob,
+                      342 => bob,   343 => bob,   344 => bob,
+                      345 => bob }
+
+    #--------------- TESTING - AN UNALTERED LIST
+    @audit_109.manage_auditor_list(self_auditors.dup, peer_auditors.dup, @scott_g)
+    
+    assert_equal(0, @emails.size)
+    assert_equal(0, @audit_109.audit_teammates.size)
+    
+    #--------------- TESTING - USING SIVA (SELF) TO ROUTE PLANES
+    self_auditors[336] = @siva_e.id.to_s
+    @audit_109.manage_auditor_list(self_auditors.dup, peer_auditors.dup, @scott_g)
+    
+    assert_equal(1,                      @emails.size)
+    email = @emails.pop
+    assert_equal(subj_audit_team_updated, email.subject)
+    assert(email.body =~ /Added Siva Esakky - Route - Planes/)
+    
+    assert_equal(1,            @audit_109.audit_teammates.size)
+    audit_teammate = @audit_109.audit_teammates.first
+    assert_equal(@siva_e.name, audit_teammate.user.name)
+    assert(audit_teammate.self?)
+    assert(@audit_109.message?)
+    assert_equal(update_message, @audit_109.message)
+    
+    #-------------- TESTING - USING SIVA (SELF) TO ROUTE PLANES (NO CHANGE)
+    @audit_109.manage_auditor_list(self_auditors.dup, peer_auditors.dup, @scott_g)
+    
+    assert_equal(0, @emails.size)
+    assert_equal(1, @audit_109.audit_teammates.size)
+    audit_teammate = @audit_109.audit_teammates.first
+    assert_equal(@siva_e.name, audit_teammate.user.name)
+    assert(audit_teammate.self?)
+    assert(!@audit_109.message?)
+
+    #--------------- TESTING - ASSIGNING ROUTE PLANES BACK TO THE LEAD DESIGNER
+    self_auditors[336] = scott
+    @audit_109.manage_auditor_list(self_auditors.dup, peer_auditors.dup, @scott_g)
+    
+    assert_equal(1,@emails.size)
+    email = @emails.pop
+    assert_equal(subj_audit_team_updated, email.subject)
+    assert(email.body =~ /Removed Siva Esakky - Route - Planes/)
+    
+    assert_equal(0, @audit_109.audit_teammates.size)
+    assert(@audit_109.message?)
+    assert_equal(update_message, @audit_109.message)
+
+    #--------------- TESTING - USING SIVA (PEER) TO ROUTE PLANES
+    peer_auditors[336] = @siva_e.id.to_s
+    @audit_109.manage_auditor_list(self_auditors.dup, peer_auditors.dup, @scott_g)
+    
+    assert_equal(1,                      @emails.size)
+    email = @emails.pop
+    assert_equal(subj_audit_team_updated, email.subject)
+    assert(email.body =~ /Added Siva Esakky - Route - Planes/)
+    
+    assert_equal(1, @audit_109.audit_teammates.size)
+    audit_teammate = @audit_109.audit_teammates.first
+    assert_equal(@siva_e.name, audit_teammate.user.name)
+    assert(!audit_teammate.self?)
+    assert(@audit_109.message?)
+    assert_equal(update_message, @audit_109.message)
+    
+    
+    #--------------- TESTING - USING SIVA (PEER) TO ROUTE PLANES (NO CHANGE)
+    @audit_109.manage_auditor_list(self_auditors.dup, peer_auditors.dup, @scott_g)
+    
+    assert_equal(0, @emails.size)
+    assert_equal(1, @audit_109.audit_teammates.size)
+    audit_teammate = @audit_109.audit_teammates.first
+    assert_equal(@siva_e.name, audit_teammate.user.name)
+    assert(!audit_teammate.self?)
+    assert(!@audit_109.message?)
+
+    #--------------- TESTING - ASSIGNING ROUTE PLANES BACK TO THE LEAD PEER
+    peer_auditors[336] = bob
+    @audit_109.manage_auditor_list(self_auditors.dup, peer_auditors.dup, @bob_g)
+    
+    assert_equal(1,@emails.size)
+    email = @emails.pop
+    assert_equal(subj_audit_team_updated, email.subject)
+    assert(email.body =~ /Removed Siva Esakky - Route - Planes/)
+    
+    assert_equal(0, @audit_109.audit_teammates.size)
+    assert(@audit_109.message?)
+    assert_equal(update_message, @audit_109.message)
+
+    #--------------- TESTING - ASSIGNING ROUTE PLANES TO SIVA SELF/PEER
+    peer_auditors[336] = @siva_e.id.to_s
+    self_auditors[336] = @siva_e.id.to_s
+    @audit_109.manage_auditor_list(self_auditors.dup, peer_auditors.dup, @bob_g)
+    
+    assert_equal(0,@emails.size)
+    assert_equal(0, @audit_109.audit_teammates.size)
+    assert(@audit_109.message?)
+    sect = Section.find(336)
+    assert_equal('WARNING: Assignments not made <br />' + '         ' + 
+                 @siva_e.name + ' can not be both ' +
+                 'self and peer auditor for ' + sect.name + '<br />',
+                 @audit_109.message)
+
+    #--------------- TESTING - ASSIGNING ROUTE PLANES TO SIVA SELF/PEER
+    peer_auditors[336] = @siva_e.id.to_s
+    peer_auditors[330] = @rich_m.id.to_s
+    self_auditors[336] = @siva_e.id.to_s
+    self_auditors[330] = @siva_e.id.to_s
+    @audit_109.manage_auditor_list(self_auditors.dup, peer_auditors.dup, @bob_g)
+    
+    assert_equal(1,@emails.size)
+    email = @emails.pop
+    assert_equal(subj_audit_team_updated, email.subject)
+    assert(email.body =~ /Added Siva Esakky - Design Report Check/)
+    assert(email.body =~ /Added Rich Miller - Design Report Check/)
+
+    assert_equal(2, @audit_109.audit_teammates.size)
+    self_auditor = @audit_109.audit_teammates.first
+    assert_equal(@siva_e.id, self_auditor.user_id)
+    assert(self_auditor.self?)
+    peer_auditor = @audit_109.audit_teammates.last
+    assert_equal(@rich_m.id, peer_auditor.user_id)
+    assert(!peer_auditor.self?)
+    
+    assert(@audit_109.message?)
+    sect = Section.find(336)
+    assert_equal('WARNING: Assignments not made <br />' + '         ' + 
+                 @siva_e.name + ' can not be both ' +
+                 'self and peer auditor for ' + sect.name + '<br />' +
+                 update_message,
+                 @audit_109.message)
+
+  end
+
   
   ######################################################################
   def dump_audits
@@ -805,14 +968,18 @@ class AuditTest < Test::Unit::TestCase
     puts("COMPLETE:            Yes") if a.is_complete?
     puts("NUMBER OF TEAMMATES: #{a.audit_teammates.size}")
       
-    a.audit_teammates.each do |at|
-      puts("  AUDITOR:           #{at.user.name}")
-      puts("  SELF:              YES") if at.self?
-      puts("  PEER:              YES") if !at.self?
+    if a.audit_teammates.size > 0
+      puts("+++ DUMPING AUDIT TEAM")
+      a.audit_teammates.each do |at|
+        puts("  AUDITOR:           #{at.user.name}")
+        puts("  SELF:              YES") if at.self?
+        puts("  PEER:              YES") if !at.self?
+      end
     end
       
     a.design_checks.each do |dc|
-      puts("  Design Check ID: #{dc.id}              Check ID: #{dc.check_id}")
+      puts("  Design Check ID: #{dc.id}         Check ID:   #{dc.check_id}")
+      puts("                                    Section ID: #{dc.check.section_id}")
       puts("    DESIGNER: #{User.find(dc.designer_id).name}  RESULT: #{dc.designer_result}") if dc.designer_id > 0
       puts("    AUDITOR:  #{User.find(dc.auditor_id).name}   RESULT: #{dc.auditor_result}")  if dc.auditor_id  > 0
     end

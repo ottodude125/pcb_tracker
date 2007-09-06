@@ -33,16 +33,16 @@ class BoardDesignEntryTest < Test::Unit::TestCase
   def test_design_name_methods
 
     bde = board_design_entries(:av714b)
-    assert_equal('av714b', bde.design_name)
-    assert_equal('av714',  bde.design)
+    #assert_equal('av714b (959-714-b0)',             bde.design_name)
+    assert_equal('av714',                           bde.design)
     
     bde = board_design_entries(:mx008b4)
-    assert_equal('mx008b4', bde.design_name)
-    assert_equal('mx008',   bde.design)
+    #assert_equal('mx008b4 (252-008-b4)',            bde.design_name)
+    assert_equal('mx008',                           bde.design)
     
     bde = board_design_entries(:mx008b4_ecoP123456)
-    assert_equal('mx008b4_ecoP123456', bde.design_name)
-    assert_equal('mx008'             , bde.design)
+    #assert_equal('mx008b4_ecoP123456 (252-008-b4)', bde.design_name)
+    assert_equal('mx008',                           bde.design)
     
   end
 
@@ -82,9 +82,9 @@ class BoardDesignEntryTest < Test::Unit::TestCase
     assert_equal('252-008-b4',               board_design_entries(:mx008b4_ecoP123456).pcb_number)
     assert_equal(BoardDesignEntry::NOT_SET,  bde_2.pcb_number)
 
-    assert_equal('956-714-10',               bde_1.pcba_part_number)
-    assert_equal('259-008-10',               board_design_entries(:mx008b4).pcba_part_number)
-    assert_equal('259-008-10',               board_design_entries(:mx008b4_ecoP123456).pcba_part_number)
+    assert_equal('956-714-00',               bde_1.pcba_part_number)
+    assert_equal('259-008-00',               board_design_entries(:mx008b4).pcba_part_number)
+    assert_equal('259-008-00',               board_design_entries(:mx008b4_ecoP123456).pcba_part_number)
     assert_equal(BoardDesignEntry::NOT_SET,  bde_2.pcba_part_number)
     
     av714b = board_design_entries(:av714b)
@@ -158,18 +158,19 @@ class BoardDesignEntryTest < Test::Unit::TestCase
     bde.load_design_team
 
     assert_equal(1,  bde.managers.size)
-    assert_equal(7,  bde.reviewers.size)
-    assert_equal(8,  bde.board_design_entry_users.size)
-    assert_equal(10, BoardDesignEntryUser.count)
+    assert_equal(8,  bde.reviewers.size)
+    assert_equal(9,  bde.board_design_entry_users.size)
+    assert_equal(11, BoardDesignEntryUser.count)
     
     default_user_list = { 'PCB Design'          => 'Light',
                           'Compliance - EMC'    => 'Bechard',
                           'Compliance - Safety' => 'Pallotta',
                           'Library'             => 'Ohara',
-                          'PCB Input Gate'      => 'Kasting',
-                          'PCB Mechanical'      => 'Khoras',
+                          'PCB Input Gate'      => 'McLaren',
+                          'PCB Mechanical'      => 'Tucker',
                           'SLM BOM'             => 'Seip',
-                          'SLM-Vendor'          => 'Gough' }
+                          'SLM-Vendor'          => 'Gough',
+                          'Valor'               => 'McLaren'}
     default_users = {}
     
     default_user_list.each { |role_name, user_last_name|  
@@ -178,7 +179,7 @@ class BoardDesignEntryTest < Test::Unit::TestCase
       default_users[role.id] = user.id  
     }
     
-    for bde_user in bde.board_design_entry_users
+    bde.board_design_entry_users.each do |bde_user|
       assert_equal(bde.id, bde_user.board_design_entry_id)
       if default_users[bde_user.role_id]
         assert_equal(default_users[bde_user.role_id], bde_user.user_id)
@@ -189,34 +190,18 @@ class BoardDesignEntryTest < Test::Unit::TestCase
   
     bde = BoardDesignEntry.find(board_design_entries(:mx234a).id)
     assert_equal(0,  bde.board_design_entry_users.size)
-    assert_equal(10, BoardDesignEntryUser.count)
-    assert_equal(0, bde.managers.size)
-    assert_equal(0, bde.reviewers.size)
+    assert_equal(11, BoardDesignEntryUser.count)
+    assert_equal(0,  bde.managers.size)
+    assert_equal(0,  bde.reviewers.size)
 
     bde.load_design_team
 
-    assert_equal(1, bde.managers.size)
-    assert_equal(7, bde.reviewers.size)
-    assert_equal( 8, bde.board_design_entry_users.size)
-    assert_equal(18, BoardDesignEntryUser.count)
+    assert_equal(1,  bde.managers.size)
+    assert_equal(8,  bde.reviewers.size)
+    assert_equal(9,  bde.board_design_entry_users.size)
+    assert_equal(20, BoardDesignEntryUser.count)
     
-    default_user_list = { 'PCB Design'          => 'Light',
-                          'Compliance - EMC'    => 'Bechard',
-                          'Compliance - Safety' => 'Pallotta',
-                          'Library'             => 'Ohara',
-                          'PCB Input Gate'      => 'Kasting',
-                          'PCB Mechanical'      => 'Khoras',
-                          'SLM BOM'             => 'Seip',
-                          'SLM-Vendor'          => 'Gough' }
-    default_users = {}
-    
-    default_user_list.each { |role_name, user_last_name|  
-      role = Role.find_by_name(role_name)
-      user = User.find_by_last_name(user_last_name)
-      default_users[role.id] = user.id  
-    }
-    
-    for bde_user in bde.board_design_entry_users
+    bde.board_design_entry_users.each do |bde_user|
       assert_equal(bde.id, bde_user.board_design_entry_id)
       if default_users[bde_user.role_id]
         assert_equal(default_users[bde_user.role_id], bde_user.user_id)

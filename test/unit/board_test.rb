@@ -84,23 +84,6 @@ class BoardTest < Test::Unit::TestCase
   
 
   ######################################################################
-  def test_creation_validation
-
-    first_board = Board.new(:number    => '999',
-                            :prefix_id => 1)
-    assert_equal(false, first_board.save)
-
-    next_board = Board.new(:number    => '999',
-                           :prefix_id => 1)
-    next_board.save
-    assert_equal(1, next_board.errors.full_messages.size)
-    assert_equal('Board mx999 already exists - creation is invalid',
-                 next_board.errors.full_messages.pop)
-
-  end
-  
-  
-  ######################################################################
   def test_reviewer_functions
   
     la753  = boards(:la453)

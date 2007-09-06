@@ -105,9 +105,9 @@ class TrackerControllerTest < Test::Unit::TestCase
 
     post('manager_list_by_design', :order => 'DESC')
     expected_active_design_reviews = 
-      expected_active_design_reviews.sort_by { |design_review| [design_review.design.name, design_review.age] }
+      expected_active_design_reviews.sort_by { |design_review| [design_review.design.part_number.pcb_display_name, design_review.age] }
     expected_inactive_design_reviews = 
-      expected_inactive_design_reviews.sort_by { |design_review| [design_review.design.name, design_review.age] }
+      expected_inactive_design_reviews.sort_by { |design_review| [design_review.design.part_number.pcb_display_name, design_review.age] }
     expected_active_design_reviews.reverse!
     expected_inactive_design_reviews.reverse!
     assert_equal('ASC',                            assigns(:sort_order)[:design])
