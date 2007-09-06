@@ -23,6 +23,7 @@ class TrackerMailerTest < Test::Unit::TestCase
   fixtures(:audits,
            :audit_comments,
            :board_reviewers,
+           :board_design_entries,
            :boards,
            :boards_fab_houses,
            :design_centers,
@@ -33,7 +34,10 @@ class TrackerMailerTest < Test::Unit::TestCase
            :design_reviews,
            :designs,
            :fab_houses,
+           :ftp_notifications,
            :ipd_posts,
+           :oi_assignments,
+           :part_numbers,
            :platforms,
            :prefixes,
            :projects,
@@ -41,6 +45,7 @@ class TrackerMailerTest < Test::Unit::TestCase
            :roles_users,
            :review_types,
            :roles,
+           :sections,
            :users)
 
 
@@ -55,12 +60,10 @@ class TrackerMailerTest < Test::Unit::TestCase
     
     @audit   = Audit.find(audits(:audit_mx234a).id)
     
-    @mx234a_pre_art_dr = DesignReview.find(
-                           design_reviews(:mx234a_pre_artwork).id)
-    @mx234a_release_dr = DesignReview.find(
-                           design_reviews(:mx234a_release).id)
-    @mx234a_final_dr   = DesignReview.find(
-                           design_reviews(:mx234a_final).id)
+    @mx234a_pre_art_dr   = design_reviews(:mx234a_pre_artwork)
+    @mx234a_release_dr   = design_reviews(:mx234a_release)
+    @mx234a_final_dr     = design_reviews(:mx234a_final)
+    @mx234a_placement_dr = design_reviews(:mx234a_placement)
                            
     @mx234a_pre_art_dr_emails = 
       @mx234a_pre_art_dr.reviewers.collect { |r| r.email }.sort_by { |address| address }.uniq
@@ -100,6 +103,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     @lee_s   = users(:lee_s)
     @rich_m  = users(:rich_m)
     @siva_e  = users(:siva_e)
+    @bala_g  = users(:bala_g)
     
     @mx234a_stackup_doc = DesignReviewDocument.find(
                             design_review_documents(:mx234a_stackup_doc).id)
@@ -118,11 +122,11 @@ class TrackerMailerTest < Test::Unit::TestCase
 
     response = TrackerMailer.create_peer_audit_complete(@audit, @now)
     
-    assert_equal("#{@audit.design.name}" +
-                 ": The peer auditor has completed the audit", 
+    assert_equal(@audit.design.part_number.pcb_display_name +
+                 ': The peer auditor has completed the audit', 
                  response.subject)
-    assert_equal("#{peer} has completed the peer audit review" +
-                 " for the #{@audit.design.name}\n",
+    assert_equal(peer + ' has completed the peer audit review for the ' +
+                 @audit.design.part_number.pcb_display_name + "\n",
                  response.body)
     assert_equal([users(:bob_g).email], response.to)
     assert_equal([Pcbtr::SENDER],       response.from)
@@ -145,12 +149,12 @@ class TrackerMailerTest < Test::Unit::TestCase
   
     response = TrackerMailer.create_self_audit_complete(@audit, @now)
     
-    assert_equal("#{@audit.design.name}" +
-                 ": The designer has completed the self-audit", 
+    assert_equal(@audit.design.part_number.pcb_display_name +
+                 ': The designer has completed the self-audit', 
                  response.subject)
-    assert_equal("#{designer} has completed the self audit review" +
-                 " for the #{@audit.design.name}\n\nYou can start" +
-                 " your peer audit.\n",
+    assert_equal(designer + ' has completed the self audit review for the ' +
+                 @audit.design.part_number.pcb_display_name + 
+                 "\n\nYou can start your peer audit.\n",
                  response.body)
     assert_equal([@scott_g.email], response.to)
     assert_equal([Pcbtr::SENDER],  response.from)
@@ -167,13 +171,58 @@ class TrackerMailerTest < Test::Unit::TestCase
 
 
   ##############################################################################
+  def test_ftp_notification
+  
+    ftp_notification = ftp_notifications(:mx234a)
+    message  = "NO RESPONSE IS REQUIRED!\n"
+    message += "NOTIFICATION THAT FILES HAVE BEEN FTP'D TO VENDOR FOR BOARD FABRICATION\n"
+    message += "Date: " + Time.now.to_s + "\n"
+    message += "Division: " + ftp_notification.division.name + "\n"
+    message += "Assembly/BOM Number: " + ftp_notification.assembly_bom_number + "\n"
+    message += "Design Files Located at: /hwnet/" + ftp_notification.design_center.pcb_path
+    message += "/" + ftp_notification.design.name + "/public/\n"
+    message += "Files Size, Date, and Name: " + ftp_notification.file_data + "\n"
+    message += "Rev Date: " + ftp_notification.revision_date + "\n"
+    message += "Vendor: " + ftp_notification.fab_house.name + "\n"
+
+    response = TrackerMailer.create_ftp_notification(message,
+                                                     ftp_notification,
+                                                     @now)
+    
+    assert_equal(ftp_notification.design.part_number.pcb_display_name +
+                 ": Bare Board Files have been transmitted to " +
+                 ftp_notification.fab_house.name, 
+                 response.subject)
+    assert_equal(message, response.body)
+
+    reviewers = [ users(:espo),       users(:heng_k),
+                  users(:lisa_a),     users(:rich_a),
+                  users(:matt_d),     users(:jim_l),
+                  users(:anthony_g),  users(:tom_f),
+                  users(:lee_s) ].uniq.sort_by { |u| u.email }
+    to_list   = reviewers.collect { |u| u.email }      
+    assert_equal(to_list,          response.to.sort_by { |email| email })
+    assert_equal([Pcbtr::SENDER],  response.from)
+    assert_equal(@now.to_s,        response.date.to_s)
+    
+    response_cc = response.cc.sort_by { |address| address }
+    expected_cc = [@cathy_m.email,
+                   @bob_g.email,
+                   @jan_k.email].sort_by { |address| address }
+    assert_equal(expected_cc, response_cc)
+    
+  end
+
+
+  ##############################################################################
   def test_final_review_warning
   
     design = @audit.design
     
     response = TrackerMailer.create_final_review_warning(@audit.design, @now)
      
-    assert_equal("Notification of upcoming Final Review for #{@audit.design.name}", 
+    assert_equal('Notification of upcoming Final Review for ' +
+                 @audit.design.part_number.pcb_display_name, 
                  response.subject)
     assert_equal("Attention! Peer review is underway.  Final review/approval " +
                  "will be required in a few days.",
@@ -198,7 +247,7 @@ class TrackerMailerTest < Test::Unit::TestCase
   ##############################################################################
   def test_design_review_update
   
-    subject = "#{@mx234a_pre_art_dr.design.name}::" +
+    subject = "#{@mx234a_pre_art_dr.design.part_number.pcb_display_name}::" +
                 "#{@mx234a_pre_art_dr.review_type.name}"
                 
     #
@@ -306,7 +355,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     response_to = response.to.sort_by { |address| address }
     expected_to = @mx234a_pre_art_dr_emails
     
-    assert_equal("mx234a: Pre-Artwork Review is complete", 
+    assert_equal("252-234-a0 g: Pre-Artwork Review is complete", 
                  response.subject)
     assert_equal(expected_to,      response_to)
     assert_equal([Pcbtr::SENDER],  response.from)
@@ -330,7 +379,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     response_to = response.to.sort_by { |address| address }
     expected_to = @mx234a_final_dr_emails
     
-    assert_equal("mx234a: Final Review is complete", 
+    assert_equal("252-234-a0 g: Final Review is complete", 
                  response.subject)
     assert_equal(expected_to, response_to)
     assert_equal([Pcbtr::SENDER],  response.from)
@@ -357,7 +406,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     response_to = response.to.sort_by { |address| address }
     expected_to = @mx234a_release_dr_emails
     
-    assert_equal("mx234a: Release Review is complete", 
+    assert_equal("252-234-a0 g: Release Review is complete", 
                  response.subject)
     assert_equal(expected_to, response_to)
     assert_equal([Pcbtr::SENDER],  response.from)
@@ -393,7 +442,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     response_to = response.to.sort_by { |address| address }
     expected_to = @mx234a_pre_art_dr_emails
     
-    assert_equal("mx234a: The Pre-Artwork review has been posted", 
+    assert_equal("252-234-a0 g: The Pre-Artwork review has been posted", 
                  response.subject)
     assert_equal(expected_to, response_to)
     assert_equal([Pcbtr::SENDER],  response.from)
@@ -415,7 +464,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     response_to = response.to.sort_by { |address| address }
     expected_to = @mx234a_final_dr_emails
     
-    assert_equal("mx234a: The Final review has been reposted", 
+    assert_equal("252-234-a0 g: The Final review has been reposted", 
                  response.subject)
     assert_equal(expected_to, response_to)
     assert_equal([Pcbtr::SENDER],  response.from)
@@ -438,7 +487,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     response = TrackerMailer.create_ipd_update(@root_post,
                                                @now)
                  
-    assert_equal("mx234a [IPD] - mx234a Thread 1 subject", 
+    assert_equal("252-234-a0 g [IPD] - mx234a Thread 1 subject", 
                  response.subject)
                  
     response_to = response.to.sort_by { |address| address }
@@ -454,7 +503,9 @@ class TrackerMailerTest < Test::Unit::TestCase
     poster = User.find(@root_post.user_id)
     expected_cc << poster.email
     expected_cc += @root_post.direct_children.collect { |post| post.user.email }
+    expected_cc += @root_post.users.collect{ |user| user.email }
     expected_cc  = expected_cc.sort_by { |address| address }.uniq
+    
     assert_equal(expected_cc, response_cc)
     
   end
@@ -531,7 +582,7 @@ class TrackerMailerTest < Test::Unit::TestCase
                  @hweng_role,
                  @now)
                  
-    assert_equal("mx234a: You have been assigned to perform the Hardware Engineer (EE) review", 
+    assert_equal("252-234-a0 g: You have been assigned to perform the Hardware Engineer (EE) review", 
                  response.subject)
     response_to = response.to.sort_by { |address| address }
     expected_to = [@rich_a.email].sort_by { |address| address }.uniq
@@ -559,7 +610,7 @@ class TrackerMailerTest < Test::Unit::TestCase
                  @hweng_role,
                  @now)
                  
-    assert_equal("mx234a: The Hardware Engineer (EE) review has been reassigned to Lee Schaff", 
+    assert_equal("252-234-a0 g: The Hardware Engineer (EE) review has been reassigned to Lee Schaff", 
                  response.subject)
     response_to = response.to.sort_by { |address| address }
     expected_to = [@rich_a.email].sort_by { |address| address }.uniq
@@ -602,7 +653,8 @@ class TrackerMailerTest < Test::Unit::TestCase
                                                       @now)
                  
     assert_equal("A document has been attached for the " +
-                 @mx234a_stackup_doc.design.name + " design", 
+                 @mx234a_stackup_doc.design.part_number.pcb_display_name + 
+                 " design", 
                  response.subject)
     response_to = response.to.sort_by { |address| address }
     
@@ -641,9 +693,9 @@ class TrackerMailerTest < Test::Unit::TestCase
                                                  @rich_m,
                                                  @now)
                
-    expected_subj = @mx234a_final_dr.design.name +
-                    " PEER AUDIT: A comment has been entered that requires " +
-                    "your attention"  
+    expected_subj = @mx234a_final_dr.design.part_number.pcb_display_name +
+                    ' PEER AUDIT: A comment has been entered that requires ' +
+                    'your attention'  
     assert_equal(expected_subj, response.subject)
     
     response_to = response.to.sort_by { |address| address }
@@ -665,7 +717,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     expected_body    = comment + "\n\n\n" +
                        "NOTE: The design information is located at <%= Pcbtr::PCBTR_BASE_URL %>design_review/view/<%= @design_review_id%>"
                        
-    expected_subject = "The mx234a Pre-Artwork Design Review has been modified by Cathy McLaren"
+    expected_subject = "The 252-234-a0 g Pre-Artwork Design Review has been modified by Cathy McLaren"
 
     response = TrackerMailer.create_design_modification(@cathy_m,
                                                         @mx234a_pre_art_dr.design,
@@ -709,38 +761,318 @@ class TrackerMailerTest < Test::Unit::TestCase
   
   ##############################################################################
   def test_audit_team_updates
+    
+    teammate_list_updates =
+      { 'self' => [ { :action   => 'Added',
+                      :teammate => AuditTeammate.new(
+                                     :audit_id   => @audit.id,
+                                     :section_id => sections(:section_01_1),
+                                     :user_id    => @siva_e.id,
+                                     :self       => 1)},
+                    { :action   => 'Added',
+                      :teammate => AuditTeammate.new(
+                                     :audit_id   => @audit.id,
+                                     :section_id => sections(:section_01_2),
+                                     :user_id    => @rich_m.id,
+                                     :self       => 1)} ], 
+        'peer' => [ { :action   => 'Added',
+                      :teammate => AuditTeammate.new(
+                                     :audit_id   => @audit.id,
+                                     :section_id => sections(:section_01_1),
+                                     :user_id    => @scott_g.id,
+                                     :self       => 0)},
+                    { :action   => 'Added',
+                      :teammate => AuditTeammate.new(
+                                     :audit_id   => @audit.id,
+                                     :section_id => sections(:section_01_2),
+                                     :user_id    => @cathy_m.id,
+                                     :self       => 0)}] }
+
+    response = TrackerMailer.create_audit_team_updates(@bob_g,
+                                                       @audit,
+                                                       teammate_list_updates,
+                                                       @now)
+                 
+    assert_equal('The audit team for the ' + 
+                 @audit.design.part_number.pcb_display_name + ' has been updated', 
+                 response.subject)
+                 
+    response_to = response.to.sort_by { |address| address }
+    expected_to = [@scott_g.email, @rich_m.email, @cathy_m.email, @siva_e.email].sort
+    assert_equal(expected_to,     response_to)
+    assert_equal([Pcbtr::SENDER], response.from)
+    assert_equal(@now.to_s,       response.date.to_s)
+
+    expected_cc = [@bob_g.email, @jim_l.email, @cathy_m.email, @jan_k.email].sort
+    assert_equal(expected_cc, response.cc.sort.uniq)
+    
   end
   
   
   ##############################################################################
   def test_notify_design_review_skipped
+
+    response = TrackerMailer.create_notify_design_review_skipped(
+                 @mx234a_placement_dr,
+                 @mx234a_placement_dr.designer,
+                 @now)
+                
+    assert_equal(@mx234a_placement_dr.design.part_number.pcb_display_name +
+                 ': The ' + @mx234a_placement_dr.review_type.name +
+                  ' design review has been skipped', 
+                 response.subject)
+    response_to = response.to.sort_by { |address| address }
+    expected_to = [@jim_l.email, @cathy_m.email, @jan_k.email].sort
+    
+    assert_equal(expected_to, response_to)
+    assert_equal([Pcbtr::SENDER],  response.from)
+    assert_equal(@now.to_s,        response.date.to_s)
+    
+    response_cc = response.cc.sort_by { |address| address }
+    
+    expected_cc = [@bob_g.email]
+    assert_equal(expected_cc, response_cc)
+    
   end
   
   
   ##############################################################################
   def test_originator_board_design_entry_deletion
+
+    response = TrackerMailer.create_originator_board_design_entry_deletion(
+               '666-666-a0 b',
+               @lee_s,
+               @now)
+                
+    assert_equal('The 666-666-a0 b has been removed from the PCB Engineering ' +
+                 'Entry list', 
+                 response.subject)
+    response_to = response.to.sort_by { |address| address }
+    expected_to = [@cathy_m.email, @jan_k.email].sort
+    
+    assert_equal(expected_to, response_to)
+    assert_equal([Pcbtr::SENDER],  response.from)
+    assert_equal(@now.to_s,        response.date.to_s)
+    
+    response_cc = response.cc.sort_by { |address| address }
+    
+    expected_cc = [@lee_s.email, @jim_l.email].sort
+    assert_equal(expected_cc, response_cc)
+    
   end
   
   
   ##############################################################################
   def test_board_design_entry_return_to_originator
+
+    response = TrackerMailer.create_board_design_entry_return_to_originator(
+               board_design_entries(:la021c),
+               @cathy_m,
+               @now)
+                
+    assert_equal('The ' + board_design_entries(:la021c).part_number.pcb_display_name +
+                 ' design entry has been returned by PCB', 
+                 response.subject)
+    response_to = response.to.sort_by { |address| address }
+    expected_to = [@lee_s.email]
+    
+    assert_equal(expected_to, response_to)
+    assert_equal([Pcbtr::SENDER],  response.from)
+    assert_equal(@now.to_s,        response.date.to_s)
+    
+    response_cc = response.cc.sort_by { |address| address }
+    
+    expected_cc = [@cathy_m.email, @jan_k.email, @jim_l.email].sort
+    assert_equal(expected_cc, response_cc)
+    
   end
   
   
   ##############################################################################
   def test_board_design_entry_submission
+
+    response = TrackerMailer.create_board_design_entry_submission(
+               board_design_entries(:la021c),
+               @now)
+                
+    assert_equal('The ' + board_design_entries(:la021c).part_number.pcb_display_name +
+                 ' has been submitted for entry to PCB Design',
+                 response.subject)
+    response_to = response.to.sort_by { |address| address }
+    expected_to = [@cathy_m.email, @jan_k.email, @jim_l.email].sort
+    
+    assert_equal(expected_to, response_to)
+    assert_equal([Pcbtr::SENDER],  response.from)
+    assert_equal(@now.to_s,        response.date.to_s)
+    
+    response_cc = response.cc.sort_by { |address| address }
+    
+    expected_cc = [@lee_s.email].sort
+    assert_equal(expected_cc, response_cc)
+    
+  end
+  
+  
+  ##############################################################################
+  def test_reviewer_modification_notification
+
+    role = roles(:mechanical)
+    
+    response = TrackerMailer.create_reviewer_modification_notification(
+                 @mx234a_final_dr,
+                 role,
+                 users(:tom_f),
+                 users(:dave_l),
+                 users(:dave_l),
+                 @now)
+                
+    assert_equal(role.display_name + ' reviewer changed for ' +
+                 @mx234a_final_dr.design.part_number.pcb_display_name + ' ' +
+                 @mx234a_final_dr.review_type.name + ' Design Review',
+                 response.subject)
+    response_to = response.to.sort_by { |address| address }
+    expected_to = [users(:dave_l).email]
+    
+    assert_equal(expected_to, response_to)
+    assert_equal([Pcbtr::SENDER],  response.from)
+    assert_equal(@now.to_s,        response.date.to_s)
+    
+    response_cc = response.cc.sort_by { |address| address }
+    
+    expected_cc = [@cathy_m.email, 
+                   @jan_k.email, 
+                   @jim_l.email, 
+                   users(:tom_f).email].sort
+    assert_equal(expected_cc, response_cc)
+    
   end
   
   
   ##############################################################################
   def test_oi_assignment_notification
+    
+    oi_assignment = oi_assignments(:first)
+    oi_assignment_list = [oi_assignment]
+    response = TrackerMailer.create_oi_assignment_notification(
+                 oi_assignment_list,
+                 @now)
+                
+    assert_equal("Work Assignment Created for the " +
+                 oi_assignment.oi_instruction.design.part_number.pcb_display_name,
+                 response.subject)
+    response_to = response.to.sort_by { |address| address }
+    expected_to = [@siva_e.email]
+    
+    assert_equal(expected_to, response_to)
+    assert_equal([Pcbtr::SENDER],  response.from)
+    assert_equal(@now.to_s,        response.date.to_s)
+    
+    response_cc = response.cc.sort_by { |address| address }
+    
+    expected_cc = [@cathy_m.email, 
+                   @scott_g.email,
+                   @jan_k.email, 
+                   @jim_l.email, 
+                   @bala_g.email].sort
+    assert_equal(expected_cc, response_cc)
+    
   end
   
   
   ##############################################################################
   def test_oi_task_update
+    
+    oi_assignment = oi_assignments(:first)
+    response = TrackerMailer.create_oi_task_update(oi_assignment,
+                                                   @siva_e,
+                                                   'completed',
+                                                   'not' == 'reset',
+                                                   @now)
+                
+    assert_equal(oi_assignment.oi_instruction.design.part_number.pcb_display_name +
+                 ':: Work Assignment Update - Completed',
+                 response.subject)
+    response_to = response.to.sort_by { |address| address }
+    expected_to = [@scott_g.email]
+    
+    assert_equal(expected_to, response_to)
+    assert_equal([Pcbtr::SENDER],  response.from)
+    assert_equal(@now.to_s,        response.date.to_s)
+    
+    response_cc = response.cc.sort_by { |address| address }
+    
+    expected_cc = [@cathy_m.email, 
+                   @siva_e.email,
+                   @jan_k.email, 
+                   @jim_l.email, 
+                   @bala_g.email].sort
+    assert_equal(expected_cc, response_cc)
+
+    
+    response = TrackerMailer.create_oi_task_update(oi_assignment,
+                                                   @scott_g,
+                                                   'not' == 'completed',
+                                                   'reset',
+                                                   @now)
+                
+    assert_equal(oi_assignment.oi_instruction.design.part_number.pcb_display_name +
+                 ':: Work Assignment Update - Reopened',
+                 response.subject)
+    response_to = response.to.sort_by { |address| address }
+    expected_to = [@siva_e.email]
+    
+    assert_equal(expected_to, response_to)
+    assert_equal([Pcbtr::SENDER],  response.from)
+    assert_equal(@now.to_s,        response.date.to_s)
+    
+    response_cc = response.cc.sort_by { |address| address }
+    
+    expected_cc = [@cathy_m.email, 
+                   @scott_g.email,
+                   @jan_k.email, 
+                   @jim_l.email, 
+                   @bala_g.email].sort
+    assert_equal(expected_cc, response_cc)
+
   end
+ 
   
+   
+  ##############################################################################
+  def test_broadcast_message
+    
+    recipients       = [@bala_g, @scott_g, @cathy_m]
+    recipient_emails = recipients.collect { |user| user.email }
+    response = TrackerMailer.create_broadcast_message('This is a test',
+                                                      'Test Message!',
+                                                      recipients,
+                                                      'Test_User_Group',
+                                                      @now)
+                
+    assert_equal('This is a test',    response.subject)
+    assert_equal(['Test_User_Group'], response.to)
+    assert_equal([Pcbtr::SENDER],     response.from)
+    assert_equal(@now.to_s,           response.date.to_s)
+    assert_equal(recipient_emails,    response.bcc)
+    assert_nil(response.cc)
+
+
+    recipients = [  @jan_k, @bob_g, @jim_l, @rich_a ]
+    recipient_emails = recipients.collect { |user| user.email }
+    response = TrackerMailer.create_broadcast_message('This is a test',
+                                                      'Test Message!',
+                                                      recipients,
+                                                      @now)
+                
+    assert_equal('This is a test',             response.subject)
+#    assert_equal(['PCB_Design_Tracker_Users'], response.to)
+    assert_equal([Pcbtr::SENDER],              response.from)
+    assert_equal(@now.to_s,                    response.date.to_s)
+    assert_equal(recipient_emails,             response.bcc)
+    assert_nil(response.cc)
+
+  end
+
 
   private
     def read_fixture(action)

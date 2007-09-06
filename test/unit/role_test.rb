@@ -143,27 +143,83 @@ class RoleTest < Test::Unit::TestCase
 
 
   ######################################################################
-  def test_get_review_roles
-  
-    all_roles      = Role.find(:all, :order => 'display_name')
-    reviewer_roles = Role.get_review_roles
+  def test_roles
+
+    expected_review_roles = [ roles(:hweng),    roles(:compliance_emc),
+                              roles(:ce_dft),   roles(:dfm),
+                              roles(:tde),      roles(:mechanical),
+                              roles(:valor),    roles(:mechanical_manufacturing),
+                              roles(:planning), roles(:pcb_input_gate),
+                              roles(:library),  roles(:pcb_mechanical),
+                              roles(:slm_bom),  roles(:slm_vendor),
+                              roles(:compliance_safety)].sort_by { |r| r.display_name }
+
+    review_roles = Role.get_review_roles
+    assert_equal(expected_review_roles.size, review_roles.size)
+    review_roles.each_with_index do |role, i|
+      assert_equal(expected_review_roles[i], role)
+    end
+
+    expected_defaulted_review_roles = [ roles(:compliance_emc),
+                                        roles(:valor),
+                                        roles(:pcb_input_gate),
+                                        roles(:library),  
+                                        roles(:pcb_mechanical),
+                                        roles(:compliance_safety),  
+                                        roles(:slm_vendor),
+                                        roles(:slm_bom) ].sort_by { |r| r.display_name }
+
+    defaulted_review_roles = Role.get_defaulted_reviewer_roles
+    assert_equal(expected_defaulted_review_roles.size,
+                 defaulted_review_roles.size)
+    defaulted_review_roles.each_with_index do |role, i|
+      assert_equal(expected_defaulted_review_roles[i], role)
+    end
     
-    assert(all_roles.size > reviewer_roles.size)
+    expected_open_review_roles = [ roles(:dfm),       roles(:ce_dft),
+                                   roles(:hweng),     roles(:mechanical), 
+                                   roles(:mechanical_manufacturing),
+                                   roles(:tde),
+                                   roles(:planning) ].sort_by { |r| r.display_name }
+
+    open_review_roles = Role.get_open_reviewer_roles
+    assert_equal(expected_open_review_roles.size, open_review_roles.size)
+    open_review_roles.each_with_index do |role, i|
+      assert_equal(expected_open_review_roles[i], role)
+    end
     
-    # Remove all of the non-reviewer roles from the original list, 
-    # all _roles, and verify that the remaining list matches the one
-    # returned by get_review_roles()
-    all_roles.delete_if { |r| !r.reviewer? }
-    assert(all_roles == reviewer_roles)
+    expected_manager_review_roles = [ roles(:hweng_manager),
+                                      roles(:pcb_design),
+                                      roles(:operations_manager),
+                                      roles(:program_manager) ].sort_by { |r| r.display_name }
+
+    manager_review_roles = Role.get_manager_review_roles
+    assert_equal(expected_manager_review_roles.size, manager_review_roles.size)
+    manager_review_roles.each_with_index do |role, i|
+      assert_equal(expected_manager_review_roles[i], role)
+    end
     
-    role_name = ''
-    reviewer_roles.each do |role|
-      assert(role.active?)
-      assert(role.reviewer?)
-      assert(role.display_name >= role_name)
-      role_name = role.display_name
-    end 
-   
+    expected_defaulted_manager_review_roles = [ roles(:pcb_design) ].sort_by { |r| r.display_name }
+
+    defaulted_manager_review_roles = Role.get_defaulted_manager_reviewer_roles
+    assert_equal(expected_defaulted_manager_review_roles.size,
+                 defaulted_manager_review_roles.size)
+    defaulted_manager_review_roles.each_with_index do |role, i|
+      assert_equal(expected_defaulted_manager_review_roles[i], role)
+    end
+
+    
+    expected_open_manager_review_roles = [ roles(:hweng_manager),
+                                           roles(:operations_manager),
+                                           roles(:program_manager) ].sort_by { |r| r.display_name }
+
+    open_manager_review_roles = Role.get_open_manager_reviewer_roles
+    assert_equal(expected_open_manager_review_roles.size,
+                 open_manager_review_roles.size)
+    open_manager_review_roles.each_with_index do |role, i|
+      assert_equal(expected_open_manager_review_roles[i], role)
+    end
+    
   end
 
 

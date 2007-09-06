@@ -15,7 +15,10 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class CheckTest < Test::Unit::TestCase
   fixtures :checks,
-           :designs
+           :checklists,
+           :designs,
+           :sections,
+           :subsections
 
   def setup
     @check = Check.find(checks(:check_18).id)
@@ -48,25 +51,6 @@ class CheckTest < Test::Unit::TestCase
   end
   
   ######################################################################
-  def test_create
-    assert_kind_of Check,  @check
-
-    check_18 = checks(:check_18)
-    assert_equal check_18.id,              @check.id
-    assert_equal check_18.section_id,      @check.section_id
-    assert_equal check_18.subsection_id,   @check.subsection_id
-    assert_equal check_18.title,           @check.title
-    assert_equal check_18.check,           @check.check
-    assert_equal check_18.url,             @check.url
-    assert_equal check_18.full_review,     @check.full_review
-    assert_equal check_18.date_code_check, @check.date_code_check
-    assert_equal check_18.dot_rev_check,   @check.dot_rev_check
-    assert_equal check_18.sort_order,      @check.sort_order
-    assert_equal check_18.check_type,      @check.check_type
-  end
-  
-  
-  ######################################################################
   def test_accessors
   
     check_01 = checks(:check_01)
@@ -89,38 +73,126 @@ class CheckTest < Test::Unit::TestCase
 
 
   ######################################################################
-  def test_update
+  def test_insert
+    
+    checklist  = Checklist.new
+    checklist.save
+    section    = Section.new( :checklist_id => checklist.id )
+    section.save
+    subsection = Subsection.new( :section_id => section.id )
+    subsection.save
+    
+    assert_equal(0, subsection.checks.size)
+    
+    first_check = Check.new( :title         => 'First Check Title',
+                             :check         => 'First Check',
+                             :subsection_id => subsection.id )
+    first_check.insert(subsection.id, 1)
 
-    assert_equal checks(:check_18).id, @check.id
+    subsection.reload
+    first_check.reload
+    assert_equal(1, subsection.checks.size)
+    assert_equal(1, first_check.position)
+    assert(first_check.errors.empty?)
+    
+    new_first_check = Check.new( :title         => 'New First Check Title',
+                                 :check         => 'New First Check',
+                                 :subsection_id => subsection.id )
+    new_first_check.insert(subsection.id, first_check.position)
 
-    @check.title           = "Check One"
-    @check.check           = "Check One Information"
-    @check.url             = "www.disney.com"
-    @check.full_review     = 0
-    @check.date_code_check = 0
-    @check.dot_rev_check   = 0
-    @check.sort_order      = 3
-    @check.check_type      = "yes_no"
+    subsection.reload
+    new_first_check.reload
+    first_check.reload
+    assert_equal(2, subsection.checks.size)
+    assert_equal(1, new_first_check.position)
+    assert_equal(2, first_check.position)
+    assert(new_first_check.errors.empty?)
+    
+    new_second_check = Check.new( :title         => 'New Second Check Title',
+                                  :check         => 'New Second Check',
+                                  :subsection_id => subsection.id )
+    new_second_check.insert(subsection.id, first_check.position)
 
-    assert @check.save
-    @check.reload 
-
-    assert_equal "Check One",             @check.title
-    assert_equal "Check One Information", @check.check
-    assert_equal "www.disney.com",        @check.url
-    assert_equal 0,                       @check.full_review
-    assert_equal 0,                       @check.date_code_check
-    assert_equal 0,                       @check.dot_rev_check
-    assert_equal 3,                       @check.sort_order
-    assert_equal "yes_no",                @check.check_type
-
+    subsection.reload
+    new_second_check.reload
+    new_first_check.reload
+    first_check.reload
+    assert_equal(3, subsection.checks.size)
+    assert_equal(1, new_first_check.position)
+    assert_equal(2, new_second_check.position)
+    assert_equal(3, first_check.position)
+    assert(new_second_check.errors.empty?)
+    
   end
 
 
   ######################################################################
-  def test_destroy
-    @check.destroy
-    assert_raise(ActiveRecord::RecordNotFound) { Check.find(checks(:check_18).id) }
+  def test_remove
+
+    check_02    = checks(:check_02)
+    subsection  = check_02.subsection
+    section     = subsection.section
+    checklist   = section.checklist
+    check_count = subsection.checks.size
+    
+    assert_equal(6, checklist.designer_only_count)
+    assert_equal(5, checklist.designer_auditor_count)
+    assert_equal(0, checklist.dc_designer_only_count)
+    assert_equal(3, checklist.dc_designer_auditor_count)
+    assert_equal(0, checklist.dr_designer_only_count)
+    assert_equal(3, checklist.dr_designer_auditor_count)
+    
+    total_checks = Check.count
+
+    result = check_02.remove
+    assert(result)
+    
+    check_count -= 1
+    subsection.reload
+    assert_equal(check_count, subsection.checks.size)
+
+    subsection.checks.each_with_index do |check, i|
+      assert_equal(i+1, check.position)
+    end
+    
+    checklist.reload
+    assert_equal(6, checklist.designer_only_count)
+    assert_equal(4, checklist.designer_auditor_count)
+    assert_equal(0, checklist.dc_designer_only_count)
+    assert_equal(2, checklist.dc_designer_auditor_count)
+    assert_equal(0, checklist.dr_designer_only_count)
+    assert_equal(2, checklist.dr_designer_auditor_count)
+
   end
+  
+  
+  ######################################################################
+  def test_released
+    
+    check_2744    = checks(:check_2744)
+
+    assert(check_2744.locked?)
+    
+    check_2744.checklist.released = 0
+    assert(!check_2744.locked?)
+    
+  end
+ 
+ 
+  ######################################################################
+  def test_short_cuts
+    
+    check = Check.new
+    assert_nil(check.section)
+    assert_nil(check.checklist)
+    
+    check_2744    = checks(:check_2744)
+    section_331   = sections(:section_331)
+    checklist_101 = checklists(:checklists_101)
+    assert_equal(section_331,   check_2744.section)
+    assert_equal(checklist_101, check_2744.checklist)
+    
+  end
+
 
 end

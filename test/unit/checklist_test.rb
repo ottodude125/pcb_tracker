@@ -23,42 +23,6 @@ class ChecklistTest < Test::Unit::TestCase
     @checklist = Checklist.find(checklists(:checklist_0_1).id)
   end
 
-  def test_create
-
-    assert_kind_of Checklist,  @checklist
-
-    checklist_0_1 = checklists(:checklist_0_1)
-    assert_equal(checklist_0_1.id,  @checklist.id)
-    assert_equal(checklist_0_1.major_rev_number,
-                 @checklist.major_rev_number)
-    assert_equal(checklist_0_1.minor_rev_number,
-                 @checklist.minor_rev_number)
-    assert_equal(checklist_0_1.released,
-                 @checklist.released)
-    assert_equal(checklist_0_1.used,
-                 @checklist.used)
-    assert_equal(checklist_0_1.released_on,
-                 @checklist.released_on)
-    assert_equal(checklist_0_1.released_by,
-                 @checklist.released_by)
-    assert_equal(checklist_0_1.created_on,
-                 @checklist.created_on)
-    assert_equal(checklist_0_1.created_by,
-                 @checklist.created_by)
-    assert_equal(checklist_0_1.designer_only_count,
-                 @checklist.designer_only_count)
-    assert_equal(checklist_0_1.designer_auditor_count,
-                 @checklist.designer_auditor_count)
-    assert_equal(checklist_0_1.dc_designer_only_count,
-                 @checklist.dc_designer_only_count)
-    assert_equal(checklist_0_1.dc_designer_auditor_count,
-                 @checklist.dc_designer_auditor_count)
-    assert_equal(checklist_0_1.dr_designer_only_count,
-                 @checklist.dr_designer_only_count)
-    assert_equal(checklist_0_1.dr_designer_auditor_count,
-                 @checklist.dr_designer_auditor_count)
-  end
-
   def test_update
 
     @checklist.major_rev_number = 4
@@ -193,6 +157,87 @@ class ChecklistTest < Test::Unit::TestCase
       i += 1
     end
   end
+  
+  
+  def test_release
+    
+    # Remove any existing released checklists.
+    released_checklists = Checklist.find(:all, :conditions => "released=1")
+    released_checklists.each { |checklist| checklist.destroy }
+    
+    # There are no released checklists - a new checklist should be returned.
+    released_checklist = Checklist.latest_release
+    assert_nil(released_checklist.id)
+    assert(!released_checklist.released?)
+    assert(!released_checklist.locked?)
+    
+    checklist = Checklist.find(:first)
+    message   = checklist.release
+    assert_equal('Checklist successfully released', message)
+    
+    # The checklist that was just released should be returned.
+    released_checklist = Checklist.latest_release
+    assert_not_nil(released_checklist.id)
+    assert_equal(0, released_checklist.minor_rev_number)
+    assert_equal(1, released_checklist.major_rev_number)
+    assert(released_checklist.released?)
+    assert(released_checklist.locked?)
+    
+  end
+  
+  
+  def test_remove
+    
+    checklist_101    = checklists(:checklists_101)
+    checklist_101_id = checklist_101.id
+    assert(checklist_101.locked?)
+    
+    checklist_101.released = 0
+    checklist_101.update
+    
+    assert(!checklist_101.locked?)
+    
+    total_checks      = Check.count
+    total_subsections = Subsection.count
+    total_sections    = Section.count
+    total_checklists  = Checklist.count
+    
+    ids = { :checks      => [],
+            :subsections => [],
+            :sections    => [] }
+            
+    checklist_101.sections.each do |section|
+      ids[:sections] << section.id
+      section.subsections.each do |subsection|
+        ids[:subsections] << subsection.id
+        subsection.checks.each do |check|
+          ids[:checks] << check.id
+        end
+      end
+    end
+    
+    assert(checklist_101.remove)
+    
+    total_checks      -= ids[:checks].size
+    total_subsections -= ids[:subsections].size
+    total_sections    -= ids[:sections].size
+    
+    assert_equal(total_checks,       Check.count)
+    assert_equal(total_subsections,  Subsection.count)
+    assert_equal(total_sections,     Section.count)
+    assert_equal(total_checklists-1, Checklist.count)
+    
+    all_checks      = Check.find(:all)
+    all_subsections = Subsection.find(:all)
+    all_sections    = Section.find(:all)
+    all_checklists  = Checklist.find(:all)
+    ids[:checks].each { |id| assert(!all_checks.detect { |c| c.id == id }) }
+    ids[:subsections].each { |id| assert(!all_subsections.detect { |ss| ss.id == id })}
+    ids[:sections].each { |id| assert(!all_sections.detect { |s| s.id == id })}
+    assert(!all_checklists.detect { |cl| cl.id == checklist_101_id })
+    
+  end
+  
   
 
   def test_destroy

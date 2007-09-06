@@ -79,7 +79,7 @@ class PrefixTest < Test::Unit::TestCase
     av = prefixes(:av)
     
     assert_equal('959-021-b2', av.pcb_number('021', 'b', '2'))
-    assert_equal('956-021-12', av.pcb_a_part_number('021', 'b', '2'))
+    assert_equal('956-021-00', av.pcb_a_part_number('021', 'b', '2'))
   
   end
   

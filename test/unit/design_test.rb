@@ -168,9 +168,9 @@ class DesignTest < Test::Unit::TestCase
    assert_equal('High', design.priority_name)
    
    
-   assert_equal('mx234a',       designs(:mx234a).name)
-   assert_equal('la453a2',      designs(:la453a2).name)
-   assert_equal('la453b4_eco2', designs(:la453b4_eco2).name)
+   assert_equal('252-234-a0 g', designs(:mx234a).part_number.pcb_display_name)
+   assert_equal('942-453-a2 y', designs(:la453a2).part_number.pcb_display_name)
+   assert_equal('942-453-b4 y', designs(:la453b4_eco2).part_number.pcb_display_name)
    
    
    section_all        = Section.new(:full_review     => 1,

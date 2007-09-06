@@ -1,59 +1,173 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class SubsectionTest < Test::Unit::TestCase
-  fixtures :subsections
-
-  def setup
-    @subsection = Subsection.find(subsections(:subsection_01_2_1).id)
-  end
-
-  def test_create
-    assert_kind_of Subsection,  @subsection
-
-    subsection_01_2_1 = subsections(:subsection_01_2_1)
+  
+  
+  fixtures :checklists,
+           :checks,
+           :sections,
+           :subsections
+  
+  
+  ######################################################################
+  def test_designer_auditor_checks
     
-    assert_equal(subsection_01_2_1.id,           @subsection.id)
-    assert_equal(subsection_01_2_1.checklist_id, @subsection.checklist_id)
-    assert_equal(subsection_01_2_1.section_id,	 @subsection.section_id)
-    assert_equal(subsection_01_2_1.name,         @subsection.name)
-    assert_equal(subsection_01_2_1.note,         @subsection.note)
-    assert_equal(subsection_01_2_1.url,          @subsection.url)
-    assert_equal(subsection_01_2_1.sort_order,   @subsection.sort_order)
-    assert_equal(subsection_01_2_1.date_code_check,
-                 @subsection.date_code_check)
-    assert_equal(subsection_01_2_1.dot_rev_check,
-                 @subsection.dot_rev_check)
-    assert_equal(subsection_01_2_1.full_review,
-                 @subsection.full_review)
+    subsection = checks(:check_2744).subsection
+    assert_equal(13, subsection.designer_auditor_checks)
+    assert_equal( 0, Subsection.new.designer_auditor_checks)
+    
   end
 
-  def test_update
 
-    assert_equal(subsections(:subsection_01_2_1).id, @subsection.id)
+  ######################################################################
+  def test_insert
+    
+    checklist  = Checklist.new
+    checklist.save
+    section    = Section.new( :checklist_id => checklist.id )
+    section.save
+    
+    assert_equal(0, section.subsections.size)
+    
+    first_subsection = Subsection.new( :name       => 'First Subsection Name',
+                                       :note       => 'First Subsection Note',
+                                       :section_id => section.id )
+    first_subsection.insert(section.id, 1)
 
-    @subsection.name = "Subsection One"
-    @subsection.note = "Subsection One Note"
-    @subsection.url  = "www.pirateball.com"
-    @subsection.sort_order      = 2
-    @subsection.date_code_check = 0
-    @subsection.dot_rev_check   = 0
-    @subsection.full_review     = 0
+    section.reload
+    first_subsection.reload
+    assert_equal(1, section.subsections.size)
+    assert_equal(1, first_subsection.position)
+    assert(first_subsection.errors.empty?)
+    
+    new_first_subsection = Subsection.new( :name       => 'New First Subsection Name',
+                                           :note       => 'New First Subsection Note',
+                                           :section_id => section.id )
+    new_first_subsection.insert(section.id, first_subsection.position)
 
-    assert @subsection.save
-    @subsection.reload
+    section.reload
+    new_first_subsection.reload
+    first_subsection.reload
+    assert_equal(2, section.subsections.size)
+    assert_equal(1, new_first_subsection.position)
+    assert_equal(2, first_subsection.position)
+    assert(new_first_subsection.errors.empty?)
+    
+    new_second_subsection = Subsection.new( :name       => 'New Second Check Title',
+                                            :note       => 'New Second Check',
+                                            :section_id => section.id )
+    new_second_subsection.insert(section.id, first_subsection.position)
 
-    assert_equal("Subsection One",      @subsection.name)
-    assert_equal("Subsection One Note", @subsection.note)
-    assert_equal("www.pirateball.com",  @subsection.url)
-    assert_equal(2, @subsection.sort_order)
-    assert_equal(0, @subsection.date_code_check)
-    assert_equal(0, @subsection.dot_rev_check)
-    assert_equal(0, @subsection.full_review)
+    section.reload
+    new_second_subsection.reload
+    new_first_subsection.reload
+    first_subsection.reload
+    assert_equal(3, section.subsections.size)
+    assert_equal(1, new_first_subsection.position)
+    assert_equal(2, new_second_subsection.position)
+    assert_equal(3, first_subsection.position)
+    assert(new_second_subsection.errors.empty?)
+    
+  end
+
+
+  ######################################################################
+  def test_remove
+    
+    checklist = Checklist.find(subsections(:subsection_01_1_1).checklist.id)
+    assert_equal(6, checklist.designer_only_count)
+    assert_equal(5, checklist.designer_auditor_count)
+    assert_equal(0, checklist.dc_designer_only_count)
+    assert_equal(3, checklist.dc_designer_auditor_count)
+    assert_equal(0, checklist.dr_designer_only_count)
+    assert_equal(3, checklist.dr_designer_auditor_count)
+
+    subsection_01_1_1 = subsections(:subsection_01_1_1)
+    subsection_01_1_2 = subsections(:subsection_01_1_2)
+    section                    = subsection_01_1_1.section
+    checklist                  = section.checklist
+    subsection_count           = section.subsections.size
+    
+    subsection_01_1_1_check_count = subsection_01_1_1.checks.size
+    subsection_01_1_2_check_count = subsection_01_1_2.checks.size
+    check_count                   = Check.count
+    
+    assert_equal(2, section.subsections.size)
+    assert_equal(1, subsection_01_1_1.position)
+    assert_equal(2, subsection_01_1_2.position)
+   
+    assert(subsection_01_1_1.remove)
+
+    section.reload
+    subsection_01_1_2.reload
+    subsection_count -= 1
+    assert_equal(subsection_count, section.subsections.size)
+    assert_equal(1, subsection_01_1_2.position)
+
+    check_count -= subsection_01_1_1_check_count
+    assert_equal(check_count, Check.count)
+
+    checklist.reload
+    assert_equal(6, checklist.designer_only_count)
+    assert_equal(3, checklist.designer_auditor_count)
+    assert_equal(0, checklist.dc_designer_only_count)
+    assert_equal(0, checklist.dc_designer_auditor_count)
+    assert_equal(0, checklist.dr_designer_only_count)
+    assert_equal(0, checklist.dr_designer_auditor_count)
+    
+
+    assert(subsection_01_1_2.remove)
+
+    section.reload
+    check_count -= subsection_01_1_2_check_count
+    assert_equal(0,           section.subsections.size)
+    assert_equal(check_count, Check.count)
+
+    checklist.reload
+    assert_equal(3, checklist.designer_only_count)
+    assert_equal(3, checklist.designer_auditor_count)
+    assert_equal(0, checklist.dc_designer_only_count)
+    assert_equal(0, checklist.dc_designer_auditor_count)
+    assert_equal(0, checklist.dr_designer_only_count)
+    assert_equal(0, checklist.dr_designer_auditor_count)
+
+    subsection_01_2_1             = subsections(:subsection_01_2_1)
+    subsection_01_2_1_check_count = subsection_01_2_1.checks.size
+    section                       = subsection_01_2_1.section
+
+    assert_equal(3, section.subsections.size)
+    assert_equal(3, subsection_01_2_1_check_count)
+
+    assert(subsection_01_2_1.remove)
+
+    section.reload
+    check_count -= subsection_01_2_1_check_count
+    assert_equal(2,           section.subsections.size)
+    assert_equal(check_count, Check.count)
+
+    checklist.reload
+    assert_equal(0, checklist.designer_only_count)
+    assert_equal(3, checklist.designer_auditor_count)
+    assert_equal(0, checklist.dc_designer_only_count)
+    assert_equal(0, checklist.dc_designer_auditor_count)
+    assert_equal(0, checklist.dr_designer_only_count)
+    assert_equal(0, checklist.dr_designer_auditor_count)
 
   end
 
-  def test_destroy
-    @subsection.destroy
-    assert_raise(ActiveRecord::RecordNotFound) { Subsection.find(@subsection.id) }
+
+  ######################################################################
+  def test_short_cuts
+    
+    assert_nil(Subsection.new.checklist)
+    
+    subsection    = checks(:check_2744).subsection
+    section_331   = sections(:section_331)
+    checklist_101 = checklists(:checklists_101)
+    assert_equal(section_331,   subsection.section)
+    assert_equal(checklist_101, subsection.checklist)
+
   end
+
+
 end
