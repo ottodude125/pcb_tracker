@@ -19,11 +19,11 @@
     </tr>
     <tr>
       <td align="right"><b>Section:</b></td>
-      <td><%= @check.section.name %></td>
+      <td><%= @section.name %></td>
       <th align="left">Full Audits:</th>
 
       <td align="center">
-        <% if @check.section.full_review == 1 %>
+        <% if @section.full_review == 1 %>
           Yes
         <% else %>
           No
@@ -36,7 +36,7 @@
       <th align="left">Date Code Audits:</th>
 
       <td align="center">
-        <% if @check.section.date_code_check == 1 %>
+        <% if @section.date_code_check == 1 %>
           Yes
         <% else %>
           No
@@ -49,7 +49,7 @@
       <th align="left">Dot Rev Audits:</th>
 
       <td align="center">
-        <% if @check.section.dot_rev_check == 1 %>
+        <% if @section.dot_rev_check == 1 %>
           Yes
         <% else %>
           No
@@ -184,7 +184,7 @@
 
   <hr class="div" />
 
-  <% if @check.section.checklist.released == 0 %>
+  <% if @section.checklist.released == 0 %>
     <input type="submit" value="Update" />
   <% else %>
     <input type="submit" disabled="disabled" value="LOCKED - Checklist Released" />
