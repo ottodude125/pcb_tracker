@@ -5,7 +5,7 @@ section_01_1:
   name: section_01_1
   url: www.google.com
   background_color: f3f3f3
-  sort_order: 1
+  position: 1
   date_code_check: 1
   dot_rev_check: 1
   full_review: 1
@@ -15,7 +15,7 @@ section_01_2:
   name: section_01_2
   url: www.boston.com
   background_color: 030303
-  sort_order: 2
+  position: 2
   date_code_check: 0
   dot_rev_check: 0
   full_review: 1
@@ -25,7 +25,7 @@ section_01_3:
   name: section_01_3
   url: www.boston.com
   background_color: 131313
-  sort_order: 3
+  position: 3
   date_code_check: 1
   dot_rev_check: 1
   full_review: 1
@@ -35,7 +35,7 @@ section_10_1:
   name: section_10_1
   url: www.dogpile.com
   background_color: 000000
-  sort_order: 1
+  position: 1
   date_code_check: 1
   dot_rev_check: 1
   full_review: 1
@@ -45,7 +45,7 @@ section_10_1_5:
   name: section_10_1_5
   url: www.dogpile.com
   background_color: 030303
-  sort_order: 4
+  position: 4
   date_code_check: 1
   dot_rev_check: 1
   full_review: 0
@@ -55,7 +55,7 @@ section_10_2:
   name: section_10_2
   url: www.dogpile.com
   background_color: 343434
-  sort_order: 3
+  position: 3
   date_code_check: 0
   dot_rev_check: 0
   full_review: 1
@@ -65,7 +65,7 @@ section_20_000:
   name: section_20_000
   url: www.dogpile.com
   background_color: 343434
-  sort_order: 1
+  position: 1
   date_code_check: 1
   dot_rev_check: 1
   full_review: 1
@@ -75,7 +75,7 @@ section_20_001:
   name: section_20_001
   url: www.dogpile.com
   background_color: 343434
-  sort_order: 2
+  position: 2
   date_code_check: 1
   dot_rev_check: 1
   full_review: 1
@@ -85,7 +85,7 @@ section_337:
   background_color: FF97FD
   name: Nomenclature
   full_review: "1"
-  sort_order: "9"
+  position: "9"
   checklist_id: "101"
   dot_rev_check: "0"
   url: ""
@@ -95,7 +95,7 @@ section_338:
   background_color: E935F7
   name: BOM
   full_review: "1"
-  sort_order: "10"
+  position: "10"
   checklist_id: "101"
   dot_rev_check: "0"
   url: ""
@@ -105,7 +105,7 @@ section_339:
   background_color: 1DCF13
   name: Assembly Drawing Check
   full_review: "1"
-  sort_order: "11"
+  position: "11"
   checklist_id: "101"
   dot_rev_check: "0"
   url: ""
@@ -115,7 +115,7 @@ section_340:
   background_color: 2BA4E7
   name: Schematic Drawing Check
   full_review: "1"
-  sort_order: "12"
+  position: "12"
   checklist_id: "101"
   dot_rev_check: "0"
   url: ""
@@ -125,7 +125,7 @@ section_341:
   background_color: 2DCF8F
   name: PCB Design Database Validation Audit
   full_review: "1"
-  sort_order: "14"
+  position: "14"
   checklist_id: "101"
   dot_rev_check: "1"
   url: ""
@@ -135,7 +135,7 @@ section_330:
   background_color: CF572D
   name: Design Report Check
   full_review: "1"
-  sort_order: "13"
+  position: "13"
   checklist_id: "101"
   dot_rev_check: "1"
   url: ""
@@ -145,7 +145,7 @@ section_342:
   background_color: 2DCF8F
   name: README
   full_review: "1"
-  sort_order: "15"
+  position: "15"
   checklist_id: "101"
   dot_rev_check: "1"
   url: etg.teradyne.com/boarddev/mfggate/bareboardTech/Readme
@@ -155,7 +155,7 @@ section_331:
   background_color: B7B7B7
   name: Fabrication Drawing Check
   full_review: "1"
-  sort_order: "8"
+  position: "8"
   checklist_id: "101"
   dot_rev_check: "1"
   url: ""
@@ -165,7 +165,7 @@ section_343:
   background_color: 2DCF8F
   name: PCB Design Directory
   full_review: "1"
-  sort_order: "16"
+  position: "16"
   checklist_id: "101"
   dot_rev_check: "1"
   url: ""
@@ -175,7 +175,7 @@ section_332:
   background_color: FFFF77
   name: Placement
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   checklist_id: "101"
   dot_rev_check: "0"
   url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
@@ -185,7 +185,7 @@ section_344:
   background_color: A8E78F
   name: Board Preparation
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   checklist_id: "101"
   dot_rev_check: "1"
   url: ""
@@ -195,7 +195,7 @@ section_333:
   background_color: 95EFE5
   name: Design Constraints
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   checklist_id: "101"
   dot_rev_check: "0"
   url: ""
@@ -205,7 +205,7 @@ section_345:
   background_color: A8a78F
   name: Outline Drawing and Allegro Board Symbol
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   checklist_id: "101"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/
@@ -215,7 +215,7 @@ section_334:
   background_color: 95EFE5
   name: Vias
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   checklist_id: "101"
   dot_rev_check: "0"
   url: ""
@@ -225,7 +225,7 @@ section_335:
   background_color: F78e54
   name: Route - Signal
   full_review: "1"
-  sort_order: "6"
+  position: "6"
   checklist_id: "101"
   dot_rev_check: "0"
   url: ""
@@ -235,7 +235,7 @@ section_336:
   background_color: F78E54
   name: Route - Planes
   full_review: "1"
-  sort_order: "7"
+  position: "7"
   checklist_id: "101"
   dot_rev_check: "0"
   url: ""
