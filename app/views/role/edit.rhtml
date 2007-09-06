@@ -19,7 +19,7 @@
 
   <table border="0">
     <tr>
-      <td align="right">Role (Internal Name): </td>
+      <td align="right" class="teraheader">Role (Internal Name): </td>
       <% if mode == 'add' %>
         <td align="left">
           <%= text_field "role", "name", "size" => 30, "maxlength" => 30 %>
@@ -29,7 +29,7 @@
       <% end %>
     </tr>
     <tr>
-      <td align="right">
+      <td align="right" class="teraheader">
         <label for="display_name">Display Name: </label>
       </td>
       <td align="left">
@@ -37,30 +37,60 @@
       </td>
     </tr>
     <tr>
-      <td align="right">Reviewer: </td>
-      <td align="left"><%= check_box "role", "reviewer" %></td>
+      <td align="right" class="teraheader">Reviewer: </td>
+	  <td align="left">
+	  	<%= check_box "role", "reviewer" %>
+        <%= observe_field("role_reviewer",
+                          :update => "reviewer",
+                          :url => { :action        => :toggle_reviewer_selection,
+                                    :role_id       => @role.id,
+                                    :value         => "'value=' + escape(value)"}) %>
+	  </td>
+	  <td>
+        <div id="reviewer">
+          <% if @role.reviewer? %>
+			<table>
+			  <tr>
+     	        <td align="right" class="teraheader">Default Reviewer:</td>
+				<td>
+                  <select id="role" name="default_reviewer_id"
+                          class="name_select">
+                    <% if @role.default_reviewer_id == 0 %>
+                      <option value="">None Selected</option>
+                    <% end %>
+                    <%= options_from_collection_for_select(@role.active_users,
+                                                           "id",
+                                                           "last_name_first",
+                                                           @role.default_reviewer_id) %>
+                  </select>
+				</td>
+			  </tr>
+			</table>
+	      <% end %>
+        </div>
+      </td>
     </tr>
     <tr>
-      <td align="right">Manager: </td>
+      <td align="right" class="teraheader">Manager: </td>
       <td align="left"><%= check_box "role", "manager" %></td>
     </tr>
     <tr>
-      <td align="right">Active: </td> 
+      <td align="right" class="teraheader">Active: </td> 
       <td align="left"><%= check_box "role", "active" %></td>
     </tr>
     <tr>
       <th align="left">Include in the following reviews:</th>
     </tr>
     <tr>
-      <td align="right">New: </td> 
+      <td align="right" class="teraheader">New: </td> 
       <td align="left"><%= check_box "role", "new_design_type" %></td>
     </tr>
     <tr>
-      <td align="right">Date Code: </td> 
+      <td align="right" class="teraheader">Date Code: </td> 
       <td align="left"><%= check_box "role", "date_code_design_type" %></td>
     </tr>
     <tr>
-      <td align="right">Dot Rev: </td> 
+      <td align="right" class="teraheader">Dot Rev: </td> 
       <td align="left"><%= check_box "role", "dot_rev_design_type" %></td>
     </tr>
   </table>
@@ -76,4 +106,4 @@
 
 <%= end_form_tag %>
 
-<%# debug mode %>
+<%# debug @role %>
