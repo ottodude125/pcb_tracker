@@ -11,7 +11,7 @@
     <%= Priority.find(reviewer_home_list_stripes.priority_id).name %>
   </td>
   <td>
-    <%= link_to(reviewer_home_list_stripes.design.name,
+    <%= link_to(reviewer_home_list_stripes.design.part_number.pcb_display_name,
                   { :controller => 'design_review',
                     :action     => :view,
                     :id         => reviewer_home_list_stripes.id })%>
@@ -23,11 +23,7 @@
     <%= reviewer_home_list_stripes.review_status.name %>
   </td>
   <td>
-    <% if reviewer_home_list_stripes.review_name == "Pre-Artwork" %>
-      <%= User.find(reviewer_home_list_stripes.design.pcb_input_id).name %>
-    <% else %>
-      <%= User.find(reviewer_home_list_stripes.design.designer_id).name %>
-    <% end %>
+  	<%= reviewer_home_list_stripes.designer.name %>
   </td>
   <td title="Age in work days">
     <%= reviewer_home_list_stripes.age_in_days %>

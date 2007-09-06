@@ -1,6 +1,6 @@
 <% for review in @review_list %>
 Criticality: <%= review[:design_review].priority.name %>
-Review:      <%= review[:design_review].design.name %> <%= review[:design_review].review_type.name %> Review
+Review:      <%= review[:design_review].design.part_number.full_display_name %> <%= review[:design_review].review_type.name %> Review
 Age:         <%= review[:age] %> working days
 <% end %>
 

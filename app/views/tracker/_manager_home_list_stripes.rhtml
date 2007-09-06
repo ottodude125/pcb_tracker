@@ -16,7 +16,7 @@
 
 <tr class="<%= manager_home_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
   <td>
-    <%= link_to(design.name,
+    <%= link_to(design.part_number.pcb_display_name,
                 :controller => 'design_review',
                 :action     => 'view',
                 :id         => design_review.id)%>
@@ -25,7 +25,7 @@
       <%= design_review.priority.name %>
   </td>
   <td>
-    <%= design.designer.name %>
+    <%= design_review.designer.name %>
   </td>
   <td>
     <%= design.peer.name %>
@@ -60,7 +60,7 @@
         </td>
       </tr>
       <tr>
-        <td align="center" valign="top">
+        <td align="left" valign="top">
           <% if !(design.audit.skip? || design.audit.is_complete?) %>
           <input type="button" value="Audit Assignments"
                  title= '<%= "#{design.name}: Set the assignments for self and peer audits" %>'
@@ -84,7 +84,7 @@
   
     <div id="board_design_details-<%= design_review.id %>">
 
-    <table width="95%" align="right" border="0">
+    <table width="100%" align="right" border="0">
       <tr>
         <td width="70%" align="left">
           <% if !design.audit.skip? %>

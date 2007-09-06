@@ -80,7 +80,7 @@
                     </td>
                     <td class="teraheader">
                       <font color="#ffffff">
-                        <b><%= design.name %> - 
+                        <b><%= design.part_number.pcb_display_name %> - 
                         <%= design.board.platform.name %> / 
                         <%= design.board.project.name %> /
                         <%= design.board.description %></b>
@@ -252,7 +252,7 @@
                                 <table border="0" width="100%">
                                   <tr>
                                     <td width="33%" align="left">
-                                      <input type="button" value='<%= "#{design.name} In-Process Dialogue" %>'
+                                      <input type="button" value='<%= "#{design.part_number.pcb_display_name} In-Process Dialogue" %>'
                                              title="Initiate and discuss all in-process changes."
                                              onClick="parent.location='<%= url_for(:controller => 'ipd_post',
                                                                                    :action     => 'list',
@@ -262,7 +262,7 @@
                                     <td width="34%" align="center">
                                     <% if session[:user].has_access?(['Designer']) && session[:user].employee? %>
 
-                                      <input type="button" value='<%= "#{design.name} Outsource Instructions" %>'
+                                      <input type="button" value='<%= "#{design.part_number.pcb_display_name} Outsource Instructions" %>'
                                              title="Create/View/Update Instructions to low cost regions"
                                              onClick="parent.location='<%= url_for(:controller => 'oi_instruction',
                                                                                    :action     => 'oi_category_selection',
@@ -274,7 +274,7 @@
                                     </td>
                                     <td width="33%" align="right">
                                       <% if !(design.audit.is_complete? || design.audit.skip?) %>
-                                      <input type="button" value='<%= "#{design.name} Audit Assignments" %>'
+                                      <input type="button" value='<%= "#{design.part_number.pcb_display_name} Audit Assignments" %>'
                                              title="Set the assignments for self and peer audits."
                                              onClick="parent.location='<%= url_for(:controller => 'audit',
                                                                                    :action     => 'auditor_list',
@@ -317,7 +317,7 @@
                 </tr>
                 <tr>
                   <td width="60">&nbsp;</td>
-                  <th align="left" class="teraheader">Design</th>
+                  <th align="left" class="teraheader">PCB Part Number Rev</th>
                   <th align="left" class="teraheader">Assignments</th>
                   <th align="left" class="teraheader">Completed Assignments</th>
                 </tr>
@@ -326,11 +326,13 @@
                   <tr>
                     <td>&nbsp;</td>
                     <td>
-                      <%= link_to(design.name,
+                      <%= link_to(design.part_number.pcb_display_name,
                                   { :controller => 'oi_instruction',
                                     :action     => 'category_details',
                                     :id         => design.id },
-                                    :title => "Access to #{design.name} work assignments") %>
+                                    :title => 'Access to ' + 
+                                              design.part_number.pcb_display_name +
+                                              ' work assignments') %>
                     
                     </td>
                     <td><%= assignments%></td>
@@ -371,7 +373,7 @@
                       <b><%= audit.design.priority_name %></b>
                     </td>
                     <td class="teraheader">
-                      <b><%= audit.design.name %> -
+                      <b><%= audit.design.part_number.pcb_display_name %> -
                       <%= audit.design.board.platform.name %> /
                       <%= audit.design.board.project.name %> /
                       <%= audit.design.board.description %></b>

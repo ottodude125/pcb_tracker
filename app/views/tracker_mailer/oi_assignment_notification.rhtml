@@ -1,4 +1,4 @@
-DESIGN:               <%= @design.name %>
+DESIGN:               <%= @design.part_number.pcb_display_name %>
 LEAD DESIGNER:        <%= User.find(@oi_assignment_list[0].oi_instruction.user_id).name %>
 
 <% @oi_assignment_list.each do |assignment| %>

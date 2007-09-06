@@ -1,9 +1,9 @@
 The following reviewers with incomplete reviews have been pinged.
 
-<% for ping in @ping_list %>
+<% @ping_list.each do |ping| %>
 <%= ping[:reviewer].name %>
-  <% for review in ping[:review_list] %>
-  Design:       <%= review[:design_review].design.name %>
+  <% ping[:review_list].each do |review| %>
+  Part Number:  <%= review[:design_review].design.part_number.full_display_name %>
   Review:       <%= review[:design_review].review_type.name %>
   Criticality:  <%= review[:design_review].priority.name %>
   Age:          <%= review[:age]%> work days
