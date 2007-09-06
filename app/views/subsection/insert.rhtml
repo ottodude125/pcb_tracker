@@ -110,12 +110,12 @@
 
   <hr class="div" />
 
-  <% if not @checklist.released? %>
+  <% if !@subsection.locked? %>
     <input type="submit" value="Insert" />
   <% else %>
     <input type="submit" disabled="disabled" value="LOCKED - Checklist Released" />
   <% end %>
 
-  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @new_subsection.checklist_id ) %>'">
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @new_subsection.checklist.id ) %>'">
 
 <%= end_form_tag %>
