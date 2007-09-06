@@ -1,8 +1,6 @@
-<% if params[:design_review_id] %>
-  <% @heading = "PCB Engineering - #{@board_design_entry.design_name} Input Entry Checklist"%>
-<% else %>
-  <% @heading = "PCB Engineering - #{@board_design_entry.design_name} Design Entry Requirements"%>
-<% end %>
+<% @heading = "PCB Engineering: #{@board_design_entry.part_number.pcb_display_name} - " %>
+<% @heading += params[:design_review_id] ? "Input Entry Checklist" : "Design Entry Requirements" %>
+
 <table width="80%" align="center">
   <tr>
     <% processor = params[:viewer] == 'processor' %>
@@ -76,6 +74,30 @@
   </tr>
 
   <tr valign="top">
+    <th align="right" width="25%">PCB Part Number: </th>
+    <td width="25%" align="left">
+      <%= @board_design_entry.part_number.pcb_name %>
+    </td>
+
+    <th align="right" width="25%">Revision: </th>
+    <td align="left">
+      <%= @board_design_entry.part_number.pcb_revision %>
+    </td>
+  </tr>
+  
+  <tr valign="top">
+    <th align="right" width="25%">PCBA Part Number: </th>
+    <td width="25%" align="left">
+      <%= @board_design_entry.part_number.pcba_name %>
+    </td>
+
+    <th align="right" width="25%">Revision: </th>
+    <td align="left">
+      <%= @board_design_entry.part_number.pcba_revision %>
+    </td>
+  </tr>
+  
+  <tr valign="top">
     <th align="right" width="25%">Originator: </th>
     <td width="25%" align="left">
       <%= User.find(@board_design_entry.originator_id).name %>
@@ -119,30 +141,10 @@
   </tr>
   
   <tr valign="top">
-    <th align="right">Design: </th>
-    <td align="left"><%= @board_design_entry.design %></td>
-    
-    <th align="right">Revision: </th>
-    <td align="left"><%= @board_design_entry.revision_name %></td>
-  </tr>
-  
-  <tr valign="top">
     <th align="right">Pre-Production Release Number: </th>
     <td align="left"><%= @board_design_entry.pre_production_release_number %></td>
   </tr>
   
-  <tr valign="top">
-    <th align="right">PCB Number: </th>
-    <td align="left">
-      <%= @board_design_entry.pcb_number %>
-    </td>
-
-    <th align="right">PCBA Part Number: </th>
-    <td align="left">
-      <%= @board_design_entry.pcba_part_number %>
-    </td>
-  </tr>
-
   <tr valign="top">
     <th align="right">Location of Review Documents: </th>
     <td colspan="3" align="left" valign="top">
@@ -353,6 +355,14 @@
     </td>
   </tr>
 
+  <% if !@board_design_entry.all_manager_reviewers_assigned? %>
+    <tr bgcolor="red">
+      <td colspan="1">
+      	<b>EVERY MANAGER ROLE NEEDS TO BE ASSIGNED!</b>
+      </td>
+    </tr>
+  <% end %>
+
   <% rows        = (@managers.size + 1) / 2 %>
   <% 1.upto(rows) { |i| %>
     <tr valign="top">
@@ -427,6 +437,14 @@
     <% default_assignments = { 'PCB Input Gate'      => 'Cathy McLaren/Jan Kasting' ,
                                'PCB Mechanical'      => 'Andrey Khoras/Mary Tucker' } %>
   
+  <% if !@board_design_entry.all_reviewers_assigned? %>
+    <tr bgcolor="red">
+      <td colspan="1">
+      	<b>EVERY REVIEWER ROLE NEEDS TO BE EITHER ASSIGNED TO A REVIEWER OR CHECKED OFF AS 'NOT REQUIRED'!</b>
+      </td>
+    </tr>
+  <% end %>
+
   <% rows = (@reviewers.size + 1) / 2 %>
   <% 1.upto(rows) { |i| %>
     <tr valign="top">
