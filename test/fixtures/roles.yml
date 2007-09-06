@@ -43,6 +43,7 @@ valor:
   new_design_type:       1
   date_code_design_type: 1
   dot_rev_design_type:   1
+  default_reviewer_id:   4000
 ce_dft:
   id:                    7
   name:                  CE-DFT
@@ -51,6 +52,7 @@ ce_dft:
   cc_peers:              0
   display_name:          CE-DFT Engineer
   new_design_type:       1
+  default_reviewer_id:   0
 dfm:
   id:                    8
   name:                  DFM
@@ -61,6 +63,7 @@ dfm:
   new_design_type:       1
   date_code_design_type: 1
   dot_rev_design_type:   1
+  default_reviewer_id:   0
 tde:
   id:                    9
   name:                  TDE
@@ -69,6 +72,7 @@ tde:
   cc_peers:              0
   display_name:          TDE Engineer
   new_design_type:       1
+  default_reviewer_id:   0
 mechanical:
   id:                   10
   name:                  Mechanical
@@ -79,6 +83,7 @@ mechanical:
   new_design_type:       1
   date_code_design_type: 1
   dot_rev_design_type:   1
+  default_reviewer_id:   0
 mechanical_manufacturing:
   id:                    11
   name:                  Mechanical-MFG
@@ -87,6 +92,7 @@ mechanical_manufacturing:
   cc_peers:              0
   display_name:          Mechanical Mfg Engineer
   new_design_type:       1
+  default_reviewer_id:   0
 pcb_design:
   id:                    12
   name:                  PCB Design
@@ -98,6 +104,7 @@ pcb_design:
   new_design_type:       1
   date_code_design_type: 1
   dot_rev_design_type:   1
+  default_reviewer_id:   4001
 planning:
   id:                    13
   name:                  Planning
@@ -118,6 +125,7 @@ pcb_input_gate:
   new_design_type:       1
   date_code_design_type: 1
   dot_rev_design_type:   1
+  default_reviewer_id:   4000
 library:
   id:                    15
   name:                  Library
@@ -126,6 +134,7 @@ library:
   cc_peers:              0
   display_name:          Component Development
   new_design_type:       1
+  default_reviewer_id:   7402
 pcb_mechanical:
   id:                    16
   name:                  PCB Mechanical
@@ -134,6 +143,7 @@ pcb_mechanical:
   cc_peers:              0
   display_name:          PCB Mechanical Engineer
   new_design_type:       1
+  default_reviewer_id:   7450
 slm_bom:
   id:                    17
   name:                  SLM BOM
@@ -142,6 +152,7 @@ slm_bom:
   cc_peers:              0
   display_name: SLM BOM
   new_design_type:       1
+  default_reviewer_id:   7501
 slm_vendor:
   id:                    18
   name:                  SLM-Vendor
@@ -150,6 +161,7 @@ slm_vendor:
   cc_peers:              0
   display_name:          SLM Vendor
   new_design_type:       1
+  default_reviewer_id:   7550
 operations_manager:
   id:                    19
   name:                  Operations Manager
@@ -194,6 +206,7 @@ compliance_emc:
   cc_peers:              0
   display_name:          Compliance - EMC
   new_design_type:       1
+  default_reviewer_id:   39000
 compliance_safety:
   id:                    24
   name:                  Compliance - Safety
@@ -202,6 +215,7 @@ compliance_safety:
   cc_peers:              0
   display_name:          Compliance - Safety
   new_design_type:       1
+  default_reviewer_id:   39001
 hcl_manager:
   id:                    25
   name:                  HCL Manager

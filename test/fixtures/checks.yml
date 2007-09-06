@@ -4,7 +4,7 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 check_01:
   id: 1
-  section_id: 1
+#  section_id: 1
   subsection_id: 1
   title: check_01
   check: First Check
@@ -12,11 +12,11 @@ check_01:
   full_review: 0
   date_code_check: 1
   dot_rev_check: 1
-  sort_order: 1
+  position: 1
   check_type: designer_auditor
 check_02:
   id: 2
-  section_id: 1
+#  section_id: 1
   subsection_id: 1
   title: check_02
   check: Second Check
@@ -24,11 +24,11 @@ check_02:
   full_review: 1
   date_code_check: 1
   dot_rev_check: 1
-  sort_order: 2
+  position: 2
   check_type: designer_auditor
 check_03:
   id: 3
-  section_id: 1
+#  section_id: 1
   subsection_id: 1
   title: check_03
   check: Third Check
@@ -36,11 +36,11 @@ check_03:
   full_review: 1
   date_code_check: 1
   dot_rev_check: 1
-  sort_order: 3
+  position: 3
   check_type: designer_auditor
 check_04:
   id: 4
-  section_id: 1
+#  section_id: 1
   subsection_id: 2
   title: check_04
   check: Fourth Check
@@ -48,11 +48,11 @@ check_04:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 1
+  position: 1
   check_type: yes_no
 check_05:
   id: 5
-  section_id: 1
+#  section_id: 1
   subsection_id: 2
   title: check_05
   check: Fifth Check
@@ -60,11 +60,11 @@ check_05:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 2
+  position: 2
   check_type: yes_no
 check_06:
   id: 6
-  section_id: 1
+#  section_id: 1
   subsection_id: 2
   title: check_06
   check: Sixth Check
@@ -72,11 +72,11 @@ check_06:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 3
+  position: 3
   check_type: yes_no
 check_07:
   id: 7
-  section_id: 2
+#  section_id: 2
   subsection_id: 3
   title: check_07
   check: 7th Check
@@ -84,11 +84,11 @@ check_07:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 1
+  position: 1
   check_type: designer_only
 check_08:
   id: 8
-  section_id: 2
+#  section_id: 2
   subsection_id: 3
   title: check_08
   check: 8th Check
@@ -96,11 +96,11 @@ check_08:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 2
+  position: 2
   check_type: designer_only
 check_09:
   id: 9
-  section_id: 2
+#  section_id: 2
   subsection_id: 3
   title: check_09
   check: 9th Check
@@ -108,11 +108,11 @@ check_09:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 3
+  position: 3
   check_type: designer_only
 check_10:
   id: 10
-  section_id: 2
+#  section_id: 2
   subsection_id: 4
   title: check_10
   check: 10th Check
@@ -120,11 +120,11 @@ check_10:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 1
+  position: 1
   check_type: designer_auditor
 check_11:
   id: 11
-  section_id: 2
+#  section_id: 2
   subsection_id: 4
   title: check_11
   check: 11th Check
@@ -132,11 +132,11 @@ check_11:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 2
+  position: 2
   check_type: designer_auditor
 check_12:
   id: 12
-  section_id: 2
+#  section_id: 2
   subsection_id: 4
   title: check_12
   check: 12th Check
@@ -144,11 +144,11 @@ check_12:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 3
+  position: 3
   check_type: designer_auditor
 check_13:
   id: 13
-  section_id: 3
+#  section_id: 3
   subsection_id: 5
   title: check_13
   check: 13th Check
@@ -156,11 +156,11 @@ check_13:
   full_review: 0
   date_code_check: 1
   dot_rev_check: 1
-  sort_order: 1
+  position: 1
   check_type: designer_auditor
 check_14:
   id: 14
-  section_id: 3
+#  section_id: 3
   subsection_id: 5
   title: check_14
   check: 14th Check
@@ -168,11 +168,11 @@ check_14:
   full_review: 1
   date_code_check: 1
   dot_rev_check: 1
-  sort_order: 2
+  position: 2
   check_type: designer_auditor
 check_15:
   id: 15
-  section_id: 3
+#  section_id: 3
   subsection_id: 6
   title: check_15
   check: 15th Check
@@ -180,11 +180,11 @@ check_15:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 1
+  position: 1
   check_type: yes_no
 check_16:
   id: 16
-  section_id: 3
+#  section_id: 3
   subsection_id: 6
   title: check_16
   check: 16th Check
@@ -192,11 +192,11 @@ check_16:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 2
+  position: 2
   check_type: yes_no
 check_17:
   id: 17
-  section_id: 3
+#  section_id: 3
   subsection_id: 6
   title: check_17
   check: 17th Check
@@ -204,11 +204,11 @@ check_17:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 3
+  position: 3
   check_type: yes_no
 check_24:
   id: 24
-  section_id: 3
+#  section_id: 3
   subsection_id: 6
   title: check_24
   check: 24th Check
@@ -216,11 +216,11 @@ check_24:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 4
+  position: 4
   check_type: yes_no
 check_32:
   id: 32
-  section_id: 5
+#  section_id: 5
   subsection_id: 9
   title: check_32
   check: 32nd Check
@@ -228,11 +228,11 @@ check_32:
   full_review: 0
   date_code_check: 1
   dot_rev_check: 1
-  sort_order: 1
+  position: 1
   check_type: designer_only
 check_25:
   id: 25
-  section_id: 5
+#  section_id: 5
   subsection_id: 9
   title: check_25
   check: 25th Check
@@ -240,11 +240,11 @@ check_25:
   full_review: 0
   date_code_check: 1
   dot_rev_check: 1
-  sort_order: 2
+  position: 2
   check_type: designer_only
 check_26:
   id: 26
-  section_id: 5
+#  section_id: 5
   subsection_id: 10
   title: check_26
   check: 26th Check
@@ -252,11 +252,11 @@ check_26:
   full_review: 1
   date_code_check: 1
   dot_rev_check: 1
-  sort_order: 1
+  position: 1
   check_type: designer_auditor
 check_27:
   id: 27
-  section_id: 5
+#  section_id: 5
   subsection_id: 10
   title: check_27
   check: 27th Check
@@ -264,11 +264,11 @@ check_27:
   full_review: 0
   date_code_check: 1
   dot_rev_check: 1
-  sort_order: 2
+  position: 2
   check_type: designer_auditor
 check_28:
   id: 28
-  section_id: 5
+#  section_id: 5
   subsection_id: 10
   title: check_28
   check: 28th Check
@@ -276,11 +276,11 @@ check_28:
   full_review: 0
   date_code_check: 1
   dot_rev_check: 1
-  sort_order: 3
+  position: 3
   check_type: designer_auditor
 check_18:
   id: 18
-  section_id: 4
+#  section_id: 4
   subsection_id: 7
   title: check_18
   check: 18th Check
@@ -288,11 +288,11 @@ check_18:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 1
+  position: 0
   check_type: designer_only
 check_19:
   id: 19
-  section_id: 4
+#  section_id: 4
   subsection_id: 7
   title: check_19
   check: 19th Check
@@ -300,11 +300,11 @@ check_19:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 2
+  position: 1
   check_type: designer_only
 check_20:
   id: 20
-  section_id: 4
+#  section_id: 4
   subsection_id: 7
   title: check_20
   check: 20th Check
@@ -312,11 +312,11 @@ check_20:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 3
+  position: 2
   check_type: designer_only
 check_21:
   id: 21
-  section_id: 4
+#  section_id: 4
   subsection_id: 8
   title: check_21
   check: 21st Check
@@ -324,11 +324,11 @@ check_21:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 1
+  position: 1
   check_type: designer_auditor
 check_22:
   id: 22
-  section_id: 4
+#  section_id: 4
   subsection_id: 8
   title: check_22
   check: 22nd Check
@@ -336,11 +336,11 @@ check_22:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 2
+  position: 2
   check_type: designer_auditor
 check_23:
   id: 23
-  section_id: 4
+#  section_id: 4
   subsection_id: 8
   title: check_23
   check: 23rd Check
@@ -348,11 +348,11 @@ check_23:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 3
+  position: 3
   check_type: designer_auditor
 check_10_000:
   id: 10000
-  section_id: 20000
+#  section_id: 20000
   subsection_id: 30000
   title: check_10_000
   check: Check 10,000
@@ -360,11 +360,11 @@ check_10_000:
   full_review: 1
   date_code_check: 1
   dot_rev_check: 0
-  sort_order: 1
+  position: 1
   check_type: designer_auditor
 check_10_001:
   id: 10001
-  section_id: 20000
+#  section_id: 20000
   subsection_id: 30000
   title: check_10_001
   check: Check 10,001
@@ -372,11 +372,11 @@ check_10_001:
   full_review: 1
   date_code_check: 1
   dot_rev_check: 0
-  sort_order: 2
+  position: 2
   check_type: designer_auditor
 check_10_002:
   id: 10002
-  section_id: 20000
+#  section_id: 20000
   subsection_id: 30000
   title: check_10_002
   check: Check 10,002
@@ -384,11 +384,11 @@ check_10_002:
   full_review: 1
   date_code_check: 1
   dot_rev_check: 0
-  sort_order: 3
+  position: 3
   check_type: designer_auditor
 check_10_003:
   id: 10003
-  section_id: 20000
+#  section_id: 20000
   subsection_id: 30000
   title: check_10_003
   check: Check 10,003
@@ -396,11 +396,11 @@ check_10_003:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 1
-  sort_order: 4
+  position: 4
   check_type: designer_auditor
 check_10_004:
   id: 10004
-  section_id: 20000
+#  section_id: 20000
   subsection_id: 30001
   title: check_10_004
   check: Check 10,004
@@ -408,11 +408,11 @@ check_10_004:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 1
+  position: 1
   check_type: yes_no
 check_10_005:
   id: 10005
-  section_id: 20000
+#  section_id: 20000
   subsection_id: 30001
   title: check_10_005
   check: Check 10,005
@@ -420,11 +420,11 @@ check_10_005:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 2
+  position: 2
   check_type: yes_no
 check_10_006:
   id: 10006
-  section_id: 20001
+#  section_id: 20001
   subsection_id: 30002
   title: check_10_006
   check: Check 10,006
@@ -432,11 +432,11 @@ check_10_006:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 1
+  position: 1
   check_type: designer_auditor
 check_10_007:
   id: 10007
-  section_id: 20001
+#  section_id: 20001
   subsection_id: 30002
   title: check_10_007
   check: Check 10,007
@@ -444,11 +444,11 @@ check_10_007:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 2
+  position: 2
   check_type: designer_auditor
 check_10_008:
   id: 10008
-  section_id: 20001
+#  section_id: 20001
   subsection_id: 30003
   title: check_10_008
   check: Check 10,008
@@ -456,11 +456,11 @@ check_10_008:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 1
+  position: 1
   check_type: designer_only
 check_10_009:
   id: 10009
-  section_id: 20001
+#  section_id: 20001
   subsection_id: 30003
   title: check_10_009
   check: Check 10,009
@@ -468,11 +468,11 @@ check_10_009:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 2
+  position: 2
   check_type: designer_only
 check_10_010:
   id: 10010
-  section_id: 20001
+#  section_id: 20001
   subsection_id: 30003
   title: check_10_010
   check: Check 10,010
@@ -480,11 +480,11 @@ check_10_010:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 3
+  position: 3
   check_type: designer_only
 check_10_011:
   id: 10011
-  section_id: 20001
+#  section_id: 20001
   subsection_id: 30003
   title: check_10_011
   check: Check 10,011
@@ -492,11 +492,11 @@ check_10_011:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 4
+  position: 4
   check_type: designer_only
 check_10_012:
   id: 10012
-  section_id: 20001
+#  section_id: 20001
   subsection_id: 30004
   title: check_10_012
   check: Check 10,012
@@ -504,11 +504,11 @@ check_10_012:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 1
+  position: 1
   check_type: designer_auditor
 check_10_013:
   id: 10013
-  section_id: 20001
+#  section_id: 20001
   subsection_id: 30004
   title: check_10_012
   check: Check 10,012
@@ -516,11 +516,11 @@ check_10_013:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 2
+  position: 2
   check_type: designer_auditor
 check_10_014:
   id: 10014
-  section_id: 20001
+#  section_id: 20001
   subsection_id: 30004
   title: check_10_014
   check: Check 10,014
@@ -528,16 +528,16 @@ check_10_014:
   full_review: 1
   date_code_check: 0
   dot_rev_check: 0
-  sort_order: 3
+  position: 3
   check_type: designer_auditor
 
 check_2854: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Title Block
   subsection_id: "550"
-  section_id: "340"
+#  section_id: "340"
   dot_rev_check: "0"
   url: ""
   id: "2854"
@@ -546,10 +546,10 @@ check_2854:
 check_2825: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: MADE IN USA and Part Number
   subsection_id: "540"
-  section_id: "337"
+#  section_id: "337"
   dot_rev_check: "0"
   url: ""
   id: "2825"
@@ -558,10 +558,10 @@ check_2825:
 check_2740: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "15"
+  position: "15"
   title: Pad Suppression
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2740"
@@ -570,10 +570,10 @@ check_2740:
 check_2799: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: ""
   subsection_id: "535"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: ""
   id: "2799"
@@ -582,10 +582,10 @@ check_2799:
 check_2712: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: DBDOCTOR Log
   subsection_id: "526"
-  section_id: "330"
+#  section_id: "330"
   dot_rev_check: "1"
   url: ""
   id: "2712"
@@ -594,10 +594,10 @@ check_2712:
 check_2910: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Plated Holes
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: ""
   id: "2910"
@@ -606,10 +606,10 @@ check_2910:
 check_2855: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Title Block
   subsection_id: "550"
-  section_id: "340"
+#  section_id: "340"
   dot_rev_check: "0"
   url: ""
   id: "2855"
@@ -618,10 +618,10 @@ check_2855:
 check_2826: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Secondary Side Designation
   subsection_id: "540"
-  section_id: "337"
+#  section_id: "337"
   dot_rev_check: "0"
   url: ""
   id: "2826"
@@ -630,10 +630,10 @@ check_2826:
 check_2741: 
   date_code_check: "0"
   full_review: "0"
-  sort_order: "16"
+  position: "16"
   title: Dot Rev
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "1"
   url: ""
   id: "2741"
@@ -642,10 +642,10 @@ check_2741:
 check_2713: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: DRC Report
   subsection_id: "526"
-  section_id: "330"
+#  section_id: "330"
   dot_rev_check: "0"
   url: ""
   id: "2713"
@@ -654,10 +654,10 @@ check_2713:
 check_2856: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Revision Block
   subsection_id: "550"
-  section_id: "340"
+#  section_id: "340"
   dot_rev_check: "0"
   url: ""
   id: "2856"
@@ -666,10 +666,10 @@ check_2856:
 check_2827: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Reference Designators
   subsection_id: "541"
-  section_id: "337"
+#  section_id: "337"
   dot_rev_check: "0"
   url: ""
   id: "2827"
@@ -678,10 +678,10 @@ check_2827:
 check_2742: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Primary Side
   subsection_id: "530"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2742"
@@ -690,10 +690,10 @@ check_2742:
 check_2714: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Summary Report
   subsection_id: "526"
-  section_id: "330"
+#  section_id: "330"
   dot_rev_check: "0"
   url: ""
   id: "2714"
@@ -702,10 +702,10 @@ check_2714:
 check_2770: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "7"
+  position: "7"
   title: Impedance Tolerance
   subsection_id: "532"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2770"
@@ -714,10 +714,10 @@ check_2770:
 check_2885: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Fabrication Issue Report (FIRs)
   subsection_id: "555"
-  section_id: "344"
+#  section_id: "344"
   dot_rev_check: "1"
   url: ""
   id: "2885"
@@ -726,10 +726,10 @@ check_2885:
 check_2857: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Revision Block
   subsection_id: "550"
-  section_id: "340"
+#  section_id: "340"
   dot_rev_check: "0"
   url: ""
   id: "2857"
@@ -738,10 +738,10 @@ check_2857:
 check_2828: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Pin 1 Indicators
   subsection_id: "541"
-  section_id: "337"
+#  section_id: "337"
   dot_rev_check: "0"
   url: ""
   id: "2828"
@@ -750,10 +750,10 @@ check_2828:
 check_2771: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "8"
+  position: "8"
   title: Impedance Style
   subsection_id: "532"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2771"
@@ -762,10 +762,10 @@ check_2771:
 check_2743: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Tooling Holes
   subsection_id: "530"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2743"
@@ -774,10 +774,10 @@ check_2743:
 check_2886: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: README.txt
   subsection_id: "555"
-  section_id: "344"
+#  section_id: "344"
   dot_rev_check: "1"
   url: ""
   id: "2886"
@@ -786,10 +786,10 @@ check_2886:
 check_2829: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Reference Designators
   subsection_id: "541"
-  section_id: "337"
+#  section_id: "337"
   dot_rev_check: "0"
   url: ""
   id: "2829"
@@ -798,10 +798,10 @@ check_2829:
 check_2715: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Title Block
   subsection_id: "527"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "1"
   url: ""
   id: "2715"
@@ -810,10 +810,10 @@ check_2715:
 check_2772: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Line Width (Mils) - Edge Coupled Diff Pair
   subsection_id: "532"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2772"
@@ -822,10 +822,10 @@ check_2772:
 check_2744: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Edge View
   subsection_id: "530"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2744"
@@ -834,10 +834,10 @@ check_2744:
 check_2887: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Tracker
   subsection_id: "555"
-  section_id: "344"
+#  section_id: "344"
   dot_rev_check: "1"
   url: ""
   id: "2887"
@@ -846,10 +846,10 @@ check_2887:
 check_2858: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Padstacks Purged
   subsection_id: "551"
-  section_id: "341"
+#  section_id: "341"
   dot_rev_check: "0"
   url: ""
   id: "2858"
@@ -858,10 +858,10 @@ check_2858:
 check_2716: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Title Block
   subsection_id: "527"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "1"
   url: ""
   id: "2716"
@@ -870,10 +870,10 @@ check_2716:
 check_2773: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "6"
+  position: "6"
   title: Impedance Value
   subsection_id: "532"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2773"
@@ -882,10 +882,10 @@ check_2773:
 check_2745: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: 0,0 Location
   subsection_id: "530"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2745"
@@ -894,10 +894,10 @@ check_2745:
 check_2800: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: ""
   subsection_id: "535"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: ""
   id: "2800"
@@ -906,10 +906,10 @@ check_2800:
 check_2888: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Symbol and Padstack Update
   subsection_id: "555"
-  section_id: "344"
+#  section_id: "344"
   dot_rev_check: "1"
   url: ""
   id: "2888"
@@ -918,10 +918,10 @@ check_2888:
 check_2859: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Valor Review
   subsection_id: "551"
-  section_id: "341"
+#  section_id: "341"
   dot_rev_check: "1"
   url: etg.teradyne.com/boarddev/mfggate/bareboardTech/Valor/
   id: "2859"
@@ -930,10 +930,10 @@ check_2859:
 check_2717: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Default Angle
   subsection_id: "527"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "1"
   url: ""
   id: "2717"
@@ -942,10 +942,10 @@ check_2717:
 check_2774: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Thru Hole
   subsection_id: "533"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2774"
@@ -954,10 +954,10 @@ check_2774:
 check_2746: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   title: Chamfers and Fillets
   subsection_id: "530"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2746"
@@ -966,10 +966,10 @@ check_2746:
 check_2801: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: ""
   subsection_id: "535"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: ""
   id: "2801"
@@ -978,10 +978,10 @@ check_2801:
 check_2889: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: File Name
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#naming
   id: "2889"
@@ -990,10 +990,10 @@ check_2889:
 check_2830: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Discretes
   subsection_id: "542"
-  section_id: "337"
+#  section_id: "337"
   dot_rev_check: "0"
   url: ""
   id: "2830"
@@ -1002,10 +1002,10 @@ check_2830:
 check_2718: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Revision Block
   subsection_id: "527"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "1"
   url: ""
   id: "2718"
@@ -1014,10 +1014,10 @@ check_2718:
 check_2775: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Blind and Buried Vias
   subsection_id: "533"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2775"
@@ -1026,10 +1026,10 @@ check_2775:
 check_2747: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "6"
+  position: "6"
   title: Details
   subsection_id: "530"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2747"
@@ -1038,10 +1038,10 @@ check_2747:
 check_2802: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: ""
   subsection_id: "535"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: ""
   id: "2802"
@@ -1050,10 +1050,10 @@ check_2802:
 check_2831: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Rotation and Clarity
   subsection_id: "542"
-  section_id: "337"
+#  section_id: "337"
   dot_rev_check: "0"
   url: ""
   id: "2831"
@@ -1062,10 +1062,10 @@ check_2831:
 check_2719: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   title: Revision Block
   subsection_id: "527"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "1"
   url: ""
   id: "2719"
@@ -1074,10 +1074,10 @@ check_2719:
 check_2776: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Blind and Buried Vias
   subsection_id: "533"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2776"
@@ -1086,10 +1086,10 @@ check_2776:
 check_2860: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: ODB++ File
   subsection_id: "551"
-  section_id: "341"
+#  section_id: "341"
   dot_rev_check: "1"
   url: etg.teradyne.com/boarddev/mfggate/bareboardTech/Valor/index.php?file=odbbrdimport.html
   id: "2860"
@@ -1098,10 +1098,10 @@ check_2860:
 check_2832: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Cable Tie-Downs
   subsection_id: "542"
-  section_id: "337"
+#  section_id: "337"
   dot_rev_check: "0"
   url: ""
   id: "2832"
@@ -1110,10 +1110,10 @@ check_2832:
 check_2777: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Drill Figures
   subsection_id: "533"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2777"
@@ -1122,10 +1122,10 @@ check_2777:
 check_2748: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "7"
+  position: "7"
   title: Slots and Cutouts
   subsection_id: "530"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2748"
@@ -1134,10 +1134,10 @@ check_2748:
 check_2803: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   title: ""
   subsection_id: "535"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: ""
   id: "2803"
@@ -1146,10 +1146,10 @@ check_2803:
 check_2861: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Title Block
   subsection_id: "552"
-  section_id: "342"
+#  section_id: "342"
   dot_rev_check: "1"
   url: ""
   id: "2861"
@@ -1158,10 +1158,10 @@ check_2861:
 check_2833: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Labels
   subsection_id: "542"
-  section_id: "337"
+#  section_id: "337"
   dot_rev_check: "0"
   url: ""
   id: "2833"
@@ -1170,10 +1170,10 @@ check_2833:
 check_2778: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   title: Blind (laser) Hole/Drill Sizes
   subsection_id: "533"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/layout/fab/laservia.pdf
   id: "2778"
@@ -1182,10 +1182,10 @@ check_2778:
 check_2749: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "8"
+  position: "8"
   title: Dimensions
   subsection_id: "530"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2749"
@@ -1194,10 +1194,10 @@ check_2749:
 check_2804: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: ""
   subsection_id: "536"
-  section_id: "333"
+#  section_id: "333"
   dot_rev_check: "0"
   url: ""
   id: "2804"
@@ -1206,10 +1206,10 @@ check_2804:
 check_2890: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Parameters
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#begin
   id: "2890"
@@ -1218,10 +1218,10 @@ check_2890:
 check_2862: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Items
   subsection_id: "552"
-  section_id: "342"
+#  section_id: "342"
   dot_rev_check: "0"
   url: ""
   id: "2862"
@@ -1233,10 +1233,10 @@ check_2862:
 check_2834: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   title: Fiducials
   subsection_id: "542"
-  section_id: "337"
+#  section_id: "337"
   dot_rev_check: "0"
   url: ""
   id: "2834"
@@ -1245,10 +1245,10 @@ check_2834:
 check_2720: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Part Number Suffix's
   subsection_id: "528"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "1"
   url: ""
   id: "2720"
@@ -1257,10 +1257,10 @@ check_2720:
 check_2779: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "6"
+  position: "6"
   title: Quantities
   subsection_id: "533"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/mfggate/bareboardTech/Valor/index.php?file=drillcheck.html
   id: "2779"
@@ -1269,10 +1269,10 @@ check_2779:
 check_2805: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: ""
   subsection_id: "536"
-  section_id: "333"
+#  section_id: "333"
   dot_rev_check: "0"
   url: ""
   id: "2805"
@@ -1281,10 +1281,10 @@ check_2805:
 check_2891: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Parameters
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=mastertext.html
   id: "2891"
@@ -1293,10 +1293,10 @@ check_2891:
 check_2863: 
   date_code_check: "1"
   full_review: "0"
-  sort_order: "3"
+  position: "3"
   title: Dot Rev/Date Code
   subsection_id: "552"
-  section_id: "342"
+#  section_id: "342"
   dot_rev_check: "1"
   url: ""
   id: "2863"
@@ -1310,10 +1310,10 @@ check_2863:
 check_2835: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "6"
+  position: "6"
   title: Soldermask
   subsection_id: "542"
-  section_id: "337"
+#  section_id: "337"
   dot_rev_check: "0"
   url: ""
   id: "2835"
@@ -1322,10 +1322,10 @@ check_2835:
 check_2721: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Outline Drawing
   subsection_id: "528"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "1"
   url: ""
   id: "2721"
@@ -1334,10 +1334,10 @@ check_2721:
 check_2806: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Default Via
   subsection_id: "537"
-  section_id: "334"
+#  section_id: "334"
   dot_rev_check: "0"
   url: ""
   id: "2806"
@@ -1346,10 +1346,10 @@ check_2806:
 check_2892: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Board Geometry/Outline
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#outline
   id: "2892"
@@ -1358,10 +1358,10 @@ check_2892:
 check_2864: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Clean
   subsection_id: "553"
-  section_id: "343"
+#  section_id: "343"
   dot_rev_check: "1"
   url: ""
   id: "2864"
@@ -1370,10 +1370,10 @@ check_2864:
 check_2807: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Micro Via Level 1
   subsection_id: "537"
-  section_id: "334"
+#  section_id: "334"
   dot_rev_check: "0"
   url: ""
   id: "2807"
@@ -1382,10 +1382,10 @@ check_2807:
 check_2750: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "9"
+  position: "9"
   title: Tolerances
   subsection_id: "530"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2750"
@@ -1394,10 +1394,10 @@ check_2750:
 check_2722: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: N/A Artwork Items
   subsection_id: "528"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "1"
   url: ""
   id: "2722"
@@ -1406,10 +1406,10 @@ check_2722:
 check_2893: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   title: Board Geometry/Outline
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: ""
   id: "2893"
@@ -1418,10 +1418,10 @@ check_2893:
 check_2836: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: No New Use
   subsection_id: "543"
-  section_id: "338"
+#  section_id: "338"
   dot_rev_check: "0"
   url: ""
   id: "2836"
@@ -1430,10 +1430,10 @@ check_2836:
 check_2808: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   title: Blind Via (Mechanical; CDD, Sequential Lam)
   subsection_id: "537"
-  section_id: "334"
+#  section_id: "334"
   dot_rev_check: "0"
   url: ""
   id: "2808"
@@ -1442,10 +1442,10 @@ check_2808:
 check_2751: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "10"
+  position: "10"
   title: Breakaways
   subsection_id: "530"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2751"
@@ -1454,10 +1454,10 @@ check_2751:
 check_2723: 
   date_code_check: "0"
   full_review: "0"
-  sort_order: "4"
+  position: "4"
   title: Dot Rev
   subsection_id: "528"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "1"
   url: ""
   id: "2723"
@@ -1466,10 +1466,10 @@ check_2723:
 check_2894: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "6"
+  position: "6"
   title: Board Geometry/Outline
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=mastertext.html
   id: "2894"
@@ -1478,10 +1478,10 @@ check_2894:
 check_2837: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Description Warnings
   subsection_id: "543"
-  section_id: "338"
+#  section_id: "338"
   dot_rev_check: "0"
   url: ""
   id: "2837"
@@ -1490,10 +1490,10 @@ check_2837:
 check_2780: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "7"
+  position: "7"
   title: Filled Vias
   subsection_id: "533"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2780"
@@ -1502,10 +1502,10 @@ check_2780:
 check_2809: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "6"
+  position: "6"
   title: Buried Via
   subsection_id: "537"
-  section_id: "334"
+#  section_id: "334"
   dot_rev_check: "0"
   url: ""
   id: "2809"
@@ -1514,10 +1514,10 @@ check_2809:
 check_2752: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "11"
+  position: "11"
   title: Scores
   subsection_id: "530"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2752"
@@ -1526,10 +1526,10 @@ check_2752:
 check_2724: 
   date_code_check: "0"
   full_review: "0"
-  sort_order: "5"
+  position: "5"
   title: Dot Rev (Etch Cut)
   subsection_id: "528"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "1"
   url: ""
   id: "2724"
@@ -1538,10 +1538,10 @@ check_2724:
 check_2895: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "7"
+  position: "7"
   title: Board Geometry/Outline
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#slots
   id: "2895"
@@ -1550,10 +1550,10 @@ check_2895:
 check_2838: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Bare Board Part Number
   subsection_id: "544"
-  section_id: "338"
+#  section_id: "338"
   dot_rev_check: "0"
   url: ""
   id: "2838"
@@ -1562,10 +1562,10 @@ check_2838:
 check_2781: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "8"
+  position: "8"
   title: Countersinks and Counterbores
   subsection_id: "533"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2781"
@@ -1574,10 +1574,10 @@ check_2781:
 check_2753: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "12"
+  position: "12"
   title: Datum's
   subsection_id: "530"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2753"
@@ -1586,10 +1586,10 @@ check_2753:
 check_2725: 
   date_code_check: "1"
   full_review: "1"
-  sort_order: "6"
+  position: "6"
   title: XX Designations
   subsection_id: "528"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "1"
   url: ""
   id: "2725"
@@ -1598,10 +1598,10 @@ check_2725:
 check_2896: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "8"
+  position: "8"
   title: Board Geometry/Outline
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: ""
   id: "2896"
@@ -1610,10 +1610,10 @@ check_2896:
 check_2839: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Outline Drawing Number
   subsection_id: "544"
-  section_id: "338"
+#  section_id: "338"
   dot_rev_check: "0"
   url: ""
   id: "2839"
@@ -1622,10 +1622,10 @@ check_2839:
 check_2782: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "9"
+  position: "9"
   title: Legend
   subsection_id: "533"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2782"
@@ -1634,10 +1634,10 @@ check_2782:
 check_2754: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "13"
+  position: "13"
   title: Countersinks and Counterbores
   subsection_id: "530"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2754"
@@ -1649,10 +1649,10 @@ check_2754:
 check_2897: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "9"
+  position: "9"
   title: Location Of All Holes
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: ""
   id: "2897"
@@ -1661,10 +1661,10 @@ check_2897:
 check_2783: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "10"
+  position: "10"
   title: Legend Title
   subsection_id: "533"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2783"
@@ -1673,10 +1673,10 @@ check_2783:
 check_2755: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   title: Maximum Thickness
   subsection_id: "531"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: www-ateops.corp.teradyne.com/ateopsdocuments/Operating%20Procedures/Design%20For%20Guidelines/Design%20For%20Manufacturability%20(DFM)/DFM-303-00%20Printed%20Circuit%20Board%20Fabrication%20Guidelines.pdf
   id: "2755"
@@ -1685,10 +1685,10 @@ check_2755:
 check_2810: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Micro Via Level 2
   subsection_id: "537"
-  section_id: "334"
+#  section_id: "334"
   dot_rev_check: "0"
   url: ""
   id: "2810"
@@ -1697,10 +1697,10 @@ check_2810:
 check_2726: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Mandatory Notes
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2726"
@@ -1709,10 +1709,10 @@ check_2726:
 check_2898: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "10"
+  position: "10"
   title: Location Of All Holes
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#tooling
   id: "2898"
@@ -1721,10 +1721,10 @@ check_2898:
 check_2784: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "11"
+  position: "11"
   title: Stub Drilled Vias
   subsection_id: "533"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2784"
@@ -1733,10 +1733,10 @@ check_2784:
 check_2756: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Nominal Thickness
   subsection_id: "531"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: www-ateops.corp.teradyne.com/ateopsdocuments/Operating%20Procedures/Design%20For%20Guidelines/Design%20For%20Manufacturability%20(DFM)/DFM-303-00%20Printed%20Circuit%20Board%20Fabrication%20Guidelines.pdf
   id: "2756"
@@ -1745,10 +1745,10 @@ check_2756:
 check_2811: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "7"
+  position: "7"
   title: Control Depth Via (CDD)
   subsection_id: "537"
-  section_id: "334"
+#  section_id: "334"
   dot_rev_check: "0"
   url: ""
   id: "2811"
@@ -1757,10 +1757,10 @@ check_2811:
 check_2727: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Mandatory Note Options
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2727"
@@ -1769,10 +1769,10 @@ check_2727:
 check_2899: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "11"
+  position: "11"
   title: Location Of All Holes
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#outline
   id: "2899"
@@ -1781,10 +1781,10 @@ check_2899:
 check_2840: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Mechanical Parts
   subsection_id: "544"
-  section_id: "338"
+#  section_id: "338"
   dot_rev_check: "0"
   url: ""
   id: "2840"
@@ -1793,10 +1793,10 @@ check_2840:
 check_2757: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Nomenclature
   subsection_id: "531"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2757"
@@ -1805,10 +1805,10 @@ check_2757:
 check_2812: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Micro Vias - Unconnected (Dummy) pads
   subsection_id: "537"
-  section_id: "334"
+#  section_id: "334"
   dot_rev_check: "0"
   url: ""
   id: "2812"
@@ -1817,10 +1817,10 @@ check_2812:
 check_2728: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Optional Notes
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2728"
@@ -1829,10 +1829,10 @@ check_2728:
 check_2785: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "12"
+  position: "12"
   title: Hole Tolerances
   subsection_id: "533"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2785"
@@ -1841,10 +1841,10 @@ check_2785:
 check_2841: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Descriptions
   subsection_id: "544"
-  section_id: "338"
+#  section_id: "338"
   dot_rev_check: "0"
   url: ""
   id: "2841"
@@ -1853,10 +1853,10 @@ check_2841:
 check_2758: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Balanced Layers
   subsection_id: "531"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2758"
@@ -1868,10 +1868,10 @@ check_2758:
 check_2813: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: BGAs
   subsection_id: "538"
-  section_id: "335"
+#  section_id: "335"
   dot_rev_check: "0"
   url: ""
   id: "2813"
@@ -1880,10 +1880,10 @@ check_2813:
 check_2729: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Optional Notes
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2729"
@@ -1892,10 +1892,10 @@ check_2729:
 check_2786: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "13"
+  position: "13"
   title: Press Fit Holes
   subsection_id: "533"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2786"
@@ -1904,10 +1904,10 @@ check_2786:
 check_2842: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Approvals
   subsection_id: "545"
-  section_id: "338"
+#  section_id: "338"
   dot_rev_check: "0"
   url: ""
   id: "2842"
@@ -1916,10 +1916,10 @@ check_2842:
 check_2787: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Mechanical Parts
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: ""
   id: "2787"
@@ -1928,10 +1928,10 @@ check_2787:
 check_2843: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Release and Change Order History
   subsection_id: "545"
-  section_id: "338"
+#  section_id: "338"
   dot_rev_check: "0"
   url: ""
   id: "2843"
@@ -1940,10 +1940,10 @@ check_2843:
 check_2759: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Aspect Ratio
   subsection_id: "531"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: www-ateops.corp.teradyne.com/ateopsdocuments/Operating%20Procedures/Design%20For%20Guidelines/Design%20For%20Manufacturability%20(DFM)/DFM-303-00%20Printed%20Circuit%20Board%20Fabrication%20Guidelines.pdf
   id: "2759"
@@ -1952,10 +1952,10 @@ check_2759:
 check_2814: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Fineline
   subsection_id: "538"
-  section_id: "335"
+#  section_id: "335"
   dot_rev_check: "0"
   url: ""
   id: "2814"
@@ -1964,10 +1964,10 @@ check_2814:
 check_2788: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Fixed Components
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: ""
   id: "2788"
@@ -1976,10 +1976,10 @@ check_2788:
 check_2844: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Electrical Parts
   subsection_id: "546"
-  section_id: "338"
+#  section_id: "338"
   dot_rev_check: "0"
   url: ""
   id: "2844"
@@ -1988,10 +1988,10 @@ check_2844:
 check_2815: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: BGAs
   subsection_id: "538"
-  section_id: "335"
+#  section_id: "335"
   dot_rev_check: "0"
   url: ""
   id: "2815"
@@ -2000,10 +2000,10 @@ check_2815:
 check_2730: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   title: Numbering Notes
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2730"
@@ -2012,10 +2012,10 @@ check_2730:
 check_2789: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   title: BGAs
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: ""
   id: "2789"
@@ -2024,10 +2024,10 @@ check_2789:
 check_2900: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "12"
+  position: "12"
   title: Marker Locations
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#pin1
   id: "2900"
@@ -2036,10 +2036,10 @@ check_2900:
 check_2845: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Mechanical Parts
   subsection_id: "546"
-  section_id: "338"
+#  section_id: "338"
   dot_rev_check: "0"
   url: ""
   id: "2845"
@@ -2048,10 +2048,10 @@ check_2845:
 check_2816: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Islands (Connected)
   subsection_id: "539"
-  section_id: "336"
+#  section_id: "336"
   dot_rev_check: "0"
   url: ""
   id: "2816"
@@ -2060,10 +2060,10 @@ check_2816:
 check_2731: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "6"
+  position: "6"
   title: Boxed Notes
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2731"
@@ -2072,10 +2072,10 @@ check_2731:
 check_2901: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "13"
+  position: "13"
   title: Route Keepin
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#keepins
   id: "2901"
@@ -2084,10 +2084,10 @@ check_2901:
 check_2846: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Title Block
   subsection_id: "547"
-  section_id: "339"
+#  section_id: "339"
   dot_rev_check: "0"
   url: ""
   id: "2846"
@@ -2096,10 +2096,10 @@ check_2846:
 check_2817: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Suppress Shape Fill (-S) Option
   subsection_id: "539"
-  section_id: "336"
+#  section_id: "336"
   dot_rev_check: "0"
   url: ""
   id: "2817"
@@ -2108,10 +2108,10 @@ check_2817:
 check_2760: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "6"
+  position: "6"
   title: Copper Thickness
   subsection_id: "531"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2760"
@@ -2120,10 +2120,10 @@ check_2760:
 check_2732: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "7"
+  position: "7"
   title: Material
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2732"
@@ -2139,10 +2139,10 @@ check_2732:
 check_2818: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   title: Current Requirements
   subsection_id: "539"
-  section_id: "336"
+#  section_id: "336"
   dot_rev_check: "0"
   url: ""
   id: "2818"
@@ -2151,10 +2151,10 @@ check_2818:
 check_2761: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "8"
+  position: "8"
   title: Dielectric Thickness
   subsection_id: "531"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: www-ateops.corp.teradyne.com/ateopsdocuments/Operating%20Procedures/Design%20For%20Guidelines/Design%20For%20Manufacturability%20(DFM)/DFM-303-00%20Printed%20Circuit%20Board%20Fabrication%20Guidelines.pdf
   id: "2761"
@@ -2163,10 +2163,10 @@ check_2761:
 check_2733: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "8"
+  position: "8"
   title: Finish
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2733"
@@ -2182,10 +2182,10 @@ check_2733:
 check_2902: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "14"
+  position: "14"
   title: Package Keepin
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#packkeepins
   id: "2902"
@@ -2194,10 +2194,10 @@ check_2902:
 check_2847: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Title Block
   subsection_id: "547"
-  section_id: "339"
+#  section_id: "339"
   dot_rev_check: "0"
   url: ""
   id: "2847"
@@ -2206,10 +2206,10 @@ check_2847:
 check_2762: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "9"
+  position: "9"
   title: 2 Plies Prepreg
   subsection_id: "531"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: www-ateops.corp.teradyne.com/ateopsdocuments/Operating%20Procedures/Design%20For%20Guidelines/Design%20For%20Manufacturability%20(DFM)/DFM-303-00%20Printed%20Circuit%20Board%20Fabrication%20Guidelines.pdf
   id: "2762"
@@ -2218,10 +2218,10 @@ check_2762:
 check_2734: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "9"
+  position: "9"
   title: Soldermask
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2734"
@@ -2230,10 +2230,10 @@ check_2734:
 check_2790: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "6"
+  position: "6"
   title: Summary Report
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: ""
   id: "2790"
@@ -2242,10 +2242,10 @@ check_2790:
 check_2819: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "7"
+  position: "7"
   title: Slivers and Acid Traps
   subsection_id: "539"
-  section_id: "336"
+#  section_id: "336"
   dot_rev_check: "0"
   url: ""
   id: "2819"
@@ -2254,10 +2254,10 @@ check_2819:
 check_2903: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "15"
+  position: "15"
   title: Route Keepouts
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#keepouts
   id: "2903"
@@ -2266,10 +2266,10 @@ check_2903:
 check_2848: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Revision Block
   subsection_id: "547"
-  section_id: "339"
+#  section_id: "339"
   dot_rev_check: "0"
   url: ""
   id: "2848"
@@ -2278,10 +2278,10 @@ check_2848:
 check_2763: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "10"
+  position: "10"
   title: Sequential Lamination
   subsection_id: "531"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2763"
@@ -2290,10 +2290,10 @@ check_2763:
 check_2735: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "10"
+  position: "10"
   title: Conductor Tolerance
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2735"
@@ -2302,10 +2302,10 @@ check_2735:
 check_2791: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "7"
+  position: "7"
   title: Global Fiducials
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
   id: "2791"
@@ -2314,10 +2314,10 @@ check_2791:
 check_2904: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "16"
+  position: "16"
   title: Via Keepouts
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#viakeepouts
   id: "2904"
@@ -2326,10 +2326,10 @@ check_2904:
 check_2849: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Revision Block
   subsection_id: "547"
-  section_id: "339"
+#  section_id: "339"
   dot_rev_check: "0"
   url: ""
   id: "2849"
@@ -2338,10 +2338,10 @@ check_2849:
 check_2736: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "11"
+  position: "11"
   title: Copper Pattern
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2736"
@@ -2350,10 +2350,10 @@ check_2736:
 check_2792: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "8"
+  position: "8"
   title: Local Fiducials
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
   id: "2792"
@@ -2362,10 +2362,10 @@ check_2792:
 check_2764: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "11"
+  position: "11"
   title: Notes
   subsection_id: "531"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2764"
@@ -2374,10 +2374,10 @@ check_2764:
 check_2905: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "17"
+  position: "17"
   title: Thieving Keepouts
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#thieving
   id: "2905"
@@ -2386,10 +2386,10 @@ check_2905:
 check_2820: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "6"
+  position: "6"
   title: Clearances
   subsection_id: "539"
-  section_id: "336"
+#  section_id: "336"
   dot_rev_check: "0"
   url: ""
   id: "2820"
@@ -2398,10 +2398,10 @@ check_2820:
 check_2793: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "9"
+  position: "9"
   title: All Fiducials
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
   id: "2793"
@@ -2410,10 +2410,10 @@ check_2793:
 check_2765: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "7"
+  position: "7"
   title: Copper Thickness
   subsection_id: "531"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: www-ateops.corp.teradyne.com/ateopsdocuments/Operating%20Procedures/Design%20For%20Guidelines/Design%20For%20Manufacturability%20(DFM)/DFM-303-00%20Printed%20Circuit%20Board%20Fabrication%20Guidelines.pdf
   id: "2765"
@@ -2422,10 +2422,10 @@ check_2765:
 check_2906: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "18"
+  position: "18"
   title: Package Keepouts
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#packkeepouts
   id: "2906"
@@ -2434,10 +2434,10 @@ check_2906:
 check_2737: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "12"
+  position: "12"
   title: Bow and Twist
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2737"
@@ -2446,10 +2446,10 @@ check_2737:
 check_2794: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "10"
+  position: "10"
   title: Master Library
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: ""
   id: "2794"
@@ -2458,10 +2458,10 @@ check_2794:
 check_2766: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Signal Layer
   subsection_id: "532"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2766"
@@ -2470,10 +2470,10 @@ check_2766:
 check_2821: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Suppress Shape Fill (-S) Option - VOIDS
   subsection_id: "539"
-  section_id: "336"
+#  section_id: "336"
   dot_rev_check: "0"
   url: ""
   id: "2821"
@@ -2482,10 +2482,10 @@ check_2821:
 check_2907: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "19"
+  position: "19"
   title: Soldermask Clearance
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: ""
   id: "2907"
@@ -2494,10 +2494,10 @@ check_2907:
 check_2850: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: XREFs Match BOM
   subsection_id: "548"
-  section_id: "339"
+#  section_id: "339"
   dot_rev_check: "0"
   url: ""
   id: "2850"
@@ -2506,10 +2506,10 @@ check_2850:
 check_2738: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "13"
+  position: "13"
   title: Dielectric Spacing
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2738"
@@ -2518,10 +2518,10 @@ check_2738:
 check_2795: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "11"
+  position: "11"
   title: Labels
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: ""
   id: "2795"
@@ -2530,10 +2530,10 @@ check_2795:
 check_2767: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Ref Layer
   subsection_id: "532"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2767"
@@ -2542,10 +2542,10 @@ check_2767:
 check_2822: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Check Plots
   subsection_id: "539"
-  section_id: "336"
+#  section_id: "336"
   dot_rev_check: "0"
   url: ""
   id: "2822"
@@ -2554,10 +2554,10 @@ check_2822:
 check_2908: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "20"
+  position: "20"
   title: Panel Drawing
   subsection_id: "556"
-  section_id: "345"
+#  section_id: "345"
   dot_rev_check: "0"
   url: ""
   id: "2908"
@@ -2566,10 +2566,10 @@ check_2908:
 check_2851: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Mechanical Details
   subsection_id: "548"
-  section_id: "339"
+#  section_id: "339"
   dot_rev_check: "0"
   url: ""
   id: "2851"
@@ -2578,10 +2578,10 @@ check_2851:
 check_2739: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "14"
+  position: "14"
   title: Component Markings
   subsection_id: "529"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2739"
@@ -2590,10 +2590,10 @@ check_2739:
 check_2796: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "12"
+  position: "12"
   title: Secondary Side
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
   id: "2796"
@@ -2602,10 +2602,10 @@ check_2796:
 check_2768: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Line Width (Mils)
   subsection_id: "532"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2768"
@@ -2614,10 +2614,10 @@ check_2768:
 check_2823: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Teradyne Logo and Part Number
   subsection_id: "540"
-  section_id: "337"
+#  section_id: "337"
   dot_rev_check: "0"
   url: ""
   id: "2823"
@@ -2626,10 +2626,10 @@ check_2823:
 check_2909: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Connector(s)
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: ""
   id: "2909"
@@ -2638,10 +2638,10 @@ check_2909:
 check_2852: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "1"
+  position: "1"
   title: Testpoint Sheet
   subsection_id: "549"
-  section_id: "339"
+#  section_id: "339"
   dot_rev_check: "0"
   url: ""
   id: "2852"
@@ -2650,10 +2650,10 @@ check_2852:
 check_2824: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "3"
+  position: "3"
   title: Primary Side Designation
   subsection_id: "540"
-  section_id: "337"
+#  section_id: "337"
   dot_rev_check: "0"
   url: ""
   id: "2824"
@@ -2662,10 +2662,10 @@ check_2824:
 check_2797: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "13"
+  position: "13"
   title: Waved Component Orientation
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
   id: "2797"
@@ -2674,10 +2674,10 @@ check_2797:
 check_2710: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "4"
+  position: "4"
   title: Summary Report
   subsection_id: "526"
-  section_id: "330"
+#  section_id: "330"
   dot_rev_check: "0"
   url: ""
   id: "2710"
@@ -2686,10 +2686,10 @@ check_2710:
 check_2769: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   title: Line Widths
   subsection_id: "532"
-  section_id: "331"
+#  section_id: "331"
   dot_rev_check: "0"
   url: ""
   id: "2769"
@@ -2703,10 +2703,10 @@ check_2769:
 check_2853: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "2"
+  position: "2"
   title: Reference Designators
   subsection_id: "549"
-  section_id: "339"
+#  section_id: "339"
   dot_rev_check: "0"
   url: ""
   id: "2853"
@@ -2715,10 +2715,10 @@ check_2853:
 check_2798: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "14"
+  position: "14"
   title: Waved Component Orientation
   subsection_id: "534"
-  section_id: "332"
+#  section_id: "332"
   dot_rev_check: "0"
   url: www-ateops.corp.teradyne.com/dfx/dfm_guidelines.asp
   id: "2798"
@@ -2727,10 +2727,10 @@ check_2798:
 check_2711: 
   date_code_check: "0"
   full_review: "1"
-  sort_order: "5"
+  position: "5"
   title: Summary Report
   subsection_id: "526"
-  section_id: "330"
+#  section_id: "330"
   dot_rev_check: "0"
   url: ""
   id: "2711"

@@ -112,7 +112,7 @@ class IncomingDirectoryControllerTest < Test::Unit::TestCase
 
     # Verify that a incoming directory can be added.  The number of 
     # incoming directories will increase by one.
-    assert_equal(3, IncomingDirectory.find_all.size)
+    incoming_directory_count = IncomingDirectory.count
     assert_equal(2, IncomingDirectory.find_all_by_active(1).size)
 
     new_incoming_directory = { 'active' => '1', 'name' => 'Thunderbird' }
@@ -120,8 +120,9 @@ class IncomingDirectoryControllerTest < Test::Unit::TestCase
     set_admin()
     post(:create, :new_incoming_directory => new_incoming_directory)
 
-    assert_equal(4, IncomingDirectory.find_all.size)
-    assert_equal(3, IncomingDirectory.find_all_by_active(1).size)
+    incoming_directory_count += 1
+    assert_equal(incoming_directory_count, IncomingDirectory.count)
+    assert_equal(3,                        IncomingDirectory.find_all_by_active(1).size)
     assert_equal("Incoming Directory #{new_incoming_directory['name']} added", 
                  flash['notice'])
     assert_redirected_to(:action => 'list')
@@ -130,8 +131,8 @@ class IncomingDirectoryControllerTest < Test::Unit::TestCase
     # It should not get added.
     post(:create, :new_incoming_directory => new_incoming_directory)
 
-    assert_equal(4, IncomingDirectory.find_all.size)
-    assert_equal(3, IncomingDirectory.find_all_by_active(1).size)
+    assert_equal(incoming_directory_count, IncomingDirectory.count)
+    assert_equal(3,                        IncomingDirectory.find_all_by_active(1).size)
     assert_equal("Name has already been taken", flash['notice'])
     assert_redirected_to(:action => 'add')
 
@@ -140,8 +141,8 @@ class IncomingDirectoryControllerTest < Test::Unit::TestCase
     # It should not get added.
     post(:create, :new_incoming_directory => { 'active' => '1', 'name' => '' })
     
-    assert_equal(4, IncomingDirectory.find_all.size)
-    assert_equal(3, IncomingDirectory.find_all_by_active(1).size)
+    assert_equal(incoming_directory_count, IncomingDirectory.count)
+    assert_equal(3,                        IncomingDirectory.find_all_by_active(1).size)
     assert_equal("Name can't be blank", flash['notice'])
     assert_redirected_to(:action => 'add')
 

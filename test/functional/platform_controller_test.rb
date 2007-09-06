@@ -24,6 +24,8 @@ class PlatformControllerTest < Test::Unit::TestCase
   end
 
   fixtures(:platforms,
+           :roles_users,
+           :roles,
            :users)
 
 

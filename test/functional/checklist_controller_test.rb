@@ -57,16 +57,12 @@ class ChecklistControllerTest < Test::Unit::TestCase
     checklist_1_0 = checklists(:checklist_1_0)
     # Try copying without logging in.
     post(:copy, :id => checklist_1_0.id)
-    
-    assert_redirected_to(:controller => 'user',
-	                       :action     => 'login')
+    assert_redirected_to(:controller => 'user', :action => 'login')
 
     # Try copying from a non-Admin account.
     set_non_admin
     post(:copy, :id => checklist_1_0.id)
-    
-    assert_redirected_to(:controller => 'tracker',
-                         :action     => 'index')
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
 
@@ -80,8 +76,7 @@ class ChecklistControllerTest < Test::Unit::TestCase
     assert_equal(5, checklist.dr_designer_auditor_count)
 
     check_count = 0
-    sections = checklist.sections
-    sections.each { |section| check_count += section.checks.size }
+    checklist.each_check { |ch| check_count += 1 }
     assert_equal(12, check_count)
 
     checklist_count = Checklist.count
@@ -108,8 +103,7 @@ class ChecklistControllerTest < Test::Unit::TestCase
     assert_equal(5, checklist.dr_designer_auditor_count)
 
     check_count = 0
-    sections = checklist.sections
-    sections.each { |section| check_count += section.checks.size }
+    checklist.each_check { |ch| check_count += 1 }
     assert_equal(12, check_count)
 
 
@@ -153,55 +147,60 @@ class ChecklistControllerTest < Test::Unit::TestCase
 
     checklist_0_1 = checklists(:checklist_0_1)
     # Try destroying without logging in.
-    post(:destroy,
-         :id      => checklist_0_1.id)
-    
-    assert_redirected_to(:controller => 'user',
-                         :action     => 'login')
+    post(:destroy, :id => checklist_0_1.id)
+    assert_redirected_to(:controller => 'user', :action => 'login')
 
     # Try destroying from a non-Admin account.
     set_non_admin
-    post(:destroy,
-         :id      => checklist_0_1.id)
-    
-    assert_redirected_to(:controller => 'tracker', :action     => 'index')
+    post(:destroy, :id => checklist_0_1.id)
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
 
-    # Try destroying from an Admin account
-    check_count = 0
-    sections = checklist_0_1.sections
-    subsections = checklist_0_1.subsections
-    sections.each { |section| check_count += section.checks.size }
+    total_checks      = Check.count
+    total_subsections = Subsection.count
+    total_sections    = Section.count
+    total_checklists  = Checklist.count
+    
+    ids = { :checks      => [],
+            :subsections => [],
+            :sections    => [] }
 
-    assert_equal(17, check_count)
-    assert_equal( 4, sections.size)
-    assert_equal( 7, subsections.size)
+    checklist_0_1.sections.each do |section|
+      ids[:sections] << section.id
+      section.subsections.each do |subsection|
+        ids[:subsections] << subsection.id
+        subsection.checks.each do |check|
+          ids[:checks] << check.id
+        end
+      end
+    end
 
-    checklist_count = Checklist.count
 
     set_admin
-    post(:destroy,
-         :id      => checklist_0_1.id)
+    post(:destroy, :id => checklist_0_1.id)
 
     assert_redirected_to(:action => 'list')
 
-    checklists = Checklist.find(:all)
-    checklist_count -= 1
-    assert_equal(checklist_count, Checklist.count)
 
-    check_count = 0
-    sections = Section.find(:all,
-                            :conditions => "checklist_id=#{checklist_0_1.id}")
-    subsections = Subsection.find(:all,
-                                  :conditions => "checklist_id=#{checklist_0_1.id}")
-    sections.each do |section|
-      check_count += Check.count("section_id=#{section.id}")
-    end
-    assert_equal(0, check_count)
-    assert_equal(0, sections.size)
-    assert_equal(0, subsections.size)
+    total_checks      -= ids[:checks].size
+    total_subsections -= ids[:subsections].size
+    total_sections    -= ids[:sections].size
+    
+    assert_equal(total_checks,       Check.count)
+    assert_equal(total_subsections,  Subsection.count)
+    assert_equal(total_sections,     Section.count)
+    assert_equal(total_checklists-1, Checklist.count)
 
+    all_checks      = Check.find(:all)
+    all_subsections = Subsection.find(:all)
+    all_sections    = Section.find(:all)
+    all_checklists  = Checklist.find(:all)
+    ids[:checks].each { |id| assert(!all_checks.detect { |c| c.id == id }) }
+    ids[:subsections].each { |id| assert(!all_subsections.detect { |ss| ss.id == id })}
+    ids[:sections].each { |id| assert(!all_sections.detect { |s| s.id == id })}
+    assert(!all_checklists.detect { |cl| cl.id == checklist_0_1 })
+    
   end
 
 
@@ -478,7 +477,7 @@ class ChecklistControllerTest < Test::Unit::TestCase
       print "  REV: #{cl.major_rev_number}.#{cl.minor_rev_number}\n" 
 
       section_list = Section.find_all("checklist_id='#{cl.id}'", 
-                                      'sort_order ASC')
+                                      'position')
     print "\n    #{section_list.size} sections\n"
     for sect in section_list
       print "\n    #{sect.name} [#{sect.id}]\n"
@@ -493,7 +492,7 @@ class ChecklistControllerTest < Test::Unit::TestCase
       print "No\n"  if not sect.dot_rev_check?
 
       subsection_list = Subsection.find_all("section_id='#{sect.id}'",
-                                            'sort_order ASC')
+                                            'position')
       print "\n      #{subsection_list.size} subsections\n"
       for subsect in subsection_list
         print "\n      #{subsect.name} [#{subsect.id}]\n"
@@ -508,7 +507,7 @@ class ChecklistControllerTest < Test::Unit::TestCase
         print "No\n"  if not subsect.dot_rev_check?
 
         check_list = Check.find_all("subsection_id='#{subsect.id}'",
-                                    'sort_order ASC')
+                                    'position')
         print "\n      #{check_list.size} checks\n"
         for check in check_list
           print "\n      #{check.check} [#{check.id}]\n"

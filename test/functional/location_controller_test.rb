@@ -42,9 +42,9 @@ class LocationControllerTest < Test::Unit::TestCase
     # Try editing from a non-Admin account.
     # VERIFY: The user is redirected.
     set_non_admin
-    post :list
+    post(:list)
 
-    assert_redirected_to(:controller => 'tracker', :action     => 'index')
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
     # Try listing from an Admin account
@@ -117,25 +117,26 @@ class LocationControllerTest < Test::Unit::TestCase
   #
   def test_create
 
-    assert_equal(5, Location.find_all.size)
+    location_count = Location.count
 
     set_admin
     post(:create, :new_location => { 'active' => '1', 'name' => 'Pittsburgh' })
 
-    assert_equal(6,	Location.find_all.size)
+    location_count += 1
+    assert_equal(location_count,	            Location.count)
     assert_equal("Location Pittsburgh added", flash['notice'])
     assert_redirected_to(:action => 'list')
     
     post(:create, :new_location => { 'active' => '1', 'name' => 'Pittsburgh' })
 
-    assert_equal(6,	Location.find_all.size)
+    assert_equal(location_count,	              Location.count)
     assert_equal("Name has already been taken", flash['notice'])
     assert_redirected_to(:action => 'add')
 
 
     post(:create, :new_location => { 'active' => '1', 'name' => '' })
     
-    assert_equal(6,	Location.find_all.size)
+    assert_equal(location_count,	      Location.count)
     assert_equal("Name can't be blank", flash['notice'])
     assert_redirected_to(:action => 'add')
 

@@ -24,6 +24,8 @@ class ReviewGroupControllerTest < Test::Unit::TestCase
   end
 
   fixtures(:review_groups,
+           :roles_users,
+           :roles,
            :users)
 
 
@@ -58,8 +60,7 @@ class ReviewGroupControllerTest < Test::Unit::TestCase
     # Try listing from an Admin account
     # VERIFY: The project list data is retrieved
     set_admin
-    post(:list,
-         :page => 1)
+    post(:list, :page => 1)
 
     assert_equal(3, assigns(:review_groups).size)
   end

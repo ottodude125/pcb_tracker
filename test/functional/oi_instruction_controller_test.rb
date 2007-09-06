@@ -49,6 +49,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
            :oi_categories,
            :oi_category_sections,
            :oi_instructions,
+           :part_numbers,
            :roles,
            :roles_users,
 	       :users)
@@ -85,8 +86,8 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     
     assert_response(:success)
     assert_not_nil(assigns(:design))
-    assert_equal(@mx234a.id, assigns(:design).id)
-    assert_equal('mx234a',   assigns(:design).name)
+    assert_equal(@mx234a.id,     assigns(:design).id)
+    assert_equal('252-234-a0 g', assigns(:design).part_number.pcb_display_name)
     
     assert_not_nil(assigns(:oi_category_list))
     oi_category_list = assigns(:oi_category_list)
@@ -136,8 +137,8 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     assert_response(:success)
     design = assigns(:design)
     assert_not_nil(design)
-    assert_equal(@mx234a.id, design.id)
-    assert_equal('mx234a',   design.name)
+    assert_equal(@mx234a.id,     design.id)
+    assert_equal('252-234-a0 g', design.part_number.pcb_display_name)
     
     category = assigns(:category)
     assert_not_nil(category)
@@ -588,15 +589,17 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     mathi_email = @emails.pop
     siva_email  = @emails.pop
     
-    assert_equal(1,                                        siva_email.to.size)
-    assert_equal(@siva_e.email,                             siva_email.to.pop)
-    assert_equal(expected_cc_list,                         siva_email.cc.sort)
-    assert_equal("Work Assignment Created for the mx234a", siva_email.subject)
+    assert_equal(1,                siva_email.to.size)
+    assert_equal(@siva_e.email,    siva_email.to.pop)
+    assert_equal(expected_cc_list, siva_email.cc.sort)
+    assert_equal("Work Assignment Created for the 252-234-a0 g",
+                 siva_email.subject)
 
-    assert_equal(1,                                        mathi_email.to.size)
-    assert_equal(@mathi_n.email,                           mathi_email.to.pop)
-    assert_equal(expected_cc_list,                         mathi_email.cc.sort)
-    assert_equal("Work Assignment Created for the mx234a", mathi_email.subject)
+    assert_equal(1,                mathi_email.to.size)
+    assert_equal(@mathi_n.email,   mathi_email.to.pop)
+    assert_equal(expected_cc_list, mathi_email.cc.sort)
+    assert_equal("Work Assignment Created for the 252-234-a0 g", 
+                 mathi_email.subject)
 
     # Verify that a user from outside the PCB Group can not 
     # access the  view_assignments view
@@ -765,7 +768,8 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     email = @emails.pop
     assert_equal([@scott_g.email], email.to.sort)
     assert_equal(cc_list.sort,     email.cc.sort)
-    assert_equal("#{@mx234a.name}:: Work Assignment Update", email.subject)
+    assert_equal("#{@mx234a.part_number.pcb_display_name}:: Work Assignment Update",
+                 email.subject)
 
 
     post(:assignment_update,
@@ -787,7 +791,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     email = @emails.pop
     assert_equal([@scott_g.email], email.to.sort)
     assert_equal(cc_list.sort,     email.cc.sort)
-    assert_equal("#{@mx234a.name}:: Work Assignment Update - Completed",
+    assert_equal("#{@mx234a.part_number.pcb_display_name}:: Work Assignment Update - Completed",
                  email.subject)
     
     set_user(@scott_g.id, 'Designer')
@@ -811,7 +815,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     email = @emails.pop
     assert_equal([@siva_e.email], email.to.sort)
     assert_equal(cc_list.sort,    email.cc.sort)
-    assert_equal("#{@mx234a.name}:: Work Assignment Update - Reopened",
+    assert_equal("#{@mx234a.part_number.pcb_display_name}:: Work Assignment Update - Reopened",
                  email.subject)
     
   end

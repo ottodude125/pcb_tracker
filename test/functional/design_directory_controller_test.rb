@@ -133,7 +133,7 @@ class DesignDirectoryControllerTest < Test::Unit::TestCase
 
     # Verify that a design directory can be added.  The number of 
     # design directories will increase by one.
-    assert_equal(3, DesignDirectory.find_all.size)
+    design_directory_count = DesignDirectory.count
     assert_equal(2, DesignDirectory.find_all_by_active(1).size)
 
     new_design_directory = { 'active' => '1', 'name'   => 'Thunderbird' }
@@ -141,8 +141,9 @@ class DesignDirectoryControllerTest < Test::Unit::TestCase
     set_admin
     post(:create, :new_design_directory => new_design_directory)
 
-    assert_equal(4, DesignDirectory.find_all.size)
-    assert_equal(3, DesignDirectory.find_all_by_active(1).size)
+    design_directory_count += 1
+    assert_equal(design_directory_count, DesignDirectory.count)
+    assert_equal(3,                      DesignDirectory.find_all_by_active(1).size)
     assert_equal("Design Directory #{new_design_directory['name']} added", 
                  flash['notice'])
     assert_redirected_to(:action => 'list')
@@ -151,8 +152,8 @@ class DesignDirectoryControllerTest < Test::Unit::TestCase
     # It should not get added.
     post(:create, :new_design_directory => new_design_directory)
 
-    assert_equal(4, DesignDirectory.find_all.size)
-    assert_equal(3, DesignDirectory.find_all_by_active(1).size)
+    assert_equal(design_directory_count, DesignDirectory.count)
+    assert_equal(3,                      DesignDirectory.find_all_by_active(1).size)
     assert_equal("Name has already been taken", flash['notice'])
     assert_redirected_to(:action => 'add')
 
@@ -162,8 +163,8 @@ class DesignDirectoryControllerTest < Test::Unit::TestCase
     post(:create,
          :new_design_directory => { 'active' => '1', 'name' => '' })
     
-    assert_equal(4, DesignDirectory.find_all.size)
-    assert_equal(3, DesignDirectory.find_all_by_active(1).size)
+    assert_equal(design_directory_count, DesignDirectory.count)
+    assert_equal(3,                      DesignDirectory.find_all_by_active(1).size)
     assert_equal("Name can't be blank", flash['notice'])
     assert_redirected_to(:action => 'add')
 

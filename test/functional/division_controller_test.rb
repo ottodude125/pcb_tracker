@@ -42,7 +42,7 @@ class DivisionControllerTest < Test::Unit::TestCase
     # Try editing from a non-Admin account.
     # VERIFY: The user is redirected.
     set_non_admin
-    post :list
+    post(:list)
 
     assert_redirected_to(:controller => 'tracker', :action     => 'index')
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
@@ -118,18 +118,19 @@ class DivisionControllerTest < Test::Unit::TestCase
   #
   def test_create
 
-    assert_equal(3, Division.find_all.size)
+    division_count = Division.count
 
     set_admin
     post(:create, :new_division => { 'active' => '1', 'name' => 'LTX' })
 
-    assert_equal(4,	Division.find_all.size)
+    division_count += 1
+    assert_equal(division_count,	     Division.count)
     assert_equal("Division LTX added", flash['notice'])
     assert_redirected_to(:action => 'list')
     
     post(:create, :new_division => { 'active' => '1', 'name' => 'LTX' })
 
-    assert_equal(4,	Division.find_all.size)
+    assert_equal(division_count,	              Division.count)
     assert_equal("Name has already been taken", flash['notice'])
     assert_redirected_to(:action => 'add')
 
@@ -137,7 +138,7 @@ class DivisionControllerTest < Test::Unit::TestCase
     post(:create,
 	     :new_project => { 'active' => '1', 'name' => '' })
     
-    assert_equal(4,	Division.find_all.size)
+    assert_equal(division_count,	      Division.count)
     assert_equal("Name can't be blank", flash['notice'])
     assert_redirected_to(:action => 'add')
 

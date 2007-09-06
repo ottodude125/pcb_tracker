@@ -2,6 +2,7 @@
 # av714b - Catalyst/DC90/First Board Entry - Ben Bina
 av714b:
   id:                                        1
+  part_number_id:                            20
   location_id:                               1
   division_id:                               2
   platform_id:                               1
@@ -33,6 +34,7 @@ av714b:
 # la021c - Flex/Viking/Second Board Entry - Lee Schaff
 la021c:
   id:                                        2
+  part_number_id:                            17
   location_id:                               1
   division_id:                               2
   platform_id:                               2
@@ -68,6 +70,7 @@ la021c:
 # mx008b4 - J750/POOL2/Third Board Entry - John Joyce
 mx008b4:
   id:                                        3
+  part_number_id:                            18
   location_id:                               1
   division_id:                               2
   platform_id:                               5
@@ -100,6 +103,7 @@ mx008b4:
 # mx008b4 - J750/POOL2/Third Board Entry - John Joyce
 mx008b4_ecoP123456:
   id:                                        4
+  part_number_id:                            19
   location_id:                               1
   division_id:                               2
   platform_id:                               5
@@ -133,6 +137,7 @@ mx008b4_ecoP123456:
 # mx234a
 mx234a:
   id:                                        5
+  part_number_id:                            4
   location_id:                               1
   division_id:                               2
   platform_id:                               5
@@ -167,6 +172,7 @@ mx234a:
 # mx234c
 mx234c:
   id:                                        6
+  part_number_id:                            9
   location_id:                               1
   division_id:                               2
   platform_id:                               5

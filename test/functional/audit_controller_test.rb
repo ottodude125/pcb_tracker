@@ -45,6 +45,7 @@ class AuditControllerTest < Test::Unit::TestCase
            :design_checks,
            :design_reviews,
            :design_review_results,
+           :part_numbers,
            :platforms,
            :projects,
            :prefixes,
@@ -56,9 +57,6 @@ class AuditControllerTest < Test::Unit::TestCase
            :subsections,
            :users)
            
-  self.use_transactional_fixtures = true
-  self.use_instantiated_fixtures  = false
-
 
   Not_Authorized = 'You are not authorized to view or modify ' +
     'audit information - check your role'
@@ -488,9 +486,11 @@ class AuditControllerTest < Test::Unit::TestCase
     # completes
     assert_equal(2, @emails.size)
     email = @emails.pop
-    assert_equal("Notification of upcoming Final Review for mx234b",  email.subject)
+    assert_equal("Notification of upcoming Final Review for 252-234-b0 m",  
+                 email.subject)
     email = @emails.pop
-    assert_equal("mx234b: The designer has completed the self-audit", email.subject)
+    assert_equal("252-234-b0 m: The designer has completed the self-audit", 
+                 email.subject)
 
     # Log in as an auditor and get the audit listing.
     user = @scott_g
@@ -706,10 +706,10 @@ class AuditControllerTest < Test::Unit::TestCase
         :id => audits(:audit_mx234b).id)
 
     audit = assigns(:audit)
-    assert_equal('mx234b',      audit.design.name)
-    assert_equal('2.0',         audit.checklist.revision)
-    assert_equal(@rich_m.name,  audit.design.designer.name)
-    assert_equal(@scott_g.name, audit.design.peer.name)
+    assert_equal('252-234-b0 m',  audit.design.part_number.pcb_display_name)
+    assert_equal('2.0',           audit.checklist.revision)
+    assert_equal(@rich_m.name,    audit.design.designer.name)
+    assert_equal(@scott_g.name,   audit.design.peer.name)
 
     #              Section      Subsection   Check IDs
     #                ID             ID
@@ -727,10 +727,10 @@ class AuditControllerTest < Test::Unit::TestCase
         :id => audits(:audit_la453b_eco2).id)
 
     audit = assigns(:audit)
-    assert_equal('la453b4_eco2', audit.design.name)
-    assert_equal('1.0',          audit.checklist.revision)
-    assert_equal(@scott_g.name,  audit.design.designer.name)
-    assert_equal(@rich_m.name,   audit.design.peer.name)
+    assert_equal('942-453-b4 y',  audit.design.part_number.pcb_display_name)
+    assert_equal('1.0',           audit.checklist.revision)
+    assert_equal(@scott_g.name,   audit.design.designer.name)
+    assert_equal(@rich_m.name,    audit.design.peer.name)
 
     #              Section      Subsection   Check IDs
     #                ID             ID
@@ -744,10 +744,10 @@ class AuditControllerTest < Test::Unit::TestCase
         :id => audits(:audit_la454c3).id)
 
     audit = assigns(:audit)
-    assert_equal('la454c3',     audit.design.name)
-    assert_equal('1.0',         audit.checklist.revision)
-    assert_equal(@rich_m.name,  audit.design.designer.name)
-    assert_equal(@scott_g.name, audit.design.peer.name)
+    assert_equal('942-454-c3 s',  audit.design.part_number.pcb_display_name)
+    assert_equal('1.0',           audit.checklist.revision)
+    assert_equal(@rich_m.name,    audit.design.designer.name)
+    assert_equal(@scott_g.name,   audit.design.peer.name)
 
     validate_print_variables(validate, audit.checklist.sections)
     display = assigns(:display)
@@ -794,7 +794,7 @@ class AuditControllerTest < Test::Unit::TestCase
     get(:show_sections,
         :id => audit_mx234c.id)
 
-    assert_equal("mx234c", assigns(:board_name))
+    assert_equal("252-234-c0 q", assigns(:board_name))
     lines = assigns(:checklist_index)
 
     expected = Array[
@@ -873,7 +873,7 @@ class AuditControllerTest < Test::Unit::TestCase
     get(:show_sections,
         :id => audits(:audit_la453b_eco2).id)
 
-    assert_equal("la453b4_eco2", assigns(:board_name))
+    assert_equal("942-453-b4 y", assigns(:board_name))
     lines = assigns(:checklist_index)
 
     expected = Array[
@@ -928,7 +928,7 @@ class AuditControllerTest < Test::Unit::TestCase
     get(:show_sections,
         :id => audits(:audit_la454c3).id)
 
-    assert_equal("la454c3", assigns(:board_name))
+    assert_equal("942-454-c3 s", assigns(:board_name))
     lines = assigns(:checklist_index)
 
     expected = Array[
@@ -982,7 +982,7 @@ class AuditControllerTest < Test::Unit::TestCase
     get(:show_sections,
         :id => audits(:audit_in_peer_audit).id)
 
-    assert_equal("mx999b", assigns(:board_name))
+    assert_equal("252-999-b0 u", assigns(:board_name))
     lines = assigns(:checklist_index)
 
     expected = Array[

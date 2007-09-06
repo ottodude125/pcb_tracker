@@ -49,17 +49,15 @@ class FabHouseControllerTest < Test::Unit::TestCase
     # Try editing from a non-Admin account.
     # VERIFY: The user is redirected.
     set_non_admin
-    post :list
+    post(:list)
 
-    assert_redirected_to(:controller => 'tracker',
-                         :action     => 'index')
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
     # Try listing from an Admin account
     # VERIFY: The project list data is retrieved
     set_admin
-    post(:list,
-         :page => 1)
+    post(:list, :page => 1)
 
     assert_equal(8, assigns(:fab_houses).size)
   end
@@ -85,8 +83,7 @@ class FabHouseControllerTest < Test::Unit::TestCase
 
     set_admin
     merix = fab_houses(:merix)
-    get(:edit,
-        :id => merix.id)
+    get(:edit, :id => merix.id)
 
     assert_equal(merix.name, assigns(:fab_house).name)
     
@@ -115,13 +112,11 @@ class FabHouseControllerTest < Test::Unit::TestCase
     fab_house      = FabHouse.find(ibm.id)
     fab_house.name = 'new_fab_house'
 
-    get(:update,
-        :fab_house => fab_house.attributes)
+    get(:update, :fab_house => fab_house.attributes)
 
+    assert_redirected_to(:action => 'edit', :id => fab_house.id)
     assert_equal('Update recorded', flash['notice'])
-    assert_redirected_to(:action => 'edit',
-                         :id     => fab_house.id)
-    assert_equal('new_fab_house', fab_house.name)
+    assert_equal('new_fab_house',   fab_house.name)
   end
 
 
@@ -143,26 +138,22 @@ class FabHouseControllerTest < Test::Unit::TestCase
   #
   def test_create
 
-    assert_equal(8, FabHouse.find_all.size)
+    fab_house_count = FabHouse.count
 
-    new_fab_house = {
-      'active' => '1',
-      'name'   => 'FabsRus'
-    }
+    new_fab_house = { 'active' => '1', 'name'   => 'FabsRus' }
 
     set_admin
-    post(:create,
-         :new_fab_house => new_fab_house)
+    post(:create, :new_fab_house => new_fab_house)
 
-    assert_equal(9,               FabHouse.find_all.size)
+    fab_house_count += 1
+    assert_equal(fab_house_count, FabHouse.count)
     assert_equal("FabsRus added", flash['notice'])
-    assert_redirected_to :action => 'list'
+    assert_redirected_to(:action => 'list')
 
-    post(:create,
-         :new_fab_house => new_fab_house)
-    assert_equal(9,                             FabHouse.find_all.size)
+    post(:create, :new_fab_house => new_fab_house)
+    assert_equal(fab_house_count,               FabHouse.count)
     assert_equal("Name has already been taken", flash['notice'])
-    assert_redirected_to :action => 'add'
+    assert_redirected_to(:action => 'add')
 
   end
 
