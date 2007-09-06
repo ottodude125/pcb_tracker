@@ -1,4 +1,4 @@
-<% @heading = "#{@root_post.design.name} - #{@root_post.subject}"%>
+<% @heading = "#{@root_post.design.part_number.pcb_display_name} - #{@root_post.subject}"%>
 
 <%= start_form_tag(:action    => 'create_reply',
                    :id        => @root_post,

@@ -6,9 +6,30 @@
 
 <table border="0" width="100%">
   <tr>
-    <td width="130" class="th1">Design:</td>
+    <td width="130" class="th1">PCB Part Number:</td>
+    <td>
+      <%= @design_review.design.part_number.pcb_name %>
+    </td>
+    <td class="th1">Revision:</td>
+    <td>
+      <%= @design_review.design.part_number.pcb_revision %>
+    </td>
+  </tr>
+  <% if @design_review.design.part_number.new? %>
+  <tr>
+    <td width="130" class="th1">PCBA Part Number:</td>
+    <td>
+      <%= @design_review.design.part_number.pcba_name %>
+    </td>
+    <td class="th1">Revision:</td>
+    <td>
+      <%= @design_review.design.part_number.pcba_revision %>
+    </td>
+  </tr>
+  <% end %>
+  <tr>
+    <td width="130" class="th1">Description:</td>
     <td colspan="3">
-      <%= @design_review.design.name %> -
       <%= @design_review.design.board.platform.name %> /
       <%= @design_review.design.board.project.name %> /
       <%= h @design_review.design.board.description %>

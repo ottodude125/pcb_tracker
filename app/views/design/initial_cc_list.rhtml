@@ -5,7 +5,9 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% @heading = "Review::#{@design.name} - #{@design.board.platform.name} / #{@design.board.project.name} / #{@design.board.description}" %>
+<% @heading = 'Review::' + @design.part_number.pcb_display_name + ' - ' +
+              @design.board.platform.name + ' / ' + @design.board.project.name +
+              ' / ' + @design.board.description %>
 
 <%= start_form_tag(:action => 'update_cc_list') %>
 

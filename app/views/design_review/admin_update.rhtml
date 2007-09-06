@@ -6,7 +6,7 @@
 <!-- ********************************************************** -->
 
 
-<% @heading = "Update #{@design_review.design.name} " %>
+<% @heading = 'Update ' + @design_review.display_header %>
 
 <%= start_form_tag(:action => 'process_admin_update',
                    :id => @design_review.id) %>
@@ -52,7 +52,7 @@
                   class="name_select">
           <%= options_from_collection_for_select(@pcb_input_gate_list,
                                                  "id",
-                                                 "name",
+                                                 "last_name_first",
                                                  @design_review.design.pcb_input_id) %>
           </select>
         </td>
@@ -72,7 +72,7 @@
                   class="name_select">
           <%= options_from_collection_for_select(@designers,
                                                  "id",
-                                                 "name",
+                                                 "last_name_first",
                                                  @release_poster.id) %>
           </select>
         </td>
