@@ -301,8 +301,10 @@ class BoardDesignEntryController < ApplicationController
       
       flash['notice'] = @part_number.error_message
     
-      @user_action = 'adding'
-      @new_entry   = 'true'
+      @user_action      = 'adding'
+      @new_entry        = 'true'
+      @pcb_part_number  = @part_number
+      @pcba_part_number = @part_number
       
       render(:action => 'get_part_number')
       return
@@ -451,23 +453,6 @@ class BoardDesignEntryController < ApplicationController
     end
     
 
-    if board
-      design = board.designs.detect { |design| 
-        design.revision_id      == bde.revision_id      &&
-        design.numeric_revision == bde.numeric_revision &&
-        design.eco_number       == design.eco_number
-      }
-
-      if design
-        flash['notice'] = "#{bde.part_number.full_display_name} duplicates an existing design - the database was not updated"
-        redirect_to(:action      => 'edit_entry',
-                    :id          => @board_design_entry.id,
-                    :user_action => 'adding',
-                    :viewer      => @viewer)
-        return
-      end
-    end
-    
     if bde.entry_type == 'new'
       bde.numeric_revision = 0
       bde.eco_number       = ''
