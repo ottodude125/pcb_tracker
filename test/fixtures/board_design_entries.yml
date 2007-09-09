@@ -15,7 +15,7 @@ av714b:
   revision_id:                               2
   numeric_revision:                          0
   entry_type:                                new
-  originator_id:                             6000
+  user_id:                                   6000
   state:                                     originated
   submitted_on:                              20060718110015
   make_from:                                 1
@@ -47,7 +47,7 @@ la021c:
   revision_id:                               3
   numeric_revision:                          0
   entry_type:                                new
-  originator_id:                             7001
+  user_id:                                   7001
   state:                                     originated
   submitted_on:                              20060720081101
   make_from:                                 1
@@ -83,7 +83,7 @@ mx008b4:
   revision_id:                               2
   numeric_revision:                          4
   entry_type:                                dot_rev
-  originator_id:                             7000
+  user_id:                                   7000
   state:                                     submitted
   submitted_on:                              20060710150000
   make_from:                                 0
@@ -117,7 +117,7 @@ mx008b4_ecoP123456:
   numeric_revision:                          4
   eco_number:                                P123456
   entry_type:                                date_code
-  originator_id:                             7000
+  user_id:                                   7000
   state:                                     submitted
   submitted_on:                              20060710150000
   make_from:                                 0
@@ -151,7 +151,7 @@ mx234a:
   numeric_revision:                          4
   eco_number:                                P123456
   entry_type:                                date_code
-  originator_id:                             7000
+  user_id:                                   7000
   state:                                     submitted
   submitted_on:                              20060710150000
   make_from:                                 0
@@ -186,7 +186,7 @@ mx234c:
   numeric_revision:                          4
   eco_number:                                P123456
   entry_type:                                date_code
-  originator_id:                             7000
+  user_id:                                   7000
   state:                                     submitted
   submitted_on:                              20060710150000
   make_from:                                 0
