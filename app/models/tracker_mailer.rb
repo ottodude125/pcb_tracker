@@ -1144,8 +1144,10 @@ class TrackerMailer < ActionMailer::Base
   def broadcast_message(subject,
                         message,
                         recipients,
+                        send_to     = 'PCB_Design_Tracker_Users',
                         sent_on     = Time.now)
   
+    @recipients      = send_to
     @subject         = subject
     @from            = Pcbtr::SENDER
     @sent_on         = sent_on
