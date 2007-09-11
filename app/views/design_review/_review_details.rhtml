@@ -40,11 +40,12 @@
     <td width="220">
       <%= poster_name(@design_review) %>
     </td>
-    <td width="150" class="th1">Design Center:</td>
+    <td width="150" class="th1">Design Data:</td>
     <td>
       <% if @design_review.design_center_id > 0 %>
         <%= link_to(@design_review.design_center.name,
-                    design_center_path(@design_review)) %>
+                    design_center_path(@design_review),
+                    :popup => true) %>
       <% else %>
         <b>Not Set</b>
       <% end %>
