@@ -158,11 +158,7 @@ module ApplicationHelper
   ######################################################################
   #
   def design_center_path(design_review)
-    'http://etg.teradyne.com/surfboards/'  +
-      design_review.design_center.pcb_path +
-      '/'                                  +
-      design_review.design.name            +
-      '/public'
+    'http://etg.teradyne.com/surfboards/' + design_review.design_center.pcb_path
   end
 
 
