@@ -1916,7 +1916,7 @@ class DesignReviewController < ApplicationController
     design.increment_review
     
     TrackerMailer::deliver_notify_design_review_skipped(skipped_review,
-                                                        session)
+                                                        session[:user])
 
     redirect_to(:controller => 'tracker', :action => 'index')
     
