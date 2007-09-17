@@ -137,8 +137,11 @@ else
   </tr>
 
   <tr>
-    <td class="label">New Part Number?:</td>
-    <td><%= check_box("new", "part_number") %></td>	
+    <td class="label">PCBA NUMBER REQUIRED?:</td>
+    <td><%= check_box("new", "part_number") %> 
+        <%= link_to('Help?',
+                    'http://etg.teradyne.com/boarddev/standards/index.php?file=bareboard_rev.html', 
+                    :popup => true )%></td>
   </tr>
 
 </table>
