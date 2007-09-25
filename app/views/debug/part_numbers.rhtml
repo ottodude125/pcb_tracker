@@ -1,0 +1,40 @@
+<h1>Part Numbers</h1>
+
+<%= link_to("DEBUG HOME", { :action => 'index' }) %>
+
+<p>Number of Part Numbers: <%= @part_numbers.size %></p>
+
+
+<table border="1">
+
+
+  <% @part_numbers.each_with_index do |part_number, line_number| 
+
+     if line_number.remainder(20) == 0 %>
+      <tr>
+        <th>#</th>
+        <th>ID</th>
+        <th>PCB Number</th>
+        <th>PCBA Number</th>
+        <th># DESIGNS</th>
+        <th>DESIGN ID</th>
+		<th># BDE</th>
+		<th>BDE ID</th>
+      </tr>
+	 
+  <% end %>
+
+    <tr>
+      <td><%= line_number + 1 %></td>
+      <td><%= part_number.id %></td>
+      <td align="center"><%= part_number.pcb_display_name %></td>
+      <td align="center"><%= part_number.pcba_display_name %></td>
+      <td align="center"><%= part_number[:design_count] %></td>
+      <td align="center"><%= part_number[:design_id] %></td>
+      <td align="center"><%= part_number[:bde_count] %></td>
+      <td align="center"><%= part_number[:bde_id] %></td>
+    </tr>
+
+  <% end %>
+  
+</table>
