@@ -32,8 +32,8 @@ checklist_1_0:
   designer_auditor_count: 4
   dc_designer_only_count: 2
   dc_designer_auditor_count: 5
-  dr_designer_only_count: 2
-  dr_designer_auditor_count: 5
+  dr_designer_only_count: 0
+  dr_designer_auditor_count: 2
 checklist_2_0:
   id: 222
   major_rev_number: 2
