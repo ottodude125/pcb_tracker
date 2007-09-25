@@ -44,6 +44,30 @@ class Design < ActiveRecord::Base
 
   ######################################################################
   #
+  # get_unique_pcb_numbers
+  #
+  # Description:
+  # This method provides a list of sorted, unique PCB part numbers.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of unique PCB part numbers represented as strings.
+  #
+  ######################################################################
+  #
+  def self.get_unique_pcb_numbers
+    
+    designs =Design.find(:all)
+    designs.delete_if { |d| d.part_number_id == 0 }
+    designs.collect { |design| design.part_number.pcb_unique_number }.uniq.sort
+    
+  end
+  
+  
+  ######################################################################
+  #
   # find_all_active
   #
   # Description:
@@ -64,38 +88,117 @@ class Design < ActiveRecord::Base
   
   ######################################################################
   #
-  # work_assignment_data
+  # assignment_count
   #
   # Description:
-  # This method computes the following outsource instruction statistics
-  #   - the total number of assignments
-  #   - the total number of completed assignments
-  #   - the total number of assignments that have report cards
+  # Computes the number of outsource instruction assignments for the 
+  # design.
   #
   # Parameters:
   # None
   #
   # Return value:
-  # A hash with the outsource instruction statistics
+  # An integer representing the number of outsource instruction assignments
+  # assigned for the design.
   #
   ######################################################################
   #
-  def work_assignment_data
+  def assignment_count
+    total = 0
+    self.oi_instructions.each { |inst| total += inst.assignment_count }
+    total
+  end
   
-    totals = { :assignments            => 0,
-               :completed_assignments  => 0,
-               :report_cards           => 0 }
-    
-    self.oi_instructions.each do |instruction| 
-      instruction.oi_assignments.each do |a|
-        totals[:assignments]            += 1 
-        totals[:completed_assignments]  += 1 if a.complete?
-        totals[:report_cards]           += 1 if a.oi_assignment_report
-      end 
-    end
-    
-    totals
   
+  ######################################################################
+  #
+  # completed_assignment_count
+  #
+  # Description:
+  # Computes the number of completed outsource instruction assignments 
+  # for the design.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An integer representing the number of completed outsource 
+  # instruction assignments assigned for the design.
+  #
+  ######################################################################
+  #
+  def completed_assignment_count
+    total = 0
+    self.oi_instructions.each { |inst| total += inst.completed_assignment_count }
+    total
+  end
+  
+  
+  ######################################################################
+  #
+  # report_card_count
+  #
+  # Description:
+  # Computes the number of completed outsource instruction assignment 
+  # report cards for the design.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An integer representing the number of completed outsource 
+  # instruction assignment report cards assigned for the design.
+  #
+  ######################################################################
+  #
+  def report_card_count
+    total = 0
+    self.oi_instructions.each { |inst| total += inst.report_card_count }
+    total
+  end
+  
+  
+  ######################################################################
+  #
+  # assignments_complete?
+  #
+  # Description:
+  # Reports on the completion status of the outsource instruction 
+  # assignments for the design.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if all of the outsource instructions assignments are complete.
+  # Otherwise, false.
+  #
+  ######################################################################
+  #
+  def assignments_complete?
+    self.assignment_count == self.completed_assignment_count
+  end
+
+
+  ######################################################################
+  #
+  # report_cards_complete?
+  #
+  # Description:
+  # Reports on the completion status of the outsource instruction 
+  # assignment report cards for the design.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if all of the outsource instructions assignment report cards 
+  # are complete.  Otherwise, false.
+  #
+  ######################################################################
+  #
+  def report_cards_complete?
+    self.assignment_count == self.report_card_count
   end
   
   
@@ -117,12 +220,7 @@ class Design < ActiveRecord::Base
   ######################################################################
   #
   def work_assignments_complete?
-
-    summary = self.work_assignment_data
-  
-    ( ( summary[:assignments] == summary[:completed_assignments] ) &&
-      ( summary[:assignments] == summary[:report_cards] ) )
- 
+    ( self.assignments_complete? && self.report_cards_complete? )
   end
 
 
@@ -179,8 +277,8 @@ class Design < ActiveRecord::Base
     users[:peer]      = self.peer       if (self.peer_id      > 0)
     users[:pcb_input] = self.input_gate if (self.pcb_input_id > 0)
 
-    role_names = ['Hardware Engineering Manager',
-                  'Program Manager']
+    role_names = ['Hardware Engineering Manager', 'Program Manager']
+    
     role_names.each do |role_name|
       role     = Role.find_by_name(role_name)
       reviewer = self.board.board_reviewers.detect { |br| br.role_id == role.id }
@@ -717,7 +815,7 @@ class Design < ActiveRecord::Base
     review_types = ReviewType.find(:all,
                                    :conditions => "active = 1 AND " +
                                                   "sort_order > '#{current_review_type.sort_order}'", 
-                                   :order      => "sort_order ASC")
+                                   :order      => "sort_order")
 
     phase_id    = COMPLETE
     next_review = nil
@@ -886,8 +984,10 @@ class Design < ActiveRecord::Base
   #
   def update_valor_reviewer(peer, user)
   
+    updated      = false
     final_review = self.get_design_review('Final')
   
+    # TO DO: This really should be a method in design_review
     if final_review.review_status.name != "Review Completed"
     
       valor_review_result = final_review.get_review_result('Valor')
@@ -899,13 +999,11 @@ class Design < ActiveRecord::Base
         valor_review_result.reviewer_id = peer_id
         valor_review_result.update
         
-        true
-      else
-        false
+        updated = true
       end
-    else
-      false
     end
+
+    updated
 
   end
   
@@ -1103,7 +1201,7 @@ class Design < ActiveRecord::Base
   ######################################################################
   #
   def role_review_count(role)
-      role_count = 0
+    role_count = 0
     self.design_reviews.each do |dr|
       role_count += 1 if dr.design_review_results.detect { |drr| drr.role_id == role.id }
     end
@@ -1129,7 +1227,7 @@ class Design < ActiveRecord::Base
   ######################################################################
   #
   def role_open_review_count(role)
-    open_reviews = 0
+    open_reviews   = 0
     closed_reviews = ReviewStatus.closed_reviews
     self.design_reviews.each do |dr|
       next if closed_reviews.detect { |rvw| rvw == dr.review_status }
@@ -1218,13 +1316,12 @@ class Design < ActiveRecord::Base
       next if dr.review_status.name == 'Review Completed'
 
       review_result = dr.design_review_results.detect { |drr| drr.role_id == role.id }
-      
       if review_result && !completed_results.include?(review_result.result)
         old_reviewer              = review_result.reviewer
         review_result.reviewer_id = new_reviewer.id
         review_result.update
-        
-        dr.record_update(role.display_name + 'Reviewer', 
+
+        dr.record_update(role.display_name + ' Reviewer', 
                          old_reviewer.name, 
                          new_reviewer.name, 
                          user)
@@ -1235,8 +1332,8 @@ class Design < ActiveRecord::Base
                                                                     old_reviewer,
                                                                     new_reviewer,
                                                                     user)
-          in_review = dr.review_type.name
         end
+        in_review = dr.review_type.name
       end
       
     end
@@ -1246,7 +1343,6 @@ class Design < ActiveRecord::Base
   end
   
   
-
   ######################################################################
   #
   # reviewers
@@ -1340,8 +1436,56 @@ class Design < ActiveRecord::Base
     self.part_number.pcb_display_name + ' - ' + brd.platform.name + ' / ' +
     brd.project.name + ' / ' + brd.description
   end
-  
 
+  
+  ######################################################################
+  #
+  # audit_type
+  #
+  # Description:
+  # Determines the audit type, full or partial, associated with the 
+  # design
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A string indicating the design's audit type
+  #
+  ######################################################################
+  #
+  def audit_type
+    self.new? ? 'Full' : 'Partial'
+  end
+
+
+  ######################################################################
+  #
+  # flip_design_type
+  #
+  # Description:
+  # The design type is toggled between 'New' (full) and
+  # 'Dot Rev' (partial) and then the audit checklist is updated.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # The number of design checks that have been added or removed.
+  #
+  ######################################################################
+  #
+  def flip_design_type
+    
+    new_design_type = self.design_type == 'New' ? 'Dot Rev' : 'New'
+    self.design_type = new_design_type
+    self.update
+    
+    self.audit.update_checklist_type
+    
+  end
+  
+  
 ########################################################################
 ########################################################################
   private
