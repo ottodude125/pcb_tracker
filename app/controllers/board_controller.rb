@@ -21,8 +21,6 @@ before_filter(:verify_admin_role,
                           :search_options,
                           :show_boards] )
   
-  auto_complete_for :board, :name
-
 
   ######################################################################
   #
@@ -220,6 +218,7 @@ before_filter(:verify_admin_role,
   # show_boards
   #
   # Description:
+  # Collects the data to display the show boards page.
   # 
   # Parameters from params
   # None
@@ -227,18 +226,31 @@ before_filter(:verify_admin_role,
   ######################################################################
   #
   def show_boards
+    
+    flash['notice'] = ''
+    unique_pcb_part_numbers = Design.get_unique_pcb_numbers
 
-    board_list = Board.find(:all, :conditions => 'prefix_id>0')
-    
-    boards = {} 
-    board_list.each do |board|
-      boards[board.prefix.pcb_mnemonic] = [] if ! boards[board.prefix.pcb_mnemonic]
-      boards[board.prefix.pcb_mnemonic] << board
-    end
-    
-    @boards = boards.sort
-    @boards.each do |board_list|
-      board_list[1] = board_list[1].sort_by { |board| board.number }
+    @columns = 8
+    @rows    = (unique_pcb_part_numbers.size) / @columns
+    @rows   += 1 if unique_pcb_part_numbers.size.remainder(@columns) > 0
+
+    @part_numbers = []
+    0.upto(@rows-1) { |row| @part_numbers[row] = [] }
+
+    # Convert the information into a structure that can easily be displayed
+    # in a table.
+    col = 0
+    row = 0
+    unique_pcb_part_numbers.each_with_index do |element, i|
+
+      @part_numbers[row][col] = element
+
+      row += 1
+      if row == @rows
+        row  = 0
+        col += 1
+      end
+      
     end
 
   end
@@ -250,7 +262,8 @@ before_filter(:verify_admin_role,
   # design_information
   #
   # Description:
-  # 
+  # Handles the processing when a user clicks on a part number on the 
+  # show boards page.
   #
   # Parameters from params
   # None
@@ -260,26 +273,20 @@ before_filter(:verify_admin_role,
   def design_information
 
     #Get the board information
-    if params[:board] != nil
-      @board = Board.find_by_name(params[:board][:name])
-    else
-      @board = Board.find(params[:board_id])
-    end
+    @designs = PartNumber.get_designs(params[:part_number])
     
-    # First sort the designs by name, then sort the reviews by review order.
-    if @board
-      @board.designs.each do |design|
+    flash['notice'] = 'Number of designs - ' + @designs.size.to_s
+    if @designs.size.to_s == 0
+      redirect_to(:action => 'show_boards')
+    else
+      # First sort the designs by name, then sort the reviews by review order.
+      @designs = @designs.sort_by { |design| design.id }
+      @designs.each do |design|
         design[:sorted_design_reviews] = 
           design.design_reviews.sort_by { |dr| dr.review_type.sort_order }
-        
-        # Get the design audit
-        design[:audit] = Audit.find_by_design_id(design.id)
+        @detailed_name = design.detailed_name  
       end
-    else
-      flash['notice'] = "Please provide a board number"
-      redirect_to 'action' => 'show_boards'
     end
-
   end
   
   
@@ -395,7 +402,7 @@ before_filter(:verify_admin_role,
     
     end
 
-    @board_list = board_list.sort_by { |b| b.name }
+    @board_list = board_list.sort_by { |b| [b.name, b.id] }
     
   end
   
