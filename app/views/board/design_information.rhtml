@@ -4,73 +4,62 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% @heading = "#{@board.name} - #{@board.platform.name}/ #{@board.project.name}" %>
+<% @heading = @detailed_name %>
 
-<%= start_form_tag(:action => 'filtered_list') %>
+<hr class="div" />
 
-  <hr class="div" />
+<table width="80%" align="center" border="0" cellspacing="2" cellpadding="2" rules="all">
 
-  <table width="80%" 
-         align="center" 
-         border="0"
-         cellspacing="2" 
-         cellpadding="2" 
-         rules="all">
-    <% for design in @board.designs %>
-    <% design_reviews = design.design_reviews.sort_by { |dr| dr.review_type.sort_order } %>
-      <tr class="teraheader">
-        <td>
-          <b><%= design.name %></b>
-        </td>
-      </tr>
-      <% for review in design[:sorted_design_reviews] %>
-        <tr>
-          <td>
-            <table width="98%"
-                   align="right"
-                   border="0">
-              <tr>
-                <th align="left"
-                    width="30%">
-                  <% review_name = review.review_type.name %>
-                  <% if review.review_type_id_2 != 0 %>
-                    <% review_name += '/' + ReviewType.find(review.review_type_id_2).name %>
-                  <% end %>
-                  <%= link_to(review_name,
-                              {:controller => 'design_review',
-                               :action     => 'view',
-                               :id         => review.id})%>
-                </th>
-                <td>
-                  <%= review.review_status.name %>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      <% end %>
+  <% @designs.each do |design| %>
+  <% design_reviews = design.design_reviews.sort_by { |dr| dr.review_type.sort_order } %>
+    <tr class="teraheader">
+      <td>
+        <b><%= design.name %></b>
+      </td>
+    </tr>
+    <% design[:sorted_design_reviews].each do |review| %>
       <tr>
         <td>
-          <% if design.audit && !design.audit.skip? %>
-            <%= link_to('Audit',
-                        {:controller => 'audit',
-                         :action     => 'print',
-                         :id         => design.audit.id}) %>
-          <% elsif !design.audit %>
-            <b>Audit Not Set Up</b>
-          <% else %>
-            <b>Audit Skipped</b>
-          <% end %>
+          <table width="98%" align="right" border="0">
+            <tr>
+              <th align="left" width="30%">
+                <% review_name = review.review_type.name %>
+                <% if review.review_type_id_2 != 0 %>
+                  <% review_name += '/' + ReviewType.find(review.review_type_id_2).name %>
+                <% end %>
+                <%= link_to(review_name,
+                            {:controller => 'design_review',
+                             :action     => 'view',
+                             :id         => review.id})%>
+              </th>
+              <td>
+                <%= review.review_status.name %>
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
     <% end %>
-  </table>
+    <tr>
+      <td>
+        <% if design.audit && !design.audit.skip? %>
+          <%= link_to('Audit',
+                      {:controller => 'audit',
+                       :action     => 'print',
+                       :id         => design.audit.id}) %>
+        <% elsif !design.audit %>
+          <b>Audit Not Set Up</b>
+        <% else %>
+          <b>Audit Skipped</b>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+</table>
 
 
-  <hr class="div" />
+<hr class="div" />
 
-  <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
-  <input type="button" value="Show All Boards" onClick="parent.location='<%= url_for( :controller => 'board', :action => 'show_boards' ) %>'" />
-<%= end_form_tag %>
+<input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+<input type="button" value="Show All Boards" onClick="parent.location='<%= url_for( :controller => 'board', :action => 'show_boards' ) %>'" />
 
-<%# debug @board %>
