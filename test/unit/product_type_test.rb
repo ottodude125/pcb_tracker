@@ -35,5 +35,21 @@ class ProductTypeTest < Test::Unit::TestCase
     @product_type.destroy
     assert_raise(ActiveRecord::RecordNotFound) { ProductType.find(@product_type.id) }
   end
+  
+  def test_get_active
+    
+    active_product_types = ProductType.get_active_product_types
+    
+    assert(active_product_types.size > 1)
+    assert(active_product_types.size < ProductType.count)
+    
+    name = ''
+    active_product_types.each do |product_type|
+      assert(name < product_type.name)
+      name = product_type.name
+    end
+    
+  end
+
 
 end

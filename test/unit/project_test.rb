@@ -108,4 +108,26 @@ class ProjectTest < Test::Unit::TestCase
   end
 
 
+  ######################################################################
+  #
+  # test_access
+  #
+  ######################################################################
+  #
+  def test_get_active
+    
+    active_projects = Project.get_active_projects
+    
+    assert(active_projects.size > 1)
+    assert(active_projects.size < Project.count)
+    
+    name = ''
+    active_projects.each do |project|
+      assert(name < project.name)
+      name = project.name
+    end
+    
+  end
+
+
 end
