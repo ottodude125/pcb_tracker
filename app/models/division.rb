@@ -19,4 +19,32 @@ class Division < ActiveRecord::Base
   has_many :ftp_notifications
   has_many :users
 
+
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+  
+  ######################################################################
+  #
+  # get_active_divisions
+  #
+  # Description:
+  # This method returns a list of the active division records
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of active division records
+  #
+  ######################################################################
+  #
+  def self.get_active_divisions
+    self.find(:all, :conditions => 'active=1', :order => 'name')
+  end
+
+
 end
