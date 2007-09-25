@@ -83,6 +83,50 @@ class Check < ActiveRecord::Base
   
   ######################################################################
   #
+  # is_peer_check?
+  #
+  # Description:
+  # Determines if the current check should be processed by a peer 
+  # auditor..
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the check needs to be processed by a peer auditor, 
+  # FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def is_peer_check?
+    self.designer_auditor?
+  end
+  
+  
+  ######################################################################
+  #
+  # is_self_check?
+  #
+  # Description:
+  # Determines if the current check should be processed by a self 
+  # auditor..
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the check needs to be processed by a self auditor, 
+  # FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def is_self_check?
+    self.designer_auditor? || self.yes_no? || self.designer_only?
+  end
+  
+  
+  ######################################################################
+  #
   # belongs_to?
   #
   # Description:
