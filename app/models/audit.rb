@@ -255,6 +255,70 @@ PEER_AUDIT       = 2
   
   ######################################################################
   #
+  # update_checklist_type
+  #
+  # Description:
+  # This method creates or destroys design checks based on the type of
+  # design the audit is tied to.  This is used when the type of design
+  # is changed.
+  #
+  # Parameters:
+  # None
+  #
+  # Returns:
+  # The number of design checks added or deleted.
+  #
+  ######################################################################
+  #
+  def update_checklist_type
+
+    design_checks = DesignCheck.find(:all, :conditions => "audit_id=#{self.id}")
+    delta = 0
+    
+    # Keep track of the completed checks that are deleted to update the
+    # audit counts of the completed checks.
+    completed_self_check_delta = 0
+    completed_peer_audit_delta = 0
+    self.checklist.each_check do |check|
+      design_check = design_checks.detect { |dc| dc.check_id == check.id }  
+      if check.belongs_to? self.design
+        if !design_check
+          design_check = DesignCheck.new(:audit_id => self.id, :check_id => check.id)
+          fail 'Design check not saved' unless design_check.save  
+          delta += 1
+        end
+      else
+        # Keep track of the adjustments that need to be made for the totals
+        completed_self_check_delta += 1 if design_check.self_auditor_checked?
+        completed_peer_audit_delta += 1 if design_check.peer_auditor_checked?
+        design_check.destroy if design_check
+        delta -= 1
+      end
+    end
+    
+    # If any of the deleted design checks were complete then the audit record needs to
+    # be updated.
+    if (completed_self_check_delta + completed_peer_audit_delta > 0)
+      if completed_self_check_delta > 0
+        completed_checks = self.designer_completed_checks - completed_self_check_delta
+        self.designer_completed_checks = completed_checks
+        self.designer_complete         = (completed_checks == self.self_check_count)
+      end
+      if completed_peer_audit_delta > 0
+        completed_checks = self.auditor_completed_checks - completed_peer_audit_delta
+        self.auditor_completed_checks = completed_checks
+        self.auditor_complete         = (completed_checks == self.peer_check_count)
+      end
+      self.update
+    end
+    
+    delta
+    
+  end
+  
+  
+  ######################################################################
+  #
   # check_count
   #
   # Description:
@@ -434,7 +498,33 @@ PEER_AUDIT       = 2
     design_checks.size
 
   end
+
   
+  ######################################################################
+  #
+  # completed_check_count
+  #
+  # Description:
+  # Returns the number of design checks that are completed for
+  # both the self and peer audit.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def completed_check_count
+    
+    count = { :self => 0, :peer => 0 }
+    
+    self.design_checks.each do |dc|
+      count[:self] += 1 if dc.self_auditor_checked?
+      count[:peer] += 1 if dc.peer_auditor_checked?
+    end
+    
+    count
+    
+  end
   ######################################################################
   #
   # completed_peer_audit_check_count
@@ -767,7 +857,7 @@ PEER_AUDIT       = 2
   #
   ######################################################################
   #
-   def manage_auditor_list(self_auditor_list, peer_auditor_list, user)
+  def manage_auditor_list(self_auditor_list, peer_auditor_list, user)
 
     lead_designer_assignments = {}
     self_auditor_list.each do |key, auditor|
@@ -899,6 +989,79 @@ PEER_AUDIT       = 2
    end
 
 
+  ######################################################################
+  #
+  # process_design_checks
+  #
+  # Description:
+  # Processes a list of design check updates.  Processing is done for 
+  # both the self and peer updates.
+  #
+  # Parameters:
+  # design_check_list - a list of self or peer design check updates
+  # user              - the record for the user making the update
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def process_design_checks(design_check_list, user)
+
+    # Go through the paramater list and pull out the checks.
+    design_check_list.each { |design_check_update|
+
+      design_check = DesignCheck.find(design_check_update[:design_check_id])
+
+      if self.self_update?(user)
+        result        = design_check.designer_result
+        result_update = design_check_update[:designer_result]
+      elsif self.peer_update?(user)
+        result        = design_check.auditor_result
+        result_update = design_check_update[:auditor_result]
+      end
+
+      comment = design_check_update[:comment].strip
+      
+      if result_update && result_update != result
+
+        # Make sure that the required comment has been added.
+        if comment.size == 0 &&
+           design_check.comment_required?(design_check_update[:designer_result], 
+                                          design_check_update[:auditor_result])
+         
+          flash[design_check.id] = 'A comment is required for a ' + result_update +
+                                   ' response.'
+          flash['notice']        = 'Not all checks were updated - please review ' +
+                                   'the form for errors.'
+          next
+        end
+
+        if !self.designer_complete? && self.self_update?(user)
+          self.process_self_audit_update(result_update, design_check, user)
+        elsif !self.auditor_complete? && self.peer_update?(user)
+          self.process_peer_audit_update(result_update, 
+                                         design_check_update[:comment], 
+                                         design_check, 
+                                         user)
+        end
+
+      end
+
+      # If the user entered a comment, update the database.
+      if comment.size > 0
+        AuditComment.new(:comment => comment, :user_id => user.id,
+                         :design_check_id => design_check.id).create
+      end
+    }
+
+    redirect_to(:action        => 'perform_checks',
+                :audit_id      => params[:audit][:id],
+                :subsection_id => params[:subsection][:id])
+    
+  end
+
+  
   ######################################################################
   #
   # clear_message
