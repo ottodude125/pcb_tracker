@@ -1,96 +1,35 @@
 <h1>Designs</h1>
 
+<%= link_to("DEBUG HOME", { :action => 'index' }) %>
 
-<h3>Board</h3>
+<p>Number of Designs: <%= @designs.size %></p>
+
 
 <table border="1">
 
-  <tr align="left">
-    <th>ID</th>
-    <th>NAME</th>
-    <th>PREFIX</th>
-    <th>NUMBER</th>
-    <th>PLATFORM</th>
-    <th>PROJECT</th>
-    <th>ACTIVE?</th>
-    <th>DESIGNS</th>
-  </tr>
 
-  <tr align="left">
-    <td><%= @board.id %></td>
-    <td><%= @board.name %></td>
-    <td><%= @board.prefix.pcb_mnemonic %></td>
-    <td><%= @board.number %></td>
-    <td><%= @board.platform.name %></td>
-    <td><%= @board.project.name %></td>
-    <td><%= @board.active? %></td>
-    <td align="center"><%= @board.designs.size%></td>
-  </tr>
+  <% @designs.each_with_index do |design, line_number| 
 
-</table>
-
-<h3>Designs</h3>
-<% line_number = 0 %>
-<table border="1">
-  <tr>
-    <th>#</th>
-    <th>ID</th>
-    <th>NAME</th>
-    <th>PHASE</th>
-    <th>PRIORITY</th>
-    <th>REVISION</th>
-    <th>NUMERIC REV</th>
-    <th>ECO NUMBER</th>
-    <th>TYPE</th>
-    <th>DESIGNER</th>
-    <th>PEER</th>
-    <th>CREATED</th>
-    <th>REVIEWS</th>
-    <th>AUDIT</th>
-  </tr>
-  
-  <% for design in @designs %>
-    <tr>
-      <td><%= line_number += 1 %></td>
-      <td><%= design.id %></td>
-      <td><%= design.name %></td>
-      <td>
-        <% if design.phase_id == 0 %>
-          NOT SET
-        <% elsif design.phase_id == Design::COMPLETE %>
-          COMPLETE
-        <% else %>
-          <%= ReviewType.find(design.phase_id).name %>
-        <% end %>
-      </td>
-      <td><%= design.priority_name %></td>
-      <td><%= Revision.find(design.revision_id).name %></td>
-      <% if design.numeric_revision %>
-        <td><%= design.numeric_revision.to_s %></td>
-      <% else %>
-        <td>&nbsp;</td>
-      <% end %>
-      <td><%= design.eco_number %></td>
-      <td><%= design.design_type %></td>
-      <% if design.designer_id > 0 %>
-        <td><%= User.find(design.designer_id).name %>
-      <% else %>
-        <td><b>Not Set</b></td>
-      <% end %>
-      <% if design.peer_id > 0 %>
-        <td><%= User.find(design.peer_id).name %></td>
-      <% else %>
-        <td><b>Not Set</b></td>
-      <% end %>
-      <td><%= design.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
-      <td align="center">
-        <%= link_to(design.design_reviews.size,
-                    { :action => 'design_reviews',
-                      :id     => design.id}) %>
-      </td>
-      <td align="center">
-        <%# link_to() %>
-      </td>
-    </tr>
+     if line_number.remainder(20) == 0 %>
+      <tr>
+        <th>#</th>
+        <th>ID</th>
+        <th width="60">BOARD ID</th>
+        <th width="60">PN ID</th>
+        <th width="100">PHASE</th>
+        <th>DESIGNS</th>
+      </tr>
+	 
   <% end %>
+
+    <tr>
+      <td><%= line_number + 1 %></td>
+      <td align="center"><%= design.id %></td>
+	  <td align="center"><%= design.board_id %></td>
+	  <td align="center"><%= design.part_number_id %></td>
+	  <td align="center"><%= design.phase.name %></td>
+    </tr>
+
+  <% end %>
+  
 </table>
