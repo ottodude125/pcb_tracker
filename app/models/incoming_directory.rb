@@ -17,4 +17,31 @@ class IncomingDirectory < ActiveRecord::Base
   validates_uniqueness_of :name
   validates_presence_of :name
 
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+  
+  ######################################################################
+  #
+  # get_active_incoming_directories
+  #
+  # Description:
+  # This method returns a list of the active incoming directory records
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of active incoming directory records
+  #
+  ######################################################################
+  #
+  def self.get_active_incoming_directories
+    self.find(:all, :conditions => 'active=1', :order => 'name')
+  end
+
+
 end
