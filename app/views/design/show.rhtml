@@ -1,0 +1,123 @@
+<!-- View:    design                                            -->
+<!-- Purpose: Display the design's details.                     -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading =  @design.part_number.pcb_display_name + ' - Details' %>
+
+<hr class="div" />
+
+<table align="center" border="0" cellspacing="0" cellpadding="0" rules="all">
+
+  <tr>
+  	<td>
+      <table cellspacing="1">
+        <tr>
+          <th class="teraheader" width="150">PCB Number</th>
+		  <td align="center" width="125"> <b>
+		    <%= @design.part_number.pcb_name %>
+		  </b></td>
+          <% if @design.part_number.pcb_revision != '' %>
+            <th class="teraheader" width="100">Revision</th>
+		    <td align="center" width="25"> <%= @design.part_number.pcb_revision %></td>
+          <% end %>
+		  <% if @design.part_number.new? %>
+            <th class="teraheader" width="150">PCBA Number</th>
+            <td align="center" width="125"><b>
+              <%= @design.part_number.pcba_name %>
+			</b></td>
+            <% if @design.part_number.pcba_revision != '' %>
+              <th class="teraheader" width="100">Revision</th>
+              <td align="center" width="25"> <%= @design.part_number.pcba_revision %></td>
+            <% end %>
+          <% end %>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  
+  <tr>
+  	<td>
+      <table cellspacing="1">
+      	<th class="teraheader" width="150">Phase</th>
+		<td width="15">&nbsp;</td>
+		<td><b><%= @design.phase.name %></b></td>
+      </table>
+  	</td>
+  </tr>
+	
+  <tr>
+  	<td>
+      <table cellspacing="1">
+      	<th class="teraheader" width="150">Project</th>
+		<td width="15">&nbsp;</td>
+		<td><b><%= @design.board.project.name %></b></td>
+      </table>
+  	</td>
+  </tr>
+	
+  <tr>
+  	<td>
+      <table cellspacing="1">
+      	<th class="teraheader" width="150">Platform</th>
+		<td width="15">&nbsp;</td>
+		<td><b><%= @design.board.platform.name %></b></td>
+      </table>
+  	</td>
+  </tr>
+	
+  <tr>
+  	<td>
+      <table cellspacing="1">
+      	<th class="teraheader" width="150">Description</th>
+		<td width="15">&nbsp;</td>
+		<td><b><%= @design.board.description %></b></td>
+      </table>
+  	</td>
+  </tr>
+	
+  <tr>
+  	<td>
+      <table cellspacing="1" border="0">
+      	<th class="teraheader" width="150">Audit</th>
+		<td width="15">&nbsp;</td>
+		<td width="220" align="right"><b>Self Audit % Complete: </b></td>
+		<th width="50"><%= sprintf("%3.2f", @design.audit.self_percent_complete) %></th>
+		<td width="220" align="right"><b>Peer Audit % Complete: </b></td>
+		<th width="50"><%= sprintf("%3.2f", @design.audit.peer_percent_complete) %></th>
+      </table>
+  	</td>
+  </tr>
+	
+  <tr>
+  	<td>
+      <table cellspacing="1" border="0" width="100%">
+      	<th class="teraheader" width="150">Audit Type</th>
+		<td width="15">&nbsp;</td>
+		<td width="110"><b><%= @design.audit_type %></b></td>
+        <td align="right">
+          <% new_type = @design.audit_type == "Full" ? 'Partial' : 'Full'
+             if new_type == 'Full'
+              confirm = "Do you want to convert this audit from a Partial to a Full audit?"
+             else
+              confirm = "Warning - when converting from a Full audit to a Partial " +
+                        "audit the tracker deletes design checks for this audit.  " +
+                        "Do you want to proceed?"
+             end %>
+		
+            <%= button_to("Convert to #{new_type} Audit", 
+                          {:action => 'convert_checklist_type',
+                           :id     => @design.id,},
+                          :title  => "Use to convert the audit type",
+                          :confirm => confirm ) %>
+        </td>
+      </table>
+  	</td>
+  </tr>
+
+</table>
+
+<hr class="div" />
+
+<%# debug @design.phase %>
