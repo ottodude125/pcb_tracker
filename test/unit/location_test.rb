@@ -65,4 +65,26 @@ class LocationTest < Test::Unit::TestCase
   end
 
 
+  ######################################################################
+  #
+  # test_get_active
+  #
+  ######################################################################
+  #
+  def test_get_active
+    
+    active_locations = Location.get_active_locations
+    
+    assert(active_locations.size > 1)
+    assert(active_locations.size < Location.count)
+    
+    name = ''
+    active_locations.each do |location|
+      assert(name < location.name)
+      name = location.name
+    end
+    
+  end
+
+
 end

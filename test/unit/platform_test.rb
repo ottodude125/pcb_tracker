@@ -113,4 +113,36 @@ class PlatformTest < Test::Unit::TestCase
   end
 
 
+  ######################################################################
+  #
+  # test_get_active
+  #
+  ######################################################################
+  #
+  def test_get_active
+    
+    platform = Platform.new( :name => 'zzz', :active => 0).create
+    active_platforms = Platform.get_active_platforms
+    
+    assert(active_platforms.size > 1)
+    
+    name = ''
+    active_platforms.each do |platform|
+      assert(name < platform.name)
+      name = platform.name
+    end
+    
+    active_platforms = Platform.get_all_active('id')
+    
+    assert(active_platforms.size > 1)
+    assert(active_platforms.size < Platform.count)
+    
+    id = 0
+    active_platforms.each do |platform|
+      assert(id < platform.id)
+      id = platform.id
+    end
+
+  
+  end
 end

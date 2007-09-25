@@ -122,8 +122,30 @@ class BoardDesignEntryTest < Test::Unit::TestCase
     assert_equal(false, av714b.modifiable?)
     
     assert_equal('Ben Bina', av714b.originator)
-    av714b.originator_id = 0
-    assert_equal(BoardDesignEntry::NOT_SET, av714b.originator)
+
+    bde = BoardDesignEntry.new
+    assert_equal(BoardDesignEntry::NOT_SET, bde.originator)
+    
+    mx234c_entry = board_design_entries(:mx234c)
+    mx234c_entry.state = 'ready_to_post'
+    mx234c_entry.update
+    
+    processor_states = %w(originated ready_to_post submitted)
+    processor_list       = BoardDesignEntry.get_entries_for_processor
+    board_design_entries = BoardDesignEntry.find(:all)
+    
+    assert(board_design_entries.size > processor_list.size)
+    processor_list.each { |bde| assert(processor_states.include?(bde.state)) }
+    not_on_list = board_design_entries - processor_list
+    not_on_list.each { |bde| assert(!processor_states.include?(bde.state)) }
+    
+    
+    submitter_states = %w(originated submitted)
+    assert_equal(0, BoardDesignEntry.get_user_entries(users(:scott_g)).size)
+
+    johns_list = BoardDesignEntry.get_user_entries(users(:john_j))
+    assert_equal(3, johns_list.size)
+    johns_list.each { |bde| assert(submitter_states.include?(bde.state)) }
     
   end
   

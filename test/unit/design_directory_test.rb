@@ -48,5 +48,21 @@ class DesignDirectoryTest < Test::Unit::TestCase
     @design_directory.destroy
     assert_raise(ActiveRecord::RecordNotFound) { DesignDirectory.find(@design_directory.id) }
   end
+  
+  
+  def test_get_active
+    
+    active_design_directories = DesignDirectory.get_active_design_directories
+    
+    assert(active_design_directories.size > 1)
+    assert(active_design_directories.size < DesignDirectory.count)
+    
+    name = ''
+    active_design_directories.each do |design_directory|
+      assert(name < design_directory.name)
+      name = design_directory.name
+    end
+    
+  end
 
 end

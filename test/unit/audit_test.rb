@@ -41,6 +41,7 @@ class AuditTest < Test::Unit::TestCase
     @audit_in_peer_audit = audits(:audit_in_peer_audit)
     @audit_complete      = audits(:audit_complete)
     @audit_109           = audits(:audit_109)
+    @audit_mx700b        = audits(:audit_mx700b)
     
     @subsection_537      = subsections(:subsection_537)
     @subsection_548      = subsections(:subsection_548)
@@ -175,27 +176,63 @@ class AuditTest < Test::Unit::TestCase
   
   
   ######################################################################
-  def test_check_creation
+  def test_checklist_methods
     
-    assert_equal(0, @audit_in_self_audit.design_checks.size)
-    assert_equal(2, @audit_in_self_audit.checklist_id)
-    @audit_in_self_audit.create_checklist
-    
-    # expected_checks is a nested hash.
     #
     #                 section  subsection  array of check ids
     #                 id       id
-    expected_checks = {3 =>   {5 =>        [13, 14],
-                               6 =>        [15, 16, 17, 24]},
-                       4 =>   {7 =>        [18, 19, 20],
-                               8 =>        [21, 22, 23]}}
+    full_review_checks     = {3 =>   {5 =>        [13, 14],
+                                      6 =>        [15, 16, 17, 24]},
+                              4 =>   {7 =>        [18, 19, 20],
+                                      8 =>        [21, 22, 23]}}
+    #
+    #                        section  subsection  array of check ids
+    #                        id       id
+    partial_review_checks  = {3 =>   {5 =>        [13, 14]}}
     
-    @audit_in_self_audit.reload
-    assert_equal(12, @audit_in_self_audit.design_checks.size)
+    
+    design_check_count = DesignCheck.find(:all)
+    
+    audit = Audit.new(:checklist_id => 2,
+                      :design_id    => @audit_mx700b.design_id)
+    audit.save
+    audit.reload
+
+    audit.create_checklist
+    assert_equal(design_check_count.size + 12, DesignCheck.find(:all).size)
+    assert_equal(12, audit.design_checks.size)
+    assert_equal(11, audit.self_check_count)
+    assert_equal(11, audit.checklist.full_review_self_check_count)
+    assert_equal(4,  audit.peer_check_count)
+    assert_equal(11, audit.checklist.full_review_self_check_count)
+
+    actual_checks = {}
+    audit.design_checks.each do |design_check|
+      assert_equal(audit.id, design_check.audit_id)
+      section_id    = design_check.check.subsection.section_id
+      subsection_id = design_check.check.subsection_id
+      actual_checks[section_id] = {} if !actual_checks[section_id]
+      actual_checks[section_id][subsection_id] = [] if !actual_checks[section_id][subsection_id]
+      actual_checks[section_id][subsection_id] << design_check.check_id
+    end
+
+    assert_equal(full_review_checks, actual_checks)
+
+    
+    audit.design.design_type = 'Dot Rev'
+    audit.design.update
+    audit.update_checklist_type
+
+    audit.reload
+    assert_equal(2, audit.design_checks.size)
+    assert_equal(2, audit.self_check_count)
+    assert_equal(2, audit.checklist.partial_review_self_check_count)
+    assert_equal(2, audit.peer_check_count)
+    assert_equal(2, audit.checklist.partial_review_self_check_count)
     
     actual_checks = {}
-    @audit_in_self_audit.design_checks.each do |design_check|
-      assert_equal(@audit_in_self_audit.id, design_check.audit_id)
+    audit.design_checks.each do |design_check|
+      assert_equal(audit.id, design_check.audit_id)
       section_id    = design_check.check.subsection.section_id
       subsection_id = design_check.check.subsection_id
       actual_checks[section_id] = {} if !actual_checks[section_id]
@@ -203,10 +240,71 @@ class AuditTest < Test::Unit::TestCase
       actual_checks[section_id][subsection_id] << design_check.check_id
     end
     
-    assert_equal(expected_checks, actual_checks)
-     
+    assert_equal(partial_review_checks, actual_checks)
+
+
+    assert_equal(design_check_count.size + 2, DesignCheck.find(:all).size)
+    
+    audit.design.design_type = 'New'
+    audit.design.update
+    audit.update_checklist_type
+    
+    audit.reload
+    audit.design_checks.each do |dc|
+      next if !dc.check.full_review?
+      dc.designer_result = 'Verified'  if dc.check.is_self_check?
+      dc.auditor_result  = 'Verified'  if dc.check.is_peer_check?
+      dc.update
+    end
+    
+    audit.designer_completed_checks = 11
+    audit.auditor_completed_checks  = 4
+    audit.designer_complete         = 1
+    audit.auditor_complete          = 1
+    audit.update
+    
+    audit.reload
+    assert_equal(design_check_count.size + 12, DesignCheck.find(:all).size)
+    completed_check_count = audit.completed_check_count
+    assert_equal(11,  completed_check_count[:self])
+    assert_equal(4,   completed_check_count[:peer])
+    assert_equal(100, audit.self_percent_complete)
+    assert_equal(100, audit.peer_percent_complete)
+    assert(audit.designer_complete?)
+    assert(audit.auditor_complete?)
+ 
+    
+    audit.design.design_type = 'Dot Rev'
+    audit.design.update
+    audit.update_checklist_type
+    
+    audit.reload
+    assert_equal(design_check_count.size + 2, DesignCheck.find(:all).size)
+    completed_check_count = audit.completed_check_count
+    assert_equal(1, completed_check_count[:self])
+    assert_equal(1, completed_check_count[:peer])
+    assert_equal(50.0, audit.self_percent_complete)
+    assert_equal(50.0, audit.peer_percent_complete)
+    assert(!audit.designer_complete?)
+    assert(!audit.auditor_complete?)
+    
+    
+    audit.design.design_type = 'New'
+    audit.design.update
+    audit.update_checklist_type
+    
+    audit.reload
+    assert_equal(design_check_count.size + 12, DesignCheck.find(:all).size)
+    completed_check_count = audit.completed_check_count
+    assert_equal(1, completed_check_count[:self])
+    assert_equal(1, completed_check_count[:peer])
+    assert_equal("9.09", sprintf("%3.2f", audit.self_percent_complete))
+    assert_equal(25.0,   audit.peer_percent_complete)
+    assert(!audit.designer_complete?)
+    assert(!audit.auditor_complete?)
+    
   end
-  
+
   
   ######################################################################
   def test_check_counts
@@ -217,16 +315,10 @@ class AuditTest < Test::Unit::TestCase
     assert_equal(4,  @audit_in_self_audit.peer_check_count)
     
     la454c3_audit = audits(:audit_la454c3)
-    assert_equal(7, la454c3_audit.check_count[:designer])
-    assert_equal(5, la454c3_audit.check_count[:peer])
-    assert_equal(7, la454c3_audit.self_check_count)
-    assert_equal(5, la454c3_audit.peer_check_count)
-    
-    la453b_eco2_audit = audits(:audit_la453b_eco2)
-    assert_equal(7, la453b_eco2_audit.check_count[:designer])
-    assert_equal(5, la453b_eco2_audit.check_count[:peer])
-    assert_equal(7, la453b_eco2_audit.self_check_count)
-    assert_equal(5, la453b_eco2_audit.peer_check_count)
+    assert_equal(2, la454c3_audit.check_count[:designer])
+    assert_equal(2, la454c3_audit.check_count[:peer])
+    assert_equal(2, la454c3_audit.self_check_count)
+    assert_equal(2, la454c3_audit.peer_check_count)
     
   end
   
@@ -956,17 +1048,32 @@ class AuditTest < Test::Unit::TestCase
   end
   
   ######################################################################
-  def dump_audit(a)
+  def dump_audit(a, message='')
 
+    a.reload
+    if message.size > 0
+      puts("================================================")
+      puts(message)
+      puts("================================================")
+    end
     puts("================================================")
-    puts("ID:                  #{a.id}")
-    puts("DESIGN:              #{a.design.name}")
-    puts("LEAD DESIGNER:       #{a.design.designer.name}")
-    puts("LEAD PEER:           #{a.design.peer.name}")
-    puts("SELF AUDIT:          Yes") if a.is_self_audit?
-    puts("PEER AUDIT:          Yes") if a.is_peer_audit?
-    puts("COMPLETE:            Yes") if a.is_complete?
-    puts("NUMBER OF TEAMMATES: #{a.audit_teammates.size}")
+    puts("ID:                    #{a.id}")
+    puts("CHECKLIST ID:          #{a.checklist.id}")
+    puts("DESIGN:                #{a.design.name}")
+    puts("DESIGN ID:             #{a.design_id}")
+    puts("DESIGN TYPE:           #{a.design.design_type}")
+    puts("LEAD DESIGNER:         #{a.design.designer.name}")
+    puts("LEAD PEER:             #{a.design.peer.name}")
+    puts("SELF AUDIT:            Yes") if a.is_self_audit?
+    puts("PEER AUDIT:            Yes") if a.is_peer_audit?
+    puts("COMPLETE:              Yes") if a.is_complete?
+    puts("NUMBER OF TEAMMATES:   #{a.audit_teammates.size}")
+    puts("SELF CHECK COUNT:      #{a.self_check_count}")
+    puts("SELF COMPLETED CHECKS: #{a.designer_completed_checks}")
+    puts("SELF % COMPLETE:       #{a.self_percent_complete}")
+    puts("PEER CHECK COUNT:      #{a.peer_check_count}")
+    puts("PEER COMPLETED CHECKS: #{a.auditor_completed_checks}")
+    puts("PEER % COMPLETE:       #{a.peer_percent_complete}")
       
     if a.audit_teammates.size > 0
       puts("+++ DUMPING AUDIT TEAM")
@@ -976,14 +1083,64 @@ class AuditTest < Test::Unit::TestCase
         puts("  PEER:              YES") if !at.self?
       end
     end
-      
+     
+    a.design_checks.reload
+    puts("================================================")
+    puts("DESIGN CHECKS")
+    puts("================================================")
     a.design_checks.each do |dc|
-      puts("  Design Check ID: #{dc.id}         Check ID:   #{dc.check_id}")
-      puts("                                    Section ID: #{dc.check.section_id}")
+      puts("  Design Check ID: #{dc.id}         Check ID:      #{dc.check_id}")
+      puts("                                    Subsection ID: #{dc.check.subsection_id}")
       puts("    DESIGNER: #{User.find(dc.designer_id).name}  RESULT: #{dc.designer_result}") if dc.designer_id > 0
+      puts("    DESIGNER RESULT:                #{dc.designer_result}")
       puts("    AUDITOR:  #{User.find(dc.auditor_id).name}   RESULT: #{dc.auditor_result}")  if dc.auditor_id  > 0
+      puts("    AUDITOR RESULT:                 #{dc.auditor_result}")
     end
 
+    completed_check_count = a.completed_check_count
+    self_completed_checks = completed_check_count[:self]
+    peer_completed_checks = completed_check_count[:peer]
+    puts("================================================")
+    puts("AUDIT CHECKLIST")
+    puts("## CHECKLIST ID:        #{a.checklist.id}")
+    puts("## REV:                 #{a.checklist.major_rev_number}.#{a.checklist.minor_rev_number}")
+    puts("## FULL DESIGNER ONLY COUNT: #{a.checklist.designer_only_count}")
+    puts("## COMPUTED:                 #{a.checklist.full_review_self_check_count}")
+    puts("## FULL DESIGNER/AUDITOR:    #{a.checklist.designer_auditor_count}")
+    puts("## COMPUTED:                 #{a.checklist.full_review_peer_check_count}")
+    puts("## PARTIAL DESIGNER ONLY COUNT: #{a.checklist.dr_designer_only_count}")
+    puts("## COMPUTED:                    #{a.checklist.partial_review_self_check_count}")
+    puts("## PARTIAL DESIGNER/AUDITOR:    #{a.checklist.dr_designer_auditor_count}")
+    puts("## COMPUTED:                    #{a.checklist.partial_review_peer_check_count}")
+    puts("## NUMBER OF SECTIONS:  #{a.checklist.sections.size.to_s}")
+    puts("## SELF COMPLETED:      #{self_completed_checks}")
+    puts("## PEER COMPLETED:      #{peer_completed_checks}")
+    a.checklist.sections.each do |section|
+      puts("#### SECTION ID:            #{section.id}")
+      puts("#### FULL:                  #{section.full_review.to_s}")
+      puts("#### PARTIAL:               #{section.dot_rev_check.to_s}")
+      puts("#### NUMBER OF SUBSECTIONs: #{section.subsections.size.to_s}")
+      section.subsections.each do |subsection|
+        puts("###### SUBSECTION ID:        #{subsection.id}")
+        puts("###### FULL:                 #{subsection.full_review.to_s}")
+        puts("###### PARTIAL:              #{subsection.dot_rev_check.to_s}")
+        puts("###### SELF COMPLETED COUNT: #{a.completed_self_audit_check_count(subsection)}")
+        puts("###### PEER COMPLETED COUNT: #{a.completed_peer_audit_check_count(subsection)}")
+        puts("###### NUMBER OF CHECKS:     #{subsection.checks.size.to_s}")
+        subsection.checks.each do |check|
+          puts("--------  CHECK ID:  #{check.id}")
+          puts("--------  FULL:      #{check.full_review.to_s}")
+          puts("--------  PARTIAL:   #{check.dot_rev_check.to_s}")
+          puts("--------  TYPE       #{check.check_type}")
+          design_check = a.design_checks.detect { |dc| dc.check_id == check.id }
+          if design_check
+            puts("++++++++ DESIGN CHECK ID: #{design_check.id}")
+          else
+            puts("WARNING - NO DESIGN CHECK") 
+          end
+        end
+      end
+    end
     puts("================================================")
 
   end

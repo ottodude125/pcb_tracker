@@ -78,4 +78,26 @@ class DivisionTest < Test::Unit::TestCase
   end
   
   
+  ######################################################################
+  #
+  # test_get_active
+  #
+  ######################################################################
+  #
+  def test_get_active
+    
+    active_divisions = Division.get_active_divisions
+    
+    assert(active_divisions.size > 1)
+    assert(active_divisions.size < Division.count)
+    
+    name = ''
+    active_divisions.each do |division|
+      assert(name < division.name)
+      name = division.name
+    end
+    
+  end
+
+
 end

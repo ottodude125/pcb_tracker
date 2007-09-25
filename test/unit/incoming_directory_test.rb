@@ -36,4 +36,21 @@ class IncomingDirectoryTest < Test::Unit::TestCase
     assert_raise(ActiveRecord::RecordNotFound) { IncomingDirectory.find(@incoming_directory.id) }
   end
 
+
+  def test_get_active
+    
+    active_incoming_directories = IncomingDirectory.get_active_incoming_directories
+    
+    assert(active_incoming_directories.size > 1)
+    assert(active_incoming_directories.size < IncomingDirectory.count)
+    
+    name = ''
+    active_incoming_directories.each do |incoming_directory|
+      assert(name < incoming_directory.name)
+      name = incoming_directory.name
+    end
+    
+  end
+
+
 end
