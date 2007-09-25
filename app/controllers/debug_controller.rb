@@ -17,6 +17,11 @@ require 'net/http'
 
 before_filter(:verify_admin_role, :except => [:cycle_time])
 
+  def audits
+    @audits = Audit.find(:all)
+  end
+  
+  
   ######################################################################
   #
   # boards
@@ -28,13 +33,13 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   ######################################################################
   #
   def boards
-    @boards = Board.find_all(nil,"name ASC")
+    @boards = Board.find(:all)
   end
 
 
   ######################################################################
   #
-  # designs
+  # design
   #
   # Description:
   # Displays a list of designs for a particular board with links to the 
@@ -42,8 +47,8 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   #
   ######################################################################
   #
-  def designs
-    @board   = Board.find(@params[:id])
+  def design
+    @board   = Board.find(params[:id])
     @designs = Design.find_all_by_board_id(@board.id)
   end
 
@@ -59,7 +64,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   ######################################################################
   #
   def design_reviews
-    @design = Design.find(@params[:id])
+    @design = Design.find(params[:id])
     @board  = Board.find(@design.board_id)
 
     @design_reviews = DesignReview.find_all_by_design_id(@design.id).sort_by { |dr|
@@ -147,7 +152,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   ######################################################################
   #
   def checklist
-    @checklist = Checklist.find(@params[:id])
+    @checklist = Checklist.find(params[:id])
     @subsection_count = 0
     @check_count      = 0
     @checklist.sections.each do |section|
@@ -164,16 +169,16 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
     @messages = []
 
     urls = {}
-    #sections = @checklist.sections.sort_by { |s| s.sort_order }
+    #sections = @checklist.sections.sort_by { |s| s.position }
     @checklist.sections.each do |section|
-      if section.sort_order != expected_section_so
+      if section.position != expected_section_so
         @messages.push   "Section #{section.id}: Expected sort order " +
                          "#{expected_section_so}  " +
-                         "actual: #{section.sort_order}"
+                         "actual: #{section.position}"
       end
-      if section.sort_order > section_count
+      if section.position > section_count
         @messages.push   "Section #{section.id}: sort order " +
-                         "#{section.sort_order}  " +
+                         "#{section.position}  " +
                          "is greater than the number of sections: #{section_count}"
       end
       expected_section_so += 1
@@ -196,16 +201,16 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
       end
       logger.info "#############################################"
 
-      #subsections = section.subsections.sort_by { |s| s.sort_order }
+      #subsections = section.subsections.sort_by { |s| s.position }
       section.subsections.each do |subsection|
-        if subsection.sort_order != expected_subsection_so
+        if subsection.position != expected_subsection_so
           @messages.push   "Subsection #{subsection.id}: Expected sort order " +
                          "#{expected_subsection_so}  " +
-                         "actual: #{subsection.sort_order}"
+                         "actual: #{subsection.position}"
         end
-        if subsection.sort_order > subsection_count
+        if subsection.position > subsection_count
           @messages.push   "Subsection #{subsection.id}: Sort order " +
-                           "#{subsection.sort_order}  " +
+                           "#{subsection.position}  " +
                            "is greater than the number of sections: #{subsection_count}"
         end
         expected_subsection_so += 1
@@ -228,16 +233,16 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
         end
         logger.info "#############################################"
 
-        #checks = subsection.checks.sort_by { |c| c.sort_order }
+        #checks = subsection.checks.sort_by { |c| c.position }
         subsection.checks.each do |check|
-          if check.sort_order != expected_check_so
+          if check.position != expected_check_so
             @messages.push   "Check #{check.id}: Expected sort order " +
                              "#{expected_check_so}  " +
-                             "actual: #{check.sort_order}"
+                             "actual: #{check.position}"
           end
-          if check.sort_order > check_count
+          if check.position > check_count
             @messages.push   "Check #{check.id}: Sort order " +
-                             "#{check.sort_order}  " +
+                             "#{check.position}  " +
                              "is greater than the number of sections: #{check_count}"
           end
           expected_check_so += 1
@@ -273,19 +278,97 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   end
   
   
-  def cycle_time
+  def select_reviewers
+    
+    @review_types = ReviewType.get_review_types
+    @review_roles = Role.get_review_roles
+    @users        = User.find(:all)
+    
+  end
   
-    @cycle_times = [{ :user           => User.find_by_last_name('Bechard'),
-                      :design_reviews => [] },
-                    { :user           => User.find_by_last_name('Pallotta'),
-                      :design_reviews => [] }]
-                      
+  
+  def cycle_time
+    
+    @cycle_times  = []
+    @review_types = []
+    @roles        = []
+    params.each do |param|
+    
+      p = param[0].split('_')
+      
+      if p[0] == 'role'
+        if p.size == 2
+          role = Role.find(p[1])
+          @roles << role
+          role.users.each do |user|
+            if !@cycle_times.detect { |ct| ct[:user].id == user.id }
+              @cycle_times << { :user => user, :design_reviews => [] }
+            end
+          end
+        end
+      elsif p[0] == 'rt'
+        @review_types << ReviewType.find(p[1])
+      end
+      
+      @cycle_times = @cycle_times.sort_by { |ct| ct[:user].last_name }
+    
+    end
+
+    @roles = @roles.uniq
+    
     @cycle_times.each do |ct|
       review_results = DesignReviewResult.find_all_by_reviewer_id(ct[:user].id)
       review_results.delete_if { |rr| rr.result == 'No Response' || rr.result == 'NONE' }
+      review_results.delete_if { |rr| !@review_types.include?(rr.design_review.review_type) }
+      review_results.delete_if { |rr| !@roles.include?(rr.role)}
       ct[:design_reviews] = review_results
     end
+    
+    @cycle_times.delete_if { |ct| ct[:design_reviews].size == 0 }
+    
+    if @cycle_times.size == 0
+      redirect_to(:action => 'select_reviewers')
+      flash['notice'] = "No Records Returned"
+    end
   
+  end
+
+
+  def designs
+    @designs = Design.find(:all)
+  end
+  
+  
+  def part_numbers
+    @part_numbers = PartNumber.find(:all)
+    designs       = Design.find(:all)
+    bde_list      = BoardDesignEntry.find(:all)
+    
+    @part_numbers.each do |pn|
+      pn_designs = []
+      pn_bdes    = []
+      
+      designs.each { |d| pn_designs << d if d.part_number_id == pn.id }
+      pn[:design_count] = pn_designs.size
+      if pn_designs.size == 0
+        pn[:design_id] = '-'
+      elsif pn_designs.size == 1
+        pn[:design_id] = pn_designs[0].id
+      else
+        pn[:design_id] = 'ERR'
+      end
+      
+      bde_list.each { |bde| pn_bdes << bde if bde.part_number_id == pn.id }
+      pn[:bde_count] = pn_bdes.size
+      if pn_bdes.size == 0
+        pn[:bde_id] = '-'
+      elsif pn_bdes.size == 1
+        pn[:bde_id] = pn_bdes[0].id
+      else
+        pn[:bde_id] = 'ERR'
+      end
+      
+    end
   end
 
 end
