@@ -18,4 +18,70 @@ class OiInstruction < ActiveRecord::Base
   
   has_many :oi_assignments
 
+
+  ######################################################################
+  #
+  # assignment_count
+  #
+  # Description:
+  # Returns the total number of assignments for the instruction.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An integer representing the number of assignments for the
+  # instruction.
+  #
+  ######################################################################
+  #
+  def assignment_count
+    self.oi_assignments.size  
+  end
+  
+  
+  ######################################################################
+  #
+  # completed_assignment_count
+  #
+  # Description:
+  # Returns the total number of completed assignments for the instruction.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An integer representing the number of completed assignments for the
+  # instruction.
+  #
+  ######################################################################
+  #
+  def completed_assignment_count
+    total = 0
+    self.oi_assignments.each { |assignment| total += 1 if assignment.complete? }
+    total
+  end
+  
+  
+  ######################################################################
+  #
+  # report_card_count
+  #
+  # Description:
+  # Returns the total number of completed report cards for the instruction.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An integer representing the number of completed report cards for the
+  # instruction.
+  #
+  ######################################################################
+  #
+  def report_card_count
+    total = 0
+    self.oi_assignments.each { |assignment| total += 1 if assignment.oi_assignment_report }
+    total
+  end
 end
