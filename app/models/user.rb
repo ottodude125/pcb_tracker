@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
   
   has_many :audit_comments
   has_many :audit_teammates
+  has_many :board_design_entries
   has_many :board_design_entry_users
   has_many :design_review_comments
   has_many :design_update
