@@ -123,6 +123,118 @@ class Checklist < ActiveRecord::Base
   
   ######################################################################
   #
+  # full_review_self_check_count
+  #
+  # Description:
+  # Computes the number of self audit checks in a full review.
+  #
+  # Parameters:
+  # None
+  #
+  # Return:
+  # The number of self audit checks in a full review.
+  #
+  ######################################################################
+  #
+  def full_review_self_check_count
+    check_count = 0
+    self.sections.each do |s|
+      next if !s.full_review?
+      s.subsections.each do |ss|
+        next if !ss.full_review?
+        ss.checks.each { |c| check_count += 1 if c.full_review? && c.is_self_check? }
+      end
+    end
+    check_count
+  end
+
+  
+  ######################################################################
+  #
+  # full_review_peer_check_count
+  #
+  # Description:
+  # Computes the number of peer audit checks in a full review.
+  #
+  # Parameters:
+  # None
+  #
+  # Return:
+  # The number of peer audit checks in a full review.
+  #
+  ######################################################################
+  #
+  def full_review_peer_check_count
+    check_count = 0
+    self.sections.each do |s|
+      next if !s.full_review?
+      s.subsections.each do |ss|
+        next if !ss.full_review?
+        ss.checks.each { |c| check_count += 1 if c.full_review? && c.is_peer_check? }
+      end
+    end
+    check_count
+  end
+
+  
+  ######################################################################
+  #
+  # partial_review_self_check_count
+  #
+  # Description:
+  # Computes the number of self audit checks in a partial review.
+  #
+  # Parameters:
+  # None
+  #
+  # Return:
+  # The number of self audit checks in a partial review.
+  #
+  ######################################################################
+  #
+  def partial_review_self_check_count
+    check_count = 0
+    self.sections.each do |s|
+      next if !s.dot_rev_check?
+      s.subsections.each do |ss|
+        next if !ss.dot_rev_check?
+        ss.checks.each { |c| check_count += 1 if c.dot_rev_check? && c.is_self_check? }
+      end
+    end
+    check_count
+  end
+  
+  
+  ######################################################################
+  #
+  # partial_review_peer_check_count
+  #
+  # Description:
+  # Computes the number of peer audit checks in a partial review.
+  #
+  # Parameters:
+  # None
+  #
+  # Return:
+  # The number of peer audit checks in a partial review.
+  #
+  ######################################################################
+  #
+  def partial_review_peer_check_count
+    check_count = 0
+    self.sections.each do |s|
+      next if !s.dot_rev_check?
+      s.subsections.each do |ss|
+        next if !ss.dot_rev_check?
+        ss.checks.each { |c| check_count += 1 if c.dot_rev_check? && c.is_peer_check? }
+      end
+    end
+    check_count
+  end
+
+  
+  ######################################################################
+  #
   # release
   #
   # Description:
