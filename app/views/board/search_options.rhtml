@@ -79,6 +79,24 @@
         <table border="0">
           <tr>
             <td class="data" align="right">
+              <%= radio_button(:review_type, :phase, 'Pre-Artwork') %>
+            </td>
+            <th align="left">Pre-Artwork</th>
+          </tr>
+          <tr>
+            <td class="data" align="right">
+              <%= radio_button(:review_type, :phase, 'Placement') %>
+            </td>
+            <th align="left">Placement</th>
+          </tr>
+          <tr>
+            <td class="data" align="right">
+              <%= radio_button(:review_type, :phase, 'Routing') %>
+            </td>
+            <th align="left">Routing</th>
+          </tr>
+          <tr>
+            <td class="data" align="right">
               <%= radio_button(:review_type, :phase, 'Final') %>
             </td>
             <th align="left">Final</th>
