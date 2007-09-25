@@ -6,27 +6,27 @@
     </tr>
     
     <tr valign="top">
-      <th>Design</th>
-      <th>Review Type</th>
-      <th>Posting Count</th>
-      <th>Role</th>
-      <th>Result</th>
-      <th>Original<br />Posting</th>
-      <th>Last<br />Posting</th>
-      <th>Resolved</th>
+      <th width="85">Design</th>
+      <th width="90">Review Type</th>
+      <th width="70">Posting Count</th>
+      <th width="130">Role</th>
+      <th width="80">Result</th>
+      <th width="150">Original<br />Posting</th>
+      <th width="150">Last<br />Posting</th>
+      <th width="150">Resolved</th>
     </tr>
     
     <% ct[:design_reviews].each do |review_result| %>
     
       <tr>
-        <td><%= review_result.design_review.design.name %></td>
-        <td><%= review_result.design_review.review_type.name %></td>
-        <td><%= review_result.design_review.posting_count %></td>
-        <td><%= review_result.role.name %></td>
-        <td><%= review_result.result %></td>
-        <td><%= review_result.design_review.created_on.strftime('%m/%d/%y %I:%M %p') %></td>
-        <td><%= review_result.design_review.reposted_on.strftime('%m/%d/%y %I:%M %p') %></td>
-        <td><%= review_result.reviewed_on.strftime('%m/%d/%y %I:%M %p') %></td>
+        <td align="center"><%= review_result.design_review.design.name %></td>
+        <td align="center"><%= review_result.design_review.review_type.name %></td>
+        <td align="center"><%= review_result.design_review.posting_count %></td>
+        <td align="center"><%= review_result.role.name %></td>
+        <td align="center"><%= review_result.result %></td>
+        <td align="center"><%= review_result.design_review.created_on.strftime('%m/%d/%y %I:%M %p') %></td>
+        <td align="center"><%= review_result.design_review.reposted_on.strftime('%m/%d/%y %I:%M %p') %></td>
+        <td align="center"><%= review_result.reviewed_on.strftime('%m/%d/%y %I:%M %p') %></td>
       </tr>
     
     <% end %>
@@ -35,4 +35,4 @@
 
 <% end %>
 
-<%# debug @cycle_times %>
+<%#S debug @review_types %>
