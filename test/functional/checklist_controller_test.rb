@@ -72,8 +72,8 @@ class ChecklistControllerTest < Test::Unit::TestCase
     assert_equal(4, checklist.designer_auditor_count)
     assert_equal(2, checklist.dc_designer_only_count)
     assert_equal(5, checklist.dc_designer_auditor_count)
-    assert_equal(2, checklist.dr_designer_only_count)
-    assert_equal(5, checklist.dr_designer_auditor_count)
+    assert_equal(0, checklist.dr_designer_only_count)
+    assert_equal(2, checklist.dr_designer_auditor_count)
 
     check_count = 0
     checklist.each_check { |ch| check_count += 1 }
@@ -99,8 +99,8 @@ class ChecklistControllerTest < Test::Unit::TestCase
     assert_equal(4, checklist.designer_auditor_count)
     assert_equal(2, checklist.dc_designer_only_count)
     assert_equal(5, checklist.dc_designer_auditor_count)
-    assert_equal(2, checklist.dr_designer_only_count)
-    assert_equal(5, checklist.dr_designer_auditor_count)
+    assert_equal(0, checklist.dr_designer_only_count)
+    assert_equal(2, checklist.dr_designer_auditor_count)
 
     check_count = 0
     checklist.each_check { |ch| check_count += 1 }
@@ -122,8 +122,8 @@ class ChecklistControllerTest < Test::Unit::TestCase
     assert_equal(4, checklist.designer_auditor_count)
     assert_equal(2, checklist.dc_designer_only_count)
     assert_equal(5, checklist.dc_designer_auditor_count)
-    assert_equal(2, checklist.dr_designer_only_count)
-    assert_equal(5, checklist.dr_designer_auditor_count)
+    assert_equal(0, checklist.dr_designer_only_count)
+    assert_equal(2, checklist.dr_designer_auditor_count)
 
   end
 

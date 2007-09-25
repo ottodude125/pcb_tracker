@@ -32,6 +32,7 @@ class BoardControllerTest < Test::Unit::TestCase
            :designs,
            :fab_houses,
            :ipd_posts,
+           :part_numbers,
            :platforms,
            :prefixes,
            :priorities,
@@ -210,21 +211,27 @@ class BoardControllerTest < Test::Unit::TestCase
   #
   def test_show_boards
   
-    all_boards = Board.find(:all)
-    board_list = {}
-    all_boards.each do |board|
-      board_list[board.prefix.pcb_mnemonic] = [] if !board_list[board.prefix.pcb_mnemonic]
-      board_list[board.prefix.pcb_mnemonic] << board
-    end
-
-    board_list.each_key do |key|
-      board_list[key] = board_list[key].sort_by { |b| b.number }
-    end
-    
     post(:show_boards)
+
+    assert_equal(1, assigns(:rows))
+    assert_equal(8, assigns(:columns))
     
-    assigns(:boards).each do |prefix_board_list|
-      assert_equal(board_list[prefix_board_list[0]], prefix_board_list[1])
+    unique_pcb_part_numbers = Design.get_unique_pcb_numbers
+    assert_equal(8, unique_pcb_part_numbers.size)
+    
+    part_numbers = assigns(:part_numbers)
+    assert_equal(1, part_numbers.size)
+    assert_equal(8, part_numbers[0].size)
+
+    row = 0
+    col = 0
+    unique_pcb_part_numbers.each_with_index do |pn, i|
+      assert_equal(pn, part_numbers[row][col])
+      col += 1
+      if col == assigns(:columns)
+        col  = 0
+        row += 1
+      end
     end
     
   end
@@ -420,7 +427,6 @@ class BoardControllerTest < Test::Unit::TestCase
     
     board_list = assigns(:board_list)
     assert_equal(all_boards.size, board_list.size)
-    
     board_list.each do |board|
       expected_brd = all_boards.detect { |k,v| k == board.name}
       assert_not_nil(expected_brd)
@@ -466,23 +472,19 @@ class BoardControllerTest < Test::Unit::TestCase
   #
   def test_design_information
   
-    post(:design_information, :board => { :name => 'junk' })
+    expected_designs = Design.find(:all)
+    expected_designs.delete_if do |d| 
+      !(d.part_number.pcb_prefix == '942' && d.part_number.pcb_number == '453') 
+    end
     
-    assert_redirected_to('action' => 'show_boards')
-    assert_equal('Please provide a board number', flash['notice'])
-  
-    post(:design_information, :board => { :name => 'la453' })
-    
-    assert_response(:success)
-    board = assigns(:board)
-    assert_equal('la453', board.name)
-  
-    mx999 = boards(:mx999)
-    post(:design_information, :board_id => mx999.id)
+    post(:design_information, :part_number => '942-453')
     
     assert_response(:success)
-    board = assigns(:board)
-    assert_equal(mx999.name, board.name)
+    designs = assigns(:designs)
+    assert_equal(expected_designs.size, designs.size)
+    
+    expected_designs.each { |ed| designs.delete_if { |d| d.id == ed.id } }
+    assert_equal(0, designs.size)
   
   end
   
