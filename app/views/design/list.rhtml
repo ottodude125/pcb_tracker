@@ -1,0 +1,36 @@
+<!-- View:    design                                            -->
+<!-- Purpose: Displays a list of designs to provied the admin   -->
+<!--          with links to each of the active designs.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading =  "Active Designs" %>
+
+<hr class="div" />
+
+<table align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+
+  <tr class="teraheader">
+  	<th width="170">PCB Part Number</th>
+	<th width="100">Revision</th>
+	<th width="100">Type Audit</th>
+  </tr>
+
+  <% @active_designs.each do |design| %>
+    <tr>
+      <td align="center">
+        <%= link_to(design.part_number.pcb_name, :action => 'show', :id => design.id) %>
+      </td>
+	  <td align="center"><%= design.part_number.pcb_revision %></td>
+	  <td align="center"><%= design.audit_type %></td>
+    </tr>
+  <% end %>
+	
+</table>
+
+<hr class="div" />
+<input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
+
+
+<%# debug @active_designs %>
