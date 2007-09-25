@@ -363,6 +363,81 @@ class DesignController < ApplicationController
     end
     
   end
+
   
+  ######################################################################
+  #
+  # list
+  #
+  # Description:
+  # Provides a list active designs sorted by the part number
+  #
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def list
+    
+    # Get all of the designs that are not complete.
+    active_designs = Design.find_all_active
+    
+    # Detect if any designs do not have a part number every design in the 
+    # list that does not have a part number
+    no_part_number = active_designs.detect { |d| d.part_number_id == 0 }
+    
+    if no_part_number
+      active_designs.delete_if { |d| d.part_number_id == 0 }
+      flash['notice'] = "Designs exist that have no associated part number"
+    end
+    
+    @active_designs = active_designs.sort_by { |d| d.part_number.pcb_display_name }  
+    
+  end
+
+
+  ######################################################################
+  #
+  # show
+  #
+  # Description:
+  # Retrieves a design for display
+  #
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def show
+    @design = Design.find(params[:id])
+  end
+
+
+  ######################################################################
+  #
+  # convert_checklist_type
+  #
+  # Description:
+  # Called when a user clicks a button on the show screen indicating
+  # that the user wants to convert the audit (from full or partial or
+  # partial to full).  Once the work is done the show screen is 
+  # redisplayed.
+  #
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def convert_checklist_type
+
+    design = Design.find(params[:id])
+    design.flip_design_type
+    redirect_to(:action => "show", :id => design.id)
+    
+    flash['notice'] = 'The audit has been converted to a ' + design.audit_type +
+                      ' audit'
+    
+  end
+
 
 end
