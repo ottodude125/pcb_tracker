@@ -86,6 +86,60 @@ class PartNumber < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # get_unique_pcb_numbers
+  #
+  # Description:
+  # This method provides a list of sorted, unique PCB part numbers.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of unique PCB part numbers represented as strings.
+  #
+  ######################################################################
+  #
+  def self.get_unique_pcb_numbers
+    part_number_list = PartNumber.find(:all)
+    part_number_list.delete_if do |pn| 
+      ((pn.board_design_entry && pn.board_design_entry.complete?) ||
+       (!pn.design))
+    end
+    part_number_list.collect { |pn| pn.pcb_prefix + '-' + pn.pcb_number }.uniq.sort
+  end
+  
+  
+  ######################################################################
+  #
+  # get_designs
+  #
+  # Description:
+  # Provides a list of designs given a unique PCB part number
+  #
+  # Parameters:
+  # unique_part_number - a string representing a unique PCB Part Number.
+  #
+  # Return value:
+  # A list of designs related to the uniqu PCB Part Number.
+  #
+  ######################################################################
+  #
+  def self.get_designs(unique_part_number)
+    
+    components = unique_part_number.split('-')
+    part_numbers = PartNumber.find(:all, 
+                                   :conditions => "pcb_prefix='#{components[0]}' " +
+                                                  "AND pcb_number='#{components[1]}'")
+                                   
+    designs = part_numbers.collect { |pn| pn.design }.reverse
+    designs.delete_if { |d| !d }
+    designs
+    
+  end
+  
+  
   ##############################################################################
   #
   # Instance Methods
@@ -210,6 +264,26 @@ class PartNumber < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # pcb_unique_number
+  #
+  # Description:
+  # Returns the unique portion of a part number
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A string representing the unique portion of a part number.
+  #
+  ######################################################################
+  #
+  def pcb_unique_number
+    self.pcb_prefix + '-' + self.pcb_number
+  end
+  
+
   ######################################################################
   #
   # valid_pcb_part_number?
