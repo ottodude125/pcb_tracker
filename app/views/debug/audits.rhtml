@@ -1,36 +1,47 @@
-<h1>Boards</h1>
+<h1>Audits</h1>
+
+<%= link_to("DEBUG HOME", { :action => 'index' }) %>
+
+<p>Number of Audits: <%= @audits.size %></p>
 
 <table border="1">
 
-  <tr>
-    <th>#</th>
-    <th>ID</th>
-    <th>NAME</th>
-    <th>PREFIX</th>
-    <th>NUMBER</th>
-    <th>PLATFORM</th>
-    <th>PROJECT</th>
-    <th>ACTIVE?</th>
-    <th>DESIGNS</th>
-  </tr>
+  <% @audits.each_with_index do |audit, line_number|
 
-  <% line_number = 0 %>
-  <% for board in @boards %>
+       completed_checks = audit.completed_check_count %>
+
+    <% if line_number.remainder(20) == 0 %>
+      <tr valign="top">
+        <th>#</th>
+        <th>ID</th>
+        <th>CHECKLIST ID</th>
+        <th>DESIGN ID</th>
+        <th>PCB NUMBER</th>
+        <th width="80">SELF COMPLETE</th>
+        <th width="100">SELF COMPLETED CHECKS</th>
+        <th>COMPUTED</th>
+        <th width="80">SELF TOTAL CHECKS</th>
+        <th width="80">PEER COMPLETE</th>
+        <th width="100">PEER COMPLETED CHECKS</th>
+        <th>COMPUTED</th>
+        <th width="80">PEER TOTAL CHECKS</th>
+      </tr>
+	<% end %>
 
     <tr>
-      <td><%= line_number += 1 %></td>
-      <td><%= board.id %></td>
-      <td><%= board.name %></td>
-      <td><%= board.prefix.pcb_mnemonic %></td>
-      <td><%= board.number %></td>
-      <td><%= board.platform.name %></td>
-      <td><%= board.project.name %></td>
-      <td><%= board.active? %></td>
-      <td align="center">
-          <%= link_to(board.designs.size.to_s,
-                      { :action => 'designs',
-                        :id     => board.id}) %>
-      </td>
+      <td><%= line_number + 1 %></td>
+      <td><%= audit.id %></td>
+	  <td><%= audit.checklist_id %></td>
+	  <td><%= audit.design_id %></td>
+	  <td><%= audit.design.part_number.pcb_display_name %></td>
+	  <td><%= audit.designer_complete? %></td>
+	  <td><%= audit.designer_completed_checks %></td>
+	  <td><%= completed_checks[:self] %></td>
+	  <td><%= audit.self_check_count %></td>
+	  <td><%= audit.auditor_complete? %></td>
+	  <td><%= audit.auditor_completed_checks %></td>
+	  <td><%= completed_checks[:peer] %></td>
+	  <td><%= audit.peer_check_count %></td>
     </tr>
 
   <% end %>
