@@ -47,4 +47,24 @@ class Platform < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # get_active_platforms
+  #
+  # Description:
+  # This method returns a list of the active platform records
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of active platform records
+  #
+  ######################################################################
+  #
+  def self.get_active_platforms
+    self.find(:all, :conditions => 'active=1', :order => 'name')
+  end
+
+
 end
