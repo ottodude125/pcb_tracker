@@ -18,4 +18,32 @@ class Location < ActiveRecord::Base
   
   has_many :users
 
+
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+  
+  ######################################################################
+  #
+  # get_active_locations
+  #
+  # Description:
+  # This method returns a list of the active location records
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of active location records
+  #
+  ######################################################################
+  #
+  def self.get_active_locations
+    self.find(:all, :conditions => 'active=1', :order => 'name')
+  end
+
+
 end
