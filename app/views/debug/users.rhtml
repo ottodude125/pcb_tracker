@@ -1,16 +1,33 @@
-<table>
-  <% for user in @users %>
+<h1>Users</h1>
+
+<%= link_to("DEBUG HOME", { :action => 'index' }) %>
+
+<p>Number of Users: <%= @users.size %></p>
+
+<table border="1">
+  <% @users.each_with_index do |user, line_number| %>
+
+    <% if line_number.remainder(20) == 0 %>
+      <tr class="teraheader" valign="top">
+        <th>#</th>
+		<th>ID</th>
+        <th>NAME</th>
+		<th>EMAIL</th>
+		<th>EMPLOYEE?</th>
+        <th>ACTIVE</th>
+        <th>ROLES</th>
+      </tr>
+	<% end %>
+
     <tr>
-      <td><%= user.name %></td>
+      <td><%= (line_number + 1).to_s %></td>
+	  <td><%= user.id.to_s %></td>
+      <td><%= user.last_name_first %></td>
       <td><%= user.email %></td>
-      <% if user.active? %>
-        <td>Yes</td>
-      <% else %>
-        <td>No</td>
-      <% end %>
-      
+	  <td><%= user.employee? ? 'Yes' : 'No' %></td>
+	  <td align="center"><%= user.active? ? 'Yes' : 'No' %></td>
       <td>
-        <% for role in user.roles %>
+        <% user.roles.each do |role| %>
           <%= role.name %>
         <% end %>
       </td>
