@@ -162,31 +162,31 @@ mx999c:
 la021c:
   id: 17
   pcb_prefix:        942
-  pcb_number:        021
+  pcb_number:        "021"
   pcb_dash_number:   c0
   pcb_revision:      r
   pcba_prefix:       949
-  pcba_number:       021
+  pcba_number:       "021"
   pcba_dash_number:  '00'
   pcba_revision:     q
 mx008b4:
   id: 18
   pcb_prefix:        252
-  pcb_number:        008
+  pcb_number:        "008"
   pcb_dash_number:   b4
   pcb_revision:      p
   pcba_prefix:       259
-  pcba_number:       008
+  pcba_number:       "008"
   pcba_dash_number:  '00'
   pcba_revision:     o
 mx008b4_eco:
   id: 19
   pcb_prefix:        252
-  pcb_number:        008
+  pcb_number:        "008"
   pcb_dash_number:   b4
   pcb_revision:      n
   pcba_prefix:       259
-  pcba_number:       008
+  pcba_number:       "008"
   pcba_dash_number:  '00'
   pcba_revision:     m
 av714b:
