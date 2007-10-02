@@ -20,6 +20,7 @@ class BoardDesignEntryTest < Test::Unit::TestCase
            :divisions,
            :incoming_directories,
            :locations,
+           :part_numbers,
            :platforms,
            :prefixes,
            :product_types,
@@ -28,6 +29,12 @@ class BoardDesignEntryTest < Test::Unit::TestCase
            :roles,
            :users
 
+
+  def setup
+    
+    @cathy_m = users(:cathy_m)
+    
+  end
 
   ######################################################################
   def test_design_name_methods
@@ -147,9 +154,228 @@ class BoardDesignEntryTest < Test::Unit::TestCase
     assert_equal(3, johns_list.size)
     johns_list.each { |bde| assert(submitter_states.include?(bde.state)) }
     
+
+    assert_equal(3, BoardDesignEntry.submission_count)
+    
   end
   
+
+  ######################################################################
+  def test_add_entry
+    
+    total_entries      = BoardDesignEntry.count
+    total_part_numbers = PartNumber.count 
+    
+    pcb_pn      = '700-400-00'.split('-')
+    pcba_pn     = '000-000-00'.split('-')
+    part_number = PartNumber.new( :pcb_prefix       => pcb_pn[0],
+                                  :pcb_number       => pcb_pn[1],
+                                  :pcb_dash_number  => pcb_pn[2],
+                                  :pcb_revision     => 'a',
+                                  :pcba_prefix      => pcba_pn[0],
+                                  :pcba_number      => pcba_pn[1],
+                                  :pcba_dash_number => pcba_pn[2],
+                                  :pcba_revision    => 'a')
+               
+    board_design_entry = BoardDesignEntry.add_entry(part_number, @cathy_m)
+    assert(board_design_entry)
+    total_entries      += 1
+    total_part_numbers += 1
+    assert_equal(total_entries,      BoardDesignEntry.count)
+    assert_equal(total_part_numbers, PartNumber.count)
+    
+    part_number.reload
+    assert_not_nil(part_number.id)
+    assert_nil(part_number.error_message)
+    
+    
+    pcb_pn      = '700-400-01'.split('-')
+    pcba_pn     = '000-000-00'.split('-')
+    part_number = PartNumber.new( :pcb_prefix       => pcb_pn[0],
+                                  :pcb_number       => pcb_pn[1],
+                                  :pcb_dash_number  => pcb_pn[2],
+                                  :pcb_revision     => 'b',
+                                  :pcba_prefix      => pcba_pn[0],
+                                  :pcba_number      => pcba_pn[1],
+                                  :pcba_dash_number => pcba_pn[2],
+                                  :pcba_revision    => 'a')
+               
+    board_design_entry = BoardDesignEntry.add_entry(part_number, @cathy_m)
+    assert(board_design_entry)
+    total_entries      += 1
+    total_part_numbers += 1
+    assert_equal(total_entries,      BoardDesignEntry.count)
+    assert_equal(total_part_numbers, PartNumber.count)
+    
+    part_number.reload
+    assert_not_nil(part_number.id)
+    assert_nil(part_number.error_message)
+    
+    
+    pcb_pn      = '700-401-00'.split('-')
+    pcba_pn     = '700-500-00'.split('-')
+    part_number = PartNumber.new( :pcb_prefix       => pcb_pn[0],
+                                  :pcb_number       => pcb_pn[1],
+                                  :pcb_dash_number  => pcb_pn[2],
+                                  :pcb_revision     => 'a',
+                                  :pcba_prefix      => pcba_pn[0],
+                                  :pcba_number      => pcba_pn[1],
+                                  :pcba_dash_number => pcba_pn[2],
+                                  :pcba_revision    => 'b')
+               
+    board_design_entry = BoardDesignEntry.add_entry(part_number, @cathy_m)
+    assert(board_design_entry)
+    total_entries      += 1
+    total_part_numbers += 1
+    assert_equal(total_entries,      BoardDesignEntry.count)
+    assert_equal(total_part_numbers, PartNumber.count)
+    
+    part_number.reload
+    assert_not_nil(part_number.id)
+    assert_nil(part_number.error_message)
+    
+
+    pcb_pn      = '700-500-01'.split('-')
+    pcba_pn     = '700-501-00'.split('-')
+    part_number = PartNumber.new( :pcb_prefix       => pcb_pn[0],
+                                  :pcb_number       => pcb_pn[1],
+                                  :pcb_dash_number  => pcb_pn[2],
+                                  :pcb_revision     => 'a',
+                                  :pcba_prefix      => pcba_pn[0],
+                                  :pcba_number      => pcba_pn[1],
+                                  :pcba_dash_number => pcba_pn[2],
+                                  :pcba_revision    => 'b')
+               
+    board_design_entry = BoardDesignEntry.add_entry(part_number, @cathy_m)
+    assert(!board_design_entry)
+    assert_equal(total_entries,      BoardDesignEntry.count)
+    assert_equal(total_part_numbers, PartNumber.count)
+    
+    assert_nil(part_number.id)
+    assert_equal("The supplied PCB Part Number already exists as a PCBA Part " +
+                 "Number in the database - YOUR PART NUMBER WAS NOT CREATED",
+                 part_number.error_message)
+    
+
+    pcb_pn      = '700-400-00'.split('-')
+    pcba_pn     = '000-000-00'.split('-')
+    part_number = PartNumber.new( :pcb_prefix       => pcb_pn[0],
+                                  :pcb_number       => pcb_pn[1],
+                                  :pcb_dash_number  => pcb_pn[2],
+                                  :pcb_revision     => 'a',
+                                  :pcba_prefix      => pcba_pn[0],
+                                  :pcba_number      => pcba_pn[1],
+                                  :pcba_dash_number => pcba_pn[2],
+                                  :pcba_revision    => 'a')
+               
+    board_design_entry = BoardDesignEntry.add_entry(part_number, @cathy_m)
+    assert(!board_design_entry)
+    assert_equal(total_entries,      BoardDesignEntry.count)
+    assert_equal(total_part_numbers, PartNumber.count)
+    
+    assert_nil(part_number.id)
+    assert_equal("The supplied PCB Part Number already exists as a PCB Part " +
+                 "Number in the database - YOUR PART NUMBER WAS NOT CREATED",
+                 part_number.error_message)
+    
+    
+    pcb_pn      = '700-600-01'.split('-')
+    pcba_pn     = '700-400-00'.split('-')
+    part_number = PartNumber.new( :pcb_prefix       => pcb_pn[0],
+                                  :pcb_number       => pcb_pn[1],
+                                  :pcb_dash_number  => pcb_pn[2],
+                                  :pcb_revision     => 'a',
+                                  :pcba_prefix      => pcba_pn[0],
+                                  :pcba_number      => pcba_pn[1],
+                                  :pcba_dash_number => pcba_pn[2],
+                                  :pcba_revision    => 'a')
+               
+    board_design_entry = BoardDesignEntry.add_entry(part_number, @cathy_m)
+    assert(!board_design_entry)
+    assert_equal(total_entries,      BoardDesignEntry.count)
+    assert_equal(total_part_numbers, PartNumber.count)
+    
+    assert_nil(part_number.id)
+    assert_equal("The supplied PCBA Part Number already exists as a PCB Part " +
+                 "Number in the database - YOUR PART NUMBER WAS NOT CREATED",
+                 part_number.error_message)
+
+    pcb_pn      = '700-600-01'.split('-')
+    pcba_pn     = '700-400-40'.split('-')
+    part_number = PartNumber.new( :pcb_prefix       => pcb_pn[0],
+                                  :pcb_number       => pcb_pn[1],
+                                  :pcb_dash_number  => pcb_pn[2],
+                                  :pcb_revision     => 'a',
+                                  :pcba_prefix      => pcba_pn[0],
+                                  :pcba_number      => pcba_pn[1],
+                                  :pcba_dash_number => pcba_pn[2],
+                                  :pcba_revision    => 'd')
+               
+    board_design_entry = BoardDesignEntry.add_entry(part_number, @cathy_m)
+    assert(!board_design_entry)
+    assert_equal(total_entries,      BoardDesignEntry.count)
+    assert_equal(total_part_numbers, PartNumber.count)
+    
+    assert_nil(part_number.id)
+    assert_equal("The supplied PCBA Part Number already exists as a PCB Part " +
+                 "Number in the database - YOUR PART NUMBER WAS NOT CREATED",
+                 part_number.error_message)
+
+  end
+
   
+  ######################################################################
+  def test_entry_type_methods
+    
+    # Test a board design entry that does not exist in the database.
+    bde = BoardDesignEntry.new
+    
+    assert_equal('New',                      bde.new_entry_type_name)
+    assert_equal('Bare Board Change/Design', bde.dot_rev_entry_type_name)
+
+    assert(!bde.new_design?)
+    assert(!bde.dot_rev_design?)
+    assert(!bde.entry_type_set?)
+    assert_equal('Entry Type Not Set', bde.entry_type_name)
+    
+    bde.set_entry_type_dot_rev
+    assert(!bde.new_design?)
+    assert(bde.dot_rev_design?)
+    assert(bde.entry_type_set?)
+    assert_equal('Bare Board Change/Design', bde.entry_type_name)
+    
+    bde.set_entry_type_new
+    assert(bde.new_design?)
+    assert(!bde.dot_rev_design?)
+    assert(bde.entry_type_set?)
+    assert_equal('New', bde.entry_type_name)
+    
+    
+    # Test a board design entry that already exists in the database.
+    bde = BoardDesignEntry.find(board_design_entries(:av714b).id)
+    
+    assert(bde.new_design?)
+    assert(!bde.dot_rev_design?)
+    assert(bde.entry_type_set?)
+    assert_equal('New', bde.entry_type_name)
+    
+    bde.set_entry_type_dot_rev
+    bde.reload
+    assert(!bde.new_design?)
+    assert(bde.dot_rev_design?)
+    assert(bde.entry_type_set?)
+    assert_equal('Bare Board Change/Design', bde.entry_type_name)
+    
+    bde.set_entry_type_new
+    bde.reload
+    assert(bde.new_design?)
+    assert(!bde.dot_rev_design?)
+    assert(bde.entry_type_set?)
+    assert_equal('New', bde.entry_type_name)
+    
+  end
+
+
   ######################################################################
   def test_validation
   

@@ -17,14 +17,24 @@ require 'board_design_entry_controller'
 class BoardDesignEntryController; def rescue_action(e) raise e end; end
 
 class BoardDesignEntryControllerTest < Test::Unit::TestCase
+
+  
   def setup
     @controller = BoardDesignEntryController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
     
+    @av714b_bde         = board_design_entries(:av714b)
+    @la021c_bde         = board_design_entries(:la021c)
+    @mx008b4_bde        = board_design_entries(:mx008b4)
+    @mx008b4_ecoP123456 = board_design_entries(:mx008b4_ecoP123456)
+    @mx234a             = board_design_entries(:mx234a)
+    @mx234c             = board_design_entries(:mx234c)
+    
     @emails     = ActionMailer::Base.deliveries
     @emails.clear
   end
+  
   
   fixtures(:board_design_entries,
            :board_design_entry_users,
@@ -39,6 +49,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
            :prefixes,
            :product_types,
            :projects,
+           :review_types,
            :revisions,
            :users)
 
@@ -53,7 +64,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
   #
   ######################################################################
   #
-  def notest_lists
+  def test_lists
 
     # Try listing without being logged in - it should bounce to
     # the tracker index.
@@ -70,7 +81,6 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     post(:originator_list)
 
     assert_response(200)
-    
     assert_equal(0, assigns(:board_design_entries).size)
 
     # Try listing from an account that does have an
@@ -80,12 +90,12 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     post(:originator_list)
     
     assert_response(200)
-    
     board_design_list = assigns(:board_design_entries)
     assert_equal(1, board_design_list.size)
 
     #Verify that the list entry is correct.
-    assert_equal('la021c', board_design_list[0].design_name)
+    assert_equal('942-021-c0 / 949-021-00', board_design_list[0].design_name)
+
 
     # Try another user and verify that the list has the 
     # correct number of entries and that the entry is correct.
@@ -93,21 +103,78 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     post(:originator_list)
     
     assert_response(200)
-    
     board_design_list = assigns(:board_design_entries)
     assert_equal(4, board_design_list.size)
 
     #Verify that the list entries are correct.
-    assert_equal('mx008b4',            board_design_list[0].design_name)
-    assert_equal('mx008b4_ecoP123456', board_design_list[1].design_name)
+    assert_equal('252-008-b4 / 259-008-00', board_design_list[0].design_name)
+    assert_equal('252-008-b4 / 259-008-00', board_design_list[1].design_name)
+    assert_equal('252-234-a0 / 259-234-00', board_design_list[2].design_name)
+    assert_equal('252-234-c0 / 259-234-00', board_design_list[3].design_name)
     
     # The process list should show all of the entries.
     set_user(users(:cathy_m).id, 'Input Gate')
     post(:processor_list)
 
     assert_response(200)
+    assert_equal(review_types(:pre_artwork), assigns(:pre_art_review))
+    board_design_entries = assigns(:board_design_entries)
+    assert_equal(6, board_design_entries.size)
     
-    assert_equal(6, assigns(:board_design_entries).size)
+    #Verify that the list of entries is correct
+    assert_equal('100-714-b0 / 150-714-00', board_design_entries[0].design_name)
+    assert_equal('942-021-c0 / 949-021-00', board_design_entries[1].design_name)
+    assert_equal('252-008-b4 / 259-008-00', board_design_entries[2].design_name)
+    assert_equal('252-008-b4 / 259-008-00', board_design_entries[3].design_name)
+    assert_equal('252-234-a0 / 259-234-00', board_design_entries[4].design_name)
+    assert_equal('252-234-c0 / 259-234-00', board_design_entries[5].design_name)
+
+  end
+  
+  
+  ######################################################################
+  def test_entry_type_methods
+
+    # Try setting the entry type without being logged in - it should 
+    # bounce to the tracker index.
+    post(:set_entry_type, :id => @av714b_bde.id )
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    assert_equal(Pcbtr::PCBTR_BASE_URL + 'board_design_entry/set_entry_type' +
+                 ' - unavailable unless logged in.', 
+                 flash['notice'])
+
+    # Try processing the entry type without being logged in - 
+    # it should bounce to the tracker index.
+    post(:process_entry_type, :id => @av714b_bde.id)
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    assert_equal(Pcbtr::PCBTR_BASE_URL + 'board_design_entry/process_entry_type' +
+                 ' - unavailable unless logged in.', 
+                 flash['notice'])
+
+    # Try accessing the set entry screen from an account that does not have
+    # the authority to set the entry type.
+    set_user(users(:scott_g).id, 'Designer')
+    post(:set_entry_type, :id => @av714b_bde.id)
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    assert_equal('Access Prohibited', flash['notice'])
+
+    # Try processing the entry type from an account that does not have
+    # the authority to set the entry type.
+    post(:process_entry_type, :id => @av714b_bde.id)
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    assert_equal('Access Prohibited', flash['notice'])
+
+    # Try listing from an account that does have an
+    # entry and verify that the list has the correct
+    # number of entries.
+    set_user(users(:cathy_m).id, 'Admin')
+    post(:set_entry_type, :id => @av714b_bde.id)
+    
+    assert_response(200)
+    board_design_entry = assigns(:board_design_entry)
+    assert_equal(@av714b_bde.id, board_design_entry.id)
+
+    post(:process_entry_type, :id => @av714b_bde.id)
 
   end
   
