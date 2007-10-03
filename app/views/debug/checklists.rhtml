@@ -2,17 +2,23 @@
   checklist count: <%= @checklists.size %>
 </p>
 
-<table>
-  <tr>
-    <th width='30'>ID</th>
-    <th>REV</th>
-    <th>Rel?</th>
-    <th>Used?</th>
-    <th>Sections</th>
-  </tr>
+<table border="1">
   
-  <% for checklist in @checklists %>
+  <% @checklists.each_with_index do |checklist, line_number| %>
+
+    <% if line_number.remainder(20) == 0 %>
+      <tr class="teraheader" valign="top">
+        <th>#</th>
+        <th width='30'>ID</th>
+        <th>REV</th>
+        <th>Rel?</th>
+        <th>Used?</th>
+        <th>Sections</th>
+      </tr>
+  <% end %>
+  
     <tr>
+      <td><%= (line_number+1).to_s %></td>
       <td><%= link_to(checklist.id.to_s,
                       { :action => 'checklist',
                         :id     => checklist.id }) %></td>
