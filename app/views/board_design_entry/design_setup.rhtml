@@ -5,6 +5,13 @@
 <%= start_form_tag({ :action        => 'create_tracker_entry', 
                      :id            => params[:id] }) %>
 
+<table border="0" align="center">
+  <tr>
+    <th width="100">Entry Type: </th>
+	<td><%= @board_design_entry.entry_type_name %></td>
+  </tr>
+</table>
+
 <hr class="div" />
 
 <table border="0" width="50%" align="center">
