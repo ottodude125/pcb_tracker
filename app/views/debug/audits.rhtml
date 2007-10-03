@@ -11,7 +11,7 @@
        completed_checks = audit.completed_check_count %>
 
     <% if line_number.remainder(20) == 0 %>
-      <tr valign="top">
+      <tr class="teraheader" valign="top">
         <th>#</th>
         <th>ID</th>
         <th>CHECKLIST ID</th>
@@ -32,7 +32,10 @@
       <td><%= line_number + 1 %></td>
       <td><%= audit.id %></td>
 	  <td><%= audit.checklist_id %></td>
-	  <td><%= audit.design_id %></td>
+	  <td><%= audit.design.id %>
+	  	<%# link_to(audit.design.id,
+                    { :action => 'design', :id => audit.design.id }) %>
+	  </td>
 	  <td><%= audit.design.part_number.pcb_display_name %></td>
 	  <td><%= audit.designer_complete? %></td>
 	  <td><%= audit.designer_completed_checks %></td>
