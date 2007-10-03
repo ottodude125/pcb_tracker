@@ -24,63 +24,183 @@ class BoardDesignEntry < ActiveRecord::Base
   has_many   :board_design_entry_users
   
   belongs_to :part_number
+  belongs_to :user
   
   NOT_SET = '<font color="red"><b>Not Set</b></font>'
   
 
-  def new?
-    self.part_number ? self.part_number.new? : true  
-  end
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
   
+  ######################################################################
+  #
+  # get_entries_for_processor
+  #
+  # Description:
+  # This method retrieves a list of board design entry records for
+  # the processor
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of board design entry records
+  #
+  ######################################################################
+  #
+  def self.get_entries_for_processor
   
-  def self.get_user_entries(user)
-    conditions = "state='originated' OR state='submitted'"
-    BoardDesignEntry.find(:all,
-                          :conditions => conditions)
-  end
-  
-  
-  def get_entry(part_number)
-    BoardDesignEntry.find(:first,
-                          :conditions => "part_number='part_number.get_id'")
+    BoardDesignEntry.find(:all, :conditions => "state='originated'") +
+    BoardDesignEntry.find(:all, :conditions => "state='submitted'")  +
+    BoardDesignEntry.find(:all, :conditions => "state='ready_to_post'")
+    
   end
 
   
+  ######################################################################
+  #
+  # get_user_entries
+  #
+  # Description:
+  # This method retrieves a list of board design entry records for
+  # the user
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of board design entry records
+  #
+  ######################################################################
+  #
+  def self.get_user_entries(user)
+
+    list = user.board_design_entries
+    list.delete_if { |bde| !(bde.state == 'originated' || bde.state == 'submitted') }
+    list
+    
+  end
+  
+  
+  ######################################################################
+  #
+  # submission_count
+  #
+  # Description:
+  # This method retrieves a count of the number of boards that are in 
+  # the 'submitted' state
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A number indicating the number of boards that have been submitted.
+  #
+  ######################################################################
+  #
   def self.submission_count
     @submissions = BoardDesignEntry.find(:all, :conditions => "state='submitted'").size
     #@submissions = BoardDesignEntry.count(:conditions => "state='submitted'")
     
   end
-  
-  
-  def self.add_entry(part_number, user)
-    if part_number.exists?
-      bde = BoardDesignEntry.find(:first,
-                                  :conditions => "part_number_id='#{part_number.get_id}'")
-    end
 
-    # Verify that the entry does not exist before 
-    # creating a new part number
-    if !bde
-      bde = BoardDesignEntry.new(:originator_id => user.id,
-                                 :entry_type    => part_number.new? ? 'new' : 'dot_rev',
-                                 :division_id   => user.division_id,
-                                 :location_id   => user.location_id)
-      if !part_number.exists?
-        part_number.create
-      else
-        part_number.get_id
-      end
+  
+  ######################################################################
+  #
+  # add_entry
+  #
+  # Description:
+  # This method adds an entry to the board design entry table.
+  #
+  # Parameters:
+  # part_number - the PCB/PCBA part number
+  # user        - the user originating the entry
+  #
+  # Return value:
+  # If an entry was created then the entry is returned, otherwise, nil
+  # is returned.
+  #
+  ######################################################################
+  #
+  def self.add_entry(part_number, user)
+
+    duplicate_part_number = part_number.exists?
+    part_number.get_id
+    
+    bde = part_number.board_design_entry if part_number.id
+
+    # Verify that the entry does not exist before creating a new board design
+    # entry
+    if !(duplicate_part_number || bde)
+
+      part_number.create
+      part_number.reload
+
+      bde = BoardDesignEntry.new(:user_id        => user.id,
+                                 :division_id    => user.division_id,
+                                 :location_id    => user.location_id,
+                                 :part_number_id => part_number.id)
       
-      bde.part_number_id = part_number.id
       bde.create
       bde.load_design_team
-      bde
 
-    else
-      nil
     end
+
+    bde
     
+  end
+
+  
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+  
+  ######################################################################
+  #
+  # before_save
+  #
+  # Description:
+  # This method performs processing prior to saving a board design 
+  # entry.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+#  def get_entry(part_number)
+#    BoardDesignEntry.find(:first,
+#                          :conditions => "part_number='part_number.get_id'")
+#  end
+
+  
+  ######################################################################
+  #
+  # before_save
+  #
+  # Description:
+  # This method determines if the board design entry is new.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the entry is new, otherwise, FALSE.
+  #
+  ######################################################################
+  #
+  def new?
+    self.part_number ? self.part_number.new? : true  
   end
 
 
@@ -101,9 +221,7 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #
   def before_save
-  
     self.design_directory_id = 0 if self.design_directory_id == ''
-    
   end
   
   
@@ -156,6 +274,157 @@ class BoardDesignEntry < ActiveRecord::Base
       self.part_number.name
     end
     
+  end
+  
+  
+  ######################################################################
+  #
+  # new_entry_type_name
+  #
+  # Description:
+  # Defines the name of the "New" entry type.
+  #
+  # Return:
+  # A string that contains the name of a "New" entry type.
+  #
+  ######################################################################
+  #
+  def new_entry_type_name
+    'New'
+  end
+  
+  
+  ######################################################################
+  #
+  # dot_rev_entry_type_name
+  #
+  # Description:
+  # Defines the name of the "Dot Rev" entry type.
+  #
+  # Return:
+  # A string that contains the name of a "Dot Rev" entry type.
+  #
+  ######################################################################
+  #
+  def dot_rev_entry_type_name
+    'Bare Board Change/Design'
+  end
+
+
+  ######################################################################
+  #
+  # entry_type_name
+  #
+  # Description:
+  # Provides the name of the entry type.
+  #
+  # Return:
+  # A string that contains the name of the entry type.
+  #
+  ######################################################################
+  #
+  def entry_type_name
+    if self.new_design?
+      self.new_entry_type_name
+    elsif self.dot_rev_design?
+      self.dot_rev_entry_type_name
+    else
+      'Entry Type Not Set'
+    end
+  end
+
+
+  ######################################################################
+  #
+  # entry_type_set?
+  #
+  # Description:
+  # Indicates if the entry type of the board design entry is set.
+  #
+  # Return:
+  # TRUE  if the entry type is set.
+  # FALSE if not
+  #
+  ######################################################################
+  #
+  def entry_type_set?
+    self.new_design? || self.dot_rev_design?
+  end
+
+  
+  ######################################################################
+  #
+  # new_design?
+  #
+  # Description:
+  # Indicates if the entry type of the board design entry is "New".
+  #
+  # Return:
+  # TRUE  if the entry type is "New".
+  # FALSE if not
+  #
+  ######################################################################
+  #
+  def new_design?
+    self.entry_type == 'new'
+  end
+
+  
+  ######################################################################
+  #
+  # dot_rev_design?
+  #
+  # Description:
+  # Indicates if the entry type of the board design entry is "Dot Rev".
+  #
+  # Return:
+  # TRUE  if the entry type is "Dot Rev".
+  # FALSE if not
+  #
+  ######################################################################
+  #
+  def dot_rev_design?
+    self.entry_type == 'dot_rev'
+  end
+  
+  
+  ######################################################################
+  #
+  # set_entry_type_new
+  #
+  # Description:
+  # Sets the entry type for the board design entry to "New" and updates
+  # the record in the detabase if the board design entry is stored 
+  # in the database.
+  #
+  # Return:
+  # None
+  #
+  ######################################################################
+  #
+  def set_entry_type_new
+    self.entry_type = 'new'
+    self.update if self.id
+  end
+  
+  
+  ######################################################################
+  #
+  # set_entry_type_dot_rev
+  #
+  # Description:
+  # Sets the entry type for the board design entry to "Dot Rev" and
+  # updates the record in the detabase if the board design entry is 
+  # stored in the database.
+  #
+  # Return:
+  # None
+  #
+  ######################################################################
+  #
+  def set_entry_type_dot_rev
+    self.entry_type = 'dot_rev'
+    self.update if self.id
   end
   
   
@@ -323,9 +592,7 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #
   def design
-  
     self.prefix.pcb_mnemonic + self.number
-    
   end
   
   
@@ -345,9 +612,7 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #
   def valid_number?
-
     /\d{3}/ =~ self.number ? true : false
-    
   end
   
   
@@ -407,8 +672,7 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #
   def submitted
-    self.update_attributes(:state        => 'submitted',
-                           :submitted_on => Time.now())
+    self.update_attributes(:state => 'submitted', :submitted_on => Time.now())
   end
 
   ######################################################################
@@ -527,7 +791,7 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #
   def originator
-    self.originator_id? ? User.find(self.originator_id).name : NOT_SET
+    self.user ? self.user.name : NOT_SET
   end
 
 
@@ -614,6 +878,21 @@ class BoardDesignEntry < ActiveRecord::Base
   end
 
 
+  ######################################################################
+  #
+  # all_roles_assigned?
+  #
+  # Description:
+  # This method determines if all of the roles have been assigned
+  #
+  # Parameters:
+  # roles = a list of roles
+  #
+  # Return value:
+  # TRUE if all of the roles have a user assigned, otherwise FALSE.
+  #
+  ######################################################################
+  #
   def all_roles_assigned?(roles)
     
     all_roles_assigned = false
@@ -631,16 +910,67 @@ class BoardDesignEntry < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # all_reviewers_assigned?
+  #
+  # Description:
+  # This method determines if all of the reviewer roles have been 
+  # assigned
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if all of the reviewer roles have a user assigned, 
+  # otherwise FALSE.
+  #
+  ######################################################################
+  #
   def all_reviewers_assigned?
     self.all_roles_assigned?(Role.get_open_reviewer_roles)
   end
   
   
+  ######################################################################
+  #
+  # all_manager_reviewers_assigned?
+  #
+  # Description:
+  # This method determines if all of the manager roles have been 
+  # assigned
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if all of the manager roles have a user assigned, 
+  # otherwise FALSE.
+  #
+  ######################################################################
+  #
   def all_manager_reviewers_assigned?
     self.all_roles_assigned?(Role.get_open_manager_reviewer_roles)
   end
   
   
+  ######################################################################
+  #
+  # ready_for_submission?
+  #
+  # Description:
+  # This method determines if the entry has all of the information 
+  # required for a board design entry submission.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if all the entry has all of the information required for submission, 
+  # otherwise FALSE.
+  #
+  ######################################################################
+  #
   def ready_for_submission?
     self.all_reviewers_assigned? && self.all_manager_reviewers_assigned?
   end
