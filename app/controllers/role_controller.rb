@@ -219,4 +219,24 @@ class RoleController < ApplicationController
   end
   
 
+  ######################################################################
+  #
+  # toggle_reviewer_selection
+  #
+  # Description:
+  # Provides/hides the default reviewer selection box from the view.
+  # If the review checkbox is selected then the selection box is provided.
+  #
+  # Parameters from params
+  # None
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def toggle_reviewer_selection
+    @role = Role.find(params[:role_id])
+    render(:layout => false)
+  end
 end
