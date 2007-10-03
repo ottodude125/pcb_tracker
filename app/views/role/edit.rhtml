@@ -43,8 +43,8 @@
         <%= observe_field("role_reviewer",
                           :update => "reviewer",
                           :url => { :action        => :toggle_reviewer_selection,
-                                    :role_id       => @role.id,
-                                    :value         => "'value=' + escape(value)"}) %>
+                                    :role_id       => @role.id },
+                          :with         => "'value=' + escape(value)") %>
 	  </td>
 	  <td>
         <div id="reviewer">
@@ -53,11 +53,9 @@
 			  <tr>
      	        <td align="right" class="teraheader">Default Reviewer:</td>
 				<td>
-                  <select id="role" name="default_reviewer_id"
+                  <select id="role" name="role[default_reviewer_id]"
                           class="name_select">
-                    <% if @role.default_reviewer_id == 0 %>
-                      <option value="">None Selected</option>
-                    <% end %>
+                      <option value="0">None Selected</option>
                     <%= options_from_collection_for_select(@role.active_users,
                                                            "id",
                                                            "last_name_first",
