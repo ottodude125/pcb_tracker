@@ -11,6 +11,7 @@
 	<% if line_number.remainder(20) == 0 %>
       <tr class="teraheader" valign="top">
      	<th>#</th>
+		<th>ID</th>
         <th>DESIGN</th>
         <th>ORIGINATOR</th>
         <th>READY TO<br />POST</th>
@@ -22,6 +23,7 @@
       </tr>
 	<% end %>
   	<td><%= line_number+1 %></td>
+	<td><%= @bde.id %></td>
     <td><%= @bde.design_name %></td>
     <td><%= @bde.originator %></td>
     <td><%= @bde.ready_to_post? ? 'Yes' : 'No' %>
