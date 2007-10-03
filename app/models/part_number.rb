@@ -42,12 +42,11 @@ class PartNumber < ActiveRecord::Base
     PartNumber.new( :pcb_prefix       => '000',
                     :pcb_number       => '000',
                     :pcb_dash_number  => '00',
-                    :pcb_revision     => '0',
+                    :pcb_revision     => 'a',
                     :pcba_prefix      => '000',
                     :pcba_number      => '000',
                     :pcba_dash_number => '00',
-                    :pcba_revision    => '0')
-
+                    :pcba_revision    => 'a')
   end
  
   
@@ -91,7 +90,9 @@ class PartNumber < ActiveRecord::Base
   # get_unique_pcb_numbers
   #
   # Description:
-  # This method provides a list of sorted, unique PCB part numbers.
+  # This method provides a list of sorted, unique PCB part numbers for
+  # part numbers that have either an associated incomplete board design 
+  # entry or design.
   #
   # Parameters:
   # None
@@ -107,7 +108,7 @@ class PartNumber < ActiveRecord::Base
       ((pn.board_design_entry && pn.board_design_entry.complete?) ||
        (!pn.design))
     end
-    part_number_list.collect { |pn| pn.pcb_prefix + '-' + pn.pcb_number }.uniq.sort
+    part_number_list.collect { |pn| pn.pcb_unique_number }.uniq.sort
   end
   
   
@@ -137,6 +138,69 @@ class PartNumber < ActiveRecord::Base
     designs.delete_if { |d| !d }
     designs
     
+  end
+  
+  
+  ######################################################################
+  #
+  # valid_prefix?
+  #
+  # Description:
+  # This method indicates the part number prefix is valid
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the prefix is valid, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def self.valid_prefix?(prefix)
+    result = prefix =~ /\d\d\d/
+    return ((prefix.size == 3) && (result != nil))
+  end
+  
+  
+  ######################################################################
+  #
+  # valid_number?
+  #
+  # Description:
+  # This method indicates the part number number is valid
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the number is valid, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def self.valid_number?(number)
+    result = number =~ /\d\d\d/
+    return ((number.size == 3) && (result != nil))
+  end
+  
+  
+  ######################################################################
+  #
+  # valid_dash_number?
+  #
+  # Description:
+  # This method indicates the part number dash number is valid
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the dash number is valid, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  def self.valid_dash_number?(dash_number)
+    result = dash_number =~ /[A-Z,a-z,0-9][A-Z,a-z,0-9]/
+    return ((dash_number.size == 2) && (result != nil))
   end
   
   
@@ -243,14 +307,12 @@ class PartNumber < ActiveRecord::Base
     valid  = self.valid_pcb_part_number?
     valid &= self.valid_pcba_part_number? if new
     if valid
-      if (self.pcb_prefix      == self.pcba_prefix      &&
-          self.pcb_number      == self.pcba_number      &&
-          self.pcb_dash_number == self.pcba_dash_number &&
-          self.pcb_revision    == self.pcba_revision)
+      if self.unique_part_numbers_equal?
         valid = false
         self.set_error_message('The PCB part number (' + self.pcb_display_name +
                                ') and the PCBA part number (' + 
-                               self.pcba_display_name + ') must be different')
+                               self.pcba_display_name + ') must be unique - YOUR PART ' +
+                             'NUMBER WAS NOT CREATED')
       end
     else
       self.set_error_message('The correct format for a part number is ' +
@@ -269,18 +331,60 @@ class PartNumber < ActiveRecord::Base
   # pcb_unique_number
   #
   # Description:
-  # Returns the unique portion of a part number
+  # Returns the unique portion of the PCB part number
   #
   # Parameters:
   # None
   #
   # Return value:
-  # A string representing the unique portion of a part number.
+  # A string representing the unique portion of the PCB part number.
   #
   ######################################################################
   #
   def pcb_unique_number
     self.pcb_prefix + '-' + self.pcb_number
+  end
+  
+
+  ######################################################################
+  #
+  # pcba_unique_number
+  #
+  # Description:
+  # Returns the unique portion of the PCBA part number
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A string representing the unique portion of the PCBA part number.
+  #
+  ######################################################################
+  #
+  def pcba_unique_number
+    self.pcba_prefix + '-' + self.pcba_number
+  end
+  
+  
+  ######################################################################
+  #
+  # unique_part_numbers_equal?
+  #
+  # Description:
+  # Returns a boolean value that indicates whether or not the unique
+  # parts of the PCB and PCBA part numbers are equal.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the unique parts of the PCB and PCBA part numbers are equal.
+  # FALSE if not.
+  #
+  ######################################################################
+  #
+  def unique_part_numbers_equal?
+    self.pcb_unique_number == self.pcba_unique_number
   end
   
 
@@ -326,27 +430,6 @@ class PartNumber < ActiveRecord::Base
   
   ######################################################################
   #
-  # valid_prefix?
-  #
-  # Description:
-  # This method indicates the part number prefix is valid
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # TRUE if the prefix is valid, FALSE otherwise.
-  #
-  ######################################################################
-  #
-  def valid_prefix?(prefix)
-    result = prefix =~ /\d\d\d/
-    return (result != nil)
-  end
-  
-  
-  ######################################################################
-  #
   # valid_pcb_prefix?
   #
   # Description:
@@ -361,13 +444,13 @@ class PartNumber < ActiveRecord::Base
   ######################################################################
   #
   def valid_pcb_prefix?
-    self.valid_prefix?(self.pcb_prefix)
+    PartNumber.valid_prefix?(self.pcb_prefix)
   end
   
   
   ######################################################################
   #
-  # valid_pcb_prefix?
+  # valid_pcba_prefix?
   #
   # Description:
   # This method indicates the PCBA part number prefix is valid
@@ -381,34 +464,13 @@ class PartNumber < ActiveRecord::Base
   ######################################################################
   #
   def valid_pcba_prefix?
-    self.valid_prefix?(self.pcba_prefix)
+    PartNumber.valid_prefix?(self.pcba_prefix)
   end
   
   
   ######################################################################
   #
-  # valid_number?
-  #
-  # Description:
-  # This method indicates the part number number is valid
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # TRUE if the number is valid, FALSE otherwise.
-  #
-  ######################################################################
-  #
-  def valid_number?(number)
-    result = number =~ /\d\d\d/
-    return (result != nil)
-  end
-  
-  
-  ######################################################################
-  #
-  # valid_number?
+  # valid_pcb_number?
   #
   # Description:
   # This method indicates the PCB part  - number number is valid
@@ -422,13 +484,13 @@ class PartNumber < ActiveRecord::Base
   ######################################################################
   #
   def valid_pcb_number?
-    self.valid_number?(self.pcb_number)
+    PartNumber.valid_number?(self.pcb_number)
   end
   
   
   ######################################################################
   #
-  # valid_number?
+  # valid_pcba_number?
   #
   # Description:
   # This method indicates the PCBA part  - number number is valid
@@ -442,34 +504,13 @@ class PartNumber < ActiveRecord::Base
   ######################################################################
   #
   def valid_pcba_number?
-    self.valid_number?(self.pcba_number)
+    PartNumber.valid_number?(self.pcba_number)
   end
   
   
   ######################################################################
   #
-  # valid_dash_number?
-  #
-  # Description:
-  # This method indicates the part number dash number is valid
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # TRUE if the dash number is valid, FALSE otherwise.
-  #
-  ######################################################################
-  #
-  def valid_dash_number?(dash_number)
-    result = dash_number =~ /[A-Z,a-z,0-9][A-Z,a-z,0-9]/
-    return (result != nil)
-  end
-  
-  
-  ######################################################################
-  #
-  # valid_dash_number?
+  # valid_pcb_dash_number?
   #
   # Description:
   # This method indicates the PCB part number - dash number is valid
@@ -483,13 +524,13 @@ class PartNumber < ActiveRecord::Base
   ######################################################################
   #
   def valid_pcb_dash_number?
-    self.valid_dash_number?(self.pcb_dash_number)
+    PartNumber.valid_dash_number?(self.pcb_dash_number)
   end
   
   
   ######################################################################
   #
-  # valid_dash_number?
+  # valid_pcba_dash_number?
   #
   # Description:
   # This method indicates the PCBA part number - dash number is valid
@@ -503,7 +544,7 @@ class PartNumber < ActiveRecord::Base
   ######################################################################
   #
   def valid_pcba_dash_number?
-    self.valid_dash_number?(self.pcba_dash_number)
+    PartNumber.valid_dash_number?(self.pcba_dash_number)
   end
   
   
@@ -627,19 +668,29 @@ class PartNumber < ActiveRecord::Base
                                              "pcb_number='#{self.pcba_number}' AND " +
                                              "pcb_dash_number='#{self.pcba_dash_number}' AND " +
                                              "pcb_revision='#{self.pcba_revision}'")
-    pcba_pn = PartNumber.find( :first,
-                               :conditions => "pcba_prefix='#{self.pcba_prefix}' AND " +
-                                              "pcba_number='#{self.pcba_number}' AND " +
-                                              "pcba_dash_number='#{self.pcba_dash_number}' AND " +
-                                              "pcba_revision='#{self.pcba_revision}'")
-    if pcb_pn
-      self.set_error_message('The supplied PCBA Part Number exists as a PCB ' +
-                             'Part Number in the database')
-    elsif pcba_pn
-      self.set_error_message('The supplied PCBA Part Number exists as a PCBA ' +
-                             'Part Number in the database')
+    pcb_pn = PartNumber.find( :first,
+                              :conditions => "pcb_prefix='#{self.pcba_prefix}' AND " +
+                                             "pcb_number='#{self.pcba_number}'")
+    if !self.pcba_pn_equal?(PartNumber.initial_part_number)
+      pcba_pn = PartNumber.find( :first,
+                                 :conditions => "pcba_prefix='#{self.pcba_prefix}' AND " +
+                                                "pcba_number='#{self.pcba_number}' AND " +
+                                                "pcba_dash_number='#{self.pcba_dash_number}' AND " +
+                                                "pcba_revision='#{self.pcba_revision}'")
     end
+
+    if pcb_pn
+      self.set_error_message('The supplied PCBA Part Number already exists as a ' +
+                             'PCB Part Number in the database - YOUR PART NUMBER ' +
+                             'WAS NOT CREATED')
+    elsif pcba_pn
+      self.set_error_message('The supplied PCBA Part Number already exists as a ' +
+                             'PCBA Part Number in the database - YOUR PART ' +
+                             'NUMBER WAS NOT CREATED')
+     
+                        end
     return !(pcb_pn == nil && pcba_pn == nil)
+    
   end
   
 
@@ -672,15 +723,15 @@ class PartNumber < ActiveRecord::Base
                                              "pcb_revision='#{self.pcb_revision}'")
     pcba_pn = PartNumber.find( :first,
                                :conditions => "pcba_prefix='#{self.pcb_prefix}' AND " +
-                                              "pcba_number='#{self.pcb_number}' AND " +
-                                              "pcba_dash_number='#{self.pcb_dash_number}' AND " +
-                                              "pcba_revision='#{self.pcb_revision}'")
+                                              "pcba_number='#{self.pcb_number}'")
     if pcb_pn
-      self.set_error_message('The supplied PCB Part Number exists as a PCB ' +
-                             'Part Number in the database')
+      self.set_error_message('The supplied PCB Part Number already exists as ' +
+                             'a PCB Part Number in the database - YOUR PART ' +
+                             'NUMBER WAS NOT CREATED')
     elsif pcba_pn
-      self.set_error_message('The supplied PCB Part Number exists as a PCBA ' +
-                             'Part Number in the database')
+      self.set_error_message('The supplied PCB Part Number already exists as a ' +
+                             'PCBA Part Number in the database - YOUR PART ' +
+                             'NUMBER WAS NOT CREATED')
     end
     return !(pcb_pn == nil && pcba_pn == nil)
   end
@@ -712,8 +763,9 @@ class PartNumber < ActiveRecord::Base
         self.set_error_message('The supplied PCB and PCBA Part Number is ' +
                                'already in the database')
       else
-        self.set_error_message('The supplied PCB Part Number exists as a PCB' +
-                               ' Part Number in the database')
+        self.set_error_message('The supplied PCB Part Number already exists as' +
+                               ' a PCB Part Number in the database - ' +
+                               'YOUR PART NUMBER WAS NOT CREATED')
       end
       exists = true
     end
@@ -879,29 +931,6 @@ class PartNumber < ActiveRecord::Base
   def name
     self.pcb_name + ' / ' + self.pcba_name
   end
-  
-  
-  ######################################################################
-  #
-  # unique?
-  #
-  # Description:
-  # This method determines if the part number is unique based on the
-  # prefix and number components of the part number.
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # TRUE if the components do not match any records in the database.
-  # Otherwise FALSE is returned.
-  #
-  ######################################################################
-  #
-#  def unique?
-#    conditions = "prefix='#{self.prefix}' AND number='#{self.number}'"
-#    PartNumber.find(:all, :conditions => conditions).size == 0
-#  end
 
 
 end
