@@ -17,7 +17,7 @@
     <tr>
       <td align="center"><%= entry.part_number.pcb_name %></td>
       <td align="center"><%= entry.part_number.pcb_revision %></td>
-      <td><%= User.find(entry.originator_id).name %></td>
+      <td><%= entry.user.name %></td>
       <td align="center"><%= (entry.submitted? || entry.ready_to_post?) ? 'Yes' : 'No' %></td>
       <td><%= entry.submitted_on.strftime("%B %d, %Y") if entry.submitted? || entry.ready_to_post? %></td>
       <td align="center">
@@ -32,7 +32,7 @@
       <td align="center">
         <% if entry.submitted? %>
           <%= link_to('Set up in Tracker', 
-                      {:action => 'design_setup',
+                      {:action => 'set_entry_type',
                        :id     => entry.id},
                       :title  => "Create the design reviews and audit associated with the tracker") %>
         <% elsif entry.ready_to_post? %>
@@ -51,7 +51,7 @@
                       {:action => 'send_back',
                        :id     => entry.id,
                        :return => params[:action]},
-                      :title  => "Return to #{User.find(entry.originator_id).name} for more information",
+                      :title  => "Return to #{entry.user.name} for more information",
                       :confirm => "Do you really want to send the entry back to the originator?  Click 'OK' to remove the entry, otherwise click 'Cancel'.") %>
         </td>
       <% end %>
