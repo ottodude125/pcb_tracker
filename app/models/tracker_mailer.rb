@@ -906,9 +906,8 @@ class TrackerMailer < ActionMailer::Base
 
     @subject    = 'The ' + board_design_entry.part_number.pcb_display_name +
                   ' design entry has been returned by PCB'
-    
-    originator  = User.find(board_design_entry.originator_id)          
-    @recipients = [originator.email]
+              
+    @recipients = [board_design_entry.user.email]
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
@@ -937,8 +936,6 @@ class TrackerMailer < ActionMailer::Base
   #
   def board_design_entry_submission(board_design_entry,
                                     sent_at = Time.now)
-                                    
-    originator = User.find(board_design_entry.originator_id)
 
     @subject    = 'The ' + board_design_entry.part_number.pcb_display_name +
                   ' has been submitted for entry to PCB Design'
@@ -948,10 +945,10 @@ class TrackerMailer < ActionMailer::Base
     @sent_on    = sent_at
     @headers    = {}
     @bcc        = blind_cc
-    @cc         = [originator.email]
+    @cc         = [board_design_entry.user.email]
 
     @body['board_design_entry'] = board_design_entry
-    @body['originator']         = originator
+    @body['originator']         = board_design_entry.user
 
   end
   
