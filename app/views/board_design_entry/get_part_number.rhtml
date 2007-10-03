@@ -82,7 +82,7 @@ else
   <tr>
     <td width="200" class="label">PCB Number:</td>
     <td width="140" class="data">
-      <table cellspacing="1">
+      <table cellspacing="1" border='1'>
         <tr>
         
           <% if @initial_prompt || @pcb_part_number.valid_pcb_prefix? %>
@@ -100,7 +100,7 @@ else
         
 		    <td>-</td>
           
-          <% if @initial_prompt ||@pcb_part_number.valid_pcb_number? %>
+          <% if @initial_prompt || @pcb_part_number.valid_pcb_number? %>
   		    <td>
           <% else %>
             <td bgcolor="red">
@@ -115,7 +115,7 @@ else
           
 		    <td>-</td>
           
-          <% if @pcb_part_number.valid_pcb_dash_number? %>
+          <% if @initial_prompt || @pcb_part_number.valid_pcb_dash_number? %>
       		  <td>
           <% else %>
             <td bgcolor="red">
@@ -136,24 +136,98 @@ else
 	</td>
   </tr>
 
+<!-- ********************************************************** -->
   <tr>
-    <td class="label">PCBA NUMBER REQUIRED?:</td>
-    <td><%= check_box("new", "part_number") %> 
-        <%= link_to('Help?',
-                    'http://etg.teradyne.com/boarddev/standards/index.php?file=bareboard_rev.html', 
-                    :popup => true )%></td>
+    <td width="200" class="label">PCBA Number:</td>
+    <td width="140" class="data">
+      <table cellspacing="1" border='1'>
+        <tr>
+        
+          <% if @pcb_part_number.pcba_prefix.size == 0 || 
+                @pcb_part_number.valid_pcba_prefix? %>
+            <td>
+          <% else %>
+            <td bgcolor="red">
+          <% end %>
+		        <INPUT TYPE="text" 
+			           name="pcba_prefix"
+				       size="3" 
+				       MAXLENGTH="3"
+				       value="<%= @pcb_part_number[:pcba_prefix] %>"
+				       onKeyUp="check_pcba_prefix()" />
+	        </td>
+        
+		    <td>-</td>
+          
+          <% if  @pcb_part_number.pcba_number.size == 0 ||
+                 @pcb_part_number.valid_pcba_number? %>
+  		    <td>
+          <% else %>
+            <td bgcolor="red">
+          <% end %>
+		      	<INPUT TYPE="text" 
+			             name="pcba_number" 
+				         size="3" 
+				         MAXLENGTH="3" 
+				         value="<%= @pcb_part_number[:pcba_number] %>"
+				         onKeyUp="check_pcba_number()" />
+	        </td>
+          
+		    <td>-</td>
+          
+          <% if @pcb_part_number.pcba_dash_number.size == 0 ||
+                @pcb_part_number.valid_pcba_dash_number? %>
+      		  <td>
+          <% else %>
+            <td bgcolor="red">
+          <% end %>
+            <INPUT TYPE="text" 
+			             name="pcba_dash_number" 
+				         size="2" 
+				         MAXLENGTH="2" 
+				         value=<%= @pcb_part_number[:pcba_dash_number] %> >  
+		    </td>
+      	</tr>
+      </table>
+    </td>
+
+    <td width="120" class="label">Revision:</td>
+	<td class="data">
+      <%= select("part_number", "pcba_revision", ('a'..'z').collect { |c| [c,c] }) %>
+	</td>
   </tr>
 
 </table>
   
-<div id="pcb_part_number_prompt">
+<br />
+<table align="center" width="500" border="5">
+  <tr>
+  	<th valign="top" class='teraheader'>NOTE</th>
+  </tr>
+  <tr bgcolor="#cfcfcf">
+  	<td>
+  	  <ul>
+  	  	<li>
+          <b>
+            PCBA Part Number not required for Bare Board Only (Dot-Rev) Changes.
+          </b>
+	    </li>
+		<li>
+			<%= link_to('Teradyne PCB Part Number Documentation',
+                    'http://etg.teradyne.com/boarddev/standards/index.php?file=bareboard_rev.html', 
+                    :popup => true )%>
+		</li>
+  	  	<li>
+          <b>
+            Please obtain the PCB/PCBA Part Numbers from TeamCenter before proceeding.  
+            Entries will not be processed if the part numbers do not exist in TeamCenter.
+          </b>
+	    </li>
+	  </ul>
+  	</td>
+  </tr>
+</table>
 
-</div>
-  
-<%= observe_field("new_part_number",
-                  :update => "pcb_part_number_prompt",
-                  :url    => { :action => :pcba_part_number_prompt },
-                  :with   => "'prompt=' + escape(value)" ) %>
 <!-- ********************************************************** -->
 
 <hr class="div" />
@@ -188,6 +262,7 @@ else
 <%= end_form_tag %>
 
 <%# debug @part_number %>
+<%# debug @initial_prompt %>
 <%# debug @viewer %>
 <%# debug @division_list %>
 <%# debug @part_number.valid? %>
