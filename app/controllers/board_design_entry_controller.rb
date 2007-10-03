@@ -41,7 +41,7 @@ class BoardDesignEntryController < ApplicationController
   #
   # Description:
   # This method retrieves a list of boards from the database for
-  # display fot the PCB Input Gate (processor).  
+  # display for the PCB Input Gate (processor).  
   # 
   # Parameters from params
   # None
@@ -55,14 +55,82 @@ class BoardDesignEntryController < ApplicationController
       return
     end
   
-    bde  = BoardDesignEntry.find_all_by_state('originated').sort_by { |e| e.design_name }
-    bde += BoardDesignEntry.find_all_by_state('submitted').sort_by { |e| e.design_name }
-    bde += BoardDesignEntry.find_all_by_state('ready_to_post').sort_by { |e| e.design_name }
-    @board_design_entries = bde
-    
-    @pre_art_review = ReviewType.get_pre_artwork
+    @board_design_entries = BoardDesignEntry.get_entries_for_processor
+    @pre_art_review       = ReviewType.get_pre_artwork
+
   end
 
+
+  ######################################################################
+  #
+  # set_entry_type
+  #
+  # Description:
+  # Gathers the information to display the Set Entry Type screen.
+  # 
+  # Parameters from params
+  # id - the identifier for the board design entry.
+  #
+  ######################################################################
+  #
+  def set_entry_type
+    if !allow_access()
+      flash['notice'] = "Access Prohibited"
+      return
+    end
+  
+    @board_design_entry = BoardDesignEntry.find(params[:id])
+  end
+  
+  
+  ######################################################################
+  #
+  # display_prompt
+  #
+  # Description:
+  # Called when the user clicks one of the radio buttons on the 
+  # set entry type screen.
+  # 
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def display_prompt
+    render(:layout => false)
+  end
+  
+  
+  ######################################################################
+  #
+  # process_entry_type
+  #
+  # Description:
+  # Called when the user selects the entry type from the set entry type
+  # screen.
+  # 
+  # Parameters from params
+  # id - the identifier for the board design entry.
+  #
+  ######################################################################
+  #
+  def process_entry_type
+    
+    if !allow_access()
+      flash['notice'] = "Access Prohibited"
+      return
+    end
+    
+    board_design_entry = BoardDesignEntry.find(params[:id])
+    entry_type = params[:design_type] == 'new' ? 'new' : 'dot_rev'
+    message    = 'set_entry_type_' + entry_type
+    
+    board_design_entry.send(message)
+    
+    redirect_to(:action => 'design_setup', :id => board_design_entry.id)
+    
+  end
+  
 
   ######################################################################
   #
@@ -190,26 +258,9 @@ class BoardDesignEntryController < ApplicationController
     @new_entry      = 'true'
     @initial_prompt = true
     
-    @pcb_part_number  = PartNumber.new( :pcb_dash_number  => '00' )
+    @pcb_part_number  = PartNumber.new
   end
 
-  ######################################################################
-  #
-  # pcba_part_number_prompt
-  #
-  # Description:
-  # This method provides the prompt for the PCBA part number.
-  # 
-  # Parameters from params
-  # None
-  #
-  ######################################################################
-  #
-  def pcba_part_number_prompt
-    @pcba_part_number = PartNumber.new( :pcba_dash_number  => '00' )
-    render(:layout => false)
-  end
-  
   ######################################################################
   #
   # new_entry
@@ -228,12 +279,12 @@ class BoardDesignEntryController < ApplicationController
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @user_action        = params[:user_action]
 
-    @design_dir_list   = DesignDirectory.find_all_by_active(1).sort_by   { |dd| dd.name }
-    @division_list     = Division.find_all_by_active(1).sort_by          { |d|  d.name }
-    @incoming_dir_list = IncomingDirectory.find_all_by_active(1).sort_by { |id| id.name }
-    @location_list     = Location.find_all_by_active(1).sort_by          { |l|  l.name }
-    @platform_list     = Platform.find_all_by_active(1).sort_by          { |p|  p.name }
-    @product_type_list = ProductType.find_all_by_active(1).sort_by       { |pt| pt.name } 
+    @design_dir_list   = DesignDirectory.get_active_design_directories
+    @division_list     = Division.get_active_divisions
+    @incoming_dir_list = IncomingDirectory.get_active_incoming_directories
+    @location_list     = Location.get_active_locations
+    @platform_list     = Platform.get_active_platforms
+    @product_type_list = ProductType.get_active_product_types
     @project_list      = Project.get_active_projects
     @revision_list     = Revision.get_revisions
 
@@ -258,7 +309,7 @@ class BoardDesignEntryController < ApplicationController
   
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @return             = params[:return]
-    @originator         = User.find(@board_design_entry.originator_id)
+    @originator         = @board_design_entry.user
     @managers           = @board_design_entry.managers
     @reviewers          = @board_design_entry.reviewers
 
@@ -292,24 +343,10 @@ class BoardDesignEntryController < ApplicationController
     @part_number.pcb_number       = params[:pcb_number]
     @part_number.pcb_dash_number  = params[:pcb_dash_number]
     @part_number.pcb_revision     = params[:part_number][:pcb_revision]
-    @part_number.pcba_prefix      = params[:pcba_prefix]      if params[:pcba_prefix]
-    @part_number.pcba_number      = params[:pcba_number]      if params[:pcba_number]
-    @part_number.pcba_dash_number = params[:pcba_dash_number] if params[:pcba_dash_number]
-    @part_number.pcba_revision    = params[:part_number][:pcba_revision] if params[:part_number][:pcba_revision]
-
-    if !@part_number.valid?(params[:new][:part_number] == "1")
-      
-      flash['notice'] = @part_number.error_message
-    
-      @user_action      = 'adding'
-      @new_entry        = 'true'
-      @pcb_part_number  = @part_number
-      @pcba_part_number = @part_number
-      
-      render(:action => 'get_part_number')
-      return
-      
-    end
+    @part_number.pcba_prefix      = params[:pcba_prefix]      if params[:pcba_prefix].size > 0
+    @part_number.pcba_number      = params[:pcba_number]      if params[:pcba_number].size > 0
+    @part_number.pcba_dash_number = params[:pcba_dash_number] if params[:pcba_dash_number].size > 0
+    @part_number.pcba_revision    = params[:part_number][:pcba_revision] if params[:part_number][:pcba_revision] != '0'
 
     
     @board_design_entry = BoardDesignEntry.add_entry(@part_number, session[:user])
@@ -323,8 +360,14 @@ class BoardDesignEntryController < ApplicationController
                   :user_action => 'adding')
     else
     
-      flash['notice'] = "There was an error storing the design entry - DTG has been notified."
-      redirect_to(:controller => 'tracker', :action => 'index')
+      flash['notice'] = @part_number.error_message
+    
+      @user_action      = 'adding'
+      @new_entry        = 'true'
+      @pcb_part_number  = @part_number
+      @pcba_part_number = @part_number
+      
+      render(:action => 'get_part_number')
     
     end
         
@@ -349,13 +392,13 @@ class BoardDesignEntryController < ApplicationController
     @user_action        = params[:user_action]
     @viewer             = params[:viewer]
     
-    @design_dir_list   = DesignDirectory.find_all_by_active(1).sort_by   { |dd| dd.name }
-    @division_list     = Division.find_all_by_active(1).sort_by          { |d|  d.name }
-    @incoming_dir_list = IncomingDirectory.find_all_by_active(1).sort_by { |id| id.name }
-    @location_list     = Location.find_all_by_active(1).sort_by          { |l|  l.name }
-    @platform_list     = Platform.find_all_by_active(1).sort_by          { |p|  p.name }
+    @design_dir_list   = DesignDirectory.get_active_design_directories
+    @division_list     = Division.get_active_divisions
+    @incoming_dir_list = IncomingDirectory.get_active_incoming_directories
+    @location_list     = Location.get_active_locations
+    @platform_list     = Platform.get_active_platforms
     @prefix_list       = Prefix.get_active_prefixes
-    @product_type_list = ProductType.find_all_by_active(1).sort_by       { |pt| pt.name } 
+    @product_type_list = ProductType.get_active_product_types
     @project_list      = Project.get_active_projects
     @revision_list     = Revision.get_revisions
     
@@ -402,13 +445,13 @@ class BoardDesignEntryController < ApplicationController
       notice += "</ul>"
       flash['notice'] = notice
       
-      @design_dir_list   = DesignDirectory.find_all_by_active(1).sort_by   { |dd| dd.name }
-      @division_list     = Division.find_all_by_active(1).sort_by          { |d|  d.name }
-      @incoming_dir_list = IncomingDirectory.find_all_by_active(1).sort_by { |id| id.name }
-      @location_list     = Location.find_all_by_active(1).sort_by          { |l|  l.name }
-      @platform_list     = Platform.find_all_by_active(1).sort_by          { |p|  p.name }
+      @design_dir_list   = DesignDirectory.get_active_design_directories
+      @division_list     = Division.get_active_divisions
+      @incoming_dir_list = IncomingDirectory.get_active_incoming_directories
+      @location_list     = Location.get_active_locations
+      @platform_list     = Platform.get_active_platforms
       @prefix_list       = Prefix.get_active_prefixes
-      @product_type_list = ProductType.find_all_by_active(1).sort_by       { |pt| pt.name } 
+      @product_type_list = ProductType.get_active_product_types
       @project_list      = Project.get_active_projects
       @revision_list     = Revision.get_revisions
 
@@ -438,13 +481,6 @@ class BoardDesignEntryController < ApplicationController
       end
     elsif bde.entry_type == 'dot_rev' && !bde.numeric_revision
       flash['notice'] = "Entry not created - a numeric revision must be specified for a Dot Rev"
-      redirect_to(:action      => 'edit_entry',
-                  :id          => @board_design_entry.id,
-                  :user_action => 'adding',
-                  :viewer      => @viewer)
-      return
-    elsif bde.entry_type == 'date_code' && bde.eco_number == ''
-      flash['notice'] = "Entry not created - an ECO number must be specified for a Date Code entry"
       redirect_to(:action      => 'edit_entry',
                   :id          => @board_design_entry.id,
                   :user_action => 'adding',
@@ -1100,8 +1136,8 @@ class BoardDesignEntryController < ApplicationController
   
   
   end
-  
-  
+
+
   ######################################################################
   #
   # create_tracker_entry
@@ -1223,10 +1259,9 @@ class BoardDesignEntryController < ApplicationController
                             :document_id      => document_id).save
         end
       }
-                                  
-      checklist = Checklist.find_by_released(1, 'major_rev_number DESC')                            
+                                                        
       audit = Audit.new(:design_id    => design.id,
-                        :checklist_id => checklist.id,
+                        :checklist_id => Checklist.latest_release.id,
                         :skip         => params[:audit][:skip])
       if audit.save
         audit.create_checklist
