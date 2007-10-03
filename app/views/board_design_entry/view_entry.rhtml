@@ -100,7 +100,7 @@
   <tr valign="top">
     <th align="right" width="25%">Originator: </th>
     <td width="25%" align="left">
-      <%= User.find(@board_design_entry.originator_id).name %>
+      <%= @board_design_entry.user.name %>
     </td>
 
     <th align="right" width="25%">Location: </th>

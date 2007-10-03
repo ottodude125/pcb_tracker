@@ -33,7 +33,7 @@
     <td align="left">
       <input type="submit" 
              class="form_submit" 
-             value="Return to <%= User.find(@board_design_entry.originator_id).name %> for more information" />
+             value="Return to <%= @board_design_entry.user.name %> for more information" />
     </td>
 
   </tr>
