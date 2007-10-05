@@ -11,22 +11,18 @@
 
   <tr align="left">
     <th>ID</th>
-    <th>NAME</th>
-    <th>PREFIX</th>
-    <th>NUMBER</th>
     <th>PLATFORM</th>
     <th>PROJECT</th>
+	<th>DESCRIPTION</th>
     <th>ACTIVE?</th>
     <th>DESIGNS</th>
   </tr>
 
   <tr align="left">
     <td><%= @board.id %></td>
-    <td><%= @board.name %></td>
-    <td><%= @board.prefix.pcb_mnemonic %></td>
-    <td><%= @board.number %></td>
     <td><%= @board.platform.name %></td>
     <td><%= @board.project.name %></td>
+	<td><%= @board.description %></td>
     <td><%= @board.active? %></td>
     <td align="center"><%= @board.designs.size%></td>
   </tr>
@@ -41,7 +37,6 @@
     <th>NAME</th>
     <th>PHASE</th>
     <th>PRIORITY</th>
-    <th>REVISION</th>
     <th>NUM REV</th>
     <th>ECO NUM</th>
     <th>TYPE</th>
@@ -54,7 +49,7 @@
 
   <tr>
     <td><%= @design.id %></td>
-    <td><%= @design.name %></td>
+    <td><%= @design.part_number.pcb_display_name %></td>
     <td>
       <% if @design.phase_id == 0 %>
         NOT SET
@@ -65,7 +60,6 @@
       <% end %>
     </td>
     <td><%= @design.priority_name %></td>
-    <td><%= Revision.find(@design.revision_id).name %></td>
     <% if @design.numeric_revision %>
       <td><%= @design.numeric_revision.to_s %></td>
     <% else %>
@@ -167,8 +161,8 @@
           <% for result in design_reviews(dr.id) %>
             <tr>
               <td><%= result.id %></td>
-              <td><%= User.find(result.reviewer_id).name %></td>
-              <td><%= result.role.name %></td>
+              <td><%= User.find(result.reviewer_id).name %> (<%= result.reviewer_id %>)</td>
+              <td><%= result.role.display_name %> (<%= result.role_id %>)</td>
               <td><%= result.result %></td>
               <td><%= result.reviewed_on.strftime("%d-%b-%y, %I:%M %p") %></td>
             </tr>
