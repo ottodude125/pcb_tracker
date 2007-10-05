@@ -307,7 +307,7 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #
   def dot_rev_entry_type_name
-    'Bare Board Change/Design'
+    'Bare Board Change'
   end
 
 
