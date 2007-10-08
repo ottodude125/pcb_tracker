@@ -267,4 +267,48 @@ class Check < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # full?
+  #
+  # Description:
+  # A flag that indicates if the check should be included in a full 
+  # audit.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the check should be included in a full review.
+  # Otherwise FALSE is returned.
+  #
+  ######################################################################
+  #
+  def full?
+    self.full_review?
+  end
+  
+  
+  ######################################################################
+  #
+  # partial?
+  #
+  # Description:
+  # A flag that indicates if the check should be included in a partial 
+  # audit.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the check should be included in a partial review.
+  # Otherwise FALSE is returned.
+  #
+  ######################################################################
+  #
+  def partial?
+    self.dot_rev_check?
+  end
+  
+  
 end
