@@ -48,6 +48,12 @@ class CheckTest < Test::Unit::TestCase
     assert(!date_code_check.belongs_to?(dot_rev_design))
     assert( dot_rev_check.belongs_to?(dot_rev_design))
     
+    assert(full_review_check.full?)
+    assert(!full_review_check.partial?)
+    
+    assert(!dot_rev_check.full?)
+    assert(dot_rev_check.partial?)
+    
   end
   
   ######################################################################
@@ -60,14 +66,20 @@ class CheckTest < Test::Unit::TestCase
     assert(check_04.yes_no?)
     assert(!check_04.designer_auditor?)
     assert(!check_04.designer_only?)
+    assert(!check_04.is_peer_check?)
+    assert(check_04.is_self_check?)
     
     assert(check_01.designer_auditor?)
     assert(!check_01.yes_no?)
     assert(!check_01.designer_only?)
+    assert(check_01.is_peer_check?)
+    assert(check_01.is_self_check?)
     
     assert(check_09.designer_only?)
     assert(!check_09.yes_no?)
     assert(!check_09.designer_auditor?)
+    assert(!check_09.is_peer_check?)
+    assert(check_09.is_self_check?)
   
   end
 
