@@ -9,4 +9,4 @@
 
 cd /hwnet/dtg_devel/web/etg/apps/pcb_tracker
 
-ruby script/runner 'Ping.send_message'
+/usr/local/bin/ruby script/runner 'Ping.send_message'
