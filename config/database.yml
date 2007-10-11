@@ -1,3 +1,4 @@
+####################################################################
 # MySQL (default setup).  Versions 4.1 and 5.0 are recommended.
 #
 # Get the fast C bindings:
@@ -5,6 +6,9 @@
 #   (on OS X: gem install mysql -- --include=/usr/local/lib)
 # And be sure to use new-style password hashing:
 #   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
+####################################################################
+# $Id$
+####################################################################
 development:
   adapter: mysql
   database: pcbtr
@@ -31,9 +35,9 @@ test:
 
 production:
   adapter: mysql
-  database: tracker_production
-  username: root
-  password: 
+  database: pcbtr
+  username: pcbtr
+  password: reviewTrack
   socket: /var/lib/mysql/mysql.sock
 
 
