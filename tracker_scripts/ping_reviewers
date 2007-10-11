@@ -4,7 +4,7 @@
 # Used to provide cron with a mechanism for generating reviewer
 # pings for the PCB Design Tracker
 #####################################################
-# $id$
+# $Id$
 #####################################################
 
 cd /hwnet/dtg_devel/web/etg/apps/pcb_tracker
