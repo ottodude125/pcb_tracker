@@ -339,6 +339,18 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   end
   
   
+  def delete_part_number
+    
+    part_number = PartNumber.find(params[:id])
+    flash['notice'] = 'PCB Part Number ' + part_number.pcb_display_name + 
+                      ' has been removed from the database.'
+    
+    part_number.destroy
+    redirect_to(:action => 'part_numbers')
+    
+  end
+  
+  
   def part_numbers
     @part_numbers = PartNumber.find(:all)
     designs       = Design.find(:all)
