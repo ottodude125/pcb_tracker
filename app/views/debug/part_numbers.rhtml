@@ -18,8 +18,9 @@
         <th>PCBA Number</th>
         <th># DESIGNS</th>
         <th>DESIGN ID</th>
-		<th># BDE</th>
-		<th>BDE ID</th>
+        <th># BDE</th>
+        <th>BDE ID</th>
+        <td>&nbsp;</td>
       </tr>
 	 
   <% end %>
@@ -33,6 +34,18 @@
       <td align="center"><%= part_number[:design_id] %></td>
       <td align="center"><%= part_number[:bde_count] %></td>
       <td align="center"><%= part_number[:bde_id] %></td>
+      <% if (part_number[:design_count] == 0 && part_number[:bde_count] == 0) %>
+        <td align="center">
+          <%= link_to('Delete', 
+                      {:action => 'delete_part_number',
+                       :id     => part_number.id},
+                       :title  => "This part number does not have any associations with it - it can be deleted",
+                       :confirm => "Click 'OK' to delete " + 
+                                    part_number.pcb_display_name) %>
+        </td>
+      <% else %>
+        <td align="center">-</td>
+      <% end %>
     </tr>
 
   <% end %>
