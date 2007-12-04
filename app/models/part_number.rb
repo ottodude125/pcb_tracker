@@ -87,6 +87,40 @@ class PartNumber < ActiveRecord::Base
   
   ######################################################################
   #
+  # directory_name
+  #
+  # Description:
+  # Provides the directory name.  If the pcb revision is empty then
+  # an empty string is returned
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A string representing the directory name for the part number.  The 
+  # string is empty (zero length) if the part number does not represent
+  # a number dispensed by the new PDM based part numbering system.
+  #
+  ######################################################################
+  #
+  def directory_name
+    
+    directory_name = ''
+    if self.pcb_revision != ''
+      directory_name  = 'pcb' 
+      directory_name += self.pcb_prefix + '_' 
+      directory_name += self.pcb_number + '_'
+      directory_name += self.pcb_dash_number + '_'
+      directory_name += self.pcb_revision
+    end
+    
+    return directory_name
+    
+  end
+  
+  
+  ######################################################################
+  #
   # get_unique_pcb_numbers
   #
   # Description:
