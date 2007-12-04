@@ -9,6 +9,8 @@
 
 
   <% @designs.each_with_index do |design, line_number| 
+  
+     next if design.part_number_id == 0
 
      if line_number.remainder(20) == 0 %>
       <tr>
@@ -17,7 +19,7 @@
         <th width="60">BOARD ID</th>
         <th width="60">PN ID</th>
         <th width="100">PHASE</th>
-        <th>DESIGNS</th>
+        <th width="150">DIR NAME</th>
       </tr>
 	 
   <% end %>
@@ -28,6 +30,7 @@
 	  <td align="center"><%= design.board_id %></td>
 	  <td align="center"><%= design.part_number_id %></td>
 	  <td align="center"><%= design.phase.name %></td>
+          <td align="center"><%= design.directory_name %></td>
     </tr>
 
   <% end %>
