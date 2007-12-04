@@ -1477,14 +1477,73 @@ class Design < ActiveRecord::Base
   #
   def flip_design_type
     
-    new_design_type = self.design_type == 'New' ? 'Dot Rev' : 'New'
-    self.design_type = new_design_type
+    self.design_type = self.design_type == 'New' ? 'Dot Rev' : 'New'
     self.update
     
     self.audit.update_checklist_type
     
   end
   
+  
+  ######################################################################
+  #
+  # directory_name
+  #
+  # Description:
+  # Provides the name of the directory in the PCB design file 
+  # directory.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A string that represents the design's PCB design directory.
+  #
+  ######################################################################
+  #
+  def directory_name
+    
+    directory_name = self.part_number.directory_name
+    return directory_name if directory_name != ''
+    
+    # If execution reaches this point then the design was originated
+    # under the old part numbering schema and the directory is based on 
+    # the pnemonic.
+    return self.pnemonic_based_name
+    
+  end
+  
+  
+  ######################################################################
+  #
+  # pnemonic_based_name
+  #
+  # Description:
+  # Provides the design name using the old PCB pnemonic based naming 
+  # convention.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A string that represents the name under the old PCB pnemonic based
+  # naming schema.
+  #
+  ######################################################################
+  #
+  def pnemonic_based_name
+    
+    base_name = self.board.name + self.revision.name
+    
+    if self.dot_rev? && self.numeric_revision?
+      base_name += self.numeric_revision.to_s
+    end
+    
+    base_name
+    
+    
+  end
+
   
 ########################################################################
 ########################################################################
