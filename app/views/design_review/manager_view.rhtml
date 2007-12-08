@@ -4,7 +4,7 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% @heading = @design_review.review_type.name + ' Review::' + @design_review.display_header %>
+<% @heading = @design_review.design.display_summary %>
 
 <%= start_form_tag(:action => 'add_comment') %>
 
