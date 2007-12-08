@@ -65,6 +65,12 @@ class TrackerController < ApplicationController
         reviewer_home_setup
         render_action('reviewer_home')
       end
+    else
+      # No user is identified.
+      @designs = Design.get_active_designs#.sort_by { |d| d.part_number.pcba_name }
+      @designs.delete_if { |d| d.part_number_id == 0 }
+      @designs = @designs.sort_by { |d| d.part_number.pcba_name }
+      
     end
     
     session[:return_to] = {:controller => 'tracker', :action => 'index'}
