@@ -1569,6 +1569,29 @@ class Design < ActiveRecord::Base
   
   ######################################################################
   #
+  # display_summary
+  #
+  # Description:
+  # Provides summary information about the design for display.
+  # The summary is in the following format:
+  #   directory_name -> platform_name / project_name
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A string containing the display summary.
+  #
+  ######################################################################
+  #
+  def display_summary
+    self.directory_name + ' -> ' + self.board.platform.name + ' / ' +
+      self.board.project.name
+  end
+  
+  
+  ######################################################################
+  #
   # pnemonic_based_name
   #
   # Description:
