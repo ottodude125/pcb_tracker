@@ -88,6 +88,59 @@ class Design < ActiveRecord::Base
   
   ######################################################################
   #
+  # get_active_designs
+  #
+  # Description:
+  # Retrieves a list of all active designs.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of active designs.
+  #
+  ######################################################################
+  #
+  def self.get_active_designs 
+    self.find(:all,
+              :conditions => "phase_id!='#{Design::COMPLETE}'",
+              :order      => 'created_on')
+  end
+  
+  
+  ######################################################################
+  #
+  # get_active_designs_owned_by
+  #
+  # Description:
+  # Retrieves a list of all active designs for a given designer.
+  #
+  # Parameters:
+  # designer - the User record for the desinger.
+  #
+  # Return value:
+  # A list of active designs assigned to the designer.
+  #
+  ######################################################################
+  #
+   def self.get_active_designs_owned_by(designer)
+
+    pre_art_phase_id = ReviewType.get_pre_artwork.id
+
+    designs  = Design.find(:all,
+                           :conditions => "designer_id='#{designer.id}' AND phase_id!='#{Design::COMPLETE}' AND phase_id!='#{pre_art_phase_id}'",
+                           :order      => 'created_on') +
+               Design.find(:all,
+                           :conditions => "pcb_input_id='#{designer.id}' AND phase_id='#{pre_art_phase_id}'",
+                           :order      => 'created_on')
+
+    designs.uniq.sort_by { |dr| dr.priority.value }
+
+  end
+  
+
+  ######################################################################
+  #
   # assignment_count
   #
   # Description:
