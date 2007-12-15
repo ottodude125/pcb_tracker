@@ -1,2 +1,0 @@
-module BoardDesignEntryHelper
-end
