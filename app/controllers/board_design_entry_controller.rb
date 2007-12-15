@@ -149,10 +149,8 @@ class BoardDesignEntryController < ApplicationController
 
     board_design_entry = BoardDesignEntry.find(params[:id])
 
-    for bde_user in board_design_entry.board_design_entry_users
-      bde_user.destroy
-    end
-    
+    board_design_entry.board_design_entry_users.destroy_all
+    board_design_entry.part_number.destroy
     
     Document.find(board_design_entry.outline_drawing_document_id).destroy \
       if board_design_entry.outline_drawing_document_id?
