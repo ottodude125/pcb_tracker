@@ -15,10 +15,20 @@
 require_dependency "login_system"
 
 
+
 class ApplicationController < ActionController::Base
 
+
   include LoginSystem
-  model :user
+#  include Sitealizer
+#  before_filter :use_sitealizer
+#  model :user
+  helper :time
+
+
+  # Pick a unique cookie name to distinguish our session data from others'
+  session :session_key => '_feb_pcbtr_session_id'
+
 
   # Do not allow any of the following listed actions unless the user is logged
   # in.
@@ -41,7 +51,7 @@ class ApplicationController < ActionController::Base
   # Description:
   # Updates the based on user input on the admin update screen.
   #
-  # Parameters from @params
+  # Parameters from params
   #
   # Return value:
   # pages - the paged listing.
@@ -66,30 +76,29 @@ class ApplicationController < ActionController::Base
   
   ######################################################################
   #
-  # start_of_quarter
+  # current_quarter
   #
   # Description:
-  # Generates the beginning of the quarter based on the current date
+  # Computes the current quarter.
   #
-  # Parameters from @params
+  # Parameters from params
+  # date - A time stamp to base the current quarter on.
   #
   # Return value:
-  # date - the date that corresponds to the start of the quarter.
+  # The current quarter.
   #
   ######################################################################
   #
-  def start_of_quarter(current_date = Time.now)
-
-    year          = current_date.strftime("%Y").to_i
-    current_month = current_date.strftime("%m").to_i
+  def current_quarter(date = Time.now)
+  
+    case date.month
     
-    month = 1
-    1.step(13, 3) do |m|
-      break if m > current_month
-      month = m
+    when 1..3: 1
+    when 4..6: 2
+    when 7..9: 3
+    else       4
     end
-
-    Date.new(year, month, 1)
+    
   end
 
   
@@ -109,9 +118,9 @@ class ApplicationController < ActionController::Base
     begin
       TrackerMailer.deliver_snapshot(exception,
                                      clean_backtrace(exception),
-                                     @session.instance_variable_get("@data"),
-                                     @params,
-                                     @request.env)
+                                     session.instance_variable_get("@data"),
+                                     params,
+                                     request.env)
     rescue => e
       logger.error(e)
     end
@@ -162,8 +171,8 @@ class ApplicationController < ActionController::Base
   def verify_logged_in
     unless session[:user]
       flash['notice'] = Pcbtr::PCBTR_BASE_URL +
-                        @params["controller"] + '/' +
-                        @params["action"]     + 
+                        params["controller"] + '/' +
+                        params["action"]     + 
                         " - unavailable unless logged in."
       redirect_to(:controller => 'tracker',
                   :action     => "index")
@@ -260,4 +269,3 @@ class ApplicationController < ActionController::Base
   
   
 end
-
