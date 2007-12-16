@@ -653,16 +653,7 @@ class TrackerController < ApplicationController
   #
   def designer_home_setup
 
-    pre_art_phase_id = ReviewType.get_pre_artwork.id
-
-    designs  = Design.find(:all,
-                           :conditions => "designer_id='#{session[:user].id}' AND phase_id!='#{Design::COMPLETE}' AND phase_id!='#{pre_art_phase_id}'",
-                           :order      => 'created_on ASC') +
-               Design.find(:all,
-                           :conditions => "pcb_input_id='#{session[:user].id}' AND phase_id='#{pre_art_phase_id}'",
-                           :order      => 'created_on ASC')
-    @designs = designs.uniq.sort_by { |dr| dr.priority.value }
-        
+    @designs = Design.get_active_designs_owned_by(session[:user])       
     @designs.each do |design|
       current_phase           = ReviewType.find(design.phase_id)
       design[:next_review]    = design.design_reviews.detect{ |dr| dr.review_type_id == design.phase_id}
