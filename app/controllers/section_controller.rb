@@ -64,15 +64,13 @@ class SectionController < ApplicationController
     params[:section][:url] = params[:section][:url].sub(/http:\/\//, '')
     if @section.update_attributes(params[:section])
       flash['notice'] = 'Section was successfully updated.'
-      redirect_to(:controller => 'checklist',
-                  :action     => 'edit',
-                  :id         => params[:section][:checklist_id])
     else
       flash['notice'] = 'Section not updated'
-      redirect_to(:controller => 'checklist', 
-                  :action     => 'edit',
-                  :id         => params[:section][:checklist_id])
     end
+
+    redirect_to(:controller => 'checklist', 
+                :action     => 'edit',
+                :id         => @section.checklist_id)
   end
 
 
