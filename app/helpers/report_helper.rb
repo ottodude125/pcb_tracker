@@ -16,27 +16,6 @@ module ReportHelper
 
   ######################################################################
   #
-  # team_leader
-  #
-  # Description:
-  # This method returns the name of the team leader.
-  #
-  # Parameters:
-  # id - the id of the team leader
-  #
-  # Returns:
-  # The team leader's name if the id is non-zero.  Otherwise a string
-  # indicating "All Teradyne Designers".
-  #
-  ######################################################################
-  #
-  def team_leader(id)
-    id == 0 ? 'All Teradyne Designers' : User.find(id).name
-  end
-
-
-  ######################################################################
-  #
   # team_member
   #
   # Description:
@@ -52,31 +31,10 @@ module ReportHelper
   ######################################################################
   #
   def team_member(id)
-    id == 0 ? 'All Team Members' : User.find(id).name
+    id == 0 ? 'All IDC Designers' : User.find(id).name
   end
 
 
-  ######################################################################
-  #
-  # category
-  #
-  # Description:
-  # This method returns the name of the category.
-  #
-  # Parameters:
-  # id - the id of the category
-  #
-  # Returns:
-  # The category name if the id is non-zero.  Otherwise a string
-  # indicating "All Categories".
-  #
-  ######################################################################
-  #
-  def category(id)
-    id == 0 ? 'All Categories' : OiCategory.find(id).name
-  end
-
- 
   ######################################################################
   #
   # display_date
