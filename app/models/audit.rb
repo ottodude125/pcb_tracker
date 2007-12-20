@@ -35,42 +35,23 @@ PEER_AUDIT       = 2
   ##############################################################################
 
 
-  ######################################################################
+  # Find incomplete audits
+  # 
+  # :call-seq:
+  #   Audit.find_incomplete_audits() -> array
   #
-  # find_incomplete_audits
-  #
-  # Description:
-  # This method retrieves all of the audits that are not complete
-  # and returns them in a list.
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # A list of incomplete audits
-  #
-  ######################################################################
-  #
+  # Returns a list of incomplete audits as an array.
   def self.find_incomplete_audits
     self.find(:all, :conditions => "auditor_complete=0", :order => "id")
   end
   
   
-  ######################################################################
+  # Find active audits for a designer
   #
-  # active_audits
+  # :call-seq:
+  #   Audit.active_audits(user) -> array
   #
-  # Description:
-  # This method retrieves a list of all the user's active audits
-  #
-  # Parameters:
-  # user - a user record for the current user.
-  #
-  # Return value:
-  # A list of active audits
-  #
-  ######################################################################
-  #
+  # Returns a list of active audits for the designer (user) as an array
   def self.active_audits(user)
   
     audits = self.find_incomplete_audits
@@ -95,26 +76,18 @@ PEER_AUDIT       = 2
   # Instance Methods
   # 
   ##############################################################################
-
   
-  ######################################################################
+  
+  # Report the statu of the audit.
   #
-  # audit_state
+  # :call-seq:
+  #   audit_state() -> integer
   #
-  # Description:
-  # This method reports that the audit is a self audit, a peer audit, or
-  # is complete.
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # SELF_AUDIT if the audit has not completed the self audit, 
-  # PEER_AUDIT if the audit is in peer audit, or
-  # AUDIT_COMPLETE if both the self and peer audits are complete.
-  #
-  ######################################################################
-  #
+  # Returns one of the following values that indicate the state of the
+  # audit.
+  #    Audit::SELF_AUDIT::  the audit is in the self audit state
+  #    Audit::PEER_AUDIT::  the audit is in the peer audit state
+  #    Audit::AUDIT_COMPLETE:: the audit is complete  
   def audit_state
   
     return SELF_AUDIT     unless self.designer_complete?
@@ -201,8 +174,8 @@ PEER_AUDIT       = 2
   ######################################################################
   #
   def is_self_auditor?(user)
-    self.design.designer_id == user.id ||
-    self.audit_teammates.detect { |teammate| teammate.user_id == user.id && teammate.self? }
+    (self.design.designer_id == user.id ||
+     self.audit_teammates.detect { |t| t.user_id == user.id && t.self? })
   end
 
 
@@ -223,8 +196,8 @@ PEER_AUDIT       = 2
   ######################################################################
   #
   def is_peer_auditor?(user)
-    self.design.peer_id == user.id ||
-    self.audit_teammates.detect { |t| t.user_id == user.id && !t.self? }
+    (self.design.peer_id == user.id ||
+     self.audit_teammates.detect { |t| t.user_id == user.id && !t.self? })
   end
   
   
@@ -242,14 +215,9 @@ PEER_AUDIT       = 2
   ######################################################################
   #
   def create_checklist
-
     self.checklist.each_check do |check|
-      if check.belongs_to? self.design
-        design_check = DesignCheck.new(:audit_id => self.id, :check_id => check.id)
-        fail 'Design check not saved' unless design_check.save        
-      end
+      DesignCheck.add(self, check) if check.belongs_to?(self.design)
     end
-    
   end
   
   
@@ -280,37 +248,27 @@ PEER_AUDIT       = 2
     completed_self_check_delta = 0
     completed_peer_audit_delta = 0
     self.checklist.each_check do |check|
-      design_check = design_checks.detect { |dc| dc.check_id == check.id }  
-      if check.belongs_to? self.design
+      design_check = design_checks.detect { |dc| dc.check_id == check.id }
+      if check.belongs_to?(self.design)
         if !design_check
-          design_check = DesignCheck.new(:audit_id => self.id, :check_id => check.id)
-          fail 'Design check not saved' unless design_check.save  
+          DesignCheck.add(self, check)
           delta += 1
         end
       else
         # Keep track of the adjustments that need to be made for the totals
-        completed_self_check_delta += 1 if design_check.self_auditor_checked?
-        completed_peer_audit_delta += 1 if design_check.peer_auditor_checked?
-        design_check.destroy if design_check
-        delta -= 1
+        completed_self_check_delta -= 1 if design_check.self_auditor_checked?
+        completed_peer_audit_delta -= 1 if design_check.peer_auditor_checked?
+        if design_check
+          design_check.destroy
+          delta -= 1
+        end
       end
     end
     
     # If any of the deleted design checks were complete then the audit record needs to
     # be updated.
-    if (completed_self_check_delta + completed_peer_audit_delta > 0)
-      if completed_self_check_delta > 0
-        completed_checks = self.designer_completed_checks - completed_self_check_delta
-        self.designer_completed_checks = completed_checks
-        self.designer_complete         = (completed_checks == self.self_check_count)
-      end
-      if completed_peer_audit_delta > 0
-        completed_checks = self.auditor_completed_checks - completed_peer_audit_delta
-        self.auditor_completed_checks = completed_checks
-        self.auditor_complete         = (completed_checks == self.peer_check_count)
-      end
-      self.update
-    end
+    self.update_self_check_count(completed_self_check_delta) if completed_self_check_delta < 0
+    self.update_peer_check_count(completed_peer_audit_delta) if completed_peer_audit_delta < 0
     
     delta
     
@@ -332,7 +290,7 @@ PEER_AUDIT       = 2
   #
   def check_count
 
-    count     = {}
+    count     = { :designer => 0, :peer => 0 }
     checklist = self.checklist
 
     case self.design.design_type
@@ -464,11 +422,15 @@ PEER_AUDIT       = 2
   #
   def completion_stats
   
-    stats = { :self => 0.0, :peer => 0.0 }
+    stats = { :self => "0.0", :peer => "0.0" }
     total_checks = self.check_count
     
-    stats[:self] = self.designer_completed_checks * 100.0 / total_checks[:designer]
-    stats[:peer] = self.auditor_completed_checks  * 100.0 / total_checks[:peer]
+    if total_checks[:designer] > 0
+      stats[:self] = self.designer_completed_checks * 100.0 / total_checks[:designer]
+    end
+    if total_checks[:peer] > 0
+      stats[:peer] = self.auditor_completed_checks  * 100.0 / total_checks[:peer]
+    end
 
     stats
   
@@ -642,9 +604,9 @@ PEER_AUDIT       = 2
     end
     
     if self.is_peer_audit? && self.is_peer_auditor?(user)
-      sections.delete_if { |sec| sec.designer_auditor_checks == 0 }
+      sections.delete_if { |sec| sec.designer_auditor_check_count == 0 }
       sections.each do |section|
-        section.subsections.delete_if { |subsec| subsec.designer_auditor_checks == 0 }
+        section.subsections.delete_if { |subsec| subsec.designer_auditor_check_count == 0 }
       end
     end
     
@@ -747,16 +709,8 @@ PEER_AUDIT       = 2
 
     if design_check.designer_result == "None"
 
-      begin
-        completed_checks = self.designer_completed_checks + 1
-        self.update_attributes(
-          :designer_completed_checks => completed_checks,
-          :designer_complete         => (completed_checks == self.self_check_count))
-      rescue ActiveRecord::StaleObjectError
-        self.reload
-        retry
-      end
-
+      self.update_self_check_count
+ 
       if self.designer_complete?
         TrackerMailer.deliver_self_audit_complete(self)
         TrackerMailer.deliver_final_review_warning(self.design)
@@ -766,9 +720,8 @@ PEER_AUDIT       = 2
       
     end
 
-    design_check.update_attributes(:designer_result     => result_update,
-                                   :designer_checked_on => Time.now,
-                                   :designer_id         => user.id)
+    design_check.update_designer_result(result_update, user)
+    
   end
   
   
@@ -796,38 +749,16 @@ PEER_AUDIT       = 2
   ######################################################################
   #
   def process_peer_audit_update(result_update, comment, design_check, user)
-  
+
     return if design_check.check.check_type != 'designer_auditor'
 
-    complete   = ['Verified', 'N/A', 'Waived']
-    incomplete = ['None', 'Comment']
-
-    incr = 0
-    incr = -1 if result_update == 'Comment'       && complete.include?(design_check.auditor_result)
-    incr = 1  if complete.include?(result_update) && incomplete.include?(design_check.auditor_result)
+    incr = design_check.update_auditor_result(result_update, user)
 
     if incr != 0
-      begin
-        completed_checks = self.auditor_completed_checks + incr
-        self.update_attributes(
-          :auditor_completed_checks => completed_checks,
-          :auditor_complete         => (completed_checks == self.peer_check_count))
-      rescue ActiveRecord::StaleObjectError
-        self.reload
-        retry
-      end
-
-      if self.auditor_complete?
-        TrackerMailer.deliver_peer_audit_complete(self)
-        #TODO - candidate for an audit method .delete_audit_teammates
-        AuditTeammate.delete_all(["audit_id = ?", self.id])
-      end
+      self.update_peer_check_count(incr)
+      TrackerMailer.deliver_peer_audit_complete(self) if self.auditor_complete?
     end
 
-    design_check.update_attributes(:auditor_result     => result_update,
-                                   :auditor_checked_on => Time.now,
-                                   :auditor_id         => user.id)
-                     
     TrackerMailer::deliver_audit_update(design_check,
                                         comment,
                                         self.design.designer,
@@ -920,25 +851,15 @@ PEER_AUDIT       = 2
       end
 
      if !audit_teammate
-        audit_teammate = AuditTeammate.new(:audit_id   => self.id,
-                                           :section_id => section_id,
-                                           :user_id    => self_auditor,
-                                           :self       => 1)
-        audit_teammate.save
-        teammate_list_updates['self'] << { :action   => 'Added ',
-                                           :teammate => audit_teammate }
+        audit_teammate = 
+          AuditTeammate.new_teammate(self.id, section_id, self_auditor, :self)
+        teammate_list_updates['self'] << { :action => 'Added ',:teammate => audit_teammate }
       elsif audit_teammate.user_id != self_auditor.to_i
-        #old_teammate = audit_teammate.dup
-        old_teammate = AuditTeammate.new(:audit_id   => self.id,
-                                         :section_id => section_id,
-                                         :user_id    => audit_teammate.user_id,
-                                         :self       => 1)
-        teammate_list_updates['self'] << { :action   => 'Removed ',
-                                           :teammate => old_teammate }
+        old_teammate = 
+          AuditTeammate.new_teammate(self.id, section_id, audit_teammate.user_id, :self, false)
+        teammate_list_updates['self'] << { :action   => 'Removed ', :teammate => old_teammate }
+        teammate_list_updates['self'] << { :action   => 'Added ', :teammate => audit_teammate }
         audit_teammate.update_attribute(:user_id, self_auditor)
-
-        teammate_list_updates['self'] << { :action   => 'Added ',
-                                           :teammate => audit_teammate }
       end
 
     end
@@ -951,19 +872,13 @@ PEER_AUDIT       = 2
       end 
 
       if !audit_teammate
-        audit_teammate = AuditTeammate.new(:audit_id   => self.id,
-                                           :section_id => section_id,
-                                           :user_id    => peer_auditor,
-                                           :self       => 0)
-        audit_teammate.save
+        audit_teammate = 
+          AuditTeammate.new_teammate(self.id, section_id, peer_auditor, :peer)
         teammate_list_updates['peer'] << { :action   => 'Added ',
                                            :teammate => audit_teammate }
       elsif audit_teammate.user_id != peer_auditor.to_i
-        #old_teammate = audit_teammate.dup
-        old_teammate = AuditTeammate.new(:audit_id   => self.id,
-                                         :section_id => section_id,
-                                         :user_id    => audit_teammate.user_id,
-                                         :self       => 0)
+        old_teammate =
+          AuditTeammate.new_teammate(self.id, section_id, audit_teammate.user_id, :peer, false)
         teammate_list_updates['peer'] << { :action   => 'Removed ',
                                            :teammate => old_teammate }
         audit_teammate.update_attribute(:user_id, peer_auditor)
@@ -1150,5 +1065,111 @@ PEER_AUDIT       = 2
      end
    end
 
+
+  ######################################################################
+  #
+  # update_self_check_count
+  #
+  # Description:
+  # Increments the designer (self) completed check count by count.  If
+  # the caller does not specify the count then the increment is by 1.
+  # If another user has updated the record,  the exception handler code
+  # is executed.  The audit record is reloaded and the work is redone.
+  #
+  # Parameters:
+  # count - provides the increment value
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def update_self_check_count(count = 1)
+    begin
+      completed_checks = self.designer_completed_checks + count
+      self.designer_completed_checks = completed_checks
+      self.designer_complete         = (completed_checks == self.self_check_count)
+      self.update
+    rescue ActiveRecord::StaleObjectError
+      self.reload
+      retry
+    end
+  end
+
+
+  ######################################################################
+  #
+  # update_peer_check_count
+  #
+  # Description:
+  # Increments the auditor (peer) completed check count by count.  If
+  # the caller does not specify the count then the increment is by 1.
+  # If another user has updated the record,  the exception handler code
+  # is executed.  The audit record is reloaded and the work is redone.
+  #
+  # Parameters:
+  # count - provides the increment value
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def update_peer_check_count(count = 1)
+    begin
+      completed_checks = self.auditor_completed_checks + count
+      self.auditor_completed_checks = completed_checks
+      self.auditor_complete         = (completed_checks == self.peer_check_count)
+      self.update
+    rescue ActiveRecord::StaleObjectError
+      self.reload
+      retry
+    end
+  end
   
+  
+  ######################################################################
+  #
+  # self_auditor_list
+  #
+  # Description:
+  # Returns a list active designers.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of user records for all users who are active and are assigned
+  # the designer role.
+  #
+  ######################################################################
+  #
+  def self_auditor_list
+    @self_auditor_list ||= Role.active_designers
+    @self_auditor_list
+  end
+  
+  
+  ######################################################################
+  #
+  # peer_auditor_list
+  #
+  # Description:
+  # Returns a list active designers with the record for the
+  # designer removed.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of user records for all users who are active and are assigned
+  # the designer role with the record for the designer assigned to the 
+  # .design removed.
+  #
+  ######################################################################
+  #
+  def peer_auditor_list
+    self.self_auditor_list - [self.design.designer]
+  end
+
 end
