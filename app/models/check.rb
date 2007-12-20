@@ -142,7 +142,7 @@ class Check < ActiveRecord::Base
   ######################################################################
   #
   def belongs_to?(design)
-    design.new?                                  ||
+    (design.new?       && self.full_review?)     ||
     (design.date_code? && self.date_code_check?) ||
     (design.dot_rev?   && self.dot_rev_check?)
   end
