@@ -22,7 +22,7 @@ class Section < ActiveRecord::Base
 
   ######################################################################
   #
-  # designer_auditor_checks
+  # designer_auditor_check_count
   #
   # Description:
   # This method returns the number of designer/auditor checks.
@@ -32,10 +32,10 @@ class Section < ActiveRecord::Base
   #
   ######################################################################
   #
-  def designer_auditor_checks
+  def designer_auditor_check_count
     
     total = 0
-    self.subsections.each { |ss| total += ss.designer_auditor_checks }
+    self.subsections.each { |ss| total += ss.designer_auditor_check_count }
     
     total
     
