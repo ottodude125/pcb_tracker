@@ -14,11 +14,53 @@ class DesignCheck < ActiveRecord::Base
 
   belongs_to :audit
   belongs_to :check
+  
+  
+  AUDITOR_COMPLETE_RESULTS   = %w(Verified N/A Waived)
+  AUDITOR_INCOMPLETE_RESULTS = %w(None Comment)
+
  
 
   has_many(:audit_comments, :order => 'created_on DESC')
   
   
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+
+
+  ######################################################################
+  #
+  # add
+  #
+  # Description:
+  # Adds a design check to the database for the given audit / check 
+  # pair
+  # 
+  # Parameters:
+  # audit - the audit to associate the design check with
+  # check - the check to associate the design check with 
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #  
+  def self.add(audit, check)
+    dc = DesignCheck.new(:audit_id => audit.id, :check_id => check.id)
+    fail 'Design check not saved' unless dc.save
+  end
+  
+  
+  ##############################################################################
+  #
+  # Instance Methods
+  # 
+  ##############################################################################
+
+
   ######################################################################
   #
   # peer_auditor
@@ -37,6 +79,8 @@ class DesignCheck < ActiveRecord::Base
     else
       User.new(:first_name => 'Not', :last_name => 'Assigned')
     end
+  rescue
+    User.new(:first_name => 'Not', :last_name => 'Assigned')
   end
   
   
@@ -58,6 +102,8 @@ class DesignCheck < ActiveRecord::Base
     else
       User.new(:first_name => 'Not', :last_name => 'Assigned')
     end
+  rescue
+    User.new(:first_name => 'Not', :last_name => 'Assigned')
   end
   
 
@@ -126,6 +172,75 @@ class DesignCheck < ActiveRecord::Base
         self.check.designer_auditor?
     end
 
+  end
+
+  ######################################################################
+  #
+  # update_designer_result
+  #
+  # Description:
+  # Updates the design check with the designer's self audit results.
+  # 
+  # Parameters:
+  # result - the result entered by the designer
+  # user   - the designer's user record
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+ def update_designer_result(result, user)
+    self.update_attributes(:designer_result     => result,
+                           :designer_checked_on => Time.now,
+                           :designer_id         => user.id)
+  end
+
+  
+  ######################################################################
+  #
+  # update_auditor_result
+  #
+  # Description:
+  # Updates the design check with the auditor's peer audit results.
+  # 
+  # Parameters:
+  # result - the result entered by the peer auditor
+  # user   - the auditor's user record
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def update_auditor_result(result, user)
+
+    incr = 0
+    if self.auditor_verified?
+      incr = -1 if result == 'Comment'
+    else
+      incr = 1  if AUDITOR_COMPLETE_RESULTS.include?(result)
+    end
+
+    self.auditor_result     = result
+    self.auditor_checked_on = Time.now
+    self.auditor_id         = user.id
+    self.update
+
+    incr
+
+  end
+
+  
+  # Indicate if the peer auditor has verified the design check.
+  #
+  # :call-seq"
+  #   auditor_verified?() -> boolean
+  #
+  # If the peer auditor has verified the check then TRUE is returned,
+  # otherwise FALSE is returned.
+  def auditor_verified?
+    AUDITOR_COMPLETE_RESULTS.include?(self.auditor_result)
   end
   
   
