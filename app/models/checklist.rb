@@ -284,9 +284,7 @@ class Checklist < ActiveRecord::Base
   ######################################################################
   #
   def locked?
-
     self.released?
-
   end
 
 
