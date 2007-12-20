@@ -20,7 +20,7 @@ class Subsection < ActiveRecord::Base
   
   ######################################################################
   #
-  # designer_auditor_checks
+  # designer_auditor_check_count
   #
   # Description:
   # This method returns the number of checks in the subsection.
@@ -30,7 +30,7 @@ class Subsection < ActiveRecord::Base
   #
   ######################################################################
   #
-  def designer_auditor_checks
+  def designer_auditor_check_count
     
     total = 0
     self.checks.each { |check| total += 1 if check.designer_auditor? }
@@ -113,9 +113,7 @@ class Subsection < ActiveRecord::Base
   ######################################################################
   #
   def locked?
-
     self.section.locked?
-
   end
 
 
@@ -137,6 +135,46 @@ class Subsection < ActiveRecord::Base
   #
   def checklist
     self.section.checklist if (self.section && self.section.checklist)
+  end
+  
+  
+  ######################################################################
+  #
+  # get_checks
+  #
+  # Description:
+  # Retrieves the subsection checks that fit the constraints set by 
+  # auditor_type and audit_type
+  #
+  # Parameters:
+  # auditor_type - indicates if the auditor is performing a self audit
+  #                or a peer audit.
+  # audit_type   - indicates if the audit is a full audit or a partial
+  #                audit.
+  #
+  # Return value:
+  # A list of checks that fit the constraints set by auditor_type and
+  # audit_type.
+  #
+  ######################################################################
+  #
+  def get_checks(auditor_type, audit_type = :full)
+
+    checks = self.checks
+    
+    # Self auditors perform all of the checks.
+    # If performing a peer audit (retreiving peer checks) delete any check that
+    # is not performed by a peer auditor.
+    checks.delete_if { |c| !c.is_peer_check? } if auditor_type == :peer
+
+    if audit_type == :full
+      checks.delete_if { |c| !c.full? }
+    elsif audit_type == :partial
+      checks.delete_if { |c| !c.partial? }
+    end
+
+    checks
+
   end
 
   
