@@ -32,6 +32,13 @@ class BoardDesignEntryTest < Test::Unit::TestCase
 
   def setup
     
+    @av714b             = board_design_entries(:av714b)
+    @la021c             = board_design_entries(:la021c)
+    @mx008b4            = board_design_entries(:mx008b4)
+    @mx008b4_ecoP123456 = board_design_entries(:mx008b4_ecoP123456)
+    @mx234a             = board_design_entries(:mx234a)
+    @mx234c             = board_design_entries(:mx234c)
+    
     @cathy_m = users(:cathy_m)
     
   end
@@ -330,8 +337,8 @@ class BoardDesignEntryTest < Test::Unit::TestCase
     # Test a board design entry that does not exist in the database.
     bde = BoardDesignEntry.new
     
-    assert_equal('New',                      bde.new_entry_type_name)
-    assert_equal('Bare Board Change/Design', bde.dot_rev_entry_type_name)
+    assert_equal('New',               bde.new_entry_type_name)
+    assert_equal('Bare Board Change', bde.dot_rev_entry_type_name)
 
     assert(!bde.new_design?)
     assert(!bde.dot_rev_design?)
@@ -342,7 +349,7 @@ class BoardDesignEntryTest < Test::Unit::TestCase
     assert(!bde.new_design?)
     assert(bde.dot_rev_design?)
     assert(bde.entry_type_set?)
-    assert_equal('Bare Board Change/Design', bde.entry_type_name)
+    assert_equal('Bare Board Change', bde.entry_type_name)
     
     bde.set_entry_type_new
     assert(bde.new_design?)
@@ -364,7 +371,7 @@ class BoardDesignEntryTest < Test::Unit::TestCase
     assert(!bde.new_design?)
     assert(bde.dot_rev_design?)
     assert(bde.entry_type_set?)
-    assert_equal('Bare Board Change/Design', bde.entry_type_name)
+    assert_equal('Bare Board Change', bde.entry_type_name)
     
     bde.set_entry_type_new
     bde.reload
@@ -395,20 +402,60 @@ class BoardDesignEntryTest < Test::Unit::TestCase
   
 
   ######################################################################
+  def test_new
+   
+    assert(@av714b.new?)
+    assert(@av714b.part_number.new?)
+    
+    @av714b.part_number = PartNumber.initial_part_number
+    assert(!@av714b.new?)
+    assert(!@av714b.part_number.new?)
+
+    @av714b.part_number_id = 0
+    assert(@av714b.new?)
+
+  end
+
+
+  ######################################################################
+  def test_design_name
+   
+    assert_equal('100-714-b0 / 150-714-00', @av714b.design_name)
+    assert_equal('252-008-b4 / 259-008-00', @mx008b4.design_name)
+    
+    @av714b.part_number_id  = 0
+    @mx008b4.part_number_id = 0
+   
+    assert_equal('av714b (959-714-b0)',  @av714b.design_name)
+    assert_equal('mx008b4 (252-008-b4)', @mx008b4.design_name)
+
+  end
+
+
+  ######################################################################
+  def test_role_methods
+   
+    assert(@av714b.all_roles_assigned?([]))
+
+  end
+
+
+  ######################################################################
   def test_load_design_team
 
+    BoardDesignEntryUser.destroy_all
+    
     bde = BoardDesignEntry.find(board_design_entries(:av714b).id)
     assert_equal(0, bde.board_design_entry_users.size)
-    assert_equal(2, BoardDesignEntryUser.count)
     assert_equal(0, bde.managers.size)
     assert_equal(0, bde.reviewers.size)
 
     bde.load_design_team
 
-    assert_equal(1,  bde.managers.size)
-    assert_equal(8,  bde.reviewers.size)
-    assert_equal(9,  bde.board_design_entry_users.size)
-    assert_equal(11, BoardDesignEntryUser.count)
+    assert_equal(1, bde.managers.size)
+    assert_equal(8, bde.reviewers.size)
+    assert_equal(9, bde.board_design_entry_users.size)
+    assert_equal(9, BoardDesignEntryUser.count)
     
     default_user_list = { 'PCB Design'          => 'Light',
                           'Compliance - EMC'    => 'Bechard',
@@ -436,18 +483,21 @@ class BoardDesignEntryTest < Test::Unit::TestCase
       end
     end
   
+
     bde = BoardDesignEntry.find(board_design_entries(:mx234a).id)
-    assert_equal(0,  bde.board_design_entry_users.size)
-    assert_equal(11, BoardDesignEntryUser.count)
-    assert_equal(0,  bde.managers.size)
-    assert_equal(0,  bde.reviewers.size)
+    bde.board_design_entry_users.destroy_all
+    bde.reload
+    assert_equal(0, bde.board_design_entry_users.size)
+    assert_equal(9, BoardDesignEntryUser.count)
+    assert_equal(0, bde.managers.size)
+    assert_equal(0, bde.reviewers.size)
 
     bde.load_design_team
 
     assert_equal(1,  bde.managers.size)
     assert_equal(8,  bde.reviewers.size)
     assert_equal(9,  bde.board_design_entry_users.size)
-    assert_equal(20, BoardDesignEntryUser.count)
+    assert_equal(18, BoardDesignEntryUser.count)
     
     bde.board_design_entry_users.each do |bde_user|
       assert_equal(bde.id, bde_user.board_design_entry_id)
