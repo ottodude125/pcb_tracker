@@ -37,8 +37,8 @@ class CheckTest < Test::Unit::TestCase
     dot_rev_check     = Check.new(:dot_rev_check   => 1)
     
     assert(full_review_check.belongs_to?(new_design))
-    assert(date_code_check.belongs_to?(new_design))
-    assert(dot_rev_check.belongs_to?(new_design))
+    assert(!date_code_check.belongs_to?(new_design))
+    assert(!dot_rev_check.belongs_to?(new_design))
     
     assert(!full_review_check.belongs_to?(date_code_design))
     assert( date_code_check.belongs_to?(date_code_design))
