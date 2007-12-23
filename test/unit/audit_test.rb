@@ -179,32 +179,44 @@ class AuditTest < Test::Unit::TestCase
   def test_checklist_methods
     
     #
-    #                 section  subsection  array of check ids
-    #                 id       id
-    full_review_checks     = {3 =>   {5 =>        [13, 14],
-                                      6 =>        [15, 16, 17, 24]},
-                              4 =>   {7 =>        [18, 19, 20],
-                                      8 =>        [21, 22, 23]}}
+    #                         section  subsection  array of check ids
+    #                         id       id
+    full_review_checks     = {3 =>    {5 =>        [14],
+                                       6 =>        [15, 16, 17, 24]},
+                              4 =>    {7 =>        [18, 19, 20],
+                                       8 =>        [21, 22, 23]}}
+                                       
+    expected_full_design_check_count = 0
+    full_review_checks.each_value do |subsection|
+      subsection.each_value { |checks| expected_full_design_check_count += checks.size}
+    end
+
+
     #
     #                        section  subsection  array of check ids
     #                        id       id
     partial_review_checks  = {3 =>   {5 =>        [13, 14]}}
+
+    expected_partial_design_check_count = 0
+    partial_review_checks.each_value do |subsection|
+      subsection.each_value { |checks| expected_partial_design_check_count += checks.size}
+    end
+
     
-    
-    design_check_count = DesignCheck.find(:all)
-    
+    design_check_count = DesignCheck.count
+
     audit = Audit.new(:checklist_id => 2,
                       :design_id    => @audit_mx700b.design_id)
     audit.save
     audit.reload
 
     audit.create_checklist
-    assert_equal(design_check_count.size + 12, DesignCheck.find(:all).size)
-    assert_equal(12, audit.design_checks.size)
-    assert_equal(11, audit.self_check_count)
-    assert_equal(11, audit.checklist.full_review_self_check_count)
-    assert_equal(4,  audit.peer_check_count)
-    assert_equal(11, audit.checklist.full_review_self_check_count)
+    assert_equal(design_check_count + expected_full_design_check_count, DesignCheck.count)
+    assert_equal(expected_full_design_check_count, audit.design_checks.size)
+    assert_equal(11,                               audit.self_check_count)
+    assert_equal(11,                               audit.checklist.full_review_self_check_count)
+    assert_equal(4,                                audit.peer_check_count)
+    assert_equal(4,                                audit.checklist.full_review_peer_check_count)
 
     actual_checks = {}
     audit.design_checks.each do |design_check|
@@ -224,11 +236,11 @@ class AuditTest < Test::Unit::TestCase
     audit.update_checklist_type
 
     audit.reload
-    assert_equal(2, audit.design_checks.size)
-    assert_equal(2, audit.self_check_count)
-    assert_equal(2, audit.checklist.partial_review_self_check_count)
-    assert_equal(2, audit.peer_check_count)
-    assert_equal(2, audit.checklist.partial_review_self_check_count)
+    assert_equal(expected_partial_design_check_count, audit.design_checks.size)
+    assert_equal(2,                                   audit.self_check_count)
+    assert_equal(2,                                   audit.checklist.partial_review_self_check_count)
+    assert_equal(2,                                   audit.peer_check_count)
+    assert_equal(2,                                   audit.checklist.partial_review_peer_check_count)
     
     actual_checks = {}
     audit.design_checks.each do |design_check|
@@ -243,7 +255,7 @@ class AuditTest < Test::Unit::TestCase
     assert_equal(partial_review_checks, actual_checks)
 
 
-    assert_equal(design_check_count.size + 2, DesignCheck.find(:all).size)
+    assert_equal(design_check_count + expected_partial_design_check_count, DesignCheck.count)
     
     audit.design.design_type = 'New'
     audit.design.update
@@ -264,7 +276,7 @@ class AuditTest < Test::Unit::TestCase
     audit.update
     
     audit.reload
-    assert_equal(design_check_count.size + 12, DesignCheck.find(:all).size)
+    assert_equal(design_check_count + expected_full_design_check_count, DesignCheck.count)
     completed_check_count = audit.completed_check_count
     assert_equal(11,  completed_check_count[:self])
     assert_equal(4,   completed_check_count[:peer])
@@ -279,7 +291,7 @@ class AuditTest < Test::Unit::TestCase
     audit.update_checklist_type
     
     audit.reload
-    assert_equal(design_check_count.size + 2, DesignCheck.find(:all).size)
+    assert_equal(design_check_count + expected_partial_design_check_count, DesignCheck.count)
     completed_check_count = audit.completed_check_count
     assert_equal(1, completed_check_count[:self])
     assert_equal(1, completed_check_count[:peer])
@@ -294,7 +306,7 @@ class AuditTest < Test::Unit::TestCase
     audit.update_checklist_type
     
     audit.reload
-    assert_equal(design_check_count.size + 12, DesignCheck.find(:all).size)
+    assert_equal(design_check_count + expected_full_design_check_count, DesignCheck.count)
     completed_check_count = audit.completed_check_count
     assert_equal(1, completed_check_count[:self])
     assert_equal(1, completed_check_count[:peer])
@@ -635,7 +647,7 @@ class AuditTest < Test::Unit::TestCase
       expected_section.reload
       assert_equal(expected_section, section)
       
-      expected_section.subsections.delete_if { |ss| ss.designer_auditor_checks == 0 }
+      expected_section.subsections.delete_if { |ss| ss.designer_auditor_check_count == 0 }
       assert_equal(expected_section.subsections.size, section.subsections.size)
 
       section.subsections.each_with_index do |subsection, j|
@@ -766,7 +778,8 @@ class AuditTest < Test::Unit::TestCase
     assert_equal('N/A',                 design_check_1.designer_result)
     assert_equal(@scott_g.id,           design_check_1.designer_id)
     
-    assert(checked_on.to_i == design_check_1.designer_checked_on.to_i)
+    assert(checked_on.to_i <= design_check_1.designer_checked_on.to_i)
+    assert(Time.now.to_i   >= design_check_1.designer_checked_on.to_i)
     
     
     audit_mx234b_other = Audit.find(@audit_mx234b.id)
@@ -825,23 +838,28 @@ class AuditTest < Test::Unit::TestCase
     assert_equal(@bob_g.id,             design_check_1.auditor_id)
     assert(start_time.to_i <= design_check_1.auditor_checked_on.to_i)
     assert(Time.now.to_i   >= design_check_1.auditor_checked_on.to_i)
-    checked_on = design_check_1.auditor_checked_on
+    
+    start_time = Time.now
 
     @audit_mx234b.process_peer_audit_update('N/A', comment, design_check_1, @bob_g)
     
     design_check_1.reload
     assert_equal('N/A',     design_check_1.auditor_result)
     assert_equal(@bob_g.id, design_check_1.auditor_id)
-    assert(checked_on.to_i == design_check_1.auditor_checked_on.to_i)
+    assert(start_time.to_i <= design_check_1.auditor_checked_on.to_i)
+    assert(Time.now.to_i   >= design_check_1.auditor_checked_on.to_i)
     assert(completed_peer_checks, @audit_mx234b.auditor_completed_checks)
-    
+
+    start_time = Time.now
+
     @audit_mx234b.process_peer_audit_update('Comment', comment, design_check_1, @bob_g)
-    
+
     completed_peer_checks -= 1
     design_check_1.reload
     assert_equal('Comment', design_check_1.auditor_result)
     assert_equal(@bob_g.id, design_check_1.auditor_id)
-    assert(checked_on.to_i == design_check_1.auditor_checked_on.to_i)
+    assert(start_time.to_i <= design_check_1.auditor_checked_on.to_i)
+    assert(Time.now.to_i   >= design_check_1.auditor_checked_on.to_i)
     assert(completed_peer_checks, @audit_mx234b.auditor_completed_checks)
     
     
@@ -1144,5 +1162,106 @@ class AuditTest < Test::Unit::TestCase
     puts("================================================")
 
   end
+
+
+  ######################################################################
+  def test_update_check_counts
+    
+    complete_self_checks = @audit_mx234b.designer_completed_checks
+    complete_peer_checks = @audit_mx234b.auditor_completed_checks
+    
+    self_checker_1_copy = Audit.find(@audit_mx234b.id)
+    self_checker_2_copy = Audit.find(@audit_mx234b.id)
+    peer_checker_1_copy = Audit.find(@audit_mx234b.id)
+    peer_checker_2_copy = Audit.find(@audit_mx234b.id)
+    
+    assert(!@audit_mx234b.designer_complete?)
+    assert(!@audit_mx234b.auditor_complete?)
+    assert(!self_checker_1_copy.designer_complete?)
+    assert(!self_checker_1_copy.auditor_complete?)
+    assert(!self_checker_2_copy.designer_complete?)
+    assert(!self_checker_2_copy.auditor_complete?)
+    
+    self_checker_2_copy.update_self_check_count
+    @audit_mx234b.reload
+    assert_equal(complete_self_checks + 1, @audit_mx234b.designer_completed_checks)
+    assert_equal(complete_self_checks,     self_checker_1_copy.designer_completed_checks)
+    assert_equal(complete_self_checks + 1, self_checker_2_copy.designer_completed_checks)
+    assert_equal(complete_peer_checks,     @audit_mx234b.auditor_completed_checks)
+    assert_equal(complete_peer_checks,     peer_checker_1_copy.auditor_completed_checks)
+    assert_equal(complete_peer_checks,     peer_checker_2_copy.auditor_completed_checks)
+    assert(!@audit_mx234b.designer_complete?)
+    assert(!@audit_mx234b.auditor_complete?)
+    assert(!self_checker_1_copy.designer_complete?)
+    assert(!self_checker_1_copy.auditor_complete?)
+    assert(!self_checker_2_copy.designer_complete?)
+    assert(!self_checker_2_copy.auditor_complete?)
+
+    self_checker_1_copy.update_self_check_count
+    @audit_mx234b.reload
+    assert_equal(complete_self_checks + 2, @audit_mx234b.designer_completed_checks)
+    assert_equal(complete_self_checks + 2, self_checker_1_copy.designer_completed_checks)
+    assert_equal(complete_self_checks + 1, self_checker_2_copy.designer_completed_checks)
+    assert_equal(complete_peer_checks,     @audit_mx234b.auditor_completed_checks)
+    assert_equal(complete_peer_checks,     peer_checker_1_copy.auditor_completed_checks)
+    assert_equal(complete_peer_checks,     peer_checker_2_copy.auditor_completed_checks)
+    assert(!@audit_mx234b.designer_complete?)
+    assert(!@audit_mx234b.auditor_complete?)
+    assert(!self_checker_1_copy.designer_complete?)
+    assert(!self_checker_1_copy.auditor_complete?)
+    assert(!self_checker_2_copy.designer_complete?)
+    assert(!self_checker_2_copy.auditor_complete?)
+    
+
+    peer_checker_2_copy.update_peer_check_count
+    @audit_mx234b.reload
+    assert_equal(complete_self_checks + 2, @audit_mx234b.designer_completed_checks)
+    assert_equal(complete_self_checks + 2, self_checker_1_copy.designer_completed_checks)
+    assert_equal(complete_self_checks + 1, self_checker_2_copy.designer_completed_checks)
+    assert_equal(complete_peer_checks + 1, @audit_mx234b.auditor_completed_checks)
+    assert_equal(complete_peer_checks,     peer_checker_1_copy.auditor_completed_checks)
+    assert_equal(complete_peer_checks + 1, peer_checker_2_copy.auditor_completed_checks)
+    assert(!@audit_mx234b.designer_complete?)
+    assert(!@audit_mx234b.auditor_complete?)
+    assert(!self_checker_1_copy.designer_complete?)
+    assert(!self_checker_1_copy.auditor_complete?)
+    assert(!self_checker_2_copy.designer_complete?)
+    assert(!self_checker_2_copy.auditor_complete?)
+    
+    peer_checker_1_copy.update_peer_check_count
+    @audit_mx234b.reload
+    assert_equal(complete_self_checks + 2, @audit_mx234b.designer_completed_checks)
+    assert_equal(complete_self_checks + 2, self_checker_1_copy.designer_completed_checks)
+    assert_equal(complete_self_checks + 1, self_checker_2_copy.designer_completed_checks)
+    assert_equal(complete_peer_checks + 2, @audit_mx234b.auditor_completed_checks)
+    assert_equal(complete_peer_checks + 2, peer_checker_1_copy.auditor_completed_checks)
+    assert_equal(complete_peer_checks + 1, peer_checker_2_copy.auditor_completed_checks)
+    assert(!@audit_mx234b.designer_complete?)
+    assert(!@audit_mx234b.auditor_complete?)
+    assert(!self_checker_1_copy.designer_complete?)
+    assert(!self_checker_1_copy.auditor_complete?)
+    assert(!self_checker_2_copy.designer_complete?)
+    assert(!self_checker_2_copy.auditor_complete?)
+    
+    @audit_mx234b.update_self_check_count(12)
+    assert(!@audit_mx234b.designer_complete?)
+    self_checker_1_copy.reload
+    assert(!self_checker_1_copy.designer_complete?)
+    @audit_mx234b.update_self_check_count
+    assert(@audit_mx234b.designer_complete?)
+    self_checker_1_copy.reload
+    assert(self_checker_1_copy.designer_complete?)
+
+    @audit_mx234b.update_peer_check_count(6)
+    assert(!@audit_mx234b.auditor_complete?)
+    self_checker_1_copy.reload
+    assert(!self_checker_1_copy.auditor_complete?)
+    @audit_mx234b.update_peer_check_count
+    assert(@audit_mx234b.auditor_complete?)
+    self_checker_1_copy.reload
+    assert(self_checker_1_copy.auditor_complete?)
+
+  end
+
 
 end
