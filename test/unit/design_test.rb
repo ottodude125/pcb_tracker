@@ -17,22 +17,31 @@ class DesignTest < Test::Unit::TestCase
   fixtures(:audits,
            :boards,
            :boards_users,
+#           :board_designs,
+           :board_design_entries,
+           :board_design_entry_users,
+           :board_reviewers,
            :checks,
            :designs,
            :design_centers,
+           :design_checks,
            :design_reviews,
            :design_review_comments,
            :design_review_results,
            :design_updates,
+           :fab_houses,
+           :oi_assignment_reports,
+           :oi_assignments,
+           :oi_categories,
+           :oi_category_sections,
+           :oi_instructions,
            :part_numbers,
            :platforms,
            :priorities,
            :projects,
-           :oi_assignment_reports,
-           :oi_assignments,
-           :oi_instructions,
            :review_statuses,
            :review_types,
+           :review_types_roles,
            :roles,
            :roles_users,
            :sections,
@@ -40,11 +49,14 @@ class DesignTest < Test::Unit::TestCase
            :users)
 
 
+  ######################################################################
   def setup
     
-    @design = Design.find(1)
-    @mx234a_design = designs(:mx234a)
-    @mx600a_design = designs(:mx600a)
+    @design         = Design.find(1)
+    @designs_027    = designs(:designs_027)
+    @la453a1_design = designs(:la453a1)
+    @mx234a_design  = designs(:mx234a)
+    @mx600a_design  = designs(:mx600a)
 
     @mx234a_pre_art_dr   = design_reviews(:mx234a_pre_artwork)
     @mx234a_placement_dr = design_reviews(:mx234a_placement)
@@ -180,7 +192,7 @@ class DesignTest < Test::Unit::TestCase
   def test_role_open_review_count
     
     assert_equal(2, @mx234a_design.role_open_review_count(@valor))
-    
+
     
     @mx234a_pre_art_dr.review_status = @review_skipped
     @mx234a_pre_art_dr.update
@@ -716,6 +728,71 @@ class DesignTest < Test::Unit::TestCase
   
   
 ######################################################################
+def test_design_setup
+  
+  DesignReview.destroy_all
+  DesignReviewResult.destroy_all
+  
+  active_review_types = ReviewType.get_active_review_types
+  not_started    = ReviewStatus.find_by_name('Not Started')
+  review_skipped = ReviewStatus.find_by_name('Review Skipped')
+  
+  test_design = Design.new
+  test_design.save
+  
+  test_design.setup_design_reviews({}, [])
+  
+  assert_equal(0, DesignReview.count)
+  assert_equal(0, DesignReviewResult.count)
+  
+  mx234a_bde = board_design_entries(:mx234a)
+  reviews = { 'Pre-Artwork' => '1',   'Placement' => '1',     'Routing'     => '1',
+              'Final'     => '1',     'Release'     => '1'}
+  
+  @mx234a_design.setup_design_reviews(reviews, mx234a_bde.board_design_entry_users)
+  assert_equal(active_review_types.size,   DesignReview.count)
+  assert_equal(35,                         DesignReviewResult.count)
+  
+  active_review_types.each do |review_type|
+    design_review = @mx234a_design.design_reviews.detect { |dr| dr.review_type == review_type }
+    assert_not_nil(design_review)
+    assert_equal(@mx234a_design.id,         design_review.design_id)
+    assert_equal(@mx234a_design.created_by, design_review.creator_id)
+    assert_equal(@mx234a_design.priority,   design_review.priority)
+    assert_equal(not_started,               design_review.review_status)
+  end
+  
+  DesignReview.destroy_all
+  DesignReviewResult.destroy_all
+  
+  @mx234a_design.design_type = 'Dot Rev'
+  @mx234a_design.update
+
+  reviews = { 'Pre-Artwork' => '1',   'Placement' => '0',     'Routing'     => '0',
+              'Final'     => '1',     'Release'     => '1'}
+
+  @mx234a_design.setup_design_reviews(reviews, mx234a_bde.board_design_entry_users)
+  @mx234a_design.reload
+  assert_equal(active_review_types.size,   DesignReview.count)
+  assert_equal(30,                         DesignReviewResult.count)
+  
+  active_review_types.each do |review_type|
+    design_review = @mx234a_design.design_reviews.detect { |dr| dr.review_type == review_type }
+    assert_not_nil(design_review)
+    assert_equal(@mx234a_design.id,         design_review.design_id)
+    assert_equal(@mx234a_design.created_by, design_review.creator_id)
+    assert_equal(@mx234a_design.priority,   design_review.priority)
+    if reviews[design_review.review_type.name] == '1'
+      assert_equal(not_started, design_review.review_status)
+    else
+      assert_equal(review_skipped, design_review.review_status)
+    end
+  end
+
+end
+
+
+######################################################################
  def test_work_assignment_data
    
    design = designs(:designs_027)
@@ -771,6 +848,69 @@ class DesignTest < Test::Unit::TestCase
    assert(all_designs.size == (complete_designs.size + active_designs.size))
    complete_designs.each { |d| assert(d.complete?) }
  
+ end
+ 
+ 
+ ######################################################################
+ def test_outsource_methods
+
+   siva_e = users(:siva_e)
+   assert(!@mx234a_design.have_assignments(@cathy_m))
+   assert(@mx234a_design.have_assignments(siva_e))
+   
+   assert_equal(0, @mx234a_design.my_assignments(@cathy_m.id).size)
+   
+   siva_assignments = @mx234a_design.my_assignments(siva_e.id)
+   
+   assert_equal(1,                      siva_assignments.size)
+   assert_equal(oi_assignments(:first), siva_assignments[0])
+   
+   assert_equal(0, @designs_027.all_assignments.size)
+   
+   all_assignments = @mx234a_design.all_assignments
+   assert_equal(2, all_assignments.size)
+   assert_equal(oi_assignments(:first),  all_assignments[0])
+   assert_equal(oi_assignments(:second), all_assignments[1])
+   
+   assembly_drawing = oi_categories(:placement)
+   assert_equal(all_assignments, @mx234a_design.all_assignments(assembly_drawing.id))
+   
+   routing = oi_categories(:routing)
+   assert_equal(0, @mx234a_design.all_assignments(routing.id).size)
+   
+ end
+
+ 
+ ######################################################################
+ def test_audit_methods
+ 
+   assert_equal('Full',    @mx234a_design.audit_type)
+   
+   checks_removed_count = @mx234a_design.flip_design_type
+   assert_equal('Partial', @mx234a_design.audit_type)
+
+   @mx234a_design.reload
+   checks_added_count = @mx234a_design.flip_design_type
+   assert_equal('Full',                      @mx234a_design.audit_type)
+   assert_equal((checks_removed_count * -1), checks_added_count)
+ 
+   @mx234a_design.reload
+   assert_equal(checks_removed_count, @mx234a_design.flip_design_type)
+ 
+ 
+   assert_equal('Partial', @la453a1_design.audit_type)
+   
+   checks_added_count = @la453a1_design.flip_design_type
+   assert_equal('Full', @la453a1_design.audit_type)
+   
+   @la453a1_design.reload
+   checks_removed_count = @la453a1_design.flip_design_type
+   assert_equal('Partial',                   @la453a1_design.audit_type)
+   assert_equal((checks_removed_count * -1), checks_added_count)
+   
+   @la453a1_design.reload
+   assert_equal(checks_added_count, @la453a1_design.flip_design_type)
+   
  end
  
  
@@ -1127,6 +1267,28 @@ class DesignTest < Test::Unit::TestCase
 
  end
  
+ 
+ ######################################################################
+ def test_directory_name
+   
+   assert_equal('pcb252_600_a0_o', @mx600a_design.directory_name)
+   
+   mx999c = designs(:mx999c)
+   assert_equal('mx999c', mx999c.directory_name)
+   
+ end
+
+
+ ######################################################################
+ def test_pnemonic_based_name
+   
+   assert_equal('mx600a', @mx600a_design.pnemonic_based_name)
+   
+   mx999c = designs(:mx999c)
+   assert_equal('mx999c', mx999c.pnemonic_based_name)
+   
+ end
+
  
  def validate_design(gold, design)
 
