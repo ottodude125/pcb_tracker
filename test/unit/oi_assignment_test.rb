@@ -2,7 +2,7 @@
 #
 # Copyright 2005, by Teradyne, Inc., Boston MA
 #
-# File: oi_assignment_test_test.rb
+# File: oi_assignment_test.rb
 #
 # This file contains the unit tests for the outsource instruction
 # assignment model
@@ -54,6 +54,7 @@ class OiAssignmentTest < Test::Unit::TestCase
     assert_equal(1, OiAssignment.complexity_id('High'))
     assert_equal(2, OiAssignment.complexity_id('Medium'))
     assert_equal(3, OiAssignment.complexity_id('Low'))
+    assert_equal(0, OiAssignment.complexity_id('Zero Expected'))
     
   end
 
