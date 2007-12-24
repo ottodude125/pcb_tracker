@@ -668,7 +668,7 @@ class AuditControllerTest < Test::Unit::TestCase
     assert(assigns(:audit).auditor_complete?)
 
     audit.reload
-    assert_equal(0, audit.audit_teammates.size)
+    assert_equal(1, audit.audit_teammates.size)
 
     results = %w{N/A Verified Waived} 
     10012.upto(10014) { |i| comment_count[i] += 1 }
