@@ -1,3 +1,15 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: part_number_test.rb
+#
+# This file contains the unit tests for the part number model
+#
+# $Id$
+#
+########################################################################
+#
 require File.dirname(__FILE__) + '/../test_helper'
 
 class PartNumberTest < Test::Unit::TestCase
@@ -671,6 +683,18 @@ class PartNumberTest < Test::Unit::TestCase
     pn.pcba_prefix = '252'
     assert(pn.unique_part_numbers_equal?)
     
+  end
+  
+  
+  def test_directory_name
+    
+    pcb100_714_b0_l = part_numbers(:av714b)
+    assert_equal('pcb100_714_b0_l', pcb100_714_b0_l.directory_name)
+    
+    pcb100_714_b0 = PartNumber.new( :pcb_prefix      => '100',
+                                    :pcb_number      => '714',
+                                    :pcb_dash_number => 'b0' )
+    assert_equal('', pcb100_714_b0.directory_name)
   end
 
 
