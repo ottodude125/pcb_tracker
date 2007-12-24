@@ -1,3 +1,16 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: subsection_test.rb
+#
+# This file contains the unit tests for the subsection model
+#
+# Revision History:
+#   $Id$
+#
+########################################################################
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class SubsectionTest < Test::Unit::TestCase
