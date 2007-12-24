@@ -26,4 +26,12 @@ on_hold:
   id:     6
   name:   Review On-Hold
   active: 1
+inactive_1:
+  id:     7
+  name:   Inactive 1
+  active: 0
+inactive_2:
+  id:     8
+  name:   Inactive 2
+  active: 0
 
