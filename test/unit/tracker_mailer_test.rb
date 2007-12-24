@@ -108,7 +108,8 @@ class TrackerMailerTest < Test::Unit::TestCase
     @mx234a_stackup_doc = DesignReviewDocument.find(
                             design_review_documents(:mx234a_stackup_doc).id)
     
-    @root_post = IpdPost.find(ipd_posts(:mx234a_thread_one).id)
+    @root_post     = ipd_posts(:mx234a_thread_one)
+    @response_post = ipd_posts(:mx234a_thread_one_a)
     
     @now  = Time.now
     
@@ -508,6 +509,31 @@ class TrackerMailerTest < Test::Unit::TestCase
     
     assert_equal(expected_cc, response_cc)
     
+    response = TrackerMailer.create_ipd_update(@response_post,
+                                               @now)
+                 
+    assert_equal("252-234-a0 g [IPD] - mx234a Thread 1 First Response Subject", 
+                 response.subject)
+                 
+    response_to = response.to.sort_by { |address| address }
+    expected_to = [@bob_g.email, @lee_s.email].sort_by { |address| address }.uniq
+
+    assert_equal(expected_to,     response_to)
+    assert_equal([Pcbtr::SENDER], response.from)
+    assert_equal(@now.to_s,       response.date.to_s)
+    
+    response_cc = response.cc.sort_by { |address| address }
+    expected_cc = @manager_email_list + @input_gate_email_list
+
+    poster = User.find(@root_post.user_id)
+    expected_cc << poster.email
+    expected_cc += @root_post.direct_children.collect { |post| post.user.email }
+    expected_cc += @root_post.users.collect{ |user| user.email }
+    expected_cc -= [@lee_s.email]
+    expected_cc  = expected_cc.sort_by { |address| address }.uniq
+    
+    assert_equal(expected_cc, response_cc)
+    
   end
 
 
@@ -581,6 +607,40 @@ class TrackerMailerTest < Test::Unit::TestCase
                  @mx234a_pre_art_dr,
                  @hweng_role,
                  @now)
+                 
+    assert_equal("252-234-a0 g: You have been assigned to perform the Hardware Engineer (EE) review", 
+                 response.subject)
+    response_to = response.to.sort_by { |address| address }
+    expected_to = [@rich_a.email].sort_by { |address| address }.uniq
+
+    assert_equal(expected_to,     response_to)
+    assert_equal([Pcbtr::SENDER], response.from)
+    assert_equal(@now.to_s,       response.date.to_s)
+    
+    response_cc = response.cc.sort_by { |address| address }
+    expected_cc = [@lee_s.email] + @manager_email_list + @input_gate_email_list
+    expected_cc = expected_cc.sort_by { |address| address }.uniq
+    assert_equal(expected_cc, response_cc)
+
+  end
+
+
+  ##############################################################################
+  def notest_snapshot
+  
+    exception = Exception.new("Test Exeception")
+    trace     = { :line_1 => 'first line', :line_2 => 'second_line'}
+    session   = { :user   => @scott_g,
+                  :info   => 'Session Info'}
+    params    = { :action => 'test_action' }
+    env       = {}
+  
+    response = TrackerMailer.create_snapshot(exception,
+                                             trace,
+                                             session,
+                                             params,
+                                             env,
+                                             @now)
                  
     assert_equal("252-234-a0 g: You have been assigned to perform the Hardware Engineer (EE) review", 
                  response.subject)
@@ -1067,9 +1127,10 @@ class TrackerMailerTest < Test::Unit::TestCase
     assert_equal('This is a test',             response.subject)
 #    assert_equal(['PCB_Design_Tracker_Users'], response.to)
     assert_equal([Pcbtr::SENDER],              response.from)
-    assert_equal(@now.to_s,                    response.date.to_s)
     assert_equal(recipient_emails,             response.bcc)
     assert_nil(response.cc)
+    assert(@now.to_i          <= response.date.to_i)
+    assert(response.date.to_i <= Time.now.to_i)
 
   end
 
