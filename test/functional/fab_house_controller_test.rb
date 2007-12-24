@@ -117,6 +117,13 @@ class FabHouseControllerTest < Test::Unit::TestCase
     assert_redirected_to(:action => 'edit', :id => fab_house.id)
     assert_equal('Update recorded', flash['notice'])
     assert_equal('new_fab_house',   fab_house.name)
+    
+    get(:update, :fab_house => { :name   => fab_house.name, 
+                                 :id     => fab_house.id.to_s, 
+                                 :active => fab_house.active.to_s})
+    assert_redirected_to(:action => 'edit', :id => fab_house.id)
+    assert_equal('Update recorded', flash['notice'])
+    
   end
 
 
