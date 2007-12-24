@@ -24,7 +24,8 @@ class RoleTest < Test::Unit::TestCase
 
 
   def setup
-    @role = Role.find(roles(:admin).id)
+    @role          = roles(:admin)
+    @designer_role = roles(:designer)
   end
 
 
@@ -118,20 +119,24 @@ class RoleTest < Test::Unit::TestCase
     active_roles = Role.find_all_active
     
     assert(all_roles.size > active_roles.size)
+    active_roles_list = all_roles
+    active_roles_list.delete_if { |r| !r.active? }
+    assert_equal(active_roles_list.size, active_roles.size)
     
     expected_role_name = ['EE Manager',               'Hardware Engineer (EE)',
                           'HCL Manager',              'Mechanical Engineer',
                           'Mechanical Mfg Engineer',  'New Product Planner',
                           'Operations Manager',       'PCB Admin',
-                          'PCB Design Input Gate',    'PCB Design Manager',
+                          'PCB Design Input Gate',    'PCB Design Management',
                           'PCB Designer',             'PCB Mechanical Engineer',
                           'Program Manager',          'SLM BOM',
                           'SLM Vendor',               'TDE Engineer',
                           'Tracker Admin',            'Tracker PCB Management',
                           'Valor']
+
     active_roles.each_with_index do |role, i| 
       assert(role.active?)
-      assert_equal(expected_role_name[i], role.display_name)
+      assert_equal(active_roles_list[i].display_name, role.display_name)
     end
     
     all_roles.delete_if { |r| !r.active? }
@@ -224,19 +229,33 @@ class RoleTest < Test::Unit::TestCase
 
 
   ######################################################################
-  def test_lcr_designers
+  def test_designer_accessors
   
-    all_designers = Role.find_by_name('Designer').users.sort_by { |u| u.last_name }
-    lcr_designers = Role.lcr_designers
+    all_designers    = Role.find(:first, :conditions => "name='Designer'").users
+    active_designers = Role.active_designers
+    lcr_designers    = Role.lcr_designers
     
-    assert(all_designers.size > lcr_designers.size)
+    assert(active_designers.size > lcr_designers.size)
     
-    # Remove all of the non-reviewer roles from the original list, 
-    # all _roles, and verify that the remaining list matches the one
-    # returned by get_review_roles()
-    all_designers.delete_if { |r| r.employee? }
-    assert(all_designers == lcr_designers)    
-   
+    # Remove all of the non-employee designers from the original list, 
+    # all _designers, and verify that the remaining list matches the one
+    # returned by lcr_designers()
+    active_designers.delete_if { |r| r.employee? }
+    assert_equal(active_designers, lcr_designers)
+    
+    active_designers   = Role.active_designers
+    inactive_designers = all_designers - active_designers
+
+    inactive_designers.each do |designer|
+      assert(!designer.active?)
+      assert(designer.roles.include?(@designer_role))
+    end
+
+    active_designers.each do |designer|
+      assert(designer.active?)
+      assert(designer.roles.include?(@designer_role))
+    end
+
   end
 
 

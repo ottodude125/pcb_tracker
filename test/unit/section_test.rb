@@ -1,12 +1,27 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: section_test.rb
+#
+# This file contains the unit tests for the section model
+#
+# Revision History:
+#   $Id$
+#
+########################################################################
+
 require File.dirname(__FILE__) + '/../test_helper'
 
 class SectionTest < Test::Unit::TestCase
   fixtures :sections
 
+
   def setup
     @section = Section.find(sections(:section_01_1).id)
   end
 
+ 
   ######################################################################
   def test_insert
     
@@ -59,6 +74,8 @@ class SectionTest < Test::Unit::TestCase
     end
     puts("--------------------------------------------")
   end
+
+  
   ######################################################################
   def test_remove
     
@@ -186,9 +203,25 @@ class SectionTest < Test::Unit::TestCase
 
   end
 
+  
+  ######################################################################
   def test_destroy
     @section.destroy
     assert_raise(ActiveRecord::RecordNotFound) { Section.find(@section.id) }
   end
+
+  
+  ######################################################################
+  def test_locked
+    assert( sections(:section_10_1).locked?)
+    assert(!sections(:section_01_2).locked?)
+  end
+
+  
+  ######################################################################
+  def test_designer_auditor_check_count
+    assert_equal(2, sections(:section_10_1).designer_auditor_check_count)
+  end
+
   
 end
