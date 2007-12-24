@@ -63,7 +63,7 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
     post(:list,
          :page => 1)
 
-    assert_equal(6, @review_statuses.size)
+    assert_equal(8, @review_statuses.size)
   end
 
 
