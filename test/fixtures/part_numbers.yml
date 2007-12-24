@@ -154,11 +154,9 @@ mx999c:
   pcb_prefix:        252
   pcb_number:        999
   pcb_dash_number:   c0
-  pcb_revision:      t
   pcba_prefix:       259
   pcba_number:       999
   pcba_dash_number:  '00'
-  pcba_revision:     s
 la021c:
   id: 17
   pcb_prefix:        942
