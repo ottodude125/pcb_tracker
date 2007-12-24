@@ -1,5 +1,118 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-first:
-  id: 1
-another:
-  id: 2
+
+# mx234a Users
+jim_l_pcb_design:
+  id:                    1
+  board_design_entry_id: 5
+  required:              1
+  user_id:               4001
+  role_id:               12
+scott_g_valor:
+  id:                    2
+  board_design_entry_id: 5
+  required:              1
+  user_id:               5001
+  role_id:               6
+lee_s_hweng:
+  id:                    3
+  board_design_entry_id: 5
+  required:              1
+  user_id:               7001
+  role_id:               5
+espo_cedft:
+  id:                    4
+  board_design_entry_id: 5
+  required:             1
+  user_id:              7101
+  role_id:              7
+john_ju_dfm:
+  id:                    5
+  board_design_entry_id: 5
+  required:              1
+  user_id:               7151
+  role_id:               8
+rich_a_tde:
+  id:                    6
+  board_design_entry_id: 5
+  required:              1
+  user_id:               7200
+  role_id:               9
+dave_l_mechanical:
+  id:                    7
+  board_design_entry_id: 5
+  required:              1
+  user_id:               7250
+  role_id:               10
+anthony_g_mech_mfg:
+  id:                    8
+  board_design_entry_id: 5
+  required:              1
+  user_id:               7300
+  role_id:               11
+cathy_m_pcb_ig:
+  id:                    9
+  board_design_entry_id: 5
+  required:              1
+  user_id:               4000
+  role_id:               14
+sheela_p_library:
+  id:                    10
+  board_design_entry_id: 5
+  required:              1
+  user_id:               7401
+  role_id:               15
+mary_t_pcb_mech:
+  id:                    11
+  board_design_entry_id: 5
+  required:              1
+  user_id:               7450
+  role_id:               16
+joe_s_slm_bom:
+  id:                    12
+  board_design_entry_id: 5
+  required:              1
+  user_id:               7501
+  role_id:               17
+dan_g_slm_vendor:
+  id:                    13
+  board_design_entry_id: 5
+  required:              1
+  user_id:               7550
+  role_id:               18
+alex_g_ops_mgr:
+  id:                    14
+  board_design_entry_id: 5
+  required:              1
+  user_id:               7600
+  role_id:               19
+matt_d_planning:
+  id:                    15
+  board_design_entry_id: 5
+  required:              1
+  user_id:               7650
+  role_id:               13
+brian_d_hw_manager:
+  id:                    16
+  board_design_entry_id: 5
+  required:              1
+  user_id:               18500
+  role_id:               22
+a_oliver_program_mgr:
+  id:                    17
+  board_design_entry_id: 5
+  required:              1
+  user_id:               19000
+  role_id:               21
+russ_emc:
+  id:                    18
+  board_design_entry_id: 5
+  required:              1
+  user_id:               39000
+  role_id:               23
+steve_safety:
+  id:                    19
+  board_design_entry_id: 5
+  required:              1
+  user_id:               39001
+  role_id:               24
+  
