@@ -65,7 +65,7 @@ la453a2:
 la453b4_eco2:
   id:               6
   part_number_id:   13
-  phase_id:         0
+  phase_id:         255
   board_id:         2
   revision_id:      2
   numeric_revision: 4
