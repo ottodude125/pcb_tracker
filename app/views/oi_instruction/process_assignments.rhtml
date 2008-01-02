@@ -8,7 +8,7 @@
 
 <% @heading = "#{@design.part_number.pcb_display_name} - #{@category.name} Instruction Details" %>
 
-<%= start_form_tag(:action => 'process_assignment_details') %>
+<% form_tag(:action => 'process_assignment_details') do %>
 
 <%= hidden_field("design",      "id") %>
 <%= hidden_field("category",    "id") %>
@@ -162,7 +162,7 @@
   </tr>
 </table>
 
-<%= end_form_tag %>
+<% end %>
 
 <%# debug flash[:step_complexities] %>
 <%# debug @step_complexities.class %>

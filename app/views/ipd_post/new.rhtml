@@ -1,6 +1,6 @@
 <h1><%= @ipd_post.design.part_number.pcb_display_name %> - New In-Process Dialogue Post</h1>
 
-<%= start_form_tag :action => 'create' %>
+<% form_tag(:action => 'create') do %>
   <%= render :partial => 'form' %>
   
   <table border='0' width='550'>
@@ -15,7 +15,7 @@
       </td>
     </tr>
   </table>
-<%= end_form_tag %>
+<% end %>
 
 <%= link_to 'Back', :action => 'list' %>
 

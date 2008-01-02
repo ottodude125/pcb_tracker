@@ -8,7 +8,7 @@
 
 <hr class="div" />
 
-<%= start_form_tag(:action => 'update') %>
+<% form_tag(:action => 'update') do %>
 
   <%= hidden_field "product_type", "id" %>
 
@@ -29,4 +29,4 @@
   <input type="submit" value="Update Product Type" />
   <input type="button" value="Return to Product Type List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
 
-<%= end_form_tag %>
+<% end %>

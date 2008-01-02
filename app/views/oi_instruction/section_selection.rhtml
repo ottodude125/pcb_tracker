@@ -10,7 +10,7 @@
 
 <hr class="div" />
 
-<%= start_form_tag(:action => 'process_assignments') %>
+<% form_tag(:action => 'process_assignments') do %>
 
 <%= hidden_field("design",      "id") %>
 <%= hidden_field("category",    "id") %>
@@ -109,7 +109,7 @@
   </tr>
 </table>
 
-<%= end_form_tag %>
+<% end %>
 
 <%# debug @team_members %>
 <%# debug @team_member_id %>

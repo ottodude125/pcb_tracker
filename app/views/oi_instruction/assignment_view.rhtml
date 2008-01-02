@@ -12,7 +12,7 @@
 
 <hr class="div" width="820" />
 
-<%= start_form_tag(:action => 'assignment_update') %>
+<% form_tag(:action => 'assignment_update') do %>
 
 <%= hidden_field "assignment", "id" %>
 
@@ -52,7 +52,7 @@
   </tr>
 </table>
 
-<%= end_form_tag %>
+<% end %>
 
 <hr class="div" width="820" />
 

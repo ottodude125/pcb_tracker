@@ -13,7 +13,7 @@
 
 <hr class="div" width="820" />
 
-<%= start_form_tag(:action => 'create_report') -%>
+<% form_tag(:action => 'create_report') do -%>
 
 <%= hidden_field("assignment", "id") %>
 
@@ -90,7 +90,7 @@
 
 </table>
 
-<%= end_form_tag %>
+<% end %>
 
 <hr class="div" width="820" />
 
