@@ -8,7 +8,7 @@
 <% @heading = "Peer Audit Review Checklists" %>
 
 
-<%= start_form_tag(:controller => 'admin', :action => 'index') %>
+<% form_tag(:controller => 'admin', :action => 'index') do %>
 
 <input type="submit" value="Return to Admin portal" />
 
@@ -117,4 +117,4 @@
 
 <input type="submit" value="Return to Admin portal" />
 
-<%= end_form_tag %>
+<% end %>

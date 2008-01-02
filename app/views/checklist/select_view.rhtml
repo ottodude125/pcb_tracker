@@ -7,7 +7,7 @@
 
 <% @heading = "Select the checklist view for display" %>
 
-<%= start_form_tag(:action => 'display_list') %>
+<% form_tag(:action => 'display_list') do %>
 
 <%= hidden_field "checklist", "id" %>
 
@@ -45,4 +45,4 @@
   <input type="submit" value="Display" />
   <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'list', :id => params["id"] )%>'">
 
-<%= end_form_tag %>
+<% end %>

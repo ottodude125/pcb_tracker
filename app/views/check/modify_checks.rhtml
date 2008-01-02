@@ -8,7 +8,7 @@
 
 <% explain = 0 %>
 
-<%= start_form_tag(:action => "modify_checks") %>
+<% form_tag(:action => "modify_checks") do %>
 
   <hr class="div" />
 
@@ -250,7 +250,7 @@
 
   <input type="button" value="Return to subsection view" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @subsection.checklist.id ) %>'">
 
-<%= end_form_tag %>
+<% end %>
 
 <% if explain == 1 %>
   <hr class="div" />

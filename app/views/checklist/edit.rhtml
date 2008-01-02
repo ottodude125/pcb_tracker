@@ -10,7 +10,7 @@
 
 <% explain = 0%>
 
-<%= start_form_tag(:action => 'list') %>
+<% form_tag(:action => 'list') do %>
 
   <hr class="div" />
 
@@ -291,7 +291,7 @@
 
   <input type="button" value="Return to checklists view" onClick="parent.location='<%= url_for( :action => 'list' ) %>'">
 
-<%= end_form_tag %>
+<% end %>
 
 <% if explain == 1 %>
   <hr class="div" />

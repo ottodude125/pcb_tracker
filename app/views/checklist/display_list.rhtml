@@ -6,7 +6,7 @@
 
 <% @heading = "Peer Audit Review Checklist - Revision #{@checklist.revision}" %>
 
-<%= start_form_tag(:action => "list") %>
+<% form_tag(:action => "list") do %>
 
   <hr class="div" />
   <table border="0" width="70%" align="center">
@@ -107,4 +107,4 @@
 
   <input type="button" value="Return to checklists" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
 
-<%= end_form_tag %>
+<% end %>

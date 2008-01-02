@@ -6,7 +6,7 @@
 
 <% @heading = "Insert: Peer Audit Check" %>
 
-<%= start_form_tag(:action => 'insert_check') %>
+<% form_tag(:action => 'insert_check') do %>
 
   <%= hidden_field "check", "id" %>
 
@@ -161,6 +161,6 @@
   <% end %>
 
   <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'check', :action => 'modify_checks', :id => @check.subsection_id ) %>'" />
-<%= end_form_tag %>
+<% end %>
 
 
