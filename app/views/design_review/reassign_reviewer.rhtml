@@ -8,7 +8,7 @@
 
 <% @heading = "Reassign Reviewer" %>
 
-<%= start_form_tag(:action => 'update_review_assignments', :id => @design_review_id) %>
+<% form_tag(:action => 'update_review_assignments', :id => @design_review_id) do %>
 
   <% for match in @matching_roles %>
 
@@ -69,7 +69,7 @@
     </tr>
   </table>
 
-<%= end_form_tag %>
+<% end %>
 
 <%# debug @matching_roles %>
 

@@ -6,8 +6,8 @@
 
 <% @heading = @design_review.display_header + ' Attachments' %>
 
-<%= start_form_tag(:action => 'add_attachment', 
-                   :id     => @design_review.design.board_id ) %>
+<% form_tag(:action => 'add_attachment', 
+            :id     => @design_review.design.board_id ) do %>
                    
 <%= hidden_field "design_review", "id" %>
 
@@ -97,7 +97,7 @@
     <input type="submit" value="New Attachment" />
   <% end %>
 
-  <%= end_form_tag %>
+  <% end %>
 
 <%# debug params %>
 

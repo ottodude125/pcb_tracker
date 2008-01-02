@@ -8,8 +8,8 @@
 
 <% @heading = 'Update ' + @design_review.display_header %>
 
-<%= start_form_tag(:action => 'process_admin_update',
-                   :id => @design_review.id) %>
+<% form_tag(:action => 'process_admin_update',
+            :id => @design_review.id) do %>
   
   <table class="nav_table">
     <tr>
@@ -228,7 +228,7 @@
   <hr class='div' />
   
 
-<%= end_form_tag %>
+<% end %>
 
 <%# debug @review_statuses %>
 <%# debug @matching_roles %>

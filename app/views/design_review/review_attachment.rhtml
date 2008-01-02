@@ -6,7 +6,7 @@
 
 <% @heading = "#{@design_review.review_type.name} Review::#{@design_review.design.name} - #{@design_review.design.board.platform.name} / #{@design_review.design.board.project.name}" %>
 
-<%= start_form_tag(:action => 'add_comment') %>
+<% form_tag(:action => 'add_comment') do %>
 
   <table width="100%">
     <tr>
@@ -221,7 +221,7 @@
 
   <hr class="div" />
 
-  <%= end_form_tag %>
+  <% end %>
 
 <%# debug @documents %>
 

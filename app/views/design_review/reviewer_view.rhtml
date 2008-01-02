@@ -6,7 +6,7 @@
 
 <% @heading = @design_review.design.display_summary %>
 
-<%= start_form_tag(:action => 'reviewer_results') %>
+<% form_tag(:action => 'reviewer_results') do %>
 <% submit_button = "Submit Comments" %>
 
   <%= render_partial("design_review_nav") %>
@@ -329,7 +329,7 @@
 
   </div>
 
-  <%= end_form_tag %>
+  <% end %>
 
 <%# debug session %>
 <%# debug @design_review %>

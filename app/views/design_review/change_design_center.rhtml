@@ -7,7 +7,7 @@
 
 <% @heading = "#{@design_review.design.name} - Modify Design Center" %>
 
-<%= start_form_tag(:action => 'update_design_center') %>
+<% form_tag(:action => 'update_design_center') do %>
   <%= hidden_field "design_review", "id" %>
 
 <hr class="div" />
@@ -77,4 +77,4 @@
 
   <input type="button" value="Return to Design Review" onClick="parent.location='<%= url_for( :action => 'view', :id => @design_review.id ) %>'" />
 
-<%= end_form_tag %>
+<% end %>

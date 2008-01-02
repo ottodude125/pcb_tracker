@@ -10,10 +10,12 @@
               @design_review.display_header %>
 
 <% if mode == 'POST' %>
-  <%= start_form_tag(:action => 'post') %>
+  <% action = { :acton => 'post' } %>
 <% else %>
-  <%= start_form_tag(:action => 'repost') %>
+  <% action = { :action => 'repost' } %>
 <% end %>
+
+  <% form_tag(action) do %>
 
   <hr class="div" />
 
@@ -160,7 +162,7 @@
 
   <input type="button" value="Cancel Posting" class="buttonStop" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
 
-<%= end_form_tag %>
+<% end %>
 
 <%# debug @design_review %>
 <%# debug @design %>

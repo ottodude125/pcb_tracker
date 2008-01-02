@@ -7,7 +7,7 @@
 
 <% @title = "Combine Placement & Routing Review?" %>
 
-<%= start_form_tag(:action => 'process_placement_routing') %>
+<% form_tag(:action => 'process_placement_routing') do %>
 
   <hr class="div" />
 
@@ -19,7 +19,7 @@
   <input type="submit" value="Continue Posting" />
   <hr class="div" />
 
-  <%= end_form_tag %>
+  <% end %>
 
   <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
 

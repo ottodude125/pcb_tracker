@@ -8,8 +8,7 @@
 <% @heading = 'FTP Notification for the  ' +
               @design.part_number.pcb_display_name %>
 
-<%= start_form_tag(:action => 'send_ftp_notification',
-                   :id     => @design.id) %>
+<% form_tag(:action => 'send_ftp_notification', :id => @design.id) do %>
   
   <table class="nav_table">
     <tr>
@@ -323,7 +322,7 @@
   </div>
 
   
-<%= end_form_tag %>
+<% end %>
 
 <%# debug @divisions %>
 <%# debug @design_review.design.board_design_entry.division_id %>

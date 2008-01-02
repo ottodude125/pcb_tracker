@@ -9,11 +9,11 @@
 
 <%= error_messages_for("drd") %>
 
-<%= start_form_tag({ :action    => 'save_update', 
-                     :id        => @design_review.design.board.id, 
-                     :doc_id    => @existing_drd.id,
-                     :return_to => params[:return_to] },
-                   :multipart => true ) %>
+<% form_tag({ :action    => 'save_update', 
+              :id        => @design_review.design.board.id, 
+              :doc_id    => @existing_drd.id,
+              :return_to => params[:return_to] },
+            :multipart => true ) do %>
 
   <%= hidden_field "board",         "id" %>
   <%= hidden_field "design_review", "id" %>
@@ -45,7 +45,7 @@
                                                  :design_review_id => @design_review.id) %>'" />
   <% end %>
 
-  <%= end_form_tag %>
+  <% end %>
 
 <%# debug params %>
 <%# debug @design_review %>
