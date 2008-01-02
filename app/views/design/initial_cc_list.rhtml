@@ -9,7 +9,7 @@
               @design.board.platform.name + ' / ' + @design.board.project.name +
               ' / ' + @design.board.description %>
 
-<%= start_form_tag(:action => 'update_cc_list') %>
+<% form_tag(:action => 'update_cc_list') do %>
 
   <table width="100%">
     <tr>
@@ -218,7 +218,7 @@
 
   <hr class="div" />
 
-  <%= end_form_tag %>
+  <% end %>
 
 <%# debug session %>
 <%# debug @users_copied %>

@@ -13,8 +13,8 @@
 
 <% inactive_warning = false %>
 
-<%= start_form_tag(:action => 'process_reviewer_modifications',
-                   :id     => @design.id ) %>
+<% form_tag(:action => 'process_reviewer_modifications',
+            :id     => @design.id ) do %>
 
 <table width="100%">
   <tr>
@@ -117,7 +117,7 @@
   <% end %>
 </table>
 
-<%= end_form_tag %>
+<% end %>
 
 <% if inactive_warning %>
   <p><b>Note:</b> Names in red indicate that the user is not active in the tracker.</p>
