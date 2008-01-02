@@ -8,7 +8,7 @@
               @audit.checklist.revision + ')' %>
 <%# debug session %>
 
-<%# start_form_tag(url_for(session[:return_to])) %>
+<%# form_tag(url_for(session[:return_to])) do %>
 
 <table width="90%" align="center">
   <tr>
@@ -180,7 +180,7 @@
   </tr>
 </table>
 
-<%# end_form_tag %>
+<%# end %>
 
 <%# debug params %>
 <%# debug @audit.design_id%>

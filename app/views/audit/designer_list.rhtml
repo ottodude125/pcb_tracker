@@ -8,7 +8,7 @@
 
 <% @heading = "Designer's Peer Audit Listing" %>
 
-  <%= start_form_tag(:controller => 'tracker', :action => 'index') %>
+  <% form_tag(:controller => 'tracker', :action => 'index') do %>
 
   <hr class="div" />
 
@@ -56,4 +56,4 @@
 
   <input type="submit" value="Return" />
 
-  <%= end_form_tag %>
+  <% end %>

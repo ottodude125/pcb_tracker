@@ -53,7 +53,7 @@
   </tr>
 </table>
 
-<%= start_form_tag(:action => "update_design_checks") %> 
+<% form_tag(:action => "update_design_checks") do %> 
 
   <%= hidden_field "audit", "id" %>
   <%= hidden_field "subsection", "id" %>
@@ -306,7 +306,7 @@
     </tr>
   </table>
 
-<%= end_form_tag %>
+<% end %>
 
 
 <hr size="8" color=#<%= @subsection.section.background_color %> noshade="noshade" />

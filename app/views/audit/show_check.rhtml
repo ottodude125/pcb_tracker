@@ -18,7 +18,7 @@
 
 <hr size="8" color=#<%= @check.section.background_color %> noshade="noshade" />
 
-<%= start_form_tag(:action => "process_check") %> 
+<% form_tag(:action => "process_check") do %> 
 
     <%= hidden_field "design_check", "id" %>
     <input id="display_index" name="display_index" type="hidden" value=<%= @display_index %> />
@@ -301,7 +301,7 @@
     </tr>
   </table>
 
-<%= end_form_tag %>
+<% end %>
 
 
   <hr size="8" color=#<%= @check.section.background_color %> noshade="noshade" />
