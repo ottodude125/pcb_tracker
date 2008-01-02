@@ -6,7 +6,7 @@
 
 <% @heading = "#{@audit.design.part_number.pcb_display_name} Self/Peer Auditor Selection" %>
 
-<%= start_form_tag(:controller => 'audit', :action => 'update_auditor_list') %>
+<% form_tag(:controller => 'audit', :action => 'update_auditor_list') do %>
 
   <%= hidden_field("audit", "id") %>
 
@@ -42,7 +42,7 @@
           </select>
         </td>
         <td align="center" valign="top">
-          <% if section[:section].designer_auditor_checks > 0 %>
+          <% if section[:section].designer_auditor_check_count > 0 %>
             <select id='peer_section_id_<%= section_id %>' 
                     name='peer_auditor[section_id_<%= section_id %>]'>
           <% else %>
@@ -75,7 +75,7 @@
     </tr>
   </table>
 
-<%= end_form_tag %>
+<% end %>
 
 <%# debug @auditor_list %>
 <%# debug session %>
