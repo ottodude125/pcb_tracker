@@ -6,7 +6,7 @@
 
 <% @heading = "PCB Tracker - Display Fields" %>
 
-<%= start_form_tag( :action => 'add') %>
+<% form_tag( :action => 'add') do %>
 
   <hr class="div" />
 
@@ -30,4 +30,4 @@
   <input type="submit" value="New Display Field" />
   <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
 
-<%= end_form_tag %>
+<% end %>
