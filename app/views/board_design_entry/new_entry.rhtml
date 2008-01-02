@@ -9,25 +9,22 @@
 
   <% @heading = "PCB Engineering - Updating #{@board_design_entry.design_name}"%>
 
-  <%= start_form_tag(:action      => 'update_entry', 
-                     :id          => @board_design_entry.id,
-                     :user_action => 'updating',
-                     :viewer      => @viewer) %>
+  <%  action = { :action      => 'update_entry', 
+                 :id          => @board_design_entry.id,
+                 :user_action => 'updating',
+                 :viewer      => @viewer } %>
 
 <% elsif @user_action == 'adding' %>
 
   <% @heading = "PCB Engineering - New Entry"%>
   
-  <%# if @new_entry %>
-    <%# start_form_tag(:action => 'update_entry') %>
-  <%# else %>
-    <%= start_form_tag(:action      => 'update_entry', 
-                       :id          => @board_design_entry.id,
-                       :user_action => 'adding') %>
-  
-  <%# end %>
+  <%action = { :action      => 'update_entry', 
+               :id          => @board_design_entry.id,
+               :user_action => 'adding' } %>
                       
 <% end %>
+
+<% form_tag(action) do %>
 
 
 <hr class="div" />
@@ -367,7 +364,7 @@
   </tr>
 </table>
 
-<%= end_form_tag %>
+<% end %>
 
 <%# debug @board_design_entry.new? %>
 <%# debug @user_action %>

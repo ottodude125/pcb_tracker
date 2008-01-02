@@ -2,9 +2,9 @@
               @board_design_entry.part_number.full_display_name +
               ' Design Entry - Originator Comments' %>
 
-<%= start_form_tag(:action      => 'submit_originator_comments', 
-                   :id          => @board_design_entry.id,
-                   :user_action => @user_action) %>
+<% form_tag(:action      => 'submit_originator_comments', 
+            :id          => @board_design_entry.id,
+            :user_action => @user_action) do %>
                    
 <hr class="div" />
 
@@ -52,7 +52,7 @@
   </tr>
 </table>
 
-<%= end_form_tag %>
+<% end %>
 
 
 <%# debug @user_action %>

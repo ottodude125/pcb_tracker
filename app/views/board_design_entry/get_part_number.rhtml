@@ -46,32 +46,30 @@ else
 
 </SCRIPT>
 
-<% if @user_action == 'updating' %>
+<% if @user_action == 'updating'
 
-  <% @heading = "PCB Engineering - Updating #{@board_design_entry.design_name}"%>
+     @heading = "PCB Engineering - Updating #{@board_design_entry.design_name}"
 
-  <%= start_form_tag({ :action      => 'update_entry', 
-                       :id          => @board_design_entry.id,
-                       :user_action => 'updating',
-                       :viewer      => @viewer },
-                     { :name => "part_number_entry" }) %>
+     action = { :action      => 'update_entry', 
+                :id          => @board_design_entry.id,
+                :user_action => 'updating',
+                :viewer      => @viewer }
 
-<% elsif @user_action == 'adding' %>
+   elsif @user_action == 'adding'
 
-  <% @heading = "PCB Engineering - New Entry"%>
+     @heading = "PCB Engineering - New Entry"
   
-  <% if @new_entry %>
-    <%= start_form_tag({ :action => 'create_board_design_entry' },
-                       { :name => "part_number_entry" }) %>
-  <% else %>
-    <%= start_form_tag({ :action      => 'update_entry', 
-                         :id          => @board_design_entry.id,
-                         :user_action => 'adding' },
-                        {:name => "part_number_entry" }) %>
+     if @new_entry
+       action = { :action => 'create_board_design_entry' }
+     else
+       action = { :action      => 'update_entry', 
+                  :id          => @board_design_entry.id,
+                  :user_action => 'adding' }
   
-  <% end %>
-                      
-<% end %>
+     end                     
+   end %>
+
+<% form_tag(action, {:name => "part_number_entry" }) do %>
 
 
 <hr class="div" />
@@ -259,7 +257,7 @@ else
   </tr>
 </table>
 
-<%= end_form_tag %>
+<% end %>
 
 <%# debug @part_number %>
 <%# debug @initial_prompt %>

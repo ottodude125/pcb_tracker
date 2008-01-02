@@ -2,8 +2,8 @@
               @board_design_entry.part_number.full_display_name + 
               ' Design Entry - Setup' %>
 
-<%= start_form_tag({ :action        => 'create_tracker_entry', 
-                     :id            => params[:id] }) %>
+<% form_tag({ :action        => 'create_tracker_entry', 
+              :id            => params[:id] }) do %>
 
 <table border="0" align="center">
   <tr>
@@ -126,6 +126,6 @@
   </tr>
 </table>
 
-<%= end_form_tag %>
+<% end %>
 
 <%# debug @board_design_entry %>

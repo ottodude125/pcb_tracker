@@ -1,6 +1,6 @@
 <% @heading = "PCB Engineering Entry - Processor List"%>
 
-<%= start_form_tag(:action => 'new_entry') %>
+<% form_tag(:action => 'new_entry') do %>
 
 <hr class="div" />
 
@@ -82,4 +82,4 @@
   </tr>
 </table>
 
-<%= end_form_tag %>
+<% end %>

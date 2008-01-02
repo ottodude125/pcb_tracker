@@ -1,89 +1,1 @@
-<% @heading = "Set Entry Type: #{@board_design_entry.part_number.pcb_display_name} " %>
-
-<%= start_form_tag(:action => 'process_entry_type', :id => @board_design_entry.id) %>
-
-<hr class="div" />
-
-<table width="60%" align="center" border="1" cellspacing='0' cellpadding="4">
-	
-  <tr>
-    <td width="50" align="center" valign="top" class="teraheader">&nbsp;</td>
-    <td class="note">
-      Note: You must indicate the entry type before proceeding
-    </td>
-  </tr>
-  
-  <% if @board_design_entry.entry_type_set? %>
-    <tr>
-      <td width="50" align="center" valign="top" class="teraheader" >&nbsp;</td>
-      <td>
-        <b>Current Entry Type: <%= @board_design_entry.entry_type_name %></b>
-		<br />
-		Please confirm the entry type.
-      </td>
-    </tr>
-  <% end %>
-  
-  <tr>
-    <td width="50" align="center" valign="top" class="teraheader">
-      <input type="radio" name="design_type" value="new" id='design_type_new' />
-        <%= observe_field("design_type_new",
-                          :update => "submit",
-                          :url => { :action => :display_prompt },
-                          :with => "'value=' + escape(value)") %>
-    </td>
-    <td>
-      <h3> <%= @board_design_entry.new_entry_type_name%></h3>
-      <ul>
-        <li>Full Audit</li>
-        <li>Default: Includes all design reviews in the review cycle<br />
-            (modifiable on the next screen)
-        </li>
-        <li>Full Complement of Reviewers</li>
-      </ul>
-    </td>
-  </tr>
-  <tr>
-    <td width="50" align="center" valign="top" class="teraheader">
-     <input type="radio" name="design_type" value="dot_rev" id='design_type_dot_rev' />
-        <%= observe_field("design_type_dot_rev",
-                          :update => "submit",
-                          :url => { :action => :display_prompt },
-                          :with => "'value=' + escape(value)") %>
-    </td>
-    <td>
-      <h3> <%= @board_design_entry.dot_rev_entry_type_name%></h3>
-      <ul>
-        <li>Partial Audit</li>
-        <li>Default: Skips the Placement and Routing design reviews<br />
-            (modifiable on the next screen)
-        </li>
-        <li>
-          List of reviewers modified to eliminate roles that are not 
-          needed for a Dot Rev design
-        </li>
-      </ul>
-    </td>
-  </tr>
-</table>
- 
-<hr class="div" />
-
-<table width="75%" align="center">
-  <tr>
-    <td align="left">
-      <input type="button" class="form_return" 
-             value="Cancel / Return to Processor List"
-             onClick="parent.location='<%= url_for( :action => 'processor_list') %>'" />
-    </td>
-    
-    <td align="right">
-      <div id='submit'>
-        &nbsp;
-      </div>
-    </td>
-    
-  </tr>
-</table>
-
-<%= end_form_tag %>
+<% @heading = "Set Entry Type: #{@board_design_entry.part_number.pcb_display_name} " %><% form_tag(:action => 'process_entry_type', :id => @board_design_entry.id) do %><hr class="div" /><table width="60%" align="center" border="1" cellspacing='0' cellpadding="4">	  <tr>    <td width="50" align="center" valign="top" class="teraheader">&nbsp;</td>    <td class="note">      Note: You must indicate the entry type before proceeding    </td>  </tr>    <% if @board_design_entry.entry_type_set? %>    <tr>      <td width="50" align="center" valign="top" class="teraheader" >&nbsp;</td>      <td>        <b>Current Entry Type: <%= @board_design_entry.entry_type_name %></b>		<br />		Please confirm the entry type.      </td>    </tr>  <% end %>    <tr>    <td width="50" align="center" valign="top" class="teraheader">      <input type="radio" name="design_type" value="new" id='design_type_new' />        <%= observe_field("design_type_new",                          :update => "submit",                          :url => { :action => :display_prompt },                          :with => "'value=' + escape(value)") %>    </td>    <td>      <h3> <%= @board_design_entry.new_entry_type_name%></h3>      <ul>        <li>Full Audit</li>        <li>Default: Includes all design reviews in the review cycle<br />            (modifiable on the next screen)        </li>        <li>Full Complement of Reviewers</li>      </ul>    </td>  </tr>  <tr>    <td width="50" align="center" valign="top" class="teraheader">     <input type="radio" name="design_type" value="dot_rev" id='design_type_dot_rev' />        <%= observe_field("design_type_dot_rev",                          :update => "submit",                          :url => { :action => :display_prompt },                          :with => "'value=' + escape(value)") %>    </td>    <td>      <h3> <%= @board_design_entry.dot_rev_entry_type_name%></h3>      <ul>        <li>Partial Audit</li>        <li>Default: Skips the Placement and Routing design reviews<br />            (modifiable on the next screen)        </li>        <li>          List of reviewers modified to eliminate roles that are not           needed for a Dot Rev design        </li>      </ul>    </td>  </tr></table> <hr class="div" /><table width="75%" align="center">  <tr>    <td align="left">      <input type="button" class="form_return"              value="Cancel / Return to Processor List"             onClick="parent.location='<%= url_for( :action => 'processor_list') %>'" />    </td>        <td align="right">      <div id='submit'>        &nbsp;      </div>    </td>      </tr></table><% end %>

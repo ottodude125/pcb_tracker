@@ -1,6 +1,6 @@
 <% @heading = "PCB Engineering Entry List"%>
 
-<%= start_form_tag(:action => 'get_part_number') %>
+<% form_tag(:action => 'get_part_number') do %>
 
 <hr class="div" />
 
@@ -88,4 +88,4 @@
   </tr>
 </table>
 
-<%= end_form_tag %>
+<% end %>
