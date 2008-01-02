@@ -5,7 +5,7 @@
 <!-- ********************************************************** -->
 
 <% @heading = "Edit board" %>
-<%= start_form_tag(:action => 'update') %>
+<% form_tag(:action => 'update') do %>
 <%= hidden_field "board", "id" %>
 
 <hr class="div" />
@@ -174,7 +174,7 @@
 
   <input type="button" value="Return to Board List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
 
-<%= end_form_tag %>
+<% end %>
 
 <%# debug @review_roles %>
 

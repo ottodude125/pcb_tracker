@@ -6,7 +6,7 @@
 
 <% @heading = "PCB Tracker - Boards" %>
 
-<%= start_form_tag(:action => 'filtered_list') %>
+<% form_tag(:action => 'filtered_list') do %>
 
   <hr class="div" />
 
@@ -52,4 +52,4 @@
   <input type="button" value="Return to Admin portal" 
          onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
 
-<%= end_form_tag %>
+<% end %>

@@ -6,7 +6,7 @@
 
 <% @heading = "Search Designs" %>
 
-<%= start_form_tag(:action => 'design_search') %>
+<% form_tag(:action => 'design_search') do %>
 
 
   <hr class="div" />
@@ -79,7 +79,7 @@
     </tr>
   </table>
 
-  <%= end_form_tag %>
+  <% end %>
 
 <%# debug params %>
 <%# debug session[:return_to] %>

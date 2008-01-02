@@ -6,7 +6,7 @@
 
 <% @heading = "Search Designs" %>
 
-<%= start_form_tag(:action => 'board_design_search') %>
+<% form_tag(:action => 'board_design_search') do %>
 
   <table width="100%">
     <tr>
@@ -135,7 +135,7 @@
     </tr>
   </table>
 
-  <%= end_form_tag %>
+  <% end %>
 
 <%# debug @designer %>
 <%# debug @platforms %>
