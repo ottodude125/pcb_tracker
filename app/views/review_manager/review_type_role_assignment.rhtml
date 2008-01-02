@@ -8,7 +8,7 @@
 <% @heading = "Review Role Assignment" %>
 
 
-  <%= start_form_tag(:action => 'assign_groups_to_reviews') %>
+  <% form_tag(:action => 'assign_groups_to_reviews') do %>
 
   <hr class="div" />
 
@@ -44,7 +44,7 @@
   <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
 
 
-  <%= end_form_tag %>
+  <% end %>
 
 <%# debug @roles %>
 <%# debug @rtypes %>

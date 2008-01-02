@@ -6,7 +6,7 @@
 
 <% @heading = "Append: Peer Audit Subsection" %>
 
-<%= start_form_tag(:action => 'append_subsection') %>
+<% form_tag(:action => 'append_subsection') do %>
 
 <%= hidden_field "subsection", "id" %>
 
@@ -117,4 +117,4 @@
   <% end %>
   <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @new_subsection.checklist.id ) %>'">
 
-<%= end_form_tag %>
+<% end %>

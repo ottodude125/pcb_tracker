@@ -6,7 +6,7 @@
 
 <% @heading = "PCB Tracker Review Roles" %>
 
-<%= start_form_tag(:action => 'update_review_roles') %>
+<% form_tag(:action => 'update_review_roles') do %>
 
   <hr class="div" />
 
@@ -23,6 +23,6 @@
   <input type="submit" value="Update Review Roles" />
   <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
 
-<%= end_form_tag %>
+<% end %>
 
 <%# debug @review_roles %>

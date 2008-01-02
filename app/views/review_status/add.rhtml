@@ -9,7 +9,7 @@
 
 <hr class="div" />
 
-<%= start_form_tag(:action => 'create') %>
+<% form_tag(:action => 'create') do %>
 
   <table border="0">
     <tr>
@@ -34,4 +34,4 @@
   <input type="submit" value="Create a new review status" />
   <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
 
-<%= end_form_tag %>
+<% end %>

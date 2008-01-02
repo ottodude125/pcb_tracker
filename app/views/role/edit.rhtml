@@ -11,12 +11,13 @@
 <hr class="div" />
 
 <% if mode == 'add' %>
-  <%= start_form_tag(:action => 'create') %>
+  <% action = { :action => 'create' } %>
 <% else %>
-  <%= start_form_tag(:action => 'update') %>
+  <% action = { :action => 'update' } %>
   <%= hidden_field "role", "id" %>
 <% end %>
 
+<% form_tag(action) do %>
   <table border="0">
     <tr>
       <td align="right" class="teraheader">Role (Internal Name): </td>
@@ -102,6 +103,6 @@
   <% end %>
   <input type="button" value="Return to Role List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
 
-<%= end_form_tag %>
+<% end %>
 
 <%# debug @role %>

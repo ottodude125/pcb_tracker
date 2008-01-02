@@ -2,7 +2,7 @@
 
 <hr class="div" />
 
-<%= start_form_tag(:action => 'set_role') %>
+<% form_tag(:action => 'set_role') do %>
 
   <table width="45%" border="0" >
     <tr>
@@ -26,4 +26,4 @@
 
   <input type="submit" value="Update My Role" />
 
-<%= end_form_tag %>
+<% end %>

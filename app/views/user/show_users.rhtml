@@ -8,7 +8,7 @@
 
 <hr class="div" />
 
-<%= start_form_tag(:action => 'login_information') -%>
+<% form_tag(:action => 'login_information') do -%>
 
   <b>Enter last name: </b>
   <%= text_field_with_auto_complete(:user, 
@@ -22,4 +22,4 @@
   <hr class="div" />
   
 
-<%= end_form_tag -%>
+<% end -%>

@@ -8,7 +8,7 @@
 
 <hr class="div" />
 
-<%= start_form_tag(:action => 'append_section') %>
+<% form_tag(:action => 'append_section') do %>
 
 <%= hidden_field "section", "id" %>
   <table border="0">
@@ -66,4 +66,4 @@
   <% end %>
   <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @new_section.checklist_id ) %>'">
 
-<%= end_form_tag %>
+<% end %>
