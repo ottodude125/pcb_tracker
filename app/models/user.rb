@@ -51,7 +51,127 @@ class User < ActiveRecord::Base
     #logger.info "    Password:         #{pass}"
     #logger.info "    Password(salted): #{sha1(pass)}"
     find_by_login_and_password(login, sha1(pass))
-  end  
+  end
+  
+  
+  ######################################################################
+  #
+  # is_manager?
+  #
+  # Description:
+  # Determines if the user is manager reviewer.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the user is manager reviewer,  Otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def is_manager?
+    self.roles.detect { |r| r.manager? } != nil
+  end
+  
+  
+  ######################################################################
+  #
+  # is_reviewer?
+  #
+  # Description:
+  # Determines if the user is a reviewer.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the user is a reviewer,  Otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def is_reviewer?
+    self.roles.detect { |r| r.reviewer? } != nil
+  end
+  
+  
+  ######################################################################
+  #
+  # is_designer?
+  #
+  # Description:
+  # Determines if the user is in PCB designer.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the user is a pcb designer,  Otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def is_designer?
+    self.roles.detect { |r| r.name == 'Designer'} != nil
+  end
+  
+  
+  ######################################################################
+  #
+  # is_pcb_management?
+  #
+  # Description:
+  # Determines if the user is in PCB management.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the user is in pcb management,  Otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def is_pcb_management?
+    self.roles.detect { |r| r.name == 'Manager' } != nil
+  end
+  
+  
+  ######################################################################
+  #
+  # is_tracker_admin?
+  #
+  # Description:
+  # Determines if the user is a tracker administrator.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the user is a tracker administrator,  Otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def is_tracker_admin?
+    self.roles.detect { |r| r.name == 'Admin'} != nil
+  end
+  
+  
+  ######################################################################
+  #
+  # is_pcb_admin?
+  #
+  # Description:
+  # Determines if the user is a pcb admin.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the user is a pcb administrator,  Otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def is_pcb_admin?
+    self.roles.detect { |r| r.name == 'PCB Admin' } != nil
+  end
   
 
   ######################################################################
@@ -129,9 +249,7 @@ class User < ActiveRecord::Base
   ######################################################################
   #
   def has_access?(required_roles)
-  
     (self.roles.collect { |r| r.name } & required_roles).size > 0
-  
   end
 
 
