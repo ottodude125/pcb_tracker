@@ -281,4 +281,26 @@ class Role < ActiveRecord::Base
   end
   
   
+  ######################################################################
+  #
+  # included_in_design_review?
+  #
+  # Description:
+  # Eetermines if the review role should be included in the design review.
+  #
+  # Parameters:
+  # design - the record design for the design being reviewed
+  #
+  # Return value:
+  # TRUE if the review role is included in the design review.  Otherwise
+  # FALSE.
+  #
+  ######################################################################
+  #
+  def included_in_design_review?(design)
+    (design.new?     && self.new_design_review_role?) ||
+    (design.dot_rev? && self.bare_board_only_review_role?)
+  end
+
+
 end
