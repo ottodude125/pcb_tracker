@@ -1089,7 +1089,7 @@ PEER_AUDIT       = 2
       completed_checks = self.designer_completed_checks + count
       self.designer_completed_checks = completed_checks
       self.designer_complete         = (completed_checks == self.self_check_count)
-      self.update
+      self.save
     rescue ActiveRecord::StaleObjectError
       self.reload
       retry
@@ -1120,7 +1120,7 @@ PEER_AUDIT       = 2
       completed_checks = self.auditor_completed_checks + count
       self.auditor_completed_checks = completed_checks
       self.auditor_complete         = (completed_checks == self.peer_check_count)
-      self.update
+      self.save
     rescue ActiveRecord::StaleObjectError
       self.reload
       retry
