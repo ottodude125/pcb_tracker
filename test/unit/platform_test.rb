@@ -121,7 +121,7 @@ class PlatformTest < Test::Unit::TestCase
   #
   def test_get_active
     
-    platform = Platform.new( :name => 'zzz', :active => 0).create
+    platform = Platform.new( :name => 'zzz', :active => 0).save
     active_platforms = Platform.get_active_platforms
     
     assert(active_platforms.size > 1)
