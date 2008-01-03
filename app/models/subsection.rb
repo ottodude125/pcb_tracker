@@ -62,7 +62,7 @@ class Subsection < ActiveRecord::Base
     section = Section.find(section_id)
 
     self.section_id   = section_id
-    self.create
+    self.save
     
     if self.errors.empty?
       section.subsections.last.insert_at(position)
