@@ -311,7 +311,7 @@ class PartNumberTest < Test::Unit::TestCase
     
     assert(!pn.exists?)
     assert_nil(pn.error_message)
-    pn.create
+    pn.save
     assert(pn.exists?)
     assert_equal(@msg_pcb_exists_pcb, pn.error_message)
 
@@ -348,7 +348,7 @@ class PartNumberTest < Test::Unit::TestCase
     pn.pcb_prefix      = pcb_pn[0]
     pn.pcb_number      = pcb_pn[1]
     pn.pcb_dash_number = pcb_pn[2]
-    pn.create
+    pn.save
     
     pn = PartNumber.initial_part_number
     pcb_pn  = '700-802-00'.split('-')
@@ -359,7 +359,7 @@ class PartNumberTest < Test::Unit::TestCase
     pn.pcba_prefix      = pcba_pn[0]
     pn.pcba_number      = pcba_pn[1]
     pn.pcba_dash_number = pcba_pn[2]
-    pn.create
+    pn.save
     
     pn = PartNumber.initial_part_number
     pcb_pn = '700-801-01'.split('-')
@@ -448,7 +448,7 @@ class PartNumberTest < Test::Unit::TestCase
     pn.get_id
     assert(0, pn.id)
     assert_nil(PartNumber.get_part_number(pn))
-    pn.create
+    pn.save
     
     assert(pn.exists?)
     assert_not_nil(PartNumber.get_part_number(pn))
@@ -457,7 +457,7 @@ class PartNumberTest < Test::Unit::TestCase
     
     assert(!pn.entry_exists?)
     board_design_entry = BoardDesignEntry.new(:part_number_id => pn.id)
-    board_design_entry.create
+    board_design_entry.save
     assert(pn.entry_exists?)
     assert_equal('The entry already exists', pn.error_message)
    
