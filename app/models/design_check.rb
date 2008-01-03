@@ -225,7 +225,7 @@ class DesignCheck < ActiveRecord::Base
     self.auditor_result     = result
     self.auditor_checked_on = Time.now
     self.auditor_id         = user.id
-    self.update
+    self.save
 
     incr
 
