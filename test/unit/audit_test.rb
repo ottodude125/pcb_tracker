@@ -269,14 +269,14 @@ class AuditTest < Test::Unit::TestCase
       next if !dc.check.full_review?
       dc.designer_result = 'Verified'  if dc.check.is_self_check?
       dc.auditor_result  = 'Verified'  if dc.check.is_peer_check?
-      dc.update
+      dc.save
     end
     
     audit.designer_completed_checks = 11
     audit.auditor_completed_checks  = 4
     audit.designer_complete         = 1
     audit.auditor_complete          = 1
-    audit.update
+    audit.save
     
     audit.reload
     assert_equal(design_check_count + expected_full_design_check_count, DesignCheck.count)
@@ -381,13 +381,13 @@ class AuditTest < Test::Unit::TestCase
     assert_equal(0, @audit_109.completed_peer_audit_check_count(@subsection_537))
     
     design_check_15730.auditor_result = "APPROVED"
-    design_check_15730.update
+    design_check_15730.save
     @audit_109.reload
     
     assert_equal(1, @audit_109.completed_peer_audit_check_count(@subsection_537))
 
     design_check_15730.auditor_result = "None"
-    design_check_15730.update
+    design_check_15730.save
     @audit_109.reload
     
     assert_equal(0, @audit_109.completed_peer_audit_check_count(@subsection_537))
