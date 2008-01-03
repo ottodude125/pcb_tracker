@@ -251,9 +251,12 @@ class AuditTest < Test::Unit::TestCase
       actual_checks[section_id][subsection_id] = [] if !actual_checks[section_id][subsection_id]
       actual_checks[section_id][subsection_id] << design_check.check_id
     end
-    
-    assert_equal(partial_review_checks, actual_checks)
 
+    partial_review_checks.each do |section_id, section|
+      section.each do |subsection_id, subsection|
+        assert_equal(subsection, actual_checks[section_id][subsection_id].sort)
+      end
+    end    
 
     assert_equal(design_check_count + expected_partial_design_check_count, DesignCheck.count)
     
