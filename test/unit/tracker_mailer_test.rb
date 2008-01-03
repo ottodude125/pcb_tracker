@@ -284,7 +284,7 @@ class TrackerMailerTest < Test::Unit::TestCase
                       @rich_a.id,
                       tde_role.id)
     review_result.result = 'APPROVED'
-    review_result.update
+    review_result.save
 
     response = TrackerMailer.create_design_review_update(
                  @rich_a,
@@ -317,7 +317,7 @@ class TrackerMailerTest < Test::Unit::TestCase
                       @rich_a.id,
                       tde_role.id)
     review_result.result = 'WAIVED'
-    review_result.update
+    review_result.save
 
     response = TrackerMailer.create_design_review_update(
                  @rich_a,
