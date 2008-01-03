@@ -113,7 +113,7 @@ class RoleTest < Test::Unit::TestCase
     # Set the first 5 roles to inactive
     0.upto(4) do |i|
       all_roles[i].active = 0
-      all_roles[i].update
+      all_roles[i].save
     end
     
     active_roles = Role.find_all_active
