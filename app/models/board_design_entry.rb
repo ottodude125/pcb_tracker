@@ -137,7 +137,7 @@ class BoardDesignEntry < ActiveRecord::Base
     # entry
     if !(duplicate_part_number || bde)
 
-      part_number.create
+      part_number.save
       part_number.reload
 
       bde = BoardDesignEntry.new(:user_id        => user.id,
@@ -145,7 +145,7 @@ class BoardDesignEntry < ActiveRecord::Base
                                  :location_id    => user.location_id,
                                  :part_number_id => part_number.id)
       
-      bde.create
+      bde.save
       bde.load_design_team
 
     end
@@ -200,7 +200,8 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #
   def new?
-    self.part_number ? self.part_number.new? : true  
+    #self.part_number ? self.part_number.new? : true
+    (self.part_number_id > 0 && self.part_number) ? self.part_number.new? : true
   end
 
 
@@ -404,7 +405,7 @@ class BoardDesignEntry < ActiveRecord::Base
   #
   def set_entry_type_new
     self.entry_type = 'new'
-    self.update if self.id
+    self.save if self.id
   end
   
   
@@ -424,7 +425,7 @@ class BoardDesignEntry < ActiveRecord::Base
   #
   def set_entry_type_dot_rev
     self.entry_type = 'dot_rev'
-    self.update if self.id
+    self.save if self.id
   end
   
   
