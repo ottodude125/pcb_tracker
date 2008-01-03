@@ -77,7 +77,7 @@ class Checklist < ActiveRecord::Base
 
     end
     
-    self.update
+    self.save
 
   end
   
@@ -258,7 +258,7 @@ class Checklist < ActiveRecord::Base
     self.released         = 1
     self.released_on      = ''
 
-    if self.update
+    if self.save
       return 'Checklist successfully released'
     else
       return 'Checklist release failed - Contact DTG.'
