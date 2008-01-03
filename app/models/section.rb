@@ -63,7 +63,7 @@ class Section < ActiveRecord::Base
   def insert(checklist_id, position)
 
     self.checklist_id = checklist_id
-    self.create
+    self.save
     
     self.checklist.sections.last.insert_at(position) if self.errors.empty?
 
