@@ -142,7 +142,7 @@ class BoardDesignEntryTest < Test::Unit::TestCase
     
     mx234c_entry = board_design_entries(:mx234c)
     mx234c_entry.state = 'ready_to_post'
-    mx234c_entry.update
+    mx234c_entry.save
     
     processor_states = %w(originated ready_to_post submitted)
     processor_list       = BoardDesignEntry.get_entries_for_processor
