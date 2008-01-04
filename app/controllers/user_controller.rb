@@ -203,10 +203,11 @@ class UserController < ApplicationController
     updated = false
     if params[:new_password] == params[:new_password_confirmation]
       user = User.find(params[:user][:id])
-      user.password = params[:new_password]
-      user.passwd   = params[:new_password]
-     
-      if user.update
+      user.password              = params[:new_password]
+      user.password_confirmation = params[:new_password]
+      user.passwd                = params[:new_password]
+
+      if user.save
         flash['notice'] = "The password for #{user.name} was updated"
         updated = true
       else
