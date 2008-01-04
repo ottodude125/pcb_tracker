@@ -318,50 +318,6 @@ class PartNumber < ActiveRecord::Base
   
   ######################################################################
   #
-  # valid?
-  #
-  # Description:
-  # This method indicates that both the PCB and PCBA part numbers are
-  # valid.
-  #
-  # Parameters:
-  # new - a bolean that indicates that the entry is new requiring both
-  #       PCB and PCBA components.
-  #
-  # Return value:
-  # TRUE if both the PCB and PCBA part numbers are valid, FALSE otherwise.
-  #
-  ######################################################################
-  #
-  def valid?(new)
-
-    self.clear_error_message
-    
-    # Make sure the part number contains the correct and legal characters.
-    valid  = self.valid_pcb_part_number?
-    valid &= self.valid_pcba_part_number? if new
-    if valid
-      if self.unique_part_numbers_equal?
-        valid = false
-        self.set_error_message('The PCB part number (' + self.pcb_display_name +
-                               ') and the PCBA part number (' + 
-                               self.pcba_display_name + ') must be unique - YOUR PART ' +
-                             'NUMBER WAS NOT CREATED')
-      end
-    else
-      self.set_error_message('The correct format for a part number is ' +
-                             '"ddd-ddd-aa" <br />' +
-                             ' Where: "ddd" is a 3 digit number and "aa"' +
-                             ' is 2 alpha-numeric characters.')
-    end
-
-    (valid && (new ? !self.exists?(false) : !self.pcb_pn_exists?(false)))
-    
-  end
-  
-  
-  ######################################################################
-  #
   # pcb_unique_number
   #
   # Description:
