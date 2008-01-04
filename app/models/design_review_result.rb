@@ -36,6 +36,8 @@ class DesignReviewResult < ActiveRecord::Base
   #
   def reviewer
     User.find(self.reviewer_id)
+  rescue
+    nil
   end
   
   
