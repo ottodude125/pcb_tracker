@@ -50,6 +50,56 @@ class DesignReview < ActiveRecord::Base
   
   ######################################################################
   #
+  # add_reviewers
+  #
+  # Description:
+  # This method adds reviewers to a design review.
+  #
+  # Parameters:
+  # board_team_list - a collection of users that are on the board team
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def add_reviewers(board_team_list)
+
+    pcb_input_gate_role = Role.find_by_name('PCB Input Gate')
+    
+      board_team_list.each do |reviewer|
+ 
+        next if !(reviewer.role.reviewer? && reviewer.required? && reviewer.user_id?)
+        next if !reviewer.role.included_in_design_review?(self.design)
+        next if !reviewer.role.review_types.include?(self.review_type)
+        
+        if reviewer.role_id == pcb_input_gate_role.id 
+          reviewer_id = self.design.created_by
+        else
+          reviewer_id = reviewer.user_id
+        end
+          
+        drr = DesignReviewResult.new(:reviewer_id => reviewer_id, :role_id => reviewer.role_id)
+        self.design_review_results << drr
+
+        # If the role (group) is set to have the peers CC'ed then update the 
+        # design review.
+        if reviewer.role.cc_peers?
+          drr.role.users.each do |peer|
+            next if (peer.id == drr.reviewer_id ||
+                     !peer.active?              ||
+                     self.design.board.users.include?(peer))
+            self.design.board.users << peer
+          end
+        end
+
+      end
+
+  end
+  
+  
+  ######################################################################
+  #
   # review_name
   #
   # Description:
@@ -589,27 +639,26 @@ class DesignReview < ActiveRecord::Base
   #
   # Parameters:
   # design_center - the new value for the design center attribute
-  # user          - the use who made the update
+  # user          - the user who made the update
   #
   # Return value:
-  # TRUE if the attribute was updated, otherwise FALSE.
-  #
+  # The old design center name if the design center was updated.
+  # Otherwise, nil
   ######################################################################
   #
   def update_design_center(design_center, user)
 
     if design_center && self.design_center_id != design_center.id
+      old_design_center_name = self.design_center.name
       self.record_update('Design Center', 
                          self.design_center_id > 0 ? self.design_center.name : 'Not Set', 
                          design_center.name, 
                          user)
       self.design_center = design_center
       self.update
-      
-      true
-    else
-      false
     end
+    
+    old_design_center_name
 
   end
   
