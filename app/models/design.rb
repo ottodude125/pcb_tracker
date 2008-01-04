@@ -863,8 +863,6 @@ class Design < ActiveRecord::Base
   def next_review
 
     current_review_type = ReviewType.find(self.phase_id)
-#    review_types = ReviewType.find_all("active = 1 AND sort_order > '#{current_review_type.sort_order}'", 
-#                                       "sort_order ASC")
     review_types = ReviewType.find(:all,
                                    :conditions => "active = 1 AND " +
                                                   "sort_order > '#{current_review_type.sort_order}'", 
@@ -894,7 +892,8 @@ class Design < ActiveRecord::Base
   # This method sets up the design reviews.
   #
   # Parameters:
-  # review_types_list - 
+  # review_types_list - a hash of flags accessed by review type name
+  #                     that indicate if the review type is active
   # board_team_list   - a collection of users that are on the board team
   #
   # Return value:
@@ -905,32 +904,16 @@ class Design < ActiveRecord::Base
   def setup_design_reviews(review_types_list, 
                            board_team_list)
                            
-    skip_role = []
-    if self.design_type != 'New'
-      skip_role = [Role.find_by_name('Hardware Engineering Manager').id,
-                   Role.find_by_name('Library').id,
-                   Role.find_by_name('Compliance - EMC').id,
-                   Role.find_by_name('Compliance - Safety').id,
-                   Role.find_by_name('Operations Manager').id,
-                   Role.find_by_name('PCB Mechanical').id,
-                   Role.find_by_name('Program Manager').id,
-                   Role.find_by_name('SLM BOM').id,
-                   Role.find_by_name('SLM-Vendor').id]
-    end
-    
     not_started    = ReviewStatus.find_by_name('Not Started')
     review_skipped = ReviewStatus.find_by_name('Review Skipped')
     review_types   = ReviewType.get_active_review_types
 
-    pcb_input_gate_role = Role.find_by_name('PCB Input Gate')
-    
     #Go through each of the review types and setup a review.
-    review_types_list.each { |review, active|
+    review_types_list.each do |review, active|
 
       review_type = review_types.detect { |rt| rt.name == review }
       
-      design_review = DesignReview.new(:design_id      => self.id,
-                                       :review_type_id => review_type.id,
+      design_review = DesignReview.new(:review_type_id => review_type.id,
                                        :creator_id     => self.created_by,
                                        :priority_id    => self.priority_id)
       design_review.review_status_id = active == '1' ? not_started.id : review_skipped.id
@@ -945,50 +928,11 @@ class Design < ActiveRecord::Base
         design_review.design_center_id = pcb_admin.design_center_id
       end
       
-      design_review.save
+      self.design_reviews << design_review
 
-      
-      board_team_list.each { |reviewer|
-      
-        # Do not create a record if:
-        #   the team member is not a reviewer, or
-        #   the reviewer role is not required, or
-        #   the reviewer user id is zero,      or
-        #   the role is listed it in skip_review
-        next if (!(reviewer.role.reviewer? && reviewer.required? && 
-                   reviewer.user_id?) || 
-                 skip_role.detect { |i| i == reviewer.role_id })
-        
-        if reviewer.role.review_types.include?(review_type)
-        
-          if reviewer.role_id == pcb_input_gate_role.id 
-            reviewer_id = self.created_by
-          else
-            reviewer_id = reviewer.user_id
-          end
-          
-          drr = DesignReviewResult.new(:design_review_id => design_review.id,
-                                       :reviewer_id      => reviewer_id,
-                                       :role_id          => reviewer.role_id)
-          drr.save
+      design_review.add_reviewers(board_team_list)
 
-          # If the role (group) is set to have the peers CC'ed then update the 
-          # design review.
-          if reviewer.role.cc_peers?
-            drr.role.users.each do |peer|
-              next if (peer.id == drr.reviewer_id ||
-                       !peer.active?              ||
-                       design_review.design.board.users.include?(peer))
-              design_review.design.board.users << peer
-            end
-          end
-
-
-        end 
-       
-      }
-    }
-    
+    end
   
   end
   
@@ -1090,8 +1034,9 @@ class Design < ActiveRecord::Base
     self.design_reviews.each do |dr|
 
       # All design reviews will get any update to the design center.
-      if dr.update_design_center(update[:design_center], user)
-        changes[:design_center] = { :old => dr.design_center.name, 
+      old_design_center_name = dr.update_design_center(update[:design_center], user)
+      if old_design_center_name
+        changes[:design_center] = { :old => old_design_center_name, 
                                     :new => update[:design_center].name }
       end
 
