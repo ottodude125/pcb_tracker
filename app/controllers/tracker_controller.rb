@@ -52,7 +52,7 @@ class TrackerController < ApplicationController
         render( :action => 'designer_home' )
       when "Reviewer"
         reviewer_home_setup
-        render ( :action => 'reviewer_home' )
+        render( :action => 'reviewer_home' )
       when "Manager", "Admin"
         manager_home_setup
         render( :action => 'manager_home' )
@@ -398,7 +398,7 @@ class TrackerController < ApplicationController
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'manager_list_by_date',
                            :order      => params[:order]}
-    render ( :action => 'manager_home' )
+    render( :action => 'manager_home' )
 
   end  
   
