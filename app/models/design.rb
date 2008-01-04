@@ -840,7 +840,7 @@ class Design < ActiveRecord::Base
   def increment_review
 
     self.phase_id = self.next_review
-    self.update
+    self.save
   
   end
   
@@ -994,7 +994,7 @@ class Design < ActiveRecord::Base
                                    peer.name,
                                    user)
         valor_review_result.reviewer_id = peer_id
-        valor_review_result.update
+        valor_review_result.save
         
         updated = true
       end
@@ -1122,7 +1122,7 @@ class Design < ActiveRecord::Base
                                           user)
                           
         valor_review_result.reviewer_id = update[:peer].id
-        valor_review_result.update
+        valor_review_result.save
            
       end
       
@@ -1141,7 +1141,7 @@ class Design < ActiveRecord::Base
         
     if changes.size > 0 || comment.size > 0 
 
-      self.update
+      self.save
       self.reload
 
       TrackerMailer::deliver_design_modification(
@@ -1317,7 +1317,7 @@ class Design < ActiveRecord::Base
       if review_result && !completed_results.include?(review_result.result)
         old_reviewer              = review_result.reviewer
         review_result.reviewer_id = new_reviewer.id
-        review_result.update
+        review_result.save
 
         dr.record_update(role.display_name + ' Reviewer', 
                          old_reviewer.name, 
@@ -1476,7 +1476,7 @@ class Design < ActiveRecord::Base
   def flip_design_type
     
     self.design_type = self.design_type == 'New' ? 'Dot Rev' : 'New'
-    self.update
+    self.save
     
     self.audit.update_checklist_type
     
