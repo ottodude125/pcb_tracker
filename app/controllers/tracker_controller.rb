@@ -49,21 +49,21 @@ class TrackerController < ApplicationController
       case session[:active_role].name
       when "Designer"
         designer_home_setup
-        render_action('designer_home')
+        render( :action => 'designer_home' )
       when "Reviewer"
         reviewer_home_setup
-        render_action('reviewer_home')
+        render ( :action => 'reviewer_home' )
       when "Manager", "Admin"
         manager_home_setup
-        render_action('manager_home')
+        render( :action => 'manager_home' )
       when "PCB Admin"
         pcb_admin_home_setup
-        render_action('pcb_admin_home')
+        render( :action => 'pcb_admin_home' )
       when "Basic User"
         # Use the default home page
       else
         reviewer_home_setup
-        render_action('reviewer_home')
+        render( :action => 'reviewer_home' )
       end
     else
       # No user is identified.
@@ -192,7 +192,7 @@ class TrackerController < ApplicationController
     session[:return_to] = {:controller => 'tracker',
                            :action => 'manager_list_by_priority',
                            :order  => params[:order]}
-    render_action 'manager_home'
+    render( :action => 'manager_home' )
 
   end  
   
@@ -226,7 +226,7 @@ class TrackerController < ApplicationController
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'manager_list_by_design',
                            :order      => params[:order]}
-    render_action 'manager_home'
+    render( :action => 'manager_home')
 
   end  
   
@@ -261,7 +261,7 @@ class TrackerController < ApplicationController
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'manager_list_by_type',
                            :order      => params[:order]}
-    render_action 'manager_home'
+    render( :action => 'manager_home' )
 
   end  
   
@@ -295,7 +295,7 @@ class TrackerController < ApplicationController
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'manager_list_by_designer',
                            :order      => params[:order]}
-    render_action 'manager_home'
+    render( :action => 'manager_home' )
 
   end  
   
@@ -329,7 +329,7 @@ class TrackerController < ApplicationController
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'manager_list_by_peer',
                            :order      => params[:order]}
-    render_action 'manager_home'
+    render( :action => 'manager_home' )
     
   end  
   
@@ -363,7 +363,7 @@ class TrackerController < ApplicationController
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'manager_list_by_age',
                            :order      => params[:order]}
-    render_action 'manager_home'
+    render( :action =>  'manager_home' )
 
   end  
   
@@ -398,7 +398,7 @@ class TrackerController < ApplicationController
     session[:return_to] = {:controller => 'tracker',
                            :action     => 'manager_list_by_date',
                            :order      => params[:order]}
-    render_action 'manager_home'
+    render ( :action => 'manager_home' )
 
   end  
   
