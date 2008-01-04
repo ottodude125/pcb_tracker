@@ -20,9 +20,6 @@ class ReviewStatus < ActiveRecord::Base
   validates_presence_of   :name
 
 
-  CLOSED_REVIEWS = [self.find_by_name('Review Completed'), 
-                    self.find_by_name('Review Skipped')]
-
   ##############################################################################
   #
   # Class Methods
@@ -67,7 +64,8 @@ class ReviewStatus < ActiveRecord::Base
   ######################################################################
   #
   def ReviewStatus.closed_reviews
-    CLOSED_REVIEWS
+      [self.find_by_name('Review Completed'), 
+       self.find_by_name('Review Skipped')]
   end
   
 
