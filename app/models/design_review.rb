@@ -191,7 +191,7 @@ class DesignReview < ActiveRecord::Base
     self.review_status     = ReviewStatus.find_by_name('Review On-Hold')
     self.placed_on_hold_on = current_time
 
-    self.update
+    self.save
   end
   
     
@@ -655,7 +655,7 @@ class DesignReview < ActiveRecord::Base
                          design_center.name, 
                          user)
       self.design_center = design_center
-      self.update
+      self.save
     end
     
     old_design_center_name
@@ -691,7 +691,7 @@ class DesignReview < ActiveRecord::Base
                          user)
 
       self.priority = criticality
-      self.update
+      self.save
       
       true
     else
@@ -734,7 +734,7 @@ class DesignReview < ActiveRecord::Base
         elsif self.review_status.name == 'In Review'
           self.place_on_hold
         end
-        self.update
+        self.save
         
         true
       else
@@ -774,7 +774,7 @@ class DesignReview < ActiveRecord::Base
                           user)
 
       self.designer_id = pcb_input_gate.id
-      self.update
+      self.save
         
       true
     else
@@ -813,7 +813,7 @@ class DesignReview < ActiveRecord::Base
                          user)
 
       self.designer_id = release_reviewer.id
-      self.update
+      self.save
       
       true
     else
@@ -851,7 +851,7 @@ class DesignReview < ActiveRecord::Base
                          designer.name,
                          user)
       self.designer_id = designer.id
-      self.update
+      self.save
 
       true
     else
