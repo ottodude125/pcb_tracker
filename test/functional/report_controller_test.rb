@@ -13,7 +13,7 @@ class ReportControllerTest < Test::Unit::TestCase
 
 
   fixtures(:design_reviews,
-           :review_status,
+           :review_statuses,
            :users)
 
 
