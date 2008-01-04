@@ -140,8 +140,8 @@ class DesignTest < Test::Unit::TestCase
     assert(!@mx234a_design.inactive_reviewers?)
 
     @tom_f.active = 0
-    @tom_f.update
-    @mx234a_design.update
+    @tom_f.save
+    @mx234a_design.save
     assert(@mx234a_design.inactive_reviewers?)
     
   end
@@ -175,7 +175,7 @@ class DesignTest < Test::Unit::TestCase
     
     # Verfiy no updates if the review is complete.
     final_design_review.review_status = @review_complete
-    final_design_review.update
+    final_design_review.save
     @mx234a_design.reload
     
     assert(!@mx234a_design.update_valor_reviewer(@lisa_a, @cathy_m))
@@ -195,13 +195,13 @@ class DesignTest < Test::Unit::TestCase
 
     
     @mx234a_pre_art_dr.review_status = @review_skipped
-    @mx234a_pre_art_dr.update
+    @mx234a_pre_art_dr.save
     @mx234a_design.reload
     assert_equal(1, @mx234a_design.role_open_review_count(@valor))
      
     
     @mx234a_final_dr.review_status = @review_complete
-    @mx234a_final_dr.update
+    @mx234a_final_dr.save
     @mx234a_design.reload
     assert_equal(0, @mx234a_design.role_open_review_count(@valor))
 
@@ -244,7 +244,7 @@ class DesignTest < Test::Unit::TestCase
                  email.subject)
     
     @mx234a_pre_art_dr.review_status = @review_complete
-    @mx234a_pre_art_dr.update
+    @mx234a_pre_art_dr.save
     @mx234a_design.reload
     
     @mx234a_design.set_role_reviewer(@valor, @lisa_a, @cathy_m)
@@ -269,11 +269,11 @@ class DesignTest < Test::Unit::TestCase
                  
                  
     @mx234a_placement_dr.review_status = @review_complete
-    @mx234a_placement_dr.update
+    @mx234a_placement_dr.save
     @mx234a_routing_dr.review_status   = @review_complete
-    @mx234a_routing_dr.update
+    @mx234a_routing_dr.save
     @mx234a_final_dr.review_status     = @in_review
-    @mx234a_final_dr.update
+    @mx234a_final_dr.save
     @mx234a_design.reload
     
     @mx234a_design.set_role_reviewer(@valor, @scott_g, @cathy_m)
@@ -311,20 +311,20 @@ class DesignTest < Test::Unit::TestCase
            
     expected_reviewers -= ['Arthur Davis', 'John Godin', 'Cathy McLaren', 'Dave Macioce']
     @mx234a_pre_art_dr.review_status = @review_complete
-    @mx234a_pre_art_dr.update
+    @mx234a_pre_art_dr.save
     @mx234a_design.reload
     assert_equal(expected_reviewers,
                  @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
 
     @mx234a_placement_dr.review_status = @review_complete
-    @mx234a_placement_dr.update
+    @mx234a_placement_dr.save
     @mx234a_design.reload
     assert_equal(expected_reviewers,
                  @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
 
     expected_reviewers -= ['Dan Gough']
     @mx234a_routing_dr.review_status = @review_complete
-    @mx234a_routing_dr.update
+    @mx234a_routing_dr.save
     @mx234a_design.reload
     assert_equal(expected_reviewers,
                  @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
@@ -333,14 +333,14 @@ class DesignTest < Test::Unit::TestCase
                            'Espo Espedicto',   'Tom Flack',        'Heng Kit Too',
                            'Anthony Gentile']
     @mx234a_final_dr.review_status = @review_complete
-    @mx234a_final_dr.update
+    @mx234a_final_dr.save
     @mx234a_design.reload
     assert_equal(expected_reviewers,
                  @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
 
     expected_reviewers = []
     @mx234a_release_dr.review_status = @review_complete
-    @mx234a_release_dr.update
+    @mx234a_release_dr.save
     @mx234a_design.reload
     assert_equal(expected_reviewers,
                  @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
@@ -558,9 +558,9 @@ class DesignTest < Test::Unit::TestCase
     placement_review = mx234a.design_reviews.detect { |dr| dr.review_type_id == @placement_review_type.id }
     routing_review   = mx234a.design_reviews.detect { |dr| dr.review_type_id == @routing_review_type.id }
     placement_review.review_status = review_skipped
-    placement_review.update
+    placement_review.save
     routing_review.review_status = review_skipped
-    routing_review.update
+    routing_review.save
   
     assert_equal(@pre_artwork_review_type.id, mx234a.phase_id)
     mx234a.increment_review
@@ -577,7 +577,7 @@ class DesignTest < Test::Unit::TestCase
     mx234a.phase_id  = @pre_artwork_review_type.id
     mx234a.design_reviews.each do |dr|
       dr.review_status = review_skipped
-      dr.update
+      dr.save
     end
   
     assert_equal(@pre_artwork_review_type.id, mx234a.phase_id)
@@ -620,9 +620,9 @@ class DesignTest < Test::Unit::TestCase
     placement_review = mx234a.design_reviews.detect { |dr| dr.review_type_id == @placement_review_type.id }
     routing_review   = mx234a.design_reviews.detect { |dr| dr.review_type_id == @routing_review_type.id }
     placement_review.review_status = review_skipped
-    placement_review.update
-     routing_review.review_status = review_skipped
-    routing_review.update
+    placement_review.save
+    routing_review.review_status = review_skipped
+    routing_review.save
   
     assert_equal(@pre_artwork_review_type.id, mx234a.phase_id)
   
@@ -641,7 +641,7 @@ class DesignTest < Test::Unit::TestCase
     mx234a.phase_id  = @pre_artwork_review_type.id
     mx234a.design_reviews.each do |dr|
       dr.review_status = review_skipped
-      dr.update
+      dr.save
     end
   
     assert_equal(@pre_artwork_review_type.id, mx234a.phase_id)
@@ -766,7 +766,7 @@ def test_design_setup
   DesignReviewResult.destroy_all
   
   @mx234a_design.design_type = 'Dot Rev'
-  @mx234a_design.update
+  @mx234a_design.save
 
   reviews = { 'Pre-Artwork' => '1',   'Placement' => '0',     'Routing'     => '0',
               'Final'     => '1',     'Release'     => '1'}
@@ -813,7 +813,7 @@ end
    
    assignment = oi_assignments(:first)
    assignment.complete = 1
-   assignment.update
+   assignment.save
    
    design.reload
    assert_equal(2, design.assignment_count)
