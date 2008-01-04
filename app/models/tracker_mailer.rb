@@ -27,8 +27,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def peer_audit_complete(audit,
-                          sent_at = Time.now)
+  def peer_audit_complete(audit, sent_at = Time.now)
     
     @subject    = audit.design.part_number.pcb_display_name +
                   ": The peer auditor has completed the audit"
@@ -64,8 +63,8 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def self_audit_complete(audit,
-                          sent_at = Time.now)
+  def self_audit_complete(audit, sent_at = Time.now)
+    
     @subject    = audit.design.part_number.pcb_display_name +
                   ": The designer has completed the self-audit"
 
@@ -103,9 +102,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def ftp_notification(message,
-                       ftp_notification,
-                       sent_at         = Time.now)
+  def ftp_notification(message, ftp_notification, sent_at = Time.now)
 
     design_review = ftp_notification.design.get_design_review("Final")
     
@@ -269,8 +266,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def design_review_complete_notification(design_review,
-                                          sent_at        = Time.now)
+  def design_review_complete_notification(design_review, sent_at = Time.now)
 
     @subject    = design_review.design.part_number.pcb_display_name + ': ' +
                   design_review.review_name + ' Review is complete'
@@ -314,8 +310,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def final_review_warning(design, 
-                           sent_at = Time.now)
+  def final_review_warning(design, sent_at = Time.now)
 
     @subject    = 'Notification of upcoming Final Review for ' +
                   design.part_number.pcb_display_name
@@ -397,8 +392,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def ipd_update(root_post,
-                 sent_at = Time.now)
+  def ipd_update(root_post, sent_at = Time.now)
 
     poster = User.find(root_post.user_id)
     
@@ -413,17 +407,14 @@ class TrackerMailer < ActionMailer::Base
     end
 
     pre_artwork = ReviewType.get_pre_artwork
-    pre_artwork_design_review = 
-      DesignReview.find_by_design_id_and_review_type_id(root_post.design_id,
-                                                        pre_artwork.id)
+    pre_artwork_design_review = root_post.design.get_design_review(pre_artwork.name)
+
     hweng_role = Role.find_by_name("HWENG")
     hweng_pre_art_review_result = 
-      DesignReviewResult.find_by_design_review_id_and_role_id(pre_artwork_design_review.id,
-                                                              hweng_role.id)
+      pre_artwork_design_review.get_review_result(hweng_role.name)
 
     if hweng_pre_art_review_result.reviewer_id != poster.id
-      hweng = User.find(hweng_pre_art_review_result.reviewer_id)
-      recipients.push(hweng.email)
+      recipients << User.find(hweng_pre_art_review_result.reviewer_id).email
     end
     
     @recipients = recipients.uniq
@@ -523,8 +514,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def user_password(user,
-                    sent_at = Time.now)
+  def user_password(user, sent_at = Time.now)
 
     @subject    = "Your password"
     @body       = {:password => user.passwd}
@@ -551,8 +541,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def ping_summary(ping_list,
-                   sent_at = Time.now)
+  def ping_summary(ping_list, sent_at = Time.now)
   
     @subject    = 'Summary of reviewers who have not approved/waived design reviews'
     ping_list.to_a
@@ -585,8 +574,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def ping_reviewer(review_result_list,
-                    sent_at = Time.now)
+  def ping_reviewer(review_result_list, sent_at = Time.now)
 
     @subject    = 'Your unresolved Design Review(s)'
     @recipients = review_result_list[:reviewer].email
@@ -714,9 +702,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def notify_design_review_skipped(design_review,
-                                   user,
-                                   sent_at = Time.now)
+  def notify_design_review_skipped(design_review, user, sent_at = Time.now)
 
     @subject    = design_review.design.part_number.pcb_display_name +
                   ': The ' + design_review.review_type.name +
@@ -748,8 +734,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def tracker_invite(user,
-                     sent_at = Time.now)
+  def tracker_invite(user, sent_at = Time.now)
 
     @subject    = "Your login information for the PCB Design Tracker"
     @recipients = user.email
@@ -777,9 +762,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def attachment_update(design_review_document,
-                        user,
-                        sent_at = Time.now)
+  def attachment_update(design_review_document, user, sent_at = Time.now)
 
     @subject    = 'A document has been attached for the ' +
                   design_review_document.design.part_number.pcb_display_name + 
@@ -877,7 +860,8 @@ class TrackerMailer < ActionMailer::Base
     @sent_on    = sent_at
     @headers    = {}
     @bcc        = blind_cc
-    @cc         = [originator.email] + add_role_members(['Manager'])
+    cc          = [originator.email] + add_role_members(['Manager'])
+    @cc         = cc.uniq - @recipients
 
     @body['entry_name'] = board_design_entry_name
     @body['originator'] = originator
@@ -934,8 +918,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def board_design_entry_submission(board_design_entry,
-                                    sent_at = Time.now)
+  def board_design_entry_submission(board_design_entry, sent_at = Time.now)
 
     @subject    = 'The ' + board_design_entry.part_number.pcb_display_name +
                   ' has been submitted for entry to PCB Design'
@@ -1051,8 +1034,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def oi_assignment_notification(oi_assignment_list,
-                                 sent_on = Time.now)
+  def oi_assignment_notification(oi_assignment_list, sent_on = Time.now)
   
     design = oi_assignment_list[0].oi_instruction.design
     
@@ -1093,11 +1075,7 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def oi_task_update(assignment, 
-                     originator, 
-                     completed, 
-                     reset,
-                     sent_on     = Time.now)
+  def oi_task_update(assignment, originator, completed, reset, sent_on = Time.now)
   
     @subject    = assignment.oi_instruction.design.part_number.pcb_display_name +
                   ':: Work Assignment Update'
