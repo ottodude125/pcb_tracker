@@ -75,7 +75,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcba_dash_number?)
     assert( pn.valid_pcb_part_number?)
     assert( pn.valid_pcba_part_number?)
-    assert( pn.valid?('new'=='new'))
+    assert( pn.valid_components?('new'=='new'))
     assert(!pn.error_message)
     
     # Valid? - No - PCB, PCBA part numbers are not unique.
@@ -93,7 +93,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcba_dash_number?)
     assert( pn.valid_pcb_part_number?)
     assert( pn.valid_pcba_part_number?)
-    assert(!pn.valid?('new'=='new'))
+    assert(!pn.valid_components?('new'=='new'))
     assert( pn.error_message)
     assert_equal('The PCB part number (600-123-a0 a) and the PCBA part number ' +
                  "(600-123-00 b) must be unique - YOUR PART NUMBER WAS NOT CREATED",
@@ -113,7 +113,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcba_dash_number?)
     assert(!pn.valid_pcb_part_number?)
     assert(!pn.valid_pcba_part_number?)
-    assert(!pn.valid?('new'=='new'))
+    assert(!pn.valid_components?('new'=='new'))
     assert_equal(@msg_format_error, pn.error_message)
 
 
@@ -130,7 +130,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcba_dash_number?)
     assert(!pn.valid_pcb_part_number?)
     assert(!pn.valid_pcba_part_number?)
-    assert(!pn.valid?('new'=='new'))
+    assert(!pn.valid_components?('new'=='new'))
     assert_equal(@msg_format_error, pn.error_message)
 
     # Valid? - No - Format bad, wrong number of characters in the number
@@ -148,7 +148,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcba_dash_number?)
     assert(!pn.valid_pcb_part_number?)
     assert(!pn.valid_pcba_part_number?)
-    assert(!pn.valid?('new'=='new'))
+    assert(!pn.valid_components?('new'=='new'))
     assert_equal(@msg_format_error, pn.error_message)
 
     # Valid? - No - Format bad, illegal characters in the number
@@ -164,7 +164,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcba_dash_number?)
     assert(!pn.valid_pcb_part_number?)
     assert(!pn.valid_pcba_part_number?)
-    assert(!pn.valid?('new'=='new'))
+    assert(!pn.valid_components?('new'=='new'))
     assert_equal(@msg_format_error, pn.error_message)
 
     # Valid? - No - Format bad, illegal characters in the dash number
@@ -182,7 +182,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert(!pn.valid_pcba_dash_number?)
     assert(!pn.valid_pcb_part_number?)
     assert(!pn.valid_pcba_part_number?)
-    assert(!pn.valid?('new'=='new'))
+    assert(!pn.valid_components?('new'=='new'))
     assert_equal(@msg_format_error, pn.error_message)
 
     # Valid? - Yes
@@ -198,7 +198,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcba_dash_number?)
     assert( pn.valid_pcb_part_number?)
     assert( pn.valid_pcba_part_number?)
-    assert( pn.valid?('new'=='new'))
+    assert( pn.valid_components?('new'=='new'))
     assert(!pn.error_message)
 
     # Valid? - Yes
@@ -212,7 +212,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcb_prefix?)
     assert( pn.valid_pcb_dash_number?)
     assert( pn.valid_pcb_part_number?)
-    assert( pn.valid?('not'=='new'))
+    assert( pn.valid_components?('not'=='new'))
     assert(!pn.error_message)
     
     # Valid? - No, pcb pn exists.
@@ -226,7 +226,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcb_prefix?)
     assert( pn.valid_pcb_dash_number?)
     assert( pn.valid_pcb_part_number?)
-    assert(!pn.valid?('not'=='new'))
+    assert(!pn.valid_components?('not'=='new'))
     assert_equal(@msg_pcb_exists_pcb, pn.error_message)
     
     # Valid? - No, pcb pn duplicates pcba pn    
@@ -240,7 +240,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcb_prefix?)
     assert( pn.valid_pcb_dash_number?)
     assert( pn.valid_pcb_part_number?)
-    assert(!pn.valid?('not'=='new'))
+    assert(!pn.valid_components?('not'=='new'))
     assert_equal(@msg_pcb_exists_pcba, pn.error_message)
     
     # Valid? - No, pcb pn prefix contains the wrong number of characters    
@@ -250,7 +250,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert(!pn.valid_pcb_prefix?)
     assert( pn.valid_pcb_dash_number?)
     assert(!pn.valid_pcb_part_number?)
-    assert(!pn.valid?('not'=='new'))
+    assert(!pn.valid_components?('not'=='new'))
     assert_equal(@msg_format_error, pn.error_message)
 
     # Valid? - No, pcb pn prefix contains illegal characters    
@@ -260,7 +260,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert(!pn.valid_pcb_prefix?)
     assert( pn.valid_pcb_dash_number?)
     assert(!pn.valid_pcb_part_number?)
-    assert(!pn.valid?('not'=='new'))
+    assert(!pn.valid_components?('not'=='new'))
     assert_equal(@msg_format_error, pn.error_message)
 
 
@@ -272,7 +272,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcb_prefix?)
     assert( pn.valid_pcb_dash_number?)
     assert(!pn.valid_pcb_part_number?)
-    assert(!pn.valid?('not'=='new'))
+    assert(!pn.valid_components?('not'=='new'))
     assert_equal(@msg_format_error, pn.error_message)
 
 
@@ -283,7 +283,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcb_prefix?)
     assert( pn.valid_pcb_dash_number?)
     assert(!pn.valid_pcb_part_number?)
-    assert(!pn.valid?('not'=='new'))
+    assert(!pn.valid_components?('not'=='new'))
     assert_equal(@msg_format_error, pn.error_message)
 
 
@@ -295,7 +295,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcb_prefix?)
     assert(!pn.valid_pcb_dash_number?)
     assert(!pn.valid_pcb_part_number?)
-    assert(!pn.valid?('not'=='new'))
+    assert(!pn.valid_components?('not'=='new'))
     assert_equal(@msg_format_error, pn.error_message)
 
     # Valid? - Yes  
@@ -305,7 +305,7 @@ class PartNumberTest < Test::Unit::TestCase
     assert( pn.valid_pcb_prefix?)
     assert( pn.valid_pcb_dash_number?)
     assert( pn.valid_pcb_part_number?)
-    assert( pn.valid?('not'=='new'))
+    assert( pn.valid_components?('not'=='new'))
     assert(!pn.error_message)
     
     
@@ -366,7 +366,7 @@ class PartNumberTest < Test::Unit::TestCase
     pn.pcb_prefix       = pcb_pn[0]
     pn.pcb_number       = pcb_pn[1]
     pn.pcb_dash_number  = pcb_pn[2]
-    assert( pn.valid?('not'=='new'))
+    assert( pn.valid_components?('not'=='new'))
     assert(!pn.error_message)
 
     pn = PartNumber.initial_part_number
@@ -374,7 +374,7 @@ class PartNumberTest < Test::Unit::TestCase
     pn.pcb_prefix       = pcb_pn[0]
     pn.pcb_number       = pcb_pn[1]
     pn.pcb_dash_number  = pcb_pn[2]
-    assert(!pn.valid?('not'=='new'))
+    assert(!pn.valid_components?('not'=='new'))
     assert( pn.error_message)
     assert_equal(@msg_pcb_exists_pcba, pn.error_message)
     
@@ -383,7 +383,7 @@ class PartNumberTest < Test::Unit::TestCase
     pn.pcba_number      = pcba_pn[1]
     pn.pcba_dash_number = pcba_pn[2]
     pn.pcba_revision    = 'b'
-    assert(!pn.valid?('new'))
+    assert(!pn.valid_components?('new'))
     assert( pn.error_message)
     assert_equal(@msg_pcb_exists_pcba, pn.error_message)
     
@@ -392,7 +392,7 @@ class PartNumberTest < Test::Unit::TestCase
     pn.pcb_prefix       = pcb_pn[0]
     pn.pcb_number       = pcb_pn[1]
     pn.pcb_dash_number  = pcb_pn[2]
-    assert(!pn.valid?('not'=='new'))
+    assert(!pn.valid_components?('not'=='new'))
     assert( pn.error_message)
     assert_equal(@msg_pcb_exists_pcba, pn.error_message)
 
@@ -401,7 +401,7 @@ class PartNumberTest < Test::Unit::TestCase
     pn.pcba_number      = pcba_pn[1]
     pn.pcba_dash_number = pcba_pn[2]
     pn.pcba_revision    = 'a'
-    assert(!pn.valid?('new'))
+    assert(!pn.valid_components?('new'))
     assert( pn.error_message)
     assert_equal(@msg_pcb_exists_pcba, pn.error_message)
     
@@ -414,7 +414,7 @@ class PartNumberTest < Test::Unit::TestCase
     pn.pcba_number      = pcba_pn[1]
     pn.pcba_dash_number = pcba_pn[2]
     pn.pcba_revision    = 'b'
-    assert(!pn.valid?('new'))
+    assert(!pn.valid_components?('new'))
     assert( pn.error_message)
     assert_equal(@msg_pcba_exists_pcb, pn.error_message)
     
