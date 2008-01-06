@@ -43,7 +43,7 @@ class Platform < ActiveRecord::Base
   ######################################################################
   #
   def Platform.get_all_active(sort = 'name ASC')
-    Platform.find_all_by_active(1, sort)
+    Platform.find(:all, :conditions => 'active=1', :order => sort)
   end
   
   
