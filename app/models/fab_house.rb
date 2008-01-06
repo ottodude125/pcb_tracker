@@ -44,7 +44,7 @@ class FabHouse < ActiveRecord::Base
   ######################################################################
   #
   def FabHouse.get_all_active(sort = 'name ASC')
-    FabHouse.find_all_by_active(1, sort)
+    FabHouse.find(:all, :conditions => 'active=1', :order => sort)
   end
 
 
