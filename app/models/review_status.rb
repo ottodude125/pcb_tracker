@@ -43,7 +43,7 @@ class ReviewStatus < ActiveRecord::Base
   ######################################################################
   #
   def ReviewStatus.get_all_active(sort = 'name ASC')
-    ReviewStatus.find_all_by_active(1, sort)
+    ReviewStatus.find(:all, :conditions => 'active=1', :order => sort)
   end
   
   
