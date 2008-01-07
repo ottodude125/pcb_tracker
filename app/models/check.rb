@@ -1,4 +1,4 @@
-########################################################################
+2########################################################################
 #
 # Copyright 2005, by Teradyne, Inc., Boston MA
 #
@@ -170,7 +170,7 @@ class Check < ActiveRecord::Base
     subsection = Subsection.find(subsection_id)
 
     self.subsection_id = subsection_id
-    self.create
+    self.save
     
     if self.errors.empty?
       subsection.checks.last.insert_at(position)
