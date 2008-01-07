@@ -186,6 +186,7 @@ class ChecklistTest < Test::Unit::TestCase
   end
   
   
+  ######################################################################
   def test_remove
     
     checklist_101    = checklists(:checklists_101)
@@ -193,7 +194,7 @@ class ChecklistTest < Test::Unit::TestCase
     assert(checklist_101.locked?)
     
     checklist_101.released = 0
-    checklist_101.update
+    checklist_101.save
     
     assert(!checklist_101.locked?)
     
