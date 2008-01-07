@@ -93,7 +93,7 @@ class AuditController < ApplicationController
         AuditComment.new(
           :comment         => design_check_update[:comment],
           :user_id         => session[:user].id,
-          :design_check_id => design_check_update[:design_check_id]).create
+          :design_check_id => design_check_update[:design_check_id]).save
       end
     }
 
