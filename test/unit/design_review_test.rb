@@ -385,8 +385,8 @@ class DesignReviewTest < Test::Unit::TestCase
     assert_equal(5.days + 12.hours, design_review.time_on_hold_total(mon_jan_15_noon))
                  
     design_review.remove_from_hold(in_review.id, sun_jan_7_noon)
-    assert_equal(0, design_review.time_on_hold)
-    assert_equal(0, design_review.time_on_hold_total)
+    assert_equal(0, design_review.time_on_hold(sun_jan_7_noon))
+    assert_equal(0, design_review.time_on_hold_total(sun_jan_7_noon))
     
     
     design_review.place_on_hold(mon_jan_8_8_am)
@@ -566,7 +566,7 @@ class DesignReviewTest < Test::Unit::TestCase
     #   current user is designer, 
     #   next review not same as design phase
     design.phase_id = final_review_type.id
-    design.update
+    design.save
     design_review.reload
     next_review.reload
 
@@ -586,7 +586,7 @@ class DesignReviewTest < Test::Unit::TestCase
     #   current user not designer, 
     #   next review same as design phase
     design.phase_id = release_review_type.id
-    design.update
+    design.save
     design_review.reload
     next_review.reload
 
@@ -612,7 +612,7 @@ class DesignReviewTest < Test::Unit::TestCase
     #   current user is designer, 
     #   next review not same as design phase
     design.phase_id = final_review_type.id
-    design.update
+    design.save
     design_review.reload
     next_review.reload
 
@@ -632,7 +632,7 @@ class DesignReviewTest < Test::Unit::TestCase
     #   current user not designer, 
     #   next reiew same as design phase
     design.phase_id = release_review_type.id
-    design.update
+    design.save
     design_review.reload
     next_review.reload
 
