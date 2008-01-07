@@ -65,7 +65,8 @@ class DesignReview < ActiveRecord::Base
   #
   def add_reviewers(board_team_list)
 
-    pcb_input_gate_role = Role.find_by_name('PCB Input Gate')
+    pcb_input_gate_role = Role.find(:first,
+                                    :conditions => "name='PCB Input Gate'")
     
       board_team_list.each do |reviewer|
  
@@ -141,11 +142,12 @@ class DesignReview < ActiveRecord::Base
   #
   def time_on_hold(current_time = Time.now)
 
-    on_hold = ReviewStatus.find_by_name('Review On-Hold')
+    on_hold = ReviewStatus.find(:first,
+                                :conditions => "name='Review On-Hold'")
 
     return 0 if self.review_status_id != on_hold.id
-    age_in_seconds(self.placed_on_hold_on, current_time)
-   
+    current_time.age_in_seconds(self.placed_on_hold_on)
+
   end
   
   
@@ -188,9 +190,9 @@ class DesignReview < ActiveRecord::Base
   ######################################################################
   #
   def place_on_hold(current_time = Time.now)
-    self.review_status     = ReviewStatus.find_by_name('Review On-Hold')
+    self.review_status     = ReviewStatus.find(:first, 
+                                               :conditions => "name='Review On-Hold'")
     self.placed_on_hold_on = current_time
-
     self.save
   end
   
@@ -216,9 +218,9 @@ class DesignReview < ActiveRecord::Base
   def remove_from_hold(review_status_id, current_time = Time.now)
 
     if self.review_status.name == 'Review On-Hold'
-      self.review_status_id    = review_status_id
-      self.total_time_on_hold += age_in_seconds(self.placed_on_hold_on, current_time)
-      self.update
+      self.review_status       = ReviewStatus.find(review_status_id)
+      self.total_time_on_hold += current_time.age_in_seconds(self.placed_on_hold_on)
+      self.save
       self.reload
     end
 
@@ -401,7 +403,8 @@ class DesignReview < ActiveRecord::Base
   ######################################################################
   #
   def on_hold?
-    self.review_status_id == ReviewStatus.find_by_name('Review On-Hold').id
+    self.review_status_id == ReviewStatus.find(:first,
+                                               :conditions => "name='Review On-Hold'").id
   end
   
   
@@ -423,7 +426,8 @@ class DesignReview < ActiveRecord::Base
   ######################################################################
   #
   def pending_repost?
-    self.review_status_id == ReviewStatus.find_by_name('Pending Repost').id
+    self.review_status_id == ReviewStatus.find(:first,
+                                               :conditions => "name='Pending Repost'").id
   end
   
   
@@ -445,7 +449,8 @@ class DesignReview < ActiveRecord::Base
   ######################################################################
   #
   def in_review?
-    self.review_status_id == ReviewStatus.find_by_name('In Review').id
+    self.review_status_id == ReviewStatus.find(:first,
+                                               :conditions => "name='In Review'").id
   end
   
   
@@ -467,7 +472,8 @@ class DesignReview < ActiveRecord::Base
   ######################################################################
   #
   def review_complete?
-    self.review_status_id == ReviewStatus.find_by_name('Review Completed').id
+    self.review_status_id == ReviewStatus.find(:first,
+                                               :conditions => "name='Review Completed'").id
   end
   
   
