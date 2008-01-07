@@ -32,7 +32,7 @@ class DesignControllerTest < Test::Unit::TestCase
            :design_review_results,
            :design_reviews,
            :fab_houses,
-           :review_status,
+           :review_statuses,
            :review_types,
            :review_types_roles,
            :revisions,
