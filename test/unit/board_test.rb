@@ -55,7 +55,7 @@ class BoardTest < Test::Unit::TestCase
     @board.project_id  = projects(:bbac).id
     @board.active      = 0
 
-    assert @board.update
+    assert @board.save
     @board.reload
 
     assert_equal('mx',                @board.prefix.pcb_mnemonic)
