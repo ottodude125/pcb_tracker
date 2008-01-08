@@ -1725,12 +1725,12 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     update_mx234a                  = DesignReview.find(mx234a.id)
     update_mx234a.review_status_id = @in_review.id
-    update_mx234a.update
+    update_mx234a.save
 
     mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
     for mx234a_review_result in mx234a_review_results
       mx234a_review_result.result = 'No Response'
-      mx234a_review_result.update
+      mx234a_review_result.save
     end
 
     mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
@@ -1748,7 +1748,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       if repost
         update_mx234a                  = DesignReview.find(mx234a.id)
         update_mx234a.review_status_id = @in_review.id
-        update_mx234a.update
+        update_mx234a.save
       end
       
       rev = User.find(reviewer_result[:user_id]).name
@@ -2075,12 +2075,12 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     update_mx234a                  = DesignReview.find(mx234a.id)
     update_mx234a.review_status_id = @in_review.id
-    update_mx234a.update
+    update_mx234a.save
 
     mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
     for mx234a_review_result in mx234a_review_results
       mx234a_review_result.result = 'No Response'
-      mx234a_review_result.update
+      mx234a_review_result.save
     end
 
     mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
@@ -2264,12 +2264,12 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     update_mx234a                  = DesignReview.find(mx234a.id)
     update_mx234a.review_status_id = @in_review.id
-    update_mx234a.update
+    update_mx234a.save
 
     mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
     for mx234a_review_result in mx234a_review_results
       mx234a_review_result.result = 'No Response'
-      mx234a_review_result.update
+      mx234a_review_result.save
     end
 
     mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
@@ -2515,12 +2515,12 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     update_mx234a                  = DesignReview.find(mx234a.id)
     update_mx234a.review_status_id = @in_review.id
-    update_mx234a.update
+    update_mx234a.save
 
     mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
     for mx234a_review_result in mx234a_review_results
       mx234a_review_result.result = 'No Response'
-      mx234a_review_result.update
+      mx234a_review_result.save
     end
 
     mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
@@ -2681,12 +2681,12 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     update_mx234a                  = DesignReview.find(mx234a.id)
     update_mx234a.review_status_id = @in_review.id
-    update_mx234a.update
+    update_mx234a.save
 
     mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
     for mx234a_review_result in mx234a_review_results
       mx234a_review_result.result = 'No Response'
-      mx234a_review_result.update
+      mx234a_review_result.save
     end
 
     mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
@@ -2879,7 +2879,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     mx234a.design_review_results.each do |rr|
       rr.result = 'No Response'
-      rr.update
+      rr.save
     end
     
     mx234a_review_results = mx234a.design_review_results
@@ -2894,7 +2894,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
         mx234a.place_on_hold
       elsif reviewer_result[:review_status] == @pending_repost
         mx234a.review_status_id = @pending_repost.id
-        mx234a.update
+        mx234a.save
       else
         mx234a.remove_from_hold(@in_review)
         expected_results[reviewer_result[:role_id].to_s] = reviewer_result[:result]
@@ -3004,7 +3004,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
         mx234a.place_on_hold
       else
         mx234a.review_status_id = review_status.id
-        mx234a.update
+        mx234a.save
       end
       mx234a.reload
     
@@ -3070,7 +3070,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
         mx234a.place_on_hold
       else
         mx234a.review_status_id = review_status.id
-        mx234a.update
+        mx234a.save
       end
       mx234a.reload
     
@@ -3475,11 +3475,11 @@ end
     # review and verify the results.
     mx234a_pre_artwork.reload
     mx234a_pre_artwork.review_status = @review_complete
-    mx234a_pre_artwork.update
+    mx234a_pre_artwork.save
     mx234a_pre_artwork.reload
     
     mx234a.phase_id = ReviewType.get_placement.id
-    mx234a.update
+    mx234a.save
     
     mx234a_placement = design_reviews(:mx234a_placement)
 
@@ -3547,11 +3547,11 @@ end
     # review and verfiy the results.
     mx234a_placement.reload
     mx234a_placement.review_status = @review_complete
-    mx234a_placement.update
+    mx234a_placement.save
     mx234a_placement.reload
     
     mx234a.phase_id = ReviewType.get_routing.id
-    mx234a.update
+    mx234a.save
     
     mx234a_routing = design_reviews(:mx234a_routing)
 
@@ -3619,11 +3619,11 @@ end
     # review and verify the results
     mx234a_routing.reload
     mx234a_routing.review_status = @review_complete
-    mx234a_routing.update
+    mx234a_routing.save
     mx234a_routing.reload
    
     mx234a.phase_id = ReviewType.get_final.id
-    mx234a.update
+    mx234a.save
     
     mx234a_final = design_reviews(:mx234a_final)
 
@@ -3693,11 +3693,11 @@ end
     # release review and verify the results.
     mx234a_final.reload
     mx234a_final.review_status = @review_complete
-    mx234a_final.update
+    mx234a_final.save
     mx234a_final.reload
     
     mx234a.phase_id = ReviewType.get_release.id
-    mx234a.update
+    mx234a.save
 
     mx234a_release = design_reviews(:mx234a_release)
 
