@@ -47,13 +47,13 @@ class DesignReviewController < ApplicationController
     
         case session[:active_role].name
         when 'Designer'
-          render_action('designer_view')
+          render( :action => 'designer_view' )
         when 'Manager'
-          render_action('manager_view')
+          render( :action => 'manager_view' )
         when 'Admin'
-          render_action('admin_view')
+          render( :action => 'admin_view' )
         else
-          render_action('safe_view')
+          render( :action => 'safe_view' )
         end
       
       else
@@ -83,9 +83,9 @@ class DesignReviewController < ApplicationController
             @fab_houses = nil
           end
 
-          render_action('reviewer_view')
+          render( :action => 'reviewer_view' )
         else
-          render_action('safe_view')
+          render( :action => 'safe_view' )
         end
       end
     else
@@ -269,7 +269,7 @@ class DesignReviewController < ApplicationController
            :reviewer_id      => routing_result.reviewer_id,
            :role_id          => routing_result.role_id,
            :result           => routing_result.result,
-           :reviewed_on      => routing_result.reviewed_on).create
+           :reviewed_on      => routing_result.reviewed_on).save
        end
       end
     end
@@ -312,7 +312,7 @@ class DesignReviewController < ApplicationController
       routing_review = ReviewType.get_routing
       
       @design_review.review_type_id_2 = routing_review.id
-      @design_review.update
+      @design_review.save
 
       # Remove the routing design review and review results for this design
       routing_review = design_reviews.detect { |dr| dr.review_type_id == routing_review.id }
@@ -351,7 +351,7 @@ class DesignReviewController < ApplicationController
     @design_review = DesignReview.find(params[:design_review_id])
     @reviewers     = @design_review.generate_reviewer_selection_list
 
-    render_action 'post_review'
+    render( :action => 'post_review' )
 
   end
 
@@ -386,7 +386,7 @@ class DesignReviewController < ApplicationController
     design_review.posting_count    = 1
     design_review.created_on       = current_time
     design_review.reposted_on      = current_time
-    design_review.update
+    design_review.save
 
     reviewer_list = {}
     params[:board_reviewers].each { |role_id, reviewer_id|
@@ -406,7 +406,7 @@ class DesignReviewController < ApplicationController
       end
       review_result.result      = 'No Response'
       review_result.reviewed_on = current_time
-      review_result.update
+      review_result.save
       
       # Send an invitation to the reviewer if one has not been sent before
       reviewer = User.find(review_result.reviewer_id)
@@ -415,7 +415,7 @@ class DesignReviewController < ApplicationController
 
         reviewer.invited  = 1
         reviewer.password = ''
-        reviewer.update
+        reviewer.save
       end
 
       # Update the CC list.
@@ -442,7 +442,7 @@ class DesignReviewController < ApplicationController
     if params[:post_comment][:comment] != ""
       DesignReviewComment.new(:comment          => params[:post_comment][:comment],
                               :user_id          => session[:user][:id],
-                              :design_review_id => design_review.id).create
+                              :design_review_id => design_review.id).save
     end
 
 
@@ -483,7 +483,7 @@ class DesignReviewController < ApplicationController
     design_review.review_status_id = in_review.id
     design_review.posting_count    += 1
     design_review.reposted_on      = Time.now
-    design_review.update
+    design_review.save
 
     review_results = 
       design_review.design_review_results.delete_if { |rr| rr.result == 'WAIVED' }
@@ -501,7 +501,7 @@ class DesignReviewController < ApplicationController
       end
       review_result.result      = 'No Response'
       review_result.reviewed_on = current_time
-      review_result.update
+      review_result.save
     end
     
 
@@ -509,7 +509,7 @@ class DesignReviewController < ApplicationController
     if params[:post_comment][:comment] != ""
       DesignReviewComment.new(:comment          => params[:post_comment][:comment],
                               :user_id          => session[:user][:id],
-                              :design_review_id => design_review.id).create
+                              :design_review_id => design_review.id).save
     end
 
     # Let everybody know that the design has been posted.
@@ -1231,7 +1231,7 @@ class DesignReviewController < ApplicationController
       dr_comment.comment          = review_results[:comments]
       dr_comment.user_id          = session[:user].id
       dr_comment.design_review_id = review_results[:design_review_id]
-      dr_comment.create
+      dr_comment.save
       
       comment_update = true
     end
@@ -1262,7 +1262,7 @@ class DesignReviewController < ApplicationController
         if review_result[:result] != 'COMMENT' && review_record && !ignore_rejection
           review_record.result      = review_result[:result]
           review_record.reviewed_on = Time.now
-          review_record.update
+          review_record.save
           results_recorded += 1
 
           result_update[review_record.role.name] = review_result[:result]
@@ -1279,13 +1279,13 @@ class DesignReviewController < ApplicationController
         for review_result in review_result_list
           if review_result.result == "APPROVED"
             review_result.result = "WITHDRAWN"
-            review_result.update
+            review_result.save
           end
         end
 
         pending_repost = ReviewStatus.find_by_name('Pending Repost')
         design_review.review_status_id = pending_repost.id
-        design_review.update
+        design_review.save
 
       elsif review_results[:roles].size > 0
 
@@ -1297,7 +1297,7 @@ class DesignReviewController < ApplicationController
           review_completed = ReviewStatus.find_by_name('Review Completed')
           design_review.review_status_id = review_completed.id
           design_review.completed_on     = Time.now
-          design_review.update
+          design_review.save
           review_complete = true
 
           # Check the design's designer and priority information against the 
@@ -1323,7 +1323,7 @@ class DesignReviewController < ApplicationController
           else
             design.phase_id = Design::COMPLETE
           end
-          design.update
+          design.save
         end
       end
     end
@@ -1651,7 +1651,7 @@ class DesignReviewController < ApplicationController
         if design_review_result
           is_reviewer = session[:user].id == design_review_result.reviewer_id
           design_review_result.reviewer_id = user_id
-          design_review_result.update
+          design_review_result.save
           peer         = User.find(user_id)
           new_reviewer = peer.name
 
@@ -1692,7 +1692,7 @@ class DesignReviewController < ApplicationController
       if design_review_result
         peer = User.find(design_review_result.reviewer_id)
         design_review_result.reviewer_id = session[:user].id
-        design_review_result.update
+        design_review_result.save
         
         design_review.record_update(role.display_name, 
                                     peer.name, 
@@ -2123,7 +2123,7 @@ class DesignReviewController < ApplicationController
       
       dr_comment = DesignReviewComment.new(:comment          => fab_msg,
                                            :user_id          => session[:user].id,
-                                           :design_review_id => design_review.id).create
+                                           :design_review_id => design_review.id).save
       comment_update = true
     end
     
@@ -2195,7 +2195,7 @@ class DesignReviewController < ApplicationController
           design_review.designer_id = designer.id
           design_review.design_center_id = designer.design_center_id
         end
-        design_review.update
+        design_review.save
       end
 
       results[:alternate_msg] += "Criticality is #{priority.name}, " if priority_update
