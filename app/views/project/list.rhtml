@@ -19,13 +19,6 @@
     <%= render_collection_of_partials "project_list_stripes", @projects %>
   </table>
 
-  <% pages = pagination_links @project_pages %>
-
-  <% if pages %>
-    <p><b>Pages:</b> <%= pages %>
-  <% end %>
-
-
   <hr class="div" />
 
   <input type="submit" value="New Project" />

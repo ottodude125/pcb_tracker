@@ -20,12 +20,6 @@
     <%= render_collection_of_partials "review_type_list_stripes", @review_types %>
   </table>
 
-  <% pages = pagination_links @review_type_pages %>
-
-  <% if pages %>
-    <p><b>Pages:</b> <%= pages %>
-  <% end %>
-
   <hr class="div" />
 
   <input type="submit" value="New Review Type" />

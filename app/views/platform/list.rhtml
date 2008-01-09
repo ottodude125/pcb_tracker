@@ -20,13 +20,6 @@
     <%= render_collection_of_partials "platform_list_stripes", @platforms %>
   </table>
 
-  <% pages = pagination_links @platform_pages %>
-
-  <% if pages %>
-    <p><b>Pages:</b> <%= pages %>
-  <% end %>
-
-
   <hr class="div" />
 
   <input type="submit" value="New Platform" />

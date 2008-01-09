@@ -20,13 +20,6 @@
     <%= render_collection_of_partials "product_type_list_stripes", @product_types %>
   </table>
 
-  <% pages = pagination_links @product_type_pages %>
-
-  <% if pages %>
-    <p><b>Pages:</b> <%= pages %>
-  <% end %>
-
-
   <hr class="div" />
 
   <input type="submit" value="New Product Type" />
