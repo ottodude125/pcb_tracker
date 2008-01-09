@@ -99,11 +99,7 @@ class DesignCenterController < ApplicationController
   ######################################################################
   #
   def list
-
-    @design_center_pages, @design_centers = paginate(:design_centers,
-                                                     :per_page => 15,
-                                                     :order_by => 'name')
-
+    @design_centers = DesignCenter.find(:all, :order => 'name' )
   end
 
 

@@ -98,11 +98,7 @@ class ReviewTypeController < ApplicationController
   ######################################################################
   #
   def list
-
-    @review_type_pages, @review_types = paginate(:review_types,
-                                                 :per_page => 15,
-                                                 :order_by => 'sort_order')
-
+    @review_types = ReviewType.find(:all, :order => 'sort_order')
   end
 
 

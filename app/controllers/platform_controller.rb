@@ -33,11 +33,8 @@ class PlatformController < ApplicationController
   #
   ######################################################################
   #
-  def list
-    
-    @platform_pages, @platforms = paginate(:platforms, 
-					   :per_page => 15,
-					   :order_by => "name")
+  def list  
+    @platforms = Platform.find(:all, :order => "name")
   end 
 
 

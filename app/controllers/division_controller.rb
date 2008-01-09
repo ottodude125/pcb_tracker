@@ -35,10 +35,7 @@ class DivisionController < ApplicationController
   ######################################################################
   #
   def list
-
-    @division_pages, @divisions = paginate(:divisions, 
-                                           :per_page => 15,
-                                           :order_by => "name")
+    @divisions = Division.find(:all, :order => "name")
   end 
 
 

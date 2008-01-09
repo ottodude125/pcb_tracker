@@ -98,11 +98,7 @@ class PriorityController < ApplicationController
   ######################################################################
   #
   def list
-
-    @priority_pages, @priorities = paginate(:priorities,
-                                            :per_page => 15,
-                                            :order_by => 'value')
-
+    @priorities = Priority.find(:all, :order => 'value')
   end
 
 

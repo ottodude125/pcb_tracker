@@ -35,9 +35,7 @@ class ProductTypeController < ApplicationController
   #
   def list
     
-    @product_type_pages, @product_types = paginate(:product_types, 
-					                               :per_page => 15,
-					                               :order_by => "name")
+    @product_types = ProductType.find(:all, :order => "name")
   end 
 
 

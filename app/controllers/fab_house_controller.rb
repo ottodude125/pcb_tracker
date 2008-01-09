@@ -99,11 +99,7 @@ class FabHouseController < ApplicationController
   ######################################################################
   #
   def list
-
-    @fab_house_pages, @fab_houses = paginate(:fab_houses,
-                                             :per_page => 15,
-                                             :order_by => 'name')
-
+    @fab_houses = FabHouse.find(:all, :order => 'name')
   end
 
 

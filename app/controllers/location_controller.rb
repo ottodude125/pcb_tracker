@@ -35,10 +35,7 @@ class LocationController < ApplicationController
   ######################################################################
   #
   def list
-
-    @location_pages, @locations = paginate(:locations, 
-                                           :per_page => 15,
-                                           :order_by => "name")
+    @locations = Location.find(:all, :order => "name")
   end 
 
 

@@ -34,10 +34,7 @@ class IncomingDirectoryController < ApplicationController
   ######################################################################
   #
   def list
-    
-    @incoming_directory_pages, @incoming_directories = paginate(:incoming_directory, 
-					                                            :per_page => 15,
-					                                            :order_by => "name")
+    @incoming_directories = IncomingDirectory.find(:all, :order => "name")
   end 
 
 

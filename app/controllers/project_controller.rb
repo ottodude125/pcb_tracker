@@ -35,10 +35,7 @@ class ProjectController < ApplicationController
   ######################################################################
   #
   def list
-
-    @project_pages, @projects = paginate(:projects, 
-					 :per_page => 15,
-					 :order_by => "name")
+    @projects = Project.find(:all, :order => "name")
   end 
 
 

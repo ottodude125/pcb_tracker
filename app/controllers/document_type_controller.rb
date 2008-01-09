@@ -100,10 +100,7 @@ class DocumentTypeController < ApplicationController
   #
   def list
 
-    @document_type_pages, 
-      @document_types = paginate(:document_type,
-                                 :per_page => 15,
-                                 :order_by => 'name')
+    @document_types = DocumentType.find(:all, :order => 'name')
   end
 
 

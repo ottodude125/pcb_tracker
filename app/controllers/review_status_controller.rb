@@ -100,11 +100,7 @@ class ReviewStatusController < ApplicationController
   ######################################################################
   #
   def list
-
-    @review_status_pages, 
-      @review_statuses = paginate(:review_statuses,
-                                  :per_page => 15,
-                                  :order_by => 'name')
+    @review_statuses = ReviewStatus.find(:all, :order => 'name')
   end
 
 

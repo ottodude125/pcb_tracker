@@ -34,10 +34,7 @@ class DesignDirectoryController < ApplicationController
   ######################################################################
   #
   def list
-    
-    @design_directory_pages, @design_directories = paginate(:design_directory, 
-					                                        :per_page => 15,
-					                                        :order_by => "name")
+    @design_directories = DesignDirectory.find(:all, :order => 'name')
   end 
 
 
