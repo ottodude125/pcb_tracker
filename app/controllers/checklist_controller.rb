@@ -182,10 +182,7 @@ class ChecklistController < ApplicationController
   ######################################################################
   #
   def list
-
-    @checklist_pages, @checklists = paginate(:checklists,
-                                             :per_page   => 15,
-                                             :order_by   => 'released_on DESC')
+    @checklists = Checklist.find(:all, :order => 'released_on DESC')
   end
 
 
