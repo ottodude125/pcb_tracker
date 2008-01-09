@@ -98,11 +98,7 @@ class ReviewGroupController < ApplicationController
   ######################################################################
   #
   def list
-
-    @review_group_pages, @review_groups = paginate(:review_groups,
-                                                   :per_page => 15,
-                                                   :order_by => 'name')
-
+    @review_groups = ReviewGroup.find(:all, :order => 'name')
   end
 
 
