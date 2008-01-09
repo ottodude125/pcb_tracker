@@ -18,12 +18,6 @@
     <%= render_collection_of_partials "fab_house_list_stripes", @fab_houses %>
   </table>
 
-  <% pages = pagination_links @fab_house_pages %>
-
-  <% if pages %>
-    <p><b>Pages:</b> <%= pages %>
-  <% end %>
-
   <hr class="div" />
 
   <input type="submit" value="New Fabrication House" />

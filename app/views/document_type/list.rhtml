@@ -19,12 +19,6 @@
     <%= render_collection_of_partials "document_type_list_stripes", @document_types %>
   </table>
 
-  <% pages = pagination_links @document_type_pages %>
-
-  <% if pages %>
-    <p><b>Pages:</b> <%= pages %>
-  <% end %>
-
   <hr class="div" />
 
   <input type="submit" value="New Document Type" />
