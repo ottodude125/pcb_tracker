@@ -36,12 +36,12 @@ class IpdPostController < ApplicationController
   def list
 
     @design = Design.find(params[:design_id])
-    @ipd_post_pages, 
-    @ipd_posts = paginate(:ipd_posts,
-                          :conditions => ['parent_id = 0 and design_id = ?', 
-                                          @design.id],
-                          :per_page => 20,
-                          :order => 'root_id desc, lft')
+  
+    @ipd_posts = IpdPost.find(:all,
+                             # :conditions => ['parent_id = 0 and design_id = ?', 
+                             #                 @design.id],
+                              :conditions => "parent_id=0 AND design_id='#{@design.id}'",
+                              :order      => 'root_id desc, lft')
   end
 
 
