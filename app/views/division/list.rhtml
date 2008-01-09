@@ -19,13 +19,6 @@
     <%= render_collection_of_partials "division_list_stripes", @divisions %>
   </table>
 
-  <% pages = pagination_links @division_pages %>
-
-  <% if pages %>
-    <p><b>Pages:</b> <%= pages %>
-  <% end %>
-
-
   <hr class="div" />
 
   <input type="submit" value="New Division" />

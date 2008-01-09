@@ -20,12 +20,6 @@
     <%= render_collection_of_partials "design_center_list_stripes", @design_centers %>
   </table>
 
-  <% pages = pagination_links @design_center_pages %>
-
-  <% if pages %>
-    <p><b>Pages:</b> <%= pages %>
-  <% end %>
-
   <hr class="div" />
 
   <input type="submit" value="New Design Center" />
