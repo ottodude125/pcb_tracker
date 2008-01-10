@@ -240,10 +240,10 @@ class ApplicationController < ActionController::Base
   def verify_pcb_group
 
     valid_user = false
-    role_list = ['Designer']
 
     if session[:user]
       roles = session[:user].roles.collect { |r| r.name }  
+      role_list = ['Designer', 'Manager']
       valid_user = (roles & role_list).size > 0
       
       if valid_user
@@ -252,6 +252,7 @@ class ApplicationController < ActionController::Base
                             'process_assignments', 
                             'section_selection',
                             'report_card_list',
+                            'static_view',
                             'view_assignments',
                             'view_assignment_report']
         if employee_actions.detect { |a| a == params[:action] }
@@ -266,6 +267,5 @@ class ApplicationController < ActionController::Base
     end
   
   end
-  
   
 end
