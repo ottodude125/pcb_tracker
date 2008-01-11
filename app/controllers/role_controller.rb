@@ -189,7 +189,7 @@ class RoleController < ApplicationController
   #
   def update_review_roles
 
-    review_roles = Role.find_all('reviewer=1', 'name ASC')
+    review_roles = Role.get_review_roles
     
     updated_roles = params[:review_role]
 
@@ -200,11 +200,11 @@ class RoleController < ApplicationController
 
       if review_role.cc_peers? && updated_roles[role_id] == '0'
 	review_role.cc_peers = 0
-	review_role.update
+	review_role.save
 	update = true
       elsif (not review_role.cc_peers?) && updated_roles[role_id] == '1'
 	review_role.cc_peers = 1
-	review_role.update
+	review_role.save
 	update = true
       end
     end
