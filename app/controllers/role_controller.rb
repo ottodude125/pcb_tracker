@@ -62,7 +62,7 @@ class RoleController < ApplicationController
   
     @role = Role.new(:active => 1)
   
-    render_action('edit')
+    render(:action => 'edit')
     
   end
   ######################################################################
@@ -236,7 +236,13 @@ class RoleController < ApplicationController
   ######################################################################
   #
   def toggle_reviewer_selection
-    @role = Role.find(params[:role_id])
-    render(:layout => false)
+    @role = Role.find(params[:role_id]) if params[:role_id]
+    if @role && @role.active_users.size > 0
+      render(:layout => false)
+    else
+      render(:action => 'no_default_reviewers', :layout => false)
+    end
   end
+
+
 end
