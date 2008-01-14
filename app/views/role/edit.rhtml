@@ -14,10 +14,14 @@
   <% action = { :action => 'create' } %>
 <% else %>
   <% action = { :action => 'update' } %>
-  <%= hidden_field "role", "id" %>
 <% end %>
 
 <% form_tag(action) do %>
+
+  <% if mode == 'edit' %>
+    <%= hidden_field "role", "id" %>
+  <% end %>
+
   <table border="0">
     <tr>
       <td align="right" class="teraheader">Role (Internal Name): </td>
