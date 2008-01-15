@@ -245,6 +245,7 @@ class UserController < ApplicationController
       user = User.find(session[:user].id)
       user.password = params[:new_password]
       user.passwd   = params[:new_password] if not params[:new_password].empty?
+      user.password_confirmation = params[:new_password_confirmation]
 
       if user.save
         if not params[:new_password].empty?
