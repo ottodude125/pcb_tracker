@@ -246,7 +246,7 @@ class UserController < ApplicationController
       user.password = params[:new_password]
       user.passwd   = params[:new_password] if not params[:new_password].empty?
 
-      if user.update
+      if user.save
         if not params[:new_password].empty?
           flash['notice'] = "The password for #{user.name} was updated"
           updated = true
@@ -443,7 +443,7 @@ class UserController < ApplicationController
           TrackerMailer::deliver_tracker_invite(@user)
           @user.invited  = 1
           @user.password = @user.passwd
-          @user.update
+          @user.save
           break
         end
       end
