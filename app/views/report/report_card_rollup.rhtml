@@ -24,7 +24,7 @@
 <table border="0" align="center">
 
   <tr>
-    <td rowspan="4" valign="middle" align="center" width="150">
+    <td rowspan="3" valign="middle" align="center" width="150">
       <input title="Click here to generate the report card rollup report." 
              class="tera_submit" type="submit" value="Create Graph" />
     </td>
@@ -68,46 +68,112 @@
     <td><b><%= @year %></b?</td>
   </tr>
 
-  <tr>
-    <th align="right" class="teraheader">Download Graph:</th>
-    <td align="left">
-      <%= check_box("download", "yes")%>
-    </td>
-  </tr>
-  
 </table>
 
 <hr class="div" width="820" />
 
 <% end %>
 
-<table align="center">
+<table align="center" border="5">
   <tr>
     <td>
       <%= image_tag('graphs/lcr_process_report.png', {:border => '0'}) %>
+    </td>
+  </tr>
+  <tr class='teraheader'>
+    <td align="center">
+      <input type="button" value="Download Rework Graph"
+             onClick="parent.location='<%= url_for(:action         => 'download_rework_graph',
+                                                   :quarter        => @quarter,
+                                                   :year           => @year,
+                                                   :team_member_id => @team_member_id) %>'" />
     </td>
   </tr>
 </table>
 
 <hr class="div" width="820" />
 
-<% if @report_cards.size > 0 %>
-<h2> Details </h2>
-
-<table border="0" align="center" cellspacing="0">
-  <tr class="teraheader" valign="top">
-    <th>Design</th>
-    <th>% Rework</th>
-    <th>Section</th>
-    <th>Lead Designer</th>
-    <th>Team Member</th>
-    <th>Duration<br />(Days)</th>
+<table align="center" border="5">
+  <tr>
+    <td>
+      <%= image_tag('graphs/lcr_rollup_report_count.png', {:border => '0'}) %>
+    </td>
   </tr>
-  
-  <%= render_collection_of_partials("report_card_list_stripes", @report_cards) %>
-  
+  <tr class='teraheader'>
+    <td align="center">
+      <input type="button" value="Download Report Count Graph"
+             onClick="parent.location='<%= url_for(:action         => 'download_report_count_graph',
+                                                   :quarter        => @quarter,
+                                                   :year           => @year,
+                                                   :team_member_id => @team_member_id) %>'" />
+    </td>
+  </tr>
 </table>
 
+<hr class="div" width="820" />
+
+<% if @high_report_cards.size + @med_report_cards.size + @low_report_cards.size > 0 %>
+<h2> Details </h2>
+
+
+<% if @high_report_cards.size  > 0 %>
+  <table border="5" align="center" cellspacing="0">
+    <tr class="teraheader">
+      <th colspan='6'>High Complexity Assignments</th>
+    </tr>
+    <tr class="teraheader" valign="top">
+      <th width="150">Design</th>
+      <th width="100">% Rework</th>
+      <th width="200">Section</th>
+      <th width="200">Lead Designer</th>
+      <th width="200">Team Member</th>
+      <th width="100">Duration<br />(Days)</th>
+    </tr>
+  
+    <%= render_collection_of_partials("report_card_list_stripes", @high_report_cards) %>
+  
+  </table>
+<% end %>
+
+<% if @med_report_cards.size > 0 %>
+  <br />
+  <table border="5" align="center" cellspacing="0">
+    <tr class="teraheader">
+      <th colspan='6'>Medium Complexity Assignments</th>
+    </tr>
+    <tr class="teraheader" valign="top">
+      <th width="150">Design</th>
+      <th width="100">% Rework</th>
+      <th width="200">Section</th>
+      <th width="200">Lead Designer</th>
+      <th width="200">Team Member</th>
+      <th width="100">Duration<br />(Days)</th>
+    </tr>
+  
+    <%= render_collection_of_partials("report_card_list_stripes", @med_report_cards) %>
+  
+  </table>
+<% end %>
+
+<% if @low_report_cards.size > 0 %>
+  <br />
+  <table border="5" align="center" cellspacing="0">
+    <tr class="teraheader">
+      <th colspan='6'>Low Complexity Assignments</th>
+    </tr>
+    <tr class="teraheader" valign="top">
+      <th width="150">Design</th>
+      <th width="100">% Rework</th>
+      <th width="200">Section</th>
+      <th width="200">Lead Designer</th>
+      <th width="200">Team Member</th>
+      <th width="100">Duration<br />(Days)</th>
+    </tr>
+  
+    <%= render_collection_of_partials("report_card_list_stripes", @low_report_cards) %>
+  
+  </table>
+<% end %>
 
 <hr class="div" width="820" />
 <% end %>
@@ -123,4 +189,7 @@
 </table>
 
 <%# debug @lcr_designers %>
-<%# debug flash %>
+<%# debug @report_cards %>
+<%# debug @high_report_cards %>
+<%# debug @med_report_cards %>
+<%# debug @low_report_cards %>
