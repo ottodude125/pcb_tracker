@@ -168,7 +168,7 @@ class DesignController < ApplicationController
     user = User.find(params[:id])
 
     # Update the database
-    details[:design].board.remove_users(user)
+    details[:design].board.users.destroy(user)
 
     # Update the history
     if 1 == 2
