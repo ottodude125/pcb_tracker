@@ -81,12 +81,24 @@ class ReportController < ApplicationController
 
     report_cards = OiAssignmentReport.report_card_rollup(@team_member_id, @quarter, @year)
 
+    @total_report_cards = report_cards.size
     @high_report_cards = report_cards.collect { |rc| rc if rc.oi_assignment.complexity_name == 'High' }
     @med_report_cards  = report_cards.collect { |rc| rc if rc.oi_assignment.complexity_name == 'Medium' }
     @low_report_cards  = report_cards.collect { |rc| rc if rc.oi_assignment.complexity_name == 'Low' }
     @high_report_cards.compact!
     @med_report_cards.compact!
     @low_report_cards.compact!
+
+    idc_designer = @team_member_id > 0 ? User.find(@team_member_id).name : 'all'
+    idc_designer.gsub!(/ /, '_')
+    common = "graphs/Q#{@quarter}_#{@year}_#{idc_designer}"
+    @rework_graph_filename       = common + '_rework_graph.png'
+    @report_count_graph_filename = common + '_report_count_graph.png'
+
+    if @total_report_cards == 0
+      
+      @no_reports_msg = "No Report Cards for Q#{@quarter} #{@year}"
+    end
 
   end
 
