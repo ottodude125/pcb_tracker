@@ -261,7 +261,9 @@ private
       graph.maximum_value -= 5
     end
     
-    graph.write('public/images/graphs/lcr_process_report.png')
+    idc_designer = 'all' if idc_designer == ''
+    idc_designer.gsub!(/ /, '_')
+    graph.write("public/images/graphs/Q#{quarter}_#{year}_#{idc_designer}_rework_graph.png")
 
     return graph
   
@@ -327,7 +329,9 @@ private
       graph.maximum_value += 10
     end 
 
-    graph.write('public/images/graphs/lcr_rollup_report_count.png')
+    idc_designer = 'all' if idc_designer == ''
+    idc_designer.gsub!(/ /, '_')
+    graph.write("public/images/graphs/Q#{quarter}_#{year}_#{idc_designer}_report_count_graph.png")
 
     return graph
   
