@@ -510,7 +510,7 @@ class BoardDesignEntryController < ApplicationController
         user.division_id = @board_design_entry.division_id
         user.location_id = @board_design_entry.location_id
         user.password    = ''
-        user.update
+        user.save
 
       end
       
@@ -676,7 +676,7 @@ class BoardDesignEntryController < ApplicationController
 
     if @entry_user
       @entry_user.user_id = @member_id
-      @entry_user.update
+      @entry_user.save
     else
       @entry_user = BoardDesignEntryUser.new
       @entry_user.role_id               = @role.id
@@ -720,7 +720,7 @@ class BoardDesignEntryController < ApplicationController
 
     if @entry_user
       @entry_user.required = params[:required] == 'not_required' ? 0 : 1
-      @entry_user.update
+      @entry_user.save
     else
       @entry_user = BoardDesignEntryUser.new
       @entry_user.role_id               = @role.id
@@ -1124,7 +1124,7 @@ class BoardDesignEntryController < ApplicationController
     end
     
     document.destroy
-    board_design_entry.update
+    board_design_entry.save
 
   
     redirect_to(:action      => 'view_attachments', 
@@ -1267,7 +1267,7 @@ class BoardDesignEntryController < ApplicationController
       
       board_design_entry.ready_to_post
       board_design_entry.design_id = design.id
-      board_design_entry.update
+      board_design_entry.save
       
     else
       flash['notice'] = "The design already exists - this should never occur"
