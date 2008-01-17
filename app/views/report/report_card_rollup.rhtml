@@ -74,45 +74,58 @@
 
 <% end %>
 
-<table align="center" border="5">
-  <tr>
-    <td>
-      <%= image_tag('graphs/lcr_process_report.png', {:border => '0'}) %>
-    </td>
-  </tr>
-  <tr class='teraheader'>
-    <td align="center">
-      <input type="button" value="Download Rework Graph"
-             onClick="parent.location='<%= url_for(:action         => 'download_rework_graph',
-                                                   :quarter        => @quarter,
-                                                   :year           => @year,
-                                                   :team_member_id => @team_member_id) %>'" />
-    </td>
-  </tr>
-</table>
 
-<hr class="div" width="820" />
+<% if @total_report_cards > 0 %>
+  <table align="center" border="5">
+    <tr>
+      <td>
+        <%= image_tag(@rework_graph_filename, {:border => '0'}) %>
+      </td>
+    </tr>
+    <tr class='teraheader'>
+      <td align="center">
+        <input type="button" value="Download Rework Graph"
+               onClick="parent.location='<%= url_for(:action         => 'download_rework_graph',
+                                                     :quarter        => @quarter,
+                                                     :year           => @year,
+                                                     :team_member_id => @team_member_id) %>'" />
+      </td>
+    </tr>
+  </table>
 
-<table align="center" border="5">
-  <tr>
-    <td>
-      <%= image_tag('graphs/lcr_rollup_report_count.png', {:border => '0'}) %>
-    </td>
-  </tr>
-  <tr class='teraheader'>
-    <td align="center">
-      <input type="button" value="Download Report Count Graph"
-             onClick="parent.location='<%= url_for(:action         => 'download_report_count_graph',
-                                                   :quarter        => @quarter,
-                                                   :year           => @year,
-                                                   :team_member_id => @team_member_id) %>'" />
-    </td>
-  </tr>
-</table>
+  <hr class="div" width="820" />
 
-<hr class="div" width="820" />
+  <table align="center" border="5">
+    <tr>
+      <td>
+        <%= image_tag(@report_count_graph_filename, {:border => '0'}) %>
+      </td>
+    </tr>
+    <tr class='teraheader'>
+      <td align="center">
+        <input type="button" value="Download Report Count Graph"
+               onClick="parent.location='<%= url_for(:action         => 'download_report_count_graph',
+                                                     :quarter        => @quarter,
+                                                     :year           => @year,
+                                                     :team_member_id => @team_member_id) %>'" />
+      </td>
+    </tr>
+  </table>
 
-<% if @high_report_cards.size + @med_report_cards.size + @low_report_cards.size > 0 %>
+  <hr class="div" width="820" />
+<% else %>
+
+  <table align="center" width="800">
+    <tr>
+      <td><font color="red"><b><%= @no_reports_msg %></b></font></td>
+    </tr>
+  </table>
+
+  <br />
+<% end %>
+
+
+<% if @total_report_cards > 0 %>
 <h2> Details </h2>
 
 
@@ -189,7 +202,7 @@
 </table>
 
 <%# debug @lcr_designers %>
-<%# debug @report_cards %>
+<%# debug @total_report_cards.class %>
 <%# debug @high_report_cards %>
 <%# debug @med_report_cards %>
 <%# debug @low_report_cards %>
