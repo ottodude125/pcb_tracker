@@ -1208,6 +1208,7 @@ class TrackerMailer < ActionMailer::Base
   def copy_to(design_review)
 
     cc_list = [design_review.designer.email]
+    cc_list << design_review.design.designer.email if design_review.design.designer_id > 0
 
     design_review.design.board.users.each do |cc|
       cc_list << cc.email if cc.active?
