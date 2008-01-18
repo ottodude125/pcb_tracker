@@ -216,8 +216,9 @@ class DesignController < ApplicationController
     @documents = []
     DocumentType.get_document_types.each do |doc_type|
 
-      docs = DesignReviewDocument.find_all("board_id='#{@design.board.id}' " +
-                                           " and document_type_id='#{doc_type.id}'")
+      docs = DesignReviewDocument.find(:all,
+                                       :conditions => "board_id='#{@design.board.id}' AND " +
+                                                      "document_type_id='#{doc_type.id}'")
       next if docs.size == 0
 
       if doc_type.name != "Other"
