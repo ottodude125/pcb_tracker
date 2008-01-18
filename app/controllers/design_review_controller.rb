@@ -914,7 +914,7 @@ class DesignReviewController < ApplicationController
   def get_attachment
     @document = Document.find(params[:id])
 
-    send_data(@document.data.to_a.pack("H*"),
+    send_data(@document.data.to_a,
               :filename    => @document.name,
               :type        => @document.content_type,
               :disposition => "inline")
