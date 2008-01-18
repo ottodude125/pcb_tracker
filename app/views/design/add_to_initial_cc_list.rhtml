@@ -70,8 +70,8 @@
                                       :name,
                                       @users_copied,
                                       :id,
-                                      :name,
-                                      {:include_blank => true},
+                                      :last_name_first,
+                                      {:include_blank => false},
                                       "class" => 'name_select',
                                       "size" => 10) %>
                 <%= observe_field('remove_name',
@@ -107,8 +107,8 @@
                                       :name,
                                       @users_not_copied,
                                       :id,
-                                      :name,
-                                      {:include_blank => true},
+                                      :last_name_first,
+                                      {:include_blank => false},
                                       "class" => 'name_select',
                                        "size"  => '10') %>
                 <%= observe_field('add_name',
