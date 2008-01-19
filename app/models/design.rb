@@ -1033,6 +1033,9 @@ class Design < ActiveRecord::Base
     # Update the design reviews
     self.design_reviews.each do |dr|
 
+      original_designer    = dr.designer
+      original_criticality = dr.priority
+
       # All design reviews will get any update to the design center.
       old_design_center_name = dr.update_design_center(update[:design_center], user)
       if old_design_center_name
@@ -1043,7 +1046,7 @@ class Design < ActiveRecord::Base
       next if dr.review_status.name == "Review Completed"
 
       if dr.update_criticality(update[:criticality], user)
-        changes[:criticality] = { :old => dr.priority.name, 
+        changes[:criticality] = { :old => original_criticality.name, 
                                   :new => update[:criticality].name}
       end
       
@@ -1056,28 +1059,27 @@ class Design < ActiveRecord::Base
       # If the design review is "Pre-Artwork" that is not complete
       # then process any PCB Input Gate change.
       if dr.update_pcb_input_gate(update[:pcb_input_gate], user)
-        cc_list << dr.designer.email             if dr.designer_id != 0
+        cc_list << original_designer.email
         cc_list << update[:pcb_input_gate].email if update[:pcb_input_gate].id != 0
 
-        changes[:pcb_input_gate] = { :old => dr.designer.name, 
+        changes[:pcb_input_gate] = { :old => original_designer.name, 
                                      :new => update[:pcb_input_gate].name}
 
         set_pcb_input_designer = true
 
       elsif dr.update_release_review_poster(update[:release_poster], user)
 
-        cc_list << dr.designer.email             if dr.designer_id != 0
+        cc_list << original_designer.email
         cc_list << update[:release_poster].email if update[:release_poster].id != 0
-        changes[:release_poster] = { :old => dr.designer.name, 
+        changes[:release_poster] = { :old => original_designer.name, 
                                      :new => update[:release_poster].name }
         
       elsif dr.update_reviews_designer_poster(update[:designer], user)
 
         cc_list << dr.designer.email       if dr.designer_id != 0
         cc_list << update[:designer].email if update[:designer].id != 0
-        changes[:designer] = { :old => dr.designer.name, 
+        changes[:designer] = { :old => original_designer.name, 
                                :new => update[:designer].name }
-        
       end
       
       dr.reload if changes.size > 0
