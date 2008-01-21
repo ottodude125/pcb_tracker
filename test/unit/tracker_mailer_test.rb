@@ -272,6 +272,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     
     response_cc = response.cc.sort_by { |address| address }
     expected_cc = (@manager_email_list + @input_gate_email_list) - expected_to
+    expected_cc << @bob_g.email
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
@@ -305,6 +306,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     
     response_cc = response.cc.sort_by { |address| address }
     expected_cc = (@manager_email_list + @input_gate_email_list) - expected_to
+    expected_cc << @bob_g.email
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
@@ -338,6 +340,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     
     response_cc = response.cc.sort_by { |address| address }
     expected_cc = (@manager_email_list + @input_gate_email_list) - expected_to
+    expected_cc << @bob_g.email
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
@@ -368,6 +371,7 @@ class TrackerMailerTest < Test::Unit::TestCase
 
     response_cc = response.cc.sort_by { |address| address }
     expected_cc = @manager_email_list + @input_gate_email_list
+    expected_cc << @bob_g.email
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
@@ -424,6 +428,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     expected_release_cc << designer.email
     expected_release_cc << "STD_DC_ECO_Inbox@notes.teradyne.com" if !Pcbtr::DEVEL_SERVER
     
+    expected_release_cc << @bob_g.email
     expected_release_cc = expected_release_cc.sort_by { |address| address }.uniq
     assert_equal(expected_release_cc, response_cc)
 
@@ -451,6 +456,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     
     response_cc = response.cc.sort_by { |address| address }
     expected_cc = @manager_email_list + @input_gate_email_list
+    expected_cc << @bob_g.email
     expected_cc = expected_cc.sort_by { |address| address }.uniq
     assert_equal(expected_cc, response_cc)
 
