@@ -139,9 +139,8 @@ class DesignTest < Test::Unit::TestCase
     
     assert(!@mx234a_design.inactive_reviewers?)
 
-    @tom_f.active = 0
-    @tom_f.save
-    @mx234a_design.save
+    @tom_f.update_attribute(:active,  0)
+
     assert(@mx234a_design.inactive_reviewers?)
     
   end
