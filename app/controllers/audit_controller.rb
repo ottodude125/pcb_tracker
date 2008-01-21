@@ -317,6 +317,7 @@ class AuditController < ApplicationController
   def print
 
     @audit    = Audit.find(params[:id])
+    @audit.trim
     @user_list = []
     
     design_check_list = DesignCheck.find(:all, 
@@ -325,68 +326,27 @@ class AuditController < ApplicationController
 
     @checklist = @audit.checklist
     
-    # Remove the sections that are not used.
-    case @audit.design.design_type
-    when 'New'
-      @audit.checklist.sections.delete_if { |section| !section.full_review? }
-    when 'Dot Rev'
-      @audit.checklist.sections.delete_if { |section| !section.dot_rev_check? }
-    when 'Date Code'
-      @audit.checklist.sections.delete_if { |section| !section.date_code_check? }
-    end
-    
-    @audit.checklist.sections.each do |section|
+    @audit.checklist.each_check do |check|
 
-      next if !@audit.design.belongs_to(section)
-      
-      # Remove the subsections that are not used.
-      case @audit.design.design_type
-      when 'New'
-        section.subsections.delete_if { |subsection| !subsection.full_review? }
-      when 'Dot Rev'
-        section.subsections.delete_if { |subsection| !subsection.dot_rev_check? }
-      when 'Date Code'
-        section.subsections.delete_if { |subsection| !subsection.date_code_check? }
+      check[:design_check] = design_check_list.detect { |dc| dc.check_id == check.id }
+      next if !check[:design_check]
+    
+      designer = @user_list.detect { |u| u.id == check[:design_check].designer_id }
+      if !designer && check[:design_check].designer_id != 0
+        designer = User.find(check[:design_check].designer_id) if check[:design_check].designer_id > 0
+        @user_list << designer
+      end
+      check[:designer] = designer.name if designer
+
+      if check[:design_check].auditor_id > 0
+        auditor = @user_list.detect { |u| u.id == check[:design_check].auditor_id }
+        if !auditor && check[:design_check].auditor_id != 0
+          auditor = User.find(check[:design_check].auditor_id) if check[:design_check].auditor_id > 0
+          @user_list << auditor
+        end
+        check[:auditor] = auditor.name if auditor
       end
 
-      section.subsections.each do |subsection|
-
-        next if !@audit.design.belongs_to(subsection)
-
-        # Remove the checks that are not used.
-        case @audit.design.design_type
-        when 'New'
-          subsection.checks.delete_if { |check| !check.full_review? }
-        when 'Dot Rev'
-          subsection.checks.delete_if { |check| !check.dot_rev_check? }
-        when @audit.design.design_type == 'Date Code'
-          subsection.checks.delete_if { |check| !check.date_code_check? }
-        end
-
-        subsection.checks.each do |check|
-
-          next if !@audit.design.belongs_to(check)
-
-          check[:design_check] = design_check_list.detect { |dc| dc.check_id == check.id }
-          next if !check[:design_check]
-    
-          designer = @user_list.detect { |u| u.id == check[:design_check].designer_id }
-          if !designer && check[:design_check].designer_id != 0
-            designer = User.find(check[:design_check].designer_id) if check[:design_check].designer_id > 0
-            @user_list << designer
-          end
-          check[:designer] = designer.name if designer
-
-          if check[:design_check].auditor_id > 0
-            auditor = @user_list.detect { |u| u.id == check[:design_check].auditor_id }
-            if !auditor && check[:design_check].auditor_id != 0
-              auditor = User.find(check[:design_check].auditor_id) if check[:design_check].auditor_id > 0
-              @user_list << auditor
-            end
-            check[:auditor] = auditor.name if auditor
-          end
-        end
-      end
     end
   end # print method
 
@@ -406,40 +366,8 @@ class AuditController < ApplicationController
   ######################################################################
   #
   def auditor_list
-    
     @audit = Audit.find(params[:id])
-    
-    self_list = Role.active_designers
-    peer_list = self_list.dup
-    peer_list.delete_if { |u| u.id == @audit.design.designer_id }
-    
-    sections = []
-    @audit.checklist.sections.each do |section|
-   
-      next if ((@audit.design.date_code? && !section.date_code_check?) ||
-               (@audit.design.dot_rev?   && !section.dot_rev_check?))
-               
-      sect = { :section      => section,
-               :self_auditor => @audit.design.designer,
-               :peer_auditor => @audit.design.peer }
-    
-      self_auditor =
-         @audit.audit_teammates.detect { |mate| mate.section_id == section.id && mate.self? }
-      sect[:self_auditor] = self_auditor.user if self_auditor
-      
-      peer_auditor = 
-        @audit.audit_teammates.detect { |mate| mate.section_id == section.id && !mate.self? }
-      sect[:peer_auditor] = peer_auditor.user if peer_auditor
-      
-      sections << sect
-      
-    end
-    
-    @auditor_list = { :lead_designer => @audit.design.designer,
-                      :self_list     => self_list,
-                      :lead_peer     => @audit.design.peer,
-                      :peer_list     => peer_list,
-                      :sections      => sections }
+    @audit.trim
   end
   
   
