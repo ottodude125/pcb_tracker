@@ -112,7 +112,7 @@
                   @design_review.review_type.name == 'Pre-Artwork'))) %>
           <tr>
             <td align="center">
-              <%= link_to(image_tag('repost'),
+              <%= link_to(image_tag('repost.png'),
                           {:action           => 'repost_review',
                            :design_review_id => @design_review.id},
                           :confirm => 'Reposting will reset all review results.  Are you sure you want to repost the review?',
