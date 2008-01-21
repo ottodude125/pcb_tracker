@@ -1265,6 +1265,180 @@ class AuditTest < Test::Unit::TestCase
     assert(self_checker_1_copy.auditor_complete?)
 
   end
+  
+  
+  ######################################################################
+  def test_teammate_functions 
 
+    # Set up so that self_auditor() and peer_auditor() return nil.
+    @audit_109.audit_teammates.destroy_all
+    @audit_109.design.designer_id = 0
+    @audit_109.design.peer_id     = 0
 
+    section = @audit_109.checklist.sections[0]
+    
+    assert_nil(@audit_109.self_auditor(section))
+    assert_nil(@audit_109.peer_auditor(section))
+    
+    # Set the designs's lead designerr and peer and verify the results
+    @audit_109.design.designer_id = @cathy_m.id
+    @audit_109.design.peer_id     = @scott_g.id
+    assert_equal(@cathy_m, @audit_109.self_auditor(section))
+    assert_equal(@scott_g, @audit_109.peer_auditor(section))
+    
+    # Set a teammate to as self and peer auditor and verify the result.
+    @audit_109.audit_teammates << AuditTeammate.new(:self       => 1,
+                                                    :section_id => section.id,
+                                                    :user_id    => @bob_g.id)
+    @audit_109.audit_teammates << AuditTeammate.new(:self       => 0,
+                                                    :section_id => section.id,
+                                                    :user_id    => @siva_e.id)
+    assert_equal(@bob_g,  @audit_109.self_auditor(section))
+    assert_equal(@siva_e, @audit_109.peer_auditor(section))
+
+  end 
+  
+  
+  ######################################################################
+  def test_auditor_lists 
+    
+    active_designers  = Role.active_designers
+    peer_auditor_list = active_designers - [@audit_109.design.designer]
+    
+    assert_equal(active_designers,  @audit_109.self_auditor_list)
+    assert_equal(peer_auditor_list, @audit_109.peer_auditor_list)
+    
+    @audit_mx234b.design.designer_id = 0
+    assert_equal(active_designers, @audit_mx234b.self_auditor_list)
+    assert_equal(active_designers, @audit_mx234b.peer_auditor_list)
+    
+  end
+  
+
+  ######################################################################
+  def test_trim
+    
+    comparison_copy = Audit.find(@audit_109.id)
+    
+    @audit_109.trim
+    results = create_comparison_hash(@audit_109)
+    
+    # Verify the trimmed audit contains all of the sections, subsections, and 
+    # checks for a full audit.
+    comparison_copy.checklist.sections.each do |section|
+      section_id = section.id.to_s
+      if section.full_review?
+        assert_not_nil(results[section_id])
+      else
+        assert_nil(results[section_id])
+      end
+      section.subsections.each do |subsection|
+        subsection_id = subsection.id.to_s
+        if subsection.full_review?
+          assert_not_nil(results[section_id+subsection_id])
+        else
+          assert_nil(results[section_id+subsection_id])
+        end
+        subsection.checks.each do |check|
+          check_id = check.id.to_s
+          if check.full_review?
+            assert_not_nil(results[section_id+subsection_id+check_id])
+          else
+            assert_nil(results[section_id+subsection_id+check_id])
+          end
+        end
+      end
+    end
+
+    @audit_109.reload
+    @audit_109.design.design_type = 'Dot Rev'
+    @audit_109.trim
+    results = create_comparison_hash(@audit_109)
+    
+    # Verify the trimmed audit contains all of the sections, subsections, and 
+    # checks for a full audit.
+    comparison_copy.checklist.sections.each do |section|
+      section_id = section.id.to_s
+      if section.dot_rev_check?
+        assert_not_nil(results[section_id])
+      else
+        assert_nil(results[section_id])
+      end
+      section.subsections.each do |subsection|
+        subsection_id = subsection.id.to_s
+        if subsection.dot_rev_check?
+          assert_not_nil(results[section_id+subsection_id])
+        else
+          assert_nil(results[section_id+subsection_id])
+        end
+        subsection.checks.each do |check|
+          check_id = check.id.to_s
+          if check.dot_rev_check?
+            assert_not_nil(results[section_id+subsection_id+check_id])
+          else
+            assert_nil(results[section_id+subsection_id+check_id])
+          end
+        end
+      end
+    end
+ 
+  end
+  
+  
+  def create_comparison_hash(audit)
+
+    results =  {}
+    audit.checklist.sections.each do |section|
+      
+      section_id = section.id.to_s
+      results[section_id] = 'yes'
+      section.subsections.each do |subsection|
+        
+        subsection_id = subsection.id.to_s
+        results[section_id+subsection_id] = 'yes'
+        subsection.checks.each do |check|
+          
+          check_id = check.id.to_s
+          results[section_id+subsection_id+check_id] = 'yes'
+        end
+      end
+    end
+
+    results
+
+  end
+  
+  
+  def dump_tree(audit)
+ 
+    puts
+    puts("dump_tree() START")
+    puts("AUDIT ID: #{audit.id}")
+    puts("DESIGN ID:          #{audit.design.id}  " +
+         "[#{audit.design.new?}:#{audit.design.date_code?}:#{audit.design.dot_rev?}]  " +
+         "Number of Sections: #{audit.checklist.sections.size.to_s}")
+    
+    audit.checklist.sections.each do |section|
+      puts("  SECTION ID: #{section.id}  " +
+          "[#{section.full_review}:#{section.date_code_check}:#{section.dot_rev_check}]" +
+          "  Number of Subsections: #{section.subsections.size.to_s}")
+      
+      section.subsections.each do |subsection|
+        puts("    SUBSECTION ID: #{subsection.id}  " +
+             "[#{subsection.full_review}:#{subsection.date_code_check}:#{subsection.dot_rev_check}]" +
+             "  Number of Checks:  #{subsection.checks.size.to_s}")
+        
+        subsection.checks.each do |check|
+          puts("      CHECK ID: #{check.id}" +
+               "[#{check.full_review}:#{check.date_code_check}:#{check.dot_rev_check}]")
+        end
+      end
+    end
+    
+    puts
+    puts("dump_tree() END")
+
+  end
+  
+  
 end
