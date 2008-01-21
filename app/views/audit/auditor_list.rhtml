@@ -13,11 +13,11 @@
   <table width="70%" align="center">
     <tr>
       <th align="right" width="50%">Lead Designer: </th>
-      <td align="left"><%= @auditor_list[:lead_designer].name %></td>
+      <td align="left"><%= @audit.design.designer.name %></td>
     </tr>
     <tr>
       <th align="right">Lead Peer Reviewer: </th>
-      <td align="left"><%= @auditor_list[:lead_peer].name %></td>
+      <td align="left"><%= @audit.design.peer.name %></td>
     </tr>
   </table>
 
@@ -27,22 +27,22 @@
       <th>Self Auditor</th>
       <th>Peer Auditor</th>
     </tr>
-    <% for section in @auditor_list[:sections] %>
+    <% @audit.checklist.sections.each do |section| %>
       <tr>
-        <% section_id = section[:section].id %>
-        <td valign="top"><%= section[:section].name %></td>
+        <% section_id = section.id %>
+        <td valign="top"><%= section.name %></td>
         <td align="center" valign="top">
           <select id='self_section_id_<%= section_id %>' 
                   name='self_auditor[section_id_<%= section_id %>]'>
             <option value="">Please Select</option>
-            <%= options_from_collection_for_select(@auditor_list[:self_list],
+            <%= options_from_collection_for_select(@audit.self_auditor_list,
                                                    "id",
                                                    :last_name_first,
-                                                   section[:self_auditor].id) %>
+                                                   @audit.self_auditor(section).id) %>
           </select>
         </td>
         <td align="center" valign="top">
-          <% if section[:section].designer_auditor_check_count > 0 %>
+          <% if section.designer_auditor_check_count > 0 %>
             <select id='peer_section_id_<%= section_id %>' 
                     name='peer_auditor[section_id_<%= section_id %>]'>
           <% else %>
@@ -51,10 +51,10 @@
                     disabled='disabled'>
           <% end %>
             <option value="">Please Select</option>
-            <%= options_from_collection_for_select(@auditor_list[:peer_list],
+            <%= options_from_collection_for_select(@audit.peer_auditor_list,
                                                    "id",
                                                    :last_name_first,
-                                                   section[:peer_auditor].id) %>
+                                                   @audit.peer_auditor(section).id) %>
           </select>
         </td>
       </tr>
