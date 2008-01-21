@@ -1128,48 +1128,95 @@ PEER_AUDIT       = 2
   end
   
   
-  ######################################################################
+  # Retrieve a list of designers eligible to perform a self audit.
   #
-  # self_auditor_list
+  # :call-seq:
+  #   self_audtor_list() -> array
   #
-  # Description:
-  # Returns a list active designers.
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # A list of user records for all users who are active and are assigned
-  # the designer role.
-  #
-  ######################################################################
-  #
+  #  The array returned contains a list of active designers.
   def self_auditor_list
     @self_auditor_list ||= Role.active_designers
-    @self_auditor_list
   end
   
   
-  ######################################################################
+  # Retrieve a list of designers eligible to perform a peer audit.
   #
-  # peer_auditor_list
+  # :call-seq:
+  #   peer_audtor_list() -> array
   #
-  # Description:
-  # Returns a list active designers with the record for the
-  # designer removed.
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # A list of user records for all users who are active and are assigned
-  # the designer role with the record for the designer assigned to the 
-  # .design removed.
-  #
-  ######################################################################
-  #
+  # The array returned contains a list of active designers with the record
+  # for the lead designer removed.
   def peer_auditor_list
-    self.self_auditor_list - [self.design.designer]
+    @peer_auditor_list ||= (self.self_auditor_list - [self.design.designer])
   end
+  
+  
+  # Retrieve the self auditor for the section.
+  #
+  # :call-seq:
+  #   self_audtor(section) -> user
+  #
+  #  If a self auditor for the section is assigned then the user record is returned.
+  #  Otherwise the user record for the design's lead designer is returned.
+  #  A nil is returned if none of the above conditions apply.
+  def self_auditor(section)
+    
+    auditor = self.audit_teammates.detect { |tmate| tmate.section_id == section.id && tmate.self? }
+    return auditor.user if auditor
+
+    return self.design.designer if self.design.designer_id > 0
+    
+    return nil
+    
+  end
+  
+  
+  # Retrieve the peer auditor for the section.
+  #
+  # :call-seq:
+  #   peer_audtor(section) -> user
+  #
+  #  If a peer auditor for the section is assigned then the user record is returned.
+  #  Otherwise the user record for the design's lead peer auditor is returned.
+  #  A nil is returned if none of the above conditions apply.
+  def peer_auditor(section)
+    
+    auditor = self.audit_teammates.detect { |tmate| tmate.section_id == section.id && !tmate.self? }
+    return auditor.user if auditor
+
+    return self.design.peer if self.design.peer_id > 0
+    
+    return nil
+    
+  end
+  
+  
+  # Trim sections, subsections, and checks from the audit that do not apply.
+  # 
+  # :call-seq:
+  #   trim() -> array
+  #
+  # The resulting audit checklist contains only the sections, subsection, and
+  # checks that apply to the audit.
+  def trim
+    
+    design = self.design
+    
+    # Remove the sections that are not used in the audit.
+    self.checklist.sections.delete_if { |section| !design.belongs_to(section) }
+    
+     self.checklist.sections.each do |section|
+       
+      # Remove the subsections that are not used in the audit.
+      section.subsections.delete_if { |subsection| !design.belongs_to(subsection) }
+      
+      section.subsections.each do |subsection|
+        # Remove the checks that are not used in the audit.
+        subsection.checks.delete_if { |check| !design.belongs_to(check) }
+      end
+    end
+    
+  end
+  
 
 end
