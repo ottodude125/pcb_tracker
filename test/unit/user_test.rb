@@ -185,19 +185,27 @@ class UserTest < Test::Unit::TestCase
   
   def test_sha1
     u = User.new
-    u.login      = "nonexistingbob"
+    u.login    = "nonexistingbob"
     u.password = u.password_confirmation = "bobs_secure_password"
     assert u.save
         
     assert_equal('98740ff87bade6d895010bceebbd9f718e7856bb', u.password)
     
+    assert(u.errors.empty?)
     u.password = ''
+    u.password_confirmation = ''
     u.login    = 'NonExistingBob'
     assert(u.password.empty?)
-    assert(u.update)
-    
+    assert(!u.save)
+    assert(!u.errors.empty?)
+    assert(u.errors.invalid?('password'))
+    assert_equal(["Password confirmation can't be blank",
+                  "Password is too short (minimum is 5 characters)",
+                  "Password can't be blank"].sort,
+                 u.errors.full_messages.sort)
+
     u.reload
-    assert_equal('NonExistingBob',                           u.login)
+    assert_equal('nonexistingbob',                           u.login)
     assert_equal('98740ff87bade6d895010bceebbd9f718e7856bb', u.password)
     
   end
