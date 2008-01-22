@@ -112,8 +112,8 @@
                           :name,
                           @available_to_cc,
                           :id,
-                          :name,
-                          {:include_blank => true},
+                          :last_name_first,
+                          {:include_blank => false},
                           "class" => 'name_select',
                           "size"  => '10') %>
                     <%= observe_field(
@@ -146,8 +146,8 @@
                           :name,
                           @optional_cc_list,
                           :id,
-                          :name,
-                          {:include_blank => true},
+                          :last_name_first,
+                          {:include_blank => false},
                           "class" => 'name_select',
                           "size"  => '10') %>
                     <%= observe_field(
