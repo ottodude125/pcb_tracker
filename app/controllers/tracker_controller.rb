@@ -602,7 +602,7 @@ class TrackerController < ApplicationController
         reviews_started += 1
 
         review_rec = {:review => review}
-        review_results = DesignReviewResult.find_all("design_review_id='#{review.id}'")
+        review_results = review.design_review_results
         review_rec[:reviewers] = review_results.size
         review_results.delete_if { |dr| dr.result != 'APPROVED' && dr.result != 'WAIVED' }
         review_rec[:approvals] = review_results.size
@@ -622,7 +622,7 @@ class TrackerController < ApplicationController
         design_summary[:next_review] = nil
       end
 
-      audit = Audit.find_all("design_id='#{design.id}'").pop
+      audit = design.audit
       design_summary[:audit] = audit
 
       num_checks = audit.check_count
