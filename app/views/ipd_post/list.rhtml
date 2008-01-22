@@ -1,4 +1,11 @@
-<% @heading = "#{@design.part_number.pcb_display_name} - In-Process Dialogue Posts" %>
+<!-- View:    ipd_post                                          -->
+<!-- Purpose: List the in process dialogue postings for the     -->
+<!--          design.                                           -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@design.directory_name} - In-Process Dialogue Posts" %>
 
 <%= display_threads @ipd_posts %>
 
