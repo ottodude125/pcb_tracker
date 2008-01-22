@@ -1,4 +1,10 @@
-<h1><%= @ipd_post.design.part_number.pcb_display_name %> - New In-Process Dialogue Post</h1>
+<!-- View:    ipd_post                                          -->
+<!-- Purpose: The form for the user to enter a new post.        -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<h1><%= @ipd_post.design.directory_name %> - New In-Process Dialogue Post</h1>
 
 <% form_tag(:action => 'create') do %>
   <%= render :partial => 'form' %>
