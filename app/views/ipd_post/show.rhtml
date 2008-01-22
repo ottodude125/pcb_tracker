@@ -1,4 +1,10 @@
-<% @heading = "#{@root_post.design.part_number.pcb_display_name} - #{@root_post.subject}"%>
+<!-- View:    ipd_post                                          -->
+<!-- Purpose: Show the posting                                  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@root_post.design.directory_name} - #{@root_post.subject}"%>
 
 <% form_tag(:action    => 'create_reply',
             :id        => @root_post,
@@ -32,8 +38,8 @@
     </tr>
     
     <tr>
-      <td colspan="2">
-        <table cellspacing="0" width="95%" align="right" border="0">
+      
+        
           <% for child_post in @root_post.direct_children %>
             <tr bgcolor="#dfdfdf">
               <td colspan="2"><b>Posted By:</b>
@@ -49,8 +55,8 @@
               </td>
             </tr>
           <% end %>
-        </table>
-      </td>
+        
+      
     </tr>
   <% end %>
 
