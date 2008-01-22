@@ -14,7 +14,7 @@
   <% design_reviews = design.design_reviews.sort_by { |dr| dr.review_type.sort_order } %>
     <tr class="teraheader">
       <td>
-        <b><%= design.name %></b>
+        <b><%= design.directory_name %></b>
       </td>
     </tr>
     <% design[:sorted_design_reviews].each do |review| %>
