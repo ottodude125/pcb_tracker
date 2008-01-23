@@ -6,9 +6,9 @@
 <!-- ********************************************************** -->
 
 
-<% @heading = "Reassign Reviewer" %>
+<% @heading = "#{@design_review.design.directory_name} - Reassign Reviewer" %>
 
-<% form_tag(:action => 'update_review_assignments', :id => @design_review_id) do %>
+<% form_tag(:action => 'update_review_assignments', :id => @design_review.id) do %>
 
   <% for match in @matching_roles %>
 
