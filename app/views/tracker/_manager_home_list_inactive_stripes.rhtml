@@ -16,7 +16,7 @@
 <tr class="<%= manager_home_list_inactive_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
 
   <td>
-    <%= link_to(design.part_number.pcb_display_name,
+    <%= link_to(design.directory_name,
                 :controller => 'design_review',
                 :action     => 'view',
                 :id         => design_review.id)%>
