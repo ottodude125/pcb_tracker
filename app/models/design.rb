@@ -1433,7 +1433,7 @@ class Design < ActiveRecord::Base
   #
   def detailed_name
     brd = self.board
-    self.part_number.pcb_display_name + ' - ' + brd.platform.name + ' / ' +
+    self.directory_name + ' - ' + brd.platform.name + ' / ' +
     brd.project.name + ' / ' + brd.description
   end
 
