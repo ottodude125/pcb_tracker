@@ -1409,23 +1409,21 @@ class DesignReviewController < ApplicationController
   #
   def reassign_reviewer
 
-    review_results = DesignReviewResult.find_all_by_design_review_id(
-                       params[:design_review_id])
+    @design_review = DesignReview.find(params[:design_review_id])
+
     # Remove reviewer results if the reviewer has already completed the 
     # review. 
-    review_results.delete_if { |rr| rr.complete? }
+    @design_review.design_review_results.delete_if { |rr| rr.complete? }
 
-    @design_review_id = params[:design_review_id]
     @matching_roles = []
-    for role in session[:roles]
+    session[:roles].each do |role|
 
       next if not role.reviewer?
 
-      match = review_results.find { |rr| role.id == rr.role_id }
+      match = @design_review.design_review_results.detect { |rr| role.id == rr.role_id }
       if match
         if session[:user].id == match.reviewer_id
-          peers = Role.find(match.role_id).users.delete_if { |u| u == session[:user] }
-          peers.delete_if { |u| !u.active? }
+          peers = role.active_users - [session[:user]]
           @matching_roles << { :design_review => match, :peers => peers }
         else
           @matching_roles << { :design_review => match }
