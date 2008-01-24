@@ -174,7 +174,7 @@ class ReportController < ApplicationController
                        "review_status_id != '#{review_skipped.id}'   AND " +
                        "review_status_id != '#{terminated.id}'"
  
-    design_reviews = DesignReview.find_all(condition)
+    design_reviews = DesignReview.find(:all, :conditions => condition)
     
     if params[:id]
       @design_review = DesignReview.find(params[:id])
@@ -203,9 +203,6 @@ class ReportController < ApplicationController
     reviewer_list  = reviewer_list.to_a.sort_by { |e| e[1][:user].last_name }
     @reviewer_list = reviewer_list.collect { |e| e[1] }
     
-  rescue
-    flash['notice'] = "Error: design review id not found in the database"
-    redirect_to(:controller => 'tracker', :action => 'index') 
   end
   
   
