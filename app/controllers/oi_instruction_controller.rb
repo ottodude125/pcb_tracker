@@ -387,7 +387,7 @@ class OiInstructionController < ApplicationController
     if completed || reset
       assignment.complete     = completed ? 1 : 0
       assignment.completed_on = Time.now if completed
-      assignment.update
+      assignment.save
     end
     
     post_comment = ""
