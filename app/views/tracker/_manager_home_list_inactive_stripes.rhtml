@@ -41,7 +41,7 @@
       <tr>
         <td align="center" valign="top">
           <input type="button" value="Updates"
-                 title='<%= "#{design.name}: Make updates to the design review assignments" %>'
+                 title='<%= "#{design.directory_name}: Make updates to the design review assignments" %>'
                  onClick="parent.location='<%= url_for(:controller => 'design_review',
                                                        :action     => 'admin_update',
                                                        :id         => design_review.id) %>'"
@@ -52,7 +52,7 @@
         <td align="center" valign="top">
           <% if !(design.audit.skip? || design.audit.is_complete?) %>
           <input type="button" value="Audit Assignments"
-                 title= '<%= "#{design.name}: Set the assignments for self and peer audits" %>'
+                 title= '<%= "#{design.directory_name}: Set the assignments for self and peer audits" %>'
                  onClick="parent.location='<%= url_for(:controller => 'audit',
                                                        :action     => 'auditor_list',
                                                        :id         => design.audit.id,
