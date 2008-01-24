@@ -41,14 +41,14 @@
           <th>Result</th>
         </tr>
 
-        <% for review_result in @review_results %>
+        <% @review_results.each do |review_result| %>
           <tr>
     
             <td>
-              <%= User.find(review_result.reviewer_id).name %>
+              <%= review_result.reviewer.name %>
             </td>
             <td>
-              <%= Role.find(review_result.role_id).name %>
+              <%= review_result.role.name %>
             </td>
             <td>
               <%= review_result.result %>
