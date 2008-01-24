@@ -8,7 +8,7 @@
 <tr class="<%= report_card_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
   <td width="150" align="center"
       title="Click to see the report card">
-    <%= link_to(report_card_list_stripes.oi_assignment.oi_instruction.design.name,
+    <%= link_to(report_card_list_stripes.oi_assignment.oi_instruction.design.directory_name,
                 { :controller => 'oi_instruction', 
                   :action     => 'static_view',
                   :id         => report_card_list_stripes.oi_assignment.id },
