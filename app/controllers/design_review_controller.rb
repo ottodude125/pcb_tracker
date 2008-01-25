@@ -719,10 +719,9 @@ class DesignReviewController < ApplicationController
   #
   def save_update
   
-    document = Document.new(params[:document])
-    drd_doc  = DesignReviewDocument.new
+    document = Document.new(params[:document]) if params[:document][:document] != ""
     
-    if document.name == ''
+    if !document
       flash['notice'] = 'No file was specified'
       redirect_to(:action           => :update_documents,
                   :design_review_id => params[:design_review][:id],
@@ -736,7 +735,8 @@ class DesignReviewController < ApplicationController
                   :return_to        => params[:return_to])
     else
       
-      document.created_by       = session[:user].id
+      document.created_by = session[:user].id
+      document.unpacked   = 0
       
       if document.save
         
@@ -744,6 +744,7 @@ class DesignReviewController < ApplicationController
         board         = Board.find(design_review.design.board_id)
         existing_drd  = DesignReviewDocument.find(params[:doc_id])
         
+        drd_doc                  = DesignReviewDocument.new
         drd_doc.document_type_id = existing_drd.document_type_id
         drd_doc.board_id         = board.id
         drd_doc.design_id        = design_review.design_id
@@ -831,12 +832,12 @@ class DesignReviewController < ApplicationController
   #
   def save_attachment
 
-    @document = Document.new(params[:document])
+    @document = Document.new(params[:document]) if params[:document][:document] != ""
     
     if params[:document_type][:id] == ''
       save_failed = true
       flash['notice'] = 'Please select the document type'
-    elsif @document.name == ''
+    elsif !@document
       save_failed = true
       flash['notice'] = 'No name provided - Please specify a document'
     elsif @document.data.size == 0
@@ -847,6 +848,7 @@ class DesignReviewController < ApplicationController
       if @document.data.size < Document::MAX_FILE_SIZE
       
         @document.created_by = session[:user].id
+        @document.unpacked   = 0
 
         if @document.save
           drd_doc = DesignReviewDocument.new
@@ -913,11 +915,18 @@ class DesignReviewController < ApplicationController
   #
   def get_attachment
     @document = Document.find(params[:id])
+    if @document.unpacked == 1
+      send_data(@document.data.to_a.pack("H*"),
+                :filename    => @document.name,
+                :type        => @document.content_type,
+                :disposition => "inline")
+    else
+      send_data(@document.data.to_a,
+                :filename    => @document.name,
+                :type        => @document.content_type,
+                :disposition => "inline")
+    end
 
-    send_data(@document.data.to_a,
-              :filename    => @document.name,
-              :type        => @document.content_type,
-              :disposition => "inline")
   rescue
   
    flash['notice'] = 'Can not retrieve the attachment without an ID'
