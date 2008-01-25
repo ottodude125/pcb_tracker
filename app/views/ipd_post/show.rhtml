@@ -17,6 +17,13 @@
                                                    :design_id => @root_post.design_id) %>'" />
     </td>
   </tr>
+
+  <tr>
+    <th colspan="2" class="teraheader">
+      Original Posting
+    </th>
+  </tr>
+
   <tr bgcolor="#dfdfdf">
     <td colspan="2"><b>Posted By:</b>
         <%= @root_post.user.name %> <b>On:</b>
@@ -40,7 +47,7 @@
     <tr>
       
         
-          <% for child_post in @root_post.direct_children %>
+          <% @root_post.direct_children.reverse.each do |child_post| %>
             <tr bgcolor="#dfdfdf">
               <td colspan="2"><b>Posted By:</b>
                 <%= child_post.user.name %> <b>On:</b>
