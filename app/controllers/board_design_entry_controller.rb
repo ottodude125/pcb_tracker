@@ -1035,14 +1035,15 @@ class BoardDesignEntryController < ApplicationController
   
     board_design_entry = BoardDesignEntry.find(params[:id])
 
-    document = Document.new(params[:document])
+    document = Document.new(params[:document]) if params[:document][:document] != ""
 
-    if document.data.size > Document::MAX_FILE_SIZE
+    if document && document.data.size > Document::MAX_FILE_SIZE
       flash['notice'] = "The document was too large to attach - it must be smaller than #{Document::MAX_FILE_SIZE/2}"
-    elsif document.name == ''
+    elsif !document
       flash['notice'] = 'No file was specified'
     else
       document.created_by = session[:user].id
+      document.unpacked   = 0
       if document.save
         case params[:document_type]
         when 'Outline Drawing'
