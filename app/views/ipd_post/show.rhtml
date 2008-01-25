@@ -10,6 +10,7 @@
             :id        => @root_post,
             :design_id => @root_post.design_id) do %>
 <table border='0' cellspacing="0" width="80%" align="center">
+
   <tr>
     <td align="right" colspan="3">
       <input class="form_return" type="button" value="Back"
@@ -19,9 +20,7 @@
   </tr>
 
   <tr>
-    <th colspan="2" class="teraheader">
-      Original Posting
-    </th>
+    <th colspan="2" class="teraheader">Original Posting</th>
   </tr>
 
   <tr bgcolor="#dfdfdf">
@@ -30,6 +29,7 @@
         <%= @root_post.created_at.strftime('%d-%b-%y at %I:%M %p') %>
     </td>
   </tr>
+  
   <tr bgcolor="#efefef">
     <td colspan="2" valign="top">
       <%= auto_link simple_format(h(@root_post.body)), 
@@ -37,34 +37,28 @@
                     :target => '_blank' %>
     </td>
   </tr>
+
   <% if @root_post.children_count > 0 %>
     <tr>
-      <th colspan="2" class="teraheader">
-        Replies
-      </th>
+      <th colspan="2" class="teraheader">Replies</th>
     </tr>
     
-    <tr>
-      
+    <% @root_post.direct_children.reverse.each do |child_post| %>
+      <tr bgcolor="#dfdfdf">
+        <td colspan="2"><b>Posted By:</b>
+          <%= child_post.user.name %> <b>On:</b>
+          <%= child_post.created_at.strftime('%d-%b-%y at %I:%M %p') %>
+        </td>
+      </tr>
+      <tr bgcolor="#efefef">
+        <td colspan="2" valign="top">
+          <%= auto_link simple_format(h(child_post.body)), 
+                        :all,
+                        :target => '_blank' %>
+        </td>
+      </tr>
+    <% end %>
         
-          <% @root_post.direct_children.reverse.each do |child_post| %>
-            <tr bgcolor="#dfdfdf">
-              <td colspan="2"><b>Posted By:</b>
-                <%= child_post.user.name %> <b>On:</b>
-                <%= child_post.created_at.strftime('%d-%b-%y at %I:%M %p') %>
-              </td>
-            </tr>
-            <tr bgcolor="#efefef">
-              <td colspan="2" valign="top">
-                <%= auto_link simple_format(h(child_post.body)), 
-                              :all,
-                              :target => '_blank' %>
-              </td>
-            </tr>
-          <% end %>
-        
-      
-    </tr>
   <% end %>
 
   <% if session[:user] %>
