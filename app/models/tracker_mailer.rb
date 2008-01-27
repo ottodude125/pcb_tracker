@@ -178,24 +178,10 @@ class TrackerMailer < ActionMailer::Base
     @headers    = {}
     @bcc        = blind_cc
     @cc         = (copy_to(design_review) - @recipients).uniq
-    @body['user'] = user
 
-    if comment_update
-      design_review_comments =
-        DesignReviewComment.find_all_by_design_review_id(design_review.id,
-                                                         'created_on DESC')
-      comments = []
-      count = design_review_comments.size < 4 ? design_review_comments.size : 4
-      0.upto(count-1) { |i|
-        comments[i] = {:comment => design_review_comments[i].comment,
-                       :user    => User.find(design_review_comments[i].user_id).name,
-                       :date    => design_review_comments[i].created_on}
-      }
+    @body['comments'] = design_review.design_review_comments[0..3] if comment_update
 
-      @body['comments']      = comments
-
-    end
-
+    @body['user']             = user
     @body['result_update']    = result_update
     @body['design_review_id'] = design_review.id
 
