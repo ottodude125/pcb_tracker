@@ -40,7 +40,7 @@ class TrackerMailer < ActionMailer::Base
     @sent_on    = sent_at
     @headers    = {}
     cc_list     = [peer.email] + add_role_members(['Manager', 'PCB Input Gate'])
-    @cc         = (cc_list - @recipients).uniq
+    @cc         = (cc_list - [@recipients]).uniq
     @bcc        = blind_cc
     @body       = { :audit    => audit,
                     :designer => designer,
@@ -76,7 +76,7 @@ class TrackerMailer < ActionMailer::Base
     @sent_on    = sent_at
     @headers    = {}
     cc_list     = [designer.email] + add_role_members(['Manager', 'PCB Input Gate'])
-    @cc         = cc_list.uniq - @recipients
+    @cc         = cc_list.uniq - [@recipients]
     @bcc        = blind_cc
     @body       = { :audit    => audit,
                     :designer => designer,
@@ -416,7 +416,7 @@ class TrackerMailer < ActionMailer::Base
     cc += root_post.users.collect { |user| user.email } +
           root_post.direct_children.collect { |child| child.user.email }
 
-    @cc = @recipients - cc.uniq
+    @cc = cc.uniq - @recipients
 
   end
 
