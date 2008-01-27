@@ -486,10 +486,10 @@ class AuditControllerTest < Test::Unit::TestCase
     # completes
     assert_equal(2, @emails.size)
     email = @emails.pop
-    assert_equal("Notification of upcoming Final Review for 252-234-b0 m",  
+    assert_equal("Notification of upcoming Final Review for pcb252_234_b0_m",  
                  email.subject)
     email = @emails.pop
-    assert_equal("252-234-b0 m: The designer has completed the self-audit", 
+    assert_equal("pcb252_234_b0_m: The designer has completed the self-audit", 
                  email.subject)
 
     # Log in as an auditor and get the audit listing.
