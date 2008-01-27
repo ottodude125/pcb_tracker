@@ -19,11 +19,11 @@ p { margin: 0 }
   </tr>
   <tr>
     <td>Action</td>
-    <td><%= params.delete('action') %></td>
+    <td><%= @params.delete('action') %></td>
   </tr>
   <tr>
     <td>Controller</td>
-    <td><%= params.delete('controller') %></td>
+    <td><%= @params.delete('controller') %></td>
   </tr>
   <tr>
     <td>Query</td>
@@ -42,8 +42,8 @@ p { margin: 0 }
     <td><%= @env['HTTP_USER_AGENT'] %></td>
   </tr>
   
-  <% if session[:user] -%>
-    <% user = session[:user] -%>
+  <% if @session[:user] -%>
+    <% user = @session[:user] -%>
     <tr>
       <td>User Id</td>
       <td><%= user.id %></td>
