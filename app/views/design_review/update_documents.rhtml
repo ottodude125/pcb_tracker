@@ -5,7 +5,7 @@
 <!-- ********************************************************** -->
 
 <% doc_type = DocumentType.find(@existing_drd.document_type_id).name %>
-<% @heading = "Update #{doc_type} Document - #{@design_review.design.name}" %>
+<% @heading = "Update #{doc_type} Document - #{@design_review.design.directory_name}" %>
 
 <%= error_messages_for("drd") %>
 
