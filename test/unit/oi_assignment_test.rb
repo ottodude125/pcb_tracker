@@ -82,7 +82,7 @@ class OiAssignmentTest < Test::Unit::TestCase
   
     date_assigned = Time.local(2007, 'feb', 15, 13, 16).strftime("%d-%b-%y, %I:%M %p %Z")
     assert_equal("------------------------------------------------------------------------\n" +
-                 "         Design : 252-234-a0 g\n"                                                 +
+                 "         Design : pcb252_234_a0_g\n"                                        +
                  "       Category : Placement\n"                                              +
                  "           Step : Place components per instructions\n"                      +
                  "      Team Lead : Scott Glover\n"                                           +
@@ -95,7 +95,7 @@ class OiAssignmentTest < Test::Unit::TestCase
     date_assigned  = Time.local(2007, 'feb', 16, 11, 20).strftime("%d-%b-%y, %I:%M %p %Z")
     date_completed = Time.local(2007, 'mar',  9, 16, 45).strftime("%d-%b-%y, %I:%M %p %Z")
     assert_equal("------------------------------------------------------------------------\n" +
-                 "         Design : 252-234-a0 g\n"                                                 +
+                 "         Design : pcb252_234_a0_g\n"                                        +
                  "       Category : Placement\n"                                              +
                  "           Step : Place components per instructions\n"                      +
                  "      Team Lead : Scott Glover\n"                                           +
