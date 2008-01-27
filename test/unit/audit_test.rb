@@ -915,7 +915,7 @@ class AuditTest < Test::Unit::TestCase
                      @audit_109.design.part_number.pcb_display_name +
                      ' have been recorded - mail was sent'
     
-    subj_audit_team_updated = 'The audit team for the 252-232-b0 e has been updated'
+    subj_audit_team_updated = 'The audit team for the pcb252_232_b0_e has been updated'
     
     self_auditors = { 330 => scott, 331 => scott, 332 => scott,
                       333 => scott, 334 => scott, 335 => scott,
