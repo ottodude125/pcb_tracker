@@ -326,12 +326,7 @@ class DesignReview < ActiveRecord::Base
   ######################################################################
   #
   def active_reviewers(sorted = false)
-
-#    reviewers = self.reviewers([], sorted)
-#    reviewers.delete_if { |r| !r.active? }
-#    return reviewers
-    self.reviewers([], sorted).delete_if { |r| !r.active? }
-  
+    self.reviewers.delete_if { |r| !r.active? }
   end
   
   
@@ -650,14 +645,14 @@ class DesignReview < ActiveRecord::Base
   # Return value:
   # The old design center name if the design center was updated.
   # Otherwise, nil
-  ######################################################################
+  ####################################################################
   #
   def update_design_center(design_center, user)
 
     if design_center && self.design_center_id != design_center.id
-      old_design_center_name = self.design_center.name
+      old_design_center_name = self.design_center_id > 0 ? self.design_center.name : 'Not Set'
       self.record_update('Design Center', 
-                         self.design_center_id > 0 ? self.design_center.name : 'Not Set', 
+                         old_design_center_name,
                          design_center.name, 
                          user)
       self.design_center = design_center
@@ -893,8 +888,17 @@ class DesignReview < ActiveRecord::Base
   end
 
 
+  # Generate an informational display header string for the design review.
+  #
+  # :call-seq:
+  #   display_header() -> string
+  #
+  # Returns the informational display header in the following form.
+  #
+  #  pcb###_###_##_x - platform_name / project_name
+  #
   def display_header
-    self.design.part_number.pcb_display_name + ' - ' +
+    self.design.directory_name + ' - ' +
     self.design.board.platform.name + ' / ' + self.design.board.project.name
   end
 
