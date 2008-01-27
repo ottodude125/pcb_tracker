@@ -480,7 +480,7 @@ class DesignTest < Test::Unit::TestCase
    assert_equal('942-453-a2 y', designs(:la453a2).part_number.pcb_display_name)
    assert_equal('942-453-b4 y', designs(:la453b4_eco2).part_number.pcb_display_name)
    
-   assert_equal('252-234-a0 g - Catalyst / AC / ', 
+   assert_equal('pcb252_234_a0_g - Catalyst / AC / ', 
                 @mx234a_design.detailed_name)
    
    section_all        = Section.new(:full_review     => 1,
