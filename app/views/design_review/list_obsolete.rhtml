@@ -4,7 +4,7 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% @heading = "#{@design_review.design.name} - Obsolete #{@document_type_name} Documents" %>
+<% @heading = "#{@design_review.design.directory_name} - Obsolete #{@document_type_name} Documents" %>
 
 <% if params[:return_to] == 'initial_attachments'
      action = { :controller => 'design',
