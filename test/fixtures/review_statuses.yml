@@ -34,4 +34,8 @@ inactive_2:
   id:     8
   name:   Inactive 2
   active: 0
+review_terminated:
+  id:     9
+  name:   Review Terminate
+  active: 1
 
