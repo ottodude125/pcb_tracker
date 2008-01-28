@@ -60,10 +60,9 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
     # Try listing from an Admin account
     # VERIFY: The project list data is retrieved
     set_admin
-    post(:list,
-         :page => 1)
+    post(:list, :page => 1)
 
-    assert_equal(8, @review_statuses.size)
+    assert_equal(ReviewStatus.count, @review_statuses.size)
   end
 
 
