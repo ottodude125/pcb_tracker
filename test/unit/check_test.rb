@@ -14,9 +14,11 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class CheckTest < Test::Unit::TestCase
-  fixtures :checks,
+  fixtures :audits,
+           :checks,
            :checklists,
            :designs,
+           :design_checks,
            :sections,
            :subsections
 
@@ -50,9 +52,13 @@ class CheckTest < Test::Unit::TestCase
     
     assert(full_review_check.full?)
     assert(!full_review_check.partial?)
+    assert(full_review_check.new_design_check?)
+    assert(!full_review_check.bare_board_design_check?)
     
     assert(!dot_rev_check.full?)
     assert(dot_rev_check.partial?)
+    assert(!dot_rev_check.new_design_check?)
+    assert(dot_rev_check.bare_board_design_check?)
     
   end
   
@@ -203,6 +209,45 @@ class CheckTest < Test::Unit::TestCase
     checklist_101 = checklists(:checklists_101)
     assert_equal(section_331,   check_2744.section)
     assert_equal(checklist_101, check_2744.checklist)
+    
+  end
+  
+  
+  ######################################################################
+  def test_design_check
+    
+    audit_109  = audits(:audit_109)
+    check_2846 = checks(:check_2846)
+    
+    check_2846.design_check = design_checks(:audit_109_design_check_15836)
+    design_check            = check_2846.design_check
+    
+    assert_equal(design_checks(:audit_109_design_check_15836).id, design_check.id)
+    
+  end
+  
+  
+  ######################################################################
+  def test_information_methods
+    
+    check = Check.new
+    
+    assert(!check.partial?)
+    assert(!check.full?)
+    assert(!check.bare_board_design_check?)
+    assert(!check.new_design_check?)
+    
+    check.dot_rev_check = 1
+    assert(check.partial?)
+    assert(!check.full?)
+    assert(check.bare_board_design_check?)
+    assert(!check.new_design_check?)
+    
+    check.full_review = 1
+    assert(check.partial?)
+    assert(check.full?)
+    assert(check.bare_board_design_check?)
+    assert(check.new_design_check?)
     
   end
 
