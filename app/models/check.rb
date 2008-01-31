@@ -15,9 +15,14 @@ class Check < ActiveRecord::Base
   belongs_to(:subsection)
   acts_as_list(:scope => :subsection)
 
-  has_one :design_check
   
-  
+  ######################################################################
+  #
+  # Instance Methods
+  #
+  ######################################################################
+ 
+ 
   ######################################################################
   #
   # yes_no?
@@ -197,10 +202,8 @@ class Check < ActiveRecord::Base
   ######################################################################
   #
   def remove
-
     self.checklist.increment_checklist_counters(self, -1)
     self.destroy
-
   end
 
 
@@ -289,6 +292,30 @@ class Check < ActiveRecord::Base
   end
   
   
+  # Indicate if the check should be applied to new board designs.
+  # 
+  # :call-seq:
+  #   new_design_check?() -> boolean
+  #
+  # Return TRUE if the check applies to bare board designs.  Otherwise return
+  # FALSE.
+  def new_design_check?
+    self.full_review?
+  end
+  
+  
+  # Indicate if the check should be applied to bare board designs.
+  # 
+  # :call-seq:
+  #   bare_board_design_check?() -> boolean
+  #
+  # Return TRUE if the check applies to new board designs.  Otherwise return
+  # FALSE.
+  def bare_board_design_check?
+    self.dot_rev_check?
+  end
+  
+  
   ######################################################################
   #
   # partial?
@@ -308,6 +335,28 @@ class Check < ActiveRecord::Base
   #
   def partial?
     self.dot_rev_check?
+  end
+  
+  
+  # Return the design check associated with the check/audit combination.
+  # 
+  # :call-seq:
+  #   design_check() -> design_check
+  #
+  # If there is no associated design check a nil is returned.
+  def design_check
+    self[:design_check]
+  end
+  
+  
+  # Set the design check associated with the check/audit combination.
+  # 
+  # :call-seq:
+  #   design_check = -> design_check
+  #
+  # Associates the design check that is passed in with the check.
+ def design_check=(design_check)
+    self[:design_check] = design_check
   end
   
   
