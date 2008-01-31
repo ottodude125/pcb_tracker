@@ -295,17 +295,15 @@ PEER_AUDIT       = 2
 
     case self.design.design_type
     when 'New'
-      count[:designer] = checklist.designer_only_count +
-                           checklist.designer_auditor_count
-      count[:peer]     = checklist.designer_auditor_count
+      count[:designer] = checklist.new_design_self_check_count
+      count[:peer]     = checklist.new_design_peer_check_count
     when 'Date Code'
       count[:designer] = checklist.dc_designer_only_count +
                            checklist.dc_designer_auditor_count
       count[:peer]     = checklist.dc_designer_auditor_count
     when 'Dot Rev'
-      count[:designer] = checklist.dr_designer_only_count +
-                           checklist.dr_designer_auditor_count
-      count[:peer]     = checklist.dr_designer_auditor_count
+      count[:designer] = checklist.bareboard_design_self_check_count
+      count[:peer]     = checklist.bareboard_design_peer_check_count
     end
 
     return count
@@ -333,10 +331,12 @@ PEER_AUDIT       = 2
     case self.design.design_type
     when 'New'
       checklist.designer_auditor_count
+      checklist.new_design_peer_check_count
     when 'Date Code'
       checklist.dc_designer_auditor_count
     when 'Dot Rev'
       checklist.dr_designer_auditor_count
+      checklist.bareboard_design_peer_check_count
     end
 
   end
@@ -356,7 +356,11 @@ PEER_AUDIT       = 2
   ######################################################################
   #
   def peer_percent_complete
-    self.auditor_completed_checks * 100.0 / self.peer_check_count
+    if self.auditor_completed_checks <= self.peer_check_count
+      self.auditor_completed_checks * 100.0 / self.peer_check_count
+    else
+      100.0
+    end
   end
   
   
@@ -380,10 +384,12 @@ PEER_AUDIT       = 2
     case self.design.design_type
     when 'New'
       checklist.designer_only_count + checklist.designer_auditor_count
+      checklist.new_design_self_check_count
     when 'Date Code'
       checklist.dc_designer_only_count + checklist.dc_designer_auditor_count
     when 'Dot Rev'
       checklist.dr_designer_only_count + checklist.dr_designer_auditor_count
+      checklist.bareboard_design_self_check_count
     end
 
   end
@@ -403,7 +409,11 @@ PEER_AUDIT       = 2
   ######################################################################
   #
   def self_percent_complete
-    self.designer_completed_checks * 100.0 / self.self_check_count
+    if self.designer_completed_checks <= self.self_check_count
+      self.designer_completed_checks * 100.0 / self.self_check_count
+    else
+      100.0
+    end
   end
   
   
@@ -455,7 +465,10 @@ PEER_AUDIT       = 2
 
     design_checks = []
     self.design_checks.each { |dc| design_checks << dc if dc.self_auditor_checked? }
-    design_checks.delete_if { |dc| !subsection.checks.include?(dc.check) }
+    design_checks.delete_if do |dc| 
+      check = Check.find(dc.check_id)
+      !subsection.checks.include?(check)
+    end
 
     design_checks.size
 
@@ -505,7 +518,10 @@ PEER_AUDIT       = 2
 
     design_checks = []
     self.design_checks.each { |dc| design_checks << dc if dc.peer_auditor_checked? }
-    design_checks.delete_if { |dc| !subsection.checks.include?(dc.check) }
+    design_checks.delete_if do |dc| 
+      check = Check.find(dc.check_id)
+      !subsection.checks.include?(check) 
+    end
 
     design_checks.size
 
@@ -750,7 +766,8 @@ PEER_AUDIT       = 2
   #
   def process_peer_audit_update(result_update, comment, design_check, user)
 
-    return if design_check.check.check_type != 'designer_auditor'
+    check = Check.find(design_check.check_id)
+    return if check.check_type != 'designer_auditor'
 
     incr = design_check.update_auditor_result(result_update, user)
 
@@ -844,7 +861,7 @@ PEER_AUDIT       = 2
     end
 
     self_auditor_list.each do |section_id, self_auditor|
-    
+
       next if self_auditor == ''
       audit_teammate = audit_teammates.detect do |t|
         t.self? && t.section_id.to_i == section_id.to_i
@@ -857,9 +874,12 @@ PEER_AUDIT       = 2
       elsif audit_teammate.user_id != self_auditor.to_i
         old_teammate = 
           AuditTeammate.new_teammate(self.id, section_id, audit_teammate.user_id, :self, false)
-        teammate_list_updates['self'] << { :action   => 'Removed ', :teammate => old_teammate }
-        teammate_list_updates['self'] << { :action   => 'Added ', :teammate => audit_teammate }
-        audit_teammate.update_attribute(:user_id, self_auditor)
+        audit_teammate.user_id = self_auditor
+        audit_teammate.save
+        audit_teammate.reload
+
+        teammate_list_updates['self'] << { :action => 'Removed ', :teammate => old_teammate }
+        teammate_list_updates['self'] << { :action => 'Added ',   :teammate => audit_teammate }
       end
 
     end
@@ -879,19 +899,19 @@ PEER_AUDIT       = 2
       elsif audit_teammate.user_id != peer_auditor.to_i
         old_teammate =
           AuditTeammate.new_teammate(self.id, section_id, audit_teammate.user_id, :peer, false)
-        teammate_list_updates['peer'] << { :action   => 'Removed ',
-                                           :teammate => old_teammate }
-        audit_teammate.update_attribute(:user_id, peer_auditor)
-
-        teammate_list_updates['peer'] << { :action   => 'Added ',
-                                           :teammate => audit_teammate }    
+        audit_teammate.user_id = peer_auditor
+        audit_teammate.save
+        audit_teammate.reload
+        
+        teammate_list_updates['peer'] << { :action => 'Removed ', :teammate => old_teammate }
+        teammate_list_updates['peer'] << { :action => 'Added ',   :teammate => audit_teammate }    
       end
     end
 
     if (teammate_list_updates['self'].size + teammate_list_updates['peer'].size) > 0
     
       self.set_message('Updates to the audit team for the ' +
-                       self.design.part_number.pcb_display_name +
+                       self.design.directory_name +
                        ' have been recorded - mail was sent',
                        'append')
     
@@ -1151,54 +1171,14 @@ PEER_AUDIT       = 2
   end
   
   
-  # Retrieve the self auditor for the section.
-  #
-  # :call-seq:
-  #   self_audtor(section) -> user
-  #
-  #  If a self auditor for the section is assigned then the user record is returned.
-  #  Otherwise the user record for the design's lead designer is returned.
-  #  A nil is returned if none of the above conditions apply.
-  def self_auditor(section)
-    
-    auditor = self.audit_teammates.detect { |tmate| tmate.section_id == section.id && tmate.self? }
-    return auditor.user if auditor
-
-    return self.design.designer if self.design.designer_id > 0
-    
-    return nil
-    
-  end
-  
-  
-  # Retrieve the peer auditor for the section.
-  #
-  # :call-seq:
-  #   peer_audtor(section) -> user
-  #
-  #  If a peer auditor for the section is assigned then the user record is returned.
-  #  Otherwise the user record for the design's lead peer auditor is returned.
-  #  A nil is returned if none of the above conditions apply.
-  def peer_auditor(section)
-    
-    auditor = self.audit_teammates.detect { |tmate| tmate.section_id == section.id && !tmate.self? }
-    return auditor.user if auditor
-
-    return self.design.peer if self.design.peer_id > 0
-    
-    return nil
-    
-  end
-  
-  
   # Trim sections, subsections, and checks from the audit that do not apply.
   # 
   # :call-seq:
-  #   trim() -> array
+  #   trim_checklist_for_design_type() -> audit
   #
   # The resulting audit checklist contains only the sections, subsection, and
   # checks that apply to the audit.
-  def trim
+  def trim_checklist_for_design_type
     
     design = self.design
     
@@ -1217,6 +1197,138 @@ PEER_AUDIT       = 2
     end
     
   end
+  
+  
+  # Trim checks that do no apply to a self audit.
+  # 
+  # :call-seq:
+  #   trim_checklist_for_self_audit() -> audit
+  #
+  # The resulting audit checklist contains only the checks that apply to a 
+  # self audit.
+ def trim_checklist_for_self_audit
+    
+    self.trim_checklist_for_design_type
+    self.checklist.sections.each do |section|
+      section.subsections.each do |subsection|
+        subsection.checks.delete_if { |check| !check.is_self_check? }
+      end
+    end
+    
+  end
+  
+
+  # Trim checks that do no apply to a peer audit.
+  # 
+  # :call-seq:
+  #   trim_checklist_for_peer_audit() -> audit
+  #
+  # The resulting audit checklist contains only the checks that apply to a 
+  # peer audit.
+  def trim_checklist_for_peer_audit
+    
+    self.trim_checklist_for_design_type
+    
+    self.checklist.sections.each do |section|
+      section.subsections.each do |subsection|
+        subsection.checks.delete_if { |check| !check.is_peer_check? }
+      end
+    end
+    
+    self.checklist.sections.delete_if { |section| section.check_count == 0 }
+    
+  end
+  
+  
+  # Retrieve and load the associated design checks
+  #
+  # :call-seq:
+  #   get_design_checks() -> audit
+  #
+  # Go through all of the checks in the check list and attach the associated
+  # design checks.
+  def get_design_checks
+    
+    design_checks = DesignCheck.find(:all, :conditions => "audit_id=#{self.id}")
+    
+    self.checklist.each_check do |check|
+      design_check       = design_checks.detect { |dc| dc.check_id == check.id }
+      check.design_check = design_check if design_check
+    end
+    
+  end
+  
+  
+  # Provide the user record of the self of peer auditor depending on
+  # the state of the audit (self or peer)
+  #
+  # :call-seq:
+  #   auditor(section) -> user
+  #
+  # Returns the user record of the auditor assigned to perform the self or
+  # peer audit depending on the state of the audit.
+  def auditor(section)
+    if self.is_self_audit?
+      self.self_auditor(section)
+    elsif self.is_peer_audit?
+      self.peer_auditor(section)
+    end
+   end
+   
+  
+  # Retrieve the self auditor for the section.
+  #
+  # :call-seq:
+  #   self_audtor(section) -> user
+  #
+  #  If a self auditor for the section is assigned then the user record is returned.
+  #  Otherwise the user record for the design's lead designer is returned.
+  #  A nil is returned if none of the above conditions apply.
+  def self_auditor(section)
+    
+    auditor = self.audit_teammates.detect { |tmate| tmate.section_id == section.id && tmate.self? }
+
+    if auditor
+      auditor.user
+    elsif self.design.designer_id > 0 
+      self.design.designer
+    else
+      nil
+    end
+    
+  end
+  
+  
+  # Retrieve the peer auditor for the section.
+  #
+  # :call-seq:
+  #   peer_audtor(section) -> user
+  #
+  #  If a peer auditor for the section is assigned then the user record is returned.
+  #  Otherwise the user record for the design's lead peer auditor is returned.
+  #  A nil is returned if none of the above conditions apply.
+  def peer_auditor(section)
+    
+    auditor = self.audit_teammates.detect { |tmate| tmate.section_id == section.id && !tmate.self? }
+    
+    if auditor 
+      return auditor.user
+    elsif self.design.peer_id > 0
+      return self.design.peer
+    else
+      nil
+    end
+    
+  end
+  
+  
+  ##############################################################################
+  #
+  # Private Methods
+  # 
+  ##############################################################################
+  
+  private
   
 
 end
