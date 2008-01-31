@@ -221,8 +221,9 @@ class AuditTest < Test::Unit::TestCase
     actual_checks = {}
     audit.design_checks.each do |design_check|
       assert_equal(audit.id, design_check.audit_id)
-      section_id    = design_check.check.subsection.section_id
-      subsection_id = design_check.check.subsection_id
+      check         = Check.find(design_check.check_id)
+      section_id    = check.subsection.section_id
+      subsection_id = check.subsection_id
       actual_checks[section_id] = {} if !actual_checks[section_id]
       actual_checks[section_id][subsection_id] = [] if !actual_checks[section_id][subsection_id]
       actual_checks[section_id][subsection_id] << design_check.check_id
@@ -245,8 +246,9 @@ class AuditTest < Test::Unit::TestCase
     actual_checks = {}
     audit.design_checks.each do |design_check|
       assert_equal(audit.id, design_check.audit_id)
-      section_id    = design_check.check.subsection.section_id
-      subsection_id = design_check.check.subsection_id
+      check         = Check.find(design_check.check_id)
+      section_id    = check.subsection.section_id
+      subsection_id = check.subsection_id
       actual_checks[section_id] = {} if !actual_checks[section_id]
       actual_checks[section_id][subsection_id] = [] if !actual_checks[section_id][subsection_id]
       actual_checks[section_id][subsection_id] << design_check.check_id
@@ -266,9 +268,9 @@ class AuditTest < Test::Unit::TestCase
     
     audit.reload
     audit.design_checks.each do |dc|
-      next if !dc.check.full_review?
-      dc.designer_result = 'Verified'  if dc.check.is_self_check?
-      dc.auditor_result  = 'Verified'  if dc.check.is_peer_check?
+      check = Check.find(dc.check_id)
+      dc.designer_result = 'Verified'  if check.is_self_check?
+      dc.auditor_result  = 'Verified'  if check.is_peer_check?
       dc.save
     end
     
@@ -317,6 +319,11 @@ class AuditTest < Test::Unit::TestCase
     assert_equal(25.0,   audit.peer_percent_complete)
     assert(!audit.designer_complete?)
     assert(!audit.auditor_complete?)
+    
+    audit.designer_completed_checks = 1000
+    audit.auditor_completed_checks  = 1000
+    assert_equal(100, audit.self_percent_complete)
+    assert_equal(100, audit.peer_percent_complete)
     
   end
 
@@ -904,6 +911,12 @@ class AuditTest < Test::Unit::TestCase
 
 
   ######################################################################
+  def test_process_design_checks
+    
+  end
+
+
+  ######################################################################
   def test_manage_auditor_list
     
     assert_equal(0, @audit_109.audit_teammates.size)
@@ -912,7 +925,7 @@ class AuditTest < Test::Unit::TestCase
     bob   = @bob_g.id.to_s
     
     update_message = 'Updates to the audit team for the ' +
-                     @audit_109.design.part_number.pcb_display_name +
+                     @audit_109.design.directory_name +
                      ' have been recorded - mail was sent'
     
     subj_audit_team_updated = 'The audit team for the pcb252_232_b0_e has been updated'
@@ -1057,6 +1070,52 @@ class AuditTest < Test::Unit::TestCase
                  'self and peer auditor for ' + sect.name + '<br />' +
                  update_message,
                  @audit_109.message)
+
+    #--------------- TESTING - Reassign section from Siva to Cathy (self)
+    self_auditors[330] = @cathy_m.id.to_s
+    peer_auditors[336] = @bob_g.id.to_s
+    self_auditors[336] = @scott_g.id.to_s
+    @audit_109.manage_auditor_list(self_auditors.dup, peer_auditors.dup, @bob_g)
+    
+    assert_equal(1,@emails.size)
+    email = @emails.pop
+    assert_equal(subj_audit_team_updated, email.subject)
+    assert(email.body =~ /Removed Siva Esakky - Design Report Check/)
+    assert(email.body =~ /Added Cathy McLaren - Design Report Check/)
+
+    assert_equal(2, @audit_109.audit_teammates.size)
+    self_auditor = @audit_109.audit_teammates.first
+    assert_equal(@cathy_m.id, self_auditor.user_id)
+    assert(self_auditor.self?)
+    peer_auditor = @audit_109.audit_teammates.last
+    assert_equal(@rich_m.id, peer_auditor.user_id)
+    assert(!peer_auditor.self?)
+    
+    assert(@audit_109.message?)
+    sect = Section.find(336)
+    assert_equal(update_message, @audit_109.message)
+
+    #--------------- TESTING - Reassign section from Rich to Sive (peer)
+    peer_auditors[330] = @siva_e.id.to_s
+    @audit_109.manage_auditor_list(self_auditors.dup, peer_auditors.dup, @bob_g)
+    
+    assert_equal(1,@emails.size)
+    email = @emails.pop
+    assert_equal(subj_audit_team_updated, email.subject)
+    assert(email.body =~ /Removed Rich Miller - Design Report Check/)
+    assert(email.body =~ /Added Siva Esakky - Design Report Check/)
+
+    assert_equal(2, @audit_109.audit_teammates.size)
+    self_auditor = @audit_109.audit_teammates.first
+    assert_equal(@cathy_m.id, self_auditor.user_id)
+    assert(self_auditor.self?)
+    peer_auditor = @audit_109.audit_teammates.last
+    assert_equal(@siva_e.id, peer_auditor.user_id)
+    assert(!peer_auditor.self?)
+    
+    assert(@audit_109.message?)
+    sect = Section.find(336)
+    assert_equal(update_message, @audit_109.message)
 
   end
 
@@ -1268,6 +1327,26 @@ class AuditTest < Test::Unit::TestCase
   
   
   ######################################################################
+  def test_get_design_checks
+    
+    @audit_109.trim_checklist_for_design_type
+    
+    # There should be no design checks associated at this point.
+    @audit_109.checklist.each_check { |check| assert_nil(check.design_check) }
+    
+    # Create the associations.
+    @audit_109.get_design_checks
+    
+    # Verify that the associated design checks are correct
+    @audit_109.checklist.each_check do |check|
+      assert_equal(@audit_109.id, check.design_check.audit_id)
+      assert_equal(check.id,      check.design_check.check_id)
+    end
+    
+  end
+  
+  
+  ######################################################################
   def test_teammate_functions 
 
     # Set up so that self_auditor() and peer_auditor() return nil.
@@ -1277,14 +1356,47 @@ class AuditTest < Test::Unit::TestCase
 
     section = @audit_109.checklist.sections[0]
     
-    assert_nil(@audit_109.self_auditor(section))
-    assert_nil(@audit_109.peer_auditor(section))
+    # Verify nil is returned when there are no audit teammates and the
+    # designer and the peer auditor have not been set.
+    # First test the self audit condition
+    @audit_109.designer_complete = 0
+    assert(@audit_109.is_self_audit?)
+    assert_nil(@audit_109.auditor(section))
+    
+    # Now test the peer audit condition
+    @audit_109.designer_complete = 1
+    @audit_109.auditor_complete  = 0
+    assert(@audit_109.is_peer_audit?)
+    assert_nil(@audit_109.auditor(section))
+    
+    # Now test the audit complete condition.
+    @audit_109.auditor_complete = 1
+    assert(@audit_109.is_complete?)
+    assert_nil(@audit_109.auditor(section))
+    
     
     # Set the designs's lead designerr and peer and verify the results
     @audit_109.design.designer_id = @cathy_m.id
     @audit_109.design.peer_id     = @scott_g.id
-    assert_equal(@cathy_m, @audit_109.self_auditor(section))
-    assert_equal(@scott_g, @audit_109.peer_auditor(section))
+    
+    # There are no audit teammates assigned.  auditor() should return
+    # the designer's user record when in the self audit state and the peer's
+    # user record when in the peer audit state.
+    @audit_109.designer_complete = 0
+    assert(@audit_109.is_self_audit?)
+    assert_equal(@cathy_m, @audit_109.auditor(section))
+    
+    # Now test the peer audit condition
+    @audit_109.designer_complete = 1
+    @audit_109.auditor_complete  = 0
+    assert(@audit_109.is_peer_audit?)
+    assert_equal(@scott_g, @audit_109.auditor(section))
+    
+    # Now test the audit complete condition.
+    @audit_109.auditor_complete = 1
+    assert(@audit_109.is_complete?)
+    assert_nil(@audit_109.auditor(section))
+    
     
     # Set a teammate to as self and peer auditor and verify the result.
     @audit_109.audit_teammates << AuditTeammate.new(:self       => 1,
@@ -1293,9 +1405,23 @@ class AuditTest < Test::Unit::TestCase
     @audit_109.audit_teammates << AuditTeammate.new(:self       => 0,
                                                     :section_id => section.id,
                                                     :user_id    => @siva_e.id)
-    assert_equal(@bob_g,  @audit_109.self_auditor(section))
-    assert_equal(@siva_e, @audit_109.peer_auditor(section))
 
+    # There are audit teammates assigned.  auditor() should return
+    # the user record from audit_teammates.
+    @audit_109.designer_complete = 0
+    assert(@audit_109.is_self_audit?)
+    assert_equal(@bob_g, @audit_109.auditor(section))
+    
+    # Now test the peer audit condition
+    @audit_109.designer_complete = 1
+    @audit_109.auditor_complete  = 0
+    assert(@audit_109.is_peer_audit?)
+    assert_equal(@siva_e, @audit_109.auditor(section))
+    
+    # Now test the audit complete condition.
+    @audit_109.auditor_complete = 1
+    assert(@audit_109.is_complete?)
+    assert_nil(@audit_109.auditor(section))
   end 
   
   
@@ -1316,11 +1442,11 @@ class AuditTest < Test::Unit::TestCase
   
 
   ######################################################################
-  def test_trim
+  def test_trim_methods
     
     comparison_copy = Audit.find(@audit_109.id)
     
-    @audit_109.trim
+    @audit_109.trim_checklist_for_design_type
     results = create_comparison_hash(@audit_109)
     
     # Verify the trimmed audit contains all of the sections, subsections, and 
@@ -1350,9 +1476,31 @@ class AuditTest < Test::Unit::TestCase
       end
     end
 
+    expected_self_checks = []
+    expected_peer_checks = []
+    @audit_109.checklist.each_check do |check|
+      expected_self_checks << check if check.is_self_check?
+      expected_peer_checks << check if check.is_peer_check?
+    end
+    
+
+    @audit_109.reload
+    @audit_109.trim_checklist_for_self_audit
+    self_checks = []
+    @audit_109.checklist.each_check { |check| self_checks << check }
+    assert_equal(expected_self_checks, self_checks)
+
+    
+    @audit_109.reload
+    @audit_109.trim_checklist_for_peer_audit
+    peer_checks = []
+    @audit_109.checklist.each_check { |check| peer_checks << check }
+    assert_equal(expected_peer_checks, peer_checks)
+
+
     @audit_109.reload
     @audit_109.design.design_type = 'Dot Rev'
-    @audit_109.trim
+    @audit_109.trim_checklist_for_design_type
     results = create_comparison_hash(@audit_109)
     
     # Verify the trimmed audit contains all of the sections, subsections, and 
@@ -1382,6 +1530,31 @@ class AuditTest < Test::Unit::TestCase
       end
     end
  
+    expected_self_checks = []
+    expected_peer_checks = []
+    @audit_109.checklist.each_check do |check|
+      expected_self_checks << check if check.is_self_check?
+      expected_peer_checks << check if check.is_peer_check?
+    end
+
+    
+    @audit_109.reload
+    @audit_109.design.design_type = 'Dot Rev'
+   
+    @audit_109.trim_checklist_for_self_audit
+    self_checks = []
+    @audit_109.checklist.each_check { |check| self_checks << check }
+    assert_equal(expected_self_checks, self_checks)
+
+    
+    @audit_109.reload
+    @audit_109.design.design_type = 'Dot Rev'
+   
+    @audit_109.trim_checklist_for_peer_audit
+    peer_checks = []
+    @audit_109.checklist.each_check { |check| peer_checks << check }
+    assert_equal(expected_peer_checks, peer_checks)
+
   end
   
   
