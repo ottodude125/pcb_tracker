@@ -19,37 +19,45 @@ checklist_0_1:
   dr_designer_only_count: 0
   dr_designer_auditor_count: 3
 checklist_1_0:
-  id: 2
-  major_rev_number: 1
-  minor_rev_number: 0
-  released: 1
-  used: 34
-  released_on: 2005-5-13 00:00:00
-  released_by: 2
-  created_on: 2005-4-13 00:00:00
-  created_by: 2
-  designer_only_count: 7
-  designer_auditor_count: 4
-  dc_designer_only_count: 2
-  dc_designer_auditor_count: 5
-  dr_designer_only_count: 0
-  dr_designer_auditor_count: 2
+  id:                                 2
+  major_rev_number:                   1
+  minor_rev_number:                   0
+  released:                           1
+  used:                               34
+  released_on:                        2005-5-13 00:00:00
+  released_by:                        2
+  created_on:                         2005-4-13 00:00:00
+  created_by:                         2
+  designer_only_count:                7
+  designer_auditor_count:             4
+  dc_designer_only_count:             2
+  dc_designer_auditor_count:          5
+  dr_designer_only_count:             0
+  dr_designer_auditor_count:          2
+  new_design_self_check_count:        11
+  new_design_peer_check_count:        4
+  bareboard_design_self_check_count:  2
+  bareboard_design_peer_check_count:  2
 checklist_2_0:
-  id: 222
-  major_rev_number: 2
-  minor_rev_number: 0
-  released: 1
-  used: 0
-  released_on: 2005-5-15 00:00:00
-  released_by: 2
-  created_on: 2005-4-13 00:00:00
-  created_by: 2
-  designer_only_count: 6
-  designer_auditor_count: 9
-  dc_designer_only_count: 2
-  dc_designer_auditor_count: 5
-  dr_designer_only_count: 2
-  dr_designer_auditor_count: 5
+  id:                                 222
+  major_rev_number:                   2
+  minor_rev_number:                   0
+  released:                           1
+  used:                               0
+  released_on:                        2005-5-15 00:00:00
+  released_by:                        2
+  created_on:                         2005-4-13 00:00:00
+  created_by:                         2
+  designer_only_count:                6
+  designer_auditor_count:             9
+  dc_designer_only_count:             2
+  dc_designer_auditor_count:          5
+  dr_designer_only_count:             2
+  dr_designer_auditor_count:          5
+  new_design_self_check_count:        15
+  new_design_peer_check_count:        9
+  bareboard_design_self_check_count:  1
+  bareboard_design_peer_check_count:  1
   
 checklists_101: 
   dr_designer_auditor_count: "18"
