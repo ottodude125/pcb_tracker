@@ -16,8 +16,10 @@ require File.dirname(__FILE__) + '/../test_helper'
 class SubsectionTest < Test::Unit::TestCase
   
   
-  fixtures :checklists,
+  fixtures :audits,
+           :checklists,
            :checks,
+           :design_checks,
            :sections,
            :subsections
   
@@ -181,6 +183,17 @@ class SubsectionTest < Test::Unit::TestCase
     assert_equal(checklist_101, subsection.checklist)
 
   end
+  
+  
+  ######################################################################  
+  def test_check_methods
+    
+    Subsection.find(:all).each do |subsection|
+      check_count = Check.count(:conditions => "subsection_id = #{subsection.id}")
+      assert_equal(check_count, subsection.check_count)
+    end
+    
+  end
 
 
   ######################################################################
@@ -190,6 +203,141 @@ class SubsectionTest < Test::Unit::TestCase
   end
 
 
+  ######################################################################
+  def test_issue_methods
+    
+    audit = audits(:audit_109)
+    audit.trim_checklist_for_peer_audit
+    audit.get_design_checks
+    
+    # Get a subsection for testing.
+    section_336    = sections(:section_336)
+    subsection_539 = subsections(:subsection_539)
+    section    = audit.checklist.sections.detect { |s| s.id == section_336.id}
+    subsection = section.subsections.detect { |ss| ss.id == subsection_539.id }
+     
+    assert(!subsection.issues?)
+    assert_equal(0, subsection.issue_count)
+     
+    check = subsection.checks.detect { |c| c.id = 2817}
+    check.design_check.auditor_result = 'Comment'
+    assert(subsection.issues?)
+    assert_equal(1, subsection.issue_count)
+     
+    check.design_check.auditor_result = 'Verified'
+    assert(!subsection.issues?)
+    assert_equal(0, subsection.issue_count)
+    
+    subsection.checks.each { |chk| chk.design_check.auditor_result = 'Comment'}
+    assert(subsection.issues?)
+    assert_equal(7, subsection.issue_count)
+     
+  end
+  
+  
+  ######################################################################
+  def test_check_count_stats
+    
+    audit = audits(:audit_109)
+    
+    check = checks(:check_2818)
+    check.check_type = 'designer_only'
+    check.save 
+    check = checks(:check_2820)
+    check.check_type = 'yes_no'
+    check.save 
+    check = checks(:check_2819)
+    check.check_type = 'yes_no'
+    check.save 
+    
+    
+    ## Collect the self audit statistics
+    audit.trim_checklist_for_self_audit
+    audit.get_design_checks
+    
+    # Get a subsection for testing.
+    section_336    = sections(:section_336)
+    subsection_539 = subsections(:subsection_539)
+    section    = audit.checklist.sections.detect { |s| s.id == section_336.id}
+    subsection = section.subsections.detect { |ss| ss.id == subsection_539.id }
+    
+    # Set the design checks
+    subsection.checks.each do |check|
+      next if !check.design_check
+      check.design_check.designer_result = 'None'
+      check.design_check.auditor_result  = 'None'
+      check.design_check.save
+    end
+    
+    # At this point, none of the design checks have not been verified.
+    assert_equal(0, subsection.completed_self_design_checks)
+    assert_equal(0, subsection.completed_peer_design_checks)
+    assert_equal(0, subsection.completed_self_design_checks_percentage)
+    assert_equal(0, subsection.completed_peer_design_checks_percentage)
+
+    design_checks = subsection.checks.collect { |c| c.design_check }
+    dc_15734 = design_checks.detect { |dc| dc.id == design_checks(:audit_109_design_check_15734).id }
+    dc_15735 = design_checks.detect { |dc| dc.id == design_checks(:audit_109_design_check_15735).id }
+    dc_15736 = design_checks.detect { |dc| dc.id == design_checks(:audit_109_design_check_15736).id }
+    dc_15737 = design_checks.detect { |dc| dc.id == design_checks(:audit_109_design_check_15737).id }
+    dc_15738 = design_checks.detect { |dc| dc.id == design_checks(:audit_109_design_check_15738).id }
+    dc_15739 = design_checks.detect { |dc| dc.id == design_checks(:audit_109_design_check_15739).id }
+    dc_15740 = design_checks.detect { |dc| dc.id == design_checks(:audit_109_design_check_15740).id }
+    
+    dc_15739.designer_result = 'Yes'
+    dc_15740.designer_result = 'No'
+    assert_equal(2, subsection.completed_self_design_checks)
+    assert_equal(0, subsection.completed_peer_design_checks)
+    assert_equal("28.57",
+                 sprintf("%3.2f", subsection.completed_self_design_checks_percentage))
+    assert_equal(0, subsection.completed_peer_design_checks_percentage)
+
+    dc_15738.designer_result = 'N/A'
+    dc_15737.designer_result = 'Verified'
+    assert_equal(4, subsection.completed_self_design_checks)
+    assert_equal(0, subsection.completed_peer_design_checks)
+    assert_equal("57.14",
+                 sprintf("%3.2f", subsection.completed_self_design_checks_percentage))
+    assert_equal(0, subsection.completed_peer_design_checks_percentage)
+    
+    dc_15734.designer_result = 'N/A'
+    dc_15735.designer_result = 'Verified'
+    dc_15736.designer_result = 'Waived'
+    assert_equal(7, subsection.completed_self_design_checks)
+    assert_equal(0, subsection.completed_peer_design_checks)
+    assert_equal("100.00",
+                 sprintf("%3.2f", subsection.completed_self_design_checks_percentage))
+    assert_equal(0, subsection.completed_peer_design_checks_percentage)
+
+    
+    ## Collect the self audit statistics
+    audit.trim_checklist_for_peer_audit
+    
+    dc_15734.auditor_result = 'N/A'
+    assert_equal(1, subsection.completed_peer_design_checks)
+    assert_equal('25.00', 
+                 sprintf("%3.2f", subsection.completed_peer_design_checks_percentage))
+    
+    dc_15734.auditor_result = 'Comment'
+    assert_equal(0, subsection.completed_peer_design_checks)
+    assert_equal('0.00', 
+                 sprintf("%3.2f", subsection.completed_peer_design_checks_percentage))
+
+    dc_15734.auditor_result = 'Verified'
+    dc_15735.auditor_result = 'Waived'
+    assert_equal(2, subsection.completed_peer_design_checks)
+    assert_equal('50.00', 
+                 sprintf("%3.2f", subsection.completed_peer_design_checks_percentage))
+
+    dc_15736.auditor_result = 'Verified'
+    dc_15737.auditor_result = 'Waived'
+    assert_equal(4, subsection.completed_peer_design_checks)
+    assert_equal('100.00', 
+                 sprintf("%3.2f", subsection.completed_peer_design_checks_percentage))
+
+  end
+  
+  
   ######################################################################
   def test_get_checks
     
