@@ -120,4 +120,30 @@ class Section < ActiveRecord::Base
   end
 
 
+  # Report on the number of checks contained in the section.
+  #
+  # :call-seq:
+  #   check_count() -> integer
+  #
+  # The number of checks contained in the section.
+  def check_count
+    check_count = 0
+    self.subsections.each { |subsection| check_count += subsection.check_count}
+    check_count
+  end
+  
+  
+  # Report on the number of issues raised by the peer auditor in the section
+  #
+  # :call-seq:
+  #   issue_count() -> integer
+  #
+  # The number of issues raised by the peer auditor in the section.
+  def issue_count
+    issue_count = 0
+    self.subsections.each { | subsection| issue_count += subsection.issue_count }
+    issue_count
+  end
+
+
 end
