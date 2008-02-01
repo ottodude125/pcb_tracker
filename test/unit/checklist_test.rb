@@ -14,15 +14,28 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class ChecklistTest < Test::Unit::TestCase
-  fixtures :checks,
+  fixtures :audits,
+           :checks,
            :checklists,
+           :design_checks,
            :sections,
            :subsections
 
+  
+  ######################################################################
   def setup
-    @checklist = Checklist.find(checklists(:checklist_0_1).id)
+    @checklist = checklists(:checklist_0_1)
   end
 
+  
+  ######################################################################
+  def test_revision
+    assert_equal('0.1', @checklist.revision)
+    assert_equal('1.0', checklists(:checklist_1_0).revision)
+  end
+
+
+  ######################################################################
   def test_update
 
     @checklist.major_rev_number = 4
@@ -49,6 +62,7 @@ class ChecklistTest < Test::Unit::TestCase
   end
   
   
+  ######################################################################
   def test_increment_checklist_counters
   
     expected_results = { 
@@ -144,6 +158,7 @@ class ChecklistTest < Test::Unit::TestCase
   end
   
   
+  ######################################################################
   def test_each_check
     expected_checks = [
       checks(:check_10_000),     checks(:check_10_001),     checks(:check_10_002),
@@ -159,6 +174,7 @@ class ChecklistTest < Test::Unit::TestCase
   end
   
   
+  ######################################################################
   def test_release
     
     # Remove any existing released checklists.
@@ -239,10 +255,85 @@ class ChecklistTest < Test::Unit::TestCase
     
   end
   
-  
 
+  ######################################################################
   def test_destroy
     @checklist.destroy
     assert_raise(ActiveRecord::RecordNotFound) { Checklist.find(@checklist.id) }
   end
+  
+  
+  ######################################################################
+  def test_check_counts_calculation
+    
+    checklist = checklists(:checklists_101)
+    
+    assert_equal(0, checklist.new_design_self_check_count)
+    assert_equal(0, checklist.new_design_peer_check_count)
+    assert_equal(0, checklist.bareboard_design_self_check_count)
+    assert_equal(0, checklist.bareboard_design_peer_check_count)
+    
+    checklist.compute_check_counts()
+    
+    new_design_self_check_count       = 0
+    new_design_peer_check_count       = 0
+    bareboard_design_self_check_count = 0
+    bareboard_design_peer_check_count = 0
+    
+    checklist.each_check do |check|
+      if check.is_self_check?
+        new_design_self_check_count       += 1 if check.new_design_check?
+        bareboard_design_self_check_count += 1 if check.bare_board_design_check?
+      end
+      if check.is_peer_check?
+        new_design_peer_check_count       += 1 if check.new_design_check?
+        bareboard_design_peer_check_count += 1 if check.bare_board_design_check?
+      end
+    end
+    
+    assert_equal(new_design_self_check_count, checklist.new_design_self_check_count)
+    assert_equal(new_design_peer_check_count, checklist.new_design_peer_check_count)
+    assert_equal(bareboard_design_self_check_count,
+                 checklist.bareboard_design_self_check_count)
+    assert_equal(bareboard_design_peer_check_count,
+                 checklist.bareboard_design_peer_check_count)
+     
+    assert_equal(new_design_self_check_count, checklist.full_review_self_check_count)
+    assert_equal(new_design_peer_check_count, checklist.full_review_peer_check_count)
+    assert_equal(bareboard_design_self_check_count,
+                 checklist.partial_review_self_check_count)
+    assert_equal(bareboard_design_peer_check_count, 
+                 checklist.partial_review_peer_check_count)
+
+ end
+
+
+  ######################################################################
+  def test_issue_methods
+    
+    audit = audits(:audit_109)
+    audit.trim_checklist_for_peer_audit
+    audit.get_design_checks
+    
+    # Get a section for testing.
+    section_336    = sections(:section_336)
+    subsection_539 = subsections(:subsection_539)
+    section    = audit.checklist.sections.detect { |s| s.id == section_336.id}
+    subsection = section.subsections.detect { |ss| ss.id == subsection_539.id }
+     
+    assert_equal(0, audit.checklist.issue_count)
+     
+    check = subsection.checks.detect { |c| c.id = 2817}
+    check.design_check.auditor_result = 'Comment'
+    assert_equal(1, audit.checklist.issue_count)
+     
+    check.design_check.auditor_result = 'Verified'
+    assert_equal(0, audit.checklist.issue_count)
+    
+    subsection.checks.each { |chk| chk.design_check.auditor_result = 'Comment'}
+    assert_equal(7, audit.checklist.issue_count)
+     
+  end
+  
+  
 end
