@@ -14,7 +14,10 @@
 require File.dirname(__FILE__) + '/../test_helper'
 
 class SectionTest < Test::Unit::TestCase
-  fixtures :sections
+  fixtures :audits,
+           :design_checks,
+           :sections,
+           :subsections
 
 
   def setup
@@ -22,6 +25,20 @@ class SectionTest < Test::Unit::TestCase
   end
 
  
+  ######################################################################  
+  def test_check_methods
+    
+    Section.find(:all).each do |section|
+      check_count = 0
+      section.subsections.each do |subsection|
+        check_count += Check.count(:conditions => "subsection_id = #{subsection.id}")
+      end
+      assert_equal(check_count, section.check_count)
+    end
+    
+  end
+
+
   ######################################################################
   def test_insert
     
@@ -223,5 +240,33 @@ class SectionTest < Test::Unit::TestCase
     assert_equal(2, sections(:section_10_1).designer_auditor_check_count)
   end
 
+  
+  ######################################################################
+  def test_issue_methods
+    
+    audit = audits(:audit_109)
+    audit.trim_checklist_for_peer_audit
+    audit.get_design_checks
+    
+    # Get a section for testing.
+    section_336    = sections(:section_336)
+    subsection_539 = subsections(:subsection_539)
+    section    = audit.checklist.sections.detect { |s| s.id == section_336.id}
+    subsection = section.subsections.detect { |ss| ss.id == subsection_539.id }
+     
+    assert_equal(0, section.issue_count)
+     
+    check = subsection.checks.detect { |c| c.id = 2817}
+    check.design_check.auditor_result = 'Comment'
+    assert_equal(1, section.issue_count)
+     
+    check.design_check.auditor_result = 'Verified'
+    assert_equal(0, section.issue_count)
+    
+    subsection.checks.each { |chk| chk.design_check.auditor_result = 'Comment'}
+    assert_equal(7, section.issue_count)
+     
+  end
+  
   
 end
