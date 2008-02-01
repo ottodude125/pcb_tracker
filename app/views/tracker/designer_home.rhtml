@@ -367,6 +367,7 @@
                 <% end %>
 
                 <% @audits.each do |audit| %>
+
                   <tr>
                     <td align="center"
                         valign="top">
@@ -417,7 +418,7 @@
                               <%= sprintf("%4.1f", audit.peer_percent_complete) %>
                             </b>
                           </td>
-                          <td>
+                          <td align="center">
                             <%= audit.design.designer.name %>
                           </td>
                           <td align="center">
