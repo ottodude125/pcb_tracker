@@ -178,4 +178,98 @@ class Subsection < ActiveRecord::Base
   end
 
   
+  # Compute the number of completed self design checks
+  #
+  # :call-seq:
+  #   completed_self_design_checks() -> integer
+  #
+  # Returns the number of design checks that have completed self
+  # audit.
+  def completed_self_design_checks
+    completed_checks = 0
+    self.checks.each do |check| 
+      completed_checks += 1 if check.design_check.self_auditor_checked?
+    end
+    completed_checks
+  end
+
+
+  # Compute the number of completed peer design checks
+  #
+  # :call-seq:
+  #   completed_peer_design_checks() -> integer
+  #
+  # Returns the number of design checks that have completed peer
+  # audit.
+  def completed_peer_design_checks
+    completed_checks = 0
+    self.checks.each do |check| 
+      completed_checks += 1 if check.design_check.peer_auditor_checked?
+    end
+    completed_checks
+  end
+
+
+  # Compute the percentage of completed self design checks
+  #
+  # :call-seq:
+  #   completed_self_design_checks_percentage() -> float
+  #
+  # Returns the percentage of design checks that have completed self
+  # audit.
+  def completed_self_design_checks_percentage
+    (self.completed_self_design_checks * 100.0) / self.checks.size
+  end
+
+
+  # Compute the percentage of completed peer design checks
+  #
+  # :call-seq:
+  #   completed_peer_design_checks_percentage() -> float
+  #
+  # Returns the percentage of design checks that have completed peer
+  # audit.
+  def completed_peer_design_checks_percentage
+    (self.completed_peer_design_checks * 100.0) / self.checks.size
+  end
+
+
+  # Determine if any issues have been raised in the subsection.
+  #
+  # :call-seq:
+  #   issues?() -> boolean
+  #
+  # TRUE if there are any issues, otherwise FALSE.
+  def issues?
+    issue = self.checks.detect { |check| check.design_check.peer_auditor_issue? }
+    issue != nil
+  end
+  
+  
+  # Report on the number of issues raised by the peer auditor
+  #
+  # :call-seq:
+  #   issue_count() -> integer
+  #
+  # The number of issues raised by the peer auditor.
+  def issue_count
+    question_count = 0
+    self.checks.each do |check|
+      question_count += 1 if check.design_check.peer_auditor_issue?
+    end
+    question_count
+  end
+  
+  
+  # Report on the number of checks contained in the subsection.
+  #
+  # :call-seq:
+  #   check_count() -> integer
+  #
+  # The number of checks contained in the subsection.
+  def check_count
+    self.checks.size
+  end
+  
+  
 end
