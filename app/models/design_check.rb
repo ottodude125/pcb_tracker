@@ -13,7 +13,6 @@
 class DesignCheck < ActiveRecord::Base
 
   belongs_to :audit
-  belongs_to :check
   
   
   AUDITOR_COMPLETE_RESULTS   = %w(Verified N/A Waived)
@@ -84,6 +83,18 @@ class DesignCheck < ActiveRecord::Base
   end
   
   
+  # Determine if the design check has a peer auditor.
+  #
+  # :call-seq:
+  #   peer_auditor_assigned?() -> boolean
+  #
+  # Returns TRUE if the design check has a peer auditor assigned.
+  # Otherwise FALSE is returned.
+  def peer_auditor_assigned?
+    self.auditor_id > 0
+  end
+  
+
   ######################################################################
   #
   # self_auditor
@@ -104,6 +115,18 @@ class DesignCheck < ActiveRecord::Base
     end
   rescue
     User.new(:first_name => 'Not', :last_name => 'Assigned')
+  end
+  
+  
+  # Determine if the design check has a self auditor.
+  #
+  # :call-seq:
+  #   self_auditor_assigned?() -> boolean
+  #
+  # Returns TRUE if the design check has a self auditor assigned.
+  # Otherwise FALSE is returned.
+  def self_auditor_assigned?
+    self.designer_id > 0
   end
   
 
@@ -163,13 +186,14 @@ class DesignCheck < ActiveRecord::Base
   def comment_required?(designer_result, auditor_result)
 
     # Checking the check for the check type is overkill.
+    check = Check.find(self.check_id)
     case 
       when designer_result == 'No'
-        self.check.yes_no?
+        check.yes_no?
       when designer_result == 'Waived'
-        self.check.designer_only? || self.check.designer_auditor?
+        check.designer_only? || check.designer_auditor?
       when auditor_result  == 'Waived'  || auditor_result == 'Comment'
-        self.check.designer_auditor?
+        check.designer_auditor?
     end
 
   end
@@ -241,6 +265,18 @@ class DesignCheck < ActiveRecord::Base
   # otherwise FALSE is returned.
   def auditor_verified?
     AUDITOR_COMPLETE_RESULTS.include?(self.auditor_result)
+  end
+  
+  
+  # Indicate if the peer auditor has raised an issue that needs to
+  # be addressed
+  #
+  # :call-seq"
+  #   peer_auditor_issue?() -> boolean
+  #
+  # TRUE if there is an issue, otherwise FALSE.
+  def peer_auditor_issue?
+    self.auditor_result == 'Comment'
   end
   
   
