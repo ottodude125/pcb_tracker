@@ -165,6 +165,8 @@ class AuditController < ApplicationController
         condition = ' and date_code_check=1'
       elsif @audit.design.dot_rev?
         condition = ' and dot_rev_check=1'
+      else
+        condition = ' and full_review=1'
       end
     
       if @audit.is_self_audit? || @audit.design.designer_id == session[:user].id
@@ -214,84 +216,13 @@ class AuditController < ApplicationController
   def show_sections
 
     @audit      = Audit.find(params[:id])
-    @board_name = @audit.design.part_number.pcb_display_name
-    
-    @lead = @audit.designer_complete? ? @audit.design.peer : @audit.design.designer
-    
-    self_flag = !@audit.is_self_audit?
-    @audit_team = @audit.audit_teammates.delete_if { |at| at.self? == self_flag }
-
-    design_check_list = {}
-    @audit.design_checks.each { |dc| design_check_list[dc.check_id] = dc }
-
-    @checklist_index = []
-    @audit.checklist.sections.each do |section|
-
-      next if !@audit.design.belongs_to(section)
-      
-      section_index = { :section => section }
-      
-      subsects = []
-      section.subsections.each do |subsection|
-
-        next if !@audit.design.belongs_to(subsection)
-                 
-        subsect = { 'name'             => subsection.name,
-                    'note'             => subsection.note,
-                    'url'              => subsection.url,
-                    'id'               => subsection.id,
-                    'percent_complete' => 0.0 }
-
-        condition = ''
-        if @audit.design.date_code?
-          condition = ' and date_code_check=1'
-        elsif @audit.design.dot_rev?
-          condition = ' and dot_rev_check=1'
-        end
-        
-        if @audit.is_self_audit? || @audit.design.designer_id == session[:user].id
-          subsection_checks = Check.find(:all,
-                                         :conditions => "subsection_id=#{subsection.id}" +
-                                                        condition)
-        else
-          subsection_checks = Check.find(:all,
-                                         :conditions => "subsection_id=#{subsection.id} and " +
-                                                        "check_type='designer_auditor'" +
-                                                        condition)
-        end
-        subsect['checks'] = subsection_checks.size
-        
-        checks_completed = 0
-        questions        = 0
-        if @audit.is_self_audit? || @audit.design.designer_id == session[:user].id
-          subsection_checks.each do |check|
-            if design_check_list[check.id]
-              checks_completed += 1 if design_check_list[check.id].designer_result != 'None'
-              questions += 1 if design_check_list[check.id].auditor_result == 'Comment'
-            end
-          end
-        else
-          subsection_checks.each do |check|
-            if design_check_list[check.id]
-              checks_completed += 1 if design_check_list[check.id].auditor_result != 'None' and design_check_list[check.id].auditor_result != 'Comment'
-              questions += 1 if design_check_list[check.id].auditor_result == 'Comment'
-            end
-          end
-        end
-        
-        subsect['questions'] = questions
-        if subsect['checks'] > 0
-          subsect['percent_complete'] = checks_completed * 100.0 / subsect['checks']
-        else
-          subsect['percent_complete'] = 0.0
-        end
-        
-        subsects.push(subsect)
-      end
-      section_index['subsections'] = subsects
-      @checklist_index.push(section_index)
+    if @audit.is_self_audit?
+      @audit.trim_checklist_for_self_audit
+    else
+      @audit.trim_checklist_for_peer_audit
     end
-    
+    @audit.get_design_checks
+        
   end # show_sections method
 
 
@@ -316,39 +247,13 @@ class AuditController < ApplicationController
   #
   def print
 
-    @audit    = Audit.find(params[:id])
-    @audit.trim
-    @user_list = []
+    @audit = Audit.find(params[:id])
+    @audit.trim_checklist_for_design_type
+    @audit.get_design_checks
     
-    design_check_list = DesignCheck.find(:all, 
-                                         :conditions => "audit_id=#{@audit.id}",
-                                         :include    => :audit_comments)
-
     @checklist = @audit.checklist
     
-    @audit.checklist.each_check do |check|
-
-      check[:design_check] = design_check_list.detect { |dc| dc.check_id == check.id }
-      next if !check[:design_check]
-    
-      designer = @user_list.detect { |u| u.id == check[:design_check].designer_id }
-      if !designer && check[:design_check].designer_id != 0
-        designer = User.find(check[:design_check].designer_id) if check[:design_check].designer_id > 0
-        @user_list << designer
-      end
-      check[:designer] = designer.name if designer
-
-      if check[:design_check].auditor_id > 0
-        auditor = @user_list.detect { |u| u.id == check[:design_check].auditor_id }
-        if !auditor && check[:design_check].auditor_id != 0
-          auditor = User.find(check[:design_check].auditor_id) if check[:design_check].auditor_id > 0
-          @user_list << auditor
-        end
-        check[:auditor] = auditor.name if auditor
-      end
-
-    end
-  end # print method
+  end
 
 
   ######################################################################
@@ -367,7 +272,7 @@ class AuditController < ApplicationController
   #
   def auditor_list
     @audit = Audit.find(params[:id])
-    @audit.trim
+    @audit.trim_checklist_for_design_type
   end
   
   
