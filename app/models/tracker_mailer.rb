@@ -811,7 +811,7 @@ class TrackerMailer < ActionMailer::Base
     @cc         = peer.email
 
     @body['design_check'] = design_check
-    @body['check']        = design_check.check
+    @body['check']        = Check.find(design_check.check_id)
     @body['comment']      = comment
 
   end
