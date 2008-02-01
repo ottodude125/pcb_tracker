@@ -142,7 +142,7 @@ class Checklist < ActiveRecord::Base
       next if !s.full_review?
       s.subsections.each do |ss|
         next if !ss.full_review?
-        ss.checks.each { |c| check_count += 1 if c.full_review? && c.is_self_check? }
+        ss.checks.each { |c| check_count += 1 if c.new_design_check? && c.is_self_check? }
       end
     end
     check_count
@@ -170,7 +170,7 @@ class Checklist < ActiveRecord::Base
       next if !s.full_review?
       s.subsections.each do |ss|
         next if !ss.full_review?
-        ss.checks.each { |c| check_count += 1 if c.full_review? && c.is_peer_check? }
+        ss.checks.each { |c| check_count += 1 if c.new_design_check? && c.is_peer_check? }
       end
     end
     check_count
@@ -198,7 +198,7 @@ class Checklist < ActiveRecord::Base
       next if !s.dot_rev_check?
       s.subsections.each do |ss|
         next if !ss.dot_rev_check?
-        ss.checks.each { |c| check_count += 1 if c.dot_rev_check? && c.is_self_check? }
+        ss.checks.each { |c| check_count += 1 if c.bare_board_design_check? && c.is_self_check? }
       end
     end
     check_count
@@ -226,7 +226,7 @@ class Checklist < ActiveRecord::Base
       next if !s.dot_rev_check?
       s.subsections.each do |ss|
         next if !ss.dot_rev_check?
-        ss.checks.each { |c| check_count += 1 if c.dot_rev_check? && c.is_peer_check? }
+        ss.checks.each { |c| check_count += 1 if c.bare_board_design_check? && c.is_peer_check? }
       end
     end
     check_count
@@ -288,6 +288,12 @@ class Checklist < ActiveRecord::Base
   end
 
 
+  # Remove the checklist and its associated sections, subsections, and checks.
+  #
+  # :call-seq:
+  #   remove() -> boolean
+  #
+  # Go through the entire checklist to remove the sections, the remove self.
   def remove
 
    removed = true
@@ -298,6 +304,54 @@ class Checklist < ActiveRecord::Base
 
    return removed && self.destroy
     
+  end
+
+
+  # Calculate the number of each of new design and bareboard design checks for 
+  # both the self and peer audits and store the results in the database.
+  #
+  # :call-seq:
+  #   compute_check_counts() -> boolean
+  #
+  # Go through the entire checklist to calculate the number of self audit and 
+  # peer audit checks for both new designs and bare board designs.  The results
+  # are stored in the database.
+  def compute_check_counts
+    
+    self.new_design_self_check_count       = 0
+    self.new_design_peer_check_count       = 0
+    self.bareboard_design_self_check_count = 0
+    self.bareboard_design_peer_check_count = 0
+    
+    self.each_check do |check|
+ 
+      if check.new_design_check?
+        self.new_design_self_check_count += 1 if check.is_self_check?
+        self.new_design_peer_check_count += 1 if check.is_peer_check?
+      end
+      
+      if check.bare_board_design_check?
+        self.bareboard_design_self_check_count += 1 if check.is_self_check?
+        self.bareboard_design_peer_check_count += 1 if check.is_peer_check?
+      end
+      
+    end
+    
+    self.save
+    
+  end
+  
+  
+  # Report on the number of issues raised by the peer auditor in the checklist
+  #
+  # :call-seq:
+  #   issue_count() -> integer
+  #
+  # The number of issues raised by the peer auditor in the checklist.
+  def issue_count
+    issue_count = 0
+    self.sections.each { | section| issue_count += section.issue_count }
+    issue_count
   end
 
 
