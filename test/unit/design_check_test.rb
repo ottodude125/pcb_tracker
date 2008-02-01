@@ -64,6 +64,39 @@ class DesignCheckTest < Test::Unit::TestCase
     
   end
 
+  
+  ######################################################################
+  def test_peer_auditor_issue
+    
+    dc = DesignCheck.new
+    
+    dc.auditor_result = 'Verified'
+    assert(!dc.peer_auditor_issue?)
+    
+    dc.auditor_result = 'Comment'
+    assert(dc.peer_auditor_issue?)
+    
+  end
+  
+  
+  ######################################################################
+  def test_auditor_access
+    
+    dc = DesignCheck.new
+    assert(!dc.self_auditor_assigned?)
+    assert(!dc.peer_auditor_assigned?)
+    assert_equal(dc.self_auditor.name, dc.peer_auditor.name)
+    
+    dc.designer_id = @scott_g.id
+    assert(dc.self_auditor_assigned?)
+    assert_equal(@scott_g.name, dc.self_auditor.name)
+    
+    dc.auditor_id = @bob_g.id
+    assert(dc.peer_auditor_assigned?)
+    assert_equal(@bob_g.name, dc.peer_auditor.name)
+    
+  end
+
 
   ######################################################################
   def test_create
@@ -176,7 +209,7 @@ class DesignCheckTest < Test::Unit::TestCase
     dc_yes_no           = design_checks(:audit_109_design_check_15729)
     dc_designer_only    = design_checks(:audit_109_design_check_15695)
     dc_designer_auditor = design_checks(:audit_109_design_check_15778)
-    
+
     assert(!dc_yes_no.comment_required?('Yes', ''))
     assert( dc_yes_no.comment_required?('No',  ''))
     
