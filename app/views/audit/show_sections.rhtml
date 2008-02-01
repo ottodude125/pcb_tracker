@@ -19,28 +19,33 @@
 	<th>Number of<br />Checks</th>
 	<th>%<br />Completed</th>
       </tr>
-      <% for entry in @checklist_index %>
+
+      <% @audit.checklist.sections.each do |section| %>
       
-        <% next if @audit.is_peer_audit? && entry[:section].designer_auditor_check_count == 0 %>
-      
-        <% auditor = auditor_name(entry[:section].id, @audit_team, @lead) %>
+        <%# next if @audit.is_peer_audit? && section.designer_auditor_check_count == 0 %>
+     
+        <%# JPA, FIND AND DELETE AUDITOR NAME auditor = auditor_name(section.id, @audit_team, @lead) %>
+        <% auditor = @audit.auditor(section).name %>
         <% section_color = auditor == session[:user].name ? "#00ff00" : "#ff0000" %>
         <tr>
-          <% color = '#' + entry[:section].background_color %>
+          <% color = '#' + section.background_color %>
           <td width="10" bgcolor="<%= color %>">&nbsp;</td>
           <td colspan="2">
-            <b><%= entry[:section].name %></b>
+            <b><%= section.name %></b>
           </td>
           <td colspan="3" bgcolor="<%= section_color %>">
-            <b><%= @audit.is_self_audit? ? 'Self' : 'Peer' %> Auditor: <%= auditor %></b>
+            <b><%= @audit.is_self_audit? ? 'Self' : 'Peer' %> Auditor: <%= auditor %> </b>
           </td>
         </tr>
-        <% for subsection in entry["subsections"] %>
-          <% if subsection["checks"] > 0 %>
-            <% if subsection["questions"] == 0 %>
-            <tr>
+
+        <% section.subsections.each do |subsection| %>
+
+          <% if subsection.checks.size > 0 %>
+
+            <% if subsection.questions? %>
+              <tr bgcolor="yellow">
             <% else %>
-            <tr bgcolor="yellow">
+              <tr>
             <% end %>
               <td width="10" bgcolor="<%= color %>">&nbsp;</td>
               <td width="5" bgcolor="<%= color %>">&nbsp;</td>
@@ -48,18 +53,23 @@
               <td>
                 <%= link_to(subsection["name"],
                             { :action        => 'perform_checks',
-                              :subsection_id => subsection["id"],
+                              :subsection_id => subsection.id,
                               :audit_id      => @audit.id }) %>
               </td>
-              <td align="center"><%= subsection["checks"] %></td>
+              <td align="center"><%= subsection.checks.size %></td>
               <td align="center">
-                <%= sprintf("%3.f",
-                            subsection["percent_complete"]) %>%
+                <% if @audit.is_self_audit? %>
+                  <%= sprintf("%3.f",
+                              subsection.completed_self_design_checks_percentage) %>%
+                <% else %>
+                  <%= sprintf("%3.f",
+                              subsection.completed_peer_design_checks_percentage) %>%
+                <% end %>
               </td>
               <td>
                 <%= link_to('Audit Checks',
                             { :action        => 'perform_checks',
-                              :subsection_id => subsection["id"],
+                              :subsection_id => subsection.id,
                               :audit_id      => @audit.id }) %>
               </td>
             </tr>
