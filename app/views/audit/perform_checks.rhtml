@@ -209,7 +209,7 @@
 
         <th align="left" width="100">Self Auditor:</th>
         <td align="left" width="200">
-          <% if check[:design_check].designer_id? %>
+          <% if check.design_check.designer_id? %>
             <%= User.find(check[:design_check].designer_id).name %>
           <% else %>
             &nbsp;
