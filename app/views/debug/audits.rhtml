@@ -30,7 +30,7 @@
 
     <tr>
       <td><%= line_number + 1 %></td>
-      <td><%= audit.id %></td>
+      <td><%= link_to(audit.id, :action => 'view_new_design_dangling_checks', :id => audit.id) %></td>
 	  <td><%= audit.checklist_id %></td>
 	  <td><%= audit.design.id %>
 	  	<%# link_to(audit.design.id,
