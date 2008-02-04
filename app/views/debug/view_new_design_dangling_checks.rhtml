@@ -22,6 +22,7 @@
   </tr>
 </table>
 
+<br />
 
 <table border="2">
   <tr>
@@ -41,7 +42,35 @@
   </tr>
 </table>
 
-<% @audit.checklist.each_check do |check| %>
-  <% debug check %>
-<% end %>
-<%# debug @audit %>
+<br />
+
+<table border="2">
+  <tr>
+    <th class="teraheader" colspan="8">Check Details</th>
+  </tr>
+
+  <tr>
+    <th>Check ID</th>
+    <th>New?</th>
+    <th>Bare Board</th>
+    <th>Design Check ID</th>
+    <th>Self Auditor Checked</th>
+    <th>Self Result</th>
+    <th>Peer Auditor Checked</th>
+    <th>Peer Result</th>
+  </tr>
+
+  <% @audit.checklist.each_check do |check| %>
+    <tr>
+      <td><%= check.id %></td>
+      <td><%= check.full_review?.to_s %></td>
+      <td><%= check.dot_rev_check?.to_s %></td>
+      <td><%= check.design_check.id %></td>
+      <td><%= check.design_check.self_auditor_checked?.to_s %></td>
+      <td><%= check.design_check.designer_result %></td>
+      <td><%= check.design_check.peer_auditor_checked?.to_s %></td>
+      <td><%= check.design_check.auditor_result %></td>
+    </tr>
+  <% end %>
+</table>
+
