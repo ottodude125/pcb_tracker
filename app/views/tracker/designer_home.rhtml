@@ -193,7 +193,6 @@
                             </td>
                           </tr>
                         <% end %>
-
                       <tr>
                         <td colspan="6">
                           <table width="100%" border="0">
@@ -204,7 +203,8 @@
                                 </td>
                               </tr>
                             <% else %>
-                              <tr>
+                              
+                                <tr>
                                 <td bgcolor="#ffffff" width="100">&nbsp;</td>
                                 <td align="center">
                                   <font size="-2"><b>% Complete</b></font>
@@ -245,7 +245,26 @@
                                     <%= sprintf("%4.1f", design.audit.peer_percent_complete) %>
                                   </b>
                                 </td>
-                              </tr>                                
+                              </tr>
+
+                              <% if design.audit.is_peer_audit? %>
+
+                                <% issue_count = design.audit.checklist.issue_count%>
+                                <tr>
+                                <% if issue_count == 0 %>
+                                  <td colspan="4">
+                                     Issues raised by peer: 0
+                                  </td>
+                                <% else %>
+                                  <td colspan="4">
+                                    <font color="red"><b>
+                                      Issues raised by peer: <%= issue_count %>
+                                    </b></font>
+                                  </td>
+                                <% end %>
+                                </tr>
+                              <% end %>
+
                             <% end %>
                             <tr>
                               <td colspan="4" align="left">
