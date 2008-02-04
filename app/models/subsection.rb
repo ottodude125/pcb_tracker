@@ -255,6 +255,7 @@ class Subsection < ActiveRecord::Base
   def issue_count
     question_count = 0
     self.checks.each do |check|
+      next if !check.design_check
       question_count += 1 if check.design_check.peer_auditor_issue?
     end
     question_count
