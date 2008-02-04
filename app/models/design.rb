@@ -136,6 +136,9 @@ class Design < ActiveRecord::Base
 
     designs.uniq.sort_by { |dr| dr.priority.value }
 
+    # Load the design checks for statistics.
+    designs.each { |design| design.audit.get_design_checks if design.audit.is_peer_audit? }
+
   end
   
 
