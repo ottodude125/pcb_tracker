@@ -28,14 +28,14 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
     
     @audit.checklist.sections.each do |section|
       section.subsections.each do |subsection|
-        subsection.checks.delete_if { |check| !check.full_review?}
+        subsection.checks.delete_if { |check| check.full_review?}
       end
     end
     
     design_checks = DesignCheck.find(:all, :conditions => "audit_id=#{@audit.id}")
     
     @audit.checklist.each_check do |check|
-      check = design_checks.detect { |dc| dc.check_id == check.id }
+     check.design_check = design_checks.detect { |dc| dc.check_id == check.id }      
     end
     
   end
