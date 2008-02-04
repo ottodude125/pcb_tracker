@@ -1,0 +1,47 @@
+<table border="2">
+  <tr>
+    <th class="teraheader" colspan="7">Audit</th>
+  </tr>
+  <tr>
+    <th>ID</th>
+    <th>Design</th>
+    <th>Checklist</th>
+    <th>Self Complete?</th>
+    <th>Peer Complete?</th>
+    <th>Self Completed Checks</th>
+    <th>Peer Completed Checks</th>
+  </tr>
+  <tr>
+    <td><%= @audit.id %></td>
+    <td><%= @audit.design_id %></td>
+    <td><%= @audit.checklist_id %></td>
+    <td><%= @audit.designer_complete?.to_s %></td>
+    <td><%= @audit.auditor_complete?.to_s %></td>
+    <td><%= @audit.designer_completed_checks %></td>
+    <td><%= @audit.auditor_completed_checks %></td>
+  </tr>
+</table>
+
+
+<table border="2">
+  <tr>
+    <th class="teraheader" colspan="4">Checklist</th>
+  </tr>
+  <tr>
+    <th>ID</th>
+    <th>Revision</th>
+    <th>New Design Self Check Count</th>
+    <th>New Design Peer Check Count</th>
+  </tr>
+  <tr>
+    <td><%= @audit.checklist.id %></td>
+    <td><%= @audit.checklist.major_rev_number %>.<%= @audit.checklist.minor_rev_number %></td>
+    <td><%= @audit.checklist.new_design_self_check_count %></td>
+    <td><%= @audit.checklist.new_design_peer_check_count %></td>
+  </tr>
+</table>
+
+<% @audit.checklist.each_check do |check| %>
+  <% debug check %>
+<% end %>
+<%# debug @audit %>
