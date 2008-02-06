@@ -297,10 +297,6 @@ PEER_AUDIT       = 2
     when 'New'
       count[:designer] = checklist.new_design_self_check_count
       count[:peer]     = checklist.new_design_peer_check_count
-    when 'Date Code'
-      count[:designer] = checklist.dc_designer_only_count +
-                           checklist.dc_designer_auditor_count
-      count[:peer]     = checklist.dc_designer_auditor_count
     when 'Dot Rev'
       count[:designer] = checklist.bareboard_design_self_check_count
       count[:peer]     = checklist.bareboard_design_peer_check_count
@@ -330,12 +326,8 @@ PEER_AUDIT       = 2
 
     case self.design.design_type
     when 'New'
-      checklist.designer_auditor_count
       checklist.new_design_peer_check_count
-    when 'Date Code'
-      checklist.dc_designer_auditor_count
     when 'Dot Rev'
-      checklist.dr_designer_auditor_count
       checklist.bareboard_design_peer_check_count
     end
 
@@ -383,12 +375,8 @@ PEER_AUDIT       = 2
 
     case self.design.design_type
     when 'New'
-      checklist.designer_only_count + checklist.designer_auditor_count
       checklist.new_design_self_check_count
-    when 'Date Code'
-      checklist.dc_designer_only_count + checklist.dc_designer_auditor_count
     when 'Dot Rev'
-      checklist.dr_designer_only_count + checklist.dr_designer_auditor_count
       checklist.bareboard_design_self_check_count
     end
 
@@ -990,10 +978,6 @@ PEER_AUDIT       = 2
       end
     }
 
-    redirect_to(:action        => 'perform_checks',
-                :audit_id      => params[:audit][:id],
-                :subsection_id => params[:subsection][:id])
-    
   end
 
   
@@ -1208,14 +1192,20 @@ PEER_AUDIT       = 2
   # self audit.
  def trim_checklist_for_self_audit
     
-    self.trim_checklist_for_design_type
-    self.checklist.sections.each do |section|
-      section.subsections.each do |subsection|
-        subsection.checks.delete_if { |check| !check.is_self_check? }
-      end
-    end
+   self.trim_checklist_for_design_type
+   self.checklist.sections.each do |section|
+     section.subsections.each do |subsection|
+       subsection.checks.delete_if { |check| !check.is_self_check? }
+     end
+   end
     
-  end
+   # Lop off any empty sections and subsections
+   self.checklist.sections.delete_if { |section| section.check_count == 0 }
+   self.checklist.sections.each do |section|
+     section.subsections.delete_if { |subsection| subsection.check_count == 0 }
+   end
+    
+ end
   
 
   # Trim checks that do no apply to a peer audit.
@@ -1235,7 +1225,11 @@ PEER_AUDIT       = 2
       end
     end
     
+   # Lop off any empty sections and subsections
     self.checklist.sections.delete_if { |section| section.check_count == 0 }
+    self.checklist.sections.each do |section|
+      section.subsections.delete_if { |subsection| subsection.check_count == 0 }
+    end
     
   end
   
