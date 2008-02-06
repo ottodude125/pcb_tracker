@@ -5,7 +5,8 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% @heading = "#{@audit.design.directory_name} - Peer Audit Sections" %>
+<% audit_type = @audit.is_self_audit? ? 'Self' : 'Peer' %>
+<% @heading = "#{@audit.design.directory_name} - #{audit_type} Audit Sections" %>
 
 <%# debug @checklist_index %>
 
