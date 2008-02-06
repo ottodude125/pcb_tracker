@@ -61,10 +61,11 @@
   <table width="80%" align="center">
     <tr>
       <td align="left">
-        <input type="submit" value="Reassign" />
+        <input class="form_return" type="button" value="Return - No Changes" 
+               onClick="parent.location='<%= url_for(session[:return_to]) %>'" />
       </td>
       <td align="right">
-        <input type="button" value="Return" onClick="parent.location='<%= url_for( :action => 'view', :id => @design_review_id ) %>'" />
+        <input class="form_submit" type="submit" value="Reassign" />
       </td>
     </tr>
   </table>
