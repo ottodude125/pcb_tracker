@@ -127,15 +127,27 @@ class AuditController < ApplicationController
   def perform_checks
 
     @audit        = Audit.find(params[:audit_id])
-    @subsection   = Subsection.find(params[:subsection_id])
     @total_checks = @audit.check_count
 
-    @arrows         = {}
-    current_section = @subsection.section
-    checklist       = @subsection.checklist
+    if @audit.is_self_audit?
+      @audit.trim_checklist_for_self_audit
+    else
+      @audit.trim_checklist_for_peer_audit
+    end
+    @audit.get_design_checks
     
     # Build the navigation information.
-    @audit.filtered_checklist(session[:user])
+    @arrows         = {}
+    
+    # Locate the subsection in the checklist.
+    @audit.checklist.sections.each do |section|
+      @subsection = section.subsections.detect { |ss| ss.id == params[:subsection_id].to_i }
+      break if @subsection
+    end
+    current_section = @subsection.section
+    checklist       = @subsection.checklist
+
+
     nav_sections  = @audit.checklist.sections
     nav_section_i = nav_sections.index(current_section)
 
@@ -160,33 +172,6 @@ class AuditController < ApplicationController
 
       @able_to_check = @audit.section_auditor?(@subsection.section, session[:user])
 
-      condition = ''
-      if @audit.design.date_code?
-        condition = ' and date_code_check=1'
-      elsif @audit.design.dot_rev?
-        condition = ' and dot_rev_check=1'
-      else
-        condition = ' and full_review=1'
-      end
-    
-      if @audit.is_self_audit? || @audit.design.designer_id == session[:user].id
-        @checks = Check.find(:all,
-                             :conditions => "subsection_id=#{@subsection.id}#{condition}",
-                             :order      => 'position')
-      else
-        @checks = Check.find(:all,
-                             :conditions => "subsection_id=#{@subsection.id} and " +
-                                            "check_type='designer_auditor'"        +
-                                            condition,
-                             :order      => 'position')
-      end
-
-      # Add the design checks and comments for each of the checks.
-      # The audit comments are included in the design check.
-      @checks.each do |check|
-        check[:design_check] = DesignCheck.find_by_check_id_and_audit_id(check.id, 
-                                                                         @audit.id)
-      end
     else
       redirect_to(:action => 'show_sections', :id => @audit.id)
     end
