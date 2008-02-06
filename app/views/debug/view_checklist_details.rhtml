@@ -1,0 +1,303 @@
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+
+<% audit = @audit %>
+
+<table border="1">
+  <tr><th class="teraheader" colspan="6">Audit</th></tr>
+  <tr>
+    <th>ID</th>
+    <th>Design ID</th>
+    <th>Self Complete</th>
+    <th>Completed Checks</th>
+    <th>Peer Complete</th>
+    <th>Completed Checks</th>
+  </tr>
+  <tr>
+    <td><%= audit.id %></td>
+    <td><%= audit.design_id %></td>
+    <td><%= audit.designer_complete?.to_s %>
+    <td><%= audit.designer_completed_checks %>
+    <td><%= audit.auditor_complete?.to_s %>
+    <td><%= audit.auditor_completed_checks %>
+  </tr>
+</table>
+
+<table border="1">
+  <tr><th class="teraheader" colspan="5">Checklist</th></tr>
+  <tr>
+    <th>ID</th>
+    <th>New Design Self Check Count</th>
+    <th>New Design Peer Check Count</th>
+    <th>Bareboard Design Self Check Count</th>
+    <th>Bareboard Design Peer Check COunt</th>
+  </tr>
+  <tr>
+    <td><%= audit.checklist.id %></td>
+    <td><%= audit.checklist.new_design_self_check_count %></td>
+    <td><%= audit.checklist.new_design_peer_check_count %>
+    <td><%= audit.checklist.bareboard_design_self_check_count %>
+    <td><%= audit.checklist.bareboard_design_peer_check_count %>
+  </tr>
+</table>
+
+<br />
+
+<% i = 0 %>
+
+<% audit.checklist.sections.each do |section| %>
+  
+  <% section.subsections.each do |subsection| %>
+    
+    <table border="1">
+      <tr
+        <th>&nbsp;</th>
+        <th class="teraheader" colspan="3">Section</th>
+        <th class="teraheader" colspan="3">Subection</th>
+        <th class="teraheader" colspan="5">Check</th>
+      </tr>
+      <tr>
+        <th>&nbsp;</th>
+        <th>ID</th>
+        <th>New Design?</th>
+        <th>Bareboard Design?</th>
+        <th>ID</th>
+        <th>New Design?</th>
+        <th>Bareboard Design?</th>
+        <th>ID</th>
+        <th>New Design?</th>
+        <th>Bareboard Design?</th>
+        <th>Self Check?</th>
+        <th>Peer Check?</th>
+      </tr>
+
+    <% subsection.checks.each do |check| %>
+      
+      <% i += 1 %>
+      <tr>
+        <td><%= i.to_s %></td> 
+        <td><%= section.id %></td>
+        <td><%= section.full_review?.to_s %></td>
+        <td><%= section.dot_rev_check?.to_s %></td>
+        <td><%= subsection.id %></td>
+        <td><%= subsection.full_review?.to_s %></td>
+        <td><%= subsection.dot_rev_check?.to_s %></td>
+        <td><%= check.id %></td>
+        <td><%= check.full_review?.to_s %></td>
+        <td><%= check.dot_rev_check?.to_s %></td>
+        <td><%= check.is_self_check?.to_s %></td>
+        <td><%= check.is_peer_check?.to_s %></td>
+
+      </tr>
+     
+    <% end %>
+    </table>
+    <br />
+  <% end %>
+  <br />
+<% end %>  
+
+
+
+<% audit = @trimmed_self_audit %>
+<table border="1">
+  <tr><th class="teraheader" colspan="6">Audit</th></tr>
+  <tr>
+    <th>ID</th>
+    <th>Design ID</th>
+    <th>Self Complete</th>
+    <th>Completed Checks</th>
+    <th>Peer Complete</th>
+    <th>Completed Checks</th>
+  </tr>
+  <tr>
+    <td><%= audit.id %></td>
+    <td><%= audit.design_id %></td>
+    <td><%= audit.designer_complete?.to_s %>
+    <td><%= audit.designer_completed_checks %>
+    <td><%= audit.auditor_complete?.to_s %>
+    <td><%= audit.auditor_completed_checks %>
+  </tr>
+</table>
+
+<table border="1">
+  <tr><th class="teraheader" colspan="5">Checklist</th></tr>
+  <tr>
+    <th>ID</th>
+    <th>New Design Self Check Count</th>
+    <th>New Design Peer Check Count</th>
+    <th>Bareboard Design Self Check Count</th>
+    <th>Bareboard Design Peer Check COunt</th>
+  </tr>
+  <tr>
+    <td><%= audit.checklist.id %></td>
+    <td><%= audit.checklist.new_design_self_check_count %></td>
+    <td><%= audit.checklist.new_design_peer_check_count %>
+    <td><%= audit.checklist.bareboard_design_self_check_count %>
+    <td><%= audit.checklist.bareboard_design_peer_check_count %>
+  </tr>
+</table>
+
+<br />
+
+<% i = 0 %>
+
+<% audit.checklist.sections.each do |section| %>
+  
+  <% section.subsections.each do |subsection| %>
+    
+    <table border="1">
+      <tr
+        <th>&nbsp;</th>
+        <th class="teraheader" colspan="3">Section</th>
+        <th class="teraheader" colspan="3">Subection</th>
+        <th class="teraheader" colspan="5">Check</th>
+      </tr>
+      <tr>
+        <th>&nbsp;</th>
+        <th>ID</th>
+        <th>New Design?</th>
+        <th>Bareboard Design?</th>
+        <th>ID</th>
+        <th>New Design?</th>
+        <th>Bareboard Design?</th>
+        <th>ID</th>
+        <th>New Design?</th>
+        <th>Bareboard Design?</th>
+        <th>Self Check?</th>
+        <th>Peer Check?</th>
+      </tr>
+
+    <% subsection.checks.each do |check| %>
+      
+      <% i += 1 %>
+      <tr>
+        <td><%= i.to_s %></td> 
+        <td><%= section.id %></td>
+        <td><%= section.full_review?.to_s %></td>
+        <td><%= section.dot_rev_check?.to_s %></td>
+        <td><%= subsection.id %></td>
+        <td><%= subsection.full_review?.to_s %></td>
+        <td><%= subsection.dot_rev_check?.to_s %></td>
+        <td><%= check.id %></td>
+        <td><%= check.full_review?.to_s %></td>
+        <td><%= check.dot_rev_check?.to_s %></td>
+        <td><%= check.is_self_check?.to_s %></td>
+        <td><%= check.is_peer_check?.to_s %></td>
+
+      </tr>
+     
+    <% end %>
+    </table>
+    <br />
+  <% end %>
+  <br />
+<% end %>  
+
+
+
+
+
+
+<% audit = @trimmed_peer_audit %>
+<table border="1">
+  <tr><th class="teraheader" colspan="6">Audit</th></tr>
+  <tr>
+    <th>ID</th>
+    <th>Design ID</th>
+    <th>Self Complete</th>
+    <th>Completed Checks</th>
+    <th>Peer Complete</th>
+    <th>Completed Checks</th>
+  </tr>
+  <tr>
+    <td><%= audit.id %></td>
+    <td><%= audit.design_id %></td>
+    <td><%= audit.designer_complete?.to_s %>
+    <td><%= audit.designer_completed_checks %>
+    <td><%= audit.auditor_complete?.to_s %>
+    <td><%= audit.auditor_completed_checks %>
+  </tr>
+</table>
+
+<table border="1">
+  <tr><th class="teraheader" colspan="5">Checklist</th></tr>
+  <tr>
+    <th>ID</th>
+    <th>New Design Self Check Count</th>
+    <th>New Design Peer Check Count</th>
+    <th>Bareboard Design Self Check Count</th>
+    <th>Bareboard Design Peer Check COunt</th>
+  </tr>
+  <tr>
+    <td><%= audit.checklist.id %></td>
+    <td><%= audit.checklist.new_design_self_check_count %></td>
+    <td><%= audit.checklist.new_design_peer_check_count %>
+    <td><%= audit.checklist.bareboard_design_self_check_count %>
+    <td><%= audit.checklist.bareboard_design_peer_check_count %>
+  </tr>
+</table>
+
+<br />
+
+<% i = 0 %>
+
+<% audit.checklist.sections.each do |section| %>
+  
+  <% section.subsections.each do |subsection| %>
+    
+    <table border="1">
+      <tr
+        <th>&nbsp;</th>
+        <th class="teraheader" colspan="3">Section</th>
+        <th class="teraheader" colspan="3">Subection</th>
+        <th class="teraheader" colspan="5">Check</th>
+      </tr>
+      <tr>
+        <th>&nbsp;</th>
+        <th>ID</th>
+        <th>New Design?</th>
+        <th>Bareboard Design?</th>
+        <th>ID</th>
+        <th>New Design?</th>
+        <th>Bareboard Design?</th>
+        <th>ID</th>
+        <th>New Design?</th>
+        <th>Bareboard Design?</th>
+        <th>Self Check?</th>
+        <th>Peer Check?</th>
+      </tr>
+
+    <% subsection.checks.each do |check| %>
+      
+      <% i += 1 %>
+      <tr>
+        <td><%= i.to_s %></td> 
+        <td><%= section.id %></td>
+        <td><%= section.full_review?.to_s %></td>
+        <td><%= section.dot_rev_check?.to_s %></td>
+        <td><%= subsection.id %></td>
+        <td><%= subsection.full_review?.to_s %></td>
+        <td><%= subsection.dot_rev_check?.to_s %></td>
+        <td><%= check.id %></td>
+        <td><%= check.full_review?.to_s %></td>
+        <td><%= check.dot_rev_check?.to_s %></td>
+        <td><%= check.is_self_check?.to_s %></td>
+        <td><%= check.is_peer_check?.to_s %></td>
+
+      </tr>
+     
+    <% end %>
+    </table>
+    <br />
+  <% end %>
+  <br />
+<% end %>  
+
+
+
+
+<%# debug @audit %>
