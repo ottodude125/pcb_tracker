@@ -22,6 +22,28 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   end
   
   
+  ######################################################################
+  #
+  # view_checklist_details
+  #
+  ######################################################################
+  #
+  def view_checklist_details
+    @audit              = Audit.find(params[:id])
+    @filtered_audit     = Audit.find(params[:id])
+    @trimmed_self_audit = Audit.find(params[:id])
+    @trimmed_self_audit.trim_checklist_for_self_audit
+    @trimmed_peer_audit = Audit.find(params[:id])
+    @trimmed_peer_audit.trim_checklist_for_peer_audit
+  end
+  
+  
+  ######################################################################
+  #
+  # view_new_design_dangling_checks
+  #
+  ######################################################################
+  #
   def view_new_design_dangling_checks
     
     @audit = Audit.find(params[:id])
