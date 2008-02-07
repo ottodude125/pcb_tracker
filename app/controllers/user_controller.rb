@@ -386,13 +386,13 @@ class UserController < ApplicationController
   # Sets the session role to the role that the user selected.
   #
   # Parameters from params
-  # role id - identifies the role that the use selected 
+  # id - identifies the role that the use selected 
   #
   ######################################################################
   #
   def set_role
 
-    session[:active_role] = session[:roles].find(params[:role][:id])
+    session[:active_role] = session[:roles].find(params[:id])
     redirect_back_or_default(:controller => "tracker",
                              :action     => "index")
   end
