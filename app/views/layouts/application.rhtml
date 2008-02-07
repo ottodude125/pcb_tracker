@@ -46,9 +46,15 @@ function setFocus() {
               <%= image_tag 'tera_logo.gif', {'border' => '0'} %>
             </td>
             <td align="right">
-              <font size="4" color="#ffffff"> 
-                <b>PCB Design Tracker</b>
-              </font>
+              <% if ENV['RAILS_ENV'] == "development" %>
+                <font size="4" color="red"> 
+                  <b>DEVELOPMENT PCB Design Tracker</b>
+                </font>
+              <% else %>
+                <font size="4" color="#ffffff">
+                  <b>PCB Design Tracker</b>
+                </font>
+              <% end %>
             </td>
           </tr>
         </table>
@@ -68,29 +74,25 @@ function setFocus() {
         </td>
       <% else %>
         <td width="66%">
-          <table align="center" width="60%" class="bottomnav" border="3">
+          <table align="center" width="100%" class="bottomnav" border="3" cellspacing="0">
             <tr bgcolor="white">
-              <td align="center">
+              <td align="left">
                 <font color="#023a94">
-                  USER: 
-	          <%= session[:user]['first_name'] %> <%= session[:user]['last_name'] %> 
-                </font>
-              </td>
-              <td align="center">
-                <font color="#023a94">
-                  ROLE: 
+                  &nbsp;&nbsp;<%= session[:user].name %>
+                  -
                   <% if session[:active_role] %>
                     <%= session[:active_role].display_name %>
                   <% else %>
                     &nbsp;
                   <% end %>
-                </font>
-                <% if session[:roles].size > 1 %>
-                  </td><td align="center">
-                  <%= link_to "Change Role", { :controller => "user", :action => "change_role" } %>
-                <% end %>
-              </td>
-	        </tr>
+                </font>              </td>
+              <% role_links = role_links() %>
+              <% if role_links.size > 0 %>
+                <% role_links.each do |rl| %>
+                  <%= rl %>
+                <% end %>                  
+              <% end %>
+	    </tr>
           </table>
         </td>
         <td align="right"> 
