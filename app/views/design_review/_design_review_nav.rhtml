@@ -1,33 +1,1 @@
-<!-- View:    tracker                                           -->
-<!-- Purpose: Displays the design review navigation bar.        -->
-<!-- ********************************************************** -->
-<!-- $Id$ -->
-<!-- ********************************************************** -->
-
-<table width="80%" align="center" border="0" cellpadding="0" cellspacing="0">
-
-  <tr>
-    <% column_width = 100/@design_review.design.design_reviews.size %>
-    <% design_reviews = @design_review.design.design_reviews.sort_by{ |dr| dr.review_type.sort_order} %>
-    <% design_reviews.each do |design_review| %>
-      <% review_name = design_review.review_type.name %>
-      <% if design_review.review_type_id_2 > 0 %>
-        <% review_name += "/" + ReviewType.find(design_review.review_type_id_2).name %>
-      <% end %>
-      <% if design_review.id != @design_review.id%>
-        <td bgcolor="#E0E8EF" align="center" width="<%= column_width%>%"
-            title="<%= design_review.review_status.name %>">
-          <%= link_to(review_name,
-                      { :action => 'view',
-                        :id     => design_review.id }) %>
-        </td>
-      <% else %>
-        <td class="teraheader" align="center" width="<%= column_width%>%"
-            title="<%= design_review.review_status.name %>">
-          <%= review_name %>
-        </td>
-      <% end %>
-    <% end %>
-  </tr>
-  
-</table>
+<!-- View:    tracker                                           --><!-- Purpose: Displays the design review navigation bar.        --><!-- ********************************************************** --><!-- $Id$ --><!-- ********************************************************** --><table width="80%" align="center" border="0" cellpadding="0" cellspacing="0">  <tr>    <% column_width = 100/@design_review.design.design_reviews.size %>    <% design_reviews = @design_review.design.design_reviews.sort_by{ |dr| dr.review_type.sort_order} %>    <% design_reviews.each do |design_review| %>      <% review_name = design_review.review_type.name %>      <% if design_review.review_type_id_2 > 0 %>        <% review_name += "/" + ReviewType.find(design_review.review_type_id_2).name %>      <% end %>      <% if design_review.id != @design_review.id%>        <td bgcolor="#E0E8EF" align="center" width="<%= column_width%>%"            title="<%= design_review.review_status.name %>">          <%= link_to(review_name,                      { :action => 'view',                        :id     => design_review.id }) %>        </td>      <% else %>        <td class="teraheader" align="center" width="<%= column_width%>%"            title="<%= design_review.review_status.name %>">          <%= review_name %>        </td>      <% end %>    <% end %>  </tr>  </table>
