@@ -192,13 +192,82 @@ module ApplicationHelper
   end
   
   
+  ######################################################################
+  #
+  # auditor_name
+  #
+  # Description:
+  # Returns the name of the auditor assigned to perform the 
+  # audit for the section.
+  #
+  # Parameters:
+  # section_id    - the section record identifier
+  # teammate_list - an array of user records who are audit teammates
+  # lead          - the user record for the audit lead.
+  #
+  # Returns:
+  # A string containing auditor's name.
+  # 
+  # TODO: This should be obsolete.  VERIFY
+  #
+  ######################################################################
+  #
   def auditor_name(section_id, teammate_list, lead)
-    teammate = teammate_list.detect { |teammate| teammate.section_id == section_id }
+    teammate = teammate_list.detect { |tmate| tmate.section_id == section_id }
     if teammate
       teammate.user.name
     else
       lead.name
     end
+  end
+  
+  
+  ######################################################################
+  #
+  # role_links
+  #
+  # Description:
+  # Generate the links to the action that changes the user's role.
+  #
+  # Parameters:
+  # None
+  #
+  # Returns:
+  # A string containing links to change the user's role.  The links
+  # are encapsulated in table data elements.
+  #
+  ######################################################################
+  #
+  def role_links
+    
+    roles = [ { :message => :designer_role,       :name => 'Designer' },
+              { :message => :reviewer_role,       :name => 'Reviewer' },
+              { :message => :pcb_management_role, :name => 'PCB Management' },
+              { :message => :pcb_admin_role,      :name => 'PCB Admin'},
+              { :message => :tracker_admin_role,  :name => 'Tracker Admin' } ]
+            
+    links = []
+    roles.each do |role|
+      
+      # Go through the roles list and determine if the user is registered
+      # for the role.  If yes, then create the link to change to that role.
+      new_role = session[:user].send(role[:message])
+      if (new_role && (session[:active_role].id != new_role.id))
+        links << '<td width="110" align="center">' + 
+          link_to(role[:name], { :controller => :user,
+                                 :action     => :set_role,
+                                 :id         => new_role.id }) + 
+          '</td>'
+      end
+      
+      # Nil out the entries that do not have a link.
+      #links = roles.collect { |role| role[:link_to] }
+      #links.compact!
+      
+    end
+    
+    links
+    
   end
   
   
