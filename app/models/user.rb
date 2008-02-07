@@ -90,7 +90,21 @@ class User < ActiveRecord::Base
   ######################################################################
   #
   def is_reviewer?
-    self.roles.detect { |r| r.reviewer? } != nil
+     self.reviewer_role != nil
+  end
+  
+  
+  # Retrieve the first reviewer role record from the user's list of role
+  # records.
+  #
+  # :call-seq:
+  #   reviewer_role() -> role
+  #
+  #  Look through the user's list of roles for a reviewer role record.  
+  #  If a reviewer role record is detected then the it is returned.
+  #  Otherwise a Nil is returned.
+ def reviewer_role
+    self.roles.detect { |r| r.reviewer? }
   end
   
   
@@ -110,7 +124,21 @@ class User < ActiveRecord::Base
   ######################################################################
   #
   def is_designer?
-    self.roles.detect { |r| r.name == 'Designer'} != nil
+    self.designer_role != nil
+  end
+  
+  
+  # Retrieve the designer role record from the user's list of roles
+  # records.
+  #
+  # :call-seq:
+  #   designer_role() -> role
+  #
+  #  Look through the user's list of roles for a designer role record.  
+  #  If a designer role record is detected then it is returned.
+  #  Otherwise a Nil is returned.
+ def designer_role
+    self.roles.detect { |r| r.name == 'Designer'}
   end
   
   
@@ -130,7 +158,21 @@ class User < ActiveRecord::Base
   ######################################################################
   #
   def is_pcb_management?
-    self.roles.detect { |r| r.name == 'Manager' } != nil
+    self.pcb_management_role != nil
+  end
+  
+  
+  # Retrieve the PCB management role record from the user's list of roles
+  # records.
+  #
+  # :call-seq:
+  #   pcb_management_role() -> role
+  #
+  #  Look through the user's list of roles for a PCB management role record.  
+  #  If a PCB management role record is detected then it is returned.
+  #  Otherwise a Nil is returned.
+  def pcb_management_role
+    self.roles.detect { |r| r.name == 'Manager' }
   end
   
   
@@ -150,7 +192,21 @@ class User < ActiveRecord::Base
   ######################################################################
   #
   def is_tracker_admin?
-    self.roles.detect { |r| r.name == 'Admin'} != nil
+    self.tracker_admin_role != nil
+  end
+  
+  
+  # Retrieve the tracker admin role record from the user's list of roles
+  # records.
+  #
+  # :call-seq:
+  #   tracker_admin_role() -> role
+  #
+  #  Look through the user's list of roles for a tracker admin role record.  
+  #  If a tracker admin role record is detected then it is returned.
+  #  Otherwise a Nil is returned.
+  def tracker_admin_role
+    self.roles.detect { |r| r.name == 'Admin'}
   end
   
   
@@ -170,7 +226,21 @@ class User < ActiveRecord::Base
   ######################################################################
   #
   def is_pcb_admin?
-    self.roles.detect { |r| r.name == 'PCB Admin' } != nil
+    self.pcb_admin_role != nil
+  end
+  
+  
+  # Retrieve the PCB admin role record from the user's list of roles
+  # records.
+  #
+  # :call-seq:
+  #   pcb_admin_role() -> role
+  #
+  #  Look through the user's list of roles for a PCB admin role record.  
+  #  If a PCB admin role record is detected then it is returned.
+  #  Otherwise a Nil is returned.
+  def pcb_admin_role
+    self.roles.detect { |r| r.name == 'PCB Admin' }
   end
   
 
