@@ -73,20 +73,23 @@ function setFocus() {
           <% end %>
         </td>
       <% else %>
+        
+        <% role_links = role_links(@generate_role_links) %>
+        <% width = role_links.size > 0 ? '100%' : '50%' %>
+
         <td width="66%">
-          <table align="center" width="100%" class="bottomnav" border="3" cellspacing="0">
+          <table align="left" width="<%= width %>" class="bottomnav" border="1" cellspacing="0">
             <tr bgcolor="white">
               <td align="left">
                 <font color="#023a94">
                   &nbsp;&nbsp;<%= session[:user].name %>
                   -
                   <% if session[:active_role] %>
-                    <%= session[:active_role].display_name %>
+                    <%= session[:active_role].generalized_name %>
                   <% else %>
                     &nbsp;
                   <% end %>
                 </font>              </td>
-              <% role_links = role_links() %>
               <% if role_links.size > 0 %>
                 <% role_links.each do |rl| %>
                   <%= rl %>
