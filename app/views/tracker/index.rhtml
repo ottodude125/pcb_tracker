@@ -24,16 +24,17 @@
     </td>
 
     <td align="left">
-      <table border="1" cellspacing="0" cellpadding="1">
-        <tr>
-          <th colspan="4" class="teraheader" align="center">Active Designs</th>
-        </tr>
-        <tr class="teraheader" align="center">
+      <h1>Active Designs</h1>
+      <table class="sortable" id="anyid" border="1" cellspacing="0" cellpadding="1">
+
+        <tr align="center">
           <th width="200">PCBA Part Number</th>
           <th width="200">PCB Part Number</th>
           <th width="200">Phase</th>
           <th width="200">Review Status</th>
-        
+        </tr>
+
+
         <% @designs.each do |design| %>
           <% design_review = design.get_phase_design_review %>
           <tr>
@@ -46,6 +47,7 @@
             <td> <%= design_review.review_status.name %></td>
           </tr>
         <% end %>
+
       </table>
     </td>
   </tr>
