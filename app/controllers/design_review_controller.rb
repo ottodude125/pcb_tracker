@@ -33,6 +33,8 @@ class DesignReviewController < ApplicationController
   #
   def view
 
+    @generate_role_links = true
+    
     session[:return_to] = {:controller => 'design_review',
                            :action     => 'view',
                            :id         => params[:id]}
