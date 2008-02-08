@@ -301,6 +301,18 @@ class Role < ActiveRecord::Base
     (design.new?     && self.new_design_review_role?) ||
     (design.dot_rev? && self.bare_board_only_review_role?)
   end
+  
+  
+  # Return a name that provides a general description for the role
+  #
+  # :call-seq:
+  #   generalized_name() -> string
+  #
+  # Most roles will return the display name.  A class of roles, such as
+  # the reviewer roles returns the classification name.
+  def generalized_name
+    self.reviewer? ? 'Reviewer' : self.display_name
+  end
 
 
 end
