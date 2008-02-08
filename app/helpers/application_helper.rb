@@ -230,7 +230,8 @@ module ApplicationHelper
   # Generate the links to the action that changes the user's role.
   #
   # Parameters:
-  # None
+  # generate_links - A flag that indicates that the links should be
+  #                  created for the view when True.
   #
   # Returns:
   # A string containing links to change the user's role.  The links
@@ -238,7 +239,7 @@ module ApplicationHelper
   #
   ######################################################################
   #
-  def role_links
+  def role_links(generate_links=false)
     
     roles = [ { :message => :designer_role,       :name => 'Designer' },
               { :message => :reviewer_role,       :name => 'Reviewer' },
@@ -247,6 +248,8 @@ module ApplicationHelper
               { :message => :tracker_admin_role,  :name => 'Tracker Admin' } ]
             
     links = []
+    return links if !generate_links
+    
     roles.each do |role|
       
       # Go through the roles list and determine if the user is registered
