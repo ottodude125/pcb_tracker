@@ -42,6 +42,8 @@ class TrackerController < ApplicationController
   #
   def index
 
+    @generate_role_links = true
+    
     session[:return_to] = {:controller => 'tracker', :action => 'index'}
     flash['notice'] = flash['notice']
     
@@ -178,6 +180,8 @@ class TrackerController < ApplicationController
   #
   def manager_list_by_priority
   
+    @generate_role_links = true
+    
     @sort_order            = get_sort_order
     @sort_order[:priority] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order]     = @sort_order
@@ -211,6 +215,8 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def manager_list_by_design
+    
+    @generate_role_links = true
   
     @sort_order          = get_sort_order
     @sort_order[:design] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
@@ -247,6 +253,8 @@ class TrackerController < ApplicationController
   #
   def manager_list_by_type
     
+    @generate_role_links = true
+    
     @sort_order        = get_sort_order
     @sort_order[:type] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order] = @sort_order
@@ -280,6 +288,8 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def manager_list_by_designer
+    
+    @generate_role_links = true
 
     @sort_order            = get_sort_order
     @sort_order[:designer] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
@@ -314,6 +324,8 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def manager_list_by_peer
+    
+    @generate_role_links = true
   
     @sort_order        = get_sort_order
     @sort_order[:peer] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
@@ -348,6 +360,8 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def manager_list_by_age
+    
+    @generate_role_links = true
   
     @sort_order        = get_sort_order
     @sort_order[:date] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
@@ -383,6 +397,8 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def manager_list_by_status
+    
+    @generate_role_links = true
   
     @sort_order          = get_sort_order
     @sort_order[:status] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
