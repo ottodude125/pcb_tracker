@@ -248,7 +248,8 @@
                               </tr>
 
                               <% if design.audit.is_peer_audit? %>
-
+                                
+                                <% design.audit.get_design_checks %>
                                 <% issue_count = design.audit.checklist.issue_count%>
                                 <tr>
                                 <% if issue_count == 0 %>
