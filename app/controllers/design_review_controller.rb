@@ -1585,7 +1585,7 @@ class DesignReviewController < ApplicationController
       
         ftp_notification = FtpNotification.new(params[:ftp_notification])
         ftp_notification.design_id = design.id
-        ftp_notification.create
+        ftp_notification.save
         
         message  = "NO RESPONSE IS REQUIRED!\n"
         message += "NOTIFICATION THAT FILES HAVE BEEN FTP'D TO VENDOR FOR BOARD FABRICATION\n"
@@ -1609,7 +1609,7 @@ class DesignReviewController < ApplicationController
         dr_comment = DesignReviewComment.new(:user_id          => session[:user][:id],
                                              :design_review_id => design_review.id,
                                              :highlight        => 1,
-                                             :comment          => message).create
+                                             :comment          => message).save
                
         
         flash['notice'] = "The FTP Notification has been sent"
@@ -2043,7 +2043,7 @@ class DesignReviewController < ApplicationController
     dr_comment = DesignReviewComment.new(:user_id          => session[:user][:id],
                                          :design_review_id => design_review.id,
                                          :highlight        => 1,
-                                         :comment          => msg).create
+                                         :comment          => msg).save
   end
   
   
