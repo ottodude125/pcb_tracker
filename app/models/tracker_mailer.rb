@@ -106,7 +106,7 @@ class TrackerMailer < ActionMailer::Base
 
     design_review = ftp_notification.design.get_design_review("Final")
     
-    @subject         = ftp_notification.design.part_number.pcb_display_name +
+    @subject         = ftp_notification.design.directory_name +
                        ": Bare Board Files have been transmitted to "         +
                        ftp_notification.fab_house.name
     @recipients      = reviewer_list(design_review)
