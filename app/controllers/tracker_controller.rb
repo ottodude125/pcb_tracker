@@ -715,14 +715,10 @@ class TrackerController < ApplicationController
                                :order      => 'created_on')
 
     peer_designs.each do |peer_design|
-    
       audit = peer_design.audit
-      next if audit.is_self_audit? && audits[audit.id]
-      
+      next if ((audit.is_self_audit? && audits[audit.id]) || audit.is_complete?)
       audit[:self] = false
-
       audits[audit.id] = audit
-      
     end
     
     audit_list = []
