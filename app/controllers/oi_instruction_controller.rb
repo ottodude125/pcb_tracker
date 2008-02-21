@@ -547,7 +547,7 @@ class OiInstructionController < ApplicationController
       @comments      = @assignment.oi_assignment_comments
       @scoring_table = OiAssignmentReport.report_card_scoring
       @complexity_id = params[:complexity][:id].to_i
-      render_action('create_assignment_report')
+      render(:action => 'create_assignment_report')
     end
   
   end
