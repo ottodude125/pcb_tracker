@@ -1,15 +1,16 @@
 The following reviewers with incomplete reviews have been pinged.
 
-<% @ping_list.each do |ping| %>
-<%= ping[:reviewer].name %>
-  <% ping[:review_list].each do |review| %>
-  Part Number:  <%= review[:design_review].design.part_number.full_display_name %>
-  Review:       <%= review[:design_review].review_type.name %>
-  Criticality:  <%= review[:design_review].priority.name %>
-  Age:          <%= review[:age]%> work days
-  Role:         <%= review[:role] %>
-  <% end %>
-<% end %>
+
+Reviewer                 Design              Criticality    Age  Role
+--------------------------------------------------------------------------------
+<% @design_reviews.each do |entry| dr = entry[:design_review] %>
+<%= sprintf('%-25s%-20s%-15s%-5s%s', entry[:reviewer].name, dr.design.directory_name, dr.priority.name, entry[:age], entry[:role]) %><% end %>
+
+
+Reviewer                 Design              Criticality    Age  Role
+--------------------------------------------------------------------------------
+<% @reviewers.each do |entry| dr = entry[:design_review] %>
+<%= sprintf('%-25s%-20s%-15s%-5s%s', entry[:reviewer].name, dr.design.directory_name, dr.priority.name, entry[:age], entry[:role]) %><% end %>
 
 
 About ping:
