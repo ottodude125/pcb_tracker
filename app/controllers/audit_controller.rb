@@ -38,68 +38,33 @@ class AuditController < ApplicationController
   #
   def update_design_checks
 
-    audit = Audit.find(params[:audit][:id])
+    audit         = Audit.find(params[:audit][:id])
+    subsection_id = params[:subsection][:id]
+    
+    # Keep track of the audit state to determine where to redirect to
+    original_state = audit.audit_state
+    
+    # Process thechecks passed in.
+    params.keys.grep(/^check_/).each do |key|
 
-    # Go through the paramater list and pull out the checks.
-    params.keys.grep(/^check_/).each { |params_key|
+      audit.update_design_check(params[key], session[:user])
 
-      design_check_update = params[params_key]
-      design_check = DesignCheck.find(design_check_update[:design_check_id])
-
-      if audit.self_update?(session[:user])
-        result        = design_check.designer_result
-        result_update = design_check_update[:designer_result]
-      elsif audit.peer_update?(session[:user])
-        result        = design_check.auditor_result
-        result_update = design_check_update[:auditor_result]
+      if audit.errors.on(:comment_required)
+        flash[params[key][:design_check_id].to_i] = audit.errors.on(:comment_required)
+        flash['notice'] = 'Not all checks were updated - please review the form for errors.'
       end
+      
+    end
 
-      if result_update && result_update != result
-
-        # Make sure that the required comment has been added.
-        if design_check_update[:comment].strip.size == 0 &&
-           design_check.comment_required?(design_check_update[:designer_result], 
-                                          design_check_update[:auditor_result])
-         
-          if audit.self_update?(session[:user])
-            flash[design_check.id] = "A comment is required for a " +
-              "#{design_check_update[:designer_result]} response."
-          elsif audit.peer_update?(session[:user])
-            flash[design_check.id] = "A comment is required for a " +
-              "#{design_check_update[:auditor_result]} response."
-          end
-          flash['notice'] = 'Not all checks were updated - please review the form for errors.'
-          next
-        end
-
-        check_count = audit.check_count
-        if !audit.designer_complete? && audit.self_update?(session[:user])
-
-          audit.process_self_audit_update(result_update, design_check, session[:user])
-                     
-        elsif !audit.auditor_complete? && audit.peer_update?(session[:user])
-
-          audit.process_peer_audit_update(result_update, 
-                                          design_check_update[:comment], 
-                                          design_check, 
-                                          session[:user])
-
-        end
-
-      end
-
-      # If the user entered a comment, update the database.
-      if design_check_update[:comment].strip.size > 0
-        AuditComment.new(
-          :comment         => design_check_update[:comment],
-          :user_id         => session[:user].id,
-          :design_check_id => design_check_update[:design_check_id]).save
-      end
-    }
-
-    redirect_to(:action        => 'perform_checks',
-                :audit_id      => params[:audit][:id],
-                :subsection_id => params[:subsection][:id])
+    if original_state == audit.audit_state
+      flash['notice'] = 'Processed design checks.' if !flash['notice']
+      redirect_to(:action        => 'perform_checks',
+                  :audit_id      => audit.id,
+                  :subsection_id => subsection_id)
+    else
+      phase = audit.is_complete? ? 'Peer' : 'Self'
+      flash['notice'] = "The #{phase} audit is complete"
+    end
     
   end
 
@@ -135,46 +100,19 @@ class AuditController < ApplicationController
       @audit.trim_checklist_for_peer_audit
     end
     @audit.get_design_checks
-    
-    # Build the navigation information.
-    @arrows         = {}
-    
+
     # Locate the subsection in the checklist.
     @audit.checklist.sections.each do |section|
       @subsection = section.subsections.detect { |ss| ss.id == params[:subsection_id].to_i }
       break if @subsection
     end
-    current_section = @subsection.section
-    checklist       = @subsection.checklist
 
+    @arrows = { :previous => @audit.previous_subsection(@subsection),
+                :next => @audit.next_subsection(@subsection) }
+    @completed_self_checks = @audit.completed_self_audit_check_count(@subsection)
+    @completed_peer_checks = @audit.completed_peer_audit_check_count(@subsection)
 
-    nav_sections  = @audit.checklist.sections
-    nav_section_i = nav_sections.index(current_section)
-
-    if nav_section_i
-
-      nav_subsection_i = nav_sections[nav_section_i].subsections.index(@subsection)
-  
-      if nav_subsection_i > 0
-        @arrows[:previous] = nav_sections[nav_section_i].subsections[nav_subsection_i-1]
-      elsif nav_section_i > 0
-        @arrows[:previous] = nav_sections[nav_section_i-1].subsections.pop
-      end
-    
-      if nav_subsection_i < (nav_sections[nav_section_i].subsections.size-1)
-        @arrows[:next] = nav_sections[nav_section_i].subsections[nav_subsection_i+1]
-      elsif nav_section_i < (nav_sections.size-1)
-        @arrows[:next] = nav_sections[nav_section_i+1].subsections.shift
-      end
-
-      @completed_self_checks = @audit.completed_self_audit_check_count(@subsection)
-      @completed_peer_checks = @audit.completed_peer_audit_check_count(@subsection)
-
-      @able_to_check = @audit.section_auditor?(@subsection.section, session[:user])
-
-    else
-      redirect_to(:action => 'show_sections', :id => @audit.id)
-    end
+    @able_to_check = @audit.section_auditor?(@subsection.section, session[:user])
     
   end 
 
@@ -201,13 +139,17 @@ class AuditController < ApplicationController
   def show_sections
 
     @audit      = Audit.find(params[:id])
-    if @audit.is_self_audit?
-      @audit.trim_checklist_for_self_audit
+    
+    if !@audit.is_complete?
+      if @audit.is_self_audit?
+        @audit.trim_checklist_for_self_audit
+      else
+        @audit.trim_checklist_for_peer_audit
+      end
+      @audit.get_design_checks
     else
-      @audit.trim_checklist_for_peer_audit
-    end
-    @audit.get_design_checks
-        
+      redirect_to( :controller => "tracker", :action => 'index' )
+    end      
   end # show_sections method
 
 
