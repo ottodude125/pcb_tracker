@@ -520,16 +520,17 @@ class TrackerMailer < ActionMailer::Base
   # outstanding reviews.
   #
   # Parameters:
-  #   ping_list - The list of reviewers who were pinged.
-  #   sent_at   - the timestamp for the mail header (defaults to Time.now)
+  #   reviewers      - the list of reviewers who were pinged.
+  #   design_reviews - the list of design reviews that have outstanding 
+  #                    review results.
+  #   sent_at        - the timestamp for the mail header (defaults to Time.now)
   #
   ######################################################################
   #
-  def ping_summary(ping_list, sent_at = Time.now)
+  def ping_summary(reviewers, design_reviews, sent_at = Time.now)
   
     @subject    = 'Summary of reviewers who have not approved/waived design reviews'
-    ping_list.to_a
-    @body       = {:ping_list => ping_list}
+    @body       = {:reviewers => reviewers, :design_reviews => design_reviews}
     
     recipients = add_role_members(['Manager', 'PCB Input Gate'])
     
