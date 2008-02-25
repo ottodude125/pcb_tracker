@@ -1304,7 +1304,7 @@ PEER_AUDIT       = 2
   def peer_auditor(section)
     
     auditor = self.audit_teammates.detect { |tmate| tmate.section_id == section.id && !tmate.self? }
-    
+    auditor = self.design.auditor if !auditor
     if auditor 
       return auditor.user
     elsif self.design.peer_id > 0
@@ -1315,6 +1315,115 @@ PEER_AUDIT       = 2
     
   end
   
+  
+  # Retrieve the next subsection in the audit.
+  #
+  # :call-seq:
+  #   next_subsection(subsection) -> subsection
+  #
+  #  Returns the next subsection in the current section.  If the current subsection
+  #  is the last subsection in the section then the first subsection in the
+  #  next section is returned.  If there is no section following the current
+  #  section then a nil is returned.
+  def next_subsection(subsection)
+
+    section = self.checklist.sections.detect { |s| s.id == subsection.section_id}
+    i = section.subsections.index(subsection)
+    if i < section.subsections.size - 1
+      return section.subsections[i+1]
+    else
+      j = self.checklist.sections.index(section)
+      if j < self.checklist.sections.size - 1
+        return self.checklist.sections[j+1].subsections.first
+      else
+        return nil
+      end
+    end
+  end
+  
+  
+  # Retrieve the previous subsection in the audit.
+  #
+  # :call-seq:
+  #   previous_subsection(subsection) -> subsection
+  #
+  #  Returns the previous subsection in the current section.  If the current subsection
+  #  is the first subsection in the section then the last subsection in the
+  #  previous section is returned.  If there is no section preceeding the current
+  #  section then a nil is returned.
+  def previous_subsection(subsection)
+
+    section = self.checklist.sections.detect { |s| s.id == subsection.section_id}
+    i = section.subsections.index(subsection)
+    if i > 0
+      return section.subsections[i-1]
+    else
+      j = self.checklist.sections.index(section)
+      if j > 0
+        return self.checklist.sections[j-1].subsections.last
+      else
+        return nil
+      end
+    end
+  end
+  
+  
+  # Update the audit's design check.
+  #
+  # :call-seq:
+  #   update_design_check(design_check_update, user) -> nil
+  #
+  #  Determine the type of update that was passed in, self or peer, and 
+  #  use the information to make the update to the stored design check.  Also
+  #  make sure that any update that requires a comment includes the comment.
+  #  If a required comment is not provided, the objects errors structure is
+  #  updated.  The caller is responsible for checking for errors.
+  #
+  #  If a comment is included in the update then an Audit Comment record is 
+  #  created and stored.
+  def update_design_check(design_check_update, user)
+
+    self.errors.clear
+    
+    self_audit_result = design_check_update[:designer_result]
+    peer_audit_result = design_check_update[:auditor_result]
+
+    updated = false
+    design_check = DesignCheck.find(design_check_update[:design_check_id])
+    if self_audit_result && self.self_update?(user)
+      result  = self_audit_result
+      updated = result != design_check.designer_result
+    elsif peer_audit_result && self.peer_update?(user)
+      result  = peer_audit_result
+      updated = result != design_check.auditor_result
+    end
+    
+    comment = design_check_update[:comment]
+    if updated
+      
+      # Make sure that the required comment has been included.
+      if (comment.strip.empty? && 
+          design_check.comment_required?(self_audit_result, peer_audit_result))
+        self.errors.add(:comment_required, "A comment is required for a #{result} response.")
+      end
+      
+      if !self.designer_complete? && self.self_update?(user)
+        self.process_self_audit_update(self_audit_result, design_check, user)
+      elsif !self.auditor_complete? && self.peer_update?(user)
+        self.process_peer_audit_update(peer_audit_result, comment, design_check, user)
+      end
+      
+    end
+    
+    # If the user entered a comment, add the record to the database.
+    if !comment.strip.empty?
+      AuditComment.new( :comment         => comment,
+                        :user_id         => user.id,
+                        :design_check_id => design_check.id ).save
+    end
+      
+  end
+    
   
   ##############################################################################
   #
