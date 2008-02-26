@@ -190,7 +190,7 @@ class TrackerMailerTest < Test::Unit::TestCase
                                                      ftp_notification,
                                                      @now)
     
-    assert_equal(ftp_notification.design.part_number.pcb_display_name +
+    assert_equal(ftp_notification.design.directory_name +
                  ": Bare Board Files have been transmitted to " +
                  ftp_notification.fab_house.name, 
                  response.subject)
@@ -425,7 +425,7 @@ class TrackerMailerTest < Test::Unit::TestCase
     expected_release_cc = @manager_email_list + @input_gate_email_list
     designer = User.find(@mx234a_release_dr.designer_id)
     expected_release_cc << designer.email
-    expected_release_cc << "STD_DC_ECO_Inbox@notes.teradyne.com" if !Pcbtr::DEVEL_SERVER
+    expected_release_cc << "STD_DC_ECO_Inbox@notes.teradyne.com" if ENV['RAILS_ENV'] == 'production'
     
     expected_release_cc << @bob_g.email
     expected_release_cc = expected_release_cc.sort_by { |address| address }.uniq
@@ -561,15 +561,15 @@ class TrackerMailerTest < Test::Unit::TestCase
   ##############################################################################
   def test_ping_summary
 
-    response = TrackerMailer.create_ping_summary({},
-                                                 @now)
-                 
-    assert_equal("Summary of reviewers who have not approved/waived design reviews", 
-                 response.subject)
-                 
+    subject = "Summary of reviewers who have not approved/waived design reviews"
+
+    response = TrackerMailer.create_ping_summary({},{})
+                                  
     response_to = response.to.sort_by { |address| address }
     expected_to = @manager_email_list + @input_gate_email_list
     expected_to = expected_to.sort_by { |address| address }.uniq
+    
+    assert_equal(subject,         response.subject)
     assert_equal(expected_to,     response_to)
     assert_equal([Pcbtr::SENDER], response.from)
     assert_equal(@now.to_s,       response.date.to_s)
