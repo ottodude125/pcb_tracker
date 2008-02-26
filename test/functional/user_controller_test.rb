@@ -448,12 +448,19 @@ class UserControllerTest < Test::Unit::TestCase
   #
   def test_set_role
 
+    pcb_input_gate = Role.find_by_name('PCB Input Gate')
+    tracker_admin  = Role.find_by_name('Admin')
+    
     set_admin
-    post(:set_role, :role => {'id' => '14'})
+    post(:set_role, :id => pcb_input_gate.id)
 
-    assert_equal('PCB Input Gate', session[:active_role].name)
-    assert_redirected_to(:controller => 'tracker',
-                         :action     => 'index')
+    assert_equal(pcb_input_gate.name, session[:active_role].name)
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
+
+    post(:set_role, :id => tracker_admin.id)
+    
+    assert_equal(tracker_admin.name, session[:active_role].name)
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
 
   end
 
