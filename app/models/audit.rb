@@ -1304,7 +1304,7 @@ PEER_AUDIT       = 2
   def peer_auditor(section)
     
     auditor = self.audit_teammates.detect { |tmate| tmate.section_id == section.id && !tmate.self? }
-    auditor = self.design.auditor if !auditor
+
     if auditor 
       return auditor.user
     elsif self.design.peer_id > 0
