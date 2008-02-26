@@ -391,10 +391,8 @@ class UserController < ApplicationController
   ######################################################################
   #
   def set_role
-
-    session[:active_role] = session[:roles].find(params[:id])
-    redirect_back_or_default(:controller => "tracker",
-                             :action     => "index")
+    session[:active_role] = session[:roles].detect { |role| role.id == params[:id].to_i }
+    redirect_back_or_default(:controller => "tracker", :action => "index")
   end
   
 
