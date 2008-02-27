@@ -737,9 +737,7 @@ class AuditTest < Test::Unit::TestCase
     richs_expected_audits = [audits(:audit_in_peer_audit), 
                              audits(:audit_in_self_audit), 
                              audits(:audit_la455b),
-                             audits(:audit_la453b_eco2), 
-                             audits(:audit_la453a2), 
-                             audits(:audit_la453a_eco1),
+                             audits(:audit_la453a2),
                              audits(:audit_la453b)]
     richs_audits = Audit.active_audits(@rich_m)
     assert_equal(richs_expected_audits.size, richs_audits.size)
