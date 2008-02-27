@@ -19,15 +19,6 @@ audit_la453b:
   auditor_complete:          0
   designer_completed_checks: 0
   auditor_completed_checks:  0
-#la453a_eco1
-audit_la453a_eco1:
-  id:                        1003
-  design_id:                 3
-  checklist_id:              222
-  designer_complete:         0
-  auditor_complete:          0
-  designer_completed_checks: 0
-  auditor_completed_checks:  0
 # la453a1
 audit_la453a1:
   id:                        1004
@@ -47,14 +38,6 @@ audit_la453a2:
   designer_completed_checks: 0
   auditor_completed_checks:  0
 # la453a2
-audit_la453b_eco2:
-  id:                        1006
-  design_id:                 6
-  checklist_id:              2
-  designer_complete:         0
-  auditor_complete:          0
-  designer_completed_checks: 0
-  auditor_completed_checks:  0
 audit_mx234b:
   id:                        1007
   design_id:                 7
