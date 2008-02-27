@@ -83,7 +83,6 @@ class TrackerControllerTest < Test::Unit::TestCase
                                          design_reviews(:mx700b_pre_artwork),
                                          design_reviews(:la455b_final),
                                          design_reviews(:mx234c_routing),
-                                         design_reviews(:la453a_eco1_final),
                                          design_reviews(:la453b_placement) ]
  
     assert_equal(expected_inactive_design_reviews.size, inactive_reviews.size)
