@@ -26,18 +26,6 @@ la453b:
   peer_id:          5002
   pcb_input_id:     4000
   priority_id:      2
-la453a_eco1:
-  id:               3
-  part_number_id:   15
-  phase_id:         1
-  board_id:         2
-  revision_id:      1
-  numeric_revision: 1
-  design_type:      Date Code
-  designer_id:      5001
-  peer_id:          5002
-  pcb_input_id:     4000
-  priority_id:      2
 la453a1:
   id:               4
   phase_id:         4
@@ -62,19 +50,6 @@ la453a2:
   peer_id:          5002
   pcb_input_id:     4000
   priority_id:      2
-la453b4_eco2:
-  id:               6
-  part_number_id:   13
-  phase_id:         255
-  board_id:         2
-  revision_id:      2
-  numeric_revision: 4
-  eco_number:       2
-  design_type:      Date Code
-  designer_id:      5001
-  peer_id:          5002
-  pcb_input_id:     4000
-  priority_id:      1
 mx234b:
   id:               7
   part_number_id:   7
