@@ -19,7 +19,6 @@ MESSAGES = {
 if ENV['RAILS_ENV'] == 'production'
   PCBTR_BASE_URL = 'http://boarddev.teradyne.com/pcbtr/'
   SENDER         = 'PCB_Tracker'
-  DEVEL_SERVER   = false
 else
   PCBTR_BASE_URL = 'http://' + ENV['HOSTNAME'] + ':8000/'
   SENDER         = 'DEVEL_PCB_TRACKER'
