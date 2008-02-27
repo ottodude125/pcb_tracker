@@ -428,10 +428,6 @@ class DesignTest < Test::Unit::TestCase
     assert_equal(false, @mx234a_design.date_code?)
     assert_equal(false, @mx234a_design.dot_rev?)
     
-    assert_equal(false, designs(:la453a_eco1).new?)
-    assert_equal(true,  designs(:la453a_eco1).date_code?)
-    assert_equal(false, designs(:la453a_eco1).dot_rev?)
-  
     assert_equal(false, designs(:la453a1).new?)
     assert_equal(false, designs(:la453a1).date_code?)
     assert_equal(true,  designs(:la453a1).dot_rev?)
@@ -478,7 +474,6 @@ class DesignTest < Test::Unit::TestCase
    
    assert_equal('252-234-a0 g', @mx234a_design.part_number.pcb_display_name)
    assert_equal('942-453-a2 y', designs(:la453a2).part_number.pcb_display_name)
-   assert_equal('942-453-b4 y', designs(:la453b4_eco2).part_number.pcb_display_name)
    
    assert_equal('pcb252_234_a0_g - Catalyst / AC / ', 
                 @mx234a_design.detailed_name)
