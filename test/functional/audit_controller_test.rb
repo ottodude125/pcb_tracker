@@ -820,16 +820,8 @@ class AuditControllerTest < Test::Unit::TestCase
       }
     ]
     
-puts
-puts "audit: " + audit.id.to_s
-puts "  complete?: " + audit.is_complete?.to_s
-puts "  self?: " + audit.is_self_audit?.to_s
-puts "  peer?: " + audit.is_peer_audit?.to_s
-puts "  sections: " + audit.checklist.sections.size.to_s
     audit.checklist.sections.each_with_index do |section, i|
       expected_sect = expected[i]
-puts expected_sect.inspect
-puts section.inspect
       assert_equal(expected_sect[:section][:name], section.name)
       assert_equal(expected_sect[:section][:id],   section.id)
       section.subsections.each_with_index do |subsection, k|	
