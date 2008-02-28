@@ -97,39 +97,19 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(audits(:audit_mx234b).id,        assigns(:audit).id)
     assert_equal(subsections(:subsect_30_000).id, assigns(:subsection).id)
     assert_equal(sections(:section_20_000).id,    assigns(:subsection).section.id)
-    assert_equal(15,                 assigns(:total_checks)[:designer])
-    assert_equal(9,                  assigns(:total_checks)[:peer])
-    assert_equal(4,                  assigns(:checks).size)
+    assert_equal(15,    assigns(:total_checks)[:designer])
+    assert_equal(9,     assigns(:total_checks)[:peer])
+    assert_equal(4,     assigns(:subsection).checks.size)
+    assert_equal(nil,   assigns(:arrows)[:previous])
+    assert_equal(30001, assigns(:arrows)[:next].id)
+    assert_equal(0,     assigns(:completed_self_checks))
+    assert_equal(0,     assigns(:completed_peer_checks))
+    assert(!assigns(:able_to_check))
 
     check_id        = 10000
     design_check_id = 20000
-    checks = assigns(:checks)
+    checks = assigns(:subsection).checks
     checks.each do |check|
-      assert_equal(check_id,        check.id)
-      assert_equal(design_check_id, check[:design_check].id)
-      assert_equal(0,               check[:design_check].audit_comments.size)
-      check_id        += 1
-      design_check_id += 1
-    end
-
-#    # Date Code Design
-    audit      = audits(:audit_la453a_eco1)
-    section    = sections(:section_20_000)
-    subsection = subsections(:subsect_30_000)
-    post(:perform_checks,
-         :audit_id      => audit.id,
-         :subsection_id => subsection.id)
-
-    assert_equal(audit.id,      assigns(:audit).id)
-    assert_equal(subsection.id, assigns(:subsection).id)
-    assert_equal(section.id,    assigns(:subsection).section.id)
-    assert_equal(7,             assigns(:total_checks)[:designer])
-    assert_equal(5,             assigns(:total_checks)[:peer])
-    assert_equal(3,             assigns(:checks).size)
-
-    check_id        = 10000
-    design_check_id = 20600
-    checks = assigns(:checks).each do |check|
       assert_equal(check_id,        check.id)
       assert_equal(design_check_id, check[:design_check].id)
       assert_equal(0,               check[:design_check].audit_comments.size)
@@ -148,14 +128,19 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(audit.id,      assigns(:audit).id)
     assert_equal(subsection.id, assigns(:subsection).id)
     assert_equal(section.id,    assigns(:subsection).section.id)
-    assert_equal(7,             assigns(:total_checks)[:designer])
-    assert_equal(5,             assigns(:total_checks)[:peer])
-    assert_equal(1,             assigns(:checks).size)
+    assert_equal(1,             assigns(:total_checks)[:designer])
+    assert_equal(1,             assigns(:total_checks)[:peer])
+    assert_equal(1,     assigns(:subsection).checks.size)
+    assert_equal(nil,   assigns(:arrows)[:previous])
+    assert_equal(nil,   assigns(:arrows)[:next])
+    assert_equal(0,     assigns(:completed_self_checks))
+    assert_equal(0,     assigns(:completed_peer_checks))
+    assert(assigns(:able_to_check))
 
     check_id        = 10003
     design_check_id = 20500
 
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal(check_id,        check.id)
       assert_equal(design_check_id, check[:design_check].id)
       assert_equal(0,               check[:design_check].audit_comments.size)
@@ -228,7 +213,7 @@ class AuditControllerTest < Test::Unit::TestCase
     audit.reload
     assert_equal(1, audit.audit_teammates.size)
 
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal('None', check[:design_check].designer_result)
       assert_equal(0,      check[:design_check].audit_comments.size)
     end 
@@ -269,7 +254,7 @@ class AuditControllerTest < Test::Unit::TestCase
     comment_count = { 10000 => 1 } 
     comment_count.default= 0
 
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal(results.shift,           check[:design_check].designer_result)
       assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
@@ -307,7 +292,7 @@ class AuditControllerTest < Test::Unit::TestCase
 
     results = %w{Verified Verified N/A Verified} 
 
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal(results.shift,           check[:design_check].designer_result)
       assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
@@ -337,7 +322,7 @@ class AuditControllerTest < Test::Unit::TestCase
 
     results = %w{Yes None} 
 
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal(results.shift,           check[:design_check].designer_result)
       assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
@@ -368,7 +353,7 @@ class AuditControllerTest < Test::Unit::TestCase
     results = %w{Yes No}
     comment_count[10005] = 1
 
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal(results.shift,           check[:design_check].designer_result)
       assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
@@ -398,7 +383,7 @@ class AuditControllerTest < Test::Unit::TestCase
     results = %w{Waived Waived}
     10006.upto(10007) { |i| comment_count[i] = 1}
 
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal(results.shift,           check[:design_check].designer_result)
       assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
@@ -437,7 +422,7 @@ class AuditControllerTest < Test::Unit::TestCase
     results = %w{Waived Waived Verified Verified} 
     10008.upto(10011) { |i| comment_count[i] = 1}
 
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal(results.shift,           check[:design_check].designer_result)
       assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
@@ -459,6 +444,8 @@ class AuditControllerTest < Test::Unit::TestCase
            :design_check_id => '20014',
            :comment         => 'Comment Three'})
 
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
+
     post(:perform_checks,
          :audit_id      => audits(:audit_mx234b).id,
          :subsection_id => subsections(:subsect_30_004).id)
@@ -472,7 +459,7 @@ class AuditControllerTest < Test::Unit::TestCase
     results = %w{Waived Waived N/A} 
     10012.upto(10014) { |i| comment_count[i] = 1}
 
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal(results.shift,           check[:design_check].designer_result)
       assert_equal(comment_count[check.id], check[:design_check].audit_comments.size)
     end 
@@ -530,7 +517,7 @@ class AuditControllerTest < Test::Unit::TestCase
 
     results = %w{Verified N/A None None}
 
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal(results.shift,           check.design_check.auditor_result)
       assert_equal(comment_count[check.id], check.design_check.audit_comments.size)
     end
@@ -568,7 +555,7 @@ class AuditControllerTest < Test::Unit::TestCase
     results = %w{Verified Comment None None}
     comment_count[10001] = 1
  
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal(results.shift,           check.design_check.auditor_result)
       assert_equal(comment_count[check.id], check.design_check.audit_comments.size)
     end
@@ -606,7 +593,7 @@ class AuditControllerTest < Test::Unit::TestCase
     results = %w{N/A Verified Waived Verified}
     10000.upto(10003) { |i| comment_count[i] += 1 }
     
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal(results.shift,           check.design_check.auditor_result)
       assert_equal(comment_count[check.id], check.design_check.audit_comments.size)
     end
@@ -636,7 +623,7 @@ class AuditControllerTest < Test::Unit::TestCase
     results = %w{N/A Verified} 
     10006.upto(10007) { |i| comment_count[i] += 1 }
     
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal(results.shift,           check.design_check.auditor_result)
       assert_equal(comment_count[check.id], check.design_check.audit_comments.size)
     end
@@ -673,7 +660,7 @@ class AuditControllerTest < Test::Unit::TestCase
     results = %w{N/A Verified Waived} 
     10012.upto(10014) { |i| comment_count[i] += 1 }
     
-    assigns(:checks).each do |check|
+    assigns(:subsection).checks.each do |check|
       assert_equal(results.shift,           check.design_check.auditor_result)
       assert_equal(comment_count[check.id], check.design_check.audit_comments.size)
     end
@@ -702,8 +689,7 @@ class AuditControllerTest < Test::Unit::TestCase
   def test_print
 
     # Test a new board
-    get(:print,
-        :id => audits(:audit_mx234b).id)
+    get(:print, :id => audits(:audit_mx234b).id)
 
     audit = assigns(:audit)
     assert_equal('252-234-b0 m',  audit.design.part_number.pcb_display_name)
@@ -718,30 +704,11 @@ class AuditControllerTest < Test::Unit::TestCase
                  '20001' => { '30002' => [10006, 10007],
                               '30003' => [10008, 10009, 10010, 10011],
                               '30004' => [10012, 10013, 10014] } }
-    
-    validate_print_variables(validate, audit.checklist.sections)
-
-
-    # Test a date code
-    get(:print,
-        :id => audits(:audit_la453b_eco2).id)
-
-    audit = assigns(:audit)
-    assert_equal('942-453-b4 y',  audit.design.part_number.pcb_display_name)
-    assert_equal('1.0',           audit.checklist.revision)
-    assert_equal(@scott_g.name,   audit.design.designer.name)
-    assert_equal(@rich_m.name,    audit.design.peer.name)
-
-    #              Section      Subsection   Check IDs
-    #                ID             ID
-    validate = {'3' => { '5' => [13, 14] } }
-
     validate_print_variables(validate, audit.checklist.sections)
 
 
     # Test a dot rev
-    get(:print,
-        :id => audits(:audit_la454c3).id)
+    get(:print, :id => audits(:audit_la454c3).id)
 
     audit = assigns(:audit)
     assert_equal('942-454-c3 s',  audit.design.part_number.pcb_display_name)
@@ -749,6 +716,9 @@ class AuditControllerTest < Test::Unit::TestCase
     assert_equal(@rich_m.name,    audit.design.designer.name)
     assert_equal(@scott_g.name,   audit.design.peer.name)
 
+    #              Section      Subsection   Check IDs
+    #                ID             ID
+    validate = { '3' => { '5' => [13, 14] } }
     validate_print_variables(validate, audit.checklist.sections)
     display = assigns(:display)
 
@@ -794,268 +764,185 @@ class AuditControllerTest < Test::Unit::TestCase
     get(:show_sections,
         :id => audit_mx234c.id)
 
-    assert_equal("252-234-c0 q", assigns(:board_name))
-    lines = assigns(:checklist_index)
+    audit = assigns(:audit)
+    assert_equal("pcb252_234_c0_q", audit.design.directory_name)
 
-    expected = Array[
+    expected = [
       { 'bg_color'     => '0', 
         :section => 
-          {'name'             => 'section_10_1',
-           'id'               => '3'
+          { :name => 'section_10_1',
+            :id   => 3
           },
-        'subsections' => Array[{
-            'name'             => 'subsection_10_1_1',
+        :subsections => [{
+            :name              => 'subsection_10_1_1',
             'percent_complete' => 0.0,
             'questions'        => 0,
             'checks'           => 2,
             'url'              => 'www.eds.com',
-            'id'               => 5,
+            :id                => 5,
             'note'             => 'id - 5'
           },
           {
-            'name'             => 'subsection_10_1_2',
+            :name              => 'subsection_10_1_2',
             'percent_complete' => 0.0,
             'questions'        => 0,
             'checks'           => 4,
             'url'              => 'www.eds.com',
-            'id'               => 6,
+            :id                => 6,
             'note'             => 'id - 6'
           }
         ]
       },
       { 'bg_color'     => '343434', 
-        :section      => 
-          { 'name'             => 'section_10_2',
-            'id'               => '4'
+        :section => 
+          { :name => 'section_10_2',
+            :id   => 4
           },
-        'subsections' => Array[{
-            'name'             => 'subsection_10_2_1',
+        :subsections => [{
+            :name              => 'subsection_10_2_1',
             'percent_complete' => 0.0,
             'questions'        => 0,
             'checks'           => 3,
             'url'              => 'www.google.com',
-            'id'               => 7,
+            :id                => 7,
             'note'             => 'id - 7'
           },
           {
-            'name'             => 'subsection_10_2_2',
+            :name              => 'subsection_10_2_2',
             'percent_complete' => 0.0,
             'questions'        => 0,
             'checks'           => 3,
             'url'              => 'www.google.com',
-            'id'               => 8,
+            :id                => 8,
             'note'             => 'id - 8'
           }
         ]
       }
     ]
     
-    i = 0
-    for line in lines
-      line.each { |k,v|	
-        if k != 'subsections'
-          section = expected[i][k]
-          assert_equal(section['id'].to_i, v.id)
-          assert_equal(section['name'],    v.name)
-        else
-          0.upto(line[k].size-1) { |idx|
-            expected_vals = expected[i][k][idx]
-            actual_vals = line['subsections'][idx]
-            actual_vals.each { |key,actual_value|
-              assert_equal(expected_vals[key], actual_value)
-            }
-          }
-        end
-      }
-      i += 1
+puts
+puts "audit: " + audit.id.to_s
+puts "  complete?: " + audit.is_complete?.to_s
+puts "  self?: " + audit.is_self_audit?.to_s
+puts "  peer?: " + audit.is_peer_audit?.to_s
+puts "  sections: " + audit.checklist.sections.size.to_s
+    audit.checklist.sections.each_with_index do |section, i|
+      expected_sect = expected[i]
+puts expected_sect.inspect
+puts section.inspect
+      assert_equal(expected_sect[:section][:name], section.name)
+      assert_equal(expected_sect[:section][:id],   section.id)
+      section.subsections.each_with_index do |subsection, k|	
+        expected_subsect = expected_sect[:subsections][k]
+        assert_equal(expected_subsect[:id],   subsection.id)
+        assert_equal(expected_subsect[:name], subsection.name)
+      end
     end
-
-    get(:show_sections,
-        :id => audits(:audit_la453b_eco2).id)
-
-    assert_equal("942-453-b4 y", assigns(:board_name))
-    lines = assigns(:checklist_index)
-
-    expected = Array[
-      { 'bg_color'     => '0', 
-        :section      => 
-          { 'name'             => 'section_10_1',
-            'id'               => '3'
-          },
-        'subsections' => Array[{
-            'name'             => 'subsection_10_1_1',
-            'percent_complete' => 0.0,
-            'questions'        => 0,
-            'checks'           => 2,
-            'url'              => 'www.eds.com',
-            'id'               => 5,
-            'note'             => 'id - 5'
-          },
-          {
-            'name'             => 'subsection_10_1_2',
-            'percent_complete' => 0.0,
-            'questions'        => 0,
-            'checks'           => 4,
-            'url'              => 'www.eds.com',
-            'id'               => 6,
-            'note'             => 'id - 6'
-          }
-        ]
-      }
-    ]
-    
-    i = 0
-    lines.each do |line|
-      line.each { |k,v|	
-        if k != 'subsections'
-          section = expected[i][k]
-          assert_equal(section['id'].to_i, v.id)
-          assert_equal(section['name'],    v.name)
-        else
-          0.upto(line[k].size-1) { |idx|
-            expected_vals = expected[i][k][idx]
-            actual_vals = line['subsections'][idx]
-            actual_vals.each { |key,actual_value|
-              assert_equal(expected_vals[key], actual_value)
-            }
-          }
-        end
-      }
-      i += 1
-    end
-
 
     get(:show_sections,
         :id => audits(:audit_la454c3).id)
 
-    assert_equal("942-454-c3 s", assigns(:board_name))
-    lines = assigns(:checklist_index)
+    audit = assigns(:audit)
+    assert_equal("pcb942_454_c3_s", audit.design.directory_name)
 
-    expected = Array[
+    expected = [
       { 'bg_color'     => '0', 
-        :section      => 
-          { 'name'             => 'section_10_1',
-            'id'               => '3'
+        :section => 
+          { :name => 'section_10_1',
+            :id   => 3
           },
-        'subsections' => Array[{
-            'name'             => 'subsection_10_1_1',
+        :subsections => [{
+            :name              => 'subsection_10_1_1',
             'percent_complete' => 0.0,
             'questions'        => 0,
             'checks'           => 2,
             'url'              => 'www.eds.com',
-            'id'               => 5,
+            :id                => 5,
             'note'             => 'id - 5'
           },
           {
-            'name'             => 'subsection_10_1_2',
+            :name              => 'subsection_10_1_2',
             'percent_complete' => 0.0,
             'questions'        => 0,
             'checks'           => 4,
             'url'              => 'www.eds.com',
-            'id'               => 6,
+            :id                => 6,
             'note'             => 'id - 6'
           }
         ]
       }
     ]
     
-    i = 0
-    lines.each do |line|
-      line.each { |k,v|	
-        if k != 'subsections'
-          section = expected[i][k]
-          assert_equal(section['id'].to_i, v.id)
-          assert_equal(section['name'],    v.name)
-        else
-          0.upto(line[k].size-1) { |idx|
-            expected_vals = expected[i][k][idx]
-            actual_vals = line['subsections'][idx]
-            actual_vals.each { |key,actual_value|
-              assert_equal(expected_vals[key], actual_value)
-            }
-          }
-        end
-      }
-      i += 1
+    audit.checklist.sections.each_with_index do |section, i|
+      expected_sect = expected[i]
+      assert_equal(expected_sect[:section][:name], section.name)
+      assert_equal(expected_sect[:section][:id],   section.id)
+      section.subsections.each_with_index do |subsection, k|	
+        expected_subsect = expected_sect[:subsections][k]
+        assert_equal(expected_subsect[:id],   subsection.id)
+        assert_equal(expected_subsect[:name], subsection.name)
+      end
     end
 
     get(:show_sections,
         :id => audits(:audit_in_peer_audit).id)
 
-    assert_equal("252-999-b0 u", assigns(:board_name))
-    lines = assigns(:checklist_index)
+    audit = assigns(:audit)
+    assert_equal("pcb252_999_b0_u", audit.design.directory_name)
 
-    expected = Array[
+    expected = [
       { 'bg_color'     => '0', 
         :section      => 
-          { 'name'             => 'section_10_1',
-            'id'               => '3'
+          { :name => 'section_10_1',
+            :id   => 3
           },
-        'subsections' => Array[{
-            'name'             => 'subsection_10_1_1',
+        :subsections => [{
+            :name              => 'subsection_10_1_1',
             'percent_complete' => 0.0,
             'questions'        => 0,
             'checks'           => 2,
             'url'              => 'www.eds.com',
-            'id'               => 5,
+            :id                => 5,
             'note'             => 'id - 5'
           },
           {
-            'name'             => 'subsection_10_1_2',
+            :name              => 'subsection_10_1_2',
             'percent_complete' => 0.0,
             'questions'        => 0,
             'checks'           => 0,
             'url'              => 'www.eds.com',
-            'id'               => 6,
+            :id                => 6,
             'note'             => 'id - 6'
           }
         ]
       },
       { 'bg_color'     => '343434', 
         :section      => 
-          { 'name'             => 'section_10_2',
-            'id'               => '4'
+          { :name => 'section_10_2',
+            :id   => 4
           },
-        'subsections' => Array[{
-            'name'             => 'subsection_10_2_1',
-            'percent_complete' => 0.0,
-            'questions'        => 0,
-            'checks'           => 0,
-            'url'              => 'www.google.com',
-            'id'               => 7,
-            'note'             => 'id - 7'
-          },
-          {
-            'name'             => 'subsection_10_2_2',
+        :subsections => [{
+            :name              => 'subsection_10_2_2',
             'percent_complete' => 0.0,
             'questions'        => 0,
             'checks'           => 3,
             'url'              => 'www.google.com',
-            'id'               => 8,
+            :id                => 8,
             'note'             => 'id - 8'
           }
         ]
       }
     ]
     
-    i = 0
-    lines.each do |line|
-      line.each { |k,v|
-        if k != 'subsections'
-          section = expected[i][k]
-          assert_equal(section['id'].to_i, v.id)
-          assert_equal(section['name'],    v.name)
-        else
-          0.upto(line[k].size-1) { |idx|
-            expected_vals = expected[i][k][idx]
-            actual_vals = line['subsections'][idx]
-            actual_vals.each { |key, actual_value|
-              assert_equal(expected_vals[key], actual_value)
-            }
-          }
-        end
-      }
-      i += 1
+    audit.checklist.sections.each_with_index do |section, i|
+      expected_sect = expected[i]
+      assert_equal(expected_sect[:section][:name], section.name)
+      assert_equal(expected_sect[:section][:id],   section.id)
+      section.subsections.each_with_index do |subsection, k|	
+        expected_subsect = expected_sect[:subsections][k]
+        assert_equal(expected_subsect[:id],   subsection.id)
+        assert_equal(expected_subsect[:name], subsection.name)
+      end
     end
 
   end
@@ -1277,7 +1164,7 @@ private
 
 
   def validate_print_variables(validate, sections)
-  
+
     assert_equal(validate.size, sections.size)
     i = 0
     
