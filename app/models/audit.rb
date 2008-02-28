@@ -1242,7 +1242,7 @@ PEER_AUDIT       = 2
   # Go through all of the checks in the check list and attach the associated
   # design checks.
   def get_design_checks
-    
+
     design_checks = DesignCheck.find(:all, :conditions => "audit_id=#{self.id}")
     
     self.checklist.each_check do |check|
@@ -1405,14 +1405,13 @@ PEER_AUDIT       = 2
       if (comment.strip.empty? && 
           design_check.comment_required?(self_audit_result, peer_audit_result))
         self.errors.add(:comment_required, "A comment is required for a #{result} response.")
+      else
+        if !self.designer_complete? && self.self_update?(user)
+          self.process_self_audit_update(self_audit_result, design_check, user)
+        elsif !self.auditor_complete? && self.peer_update?(user)
+          self.process_peer_audit_update(peer_audit_result, comment, design_check, user)
+        end
       end
-      
-      if !self.designer_complete? && self.self_update?(user)
-        self.process_self_audit_update(self_audit_result, design_check, user)
-      elsif !self.auditor_complete? && self.peer_update?(user)
-        self.process_peer_audit_update(peer_audit_result, comment, design_check, user)
-      end
-      
     end
     
     # If the user entered a comment, add the record to the database.
