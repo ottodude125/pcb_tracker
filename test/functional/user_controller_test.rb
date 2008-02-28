@@ -176,7 +176,7 @@ class UserControllerTest < Test::Unit::TestCase
 
 
     assert_equal("Administrators only!  Check your role.", flash['notice'])
-    assert_equal("http://localhost/tracker",               @response.redirect_url)
+    assert_equal("http://localhost/",                      @response.redirect_url)
 
     # Make sure that an admin can create a new user.
     set_admin
