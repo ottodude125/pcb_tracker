@@ -64,6 +64,7 @@ class AuditController < ApplicationController
     else
       phase = audit.is_complete? ? 'Peer' : 'Self'
       flash['notice'] = "The #{phase} audit is complete"
+      redirect_to(:controller => 'tracker', :action => 'index')
     end
     
   end
