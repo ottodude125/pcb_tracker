@@ -425,7 +425,6 @@ class TrackerMailerTest < Test::Unit::TestCase
     expected_release_cc = @manager_email_list + @input_gate_email_list
     designer = User.find(@mx234a_release_dr.designer_id)
     expected_release_cc << designer.email
-    expected_release_cc << "STD_DC_ECO_Inbox@notes.teradyne.com" if ENV['RAILS_ENV'] != 'development'
     
     expected_release_cc << @bob_g.email
     expected_release_cc = expected_release_cc.sort_by { |address| address }.uniq
