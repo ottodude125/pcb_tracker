@@ -31,9 +31,6 @@ class Ping < ActiveRecord::Base
 
     ping_list   = {}
     
-    # Remove any design reviews that have not been posted long enough to be 
-    # pinged.
-    active_reviews.delete_if { |dr| dr.age < 3.days }
     active_reviews.each do |design_review|
 
       age = design_review.age/1.day
