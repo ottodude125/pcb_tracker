@@ -959,34 +959,34 @@ class AuditControllerTest < Test::Unit::TestCase
     
     assert_equal(mx234c_audit, assigns(:audit))
     
-    auditor_list = assigns(:auditor_list)
+    audit = assigns(:audit)
     
     lead_designer = mx234c_audit.design.designer
     lead_peer     = mx234c_audit.design.peer
-    
-    assert_equal(lead_designer, auditor_list[:lead_designer])
-    assert_equal(lead_peer,     auditor_list[:lead_peer])
+
+    assert_equal(lead_designer, audit.design.designer)
+    assert_equal(lead_peer,     audit.design.peer)
     
     expected_self_auditors = [@siva_e,
                               @scott_g,
                               @bob_g,
                               @rich_m,
                               @mathi_n]
-    assert_equal(expected_self_auditors, auditor_list[:self_list])
+    assert_equal(expected_self_auditors, audit.self_auditor_list)
     
     # Remove the self auditor to get the list of peers
     expected_peer_auditors = expected_self_auditors - [@rich_m]
-    assert_equal(expected_peer_auditors, auditor_list[:peer_list])
+    assert_equal(expected_peer_auditors, audit.peer_auditor_list)
 
     checklist_sections = [sections(:section_10_1), 
                           sections(:section_10_2)]
     
-    auditor_list[:sections].each do |section|
-      expected_section = checklist_sections.shift
+    audit.checklist.sections.each_with_index do |section, i|
+      expected_section = checklist_sections[i]
 
-      assert_equal(lead_designer,         section[:self_auditor])
-      assert_equal(lead_peer,             section[:peer_auditor])
-      assert_equal(expected_section.name, section[:section].name)
+      assert_equal(lead_designer,         audit.self_auditor(section))
+      assert_equal(lead_peer,             audit.peer_auditor(section))
+      assert_equal(expected_section.name, section.name)
     end
     
     # No updates should have been made to audit teammates
