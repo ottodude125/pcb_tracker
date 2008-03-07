@@ -76,4 +76,19 @@ class DesignReviewResult < ActiveRecord::Base
   end
 
   
+  # Set the reviewer for the design review result
+  #
+  # :call-seq:
+  #   set_reviewer(user) -> nil
+  #
+  #  The reviewer_id field is updated with the id of the user if the user
+  #  is a memeber of the review group.
+  def set_reviewer(user)
+    if user.roles.detect { |role| role.id == self.role_id}
+      self.reviewer_id = user.id
+      self.save
+    end
+  end
+  
+  
 end
