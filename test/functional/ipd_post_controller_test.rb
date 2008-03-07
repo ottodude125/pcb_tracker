@@ -49,42 +49,24 @@ class IpdPostControllerTest < Test::Unit::TestCase
     
     # The la454c design has no idp posts in the database.  Verify
     # that list provides the expected information.
-    post(:list,
-         :design_id => designs(:la454c3).id)
+    post(:list, :design_id => designs(:la454c3).id)
 
-    assert_equal(designs(:la454c3).name,
-                 assigns(:design).name)
-    assert_equal(0,  assigns(:ipd_post_pages).item_count)
-    assert_equal(0, assigns(:ipd_posts).size)
+    assert_equal(designs(:la454c3).name, assigns(:design).name)
+    assert_equal(0,                      assigns(:ipd_posts).size)
 
     # The mx234a design has 3 idp posts in the database.  Verify
     # that list provides the expected information.
-    post(:list,
-         :design_id => designs(:mx234a).id)
+    post(:list, :design_id => designs(:mx234a).id)
 
-    assert_equal(designs(:mx234a).name,
-                 assigns(:design).name)
-    assert_equal(3, assigns(:ipd_post_pages).item_count)
-    assert_equal(3, assigns(:ipd_posts).size)
+    assert_equal(designs(:mx234a).name,  assigns(:design).name)
+    assert_equal(3,                      assigns(:ipd_posts).size)
 
     # The la453b design has 23 ipd posts in the database.  Verify
     # that list provides the expected information.
-    post(:list,
-         :design_id => designs(:la453b).id)
+    post(:list, :design_id => designs(:la453b).id)
 
-    assert_equal(designs(:la453b).name,
-                 assigns(:design).name)
-    assert_equal(23, assigns(:ipd_post_pages).item_count)
-    assert_equal(20, assigns(:ipd_posts).size)
-
-    post(:list,
-         :design_id => designs(:la453b).id,
-         :page      => 2)
-
-    assert_equal(designs(:la453b).name,
-                 assigns(:design).name)
-    assert_equal(23, assigns(:ipd_post_pages).item_count)
-    assert_equal(3,  assigns(:ipd_posts).size)
+    assert_equal(designs(:la453b).name, assigns(:design).name)
+    assert_equal(23,                    assigns(:ipd_posts).size)
 
   end
 
@@ -103,8 +85,7 @@ class IpdPostControllerTest < Test::Unit::TestCase
   
     set_user(users(:scott_g).id, 'Designer')
     
-    post(:new, 
-         :design_id => designs(:la453b).id)
+    post(:new,  :design_id => designs(:la453b).id)
     assert_equal(designs(:la453b).id, assigns(:ipd_post).design_id)
     
   end
@@ -122,20 +103,17 @@ class IpdPostControllerTest < Test::Unit::TestCase
   #
   def test_show
     
-    post(:show, 
-         :id => ipd_posts(:mx234a_thread_one).id)
+    post(:show, :id => ipd_posts(:mx234a_thread_one).id)
     assert_equal(designs(:mx234a).id, assigns(:reply_post).design_id)
 
     root_post = assigns(:root_post)
     assert_equal(designs(:mx234a).id, root_post.design_id)
-    assert_equal(3, root_post.all_children.size)
+    assert_equal(3,                   root_post.all_children.size)
 
     mx234a_thr_one = ipd_posts(:mx234a_thread_one)
     assert_equal(mx234a_thr_one, root_post)
 
-    children_sorted = root_post.all_children.sort_by { |post|
-      post.id
-    }
+    children_sorted = root_post.all_children.sort_by { |post| post.id }
 
     assert_equal(ipd_posts(:mx234a_thread_one_a), children_sorted[0])
     assert_equal(ipd_posts(:mx234a_thread_one_b), children_sorted[1])
@@ -160,45 +138,33 @@ class IpdPostControllerTest < Test::Unit::TestCase
 
     # The mx243c design has no ipd posts in the database.  Verify
     # that list provides the expected information.
-    post(:list,
-         :design_id => designs(:mx234c).id)
-    assert_equal(designs(:mx234c).name,
-                 assigns(:design).name)
-    assert_equal(0, assigns(:ipd_post_pages).item_count)
-    assert_equal(0, assigns(:ipd_posts).size)
+    post(:list,  :design_id => designs(:mx234c).id)
+    assert_equal(designs(:mx234c).name,  assigns(:design).name)
+    assert_equal(0,                      assigns(:ipd_posts).size)
 
     set_user(users(:scott_g).id, 'Designer')
     root_post = {:design_id => designs(:mx234c).id,
                  :subject   => "mx234c thread 1",
                  :body      => "mx234c thread 1 BODY"}
-    post(:create,
-         :ipd_post => root_post)
+    post(:create, :ipd_post => root_post)
     
-    post(:list,
-         :design_id => designs(:mx234c).id)
-    assert_equal(1, assigns(:ipd_post_pages).item_count)
+    post(:list, :design_id => designs(:mx234c).id)
     assert_equal(1, assigns(:ipd_posts).size)
 
 
     root_post = {:design_id => designs(:mx234c).id,
                  :subject   => "mx234c thread 2",
                  :body      => "mx234c thread 2 BODY"}
-    post(:create,
-         :ipd_post => root_post)
+    post(:create, :ipd_post => root_post)
          
     root_post = {:design_id => designs(:mx234c).id,
                  :subject   => "mx234c thread 3",
                  :body      => "mx234c thread 3 BODY"}
-    post(:create,
-         :ipd_post => root_post)
+    post(:create, :ipd_post => root_post)
 
-    post(:list,
-         :design_id => designs(:mx234c).id)
-    assert_equal(3, assigns(:ipd_post_pages).item_count)
+    post(:list, :design_id => designs(:mx234c).id)
     assert_equal(3, assigns(:ipd_posts).size)
-    for post in assigns(:ipd_posts)
-      assert_equal(0, post.all_children.size)
-    end
+    assigns(:ipd_posts).each { |post| assert_equal(0, post.all_children.size) }
 
     thread_3 = assigns(:ipd_posts).detect{ |p| 
                  p.subject == "mx234c thread 3"}
@@ -207,9 +173,7 @@ class IpdPostControllerTest < Test::Unit::TestCase
          :reply_post => {:body => 'mx234c thread 3 REPLY 1'},
          :id         => thread_3.id)
 
-    post(:list,
-         :design_id => designs(:mx234c).id)
-    assert_equal(3, assigns(:ipd_post_pages).item_count)
+    post(:list, :design_id => designs(:mx234c).id)
     assert_equal(3, assigns(:ipd_posts).size)
 
     expected_results = {
@@ -235,9 +199,7 @@ class IpdPostControllerTest < Test::Unit::TestCase
          :reply_post => {:body => 'mx234c thread 3 REPLY 2'},
          :id         => thread_3.id)
 
-    post(:list,
-         :design_id => designs(:mx234c).id)
-    assert_equal(3, assigns(:ipd_post_pages).item_count)
+    post(:list, :design_id => designs(:mx234c).id)
     assert_equal(3, assigns(:ipd_posts).size)
 
     expected_results['mx234c thread 3'][:size] = 2
@@ -257,9 +219,7 @@ class IpdPostControllerTest < Test::Unit::TestCase
          :reply_post => {:body => 'mx234c thread 3 REPLY 3'},
          :id         => thread_3.id)
 
-    post(:list,
-         :design_id => designs(:mx234c).id)
-    assert_equal(3, assigns(:ipd_post_pages).item_count)
+    post(:list, :design_id => designs(:mx234c).id)
     assert_equal(3, assigns(:ipd_posts).size)
 
     expected_results['mx234c thread 3'][:size] = 3
@@ -282,9 +242,7 @@ class IpdPostControllerTest < Test::Unit::TestCase
          :reply_post => {:body => 'mx234c thread 1 REPLY 1'},
          :id         => thread_1.id)
 
-    post(:list,
-         :design_id => designs(:mx234c).id)
-    assert_equal(3, assigns(:ipd_post_pages).item_count)
+    post(:list, :design_id => designs(:mx234c).id)
     assert_equal(3, assigns(:ipd_posts).size)
 
     expected_results['mx234c thread 1'][:size] = 1
