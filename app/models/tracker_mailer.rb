@@ -149,11 +149,10 @@ class TrackerMailer < ActionMailer::Base
     review_results = ''
     subject        = design_review.design.directory_name +
                      '::' + design_review.review_name
-
     if comment_update && result_update == {}
       @subject    = "#{subject} - Comments added"
     elsif result_update
-      
+ 
       results = DesignReviewResult.find(
                   :all,
                   :conditions => "design_review_id=#{design_review.id} AND " +
@@ -265,7 +264,7 @@ class TrackerMailer < ActionMailer::Base
 
     case design_review.review_type.name
     when "Release"
-      cc.push("STD_DC_ECO_Inbox@notes.teradyne.com") if ENV['RAILS_ENV'] != 'development'
+      cc.push("STD_DC_ECO_Inbox@notes.teradyne.com") if Pcbtr::SENDER != 'DEVEL_PCB_TRACKER'
     when "Final"
       pcb_admin = Role.find_by_name("PCB Admin")
       cc       += pcb_admin.active_users.collect { |u| u.email }
