@@ -35,10 +35,11 @@
           <select id='self_section_id_<%= section_id %>' 
                   name='self_auditor[section_id_<%= section_id %>]'>
             <option value="">Please Select</option>
+            <% self_auditor_id = @audit.self_auditor(section) ? @audit.self_auditor(section).id : 0 %>
             <%= options_from_collection_for_select(@audit.self_auditor_list,
                                                    "id",
                                                    :last_name_first,
-                                                   @audit.self_auditor(section).id) %>
+                                                   self_auditor_id) %>
           </select>
         </td>
         <td align="center" valign="top">
@@ -51,10 +52,11 @@
                     disabled='disabled'>
           <% end %>
             <option value="">Please Select</option>
+            <% peer_auditor_id = @audit.peer_auditor(section) ? @audit.peer_auditor(section).id : 0 %>
             <%= options_from_collection_for_select(@audit.peer_auditor_list,
                                                    "id",
                                                    :last_name_first,
-                                                   @audit.peer_auditor(section).id) %>
+                                                   peer_auditor_id) %>
           </select>
         </td>
       </tr>
@@ -70,7 +72,7 @@
       </td>
       <td align="right">
         <input class="form_return" type="button" value="Return"
-         onClick="parent.location='<%= url_for( session[:return_to] ) %>'" />
+         onClick="parent.location='<%= url_for_stored() %>'" />
       </td>
     </tr>
   </table>
