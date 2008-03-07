@@ -13,8 +13,11 @@ Reviewer                 Design              Criticality    Age  Role
 <%= sprintf('%-25s%-20s%-15s%-5s%s', entry[:reviewer].name, dr.design.directory_name, dr.priority.name, entry[:age], entry[:role]) %><% end %>
 
 
-About ping:
 
-No reviewer will receive a ping until the review has been posted for 3 days.
-After that, high criticality boards are pinged daily, medium criticality are
-pinged every other day, and low criticality boards are pinged every third day.
+Ping Schedule:
+
+Criticality           Pinged
+--------------------------------------------
+High                  Every work day
+Medium                Every other work day
+Low                   Every third work day
