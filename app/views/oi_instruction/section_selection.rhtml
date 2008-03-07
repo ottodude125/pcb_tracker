@@ -101,7 +101,7 @@
     <td align="left">
       <%# button_to('Return', session[:return_to], :class=>'form_return') %>
       <input type="button" value="Home" class="form_return"
-             onClick="parent.location='<%= url_for( session[:return_to] ) %>'" />
+             onClick="parent.location='<%= url_for( :controller => 'tracker' ) %>'" />
     </td>
     <td align="right">
       <input type="submit" value="Next -->" class="form_submit" />
