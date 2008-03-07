@@ -17,13 +17,11 @@
       <%= button_to('New In-Process Dialog Post', 
                     {:action => 'new',
                      :design_id => @design.id},
-                    :class => 'form_submit',
-                    :title => "Use to initiate a new in-process change request/discussion thread") %>
+                     :class => 'form_submit',
+                     :title => "Use to initiate a new in-process change request/discussion thread") %>
     </td>
     <td align="right">
-      <%= button_to('Return', 
-                    session[:return_to],
-                    :class => 'form_return') %>
+      <%= button_to('Return', url_for_stored, :class => 'form_return') %>
     </td>
   </tr>
 </table>

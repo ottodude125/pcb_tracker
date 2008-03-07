@@ -62,7 +62,7 @@
     <tr>
       <td align="left">
         <input class="form_return" type="button" value="Return - No Changes" 
-               onClick="parent.location='<%= url_for(session[:return_to]) %>'" />
+               onClick="parent.location='<%= url_for_stored() %>'" />
       </td>
       <td align="right">
         <input class="form_submit" type="submit" value="Reassign" />
