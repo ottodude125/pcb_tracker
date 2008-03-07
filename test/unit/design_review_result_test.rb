@@ -16,11 +16,17 @@ require File.dirname(__FILE__) + '/../test_helper'
 class DesignReviewResultTest < Test::Unit::TestCase
   
   
-  fixtures :design_review_results
+  fixtures :design_review_results,
+           :roles,
+           :users
 
 
   def setup
     @mx234a_pre_artwork_hw = design_review_results(:mx234a_pre_artwork_hw)
+    
+    @ben_b   = users(:ben_b)
+    @lee_s   = users(:lee_s)
+    @scott_g = users(:scott_g)
   end
 
 
@@ -67,4 +73,20 @@ class DesignReviewResultTest < Test::Unit::TestCase
   end
 
 
+  ###################################################################
+  def test_set_reviewer_non_role_member
+    @mx234a_pre_artwork_hw.set_reviewer(@scott_g)
+    @mx234a_pre_artwork_hw.reload
+    assert_equal(@lee_s.name, @mx234a_pre_artwork_hw.reviewer.name)
+  end
+  
+  
+  ###################################################################
+  def test_set_reviewer_role_member
+    @mx234a_pre_artwork_hw.set_reviewer(@ben_b)
+    @mx234a_pre_artwork_hw.reload
+    assert_equal(@ben_b.name, @mx234a_pre_artwork_hw.reviewer.name)
+  end
+  
+  
 end
