@@ -50,6 +50,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     @rich_a    = users(:rich_a)
     @lisa_a    = users(:lisa_a)
     @eileen_c  = users(:eileen_c)
+    @bob_g     = users(:bob_g)
     
     # Pre-load criticalities
     @low_priority  = priorities(:low)
@@ -2377,7 +2378,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     }
 
     mail_subject = 'pcb252_234_a0_g::Final '
-    reviewer_result_list= [
+    final_reviewer_result_list = [
       # Espo - CE-DFT Reviewer
       {:user_id          => @espo.id,
        :role_id          => @ce_dft.id,
@@ -2491,7 +2492,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
        }
       },
       # Lisa Austin - Valor
-      {:user_id          => @lisa_a.id,
+      {:user_id          => @bob_g.id,
        :role_id          => @valor.id,
        :comment          => '',
        :result           => 'APPROVED',
@@ -2522,16 +2523,15 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     mx234a_review_results = DesignReviewResult.find_all_by_design_review_id(mx234a.id)
 
-    assert_equal(reviewer_result_list.size,
-                 mx234a_review_results.size)
+    assert_equal(final_reviewer_result_list.size,  mx234a_review_results.size)
     assert_equal(0, 
                  DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
-    for review_result in mx234a_review_results
+    mx234a_review_results.each do |review_result| 
       assert_equal("No Response", review_result.result)
     end
 
     repost = false
-    reviewer_result_list.each do |reviewer_result|
+    final_reviewer_result_list.each do |reviewer_result|
 
       if repost
         update_mx234a                  = DesignReview.find(mx234a.id)
@@ -2740,11 +2740,6 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       if @emails.size > 0
         assert_equal("pcb252_234_a0_g: Release Review is complete",
                      email.subject)
-
-        doc_control_email = 'STD_DC_ECO_Inbox@notes.teradyne.com'
-        found_email = email.cc.detect { |addr| addr == doc_control_email }
-        assert_equal(doc_control_email, found_email)
-
         email = @emails.pop
       end
 
