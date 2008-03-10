@@ -87,6 +87,8 @@ class DesignReviewResult < ActiveRecord::Base
     if user.roles.detect { |role| role.id == self.role_id}
       self.reviewer_id = user.id
       self.save
+    else
+      raise ArgumentError.new("#{user.name} is not a member of the #{role.display_name} group.")
     end
   end
   
