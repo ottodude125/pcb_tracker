@@ -83,6 +83,9 @@ class DesignReviewResult < ActiveRecord::Base
   #
   #  The reviewer_id field is updated with the id of the user if the user
   #  is a memeber of the review group.
+  #
+  # Exception
+  #   ArgumentError - indicates that the user is not a member of the group (role).
   def set_reviewer(user)
     if user.roles.detect { |role| role.id == self.role_id}
       self.reviewer_id = user.id
