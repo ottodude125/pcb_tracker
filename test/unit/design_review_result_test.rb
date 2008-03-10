@@ -18,6 +18,7 @@ class DesignReviewResultTest < Test::Unit::TestCase
   
   fixtures :design_review_results,
            :roles,
+           :roles_users,
            :users
 
 
@@ -74,13 +75,22 @@ class DesignReviewResultTest < Test::Unit::TestCase
 
 
   ###################################################################
-  def test_set_reviewer_non_role_member
-    @mx234a_pre_artwork_hw.set_reviewer(@scott_g)
+  def test_set_reviewer_non_role_member_exception
+    assert_raise(ArgumentError) { @mx234a_pre_artwork_hw.set_reviewer(@scott_g) }
     @mx234a_pre_artwork_hw.reload
     assert_equal(@lee_s.name, @mx234a_pre_artwork_hw.reviewer.name)
   end
   
   
+  ###################################################################
+ def test_set_reviewer_non_role_member
+    @mx234a_pre_artwork_hw.set_reviewer(@scott_g)
+  rescue => err
+    assert_equal('Scott Glover is not a member of the Hardware Engineer (EE) group.', 
+                 err.message)
+  end
+  
+
   ###################################################################
   def test_set_reviewer_role_member
     @mx234a_pre_artwork_hw.set_reviewer(@ben_b)
@@ -88,5 +98,5 @@ class DesignReviewResultTest < Test::Unit::TestCase
     assert_equal(@ben_b.name, @mx234a_pre_artwork_hw.reviewer.name)
   end
   
-  
+   
 end

@@ -30,30 +30,41 @@ class DesignReviewTest < Test::Unit::TestCase
 
   ######################################################################
   def setup
+    
     @mx234a_pre_art_review   = design_reviews(:mx234a_pre_artwork)
     @mx234a_placement_review = design_reviews(:mx234a_placement)
     @mx234a_routing_review   = design_reviews(:mx234a_routing)
     @mx234a_final_review     = design_reviews(:mx234a_final)
     @mx234a_release_review   = design_reviews(:mx234a_release)
     
+    @mx234a_pre_artwork_hw = design_review_results(:mx234a_pre_artwork_hw)
+    
+    @ben_b   = users(:ben_b)
+    @scott_g = users(:scott_g)
     @cathy_m = users(:cathy_m)
+    @lee_s   = users(:lee_s)
+    
+    @admin    = roles(:admin)
+    @designer = roles(:designer)
+    @hweng    = roles(:hweng)
+    
   end
 
 
   ######################################################################
   def test_role_functions
 
-    test_data = [ { :role     => roles(:admin),
+    test_data = [ { :role     => @admin,
                     :reviewer => nil,
                     :comments => [design_review_comments(:comment_four),
                                   design_review_comments(:comment_one)] },
-                  { :role     => roles(:designer),
+                  { :role     => @designer,
                     :reviewer => nil,
                     :comments => [design_review_comments(:comment_three)] },
                   { :role     => roles(:manager),
                     :reviewer => nil,
                     :comments => [design_review_comments(:comment_two)] },
-                  { :role     => roles(:hweng),
+                  { :role     => @hweng,
                     :reviewer => users(:lee_s),
                     :comments => [] },
                   { :role     => roles(:valor),
@@ -682,6 +693,65 @@ class DesignReviewTest < Test::Unit::TestCase
     assert(!design_review.pending_repost?)
     assert(design_review.review_complete?)
 
+  end
+
+
+  ###################################################################
+  def test_no_set_reviewer_result_already_recorded
+    
+    assert_equal(@lee_s.name, @mx234a_pre_artwork_hw.reviewer.name)
+
+    @mx234a_pre_artwork_hw.result = "WAIVED"
+    @mx234a_pre_artwork_hw.save
+    @mx234a_pre_art_review.reload
+    @mx234a_pre_art_review.set_reviewer(@hweng, @ben_b)
+    
+    @mx234a_pre_artwork_hw.reload
+    assert_equal(@lee_s.name, @mx234a_pre_artwork_hw.reviewer.name)
+    
+  end
+  
+  
+  ###################################################################
+  def test_set_reviewer_non_role_member_exception
+    
+    assert_equal(@lee_s.name, @mx234a_pre_artwork_hw.reviewer.name)
+
+    assert_raise(ArgumentError) { @mx234a_pre_art_review.set_reviewer(@hweng, @scott_g) }
+    @mx234a_pre_art_review.reload
+    
+    @mx234a_pre_artwork_hw.reload
+    assert_equal(@lee_s.name, @mx234a_pre_artwork_hw.reviewer.name)
+    
+  end
+  
+  
+  ###################################################################
+ def test_set_reviewer_non_role_member
+
+    assert_equal(@lee_s.name, @mx234a_pre_artwork_hw.reviewer.name)
+
+    @mx234a_pre_art_review.set_reviewer(@hweng, @scott_g)
+    @mx234a_pre_art_review.reload
+  rescue => err
+    assert_equal('Scott Glover is not a member of the Hardware Engineer (EE) group.', 
+                 err.message)
+    assert_equal(@lee_s.name, @mx234a_pre_artwork_hw.reviewer.name)
+
+  end
+  
+
+  ###################################################################
+  def test_set_reviewer_role_member
+    
+    assert_equal(@lee_s.name, @mx234a_pre_artwork_hw.reviewer.name)
+
+    @mx234a_pre_art_review.set_reviewer(@hweng, @ben_b)
+    @mx234a_pre_art_review.reload
+    
+    @mx234a_pre_artwork_hw.reload
+    assert_equal(@ben_b.name, @mx234a_pre_artwork_hw.reviewer.name)
+    
   end
 
 
