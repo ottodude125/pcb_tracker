@@ -63,6 +63,10 @@ class DesignTest < Test::Unit::TestCase
     @mx234a_routing_dr   = design_reviews(:mx234a_routing)
     @mx234a_final_dr     = design_reviews(:mx234a_final)
     @mx234a_release_dr   = design_reviews(:mx234a_release)
+    
+    @mx234a_pre_artwork_hw    = design_review_results(:mx234a_pre_artwork_hw)
+    @mx234a_pre_artwork_valor = design_review_results(:mx234a_pre_artwork_valor)
+    @mx234a_final_valor       = design_review_results(:mx234a_final_valor)
 
 
     @pre_artwork_review_type = review_types(:pre_artwork)
@@ -76,6 +80,7 @@ class DesignTest < Test::Unit::TestCase
          
     @rich_a    = users(:rich_a)
     @lisa_a    = users(:lisa_a)
+    @ben_b     = users(:ben_b)
     @eileen_c  = users(:eileen_c)
     @art_d     = users(:art_d)
     @matt_d    = users(:matt_d)
@@ -1284,6 +1289,145 @@ end
  end
 
  
+  ###################################################################
+  def test_set_all_reviewer_for_role_used_in_a_select_design_reviews
+    
+    @mx234a_design.design_reviews.each do |design_review|
+      if valor_result = design_review.get_review_result(@valor.name)
+        assert_equal(@lisa_a.name, valor_result.reviewer.name)
+      end
+    end
+    
+    @mx234a_design.set_reviewer(@valor, @scott_g)
+    
+    @mx234a_design.reload
+    @mx234a_design.design_reviews.each do |design_review|
+      if valor_result = design_review.get_review_result(@valor.name)
+        assert_equal(@scott_g.name, valor_result.reviewer.name)
+      end
+    end
+    
+  end
+
+
+ ###################################################################
+  def test_set_incomplete_reviewer_for_role_used_in_a_select_design_reviews
+    
+    @mx234a_pre_artwork_valor.result = 'APPROVED'
+    @mx234a_pre_artwork_valor.save
+    
+    @mx234a_design.reload
+    @mx234a_design.design_reviews.each do |design_review|
+      if valor_result = design_review.get_review_result(@valor.name)
+        assert_equal(@lisa_a.name, valor_result.reviewer.name)
+      end
+    end
+    
+    @mx234a_design.set_reviewer(@valor, @scott_g)
+    
+    @mx234a_design.reload
+    @mx234a_design.design_reviews.each do |design_review|
+      if valor_result = design_review.get_review_result(@valor.name)
+        if design_review.review_type.name == 'Pre-Artwork'
+            assert_equal(@lisa_a.name + '/' + design_review.review_type.name,
+                         valor_result.reviewer.name + '/' + design_review.review_type.name)
+        else
+            assert_equal(@scott_g.name + '/' + design_review.review_type.name,
+                         valor_result.reviewer.name + '/' + design_review.review_type.name)
+        end
+      end
+    end
+    
+  end
+
+
+  ###################################################################
+  def test_no_set_reviewer_result_already_recorded
+    
+    @mx234a_design.design_reviews.each do |design_review|
+      hw_result = design_review.get_review_result(@hweng_role.name)
+      assert_equal(@lee_s.name, hw_result.reviewer.name)
+    end
+
+    @mx234a_pre_artwork_hw.result = "WAIVED"
+    @mx234a_pre_artwork_hw.save
+    @mx234a_design.reload
+    @mx234a_design.set_reviewer(@hweng_role, @ben_b)
+    
+    @mx234a_design.reload
+    @mx234a_design.design_reviews.each do |design_review|
+      hw_result = design_review.get_review_result(@hweng_role.name)
+      if design_review.review_type.name == 'Pre-Artwork'
+        assert_equal(@lee_s.name + '/' + design_review.review_type.name,
+                     hw_result.reviewer.name + '/' + design_review.review_type.name)
+      else
+        assert_equal(@ben_b.name + '/' + design_review.review_type.name, 
+                     hw_result.reviewer.name + '/' + design_review.review_type.name)
+      end
+    end
+    
+  end
+  
+  
+  ###################################################################
+  def test_set_reviewer_non_role_member_exception
+    
+    @mx234a_design.design_reviews.each do |design_review|
+      hw_result = design_review.get_review_result(@hweng_role.name)
+      assert_equal(@lee_s.name, hw_result.reviewer.name)
+    end
+
+    assert_raise(ArgumentError) { @mx234a_design.set_reviewer(@hweng_role, @scott_g) }
+    
+    @mx234a_design.reload
+    @mx234a_design.design_reviews.each do |design_review|
+      hw_result = design_review.get_review_result(@hweng_role.name)
+      assert_equal(@lee_s.name, hw_result.reviewer.name)
+    end
+    
+  end
+  
+  
+  ###################################################################
+ def test_set_reviewer_non_role_member
+
+    @mx234a_design.design_reviews.each do |design_review|
+      hw_result = design_review.get_review_result(@hweng_role.name)
+      assert_equal(@lee_s.name, hw_result.reviewer.name)
+    end
+
+    @mx234a_design.set_reviewer(@hweng_role, @scott_g)
+
+  rescue => err
+    assert_equal('Scott Glover is not a member of the Hardware Engineer (EE) group.', 
+                 err.message)
+    @mx234a_design.reload
+    @mx234a_design.design_reviews.each do |design_review|
+      hw_result = design_review.get_review_result(@hweng_role.name)
+      assert_equal(@lee_s.name, hw_result.reviewer.name)
+    end
+
+  end
+  
+
+  ###################################################################
+  def test_set_reviewer_role_member
+    
+    @mx234a_design.design_reviews.each do |design_review|
+      hw_result = design_review.get_review_result(@hweng_role.name)
+      assert_equal(@lee_s.name, hw_result.reviewer.name)
+    end
+
+    @mx234a_design.set_reviewer(@hweng_role, @ben_b)
+    
+    @mx234a_design.design_reviews.each do |design_review|
+      hw_result = design_review.get_review_result(@hweng_role.name)
+      assert_equal(@ben_b.name, hw_result.reviewer.name)
+    end
+    
+  end
+
+
  def validate_design(gold, design)
 
    msg = "#{design.name} - design - "
