@@ -1169,7 +1169,7 @@ class DesignReviewController < ApplicationController
   ######################################################################
   #
   def reviewer_results
-  
+
     # Go through the results for each role and look for a rejection
     rejected = false
     roles    = []
@@ -1185,7 +1185,7 @@ class DesignReviewController < ApplicationController
                    :result                  => result[0][1] }
       end
     }
-    
+
     # Save the data in flash
     review_results = {
       :comments         => params["post_comment"]["comment"],
@@ -2196,6 +2196,8 @@ class DesignReviewController < ApplicationController
       design.designer_id = designer.id
       design.priority_id = priority.id
       design.update
+      
+      design.set_reviewer(Role.find_by_name("Valor"), peer)
 
       for design_review in design.design_reviews
         design_review.priority_id = priority.id
