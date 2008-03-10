@@ -295,4 +295,16 @@ module ApplicationHelper
   end
   
   
+  # Retrieve the stored return target
+  #
+  # :call-seq:
+  #   url_for_stored() -> string
+  #
+  #  If a return target url was stored provide that url, otherwise send the
+  #  tracker back to the home page
+  def url_for_stored
+    session[:return_to] ? url_for(session[:return_to]) : url_for( :controller => 'tracker' )
+  end
+  
+  
 end
