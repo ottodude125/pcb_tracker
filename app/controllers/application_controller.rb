@@ -268,4 +268,32 @@ class ApplicationController < ActionController::Base
   
   end
   
+  
+  # Set the stored return target
+  #
+  # :call-seq:
+  #   set_stored() -> nil
+  #
+  #  Sets the "return_to" field in the session variable.
+  def set_stored
+    session[:return_to] = request.request_uri
+  end
+  
+  
+  # Redirect to the stored return target
+  #
+  # :call-seq:
+  #   redirect_to_stored() -> string
+  #
+  #  If a return target url was stored provide that url, otherwise send the
+  #  tracker back to the home page
+  def redirect_to_stored
+    if return_to = session[:return_to]
+      session[:return_to] = nil
+      redirect_to(return_to)
+    else
+      redirect_to( :controller => 'tracker' )
+    end
+  end
+  
 end
