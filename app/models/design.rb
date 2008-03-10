@@ -1186,6 +1186,24 @@ class Design < ActiveRecord::Base
   end
   
   
+  # Set the reviewer for the design reviews with incomplete results for the 
+  # role.
+  #
+  # :call-seq:
+  #   set_reviewer(role, user) -> nil
+  #
+  #  For each of the design reviews associated with the design, set the reviewer
+  #  for the specified role.
+  #
+  # Exception
+  #   ArgumentError - indicates that the user is not a member of the group (role).
+  def set_reviewer(role, user)
+    self.design_reviews.each { |dr| dr.set_reviewer(role, user) }
+  rescue
+    raise
+  end
+  
+  
   ######################################################################
   #
   # role_review_count
