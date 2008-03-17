@@ -480,9 +480,11 @@ PEER_AUDIT       = 2
     
     count = { :self => 0, :peer => 0 }
     
-    self.design_checks.each do |dc|
-      count[:self] += 1 if dc.self_auditor_checked?
-      count[:peer] += 1 if dc.peer_auditor_checked?
+    self.checklist.each_check do |check|
+      design_check = self.design_checks.detect { |dc| dc.check_id == check.id }
+      next if !design_check
+      count[:self] += 1 if design_check.self_auditor_checked?
+      count[:peer] += 1 if design_check.peer_auditor_checked?
     end
     
     count
@@ -1152,6 +1154,67 @@ PEER_AUDIT       = 2
   # for the lead designer removed.
   def peer_auditor_list
     @peer_auditor_list ||= (self.self_auditor_list - [self.design.designer])
+  end
+  
+  
+  
+  # Locate and remove any orphaned design checks associated with the audit
+  #
+  # :call-seq:
+  #    orphaned_design_checks
+  #
+  # Find all design checks that were incorrectly created and processed and 
+  # remove them from the database.  The design checks were created due to a 
+  # bug that existed that blindly created design checks new designs.  The program
+  # should not have create design checks for checks that only apply to bareboard
+  # designs.
+  # In addition, those design checks were filled out by the self and peer auditors.
+  # The completion stats reflect that.  The numbers recorded in the audit are 
+  # adjusted when the design checks are destroyed.
+  def orphaned_design_checks
+    
+    total_design_checks = self.design_checks.size
+    
+    self.trim_checklist_for_design_type
+    self.get_design_checks
+    
+    completed_check_counts = self.completed_check_count
+    
+    attached_design_checks = []
+    self.checklist.each_check { |ch| attached_design_checks << ch.design_check }
+    
+    orphaned_design_checks = self.design_checks - attached_design_checks
+    
+    if orphaned_design_checks.size > 0
+      puts 'audit ID: ' + self.id.to_s +
+           "\tNumber of orphaned_design_checks: " + orphaned_design_checks.size.to_s
+      puts "\tRECORDED COMPLETE:\tself: " + self.designer_completed_checks.to_s +
+           "\tpeer: " + self.auditor_completed_checks.to_s
+      puts "\tACTUAL COMPLETE:\tself: " + completed_check_counts[:self].to_s +
+           "\tpeer: " + completed_check_counts[:peer].to_s
+      
+      self.designer_completed_checks = completed_check_counts[:self]
+      self.auditor_completed_checks  = completed_check_counts[:peer]
+      self.save
+      
+      orphaned_design_checks.each do |dc|
+        check = Check.find(dc.check_id)
+        puts "\t** DC ID: " + dc.id.to_s + ' self: ' +
+             dc.self_auditor_checked?.to_s + ' peer: ' +
+             dc.peer_auditor_checked?.to_s +
+             "\tFull: " + check.full_review?.to_s + "\tPartial: " + check.dot_rev_check?.to_s
+        
+        dc.destroy        
+        
+        design_check_list = DesignCheck.find(:all, :conditions => "audit_id=#{self.id} AND check_id=#{dc.check_id}")
+        if design_check_list.size > 1
+            puts "***** WARNING: FOUND MULTIPLE DESIGN CHECKS!!!"
+        end
+      end
+    end
+    
+    orphaned_design_checks
+    
   end
   
   
