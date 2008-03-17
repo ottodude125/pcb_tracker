@@ -8,7 +8,9 @@
 
   <% @audits.each_with_index do |audit, line_number|
 
-       completed_checks = audit.completed_check_count %>
+       completed_checks = audit.completed_check_count
+       audit.trim_checklist_for_design_type
+       trimmed_checks   = audit.completed_check_count %>
 
     <% if line_number.remainder(20) == 0 %>
       <tr class="teraheader" valign="top">
@@ -39,11 +41,11 @@
 	  <td><%= audit.design.part_number.pcb_display_name %></td>
 	  <td><%= audit.designer_complete? %></td>
 	  <td><%= audit.designer_completed_checks %></td>
-	  <td><%= completed_checks[:self] %></td>
+	  <td><%= completed_checks[:self] %> / <%= trimmed_checks[:self] %></td>
 	  <td><%= audit.self_check_count %></td>
 	  <td><%= audit.auditor_complete? %></td>
 	  <td><%= audit.auditor_completed_checks %></td>
-	  <td><%= completed_checks[:peer] %></td>
+	  <td><%= completed_checks[:peer] %> / <%= trimmed_checks[:peer] %></td>
 	  <td><%= audit.peer_check_count %></td>
     </tr>
 
