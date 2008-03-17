@@ -12,32 +12,29 @@
 
   <hr class="div" />
 
-    <table border="1" 
-           align="center"
-           rules="all"
-           cellpadding="2">
+    <table border="1" align="center" rules="all" cellpadding="2">
 
       <tr>
         <td>&nbsp;</td>
-        <% for design_center in @design_centers %>
+        <% @design_centers.each do |design_center| %>
           <th><%= design_center.name %></th>
         <% end %>
       </tr>
 
-      <% for designer in @designers %>
+      <% @designers.each do |designer| %>
         <tr>
           <td align="right">
             <b><%= designer.name %></b>
           </td>
 
-          <% for design_center in @design_centers %>
+          <% @design_centers.each do |design_center| %>
             <td align="center">
               <% if design_center.id != designer.design_center_id %>
-                <%= radio_button("#{designer.last_name}_#{designer.id}", 
+                <%= radio_button("designer_#{designer.id}", 
                                  "id", 
                                  design_center.id) %>
               <% else %>
-                <%= radio_button("#{designer.last_name}_#{designer.id}", 
+                <%= radio_button("designer_#{designer.id}", 
                                  "id", 
                                  design_center.id,
                                  { 'checked' => 'checked'}) %>
