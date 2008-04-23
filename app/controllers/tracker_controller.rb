@@ -830,7 +830,7 @@ class TrackerController < ApplicationController
     flash[:sort_order] = @sort_order
       
     design_reviews = get_active_reviews
-    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.priority.value, dr.age] }
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.age] }.reverse
     @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.priority.value, dr.age] }
 
     @submissions = BoardDesignEntry.submission_count
