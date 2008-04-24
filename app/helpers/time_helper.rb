@@ -103,14 +103,13 @@ module TimeHelper
     # current_time - the time stamp for the current time
     #
     # Return value:
-    # A string representing the number of days between the time the 
-    # design review was post and the current time.
+    # A floating point number that indicates the number of days between the
+    # time stored in the object and the time passed in.
     #
     ######################################################################
     #
     def age_in_days(start_time)
-      delta = self.age_in_seconds(start_time)
-      sprintf("%4.1f", delta.to_f / 1.day)  
+      (self.age_in_seconds(start_time).to_f / 1.day)
     end
     
     
