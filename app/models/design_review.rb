@@ -489,11 +489,37 @@ class DesignReview < ActiveRecord::Base
   ######################################################################
   #
   def age_in_days(current_time = Time.now)
-
-    delta = age_in_seconds(self.created_on, current_time)
-
-    sprintf("%4.1f", delta.to_f / 1.day)  
-
+    delta = current_time.age_in_days(self.created_on)
+    sprintf("%4.1f", delta)  
+  end
+  
+  
+  ######################################################################
+  #
+  # display_age_in_days
+  #
+  # Description:
+  # This method returns a formatted string of the age of a design_review 
+  # in work days.
+  #
+  # Parameters:
+  # current_time - the time stamp for the current time
+  #
+  # Return value:
+  # A string representing the number of days between the time the 
+  # design review was post and the current time.  If the age is greater 
+  # than the threshold then the font is formatted to be bold and red.
+  #
+  ######################################################################
+  #
+  def display_age_in_days(current_time = Time.now)
+    delta = current_time.age_in_days(self.created_on)
+    age   = sprintf("%4.1f", delta)
+    if delta.to_i < 3
+      return age
+    else
+      return '<font color="red"><b>' + age + '</b></font>'
+    end
   end
   
   
