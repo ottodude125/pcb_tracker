@@ -455,12 +455,12 @@ class UserControllerTest < Test::Unit::TestCase
     post(:set_role, :id => pcb_input_gate.id)
 
     assert_equal(pcb_input_gate.name, session[:active_role].name)
-    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    assert_redirected_to(:controller => 'tracker')
 
     post(:set_role, :id => tracker_admin.id)
     
     assert_equal(tracker_admin.name, session[:active_role].name)
-    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    assert_redirected_to(:controller => 'tracker')
 
   end
 
