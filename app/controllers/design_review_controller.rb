@@ -33,8 +33,7 @@ class DesignReviewController < ApplicationController
   #
   def view
 
-    @generate_role_links = true
-    
+    @user = session[:user]
     session[:return_to] = {:controller => 'design_review',
                            :action     => 'view',
                            :id         => params[:id]}
@@ -44,51 +43,31 @@ class DesignReviewController < ApplicationController
       @design_review  = DesignReview.find(params[:id])
       @review_results = @design_review.review_results_by_role_name
 
-      active_role = session[:active_role]
-      if session[:active_role] && !active_role.reviewer?
-    
-        case session[:active_role].name
-        when 'Designer'
-          render( :action => 'designer_view' )
-        when 'Manager'
-          render( :action => 'manager_view' )
-        when 'Admin'
-          render( :action => 'admin_view' )
-        else
-          render( :action => 'safe_view' )
-        end
-      
-      else
-
-        if active_role && active_role.reviewer?
+      if @user && @user.is_reviewer?
         
-          @my_review_results = []
-          @review_results.each do |review_result|
-            @my_review_results << review_result if review_result.reviewer_id == session[:user].id
-          end
-
-          if pre_art_pcb(@design_review, @my_review_results)
-            @designers  = Role.find_by_name("Designer").active_users
-            @priorities = Priority.get_priorities
-          else
-            @designers  = nil
-            @priorities = nil
-          end
-
-          if (@my_review_results.find { |rr| rr.role.name == "SLM-Vendor"})
-            design_fab_houses = {}
-            @design_review.design.fab_houses.each { |dfh| design_fab_houses[dfh.id] = dfh }
-          
-            @fab_houses = FabHouse.get_all_active
-            @fab_houses.each { |fh| fh[:selected] = design_fab_houses[fh.id] != nil }
-          else
-            @fab_houses = nil
-          end
-
-          render( :action => 'reviewer_view' )
-        else
-          render( :action => 'safe_view' )
+        @my_review_results = []
+        @review_results.each do |review_result|
+          @my_review_results << review_result if review_result.reviewer_id == @user.id
         end
+
+        if pre_art_pcb(@design_review, @my_review_results)
+          @designers  = Role.find_by_name("Designer").active_users
+          @priorities = Priority.get_priorities
+        else
+          @designers  = nil
+          @priorities = nil
+        end
+
+        if (@my_review_results.find { |rr| rr.role.name == "SLM-Vendor"})
+          design_fab_houses = {}
+          @design_review.design.fab_houses.each { |dfh| design_fab_houses[dfh.id] = dfh }
+          
+          @fab_houses = FabHouse.get_all_active
+          @fab_houses.each { |fh| fh[:selected] = design_fab_houses[fh.id] != nil }
+        else
+          @fab_houses = nil
+        end
+
       end
     else
     
@@ -99,96 +78,6 @@ class DesignReviewController < ApplicationController
   end
   
   
-  ######################################################################
-  #
-  # safe_view
-  #
-  # Description:
-  # This method redirects to the view action to display the appropriate
-  # view.
-  #
-  # Parameters from params
-  # ['id'] - The design review ID.
-  #
-  ######################################################################
-  #
-  def safe_view
-    redirect_to(:action => 'view', :id => params[:id])
-  end
-  
-  
-  ######################################################################
-  #
-  # admin_view
-  #
-  # Description:
-  # This method redirects to the view action to display the appropriate
-  # view.
-  #
-  # Parameters from params
-  # ['id'] - The design review ID.
-  #
-  ######################################################################
-  #
-  def admin_view
-    redirect_to(:action => 'view', :id => params[:id])
-  end
-  
-  
-  ######################################################################
-  #
-  # manager_view
-  #
-  # Description:
-  # This method redirects to the view action to display the appropriate
-  # view.
-  #
-  # Parameters from params
-  # ['id'] - The design review ID.
-  #
-  ######################################################################
-  #
-  def manager_view
-    redirect_to(:action => 'view', :id => params[:id])
-  end
-  
-  
-  ######################################################################
-  #
-  # designer_view
-  #
-  # Description:
-  # This method redirects to the view action to display the appropriate
-  # view.
-  #
-  # Parameters from params
-  # ['id'] - The design review ID.
-  #
-  ######################################################################
-  #
-  def designer_view
-    redirect_to(:action => 'view', :id => params[:id])
-  end
-  
-  
-  ######################################################################
-  #
-  # reviewer_view
-  #
-  # Description:
-  # This method redirects to the view action to display the appropriate
-  # view.
-  #
-  # Parameters from params
-  # ['id'] - The design review ID.
-  #
-  ######################################################################
-  #
-  def reviewer_view
-    redirect_to(:action => 'view', :id => params[:id])
-  end
-
-
   ######################################################################
   #
   # posting_filter
