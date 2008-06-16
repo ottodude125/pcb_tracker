@@ -314,5 +314,21 @@ class Role < ActiveRecord::Base
     self.reviewer? ? 'Reviewer' : self.display_name
   end
 
+  
+  # Return the user record for the default reviewer, if an active
+  # default reviewer is set
+  #
+  # :call-seq:
+  #   default_reviewer() -> record
+  #
+  # Reviewer roles with a default reviewer set return the reviewer's user
+  # record.
+  def default_reviewer
+    if self.default_reviewer_id > 0
+      default_reviewer = User.find(self.default_reviewer_id)
+      return default_reviewer if default_reviewer.active?
+    end
+  end
+  
 
 end
