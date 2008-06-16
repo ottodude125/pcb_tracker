@@ -1,19 +1,34 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: design_review_helper.rb
+#
+# This contains the helper methods for design reviews.
+#
+# $Id$
+#
+########################################################################
+#
 module DesignReviewHelper
 
 
   def display_approval_options(review_status_id)
-
+    
     review_status = ReviewStatus.find(review_status_id)
 
     in_review = ReviewStatus.find_by_name("In Review")
-    review_outstanding = @review_results.find { |rr| 
-      rr.reviewer_id == session[:user].id && rr.result == 'No Response'
-    }
+    
+    if session[:user]
+      review_outstanding = @review_results.find { |rr| 
+        rr.reviewer_id == session[:user].id && rr.result == 'No Response'
+      }
+    end
 
-    return ((review_status.name == "Pending Repost" ||
+    return (review_outstanding &&
+            (review_status.name == "Pending Repost" ||
              review_status.name == "Review On-Hold" ||
-             review_status.name == "In Review") &&
-            review_outstanding)
+             review_status.name == "In Review"))
 
   end
 
