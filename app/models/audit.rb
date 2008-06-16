@@ -1114,6 +1114,7 @@ PEER_AUDIT       = 2
   # is executed.  The audit record is reloaded and the work is redone.
   #
   # Parameters:
+
   # count - provides the increment value
   #
   # Return value:
@@ -1173,8 +1174,8 @@ PEER_AUDIT       = 2
   # adjusted when the design checks are destroyed.
   def orphaned_design_checks
     
-    total_design_checks = self.design_checks.size
     
+    total_design_checks = self.design_checks.size
     self.trim_checklist_for_design_type
     self.get_design_checks
     
@@ -1182,38 +1183,126 @@ PEER_AUDIT       = 2
     
     attached_design_checks = []
     self.checklist.each_check { |ch| attached_design_checks << ch.design_check }
+
+    directory_name = self.design.directory_name
+    logger.info('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+    logger.info("orphaned_design_checks()")
+    logger.info("")
+    logger.info("  Design\t#{directory_name}\t\tID: #{self.design_id}\t\tTYPE: #{self.design.design_type}")
+    logger.info("  Audit ID:  #{self.id.to_s}\t\tREVISION: #{self.checklist.revision}")
+    logger.info("")
+    logger.info("  Total Design Checks (initial):  #{total_design_checks}")
+    logger.info("  Total Design Checks (attached): #{attached_design_checks.size.to_s}")
+    logger.info("")
     
     orphaned_design_checks = self.design_checks - attached_design_checks
     
     if orphaned_design_checks.size > 0
-      puts 'audit ID: ' + self.id.to_s +
-           "\tNumber of orphaned_design_checks: " + orphaned_design_checks.size.to_s
-      puts "\tRECORDED COMPLETE:\tself: " + self.designer_completed_checks.to_s +
-           "\tpeer: " + self.auditor_completed_checks.to_s
-      puts "\tACTUAL COMPLETE:\tself: " + completed_check_counts[:self].to_s +
-           "\tpeer: " + completed_check_counts[:peer].to_s
+      logger.info("\tNumber of orphaned_design_checks: " + orphaned_design_checks.size.to_s)
+      logger.info("\tRECORDED COMPLETE:\tself: " + self.designer_completed_checks.to_s +
+                  "\tpeer: " + self.auditor_completed_checks.to_s)
+      logger.info("\tACTUAL COMPLETE:\tself: " + completed_check_counts[:self].to_s +
+                  "\tpeer: " + completed_check_counts[:peer].to_s)
       
       self.designer_completed_checks = completed_check_counts[:self]
       self.auditor_completed_checks  = completed_check_counts[:peer]
       self.save
       
+      logger.info("")
+      logger.info("  REMOVING DESIGN CHECKS ...")
+      logger.info("")
       orphaned_design_checks.each do |dc|
         check = Check.find(dc.check_id)
-        puts "\t** DC ID: " + dc.id.to_s + ' self: ' +
-             dc.self_auditor_checked?.to_s + ' peer: ' +
-             dc.peer_auditor_checked?.to_s +
-             "\tFull: " + check.full_review?.to_s + "\tPartial: " + check.dot_rev_check?.to_s
+        logger.info("\t** DC ID: " + dc.id.to_s + ' self: ' +
+                    dc.self_auditor_checked?.to_s + ' peer: ' +
+                    dc.peer_auditor_checked?.to_s +
+                    "\tFull: " + check.full_review?.to_s +
+                    "\tPartial: " + check.dot_rev_check?.to_s)
+        logger.info(dc.inspect)
         
         dc.destroy        
         
         design_check_list = DesignCheck.find(:all, :conditions => "audit_id=#{self.id} AND check_id=#{dc.check_id}")
         if design_check_list.size > 1
-            puts "***** WARNING: FOUND MULTIPLE DESIGN CHECKS!!!"
+            logger.info("***** WARNING: FOUND MULTIPLE DESIGN CHECKS!!!")
         end
       end
     end
+
+    logger.info('-----------------------------------------------------------')
     
     orphaned_design_checks
+    
+  end
+  
+  
+  def self.sanity_check
+    
+    audits = Audit.find(:all)
+    
+    log = []
+    audits.each do |audit|
+
+      if audit.design.design_type == 'New'
+        total_self_checks = audit.checklist.new_design_self_check_count
+        total_peer_checks = audit.checklist.new_design_peer_check_count
+      else
+        total_self_checks = audit.checklist.bareboard_design_self_check_count
+        total_peer_checks = audit.checklist.bareboard_design_peer_check_count
+      end
+      
+      completed_check_counts = audit.completed_check_count
+      log << "#{audit.design.directory_name} (#{audit.id})\t#{audit.checklist.revision}\t" +
+             "Self: #{audit.designer_completed_checks}/#{completed_check_counts[:self]}/#{audit.designer_complete?}/" +
+             "#{total_self_checks}\t\t"                                                                               +
+             "Peer: #{audit.auditor_completed_checks}/#{completed_check_counts[:peer]}/#{audit.auditor_complete?}/"    +
+             "#{total_peer_checks}"
+      if !audit.designer_complete? && audit.auditor_complete?
+        log << "WARNING: Self is incomplete and Peer is complete"
+      end
+      if audit.designer_completed_checks != completed_check_counts[:self]
+        log << "WARNING: The stored value and the computed value for the number of completed self checks do not match"
+      end
+      if audit.auditor_completed_checks != completed_check_counts[:peer]
+        log << "WARNING: The stored value and the computed value for the number of completed peer checks do not match"
+      end
+      
+      if audit.designer_completed_checks > total_self_checks
+        log << "WARNING: Recorded more self checks complete(#{audit.designer_completed_checks})" +
+               " than there are checks #{total_self_checks}"
+      end
+      if audit.auditor_completed_checks > total_peer_checks
+        log << "WARNING: Recorded more self checks complete(#{audit.auditor_completed_checks})" +
+               " than there are checks #{total_peer_checks}"
+      end
+
+      
+      if audit.designer_completed_checks == total_self_checks
+        if !audit.designer_complete?
+          log << "WARNING: Self check not marked complete, but all checks have been checked"
+        end
+      else
+        if audit.designer_complete?
+          log << "WARNING: Self check marked complete, but not all checks have been checked"
+        end
+      end
+      
+      if audit.auditor_completed_checks == total_peer_checks
+        if !audit.auditor_complete?
+          log << "WARNING: Peer check not marked complete, but all checks have been checked"
+        end
+      else
+        if audit.auditor_complete?
+          log << "WARNING: Peer check marked complete, but not all checks have been checked"
+        end
+      end
+
+      
+    end
+    
+    log.each { |entry| logger.info entry }
+    
+    return nil
     
   end
   
