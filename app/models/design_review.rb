@@ -48,6 +48,20 @@ class DesignReview < ActiveRecord::Base
   end
   
   
+  # Determine if the user record passed is one of the reviewers.
+  #
+  # :call-seq:
+  #   is_reviewer?(user) -> boolean
+  #
+  # Returns the TRUE if the user record passed in represents one 
+  # of the reviewers.
+  #
+  def is_reviewer?(user)
+    review_result = self.design_review_results.detect { |drr| drr.reviewer == user }
+    review_result != nil
+  end
+  
+  
   ######################################################################
   #
   # add_reviewers
