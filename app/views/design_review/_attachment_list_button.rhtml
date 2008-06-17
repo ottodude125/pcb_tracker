@@ -1,0 +1,12 @@
+<!-- View:    design_review                                     -->
+<!-- Purpose: Displays the buttons common to all roles.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<input type="button" value="Attachments" title="Add or view attachments"
+       onClick="parent.location='<%= url_for(:controller => 'design_review', 
+                                             :action => 'review_attachments',
+                                             :design_review_id => @design_review.id) %>'"
+       class="small_font_wide_button" />
+
