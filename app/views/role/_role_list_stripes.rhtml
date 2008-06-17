@@ -1,3 +1,10 @@
+
+<!-- View:    role                                              -->
+<!-- Purpose: Displays the rows for the role list view.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
 <tr class="<%= role_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
   <td>
     <%= link_to role_list_stripes.name, { :action => 'edit', 
@@ -10,4 +17,16 @@
   <td align="center"><%= role_list_stripes.new_design_type?       ? 'Yes' : 'No' %></td>
   <td align="center"><%= role_list_stripes.date_code_design_type? ? 'Yes' : 'No' %></td>
   <td align="center"><%= role_list_stripes.dot_rev_design_type?   ? 'Yes' : 'No' %></td>
+
+  <% if !role_list_stripes.reviewer? %>
+    <td align="center">-</td>
+  <% else %>
+    
+    <% default_reviewer = role_list_stripes.default_reviewer %>
+    <% if default_reviewer %>
+      <td align="center"><%= default_reviewer.name %></td>
+    <% else %>
+      <td align="center">None</td>
+    <% end %>
+  <% end %>
 </tr>
