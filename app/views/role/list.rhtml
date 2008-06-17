@@ -10,20 +10,21 @@
 
   <hr class="div" />
 
-  <table width="90%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+  <table align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
     <tr>
       <td colspan="5">&nbsp;</td>
       <th colspan="3">Design Type</th>
     </tr>
     <tr>
-      <th>Role</th>
-      <th>Display Name</th>
-      <th>Reviewer</th>
-      <th>Manager</th>
-      <th>Active</th>
+      <th width="250">Role</th>
+      <th width="250">Display Name</th>
+      <th width="80">Reviewer</th>
+      <th width="80">Manager</th>
+      <th width="80">Active</th>
       <th width="80">New</th>
       <th width="80">Date Code</th>
       <th width="80">Dot Rev</th>
+      <th width="200">Default Reviewer</th>
     </tr>
     <%= render_collection_of_partials "role_list_stripes", @roles %>
   </table>
