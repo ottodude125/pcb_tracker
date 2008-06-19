@@ -1114,8 +1114,7 @@ PEER_AUDIT       = 2
   # is executed.  The audit record is reloaded and the work is redone.
   #
   # Parameters:
-
-
+  #
   # count - provides the increment value
   #
   # Return value:
