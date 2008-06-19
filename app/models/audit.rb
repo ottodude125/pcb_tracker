@@ -1115,6 +1115,7 @@ PEER_AUDIT       = 2
   #
   # Parameters:
 
+
   # count - provides the increment value
   #
   # Return value:
@@ -1159,6 +1160,84 @@ PEER_AUDIT       = 2
   
   
   
+  #
+  # Fix the audits of active designs.
+  #
+  def self.fix_audits(update = false)
+    
+    log = []
+    # Find all of the active audits.
+    Design.find(:all,
+                :conditions => "phase_id!=#{Design::COMPLETE}",
+                :include    => :design_reviews).each do |design|
+                
+      audit     = design.audit
+      checklist = audit.checklist
+      
+      log << '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      log << '++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++'
+      log << 'Fixing the audit for ' + design.directory_name
+      log << ''
+      log << '  Checklist ID:       ' + checklist.id.to_s
+      log << '            Revision: ' + checklist.revision
+      log << ''
+      log << '  INITIAL CHECK COUNT TOTALS FOR THE CHECKLIST'
+      log << '  ============================================'
+      log << ''
+      log << "  New Design:        SELF: #{checklist.new_design_self_check_count.to_s}"
+      log << "                     PEER: #{checklist.new_design_peer_check_count}"
+      log << "  Bareboard Design:  SELF: #{checklist.bareboard_design_self_check_count}"
+      log << "                     PEER: #{checklist.bareboard_design_peer_check_count}"
+      log << ""
+      log << ""
+      log << "  Audit ID: " + audit.id.to_s
+      log << ""
+      log << "  INITIAL AUDIT CHECK COMPLETION COUNTS"
+      log << "  ====================================="
+      log << ""
+      log << "  SELF: #{audit.designer_completed_checks.to_s}"
+      log << "  PEER: #{audit.auditor_completed_checks.to_s}"
+      log << ""
+      
+      if update
+        
+        checklist.compute_check_counts
+        
+        log << '  UPDATED CHECK COUNT TOTALS FOR THE CHECKLIST'
+        log << '  ============================================'
+        log << ''
+        log << "  New Design:        SELF: #{checklist.new_design_self_check_count.to_s}"
+        log << "                     PEER: #{checklist.new_design_peer_check_count}"
+        log << "  Bareboard Design:  SELF: #{checklist.bareboard_design_self_check_count}"
+        log << "                     PEER: #{checklist.bareboard_design_peer_check_count}"
+        log << ''
+        
+        # Trim off checks that were incorrectly included and update the completion counts.
+        log << "  Removing inappropriate checks from the audit."
+        log << ""
+        
+        log << audit.orphaned_design_checks
+        
+        audit.reload
+        log << "  UPDATED AUDIT CHECK COMPLETION COUNTS"
+        log << "  ====================================="
+        log << ""
+        log << "  SELF: #{audit.designer_completed_checks.to_s}"
+        log << "  PEER: #{audit.auditor_completed_checks.to_s}"
+        log << ""
+      end
+      
+    end
+    
+    log.each do |entry|
+      puts entry
+      logger.info
+    end
+    
+    log = nil
+    
+  end
+  
   # Locate and remove any orphaned design checks associated with the audit
   #
   # :call-seq:
@@ -1174,6 +1253,7 @@ PEER_AUDIT       = 2
   # adjusted when the design checks are destroyed.
   def orphaned_design_checks
     
+    log = []
     
     total_design_checks = self.design_checks.size
     self.trim_checklist_for_design_type
@@ -1185,53 +1265,46 @@ PEER_AUDIT       = 2
     self.checklist.each_check { |ch| attached_design_checks << ch.design_check }
 
     directory_name = self.design.directory_name
-    logger.info('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
-    logger.info("orphaned_design_checks()")
-    logger.info("")
-    logger.info("  Design\t#{directory_name}\t\tID: #{self.design_id}\t\tTYPE: #{self.design.design_type}")
-    logger.info("  Audit ID:  #{self.id.to_s}\t\tREVISION: #{self.checklist.revision}")
-    logger.info("")
-    logger.info("  Total Design Checks (initial):  #{total_design_checks}")
-    logger.info("  Total Design Checks (attached): #{attached_design_checks.size.to_s}")
-    logger.info("")
     
     orphaned_design_checks = self.design_checks - attached_design_checks
     
     if orphaned_design_checks.size > 0
-      logger.info("\tNumber of orphaned_design_checks: " + orphaned_design_checks.size.to_s)
-      logger.info("\tRECORDED COMPLETE:\tself: " + self.designer_completed_checks.to_s +
-                  "\tpeer: " + self.auditor_completed_checks.to_s)
-      logger.info("\tACTUAL COMPLETE:\tself: " + completed_check_counts[:self].to_s +
-                  "\tpeer: " + completed_check_counts[:peer].to_s)
       
       self.designer_completed_checks = completed_check_counts[:self]
       self.auditor_completed_checks  = completed_check_counts[:peer]
       self.save
       
-      logger.info("")
-      logger.info("  REMOVING DESIGN CHECKS ...")
-      logger.info("")
+      log << "    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+      log << "    REMOVING INAPPROPRIATE DESIGN CHECKS"
+      log << "    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+
       orphaned_design_checks.each do |dc|
         check = Check.find(dc.check_id)
-        logger.info("\t** DC ID: " + dc.id.to_s + ' self: ' +
-                    dc.self_auditor_checked?.to_s + ' peer: ' +
-                    dc.peer_auditor_checked?.to_s +
-                    "\tFull: " + check.full_review?.to_s +
-                    "\tPartial: " + check.dot_rev_check?.to_s)
-        logger.info(dc.inspect)
+        
+        log << ""
+        log << "    DESIGN CHECK    ID:           " + dc.id.to_s
+        log << "                    CHECK ID:     " + dc.check_id.to_s
+        log << "                    SELF CHECKED: " + dc.self_auditor_checked?.to_s
+        log << "                    PEER CHECKED: " + dc.peer_auditor_checked?.to_s
+        log << "                    NEW REVIEW:   " + check.full_review?.to_s
+        log << "                    BB REVIEW:    " + check.dot_rev_check?.to_s
         
         dc.destroy        
         
         design_check_list = DesignCheck.find(:all, :conditions => "audit_id=#{self.id} AND check_id=#{dc.check_id}")
         if design_check_list.size > 1
-            logger.info("***** WARNING: FOUND MULTIPLE DESIGN CHECKS!!!")
+            log << ""
+            log << "    **********************************************"
+            log << "    **********************************************"
+            log << "    ***** WARNING: FOUND MULTIPLE DESIGN CHECKS!!!"
+            log << "    **********************************************"
+            log << "    **********************************************"
+            log << ""
         end
       end
     end
-
-    logger.info('-----------------------------------------------------------')
     
-    orphaned_design_checks
+    log
     
   end
   
