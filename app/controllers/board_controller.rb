@@ -166,11 +166,12 @@ before_filter(:verify_admin_role,
       @project = project.name
     end
     
-    conditions  = 'prefix_id>0'
-    conditions += " AND platform_id=#{platform.id}" if platform
-    conditions += " and project_id=#{project.id}"   if project
+    condition = []
+    condition << "platform_id=#{platform.id}" if platform
+    condition << "project_id=#{project.id}"   if project
+    conditions = condition.join(' AND ')
     board_list = Board.find(:all, :conditions => conditions)
-   
+    
     release_rt = ReviewType.get_release
     final_rt   = ReviewType.get_final
     board_list.each do |board|
@@ -210,7 +211,8 @@ before_filter(:verify_admin_role,
     
     end
 
-    @board_list = board_list.sort_by { |b| [b.name, b.id] }
+    #@board_list = board_list.sort_by { |b| [b.directory_name, b.id] }
+    @board_list = board_list
     
   end
   
