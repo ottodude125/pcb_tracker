@@ -24,12 +24,16 @@ class Pcbtr < ActiveRecord::Base
     ENV['RAILS_ENV'] == 'production'
   end
 
+  def self.hostname
+    $hostname ||= Socket.gethostname
+  end
+
 
   if Pcbtr.production_environment?
     PCBTR_BASE_URL = 'http://boarddev.teradyne.com/pcbtr/'
     SENDER         = 'PCB_Tracker'
   else
-    PCBTR_BASE_URL = 'http://' + ENV['HOSTNAME'] + ':8000/'
+    PCBTR_BASE_URL = 'http://' + Pcbtr.hostname + '.icd.teradyne.com:8000/'
     SENDER         = 'DEVEL_PCB_TRACKER'
   end
   EAVESDROP      = 'paul_altimonte@notes.teradyne.com'
