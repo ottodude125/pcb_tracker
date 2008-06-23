@@ -1,0 +1,10 @@
+# $Header$
+--- 
+cwd:         /hwnet/dtg_devel/web/etg/apps/pcbtr_development_branch/pcb_tracker/
+port:        "8001"
+user:        dtg
+group:       dtg
+environment: production
+address:     127.0.0.1
+pid_file:    /hwnet/dtg_devel/web/etg/apps/pcbtr_production_branch/pcb_tracker/shared/pids/mongrel.pid
+servers:     4
