@@ -26,7 +26,7 @@
       <th width="80">Dot Rev</th>
       <th width="200">Default Reviewer</th>
     </tr>
-    <%= render_collection_of_partials "role_list_stripes", @roles %>
+    <%= render( :partial => "role_list_stripes", :collection => @roles ) %>
   </table>
 
   <hr class="div" />

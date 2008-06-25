@@ -16,7 +16,8 @@
       <th>CC Peers?</th>
       <th>Active</th>
     </tr>
-    <%= render_collection_of_partials "review_group_list_stripes", @review_groups %>
+    <%= render( :partial    => "review_group_list_stripes",
+                :collection => @review_groups ) %>
   </table>
 
   <hr class="div" />

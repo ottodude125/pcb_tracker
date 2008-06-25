@@ -15,7 +15,8 @@
       <th>Review Status</th>
       <th>Active</th>
     </tr>
-    <%= render_collection_of_partials "review_status_list_stripes", @review_statuses %>
+    <%= render( :partial    => "review_status_list_stripes",
+                :collection =>  @review_statuses ) %>
   </table>
 
   <hr class="div" />
