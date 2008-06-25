@@ -22,7 +22,7 @@
       <th>Unloaded Prefix</th>
       <th>Active</th>
     </tr>
-    <%= render_collection_of_partials "prefix_list_stripes", @prefixes %>
+    <%= render( :partial => "prefix_list_stripes", :collection => @prefixes ) %>
   </table>
 
   <hr class="div" />

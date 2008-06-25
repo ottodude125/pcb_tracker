@@ -17,7 +17,7 @@
       <th width="15%">Active</th>
     </tr>
 
-    <%= render_collection_of_partials "platform_list_stripes", @platforms %>
+    <%= render( :partial => "platform_list_stripes", :collection => @platforms ) %>
   </table>
 
   <hr class="div" />

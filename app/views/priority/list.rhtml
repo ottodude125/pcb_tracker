@@ -15,7 +15,7 @@
       <th>Review Criticality</th>
       <th>Value</th>
     </tr>
-    <%= render_collection_of_partials "priority_list_stripes", @priorities %>
+    <%= render( :partial => "priority_list_stripes", :collection => @priorities ) %>
   </table>
 
   <hr class="div" />

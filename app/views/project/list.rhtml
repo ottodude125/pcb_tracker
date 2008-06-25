@@ -16,7 +16,7 @@
       <th width="15%">Active</th>
     </tr>
 
-    <%= render_collection_of_partials "project_list_stripes", @projects %>
+    <%= render( :partial => "project_list_stripes", :collection => @projects ) %>
   </table>
 
   <hr class="div" />
