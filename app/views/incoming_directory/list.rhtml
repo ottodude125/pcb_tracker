@@ -17,8 +17,8 @@
       <th width="15%">Active</th>
     </tr>
 
-    <%= render_collection_of_partials("incoming_directory_list_stripes", 
-                                      @incoming_directories) %>
+    <%= render( :partial    => "incoming_directory_list_stripes", 
+                :collection => @incoming_directories) %>
   </table>
 
   <hr class="div" />

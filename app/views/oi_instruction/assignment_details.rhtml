@@ -15,8 +15,8 @@
       <th width="150">Complete</th>
     </tr>
 
-    <%= render_collection_of_partials("assignment_list_stripes", 
-                                      @section_list[:assignment_list]) %>
+    <%= render( :partial    => "assignment_list_stripes", 
+                :collection => @section_list[:assignment_list]) %>
 
 </table>
 
