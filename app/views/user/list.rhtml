@@ -36,7 +36,7 @@
       <th width="200">Teradyne Employee</th>
       <td width="150">&nbsp;</td>
     </tr>
-    <%= render_collection_of_partials "user_list_stripes", @users %>
+    <%= render( :partial => "user_list_stripes", :collection => @users ) %>
   </table>
   
   <p align="center">

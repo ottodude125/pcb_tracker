@@ -166,8 +166,8 @@
                 <th valign="bottom" class="th1">Reviews<br />Approved</th>
               </tr>
               
-              <%= render_collection_of_partials("manager_home_list_stripes",
-                                                @active_reviews) %>
+              <%= render( :partial    =>"manager_home_list_stripes",
+                          :collection => @active_reviews) %>
 
             </table>
           </td>
@@ -202,8 +202,8 @@
                 <th align="left" valign="bottom">Status</th>
               </tr>
               
-              <%= render_collection_of_partials("manager_home_list_inactive_stripes",
-                                                @inactive_reviews) %>
+              <%= render( :partial    => "manager_home_list_inactive_stripes",
+                          :collection => @inactive_reviews) %>
 
             </table>
           </td>
