@@ -15,7 +15,7 @@ class Subsection < ActiveRecord::Base
   belongs_to(:section)
   acts_as_list(:scope => :section)
   
-  has_many(:checks, :order => :position)
+  has_many(:checks, :order => 'position')
   
   
   ######################################################################

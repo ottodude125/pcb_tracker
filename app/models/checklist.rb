@@ -12,7 +12,7 @@
 
 class Checklist < ActiveRecord::Base
 
-  has_many(:sections,     :order => :position)
+  has_many(:sections,     :order => 'position')
   has_many :audits
 
 

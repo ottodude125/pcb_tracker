@@ -17,7 +17,7 @@ class Section < ActiveRecord::Base
   
   has_many(:audit_teammates)
 
-  has_many(:subsections, :order => :position)  
+  has_many(:subsections, :order => 'position')  
 
 
   ######################################################################
