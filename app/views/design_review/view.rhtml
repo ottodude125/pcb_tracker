@@ -131,8 +131,8 @@
       <tr>
         <th class="teraheader" colspan="2">Comments</th>
       </tr>
-      <%= render_collection_of_partials("comment_list",
-                                        @design_review.design_review_comments) %>
+      <%= render( :partial    => "comment_list",
+                  :collection => @design_review.design_review_comments) %>
     </table>
   <% end %>
 
