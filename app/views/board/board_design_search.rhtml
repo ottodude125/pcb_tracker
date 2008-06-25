@@ -54,8 +54,8 @@
     </tr>
 
     <% for board in @board_list %>
-      <%= render_collection_of_partials("board_design_search_list_stripes",
-                                        board.designs) %>
+      <%= render( :partial    => "board_design_search_list_stripes",
+                  :collection => board.designs) %>
     <% end %>
 
   </table>
