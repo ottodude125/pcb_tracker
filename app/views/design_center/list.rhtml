@@ -17,7 +17,8 @@
       <th>HW Path</th>
       <th>Active</th>
     </tr>
-    <%= render_collection_of_partials "design_center_list_stripes", @design_centers %>
+    <%= render( :partial    => "design_center_list_stripes", 
+                :collection => @design_centers) %>
   </table>
 
   <hr class="div" />
