@@ -15,7 +15,7 @@
       <th>Fabrication House</th>
       <th>Active</th>
     </tr>
-    <%= render_collection_of_partials "fab_house_list_stripes", @fab_houses %>
+    <%= render( :partial => "fab_house_list_stripes", :collection => @fab_houses ) %>
   </table>
 
   <hr class="div" />

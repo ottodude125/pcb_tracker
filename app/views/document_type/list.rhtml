@@ -16,7 +16,8 @@
       <th>Required?</th>
       <th>Active?</th>
     </tr>
-    <%= render_collection_of_partials "document_type_list_stripes", @document_types %>
+    <%= render( :partial    => "document_type_list_stripes", 
+                :collection => @document_types) %>
   </table>
 
   <hr class="div" />
