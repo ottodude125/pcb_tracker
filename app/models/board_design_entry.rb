@@ -140,10 +140,13 @@ class BoardDesignEntry < ActiveRecord::Base
       part_number.save
       part_number.reload
 
-      bde = BoardDesignEntry.new(:user_id        => user.id,
-                                 :division_id    => user.division_id,
-                                 :location_id    => user.location_id,
-                                 :part_number_id => part_number.id)
+      bde = BoardDesignEntry.new(:user_id                => user.id,
+                                 :division_id            => user.division_id,
+                                 :location_id            => user.location_id,
+                                 :part_number_id         => part_number.id,
+                                 :lead_free_device_names => '',
+                                 :originator_comments    => '',
+                                 :input_gate_comments    => '')
       
       bde.save
       bde.load_design_team
