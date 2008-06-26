@@ -68,6 +68,44 @@ class RoleControllerTest < Test::Unit::TestCase
 
   ######################################################################
   #
+  # test_list_review_roles
+  #
+  # Description:
+  # This method does the functional testing of the list review roles method
+  # from the Role class
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # None
+  #
+  ######################################################################
+  #
+  def test_list_review_roles
+
+    # Try editing from a non-Admin account.
+    # VERIFY: The user is redirected.
+    set_non_admin
+    post :list_review_roles
+
+    assert_redirected_to(:controller => 'tracker',
+                         :action     => 'index')
+    assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
+
+    # Try listing from an Admin account
+    # VERIFY: The project list data is retrieved
+    set_admin
+    post(:list_review_roles)
+
+    review_roles = Role.find_all_active
+    review_roles.delete_if { |r| !r.reviewer? || r.manager? }
+    assert_equal(review_roles, assigns(:review_roles))
+  end
+
+
+  ######################################################################
+  #
   # test_create
   #
   # Description:
