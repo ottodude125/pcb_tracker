@@ -456,10 +456,10 @@ class PartNumberTest < Test::Unit::TestCase
     assert_equal(pn.id,                PartNumber.get_part_number(pn).id)
     
     assert(!pn.entry_exists?)
-    board_design_entry = BoardDesignEntry.new(:part_number_id => pn.id,
+    board_design_entry = BoardDesignEntry.new(:part_number_id         => pn.id,
                                               :lead_free_device_names => '',
                                               :originator_comments    => '',
-                                              :input_gate_commnets    => '')
+                                              :input_gate_comments    => '')
     board_design_entry.save
     assert(pn.entry_exists?)
     assert_equal('The entry already exists', pn.error_message)
