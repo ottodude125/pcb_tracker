@@ -113,7 +113,7 @@
 <hr class="div" width="820" />
 <h1>Comments (For Reference)</h1>
 <table class="comment_table">
-<%= render_collection_of_partials("comment_list", @comments) %>
+  <%= render( :partial => "comment_list", :collection => @comments) %>
 </table>
 <hr class="div" width="820" />
 
