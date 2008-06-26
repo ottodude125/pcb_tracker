@@ -46,6 +46,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
            :document_types,
            :oi_assignments,
            :oi_assignment_comments,
+           :oi_assignment_reports,
            :oi_categories,
            :oi_category_sections,
            :oi_instructions,
@@ -842,6 +843,45 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     assert_nil(assigns(:assignments_list))
     
   end
+  
+  
+  ######################################################################
+  #
+  # test_report_card_list
+  #
+  # Description:
+  # This method does the functional testing of the report card list view.
+  #
+  ######################################################################
+  #
+  def test_create_assignment_report
+    
+    first_report = oi_assignment_reports(:first)
+    
+    # Try accessing from an account that is not a PCB Designer and
+    # verify that the user is redirected.
+    post(:create_assignment_report, :id => oi_assignment_reports(:first))
+    
+    assert_redirected_to(:controller => 'tracker', :action     => 'index')
+    assert_equal("You are not authorized to access this page", flash['notice'])
+    
+    
+    set_user(@scott_g.id, 'Designer')
+    post(:create_assignment_report, :id => first_report)
+    
+    assert_equal(first_report.id,                assigns(:assignment).id)
+    assert_equal(1,                              assigns(:complexity_id))
+    assert_equal(OiAssignmentReport::NOT_SCORED, assigns(:report).score)
+    assert_equal([],                             assigns(:comments))
+    assert_equal(OiAssignmentReport.report_card_scoring,
+                 assigns(:scoring_table))
+               
+    # Verify the redirect to create_assignment_report by create report when the 
+    # report has not been scored.
+   
+    
+  end
+
 
   
 end
