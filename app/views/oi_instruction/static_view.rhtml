@@ -109,7 +109,7 @@ function setFocus() {
       </td>
     </tr>
     
-    <%= render_collection_of_partials("comment_list", @comments) %>
+    <%= render( :partial => "comment_list", :collection => @comments) %>
 
     <tr>
       <td colspan="2" align="center">
