@@ -15,7 +15,8 @@
       <th>Review Group</th>
       <th>CC Peers?</th>
     </tr>
-    <%= render_collection_of_partials "review_role_list_stripes", @review_roles %>
+    <%= render( :partial    => "review_role_list_stripes",
+                :collection => @review_roles) %>
   </table>
 
   <hr class="div" />
