@@ -62,20 +62,18 @@
               </tr>
               
               <% if @my_reviews.size > 0 %>
-              <tr class="subheading">
-                <th align="left" width="60">&nbsp;</th>
-                <th align="left" width="160">PCB Part Number Rev</th>
-                <th align="left" width="100">Type</th>
-                <th align="left" width="70">Status</th>
-                <th align="left" width="140">Posted By</th>
-                <th align="left" width="45" title="Age in work days">
-                  Age</th>
-                <td>&nbsp;</td>
-              </tr>
-              <%= render_collection_of_partials("reviewer_home_list_stripes",
-                                                @my_reviews,
-                                                nil,
-                                                "my_reviews" => true) %>
+                <tr class="subheading">
+                  <th align="left" width="60">&nbsp;</th>
+                  <th align="left" width="160">PCB Part Number Rev</th>
+                  <th align="left" width="100">Type</th>
+                  <th align="left" width="70">Status</th>
+                  <th align="left" width="140">Posted By</th>
+                  <th align="left" width="45" title="Age in work days">Age</th>
+                  <td>&nbsp;</td>
+                </tr>
+                <%= render( :partial    => 'reviewer_home_list_stripes',
+                            :collection => @my_reviews,
+                            :locals     => { :my_reviews => true } )%>
               <% else %>
                 <tr>
                   <th>
@@ -103,21 +101,19 @@
               </tr>
               
               <% if @other_reviews.size > 0 %>
-              <tr class="subheading">
-                <th align="left" width="60">&nbsp;</th>
-                <th align="left" width="160">PCB Part Number Rev</th>
-                <th align="left" width="100">Type</th>
-                <th align="left" width="70">Status</th>
-                <th align="left" width="140">Posted By</th>
-                <th align="left" width="45" title="Age in work days">
-                  Age</th>
-                <th align="left" width="100">Results</th>
-                <th align="left" width="180">Reviewer(s)</th>
-              </tr>
-              <%= render_collection_of_partials("reviewer_home_list_stripes",
-                                                @other_reviews,
-                                                nil,
-                                                "my_reviews" => false) %>
+                <tr class="subheading">
+                  <th align="left" width="60">&nbsp;</th>
+                  <th align="left" width="160">PCB Part Number Rev</th>
+                  <th align="left" width="100">Type</th>
+                  <th align="left" width="70">Status</th>
+                  <th align="left" width="140">Posted By</th>
+                  <th align="left" width="45" title="Age in work days">Age</th>
+                  <th align="left" width="100">Results</th>
+                  <th align="left" width="180">Reviewer(s)</th>
+                </tr>
+                <%= render( :partial    => 'reviewer_home_list_stripes',
+                            :collection => @other_reviews,
+                            :locals     => { :my_reviews => false } )%>
               <% else %>
                 <tr>
                   <th>
