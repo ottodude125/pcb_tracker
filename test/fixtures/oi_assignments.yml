@@ -10,6 +10,7 @@ first:
   complexity_id:     1
   created_on:        20070215131651
   complete:          0
+  due_date:          20070215171651
 second:
   id:                2
   oi_instruction_id: 3
@@ -18,3 +19,4 @@ second:
   created_on:        20070216112057
   complete:          1
   completed_on:      20070309164546
+  due_date:          20070309164546
