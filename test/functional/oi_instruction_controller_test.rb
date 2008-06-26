@@ -847,10 +847,11 @@ class OiInstructionControllerTest < Test::Unit::TestCase
   
   ######################################################################
   #
-  # test_report_card_list
+  # test_create_assignment_report
   #
   # Description:
-  # This method does the functional testing of the report card list view.
+  # This method does the functional testing of the create assignment
+  # report view.
   #
   ######################################################################
   #
@@ -882,6 +883,70 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     
   end
 
+  
+  ######################################################################
+  #
+  # test_static_view
+  #
+  # Description:
+  # This method does the functional testing of the static_view view.
+  #
+  ######################################################################
+  #
+  def test_static_view
+    
+    first_assignment = oi_assignments(:first)
+    
+    # Try accessing from an account that is not a PCB Designer and
+    # verify that the user is redirected.
+    post(:static_view, :id => first_assignment)
+    
+    assert_redirected_to(:controller => 'tracker', :action     => 'index')
+    assert_equal("You are not authorized to access this page", flash['notice'])
+    
+    
+    set_user(@scott_g.id, 'Designer')
+    post(:static_view, :id => first_assignment)
+    
+    assert_equal(first_assignment.id,                assigns(:assignment).id)
+    assert_equal(oi_category_sections(:placement_3), assigns(:section))
+    assert_equal(designs(:mx234a),                   assigns(:design))
+    assert_equal([],                                 assigns(:comments))
+   
+  end
+
+  
+  ######################################################################
+  #
+  # test_view_assignment_report
+  #
+  # Description:
+  # This method does the functional testing of the view assignment
+  # report view.
+  #
+  ######################################################################
+  #
+  def test_view_assignment_report
+    
+    first_assignment = oi_assignments(:first)
+    
+    # Try accessing from an account that is not a PCB Designer and
+    # verify that the user is redirected.
+    post(:view_assignment_report, :id => first_assignment)
+    
+    assert_redirected_to(:controller => 'tracker', :action     => 'index')
+    assert_equal("You are not authorized to access this page", flash['notice'])
+    
+    
+    set_user(@scott_g.id, 'Designer')
+    post(:view_assignment_report, :id => first_assignment)
+    
+    assert_equal(first_assignment.id,                    assigns(:assignment).id)
+    assert_equal([],                                     assigns(:comments))
+    assert_equal(OiAssignmentReport.report_card_scoring, assigns(:scoring_table))
+    assert_equal("0% Rework",                            assigns(:current_score))
+   
+  end
 
   
 end
