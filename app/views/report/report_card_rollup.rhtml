@@ -45,27 +45,19 @@
   </tr>
   
   <tr>
-    <th align="right" class="teraheader">Quarter:</th>
+    <th align="right" class="teraheader">Start Date:</th>
     <td align="left">
-      <select id="quarter" name="quarter[number]">
-        <% 1.upto(4) do |q| %>
-          <option value="<%=q%>"<%= 'selected="selected"' if q == @quarter %>><%=q%></option>
-        <% end %>
-      </select>
+      <%= select_date(date = @start_date, :prefix => "start_date") %>
     </td>
-    <td><b><%= @quarter %></b?</td>
+    <td><b><%= display_date(@start_date) %></b?</td>
   </tr>
   
   <tr>
-    <th align="right" class="teraheader">Year:</th>
+    <th align="right" class="teraheader">End Date:</th>
     <td align="left">
-      <select id="date" name="date[year]">
-        <% 2007.upto(Time.now.year) do |q| %>
-          <option value="<%=q%>"<%= 'selected="selected"' if q == @year %>><%=q%></option>
-        <% end %>
-      </select>
+      <%= select_date(date = @end_date, :prefix => "end_date") %>
     </td>
-    <td><b><%= @year %></b?</td>
+    <td><b><%= display_date(@end_date) %></b?</td>
   </tr>
 
 </table>
@@ -79,15 +71,15 @@
   <table align="center" border="5">
     <tr>
       <td>
-        <%= image_tag(@rework_graph_filename, {:border => '0'}) %>
+        <%= image_tag('graphs/' + @rework_graph_filename, {:border => '0'}) %>
       </td>
     </tr>
     <tr class='teraheader'>
       <td align="center">
         <input type="button" value="Download Rework Graph"
                onClick="parent.location='<%= url_for(:action         => 'download_rework_graph',
-                                                     :quarter        => @quarter,
-                                                     :year           => @year,
+                                                     :start_date     => @start_date,
+                                                     :end_date       => @end_date,
                                                      :team_member_id => @team_member_id) %>'" />
       </td>
     </tr>
@@ -98,15 +90,15 @@
   <table align="center" border="5">
     <tr>
       <td>
-        <%= image_tag(@report_count_graph_filename, {:border => '0'}) %>
+        <%= image_tag('graphs/' + @report_count_graph_filename, {:border => '0'}) %>
       </td>
     </tr>
     <tr class='teraheader'>
       <td align="center">
         <input type="button" value="Download Report Count Graph"
                onClick="parent.location='<%= url_for(:action         => 'download_report_count_graph',
-                                                     :quarter        => @quarter,
-                                                     :year           => @year,
+                                                     :start_date     => @start_date,
+                                                     :end_date       => @end_date,
                                                      :team_member_id => @team_member_id) %>'" />
       </td>
     </tr>
@@ -209,3 +201,7 @@
 <%# debug @high_report_cards %>
 <%# debug @med_report_cards %>
 <%# debug @low_report_cards %>
+<%# debug "Start Date: " + @start_date.to_s %>
+<%# debug "End Date: "   + @end_date.to_s %>
+<%# debug "Rework Graph Filename: " + @rework_graph_filename %>
+<%# debug "Report Count Graph Filename: " + @report_count_graph_filename %>
