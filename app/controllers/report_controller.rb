@@ -76,28 +76,49 @@ class ReportController < ApplicationController
     @lcr_designers = Role.lcr_designers
     
     @team_member_id   = params[:team_member]   ? params[:team_member][:id].to_i   : 0
-    @quarter = !params[:quarter] ? current_quarter()  : params[:quarter][:number].to_i
-    @year    = !params[:date]    ? Time.now.year      : params[:date][:year].to_i
+    
+    if !params[:start_date]
+      @start_date = Time.now.start_of_quarter
+    else
+      date        = params[:start_date]
+      @start_date = Time.local(date[:year], date[:month], date[:day]).to_date
+    end
+    
+    if !params[:end_date]
+      @end_date = Date.today
+    else
+      date      = params[:end_date]
+      @end_date = Time.local(date[:year], date[:month], date[:day]).to_date
+    end
 
-    report_cards = OiAssignmentReport.report_card_rollup(@team_member_id, @quarter, @year)
+    team_member                  = team_member(@team_member_id)
+    common_filename_part         = common_part(@start_date, @end_date, team_member)
+    @rework_graph_filename       = rework_graph_filename(common_filename_part)
+    @report_count_graph_filename = report_count_graph_filename(common_filename_part)
+    
+    if @end_date >= @start_date
+ 
+      report_cards = OiAssignmentReport.report_card_rollup(@team_member_id, 
+                                                           @start_date,
+                                                           @end_date,
+                                                           @rework_graph_filename,
+                                                           @report_count_graph_filename)
 
-    @total_report_cards = report_cards.size
-    @high_report_cards = report_cards.collect { |rc| rc if rc.oi_assignment.complexity_name == 'High' }
-    @med_report_cards  = report_cards.collect { |rc| rc if rc.oi_assignment.complexity_name == 'Medium' }
-    @low_report_cards  = report_cards.collect { |rc| rc if rc.oi_assignment.complexity_name == 'Low' }
-    @high_report_cards.compact!
-    @med_report_cards.compact!
-    @low_report_cards.compact!
-
-    idc_designer = @team_member_id > 0 ? User.find(@team_member_id).name : 'all'
-    idc_designer.gsub!(/ /, '_')
-    common = "graphs/Q#{@quarter}_#{@year}_#{idc_designer}"
-    @rework_graph_filename       = common + '_rework_graph.png'
-    @report_count_graph_filename = common + '_report_count_graph.png'
-
-    if @total_report_cards == 0
-      
-      @no_reports_msg = "No Report Cards for Q#{@quarter} #{@year}"
+      @total_report_cards = report_cards.size
+      if @total_report_cards > 0
+        @high_report_cards = report_cards.collect { |rc| rc if rc.oi_assignment.complexity_name == 'High' }
+        @med_report_cards  = report_cards.collect { |rc| rc if rc.oi_assignment.complexity_name == 'Medium' }
+        @low_report_cards  = report_cards.collect { |rc| rc if rc.oi_assignment.complexity_name == 'Low' }
+        @high_report_cards.compact!
+        @med_report_cards.compact!
+        @low_report_cards.compact!
+      else     
+        @no_reports_msg = "No Report Cards for #{@start_date.to_s} through #{@end_date.to_s}"
+      end
+      flash['notice'] = nil
+    else
+      @total_report_cards = 0
+      flash['notice'] = "WARNING: the end date preceeds the start date - no reports retrieved"
     end
 
   end
@@ -111,16 +132,23 @@ class ReportController < ApplicationController
   # Returns a copy of the rework graph displayed on the report
   # card rollup screen.
   def download_rework_graph
+    
+    common_filename_part  = common_part(params[:start_date],
+                                        params[:end_date],
+                                        team_member(params[:team_member_id]))
+    rework_graph_filename = rework_graph_filename(common_filename_part)
 
     graph = OiAssignmentReport.report_card_rollup(params[:team_member_id].to_i,
-                                                  params[:quarter].to_i,
-                                                  params[:year].to_i,
+                                                  params[:start_date],
+                                                  params[:end_date],
+                                                  rework_graph_filename,
+                                                  '',
                                                   "rework")
 
     send_data(graph.to_blob,
               :disposition => 'attachment',
               :type        => 'image/png',
-              :filename    => "lcr_rework_graph.png")     
+              :filename    => rework_graph_filename)     
 
   end
   
@@ -134,15 +162,21 @@ class ReportController < ApplicationController
   # card rollup screen.
   def download_report_count_graph
 
+    common_filename_part        = common_part(params[:start_date],
+                                              params[:end_date],
+                                              team_member(params[:team_member_id]))
+    report_count_graph_filename = report_count_graph_filename(common_filename_part)
     graph = OiAssignmentReport.report_card_rollup(params[:team_member_id].to_i,
-                                                  params[:quarter].to_i,
-                                                  params[:year].to_i,
+                                                  params[:start_date],
+                                                  params[:end_date],
+                                                  '',
+                                                  report_count_graph_filename,
                                                   "assignment_count")
 
     send_data(graph.to_blob,
               :disposition => 'attachment',
               :type        => 'image/png',
-              :filename    => "lcr_assignment_count_graph.png")     
+              :filename    => report_count_graph_filename)     
 
   end
   
@@ -205,5 +239,30 @@ class ReportController < ApplicationController
     
   end
   
+  
+private
+
+
+  def team_member(team_member_id)
+    idc_designer = team_member_id.to_i > 0 ? User.find(team_member_id).name : 'all'
+    idc_designer.gsub!(/ /, '_')
+    idc_designer
+  end
+  
+  
+  def common_part(start_date, end_date, designer)
+    "#{start_date.to_s}_#{end_date.to_s}_#{designer}"
+  end
+  
+  
+  def rework_graph_filename(common_part)
+    common_part + '_rework_graph.png'
+  end
+  
+  
+  def report_count_graph_filename(common_part)
+    common_part + '_report_count_graph.png'
+  end
+ 
   
 end
