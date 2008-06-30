@@ -87,35 +87,30 @@ REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
   end
   
   
-  ######################################################################
   #
-  # report_card_rollup
+  # Generate the report cart rollup reports
+  # 
+  # :call-seq:
+  #   OiAssignmentReport.report_card_rollup(designer_id,
+  #                                         start_date,
+  #                                         end_date,
+  #                                         rework_filename,
+  #                                         report_count_filename,
+  #                                         download)
   #
-  # Description:
-  # This method retrieves the information to display the report card
-  # rollup.  The graphs are generated and provided to the user.
+  # Retrieves the report cards for the date range provided.  If the download
+  # flag indicates 'none' then the reports are returned.  Otherwise the graph
+  # specified by download is returned.
   #
-  # Parameters:
-  # designer_id  - If 0 then all low cost region designers should be 
-  #                included in the results.  Otherwise, it is the 
-  #                identifier of the specific to include in the results.
-  # quarter      - Indicates the calendar quarter
-  # year         - Indicates the caleandar year
-  # download     - a string that indicates which graph the user wants to
-  #                download.  If download is not specfied in the call
-  #                no graph is returned.
-  #
-  ######################################################################
-  #
-  def self.report_card_rollup(designer_id, quarter, year, download = 'none')
+  def self.report_card_rollup(designer_id, 
+                              start_date, 
+                              end_date,
+                              rework_filename,
+                              report_count_filename,
+                              download = 'none')
   
-    start_month = (quarter - 1) * 3 + 1
-    end_month   = start_month < 10 ? start_month + 3 : 1
-    end_year    = start_month < 10 ? year           : year + 1
-    
-    start_date = Date.new(year,    start_month, 1)
-    end_date   = Date.new(end_year, end_month,   1)
-    conditions = "created_on >= '#{start_date}' and created_on < '#{end_date}'"
+    query_end_date = (end_date.to_time + 1.day).to_date
+    conditions = "created_on >= '#{start_date}' and created_on < '#{query_end_date}'"
 
     # Gather all of the report cards that were created in the quarter and toss 
     # out the assignments that are not complete.
@@ -123,7 +118,7 @@ REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
                                            :conditions => conditions,
                                            :order      => 'created_on')
     report_cards.delete_if { |rc| !rc.oi_assignment.complete? }
-    
+
     # If the report is for a specific designer, toss out the assignments 
     # that do not apply for the designer.
     if designer_id > 0
@@ -153,9 +148,19 @@ REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
 
     end
     
-    # Create the graphs.    
-    rework_graph = create_rework_graph(score_summary, quarter, year, idc_designer)
-    count_graph  = create_assignment_count_graph(score_summary, quarter, year, idc_designer)
+    # Create the graphs.
+    start_date = start_date.to_s
+    end_date   = end_date.to_s    
+    rework_graph = create_rework_graph(score_summary, 
+                                       start_date, 
+                                       end_date, 
+                                       idc_designer, 
+                                       rework_filename)
+    count_graph  = create_assignment_count_graph(score_summary, 
+                                                 start_date,
+                                                 end_date, 
+                                                 idc_designer, 
+                                                 report_count_filename)
 
     # Return the report cards to the caller.
     if download == 'none'
@@ -205,15 +210,19 @@ private
   # Create rework percentage graph.
   # 
   # :call-seq:
-  #   create_rework_graph(score_summary, quarter, year, idc_designer)
+  #   create_rework_graph(score_summary, start_date, end_date, idc_designer, graph_filename)
   #
-  # Given the graph data (score summary), year and quarter this method generates 
-  # the rework percentage graph.  If the idc_designer is not an empty string then
+  # Given the graph data (score summary) and the start and end dates this method 
+  # generates the rework percentage graph.  If the idc_designer is not an empty string then
   # the name is included in the graph title.
-  def self.create_rework_graph(score_summary, quarter, year, idc_designer)
+  def self.create_rework_graph(score_summary, 
+                               start_date, 
+                               end_date, 
+                               idc_designer,
+                               graph_filename)
   
     title = 'LCR Process Step Evaluation: Percent Rework Roll Up -'
-    date  = "Q#{quarter}-#{year}"
+    date  = start_date + '-' + end_date
     graph = Gruff::Bar.new
 
     if idc_designer == ''
@@ -263,7 +272,7 @@ private
     
     idc_designer = 'all' if idc_designer == ''
     idc_designer.gsub!(/ /, '_')
-    graph.write("public/images/graphs/Q#{quarter}_#{year}_#{idc_designer}_rework_graph.png")
+    graph.write("public/images/graphs/#{graph_filename}")
 
     return graph
   
@@ -273,15 +282,19 @@ private
   # Create the report count graph.
   # 
   # :call-seq:
-  #   create_assignment_count_graph(score_summary, quarter, year, idc_designer)
+  #   create_assignment_count_graph(score_summary, start_date, end_date, idc_designer, graph_filename)
   #
-  # Given the graph data (score summary), year and quarter this method generates 
+  # Given the graph data (score summary) and the start and end dates this method generates 
   # the report card count graph.  If the idc_designer is not an empty string then
   # the name is included in the graph title.
-  def self.create_assignment_count_graph(score_summary, quarter, year, idc_designer)
+  def self.create_assignment_count_graph(score_summary, 
+                                         start_date, 
+                                         end_date, 
+                                         idc_designer,
+                                         graph_filename)
   
     title = 'LCR Process Step Evaluation: Report Count Roll Up -'
-    date  = "Q#{quarter}-#{year}"
+    date  = start_date + '-' + end_date
     graph = Gruff::Bar.new
 
     if idc_designer == ''
@@ -331,7 +344,7 @@ private
 
     idc_designer = 'all' if idc_designer == ''
     idc_designer.gsub!(/ /, '_')
-    graph.write("public/images/graphs/Q#{quarter}_#{year}_#{idc_designer}_report_count_graph.png")
+    graph.write("public/images/graphs/#{graph_filename}")
 
     return graph
   
