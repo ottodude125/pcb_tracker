@@ -16,7 +16,7 @@
 
 <% if @comments.size > 0 %>
   <table border="0" cellspacing="0" width="100%" align="center">
-    <%= render_collection_of_partials("comment_list", @comments) %>
+    <%= render( :partial => "comment_list", :collection => @comments) %>
   </table>
 <% else %>
   <p align="center">
