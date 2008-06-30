@@ -43,6 +43,37 @@ module TimeHelper
     
     ######################################################################
     #
+    # start_of_quarter
+    #
+    # Description:
+    # Generates the date for the begining of the quarter based on time
+    #
+    # Parameters:
+    # none
+    #
+    # Return value:
+    # A date record indicating the start of the quarter for date.
+    #
+    ######################################################################
+    #
+    def start_of_quarter
+      
+      year          = self.strftime('%Y').to_i
+      current_month = self.strftime('%m').to_i
+      
+      month = 1
+      1.step(13, 3) do |m|
+        break if m > current_month
+        month = m
+      end
+      
+      Date.new(year, month, 1)
+        
+    end
+
+    
+    ######################################################################
+    #
     # age_in_seconds
     #
     # Description:
