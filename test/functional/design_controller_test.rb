@@ -29,6 +29,7 @@ class DesignControllerTest < Test::Unit::TestCase
            :board_reviewers,
            :designs,
            :design_checks,
+           :design_review_comments,
            :design_review_results,
            :design_reviews,
            :fab_houses,
@@ -41,8 +42,29 @@ class DesignControllerTest < Test::Unit::TestCase
            :users)
 
 
-  def test_default
+  def test_pcb_mechanical_comments
+    
+    mx234a = designs(:mx234a)
+    
+    get(:pcb_mechanical_comments, :id => mx234a.id)
 
+    assert_equal(mx234a.directory_name, assigns(:design).directory_name)
+    assert_equal(0, assigns(:comments).size)
+    
+    # Add a comment to one of the reviews.
+    pcb_mech_comment = DesignReviewComment.new( 
+                         :design_review_id => design_reviews(:mx234a_pre_artwork).id,
+                         :user_id          => users(:mary_t).id,
+                         :comment          => "PCB Mech Comment" )
+    pcb_mech_comment.save
+    
+    mx234a.reload
+    
+    get(:pcb_mechanical_comments, :id => mx234a.id)
+
+    assert_equal(mx234a.directory_name, assigns(:design).directory_name)
+    assert_equal(1, assigns(:comments).size)
+    
   end
   
   
