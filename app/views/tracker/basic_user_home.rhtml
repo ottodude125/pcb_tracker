@@ -1,0 +1,177 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays the tracker home page.                   -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @title = "PCB Design Board/Data Tracker" %>
+<%# debug session %>
+
+<table width="100%"
+       border="0" 
+       cellspacing="2"
+       align="center"
+       rules="cols">
+  <tr>
+    <td width="155" valign="top">
+      <table align="center" rules="rows" cellpadding="5" border="0">
+        <tr>
+          <td align="center">
+            <%= link_to("All Boards",
+                          { :controller => 'board',
+                            :action     => 'show_boards' }) %>
+          </td>
+        </tr>
+        
+        <tr>
+          <td align="center">
+            <%= link_to("Board Search",
+                        { :controller => 'board',
+                          :action     => 'search_options' }) %> <br />
+          </td>
+        </tr>
+
+        <% if session[:active_role].name == 'Admin' %>
+        <tr>
+          <td align="center">
+            <%= link_to("Admin Portal", { :controller => "admin" }) %>
+          </td>
+        </tr>
+        <% end %>
+
+        <tr>
+          <th class="teraheader">
+            PCB Engineering Entry
+          </th>
+        </tr>
+
+        <tr>
+          <td align="center">
+            <%= link_to("PCB Engineering Entry",
+                        { :controller => 'board_design_entry',
+                          :action     => 'originator_list' }) %>
+          </td>
+        </tr>
+        
+        <% if session[:active_role].name == 'Admin' %>
+        <tr>
+          <td align="center">
+            <table>
+              <tr>
+                <td>
+                  <%= link_to("Process PCB Engineering Entries",
+                              { :controller => 'board_design_entry',
+                                :action     => 'processor_list' }) %>
+                </td>
+              </tr>
+              <% if @submissions > 0 %>
+                <tr title="<%= @submissions.to_s %> Board Design <%= @submissions == 1 ? "Entry" : "Entries" %> Submitted">
+                  <td bgcolor="#df4545">
+                    <b>Needs Action</b>
+                  </td>
+                </tr>
+              <% end %>
+            </table>
+          </td>
+        </tr>
+        <% end %>
+        
+        <tr>
+          <th class="teraheader">
+            Reports
+          </th>
+        </tr>
+
+        <tr>
+          <td align="center">
+            <%= link_to("Reviewer Workload",
+                        { :controller => 'report',
+                          :action     => 'reviewer_workload' }) %>
+          </td>
+        </tr>
+
+        <tr>
+          <td>&nbsp;</td>
+        </tr>
+        
+      </table>
+    </td>
+
+    <td>
+      <table width="100%"
+             border="0">
+        <tr>
+          <td>
+            <table width="100%" 
+                   align="left" 
+                   border="0"
+                   cellspacing="0">
+    	        <tr>
+                <th colspan="9"
+                    class="teraheader">
+                  <font color="#ffffff">Active Reviews</font>
+                </th>
+              </tr>
+              <tr class="th1">
+                <th align="left" valign="bottom">PCB Part Number Rev</th>
+                <th align="left" valign="bottom" width="85">Criticality</th>
+                <th align="left" valign="bottom">Posted By</th>
+                <th align="left" valign="bottom">Peer</th>
+                <th align="left" valign="bottom">Type</th>
+                <th align="left" valign="bottom">Status</th>
+                <th align="left" valign="bottom">Age</th>
+                <th valign="bottom" class="th1">Reviews<br />Approved</th>
+              </tr>
+              
+              <%= render( :partial    =>"basic_user_home_list_stripes",
+                          :collection => @active_reviews) %>
+
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <tr>
+    <td>&nbsp;</td>
+    <td>
+      <table width="100%"
+             border="0">
+        <tr>
+          <td>
+            <table width="100%" 
+                   align="left" 
+                   border="0"
+                   cellspacing="0">
+    	        <tr>
+                <th colspan="9"
+                    class="teraheader">
+                  <font color="#ffffff">Active Boards (Reviews Not Started)</font>
+                </th>
+              </tr>
+              <tr class="th1">
+                <th align="left" valign="bottom">PCB Part Number Rev</th>
+                <th align="left" valign="bottom" width="85">Criticality</th>
+                <th align="left" valign="bottom">Posted By</th>
+                <th align="left" valign="bottom">Peer</th>
+                <th align="left" valign="bottom">Type</th>
+                <th align="left" valign="bottom">Status</th>
+              </tr>
+              
+              <%= render( :partial    => "basic_user_home_list_inactive_stripes",
+                          :collection => @inactive_reviews) %>
+
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+
+
+  </tr>
+</table>
+
+<%# debug @design_reviews %>
+<%# debug @sort_order %>
+<%# debug flash %>
