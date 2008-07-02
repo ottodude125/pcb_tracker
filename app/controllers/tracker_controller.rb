@@ -62,7 +62,8 @@ class TrackerController < ApplicationController
         pcb_admin_home_setup
         render( :action => 'pcb_admin_home' )
       when "Basic User"
-        # Use the default home page
+        manager_home_setup
+        render( :action => 'basic_user_home')
       else
         reviewer_home_setup
         render( :action => 'reviewer_home' )
