@@ -304,9 +304,9 @@ class DesignReviewController < ApplicationController
       if !reviewer.invited?
         TrackerMailer::deliver_tracker_invite(reviewer)
 
-        reviewer.invited  = 1
         reviewer.password = ''
-        reviewer.save
+        reviewer.update_attribute(:invited, 1)
+        reviewer.reload
       end
 
       # Update the CC list.
