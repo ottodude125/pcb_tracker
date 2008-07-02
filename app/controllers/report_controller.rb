@@ -92,17 +92,39 @@ class ReportController < ApplicationController
     end
 
     team_member                  = team_member(@team_member_id)
-    common_filename_part         = common_part(@start_date, @end_date, team_member)
+    team_member_file_name        = team_member_file_name(team_member)
+    common_filename_part         = common_part(@start_date, @end_date, team_member_file_name)
     @rework_graph_filename       = rework_graph_filename(common_filename_part)
     @report_count_graph_filename = report_count_graph_filename(common_filename_part)
     
     if @end_date >= @start_date
- 
+      
+      range = @start_date.to_s + ' - ' + @end_date.to_s
+      name  = team_member ? team_member.name : "All Designers" 
+      
+      if !params[:rework_graph_title]
+        @rework_graph_title = range + ' ' +
+                             'LCR Process Step Evaluation: Percent Rework Roll Up -' +
+                             ' ' + name
+      else
+        @rework_graph_title = params[:rework_graph_title]
+      end
+      
+      if !params[:report_count_graph_title]
+        @report_count_graph_title = range + ' ' +
+                                    'LCR Process Step Evaluation: Report Count Roll Up -' +
+                                    ' ' + name                                  
+      else
+        @report_count_graph_title = params[:report_count_graph_title]
+      end
+  
       report_cards = OiAssignmentReport.report_card_rollup(@team_member_id, 
                                                            @start_date,
                                                            @end_date,
                                                            @rework_graph_filename,
-                                                           @report_count_graph_filename)
+                                                           @rework_graph_title,
+                                                           @report_count_graph_filename,
+                                                           @report_count_graph_title)
 
       @total_report_cards = report_cards.size
       if @total_report_cards > 0
@@ -133,22 +155,19 @@ class ReportController < ApplicationController
   # card rollup screen.
   def download_rework_graph
     
-    common_filename_part  = common_part(params[:start_date],
-                                        params[:end_date],
-                                        team_member(params[:team_member_id]))
-    rework_graph_filename = rework_graph_filename(common_filename_part)
-
     graph = OiAssignmentReport.report_card_rollup(params[:team_member_id].to_i,
                                                   params[:start_date],
                                                   params[:end_date],
-                                                  rework_graph_filename,
+                                                  params[:rework_graph_filename],
+                                                  params[:rework_graph_title],
+                                                  '',
                                                   '',
                                                   "rework")
 
     send_data(graph.to_blob,
               :disposition => 'attachment',
               :type        => 'image/png',
-              :filename    => rework_graph_filename)     
+              :filename    => params[:rework_graph_filename])     
 
   end
   
@@ -162,21 +181,19 @@ class ReportController < ApplicationController
   # card rollup screen.
   def download_report_count_graph
 
-    common_filename_part        = common_part(params[:start_date],
-                                              params[:end_date],
-                                              team_member(params[:team_member_id]))
-    report_count_graph_filename = report_count_graph_filename(common_filename_part)
     graph = OiAssignmentReport.report_card_rollup(params[:team_member_id].to_i,
                                                   params[:start_date],
                                                   params[:end_date],
                                                   '',
-                                                  report_count_graph_filename,
+                                                  '',
+                                                  params[:report_count_graph_filename],
+                                                  params[:report_count_graph_title],
                                                   "assignment_count")
 
     send_data(graph.to_blob,
               :disposition => 'attachment',
               :type        => 'image/png',
-              :filename    => report_count_graph_filename)     
+              :filename    => params[:report_count_graph_filename])     
 
   end
   
@@ -243,10 +260,13 @@ class ReportController < ApplicationController
 private
 
 
+  def team_member_file_name(team_member)
+    team_member ? team_member.name.gsub(/ /, '_') : 'all'
+  end
+  
+  
   def team_member(team_member_id)
-    idc_designer = team_member_id.to_i > 0 ? User.find(team_member_id).name : 'all'
-    idc_designer.gsub!(/ /, '_')
-    idc_designer
+    User.find(team_member_id) if team_member_id.to_i > 0
   end
   
   
