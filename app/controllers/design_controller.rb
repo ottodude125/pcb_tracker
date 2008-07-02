@@ -298,7 +298,7 @@ class DesignController < ApplicationController
   
     @design         = Design.find(params[:id])
     @design_reviews = @design.design_reviews.sort_by { |dr| dr.review_type.sort_order } 
-    @review_roles   = Role.get_review_roles
+    @review_roles   = Role.get_review_roles + Role.get_manager_review_roles
     
     # Do not display a review role that is not set up to review the
     # design.
