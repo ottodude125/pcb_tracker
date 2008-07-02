@@ -95,7 +95,9 @@ REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
   #                                         start_date,
   #                                         end_date,
   #                                         rework_filename,
+  #                                         rework_title,
   #                                         report_count_filename,
+  #                                         report_count_title
   #                                         download)
   #
   # Retrieves the report cards for the date range provided.  If the download
@@ -106,7 +108,9 @@ REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
                               start_date, 
                               end_date,
                               rework_filename,
+                              rework_title,
                               report_count_filename,
+                              report_count_title,
                               download = 'none')
   
     query_end_date = (end_date.to_time + 1.day).to_date
@@ -123,9 +127,6 @@ REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
     # that do not apply for the designer.
     if designer_id > 0
       report_cards.delete_if { |rc| rc.oi_assignment.user_id != designer_id }
-      idc_designer = User.find(designer_id).name
-    else
-      idc_designer = ''
     end
     
     category_count = OiCategory.count
@@ -150,17 +151,18 @@ REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
     
     # Create the graphs.
     start_date = start_date.to_s
-    end_date   = end_date.to_s    
-    rework_graph = create_rework_graph(score_summary, 
-                                       start_date, 
-                                       end_date, 
-                                       idc_designer, 
-                                       rework_filename)
-    count_graph  = create_assignment_count_graph(score_summary, 
-                                                 start_date,
-                                                 end_date, 
-                                                 idc_designer, 
-                                                 report_count_filename)
+    end_date   = end_date.to_s
+    
+    if download == 'none' || download == 'rework'
+      rework_graph = create_rework_graph(score_summary, 
+                                         rework_filename,
+                                         rework_title)
+    end
+    if download == 'none' || download == "assignment_count"
+      count_graph  = create_assignment_count_graph(score_summary, 
+                                                   report_count_filename,
+                                                   report_count_title)
+    end
 
     # Return the report cards to the caller.
     if download == 'none'
@@ -210,26 +212,17 @@ private
   # Create rework percentage graph.
   # 
   # :call-seq:
-  #   create_rework_graph(score_summary, start_date, end_date, idc_designer, graph_filename)
+  #   create_rework_graph(score_summary, graph_filename, title)
   #
   # Given the graph data (score summary) and the start and end dates this method 
   # generates the rework percentage graph.  If the idc_designer is not an empty string then
   # the name is included in the graph title.
   def self.create_rework_graph(score_summary, 
-                               start_date, 
-                               end_date, 
-                               idc_designer,
-                               graph_filename)
+                               graph_filename,
+                               title)
   
-    title = 'LCR Process Step Evaluation: Percent Rework Roll Up -'
-    date  = start_date + '-' + end_date
     graph = Gruff::Bar.new
-
-    if idc_designer == ''
-      graph.title = "#{date} #{title} All Designers"
-    else
-      graph.title = "#{date} #{title} #{idc_designer}"
-    end
+    graph.title = title
 
     # Adjust the font according to the length of the title
     graph.title_font_size  = graph.title.size < 50 ? 24 : 18
@@ -270,8 +263,6 @@ private
       graph.maximum_value -= 5
     end
     
-    idc_designer = 'all' if idc_designer == ''
-    idc_designer.gsub!(/ /, '_')
     graph.write("public/images/graphs/#{graph_filename}")
 
     return graph
@@ -282,26 +273,17 @@ private
   # Create the report count graph.
   # 
   # :call-seq:
-  #   create_assignment_count_graph(score_summary, start_date, end_date, idc_designer, graph_filename)
+  #   create_assignment_count_graph(score_summary, graph_filename, title)
   #
   # Given the graph data (score summary) and the start and end dates this method generates 
   # the report card count graph.  If the idc_designer is not an empty string then
   # the name is included in the graph title.
   def self.create_assignment_count_graph(score_summary, 
-                                         start_date, 
-                                         end_date, 
-                                         idc_designer,
-                                         graph_filename)
+                                         graph_filename,
+                                         title)
   
-    title = 'LCR Process Step Evaluation: Report Count Roll Up -'
-    date  = start_date + '-' + end_date
     graph = Gruff::Bar.new
-
-    if idc_designer == ''
-      graph.title = "#{date} #{title} All Designers"
-    else
-      graph.title = "#{date} #{title} #{idc_designer}"
-    end
+    graph.title = title
 
     # Adjust the font according to the length of the title
     graph.title_font_size  = graph.title.size < 50 ? 24 : 18
@@ -342,8 +324,6 @@ private
       graph.maximum_value += 10
     end 
 
-    idc_designer = 'all' if idc_designer == ''
-    idc_designer.gsub!(/ /, '_')
     graph.write("public/images/graphs/#{graph_filename}")
 
     return graph
