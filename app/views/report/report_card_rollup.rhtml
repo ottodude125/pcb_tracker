@@ -15,7 +15,7 @@
       <input type="button" value="Home"
              onClick="parent.location='<%= url_for(:controller => 'tracker', 
                                                    :action     => 'index') %>'" />
-    <td>&nbsp;</td>
+    
   </tr>
 </table>
 
@@ -69,10 +69,30 @@
 
 </table>
 
+  <table border="0" align="center" cellspacing="0">
+    <tr>
+      <th class="teraheader">Titles</th>
+      <td>&nbsp;<td>
+    </tr>
+    <tr>
+      <th align="right" class="teraheader">Percent Rework:</th>
+      <td>
+        <input type="text" name="rework_graph_title" size="100" value="<%= @rework_graph_title %>" />
+      <td>
+    </tr>
+    <tr>
+      <th align="right" class="teraheader">Report Card Count:</th>
+      <td>
+        <input type="text" name="report_count_graph_title" size="100" value="<%= @report_count_graph_title %>" />
+      </td>
+    </tr>
+  </table>
+
 <hr class="div" width="820" />
 
 <% end %>
 
+<p align="center"><b>Number of Report Cards: <%= @total_report_cards %></b></p>
 
 <% if @total_report_cards > 0 %>
   <table align="center" border="5">
@@ -84,10 +104,12 @@
     <tr class='teraheader'>
       <td align="center">
         <input type="button" value="Download Rework Graph"
-               onClick="parent.location='<%= url_for(:action         => 'download_rework_graph',
-                                                     :start_date     => @start_date,
-                                                     :end_date       => @end_date,
-                                                     :team_member_id => @team_member_id) %>'" />
+               onClick="parent.location='<%= url_for(:action                => 'download_rework_graph',
+                                                     :start_date            => @start_date,
+                                                     :end_date              => @end_date,
+                                                     :team_member_id        => @team_member_id,
+                                                     :rework_graph_filename => @rework_graph_filename,
+                                                     :rework_graph_title    => @rework_graph_title ) %>'" />
       </td>
     </tr>
   </table>
@@ -103,10 +125,12 @@
     <tr class='teraheader'>
       <td align="center">
         <input type="button" value="Download Report Count Graph"
-               onClick="parent.location='<%= url_for(:action         => 'download_report_count_graph',
-                                                     :start_date     => @start_date,
-                                                     :end_date       => @end_date,
-                                                     :team_member_id => @team_member_id) %>'" />
+               onClick="parent.location='<%= url_for(:action                      => 'download_report_count_graph',
+                                                     :start_date                  => @start_date,
+                                                     :end_date                    => @end_date,
+                                                     :team_member_id              => @team_member_id,
+                                                     :report_count_graph_filename => @report_count_graph_filename,
+                                                     :report_count_graph_title    => @report_count_graph_title) %>'" />
       </td>
     </tr>
   </table>
