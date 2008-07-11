@@ -35,6 +35,25 @@ class BoardDesignEntry < ActiveRecord::Base
   # 
   ##############################################################################
 
+
+  def self.summary_data
+    
+    entries = self.find(:all, :conditions => 'design_id > 0')
+    
+    sorted_by_quarter = {}
+    
+    entries.each do |entry|
+      quarter = 'Q' + entry.submitted_on.current_quarter.to_s
+      year    = entry.submitted_on.strftime("%Y")
+      key     = year + quarter
+      sorted_by_quarter[key] = [] if !sorted_by_quarter[key]
+      sorted_by_quarter[key] << entry
+    end
+    
+    sorted_by_quarter
+
+  end
+
   
   ######################################################################
   #
@@ -595,9 +614,9 @@ class BoardDesignEntry < ActiveRecord::Base
   #
   ######################################################################
   #
-  def design
-    self.prefix.pcb_mnemonic + self.number
-  end
+  ##def design
+  ##  self.prefix.pcb_mnemonic + self.number
+  ##end
   
   
   ######################################################################
