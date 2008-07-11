@@ -127,7 +127,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   def orphaned_audits
 
     @audit_list = {}
-    Audit.find_all.each do |audit|
+    Audit.find(:all).each do |audit|
       begin
         @audit_list[audit.id] = Design.find(audit.design_id).name
       rescue
@@ -151,7 +151,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
 
     @section_list    = {}
     @subsection_list = {}
-    Check.find_all.each do |check|
+    Check.find(:all).each do |check|
       begin
         Section.find(check.section_id)
       rescue
@@ -179,7 +179,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   ######################################################################
   #
   def checklists
-    @checklists = Checklist.find_all(nil, 'created_on ASC')
+    @checklists = Checklist.find(:all, :order => 'created_on')
   end
 
 
@@ -306,16 +306,12 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   
   
   def board_design_entries
-  
-    @bde_list = BoardDesignEntry.find_all
-  
+    @bde_list = BoardDesignEntry.find(:all)
   end
 
 
   def users
-
-    @users = User.find_all(nil, 'last_name ASC')
-  
+   @users = User.find(:all, :order => 'last_name')
   end
   
   
