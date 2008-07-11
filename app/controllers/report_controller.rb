@@ -257,6 +257,11 @@ class ReportController < ApplicationController
   end
   
   
+  def summary_data
+    @board_design_entries = BoardDesignEntry.summary_data
+  end
+  
+  
 private
 
 
