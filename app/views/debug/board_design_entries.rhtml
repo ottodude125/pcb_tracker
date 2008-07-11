@@ -12,7 +12,7 @@
       <tr class="teraheader" valign="top">
      	<th>#</th>
 		<th>ID</th>
-        <th>DESIGN</th>
+        <th>DIRECTORY</th>
         <th>ORIGINATOR</th>
         <th>READY TO<br />POST</th>
         <th>SUBMITTED</th>
@@ -24,7 +24,12 @@
 	<% end %>
   	<td><%= line_number+1 %></td>
 	<td><%= @bde.id %></td>
-    <td><%= @bde.design_name %></td>
+    <% design = Design.find(@bde.design_id) if @bde.design_id > 0%>
+    <% if design %>
+      <td><%= design.directory_name %>
+    <% else %>
+      <td>None</td>
+    <% end %>
     <td><%= @bde.originator %></td>
     <td><%= @bde.ready_to_post? ? 'Yes' : 'No' %>
     <td><%= @bde.submitted?     ? 'Yes' : 'No' %>
