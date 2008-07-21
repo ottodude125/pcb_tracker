@@ -26,8 +26,9 @@ class Ping < ActiveRecord::Base
   def self.send_message()
 
     in_review      = ReviewStatus.find_by_name("In Review")
-    active_reviews = DesignReview.find_all_by_review_status_id(in_review.id,
-                                                               "created_on ASC")
+    active_reviews = DesignReview.find( :all,
+                                        :conditions => "review_status_id=#{in_review.id}",
+                                        :order      => "created_on" )
 
     ping_list   = {}
     
@@ -75,10 +76,10 @@ class Ping < ActiveRecord::Base
       end
     end
     
-    sleep(60)
+    sleep(30)
 
     summary_reviewer_list      = summary_reviewer_list.sort_by { |rr| rr[:reviewer].last_name }
-    summary_design_review_list = summary_reviewer_list.sort_by { |rr| rr[:design_review].design.directory_name }
+    summary_design_review_list = summary_reviewer_list.sort_by { |rr| rr[:design_review].design.age }.reverse
     TrackerMailer::deliver_ping_summary(summary_reviewer_list, summary_design_review_list)
 
   end
