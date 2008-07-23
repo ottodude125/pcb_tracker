@@ -27,6 +27,26 @@ class DesignReview < ActiveRecord::Base
   SATURDAY = 6
 
 
+  def self.summary_data
+    
+    design_reviews = self.find( :all,
+                                :conditions => "posting_count > 0" )
+    
+    sorted_by_quarter = {}
+    
+    design_reviews.each do |design_review|
+      quarter = 'Q' + design_review.created_on.current_quarter.to_s
+      year    = design_review.created_on.strftime("%Y")
+      key     = year + quarter
+      sorted_by_quarter[key] = [] if !sorted_by_quarter[key]
+      sorted_by_quarter[key] << design_review
+    end
+    
+    sorted_by_quarter
+
+  end
+
+
   ######################################################################
   #
   # get_review_result
