@@ -259,6 +259,7 @@ class ReportController < ApplicationController
   
   def summary_data
     @board_design_entries = BoardDesignEntry.summary_data
+    @design_reviews       = DesignReview.summary_data
   end
   
   
