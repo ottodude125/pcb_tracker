@@ -8,7 +8,6 @@
 
 <% @board_design_entries.sort.reverse.each do |key, entry_list| %>
   
-  <% total_reviews = 0 %>
   <tr class="teraheader"><td colspan="3" align="center"><%= key %></td></tr>
   <tr class="teraheader">
     <th width="200">Design</th>
@@ -16,8 +15,6 @@
     <th width="200">Phase</th>
   </tr>
     <% entry_list.each do |entry| %>
-      
-      <% total_reviews += entry.design.design_reviews.size %>
       
       <tr>
         <td align="center"><%= entry.design.directory_name  %></td>
@@ -32,7 +29,7 @@
             <th class="teraheader" width="200">Total Entries: </th>
             <td width="100"><%= entry_list.size %></td>
             <th class="teraheader" width="200">Total Reviews: </th>
-            <td width="100"><%= total_reviews %></td>
+            <td width="100"><%= @design_reviews[key].size %></td>
           </tr>
         </table>
       </td>
@@ -41,3 +38,5 @@
 <% end %>
 
 </table>
+
+<%# debug @design_reviews %>
