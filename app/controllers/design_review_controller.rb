@@ -1808,7 +1808,7 @@ class DesignReviewController < ApplicationController
     skipped_review = design.design_reviews.detect { |dr| 
                        dr.review_type_id == design.phase_id }
     skipped_review.review_status_id = skipped_review_status.id
-    skipped_review.update
+    skipped_review.save
     
     # Set the phase of the design to the next non-skipped review.
     design.increment_review
