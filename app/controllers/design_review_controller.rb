@@ -1481,8 +1481,11 @@ class DesignReviewController < ApplicationController
         message += "Date: " + Time.now.to_s + "\n"
         message += "Division: " + ftp_notification.division.name + "\n"
         message += "Assembly/BOM Number: " + ftp_notification.assembly_bom_number + "\n"
-        message += "Design Files Located at: /hwnet/" + ftp_notification.design_center.pcb_path
+        message += "Design Files Location -\n"
+        message += "   UNIX:     /hwnet/" + ftp_notification.design_center.pcb_path
         message += "/" + ftp_notification.design.directory_name + "/public/\n"
+        message += "   WINDOWS:  \\\\nrpcb\\" + ftp_notification.design_center.pcb_path
+        message += "\\" + ftp_notification.design.directory_name + "\\public\\\n"
         message += "Files Size, Date, and Name: " + ftp_notification.file_data + "\n"
         message += "Rev Date: " + ftp_notification.revision_date + "\n"
         message += "Vendor: " + ftp_notification.fab_house.name + "\n"
