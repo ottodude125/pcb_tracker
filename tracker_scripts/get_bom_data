@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#####################################################
+# Used to retrieve the data used to upload BOMs to 
+# TeamCenter
+#####################################################
+# $Id$
+#####################################################
+
+cd /hwnet/dtg_devel/web/etg/apps/pcbtr_production_branch/pcb_tracker
+
+/usr/local/bin/ruby script/runner -e production 'Design.bom_upload_data' > \
+    /hwnet/dtg_devel/tcbom/tracker_data.txt
