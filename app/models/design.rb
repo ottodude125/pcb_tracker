@@ -42,6 +42,50 @@ class Design < ActiveRecord::Base
   ##############################################################################
 
 
+  # Generates a list of active designs with information that is used to load
+  # BOMs to TeamCenter by a DTG process.  This is called by an outside 
+  # script.
+  #
+  # :call-seq:
+  #   bom_upload_data() -> string
+  #
+  # Outputs the BOM Upload Data.
+  #
+  def self.bom_upload_data
+    
+    active_designs = self.get_active_designs
+    
+    active_designs.each do |design|
+      
+      current_design_review = design.get_phase_design_review
+      
+      hweng_role  = Role.find( :first, :conditions => "name='HWENG'")
+      hweng       = current_design_review.role_reviewer(hweng_role)
+      hweng_email = hweng ? hweng.email : "** NOT SET **"
+      
+      planning_role = Role.find( :first, :conditions => "name='Planning'")
+      planner       = design.get_role_reviewer(planning_role)
+      planner_email = planner ? planner.email : ''
+      planner_name  = planner ? planner.name  : ''
+      
+      pcb_path = '/hwnet/' + 
+                 current_design_review.design_center.pcb_path + '/' +
+                 design.directory_name + '/'
+      
+      puts(design.part_number.pcba_display_name          + '|' +
+           design.part_number.pcb_display_name           + '|' +
+           design.phase.name                             + '|' +
+           current_design_review.review_status.name      + '|' +
+           planner_email                                 + '|' +
+           hweng_email                                   + '|' +
+           design.designer.email                         + '|' +
+           pcb_path                                      + '|' +
+           design.board_design_entry.review_doc_location + '|')
+    end
+ 
+  end
+
+  
   ######################################################################
   #
   # get_unique_pcb_numbers
@@ -1587,7 +1631,7 @@ class Design < ActiveRecord::Base
     
     
   end
-
+  
   
 ########################################################################
 ########################################################################
