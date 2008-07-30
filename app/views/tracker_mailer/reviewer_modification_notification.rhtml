@@ -1,4 +1,4 @@
-<% @user.name %> changed the <%= @role.display_name %> reviewer for the <%= @design_review.design.part_number.pcb_display_name %> <%= @design_review.review_type.name %> Design Review
+<%= @user.name %> changed the <%= @role.display_name %> reviewer for the <%= @design_review.design.part_number.pcb_display_name %> <%= @design_review.review_type.name %> Design Review
 
     From: <%= @old_reviewer %>
     To:   <%= @new_reviewer %>
