@@ -21,7 +21,7 @@ module DesignReviewHelper
     
     if session[:user]
       review_outstanding = @review_results.find { |rr| 
-        rr.reviewer_id == session[:user].id && rr.result == 'No Response'
+        rr.reviewer_id == session[:user].id && rr.no_response?
       }
     end
 
@@ -47,11 +47,6 @@ module DesignReviewHelper
     end
    
     return reassignable
-  end
-
-
-  def display_role(review_result)
-    review_result[:result] == "No Response"
   end
 
 
