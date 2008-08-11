@@ -34,10 +34,11 @@ class DesignReviewResultTest < Test::Unit::TestCase
   ###################################################################
   def test_complete
     
-    results = { 'APPROVED' => true,
-                'WAIVED'   => true,
-                'COMMENT'  => false, 
-                'REJECTED' => true }
+    results = { 'No Response' => false,
+                'APPROVED'    => true,
+                'WAIVED'      => true,
+                'COMMENTED'   => false, 
+                'REJECTED'    => true }
                 
     drr = DesignReviewResult.new
     results.each do |result, expected_return|
@@ -51,15 +52,34 @@ class DesignReviewResultTest < Test::Unit::TestCase
   ###################################################################
   def test_positive_response
     
-    results = { 'APPROVED' => true,
-                'WAIVED'   => true,
-                'COMMENT'  => false, 
-                'REJECTED' => false }
+    results = { 'No Response' => false,
+                'APPROVED'    => true,
+                'WAIVED'      => true,
+                'COMMENTED'   => false, 
+                'REJECTED'    => false }
                 
     drr = DesignReviewResult.new
     results.each do |result, expected_return|
       drr.result = result
       assert_equal(expected_return, drr.positive_response?)
+    end
+    
+  end
+  
+  
+  ###################################################################
+  def test_no_response
+    
+    results = { 'No Response' => true,
+                'APPROVED'    => false,
+                'WAIVED'      => false,
+                'COMMENTED'   => true, 
+                'REJECTED'    => false }
+                
+    drr = DesignReviewResult.new
+    results.each do |result, expected_return|
+      drr.result = result
+      assert_equal(expected_return, drr.no_response?)
     end
     
   end
