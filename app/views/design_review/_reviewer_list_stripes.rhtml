@@ -26,10 +26,10 @@
   <% @review_results.each do |review_result| %>
     <% if review_result.result == "No Response" %>
     <tr class="no_response">
-    <% elsif review_result.result == "APPROVED" %>
+    <% elsif review_result.positive_response? %>
     <tr class="approved">
-    <% elsif review_result.result == "WAIVED" %>
-    <tr class="approved">
+    <% elsif review_result.result == "COMMENTED" %>
+    <tr class="commented">
     <% elsif review_result.result == "REJECTED" %>
     <tr class="rejected">
     <% else %>
