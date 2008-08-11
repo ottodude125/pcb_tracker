@@ -310,6 +310,7 @@ a:hover { color: #fff; background-color:#000; }
 .no_response { background-color: #dfe9ff; }
 .rejected    { background-color: #ef9595; }
 .withdrawn   { background-color: #dfe9ff; }
+.commented   { background-color: #ff8d4f; }
 
 .reviewer_peer {
   font-size: 10px;
