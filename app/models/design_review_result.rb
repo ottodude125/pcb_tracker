@@ -15,12 +15,15 @@ class DesignReviewResult < ActiveRecord::Base
   belongs_to :design_review
   belongs_to :role
   
-  APPROVED = 'APPROVED'
-  REJECTED = 'REJECTED'
-  WAIVED   = 'WAIVED'
+  APPROVED    = 'APPROVED'
+  REJECTED    = 'REJECTED'
+  WAIVED      = 'WAIVED'
+  NO_RESPONSE = 'No Response'
+  COMMENTED   = 'COMMENTED'
  
   REVIEW_COMPLETE = [APPROVED, REJECTED, WAIVED]
   POSITIVE_RESULT = [APPROVED, WAIVED]
+  NO_RESULT       = [COMMENTED, NO_RESPONSE]
 
   ######################################################################
   #
@@ -75,6 +78,21 @@ class DesignReviewResult < ActiveRecord::Base
     POSITIVE_RESULT.include?(self.result)
   end
 
+  
+  # Indicate that the reviewer has responded to the design review
+  #
+  # :call-seq:
+  #   no_response?() -> boolean
+  #
+  #  Returns a flag that indicates whether or not the reviewer has responded
+  #  to the design review.
+  #
+  # Exception
+  #   None
+  def no_response?
+    NO_RESULT.include?(self.result)
+  end
+  
   
   # Set the reviewer for the design review result
   #
