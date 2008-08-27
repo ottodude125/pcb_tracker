@@ -520,16 +520,16 @@ class TrackerMailer < ActionMailer::Base
   #
   # Parameters:
   #   reviewers      - the list of reviewers who were pinged.
-  #   design_reviews - the list of design reviews that have outstanding 
+  #   active_reviews - the list of design reviews that have outstanding 
   #                    review results.
   #   sent_at        - the timestamp for the mail header (defaults to Time.now)
   #
   ######################################################################
   #
-  def ping_summary(reviewers, design_reviews, sent_at = Time.now)
+  def ping_summary(reviewers, active_reviews, sent_at = Time.now)
   
     @subject    = 'Summary of reviewers who have not approved/waived design reviews'
-    @body       = {:reviewers => reviewers, :design_reviews => design_reviews}
+    @body       = { :reviewers => reviewers, :active_reviews => active_reviews }
     
     recipients = add_role_members(['Manager', 'PCB Input Gate'])
     
@@ -551,23 +551,23 @@ class TrackerMailer < ActionMailer::Base
   # outstanding reviews.
   #
   # Parameters:
-  #   review_result_list - A record for a reviewer with a list of the 
-  #                        outstanding reviews.
-  #   sent_at            - the timestamp for the mail header 
-  #                        (defaults to Time.now)
+  #   reviewer - A record for a reviewer with a list of the 
+  #              outstanding reviews.
+  #   sent_at  - the timestamp for the mail header 
+  #              (defaults to Time.now)
   #
   ######################################################################
   #
-  def ping_reviewer(review_result_list, sent_at = Time.now)
+  def ping_reviewer(reviewer, sent_at = Time.now)
 
     @subject    = 'Your unresolved Design Review(s)'
-    @recipients = review_result_list[:reviewer].email
+    @recipients = reviewer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
     @headers    = {}
     @bcc        = blind_cc
 
-    @body[:review_list] = review_result_list[:review_list]
+    @body[:review_list] = reviewer[:results]
 
   end
   
@@ -1079,8 +1079,7 @@ class TrackerMailer < ActionMailer::Base
                    [originator.email]) - @recipients
 
     @body['assignment'] = assignment
-    
-                  
+               
   end
   
   
@@ -1116,6 +1115,28 @@ class TrackerMailer < ActionMailer::Base
   end
   
   
+  def eco_task_creation_notification(eco_task, subject, sent_on = Time.now)
+    
+    @subject    = "ECO #{eco_task.number}: #{subject}"
+    @recipients = Role.lcr_designers.collect { |d| d.email }
+    @recipients.uniq!
+
+    @from    = Pcbtr::SENDER
+    @sent_on = sent_on
+    @bcc     = blind_cc
+    @cc      = add_role_members(['PCB Input Gate', 
+                                'Manager', 
+                                'HCL Manager',
+                                'ECO Admin'])
+    @cc        += eco_task.users.sort_by{ |u| u.last_name }.map(&:email)
+    @cc        -= @recipients
+    @cc.uniq!
+
+    @body['eco_task'] = eco_task
+    
+  end
+  
+  
   private
   
   
@@ -1136,9 +1157,7 @@ class TrackerMailer < ActionMailer::Base
   
     cc_list = []
     role_list.each do |role_name|
-      cc_list += Role.find_by_name(role_name).active_users.collect do |member|
-        member.email
-      end
+      cc_list += Role.find_by_name(role_name).active_users.collect { |m| m.email }
     end
 
     cc_list.uniq
