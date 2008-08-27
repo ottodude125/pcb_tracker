@@ -29,58 +29,42 @@ class Ping < ActiveRecord::Base
     active_reviews = DesignReview.find( :all,
                                         :conditions => "review_status_id=#{in_review.id}",
                                         :order      => "created_on" )
-
-    ping_list   = {}
-    
-    active_reviews.each do |design_review|
-
-      age = design_review.age/1.day
-      
-      # Remove any reaults that have reviewer responses
-      design_review.design_review_results.delete_if { |drr| drr.result != 'No Response' }
-      design_review.design_review_results.each do |review_result|
-
-        if ((design_review.priority.name == 'High')                   ||
-            (design_review.priority.name == 'Medium' && age % 2 == 0) ||
-            (design_review.priority.name == 'Low'    && age % 3 == 0))
-        
-          if !ping_list[review_result.reviewer_id]
-            ping_list[review_result.reviewer_id] = 
-              {:reviewer    => review_result.reviewer,
-               :review_list => []}
-          end
-      
-          ping_info = {:design_review => design_review,
-                       :role          => review_result.role.display_name,
-                       :age           => age}
-          ping_list[review_result.reviewer_id][:review_list].push(ping_info)
-        end
-      end
+                                      
+    # Remove design review that should not be pinged
+=begin
+    active_reviews.delete_if do |dr| 
+      ((dr.priority.name == 'Medium' && dr.age/1.day != 0) ||  # was 2
+        dr.priority.name == 'Low'    && dr.age/1.day != 0)    # was 3
     end
-
-    reviewer_list = []
-    ping_list.each { |user_id, review_result_list|
-      review_result_list[:review_list] =
-        review_result_list[:review_list].sort_by{ |rr| rr[:age] }.reverse
-      reviewer_list.push(review_result_list)
-      TrackerMailer::deliver_ping_reviewer(review_result_list)
-    }
-
-    summary_reviewer_list = []
-    reviewer_list.each do |entry|
-      entry[:review_list].each do |review|
-        summary_reviewer_list << { :reviewer      => entry[:reviewer],
-                                   :design_review => review[:design_review],
-                                   :role          => review[:role],
-                                   :age           => review[:age] }
+=end
+    
+    
+    user_list = []
+    active_reviews.each do |dr|
+    
+      # Remove the results if they have been addressed      
+      dr.design_review_results.delete_if { |drr| drr.result != 'No Response' }
+      
+      dr.design_review_results.each do |drr|
+        reviewer = drr.reviewer
+        user_list << reviewer if !user_list.include?(reviewer)
+        user = user_list.detect { |u| u.id == reviewer.id }
+        user[:results] = [] if !user[:results]
+        user[:results] << drr
       end
+      
     end
     
-    sleep(30)
+    user_list = user_list.sort_by { |u| u.last_name }
+    
+    user_list.each do |reviewer|
+      TrackerMailer::deliver_ping_reviewer(reviewer)
+      sleep(1)
+    end
+    
+    sleep(10)
 
-    summary_reviewer_list      = summary_reviewer_list.sort_by { |rr| rr[:reviewer].last_name }
-    summary_design_review_list = summary_reviewer_list.sort_by { |rr| rr[:design_review].age }.reverse
-    TrackerMailer::deliver_ping_summary(summary_reviewer_list, summary_design_review_list)
+    TrackerMailer::deliver_ping_summary(user_list, active_reviews)
 
   end
 
