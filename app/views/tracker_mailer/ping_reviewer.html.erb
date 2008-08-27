@@ -1,0 +1,8 @@
+Criticality    PCB Number     PCBA Number    Review         Age (Days)  Role
+-----------------------------------------------------------------------------------------
+<% @review_list.each do |entry| dr = entry.design_review %>
+<%= sprintf('%-15s%-15s%-15s%-15s%-12s%-15s', dr.priority.name, dr.design.part_number.pcb_display_name, dr.design.part_number.pcba_display_name, dr.review_type.name, dr.age/1.day, entry.role.display_name) %><% end %>
+
+
+Please review these boards as soon as possible using the PCB Tracker.
+The design information is located at <%= Pcbtr::PCBTR_BASE_URL %>tracker
