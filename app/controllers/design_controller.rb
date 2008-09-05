@@ -328,7 +328,7 @@ class DesignController < ApplicationController
   ######################################################################
   #
   def process_reviewer_modifications
-    
+
     design = Design.find(params[:id])
     
     updated_reviewers = false
@@ -392,7 +392,7 @@ class DesignController < ApplicationController
       flash['notice'] = "Designs exist that have no associated part number"
     end
     
-    @active_designs = active_designs.sort_by { |d| d.part_number.pcb_display_name }  
+    @active_designs = active_designs.sort_by { |d| d.directory_name }  
     
   end
 
