@@ -70,6 +70,26 @@ module TimeHelper
       Date.new(year, month, 1)
         
     end
+    
+    
+    ######################################################################
+    #
+    # start_of_month
+    #
+    # Description:
+    # Generates the date for the begining of the month based on time
+    #
+    # Parameters:
+    # none
+    #
+    # Return value:
+    # A date record indicating the start of the month for date.
+    #
+    ######################################################################
+    #
+    def start_of_month
+      Date.new(self.strftime('%Y').to_i, self.strftime('%m').to_i, 1)
+    end
 
     
     ######################################################################
