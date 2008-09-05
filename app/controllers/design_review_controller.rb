@@ -2087,7 +2087,7 @@ class DesignReviewController < ApplicationController
       design.peer_id     = peer.id
       design.designer_id = designer.id
       design.priority_id = priority.id
-      design.update
+      design.save
       
       design.set_reviewer(Role.find_by_name("Valor"), peer)
 
