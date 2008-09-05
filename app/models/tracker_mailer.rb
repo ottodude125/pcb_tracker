@@ -1115,7 +1115,21 @@ class TrackerMailer < ActionMailer::Base
   end
   
   
-  def eco_task_creation_notification(eco_task, subject, sent_on = Time.now)
+  ######################################################################
+  #
+  # eco_task_message
+  #
+  # Description:
+  # This method generates mail for people requiring knowlege about 
+  # the creation and updates of ECO CAD tasks.
+  #
+  # Parameters:
+  #   eco_task   - the ECO CAD Task record
+  #   subject    - the mail subject
+  #
+  ######################################################################
+  #
+  def eco_task_message(eco_task, subject, sent_on = Time.now)
     
     @subject    = "ECO #{eco_task.number}: #{subject}"
     @recipients = Role.lcr_designers.collect { |d| d.email }
