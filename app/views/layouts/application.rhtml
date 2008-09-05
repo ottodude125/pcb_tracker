@@ -38,28 +38,39 @@ function setFocus() {
 <body OnLoad="setFocus()">
 
   <table cellpadding="1" width="100%" class="bottomnav" border='0'>
-    <tr>
+    <tr class="teraheader">
       <td colspan="2">
-        <table width="70%">
+        <table width="70%" border="0">
           <tr>
             <td>
               <%= image_tag 'tera_logo.gif', {'border' => '0'} %>
             </td>
             <td align="right">
-              <% if Pcbtr.production_environment? %>
-                <font size="4" color="white">
-                  <b>PCB Design Tracker</b>
-                </font>
-              <% else %>
-                <font size="4" color="red">
-                    <b>DEVELOPMENT PCB Design Tracker</b>
-                </font>
-              <% end %>
+              <table width="100%">
+                <tr>
+                  <td align="right">
+                    <% if Pcbtr.production_environment? %>
+                      <font size="4" color="white">
+                        <b>PCB Design Tracker</b>
+                      </font>
+                    <% else %>
+                      <font size="4" color="red">
+                        <b>DEVELOPMENT PCB Design Tracker</b>
+                      </font>
+                    <% end %>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
         </table>
       </td>
-      <td width="46" bgcolor="white">
+      <td width="46">
+        <%= link_to(image_tag('home.jpg'), 
+                    { :controller => :tracker },
+                    :title => "Navigate to your PCB Design Tracker Home Page") %>
+      </td>
+      <td width="46" bgcolor="white" valign="middle">
         <%= image_tag 'dtgLogo.gif', {'border' => '0' } %>
       </td>
     </tr>
@@ -99,13 +110,13 @@ function setFocus() {
           </table>
         </td>
         <td align="right"> 
-          <%= Time.now %>
+          <%= Time.now.strftime("%d-%b-%y, %I:%M %p %Z") %>
         </td>
       <% end %>
     </tr>
     <% if session[:user] == nil %>
     <tr>
-        <td colspan="3" align="left" bgcolor="#ffffff">
+        <td colspan="4" align="left" bgcolor="#f6f792">
           <%= link_to('Login Help',
                       {:controller => 'user',
                        :action     => 'show_users'}) %>
@@ -114,7 +125,7 @@ function setFocus() {
     <% end %>
     <% if flash["notice"] %>
       <tr bgcolor="#f6f792">
-        <td colspan="3">
+        <td colspan="4">
           <span class="notice">
             <%= flash["notice"] %>
           </span>
@@ -128,7 +139,7 @@ function setFocus() {
                       { :controller => "user",
                         :action     => "logout" }) %>
         </td>
-        <td align = 'right'>
+        <td colspan="1" align = 'right'>
           <%= link_to("Change Password", 
           			  { :controller => "user",
           			    :action     => "user_set_password",
