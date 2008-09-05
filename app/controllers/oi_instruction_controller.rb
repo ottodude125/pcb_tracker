@@ -644,8 +644,8 @@ class OiInstructionController < ApplicationController
     end
     
     if score_update || comment_update || complexity_update
-      assignment.update
-      assignment.oi_assignment_report.update
+      assignment.save
+      assignment.oi_assignment_report.save
       flash['notice'] += " - Report update recorded"
     else
       flash['notice'] = "No Updates were recorded"
