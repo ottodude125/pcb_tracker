@@ -1,6 +1,6 @@
 module BoardHelper
 
-
+=begin
   def list_revisions(board)
 
     # Get the list of designs for the board.
@@ -28,5 +28,5 @@ module BoardHelper
     end
   end
 
-
+=end
 end
