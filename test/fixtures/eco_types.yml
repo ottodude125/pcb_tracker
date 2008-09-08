@@ -1,0 +1,21 @@
+#
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+schematic:
+  id:     1
+  name:   Schematic
+  active: 1
+
+assembly_drawing:
+  id:     2
+  name:   Assembly Drawing
+  active: 1
+
+fabrication_drawing:
+  id:     3
+  name:   Fabrication Drawing
+  active: 1
+
+
