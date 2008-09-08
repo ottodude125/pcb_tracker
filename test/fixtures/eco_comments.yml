@@ -1,0 +1,41 @@
+#
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+comment_one:
+  id:          1
+  eco_task_id: 1
+  user_id:     4000
+  created_at:  19981230100000
+  comment:     This is comment one
+  
+comment_two:
+  id:          2
+  eco_task_id: 1
+  user_id:     4001
+  created_at:  20000409100000
+  comment:     This is comment two
+  
+comment_three:
+  id:          3
+  eco_task_id: 1
+  user_id:     5000
+  created_at:  20000704100000
+  comment:     This is comment three
+  
+comment_four:
+  id:          4
+  eco_task_id: 1
+  user_id:     4000
+  created_at:  20000904100000
+  comment:     This is comment four
+
+comment_five:
+  id:          5
+  eco_task_id: 2
+  user_id:     4001
+  created_at:  20010914100000
+  comment:     This is comment five
+
+  
