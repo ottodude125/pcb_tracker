@@ -44,23 +44,6 @@ class BoardDesignEntryTest < Test::Unit::TestCase
   end
 
   ######################################################################
-  def test_design_name_methods
-
-    bde = board_design_entries(:av714b)
-    #assert_equal('av714b (959-714-b0)',             bde.design_name)
-    assert_equal('av714',                           bde.design)
-    
-    bde = board_design_entries(:mx008b4)
-    #assert_equal('mx008b4 (252-008-b4)',            bde.design_name)
-    assert_equal('mx008',                           bde.design)
-    
-    bde = board_design_entries(:mx008b4_ecoP123456)
-    #assert_equal('mx008b4_ecoP123456 (252-008-b4)', bde.design_name)
-    assert_equal('mx008',                           bde.design)
-    
-  end
-
-  ######################################################################
   def test_accessors
 
     bde_1 = BoardDesignEntry.find(board_design_entries(:av714b).id)
