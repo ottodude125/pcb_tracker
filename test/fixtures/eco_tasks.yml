@@ -1,0 +1,39 @@
+#
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+task_one:
+  number:           P2000
+  pcb_part_number:  600-000-00 Rev a
+  pcba_part_number: 600-500-00 Rev a
+  eco_type_id:      1
+  completed:        1
+  closed:           1
+  screened_at:      2008-07-20 09:35:07
+  started_at:       2008-07-21 09:35:07
+  completed_at:     2008-07-24 09:35:07
+  closed_at:        2008-07-25 09:35:07
+
+task_two:
+  number:           P2001
+  pcb_part_number:  600-001-00 Rev a
+  pcba_part_number: 600-501-00 Rev a
+  eco_type_id:      2
+  completed:        1
+  closed:           0
+  screened_at:      2008-07-20 09:35:07
+  started_at:       2008-07-22 09:35:07
+  completed_at:     2008-07-24 09:35:07
+
+task_three:
+  number:           P2002
+  pcb_part_number:  600-002-00 Rev a
+  pcba_part_number: 600-502-00 Rev a
+  eco_type_id:      3
+  completed:        1
+  closed:           0
+  screened_at:      2008-07-22 09:35:07
+  started_at:       2008-07-24 09:35:07
+  updated_at:       2008-07-24 09:35:07
+  completed_at:     2008-07-24 09:35:07
