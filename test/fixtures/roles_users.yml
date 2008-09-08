@@ -144,3 +144,6 @@ mark_f_program_mgr:
 bala_hcl_manager:
   role_id: 25
   user_id: 5006
+patrice_m_eco_admin:
+  role_id: 26
+  user_id: 8000
