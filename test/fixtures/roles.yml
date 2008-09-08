@@ -338,4 +338,18 @@ hcl_manager:
   bare_board_only_review_role: 0
   display_name:                HCL Manager
   default_reviewer_id:         0
+eco_admin:
+  id:                          26
+  name:                        ECO Admin
+  active:                      1
+  reviewer:                    0
+  manager:                     0
+  cc_peers:                    0
+  new_design_type:             0
+  date_code_design_type:       0
+  dot_rev_design_type:         0
+  new_design_review_role:      0
+  bare_board_only_review_role: 0
+  display_name:                ECO CAD Task Admin
+  default_reviewer_id:         0
  
