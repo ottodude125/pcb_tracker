@@ -641,6 +641,9 @@ class PartNumberTest < Test::Unit::TestCase
     assert_equal(nil, pn.error_message)
     pn.set_error_message('This is a test')
     assert_equal('This is a test', pn.error_message)
+    pn.set_error_message('This is another test')
+    assert_equal("This is a test\nThis is another test", 
+                 pn.error_message)
     pn.clear_error_message
     assert_equal(nil, pn.error_message)  
     
