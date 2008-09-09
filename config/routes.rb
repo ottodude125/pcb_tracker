@@ -1,4 +1,11 @@
 ActionController::Routing::Routes.draw do |map|
+  
+  map.resources :eco_tasks
+  map.resources :eco_task_reports
+  map.resources :eco_documents
+
+  
+  
   # The priority is based upon order of creation: first created -> highest priority.
 
   # Sample of regular route:
