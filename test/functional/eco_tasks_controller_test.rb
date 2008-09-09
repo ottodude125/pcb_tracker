@@ -1,3 +1,16 @@
+########################################################################
+#
+# Copyright 2008, by Teradyne, Inc., North Reading MA
+#
+# File: eco_tasks_controller_test.rb
+#
+# This file contains the functional tests for the eco task type
+# controller
+#
+# $Id$
+#
+########################################################################
+#
 require File.dirname(__FILE__) + '/../test_helper'
 
 class EcoTasksControllerTest < ActionController::TestCase
