@@ -18,7 +18,9 @@ User.salt = 'change-me'
 
 class UserTest < Test::Unit::TestCase
   
-  fixtures :roles,
+  fixtures :eco_comments, 
+           :eco_documents,
+           :roles,
            :users
   
   
