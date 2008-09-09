@@ -41,6 +41,20 @@
 
         <tr>
           <th class="teraheader">
+            ECO/RELEASE CAD TASKING
+          </th>
+        </tr>
+
+        <% if session[:user].is_a_role_member?('ECO Admin') %>
+          <tr>
+            <td align="center">
+              <%= link_to("Active ECO CAD Tasks", eco_tasks_url) %>
+            </td>
+          </tr>
+        <% end %>
+        
+        <tr>
+          <th class="teraheader">
             PCB Engineering Entry
           </th>
         </tr>
@@ -80,6 +94,12 @@
           <th class="teraheader">
             Reports
           </th>
+        </tr>
+
+        <tr>
+          <td align="center">
+            <%= link_to("ECO CAD Tasking", eco_task_reports_url) %>
+          </td>
         </tr>
 
         <tr>
