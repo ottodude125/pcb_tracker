@@ -40,6 +40,14 @@
           </td>
         </tr>
         
+        <% if session[:user].is_a_role_member?('ECO Admin') %>
+          <tr>
+            <td align="center">
+              <%= link_to("Active ECO CAD Tasks", eco_tasks_url) %>
+            </td>
+          </tr>
+        <% end %>
+
         <tr>
           <td align="center">
             <%= link_to("Reviewer Workload",
