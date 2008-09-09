@@ -1,0 +1,14 @@
+ECO Number:                  <%=h @eco_task.number %>
+Type:                        <%= @eco_task.eco_types.collect { |et| et.name }.join(', ') %>
+Assembled Board Part Number: <%=h @eco_task.pcba_part_number %>
+Bare Board Revision:         <%=h @eco_task.pcb_revision %>
+
+Reference:  <%= Pcbtr::TRACKER_ROOT + eco_task_path(@eco_task) %>
+                        
+
+<% if @eco_task.eco_comments.size > 0 %>COMMENTS:<% @eco_task.eco_comments.each do |comment| %>
+=================================================================
+Entered by: <%= comment.user.name %> on <%= comment.created_at.strftime("%d-%b-%y")%> at <%= comment.created_at.strftime("%I:%M %p %Z")%>
+<%=  comment.comment %><% end %><% end %>
+=================================================================
+
