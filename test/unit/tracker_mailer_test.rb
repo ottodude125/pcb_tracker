@@ -584,7 +584,8 @@ class TrackerMailerTest < Test::Unit::TestCase
                                              :role          => 'HWENG',
                                              :age           => 12}],
                           :reviewer    => @lee_s}
-    response = TrackerMailer.create_ping_reviewer(review_result_list,
+    @lee_s[:results] = [design_review_results(:mx234a_pre_artwork_hw)]
+    response = TrackerMailer.create_ping_reviewer(@lee_s,
                                                   @now)
                  
     assert_equal("Your unresolved Design Review(s)", 
