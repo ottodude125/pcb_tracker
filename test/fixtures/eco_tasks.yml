@@ -5,8 +5,8 @@
 
 task_one:
   number:           P2000
-  pcb_part_number:  600-000-00 Rev a
-  pcba_part_number: 600-500-00 Rev a
+  pcb_revision:     A
+  pcba_part_number: 600-500-00
   eco_type_id:      1
   completed:        1
   closed:           1
@@ -17,8 +17,8 @@ task_one:
 
 task_two:
   number:           P2001
-  pcb_part_number:  600-001-00 Rev a
-  pcba_part_number: 600-501-00 Rev a
+  pcb_revision:     A
+  pcba_part_number: 600-501-00
   eco_type_id:      2
   completed:        1
   closed:           0
@@ -28,8 +28,8 @@ task_two:
 
 task_three:
   number:           P2002
-  pcb_part_number:  600-002-00 Rev a
-  pcba_part_number: 600-502-00 Rev a
+  pcb_revision:     A
+  pcba_part_number: 600-502-00
   eco_type_id:      3
   completed:        1
   closed:           0

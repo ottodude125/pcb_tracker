@@ -57,9 +57,10 @@ class EcoTasksControllerTest < ActionController::TestCase
     set_user(@patrice_m, 'ECO Admin')
     assert_difference('EcoTask.count') do
       post(:create,
-           :eco_task     => { :number          => 'p21',
-                              :pcb_part_number => '500-010-00',
-                              :eco_type_ids    => ["1", "2"] },
+           :eco_task     => { :number           => 'p21',
+                              :pcb_revision     => 'B',
+                              :pcba_part_number => '500-010-00',
+                              :eco_type_ids     => ["1", "2"] },
            :eco_document => { :document => '' },
            :eco_comment  => { :comment => ''})
     end
@@ -83,6 +84,7 @@ class EcoTasksControllerTest < ActionController::TestCase
 
   def test_should_get_edit
     set_user(@patrice_m, 'ECO Admin')
+    @request.session[:return_to] = 'wrewqe'
     get :edit, :id => eco_tasks(:task_one).id
     assert_equal(eco_tasks(:task_one).id, assigns(:eco_task).id)
     assert_response :success
@@ -94,11 +96,12 @@ class EcoTasksControllerTest < ActionController::TestCase
     comment_count = eco_task.eco_comments.size
     put(:update, 
         :id       => eco_task.id, 
-        :eco_task => { :number          => 'p2108',
-                       :pcb_part_number => '500-010-00',
-                       :eco_type_ids    => ["1", "2"] },
-                       :eco_document => { :document => '' },
-                       :eco_comment  => { :comment => 'New Comment'} )
+        :eco_task => { :number           => 'p2108',
+                       :pcb_revision     => 'C',
+                       :pcba_part_number => '500-010-00',
+                       :eco_type_ids     => ["1", "2"] },
+                       :eco_document     => { :document => '' },
+                       :eco_comment      => { :comment => 'New Comment'} )
     assert_redirected_to eco_tasks_url
     eco_task.reload
     assert_equal(comment_count+1, eco_task.eco_comments.size)
@@ -118,8 +121,8 @@ class EcoTasksControllerTest < ActionController::TestCase
     put(:update, 
         :id       => baseline_eco_task.id, 
         :eco_task => { :number           => 'P2000',
-                       :pcb_part_number  => '600-000-00 Rev a',
-                       :pcba_part_number => "600-500-00 Rev a",
+                       :pcb_revision     => 'A',
+                       :pcba_part_number => "600-500-00",
                        :eco_type_ids     => ["1", "2"],
                        :completed        => '1',
                        :closed           => '1',
@@ -128,7 +131,7 @@ class EcoTasksControllerTest < ActionController::TestCase
     eco_task = EcoTask.find(baseline_eco_task.id)
 
     assert_equal(baseline_eco_task.number,           eco_task.number)
-    assert_equal(baseline_eco_task.pcb_part_number,  eco_task.pcb_part_number)
+    assert_equal(baseline_eco_task.pcb_revision,     eco_task.pcb_revision)
     assert_equal(baseline_eco_task.pcba_part_number, eco_task.pcba_part_number)
     assert_equal(baseline_eco_task.completed?,       eco_task.completed?)
     assert_equal(baseline_eco_task.closed?,          eco_task.closed?)
@@ -142,8 +145,8 @@ class EcoTasksControllerTest < ActionController::TestCase
     put(:update, 
         :id       => baseline_eco_task.id, 
         :eco_task => { :number           => 'P4000',
-                       :pcb_part_number  => '600-000-00 Rev a',
-                       :pcba_part_number => "600-500-00 Rev a",
+                       :pcb_revision     => 'A',
+                       :pcba_part_number => "600-500-00",
                        :eco_type_ids     => ["1", "2"],
                        :completed        => '1',
                        :closed           => '1',
@@ -152,7 +155,7 @@ class EcoTasksControllerTest < ActionController::TestCase
     eco_task = EcoTask.find(baseline_eco_task.id)
 
     assert_equal('P4000',                            eco_task.number)
-    assert_equal(baseline_eco_task.pcb_part_number,  eco_task.pcb_part_number)
+    assert_equal(baseline_eco_task.pcb_revision,     eco_task.pcb_revision)
     assert_equal(baseline_eco_task.pcba_part_number, eco_task.pcba_part_number)
     assert_equal(baseline_eco_task.completed?,       eco_task.completed?)
     assert_equal(baseline_eco_task.closed?,          eco_task.closed?)
@@ -165,8 +168,8 @@ class EcoTasksControllerTest < ActionController::TestCase
     put(:update, 
         :id       => baseline_eco_task.id, 
         :eco_task => { :number           => 'P4000',
-                       :pcb_part_number  => '666-000-00',
-                       :pcba_part_number => "600-500-00 Rev a",
+                       :pcb_revision     => 'C',
+                       :pcba_part_number => "600-500-00",
                        :eco_type_ids     => ["1", "2"],
                        :completed        => '1',
                        :closed           => '1',
@@ -175,7 +178,7 @@ class EcoTasksControllerTest < ActionController::TestCase
     eco_task = EcoTask.find(baseline_eco_task.id)
 
     assert_equal(baseline_eco_task.number,           eco_task.number)
-    assert_equal('666-000-00',                       eco_task.pcb_part_number)
+    assert_equal('C',                                eco_task.pcb_revision)
     assert_equal(baseline_eco_task.pcba_part_number, eco_task.pcba_part_number)
     assert_equal(baseline_eco_task.completed?,       eco_task.completed?)
     assert_equal(baseline_eco_task.closed?,          eco_task.closed?)
@@ -188,7 +191,7 @@ class EcoTasksControllerTest < ActionController::TestCase
     put(:update, 
         :id       => baseline_eco_task.id, 
         :eco_task => { :number           => 'P4000',
-                       :pcb_part_number  => '666-000-00',
+                       :pcb_revision     => 'C',
                        :pcba_part_number => "600-555-00",
                        :eco_type_ids     => ["1", "2"],
                        :completed        => '1',
@@ -197,13 +200,13 @@ class EcoTasksControllerTest < ActionController::TestCase
     assert_redirected_to eco_tasks_url
     eco_task = EcoTask.find(baseline_eco_task.id)
 
-    assert_equal(baseline_eco_task.number,           eco_task.number)
-    assert_equal(baseline_eco_task.pcb_part_number,  eco_task.pcb_part_number)
-    assert_equal("600-555-00",                       eco_task.pcba_part_number)
-    assert_equal(baseline_eco_task.completed?,       eco_task.completed?)
-    assert_equal(baseline_eco_task.closed?,          eco_task.closed?)
-    assert_equal(baseline_eco_task.document_link,    eco_task.document_link)
-    assert_equal(eco_type_list,                      baseline_eco_task.eco_types)
+    assert_equal(baseline_eco_task.number,         eco_task.number)
+    assert_equal(baseline_eco_task.pcb_revision,   eco_task.pcb_revision)
+    assert_equal("600-555-00",                     eco_task.pcba_part_number)
+    assert_equal(baseline_eco_task.completed?,     eco_task.completed?)
+    assert_equal(baseline_eco_task.closed?,        eco_task.closed?)
+    assert_equal(baseline_eco_task.document_link,  eco_task.document_link)
+    assert_equal(eco_type_list,                    baseline_eco_task.eco_types)
     
     baseline_eco_task.reload
     
@@ -211,7 +214,7 @@ class EcoTasksControllerTest < ActionController::TestCase
     put(:update, 
         :id       => baseline_eco_task.id, 
         :eco_task => { :number           => 'P4000',
-                       :pcb_part_number  => '666-000-00',
+                       :pcb_revision     => 'C',
                        :pcba_part_number => "600-555-00",
                        :eco_type_ids     => ["1", "2"],
                        :completed        => '1',
@@ -221,7 +224,7 @@ class EcoTasksControllerTest < ActionController::TestCase
     eco_task = EcoTask.find(baseline_eco_task.id)
 
     assert_equal(baseline_eco_task.number,           eco_task.number)
-    assert_equal(baseline_eco_task.pcb_part_number,  eco_task.pcb_part_number)
+    assert_equal(baseline_eco_task.pcb_revision,     eco_task.pcb_revision)
     assert_equal(baseline_eco_task.pcba_part_number, eco_task.pcba_part_number)
     assert_equal(baseline_eco_task.completed?,       eco_task.completed?)
     assert_equal(false,                              eco_task.closed?)
@@ -234,7 +237,7 @@ class EcoTasksControllerTest < ActionController::TestCase
     put(:update, 
         :id       => baseline_eco_task.id, 
         :eco_task => { :number           => 'P4000',
-                       :pcb_part_number  => '666-000-00',
+                       :pcb_revision     => 'C',
                        :pcba_part_number => "600-555-00",
                        :eco_type_ids     => ["1", "2"],
                        :completed        => '0',
@@ -244,7 +247,7 @@ class EcoTasksControllerTest < ActionController::TestCase
     eco_task = EcoTask.find(baseline_eco_task.id)
 
     assert_equal(baseline_eco_task.number,           eco_task.number)
-    assert_equal(baseline_eco_task.pcb_part_number,  eco_task.pcb_part_number)
+    assert_equal(baseline_eco_task.pcb_revision,     eco_task.pcb_revision)
     assert_equal(baseline_eco_task.pcba_part_number, eco_task.pcba_part_number)
     assert_equal(false,                              eco_task.completed?)
     assert_equal(baseline_eco_task.closed?,          eco_task.closed?)
@@ -257,7 +260,7 @@ class EcoTasksControllerTest < ActionController::TestCase
     put(:update, 
         :id       => baseline_eco_task.id, 
         :eco_task => { :number           => 'P4000',
-                       :pcb_part_number  => '666-000-00',
+                       :pcb_revision     => 'C',
                        :pcba_part_number => "600-555-00",
                        :eco_type_ids     => ["1", "2"],
                        :completed        => '0',
@@ -267,7 +270,7 @@ class EcoTasksControllerTest < ActionController::TestCase
     eco_task = EcoTask.find(baseline_eco_task.id)
 
     assert_equal(baseline_eco_task.number,           eco_task.number)
-    assert_equal(baseline_eco_task.pcb_part_number,  eco_task.pcb_part_number)
+    assert_equal(baseline_eco_task.pcb_revision,     eco_task.pcb_revision)
     assert_equal(baseline_eco_task.pcba_part_number, eco_task.pcba_part_number)
     assert_equal(baseline_eco_task.completed?,       eco_task.completed?)
     assert_equal(baseline_eco_task.closed?,          eco_task.closed?)
