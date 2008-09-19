@@ -1139,15 +1139,52 @@ class TrackerMailer < ActionMailer::Base
     @sent_on = sent_on
     @bcc     = blind_cc
     @cc      = add_role_members(['PCB Input Gate', 
-                                'Manager', 
-                                'HCL Manager',
-                                'ECO Admin'])
+                                 'Manager', 
+                                 'HCL Manager',
+                                 'ECO Admin'])
     @cc        += eco_task.users.sort_by{ |u| u.last_name }.map(&:email)
     @cc        -= @recipients
     @cc.uniq!
 
     @body['eco_task'] = eco_task
     
+  end
+  
+  
+  ######################################################################
+  #
+  # eco_task_closed_notification
+  #
+  # Description:
+  # This method generates mail to indicate that the ECO Task has been 
+  # closed
+  #
+  # Parameters:
+  #   eco_task   - the ECO CAD Task record
+  #
+  ######################################################################
+  #
+  def eco_task_closed_notification(eco_task, sent_on = Time.now)
+    
+    @subject    = "ECO #{eco_task.number} is complete"
+    
+    doc_control = Role.find(:first, :conditions => "name='doc_control'")
+    @recipients = doc_control.users.map(&:email)
+    @recipients.uniq!
+
+    @from    = Pcbtr::SENDER
+    @sent_on = sent_on
+    @bcc     = blind_cc
+    @cc      = add_role_members(['PCB Input Gate', 
+                                 'Manager', 
+                                 'HCL Manager',
+                                 'ECO Admin'])
+    @cc += (eco_task.users + Role.lcr_designers).sort_by{ |u| u.last_name }.map(&:email)
+    @cc -= @recipients
+    @cc.uniq!
+
+    @body['eco_task'] = eco_task
+
   end
   
   
@@ -1168,13 +1205,14 @@ class TrackerMailer < ActionMailer::Base
   ######################################################################
   #
   def add_role_members(role_list)
-  
-    cc_list = []
+    
+    user_list = []
     role_list.each do |role_name|
-      cc_list += Role.find_by_name(role_name).active_users.collect { |m| m.email }
+      user_list += Role.find_by_name(role_name).active_users
     end
-
-    cc_list.uniq
+    
+    user_list.uniq!
+    user_list.sort_by{ |u| u.last_name }.map(&:email)
     
   end
   
