@@ -25,12 +25,15 @@ class User < ActiveRecord::Base
   has_many :board_design_entry_users
   has_many :design_review_comments
   has_many :design_update
+  has_many :eco_comments
+  has_many :eco_documents
   has_many :oi_assignments
   has_many :oi_assignment_comments
   has_many :oi_assignment_reports
   has_many :oi_instructions
 
   has_and_belongs_to_many :boards
+  has_and_belongs_to_many :eco_tasks
   has_and_belongs_to_many :ipd_posts
   has_and_belongs_to_many :roles
 
@@ -94,6 +97,31 @@ class User < ActiveRecord::Base
   end
   
   
+  # Set the user's active role.
+  #
+  # :call-seq:
+  #   active_role=(role) -> boolean
+  #
+  #  Set the user's active role to the role passed in.
+  def active_role=(role)
+    self.active_role_id        = role.id
+    self.password              = self.passwd
+    self.password_confirmation = self.passwd
+    self.save
+#    self.update_attribute(:active_role_id, role.id)
+  end
+
+  # Retrieve the user's active role.
+  #
+  # :call-seq:
+  #   active_role(role) -> role
+  #
+  #  Retrieve the user's active role to the role passed in.
+  def active_role
+    Role.find(self.active_role_id)
+  end
+  
+  
   # Retrieve the first reviewer role record from the user's list of role
   # records.
   #
@@ -103,10 +131,32 @@ class User < ActiveRecord::Base
   #  Look through the user's list of roles for a reviewer role record.  
   #  If a reviewer role record is detected then the it is returned.
   #  Otherwise a Nil is returned.
- def reviewer_role
+  def reviewer_role
     self.roles.detect { |r| r.reviewer? }
   end
   
+  
+  # Indicate if the user is assigned to the role identified by the role name.
+  #
+  # :call-seq:
+  #   is_a_role_member?() -> boolean
+  #
+  #  Returns TRUE if the user is assigned to the role.
+  def is_a_role_member?(role_name)
+    self.roles.detect { |r| r.name == role_name } != nil
+  end
+  
+  
+  # Indicate if the user is designer from a low cost region.
+  #
+  # :call-seq:
+  #   is_an_lcr_designer?() -> boolean
+  #
+  #  Returns TRUE if the user is a designer from a low cost region.
+  def is_an_lcr_designer?
+    designer = self.roles.detect { |r| r.name == 'Designer'}
+    designer && !self.employee?
+  end
   
   ######################################################################
   #
