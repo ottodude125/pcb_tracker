@@ -1,0 +1,41 @@
+<!-- View:    eco_task_reports                                  -->
+<!-- Purpose: Displays table containing eco_tasks for the index -->
+<!--          and reindex views.                                -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+<table align="center"       id="anyid"
+       border="3"           cellspacing="0" 
+       cellpadding="1">
+
+  <% if @eco_tasks.size > 0 %>
+    <tr class="teraheader" valign="top">
+      <th width="80">ECO/REL<br />Number</th>
+      <th width="100">PCBA <br />Part Number</th>
+      <th width="40">PCB<br />Rev</th>
+      <th width="90">Date<br />Screened</th>
+      <th width="90">Date<br />Started</th>
+      <th width="90">Date<br />Completed</th>
+      <th width="90">Date<br />Filed</th>
+      <th width="40">Sch</th>
+      <th width="40">Assy</th>
+      <th width="40">Fab</th>
+      <th width="60">Cuts &amp;<br />Jumps</th>
+    </tr>
+
+    <%= render( :partial => "eco_tasks_list_stripes", :collection => @eco_tasks) %>
+      
+    <tr>
+      <th class="teraheader" colspan="7" align="right">Totals:&nbsp;</th>
+      <td align="center"><%= @task_summary[:schematic] %></td>
+      <td align="center"><%= @task_summary[:assembly_drawing] %></td>
+      <td align="center"><%= @task_summary[:fabrication_drawing] %></td>
+      <td align="center"><%= @task_summary[:cuts_and_jumps] %></td>
+    </tr>
+    
+  <% else %>
+    <tr>
+      <td colspan="5" align="center">No records found</td>
+    </tr>
+  <% end %>
+</table>
