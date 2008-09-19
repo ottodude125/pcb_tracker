@@ -1,0 +1,36 @@
+<!-- View:    ECO Tasks                                         -->
+<!-- Purpose: Displays the line items on for the eco tasks in   -->
+<!--          index view.                                       -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<tr align="center" class="<%= eco_tasks_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% if session[:user] %>
+      <%= link_to "#{eco_tasks_list_stripes.number}", edit_eco_task_path(eco_tasks_list_stripes) %>
+    <% else %>
+      <%= link_to "#{eco_tasks_list_stripes.number}", eco_task_path(eco_tasks_list_stripes) %>
+    <% end %>
+  </td>
+  <td><%=h eco_tasks_list_stripes.pcba_part_number %></td>
+  <td><%=h eco_tasks_list_stripes.pcb_revision %></td>
+  <td>
+    <% if eco_tasks_list_stripes.specification_identified? %>
+      <% if eco_tasks_list_stripes.started_at != nil %>
+      <%= eco_tasks_list_stripes.started_at.strftime("%d-%b-%y %H:%M") %>
+      <% else %>
+        NULL
+      <% end %>
+    <% else %>
+      Not Started
+    <% end %>
+  </td>
+  <td>
+    <% if eco_tasks_list_stripes.completed? %>
+      <%= eco_tasks_list_stripes.completed_at.strftime("%d-%b-%y %H:%M") %>
+    <% end %>
+  </td>
+  <td><%= eco_tasks_list_stripes.state %></td>
+</tr>
+

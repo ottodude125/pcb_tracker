@@ -1,0 +1,137 @@
+<!-- View:    eco  task                                         -->
+<!-- Purpose: Displays the details of an ECO task.              -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading =  "ECO CAD Task: ECO Number #{@eco_task.number}" %>
+
+<table align="center">
+
+  <tr>
+    <th class="teraheader" width="250" align="right">ECO Number:&nbsp;</th>
+    <td width="400"><%=h @eco_task.number %></td>
+  </tr>
+
+  <tr>
+    <th class="teraheader" align="right">PCBA Part Number:&nbsp;</th>
+    <td><%=h @eco_task.pcba_part_number %></td>
+  </tr>
+  
+  <tr>
+    <th class="teraheader" align="right">PCB Revision:&nbsp;</th>
+    <td><%=h @eco_task.pcb_revision %></td>
+  </tr>
+
+  <tr>
+    <th class="teraheader" align="right">Date Screened:&nbsp;</th>
+    <td><%= @eco_task.screened_at.strftime("%d-%b-%y") %></td>
+  </tr>
+
+  <tr>
+    <th class="teraheader" align="right">ECO Type:&nbsp;</th>
+    <td><%=h @eco_task.eco_types.collect { |et| et.name }.join(', ') %></td>
+  </tr>
+
+  <tr>
+    <th class="teraheader" align="right" valign="top">Cuts &amp; Jumps:&nbsp;</th>
+    <td><%= @eco_task.cuts_and_jumps ? 'Yes' : 'No' %></td>
+  </tr>
+
+  <% if @eco_task.specification_attached? %>
+    <tr>
+      <th class="teraheader" align="right">ECO/Release Document:&nbsp;</th>
+      <td>
+        <%= link_to(@eco_task.specification.name,
+	            :action => "get_attachment",
+                    :id     => @eco_task.specification.id) %>
+      </td>
+    </tr>
+  <% end %>
+  
+  <% if !@eco_task.document_link.blank? %>
+    <tr>
+      <th class="teraheader" align="right">ECO/Release Document Link:&nbsp;</th>
+      <td><%= auto_link simple_format(h(@eco_task.document_link)) %></td>
+    </tr>
+  <% end %>
+  
+  <tr>
+    <th class="teraheader" align="right" valign="top">Directory Name:&nbsp;</th>
+    <td><%=h @eco_task.directory_name %></td>
+  </tr>
+
+  <tr>
+    <th class="teraheader" align="right">Started On:&nbsp;</th>
+    <td>
+      <% if @eco_task.specification_attached? %>
+        <%= @eco_task.created_at.strftime("%d-%b-%y") %>
+      <% else %>
+        Not
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
+    <th class="teraheader" align="right">Complete:&nbsp;</th>
+    <td><%= @eco_task.completed? ? 'Yes' : 'No' %></td>
+  </tr>
+
+  <% if @eco_task.completed? %>
+    <tr>
+      <th class="teraheader" align="right">Completed At:&nbsp;</th>
+      <td><%= @eco_task.completed_at.strftime("%d-%b-%y") %></td>
+    </tr>
+  <% end %>
+
+  <tr>
+    <th class="teraheader" align="right">Closed:&nbsp;</th>
+    <td><%= @eco_task.closed? ? 'Yes' : 'No' %></td>
+  </tr>
+
+  <% if @eco_task.closed? %>
+    <tr>
+      <th class="teraheader" align="right">Closed At:&nbsp;</th>
+      <td><%= @eco_task.closed_at.strftime("%d-%b-%y") %></td>
+    </tr>
+  <% end %>
+
+  <% if @eco_task.users.size > 0 %>
+    <tr valign="top">
+      <th class="teraheader" align="right">Additions to the email CC List:&nbsp;</th>
+      <td>
+        <table width="100%" cellspacing="1">
+          <% @eco_task.users.sort_by { |u| u.last_name }.each do |user| %>
+            <tr><td><%= user.name %></td></tr>
+          <% end %>
+        </table>
+      </td>
+    </tr>
+  <% end %>
+  
+</table>
+
+<table align="center" width="880" border="0">
+  <tr><td colspan="4"><hr class="div" /></td></tr>
+  <tr>
+    <td align="center" width="100%">
+      <%= link_to 'Return to ECO CAD Task List', eco_tasks_path %>
+    </td>
+  </tr>
+  <tr><td colspan="4"><hr class="div" /></td></tr>
+</table>
+  
+  <% if @eco_task.eco_comments.size > 0 %>
+    <table border="0" cellspacing="0" width="100%" align="center">
+      <tr>
+        <th class="teraheader" colspan="2">Task Comments</th>
+      </tr>
+      <%= render( :partial    => "comment_list",
+                  :collection => @eco_task.eco_comments) %>
+    </table>
+  <% end %>
+
+  </div>
+
+  <hr class="div" />
+<%# debug @eco_task %>

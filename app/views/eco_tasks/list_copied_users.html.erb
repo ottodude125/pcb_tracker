@@ -1,0 +1,34 @@
+<!-- View:    eco_task                                          -->
+<!-- Purpose: Displays the ECO Task CC List.                    -->
+<!--                                                            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<!DOCTYPE HTML PUBLIC "HTML 4.01 Transitional" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title>ECO/Release <%= @eco_task.number %> Email CC List</title>
+  <%= stylesheet_link_tag 'tracker' %>
+</head>
+
+<body>
+ 
+  <p align="center">
+    <a href="javascript:window.close();">Close Window</a>
+  </p>
+
+  <h1>ECO/Release <%= @eco_task.number %> CC List<h1>
+  <hr class="div" />
+
+  <% @users.each do |user| %>
+  <p align="center"><%= user.name %></p>
+  <% end %>
+  
+<hr class="div" />
+
+  <p align="center">
+    <a href="javascript:window.close();">Close Window</a>
+  </p>
+</body>
+</html>

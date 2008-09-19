@@ -1,0 +1,58 @@
+<!-- View:    design                                            -->
+<!-- Purpose: Displays a list of designs to provied the admin   -->
+<!--          with links to each of the active designs.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading =  "Open ECO CAD Tasks" %>
+
+<p align="center"><font size="-2">(Click on column headers to sort)</font></p>
+
+<% eco_admin = session[:user] && session[:user].is_a_role_member?('ECO Admin') %>
+
+<table align="center"       class="sortable" 
+       id="anyid"           border="0" 
+       cellspacing="0"      cellpadding="1">
+
+  <% if @eco_tasks.size > 0 %>
+    <tr class="teraheader" valign="top">
+      <th width="130">ECO Number</th>
+      <th width="160">PCBA Part Number</th>
+      <th width="185">PCB Revision</th>
+      <th width="150">Started</th>
+      <th width="150">Completed</th>
+      <th width="150">State</th>
+    </tr>
+
+    <%= render( :partial => "eco_tasks_list_stripes", :collection => @eco_tasks) %>
+  <% else %>
+    <p align="center">The List is Empty</p>
+  <% end %>
+                           
+</table>
+
+
+<br />
+
+<table align="center"       border="0" 
+       cellspacing="0"      cellpadding="1"
+       width="800">
+
+  <tr><td colspan="2"><hr class="div" /></td></tr>
+  <tr>
+    <% if eco_admin %>
+      <td align="left">
+        <%= link_to 'New ECO CAD Task', new_eco_task_path %>
+      </td>
+      <td align="right"><%= link_to 'Home', :controller => 'tracker' %></td>
+    <% else %>
+      <td align="center"><%= link_to 'Home', :controller => 'tracker' %></td>
+    <% end %>
+  </tr>
+
+  <tr><td colspan="2"><hr class="div" /></td></tr>
+                           
+</table>
+
+

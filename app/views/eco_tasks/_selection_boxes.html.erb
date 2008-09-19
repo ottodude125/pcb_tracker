@@ -1,0 +1,96 @@
+<!-- View:    ECO Tasks                                         -->
+<!-- Purpose: Displays the user names for selection in the      -->
+<!--          edit_eco_task_email_list view.                    -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<table border="0" width='1000' align="center">
+  <tr>
+
+    <td valign="top" width="50%">
+
+      <table width="100%">
+        
+        <tr>
+          <th class="teraheader">
+            <font size="+1">Remove from CC List</font>
+          </th>
+        </tr>
+
+        <% if @eco_task.users.size > 0 %>
+          <tr>
+            <td align="center">
+              <font size="-2">
+                To remove from the CC list, click on the person's name.
+              </font>
+            </td>
+          </tr>
+          <tr>
+            <td align="center">
+              <%= collection_select(:remove,
+                                    :name,
+                                    @eco_task.users.sort_by { |u| u.last_name },
+                                    :id,
+                                    :last_name_first,
+                                    {:include_blank => false},
+                                    "class" => 'name_select',
+                                    "size" => 30) %>
+              <%= observe_field('remove_name',
+                                :update => 'selections',
+                                :url    => {:action =>'remove_from_cc_list'},
+                                :with   => "'id=' + escape(value)+'&eco_task_id='+#{@eco_task.id}") %> 
+            </td>
+          </tr>
+        <% else %>
+          <tr align="center"><td>The CC list is empty.</td></tr>
+        <% end %>
+          
+      </table>
+    </td>
+          
+    <td valign="top" width="50%">
+
+      <table width="100%">
+        
+        <tr>
+          <th class="teraheader" colspan="2">
+            <font size="+1">Add to CC List</font>
+          </th>
+        </tr>
+        <% if @eco_task.users_eligible_for_cc_list.size > 0 %>
+          <tr>
+            <td align="center">
+              <font size="-2">
+                To add to the CC list, click on the person's name.
+              </font>
+            </td>
+          </tr>
+          <tr>
+            <td align="center">
+              <%= collection_select(:add,
+                                    :name,
+                                    @eco_task.users_eligible_for_cc_list,
+                                    :id,
+                                    :last_name_first,
+                                    {:include_blank => false},
+                                    "class" => 'name_select',
+                                    "size"  => '30') %>
+              <%= observe_field('add_name',
+                                :update => 'selections',
+                                :url    => {:action => 'add_to_cc_list'},
+                                :with   => "'id=' + escape(value)+'&eco_task_id='+#{@eco_task.id}") %> 
+            </td>
+          </tr>
+        <% else %>
+          <tr align="center">
+            <td>No users remain to be added.</td>
+          </tr>
+        <% end %>
+        
+      </table>
+    </td>
+  </tr>
+
+</table>
+

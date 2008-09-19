@@ -1,0 +1,38 @@
+<!-- View:    eco_tasks                                         -->
+<!-- Purpose: Displays the email list for an eco task           -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "ECO/Release Number #{@eco_task.number} Email CC List" %>
+
+<% form_tag(:action => 'update_cc_list') do %>
+
+  <table width="100%">
+    <tr>
+      <td align="left">
+        <%# link_to "#{eco_task.number}", edit_eco_task_path(eco_task) %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <div id="selections">
+
+   <%= render_partial('selection_boxes')%>
+
+  </div>
+
+  <hr class="div" />
+  
+  <p align="center"><%= link_to "Return", edit_eco_task_path(@eco_task) %></p>
+
+  <hr class="div" />
+
+  <% end %>
+
+<%# debug @eco_task %>
+<%# debug "ECO TASK USERS SIZE: #{@eco_task.users.size}" %>
+<%# debug @eco_task.users %>
+<%# debug "USERS SIZE: #{@users_eligible_for_cc_list.size}" %>
