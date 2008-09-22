@@ -12,7 +12,7 @@
 development:
   adapter: mysql
   encoding: utf8
-  database: pcbtr_development
+  database: pcbtr
   username: pcbtr
   password: reviewTrack
   socket: /var/lib/mysql/mysql.sock
