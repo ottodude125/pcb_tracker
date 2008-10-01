@@ -753,7 +753,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     email = @emails.pop
 
     assert_equal(14, email.to.size)
-    assert_equal("pcb252_234_c0_q: The Pre-Artwork review has been posted", 
+    assert_equal('Catalyst/AC/(pcb252_234_c0_q): The Pre-Artwork review has been posted', 
                  email.subject)
     found_email = email.cc.detect { |addr| addr == admin_email }
     assert_equal(nil, found_email)
@@ -820,7 +820,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     email = @emails.pop
     assert_equal(9, email.to.size)
-    assert_equal("pcb252_234_a0_g: The Final review has been posted", 
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): The Final review has been posted', 
                  email.subject)
     found_email = email.cc.detect { |addr| addr == admin_email }
     assert_equal(admin_email, found_email)
@@ -1480,7 +1480,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       '12' => "No Response"
     }
 
-    mail_subject = 'pcb252_234_a0_g::Pre-Artwork '
+    mail_subject = 'Catalyst/AC/(pcb252_234_a0_g): Pre-Artwork '
     reviewer_result_list= [
       # Espo - CE-DFT Reviewer
       {:user_id          => @espo.id,
@@ -1922,7 +1922,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     email = @emails.shift
     assert_equal(0, @emails.size)
 
-    assert_equal('pcb252_234_a0_g: Pre-Artwork Review is complete',
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): The Pre-Artwork Review is complete',
                  email.subject)
 
     mx234a_pre_art_dr = DesignReview.find(mx234a.id)
@@ -1981,7 +1981,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       '9'  => "No Response"
     }
 
-    mail_subject = 'pcb252_234_a0_g::Placement '
+    mail_subject = 'Catalyst/AC/(pcb252_234_a0_g): Placement '
     reviewer_result_list= [
       # Espo - CE-DFT Reviewer
       {:user_id          => @espo.id,
@@ -2136,7 +2136,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       email = @emails.pop
 
       if @emails.size > 0
-        assert_equal("pcb252_234_a0_g: Placement Review is complete",
+        assert_equal("Catalyst/AC/(pcb252_234_a0_g): The Placement Review is complete",
                      email.subject)
         email = @emails.pop
       end
@@ -2184,7 +2184,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       '11' => "No Response"
     }
 
-    mail_subject = 'pcb252_234_a0_g::Routing '
+    mail_subject = 'Catalyst/AC/(pcb252_234_a0_g): Routing '
     reviewer_result_list= [
       # Espo - CE-DFT Reviewer
       {:user_id          => @espo.id,
@@ -2325,7 +2325,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       email = @emails.pop
 
       if @emails.size > 0
-        assert_equal("pcb252_234_a0_g: Routing Review is complete",
+        assert_equal('Catalyst/AC/(pcb252_234_a0_g): The Routing Review is complete',
                      email.subject)
         email = @emails.pop
       end
@@ -2377,7 +2377,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       '6'  => "No Response"
     }
 
-    mail_subject = 'pcb252_234_a0_g::Final '
+    mail_subject = 'Catalyst/AC/(pcb252_234_a0_g): Final '
     final_reviewer_result_list = [
       # Espo - CE-DFT Reviewer
       {:user_id          => @espo.id,
@@ -2575,7 +2575,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       email = @emails.pop
 
       if @emails.size > 0
-        assert_equal("pcb252_234_a0_g: Final Review is complete",
+        assert_equal("Catalyst/AC/(pcb252_234_a0_g): The Final Review is complete",
                      email.subject)
 
         found_email = email.cc.detect { |addr| addr == admin_email }
@@ -2625,7 +2625,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       '19' => "No Response"
     }
 
-    mail_subject = 'pcb252_234_a0_g::Release '
+    mail_subject = 'Catalyst/AC/(pcb252_234_a0_g): Release '
     reviewer_result_list= [
       # Lee Shaff- HW Reviewer
       {:user_id          => @lee_s.id,
@@ -2738,7 +2738,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       email = @emails.pop
 
       if @emails.size > 0
-        assert_equal("pcb252_234_a0_g: Release Review is complete",
+        assert_equal("Catalyst/AC/(pcb252_234_a0_g): The Release Review is complete",
                      email.subject)
         email = @emails.pop
       end
@@ -2810,7 +2810,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
       '12' => "No Response"
     }
 
-    mail_subject = 'pcb252_234_a0_g::Pre-Artwork '
+    mail_subject = 'Catalyst/AC/(pcb252_234_a0_g): Pre-Artwork '
     reviewer_result_list= [
       # Espo - CE-DFT Reviewer
       {:user_id          => @espo.id,
@@ -3187,7 +3187,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     email = @emails.pop
     assert_equal(0, @emails.size)
-    assert_equal('pcb252_234_a0_g: The Hardware Engineer (EE) review has been reassigned to Rich Ahamed',
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): The Hardware Engineer (EE) review has been reassigned to Rich Ahamed',
                  email.subject)
 
     hw_review_result.reload
@@ -3200,11 +3200,11 @@ class DesignReviewControllerTest < Test::Unit::TestCase
                      'HWENG' => '6000'})
     email = @emails.pop
     assert_equal(1, @emails.size)
-    assert_equal('pcb252_234_a0_g: You have been assigned to perform the TDE Engineer review',
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): You have been assigned to perform the TDE Engineer review',
                  email.subject)
     email = @emails.pop
     assert_equal(0, @emails.size)
-    assert_equal('pcb252_234_a0_g: You have been assigned to perform the Hardware Engineer (EE) review',
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): You have been assigned to perform the Hardware Engineer (EE) review',
                  email.subject)
 
     hw_review_result.reload
@@ -3417,7 +3417,8 @@ end
 
     assert_equal(1, @emails.size)
     email = @emails.pop
-    assert_equal("The pcb252_234_a0_g Pre-Artwork Design Review has been modified by James Light",
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): The Pre-Artwork Design ' +
+                 'Review has been modified by James Light',
                  email.subject)
           
     expected_to_list  = mx234a_pre_artwork_reviewers.collect { |r| r.email }
@@ -3486,7 +3487,8 @@ end
 
     assert_equal(1, @emails.size)
     email = @emails.pop
-    assert_equal("The pcb252_234_a0_g Placement Design Review has been modified by James Light",
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): The Placement Design Review ' +
+                 'has been modified by James Light',
                  email.subject)
 
     mx234a_placement_reviewers = [@espo,      @heng_k,    @lee_s,     
@@ -3558,7 +3560,8 @@ end
     
     assert_equal(1, @emails.size)
     email = @emails.pop
-    assert_equal("The pcb252_234_a0_g Routing Design Review has been modified by James Light",
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): The Routing Design Review ' +
+                 'has been modified by James Light',
                  email.subject)
 
     mx234a_routing_reviewers = [@espo,      @heng_k,    @lee_s,     
@@ -3632,7 +3635,8 @@ end
     
     assert_equal(1, @emails.size)
     email = @emails.pop
-    assert_equal("The pcb252_234_a0_g Final Design Review has been modified by James Light",
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): The Final Design Review has ' +
+                 'been modified by James Light',
                  email.subject)
 
     mx234a_final_reviewers = [@espo,      @heng_k,    @lee_s,     @anthony_g, 
@@ -3705,7 +3709,8 @@ end
     
     assert_equal(1, @emails.size)
     email = @emails.pop
-    assert_equal("The pcb252_234_a0_g Release Design Review has been modified by James Light",
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): The Release Design Review ' +
+                 'has been modified by James Light',
                  email.subject)
 
     mx234a_routing_reviewers = [@lee_s,   @jim_l,   @eileen_c]

@@ -473,10 +473,10 @@ class AuditControllerTest < Test::Unit::TestCase
     # completes
     assert_equal(2, @emails.size)
     email = @emails.pop
-    assert_equal("Notification of upcoming Final Review for pcb252_234_b0_m",  
+    assert_equal("Catalyst/AC/(pcb252_234_b0_m): Notification of upcoming Final Review",  
                  email.subject)
     email = @emails.pop
-    assert_equal("pcb252_234_b0_m: The designer has completed the self-audit", 
+    assert_equal("Catalyst/AC/(pcb252_234_b0_m): The designer's self audit is complete", 
                  email.subject)
 
     # Log in as an auditor and get the audit listing.
