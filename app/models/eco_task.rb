@@ -336,7 +336,6 @@ class EcoTask < ActiveRecord::Base
   #
   def users_eligible_for_cc_list
     User.find(:all, :conditions => 'active=1',:order => 'last_name') -
-      Role.find_by_name('PCB Input Gate').active_users               -
       Role.find_by_name('HCL Manager').active_users                  -
       Role.find_by_name('Manager').active_users                      -
       Role.find_by_name('ECO Admin').active_users                    -
