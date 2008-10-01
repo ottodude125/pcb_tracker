@@ -1139,10 +1139,7 @@ class TrackerMailer < ActionMailer::Base
     @from    = Pcbtr::SENDER
     @sent_on = sent_on
     @bcc     = blind_cc
-    @cc      = add_role_members(['PCB Input Gate', 
-                                 'Manager', 
-                                 'HCL Manager',
-                                 'ECO Admin'])
+    @cc      = add_role_members(['Manager', 'HCL Manager', 'ECO Admin'])
     @cc        += eco_task.users.sort_by{ |u| u.last_name }.map(&:email)
     @cc        -= @recipients
     @cc.uniq!
@@ -1176,10 +1173,7 @@ class TrackerMailer < ActionMailer::Base
     @from    = Pcbtr::SENDER
     @sent_on = sent_on
     @bcc     = blind_cc
-    @cc      = add_role_members(['PCB Input Gate', 
-                                 'Manager', 
-                                 'HCL Manager',
-                                 'ECO Admin'])
+    @cc      = add_role_members(['Manager', 'HCL Manager', 'ECO Admin'])
     @cc += (eco_task.users + Role.lcr_designers).sort_by{ |u| u.last_name }.map(&:email)
     @cc -= @recipients
     @cc.uniq!
