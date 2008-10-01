@@ -593,13 +593,13 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     assert_equal(1,                siva_email.to.size)
     assert_equal(@siva_e.email,    siva_email.to.pop)
     assert_equal(expected_cc_list, siva_email.cc.sort)
-    assert_equal("Work Assignment Created for the pcb252_234_a0_g",
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): Work Assignment created',
                  siva_email.subject)
 
     assert_equal(1,                mathi_email.to.size)
     assert_equal(@mathi_n.email,   mathi_email.to.pop)
     assert_equal(expected_cc_list, mathi_email.cc.sort)
-    assert_equal("Work Assignment Created for the pcb252_234_a0_g", 
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): Work Assignment created', 
                  mathi_email.subject)
 
     # Verify that a user from outside the PCB Group can not 
@@ -769,7 +769,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     email = @emails.pop
     assert_equal([@scott_g.email], email.to.sort)
     assert_equal(cc_list.sort,     email.cc.sort)
-    assert_equal("#{@mx234a.directory_name}:: Work Assignment Update",
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): Work Assignment Update',
                  email.subject)
 
 
@@ -792,7 +792,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     email = @emails.pop
     assert_equal([@scott_g.email], email.to.sort)
     assert_equal(cc_list.sort,     email.cc.sort)
-    assert_equal("#{@mx234a.directory_name}:: Work Assignment Update - Completed",
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): Work Assignment Update - Completed',
                  email.subject)
     
     set_user(@scott_g.id, 'Designer')
@@ -816,7 +816,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     email = @emails.pop
     assert_equal([@siva_e.email], email.to.sort)
     assert_equal(cc_list.sort,    email.cc.sort)
-    assert_equal("#{@mx234a.directory_name}:: Work Assignment Update - Reopened",
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): Work Assignment Update - Reopened',
                  email.subject)
     
   end

@@ -244,7 +244,8 @@ class DesignTest < Test::Unit::TestCase
     # Mail will only be sent for the design review that is in process.
     assert_equal(1, @emails.size)
     email = @emails.pop
-    assert_equal('Valor reviewer changed for 252-234-a0 g Pre-Artwork Design Review', 
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): Valor reviewer changed for ' +
+                 'the Pre-Artwork design review', 
                  email.subject)
     
     @mx234a_pre_art_dr.review_status = @review_complete
@@ -298,7 +299,8 @@ class DesignTest < Test::Unit::TestCase
        
     assert_equal(1, @emails.size)
     email = @emails.pop
-    assert_equal('Valor reviewer changed for 252-234-a0 g Final Design Review', 
+    assert_equal('Catalyst/AC/(pcb252_234_a0_g): Valor reviewer changed for ' +
+                 'the Final design review', 
                  email.subject)
 
   end

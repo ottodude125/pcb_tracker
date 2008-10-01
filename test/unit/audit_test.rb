@@ -25,11 +25,14 @@ class AuditTest < Test::Unit::TestCase
            :design_reviews,
            :design_review_results,
            :part_numbers,
+           :platforms,
            :prefixes,
            :priorities,
+           :projects,
            :review_types,
            :revisions,
            :roles,
+           :roles_users,
            :sections,
            :subsections,
            :users
@@ -926,7 +929,7 @@ class AuditTest < Test::Unit::TestCase
                      @audit_109.design.directory_name +
                      ' have been recorded - mail was sent'
     
-    subj_audit_team_updated = 'The audit team for the pcb252_232_b0_e has been updated'
+    subj_audit_team_updated = 'FLEX/Other/Flex 2070 AWP(pcb252_232_b0_e): The audit team has been updated'
     
     self_auditors = { 330 => scott, 331 => scott, 332 => scott,
                       333 => scott, 334 => scott, 335 => scott,
