@@ -6,7 +6,7 @@
 
 
 <% if @design_review %>
-  <% @heading = "#{@design_review.design.name} #{@design_review.review_type.name} Design Review - Reviewer Workload" %>
+  <% @heading = "#{@design_review.design.directory_name} #{@design_review.review_type.name} Design Review - Reviewer Workload" %>
 <% else %>
   <% @heading = "Reviewer Workload - All Reviewers" %>
 <% end %>
