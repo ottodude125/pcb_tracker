@@ -65,12 +65,21 @@
             <td>
               <%= @design_review.design_center.name %>
             </td>
-	      </tr>
-		  <tr>
+	  </tr>
+	  <tr valign="top">
             <th align="left">Review Type:</th>
             <td>
               <%= @design_review.review_name %>
             </td>
+            <% if @design_review.design_center == session[:user].design_center %>
+              <td colspan="2">&nbsp;</td>
+            <% else %>
+              <td colspan="2" bgcolor="yellow"><font color="red"><b>
+                NOTE: The data is not located in <%= session[:user].design_center.name  %>.  
+                After posting, the tracker will display the design review.  You can change
+                the design center from that screen.
+              </b></font></td>
+            <% end %>
           </tr>
         </table>
       </td>
