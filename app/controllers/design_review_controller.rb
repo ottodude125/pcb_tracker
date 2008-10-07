@@ -1461,31 +1461,30 @@ class DesignReviewController < ApplicationController
   #
   def send_ftp_notification
 
+    ftp_notification           = FtpNotification.new(params[:ftp_notification])
+    ftp_notification.design_id = params[:id]
+
     # Verify that all of the information has been provided before processing.
-    if (params[:ftp_notification][:assembly_bom_number].strip == "" ||  
-        params[:ftp_notification][:file_data].strip           == "" ||
-        params[:ftp_notification][:revision_date].strip       == "" ||
-        params[:ftp_notification][:fab_house_id]     == '0'         ||
-        params[:ftp_notification][:division_id]      == '0'         ||
-        params[:ftp_notification][:design_center_id] == '0')
+    if (ftp_notification.assembly_bom_number.strip == "" ||  
+        ftp_notification.file_data.strip           == "" ||
+        ftp_notification.fab_house_id     == '0'         ||
+        ftp_notification.division_id      == '0'         ||
+        ftp_notification.design_center_id == '0')
 
       flash['notice'] = "Please provide all to the data requied for the FTP Notification.  The notification was not sent."
       redirect_to(:action              => "perform_ftp_notification", 
                   :id                  => params[:id],
-                  :assembly_bom_number => params[:ftp_notification][:assembly_bom_number],
-                  :file_data           => params[:ftp_notification][:file_data],
-                  :revision_date       => params[:ftp_notification][:revision_date],
-                  :division_id         => params[:ftp_notification][:division_id],
-                  :design_center_id    => params[:ftp_notification][:design_center_id],
-                  :vendor_id           => params[:ftp_notification][:fab_house_id])
+                  :assembly_bom_number => ftp_notification.assembly_bom_number,
+                  :file_data           => ftp_notification.file_data,
+                  :division_id         => ftp_notification.division_id,
+                  :design_center_id    => ftp_notification.design_center_id,
+                  :vendor_id           => ftp_notification.fab_house_id)
 
     else
 
       design   = Design.find(params[:id])
       if !design.ftp_notification
       
-        ftp_notification = FtpNotification.new(params[:ftp_notification])
-        ftp_notification.design_id = design.id
         ftp_notification.save
         
         message  = "NO RESPONSE IS REQUIRED!\n"
@@ -1499,7 +1498,6 @@ class DesignReviewController < ApplicationController
         message += "   WINDOWS:  \\\\nrpcb\\" + ftp_notification.design_center.pcb_path
         message += "\\" + ftp_notification.design.directory_name + "\\public\\\n"
         message += "Files Size, Date, and Name: " + ftp_notification.file_data + "\n"
-        message += "Rev Date: " + ftp_notification.revision_date + "\n"
         message += "Vendor: " + ftp_notification.fab_house.name + "\n"
         
         TrackerMailer::deliver_ftp_notification(message, ftp_notification)
@@ -1509,9 +1507,9 @@ class DesignReviewController < ApplicationController
         message += " - all of the reviewers\n"
         design.board.users.each { |user| message += " - #{user.name}\n" }
 
-        design_review = design.design_reviews.detect { |dr| dr.review_type.name == 'Final'}
+        final_design_review = design.get_design_review('Final')
         dr_comment = DesignReviewComment.new(:user_id          => session[:user][:id],
-                                             :design_review_id => design_review.id,
+                                             :design_review_id => final_design_review.id,
                                              :highlight        => 1,
                                              :comment          => message).save
                
