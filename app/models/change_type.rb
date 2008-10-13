@@ -38,7 +38,7 @@ class ChangeType < ActiveRecord::Base
     self.save
 
     if self.errors.empty?
-      change_types = ChangeType.find(:all, :order => :position)
+      change_types = self.change_class.change_types.find(:all)
       position     = 1 if !position
       change_types.last.insert_at(position)
     end
@@ -61,7 +61,7 @@ class ChangeType < ActiveRecord::Base
     self.save
     
     if self.errors.empty?
-      change_types = ChangeType.find(:all, :order => :position)
+      change_types = self.change_class.change_types.find(:all)
       index        = change_types.index(self)
       change_types[index].insert_at(update[:position].to_i)
     end
