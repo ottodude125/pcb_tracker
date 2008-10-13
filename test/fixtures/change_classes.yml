@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+change_class_1:
+  name:       Class 1
+  position:   1
+  active:     true
+  definition: Describes the first class
+
+change_class_2:
+  name:       MyString
+  position:   2
+  active:     false
+  definition: Describes the second class
