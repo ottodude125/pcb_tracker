@@ -1,0 +1,44 @@
+#
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+change_detail_1_1_3_1:
+  id:             1131
+  name:           Class 1, Type 1, Item 3, Detail 1
+  change_item_id: 113
+  position:       1
+  active:         true
+  definition:     Describes the first detail (class 1, type 1, item 3)
+
+change_detail_1_1_3_2:
+  id:             1132
+  name:           Class 1, Type 1, Item 3, Detail 2
+  change_item_id: 113
+  position:       2
+  active:         false
+  definition:     Describes the second detail (class 1, type 1, item 3)
+
+change_detail_1_1_3_3:
+  id:             1133
+  name:           Class 1, Type 3, Item 3, Detail 3
+  change_item_id: 113
+  position:       3
+  active:         false
+  definition:     Describes the third detail (class 1, type 1, item 3)
+
+change_detail_2_2_1_1:
+  id:             2211
+  name:           Class 2, Type 2, Item 1, Detail 1
+  change_item_id: 221
+  position:       1
+  active:         true
+  definition:     Describes the first detail (class 2, type 2, item 1)
+
+change_detail_2_2_1_2:
+  id:            2212
+  name:          Class 2, Type 2, Item 1, Detail 2
+  change_item_id:  221
+  position:      2
+  active:        false
+  definition:    Describes the second detail (class 2, type 2, item 2)
