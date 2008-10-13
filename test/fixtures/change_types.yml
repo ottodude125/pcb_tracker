@@ -1,0 +1,44 @@
+#
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+change_type_1_1:
+  id:              11
+  name:            Class 1, Type 1
+  change_class_id: 1
+  position:        1
+  active:          true
+  definition:      Describes the first type (class 1)
+
+change_type_1_2:
+  id:              12
+  name:            Class 1, Type 2
+  change_class_id: 1
+  position:        2
+  active:          false
+  definition:      Describes the second type (class 1)
+
+change_type_1_3:
+  id:              13
+  name:            Class 1, Type 3
+  change_class_id: 1
+  position:        3
+  active:          false
+  definition:      Describes the third type (class 1)
+
+change_type_2_1:
+  id:              21
+  name:            Class 2, Type 1
+  change_class_id: 2
+  position:        1
+  active:          true
+  definition:      Describes the first type (class 2)
+
+change_type_2_2:
+  id:              22
+  name:            Class 2, Type 2
+  change_class_id: 2
+  position:        2
+  active:          false
+  definition:      Describes the second type (class 2)
