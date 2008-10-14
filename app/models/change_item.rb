@@ -68,4 +68,15 @@ class ChangeItem < ActiveRecord::Base
   end
   
   
+  # Retrieve the active change details.
+  #
+  # :call-seq:
+  #   get_active_change_details() -> [change_detail(s)]
+  #
+  # A list of active change details is returned ordered by position.
+  def get_active_change_details
+    self.change_details.find(:all, :conditions => { :active => true })
+  end
+  
+  
 end
