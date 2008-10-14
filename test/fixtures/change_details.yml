@@ -27,6 +27,14 @@ change_detail_1_1_3_3:
   active:         false
   definition:     Describes the third detail (class 1, type 1, item 3)
 
+change_detail_1_1_3_4:
+  id:             134
+  name:           Class 1, Type 3, Item 3, Detail 4
+  change_item_id: 113
+  position:       4
+  active:         true
+  definition:     Describes the fourth detail (class 1, type 1, item 3)
+
 change_detail_2_2_1_1:
   id:             2211
   name:           Class 2, Type 2, Item 1, Detail 1
