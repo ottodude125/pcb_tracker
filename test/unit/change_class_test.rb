@@ -167,6 +167,24 @@ class ChangeClassTest < ActiveSupport::TestCase
 
 
   end
+  
+  
+  ######################################################################
+  def test_get_active_change_types
+    all_types      = @change_class_1.change_types.find(:all)
+    active_types   = @change_class_1.get_active_change_types
+    inactive_types = all_types - active_types
+    
+    inactive_types.each { |change_type| assert(!change_type.active?) }
+   
+    pos = 0
+    active_types.each do |change_type|
+      assert(change_type.active)
+      assert(change_type.position > pos)
+      pos = change_type.position
+    end
+    
+  end
 
   
 private 
