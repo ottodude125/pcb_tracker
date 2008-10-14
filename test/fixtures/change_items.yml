@@ -27,6 +27,14 @@ change_item_1_1_3:
   active:          false
   definition:      Describes the third item (class 1, type 1)
 
+change_item_1_1_4:
+  id:              100
+  name:            Class 1, Type 3, Item 4
+  change_type_id:  11
+  position:        4
+  active:          true
+  definition:      Describes the fourth item (class 1, type 1)
+
 change_item_2_2_1:
   id:              221
   name:            Class 2, Type 2, Item 1
