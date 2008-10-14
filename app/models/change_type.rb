@@ -68,4 +68,15 @@ class ChangeType < ActiveRecord::Base
   end
   
   
+  # Retrieve the active change items.
+  #
+  # :call-seq:
+  #   get_active_change_items() -> [change_item(s)]
+  #
+  # A list of active change items is returned ordered by position.
+  def get_active_change_items
+    self.change_items.find(:all, :conditions => { :active => true })
+  end
+  
+  
 end
