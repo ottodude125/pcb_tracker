@@ -20,11 +20,8 @@ class ChangeTypeTest < ActiveSupport::TestCase
   
   
   def setup
-    @change_class_1    = change_classes(:change_class_1)
     @change_class_2    = change_classes(:change_class_2)
     @change_type_1_1   = change_types(:change_type_1_1)
-    @change_type_1_2   = change_types(:change_type_1_2)
-    @change_type_1_3   = change_types(:change_type_1_3)
     @change_type_2_1   = change_types(:change_type_2_1)
     @change_type_2_2   = change_types(:change_type_2_2)
     @change_type_count = ChangeType.count
@@ -191,6 +188,24 @@ class ChangeTypeTest < ActiveSupport::TestCase
     assert_equal(2, @change_type_2_2.position)
 
 
+  end
+
+  
+  ######################################################################
+  def test_get_active_change_items
+    all_items      = @change_type_1_1.change_items.find(:all)
+    active_items   = @change_type_1_1.get_active_change_items
+    inactive_items = all_items - active_items
+    
+    inactive_items.each { |change_item| assert(!change_item.active?) }
+   
+    pos = 0
+    active_items.each do |change_item|
+      assert(change_item.active)
+      assert(change_item.position > pos)
+      pos = change_item.position
+    end
+    
   end
 
   
