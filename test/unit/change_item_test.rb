@@ -24,6 +24,7 @@ class ChangeItemTest < ActiveSupport::TestCase
     @change_type_2_2   = change_types(:change_type_2_2)
     @change_item_2_2_1 = change_items(:change_item_2_2_1)
     @change_item_2_2_2 = change_items(:change_item_2_2_2)
+    @change_item_1_1_3 = change_items(:change_item_1_1_3)
     @change_item_count = ChangeItem.count
   end
   
@@ -189,6 +190,24 @@ class ChangeItemTest < ActiveSupport::TestCase
     assert_equal(2, @change_item_2_2_2.position)
 
 
+  end
+
+  
+  ######################################################################
+  def test_get_active_change_details
+    all_details      = @change_item_1_1_3.change_details.find(:all)
+    active_details   = @change_item_1_1_3.get_active_change_details
+    inactive_details = all_details - active_details
+    
+    inactive_details.each { |change_detail| assert(!change_detail.active?) }
+   
+    pos = 0
+    active_details.each do |change_detail|
+      assert(change_detail.active)
+      assert(change_detail.position > pos)
+      pos = change_detail.position
+    end
+    
   end
 
   
