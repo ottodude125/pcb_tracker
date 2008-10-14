@@ -67,4 +67,15 @@ class ChangeClass < ActiveRecord::Base
   end
   
   
+  # Retrieve the active change types.
+  #
+  # :call-seq:
+  #   get_active_change_types() -> [change_type(s)]
+  #
+  # A list of active change types is returned ordered by position.
+  def get_active_change_types
+    self.change_types.find(:all, :conditions => { :active => true })
+  end
+  
+  
 end
