@@ -27,6 +27,14 @@ change_type_1_3:
   active:          false
   definition:      Describes the third type (class 1)
 
+change_type_1_4:
+  id:              8
+  name:            Class 1, Type 4
+  change_class_id: 1
+  position:        4
+  active:          true
+  definition:      Describes the fourth type (class 1)
+
 change_type_2_1:
   id:              21
   name:            Class 2, Type 1
