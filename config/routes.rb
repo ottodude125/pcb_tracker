@@ -1,5 +1,32 @@
+########################################################################
+#
+# Copyright 2008, by Teradyne, Inc., North Reading MA
+#
+# File: routes.rb
+#
+# Contains the routing configuration for the PCB Design Tracker.
+#
+# $Id$
+#
+########################################################################
+#
 ActionController::Routing::Routes.draw do |map|
+
+  map.resources :change_classes do |change_classes|
+    change_classes.resources :change_types, :name_prefix => "change_class_"
+  end
   
+  map.resources :change_types do |change_types|
+    change_types.resources :change_items, :name_prefix => "change_type_"
+  end
+  
+  map.resources :change_items do |change_items|
+    change_items.resources :change_details, :name_prefix => "change_item_"
+  end
+   
+  #map.resources :change_details
+  #map.resources :change_items
+  #map.resources :change_class, :has_many => :change_types
   map.resources :eco_tasks
   map.resources :eco_task_reports
   map.resources :eco_documents
