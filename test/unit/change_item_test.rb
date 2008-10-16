@@ -30,6 +30,54 @@ class ChangeItemTest < ActiveSupport::TestCase
   
   
   ######################################################################
+  def test_presence_of_name_on_create
+    expected_error_message = 'can not be blank'
+    change_item = ChangeItem.new( :name       => '',
+                                  :position   => 1,
+                                  :active     => false,
+                                  :definition => 'Testing empty name')
+    change_item.save
+    assert_equal(1, change_item.errors.count)
+    assert_equal(expected_error_message, change_item.errors.on(:name))
+    
+    # Retry with blanks
+    change_item.name = '  '
+    change_item.save
+    assert_equal(1, change_item.errors.count)
+    assert_equal(expected_error_message, change_item.errors.on(:name))
+    
+    # Retry with tabs
+    change_item.name = "\t\t"
+    change_item.save
+    assert_equal(1, change_item.errors.count)
+    assert_equal(expected_error_message, change_item.errors.on(:name))
+  end
+  
+  
+  ######################################################################
+  def test_presence_of_name_on_update
+    expected_error_message = 'can not be blank'
+    change_item = ChangeItem.find(:first)
+    change_item.name = ''
+    change_item.save
+    assert_equal(1, change_item.errors.count)
+    assert_equal(expected_error_message, change_item.errors.on(:name))
+    
+    # Retry with blanks
+    change_item.name = '  '
+    change_item.save
+    assert_equal(1, change_item.errors.count)
+    assert_equal(expected_error_message, change_item.errors.on(:name))
+    
+    # Retry with tabs
+    change_item.name = "\t\t"
+    change_item.save
+    assert_equal(1, change_item.errors.count)
+    assert_equal(expected_error_message, change_item.errors.on(:name))
+  end
+  
+  
+  ######################################################################
   def test_add_first_change_item
     
     # Clear out the change item table to add the first change type

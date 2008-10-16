@@ -32,6 +32,54 @@ class ChangeDetailTest < ActiveSupport::TestCase
   
   
   ######################################################################
+  def test_presence_of_name_on_create
+    expected_error_message = 'can not be blank'
+    change_detail = ChangeDetail.new( :name       => '',
+                                      :position   => 1,
+                                      :active     => false,
+                                      :definition => 'Testing empty name')
+    change_detail.save
+    assert_equal(1, change_detail.errors.count)
+    assert_equal(expected_error_message, change_detail.errors.on(:name))
+    
+    # Retry with blanks
+    change_detail.name = '  '
+    change_detail.save
+    assert_equal(1, change_detail.errors.count)
+    assert_equal(expected_error_message, change_detail.errors.on(:name))
+    
+    # Retry with tabs
+    change_detail.name = "\t\t"
+    change_detail.save
+    assert_equal(1, change_detail.errors.count)
+    assert_equal(expected_error_message, change_detail.errors.on(:name))
+  end
+  
+  
+  ######################################################################
+  def test_presence_of_name_on_update
+    expected_error_message = 'can not be blank'
+    change_detail = ChangeDetail.find(:first)
+    change_detail.name = ''
+    change_detail.save
+    assert_equal(1, change_detail.errors.count)
+    assert_equal(expected_error_message, change_detail.errors.on(:name))
+    
+    # Retry with blanks
+    change_detail.name = '  '
+    change_detail.save
+    assert_equal(1, change_detail.errors.count)
+    assert_equal(expected_error_message, change_detail.errors.on(:name))
+    
+    # Retry with tabs
+    change_detail.name = "\t\t"
+    change_detail.save
+    assert_equal(1, change_detail.errors.count)
+    assert_equal(expected_error_message, change_detail.errors.on(:name))
+  end
+  
+  
+  ######################################################################
   def test_add_first_change_detail
     
     # Clear out the change item table to add the first change type

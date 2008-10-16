@@ -29,6 +29,54 @@ class ChangeTypeTest < ActiveSupport::TestCase
   
   
   ######################################################################
+  def test_presence_of_name_on_create
+    expected_error_message = 'can not be blank'
+    change_type = ChangeType.new( :name       => '',
+                                  :position   => 1,
+                                  :active     => false,
+                                  :definition => 'Testing empty name')
+    change_type.save
+    assert_equal(1, change_type.errors.count)
+    assert_equal(expected_error_message, change_type.errors.on(:name))
+    
+    # Retry with blanks
+    change_type.name = '  '
+    change_type.save
+    assert_equal(1, change_type.errors.count)
+    assert_equal(expected_error_message, change_type.errors.on(:name))
+    
+    # Retry with tabs
+    change_type.name = "\t\t"
+    change_type.save
+    assert_equal(1, change_type.errors.count)
+    assert_equal(expected_error_message, change_type.errors.on(:name))
+  end
+  
+  
+  ######################################################################
+  def test_presence_of_name_on_update
+    expected_error_message = 'can not be blank'
+    change_type = ChangeType.find(:first)
+    change_type.name = ''
+    change_type.save
+    assert_equal(1, change_type.errors.count)
+    assert_equal(expected_error_message, change_type.errors.on(:name))
+    
+    # Retry with blanks
+    change_type.name = '  '
+    change_type.save
+    assert_equal(1, change_type.errors.count)
+    assert_equal(expected_error_message, change_type.errors.on(:name))
+    
+    # Retry with tabs
+    change_type.name = "\t\t"
+    change_type.save
+    assert_equal(1, change_type.errors.count)
+    assert_equal(expected_error_message, change_type.errors.on(:name))
+  end
+  
+  
+  ######################################################################
   def test_add_first_change_type
     
     # Clear out the change type table to add the first change type
