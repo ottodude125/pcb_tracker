@@ -1,0 +1,51 @@
+<!-- View:    change details                                    -->
+<!-- Purpose: Displays a listing of the change details.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<h1>Change Details</h1>
+
+<%= render(:partial => 'parent_table') %>
+
+<% if @change_details.size > 0 %>
+  <table align="center">
+    <tr>
+      <th class="teraheader">Name</th>
+      <th class="teraheader">Active</th>
+      <th class="teraheader">Position</th>
+    </tr>
+
+  <% @change_details.each do |change_detail| %>
+    <tr valign="top">
+      <td><%= link_to(h(change_detail.name), edit_change_item_change_detail_path(@change_item, change_detail)) %></td>
+      <td align="center"><%= change_detail.active? ? 'Yes' : 'No' %></td>
+      <td align="center"><%= change_detail.position %></td>
+      <td>&nbsp;</td>
+      <td><%# link_to 'Show', change_class %></td>
+      <td><%# link_to 'Edit', edit_change_class_path(change_class) %></td>
+      <td><%# link_to 'Destroy', change_class, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+  </table>
+<% else %>
+  <p align="center">No Change Details have been recorded.</p>
+<% end %>
+
+<hr class="div" align="center" width="80%" />
+
+<table align="center" width="75%" border="0">
+  <tr>
+    <td align="left" width="33%">
+      <%= link_to 'New Change Detail', new_change_item_change_detail_path(@change_item.id) %>
+    </td>
+    <td align="center" width="34%">
+      <%= link_to 'Return to Change Items', change_type_change_items_path(@change_item.change_type.id) %>
+    </td>
+    <td align="right" width="33%">
+      <%= link_to 'Return to Admin Portal', { :controller => :admin } %>
+    </td>
+  </tr>
+</table>
+
+<hr class="div" align="center" width="80%" />
