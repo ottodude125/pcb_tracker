@@ -1,0 +1,27 @@
+<!-- View:    change_class                                      -->
+<!-- Purpose: Displays a table of existing of the change        -->
+<!--          classes.                                          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<hr class="div" align="center" width="80%" />
+
+<table align="center" border="1">
+
+  <tr><th class="teraheader" colspan="3">Existing Classes</th></tr>
+
+  <tr>
+    <th>Class</th>
+    <th>&nbsp;Active&nbsp;</th>
+    <th>&nbsp;Position&nbsp;</th>
+  </tr>
+
+  <% @change_classes.each do |change_class| %>
+    <tr>
+      <td align="center">&nbsp;<%=h change_class.name %>&nbsp;</td>
+      <td align="center"><%= change_class.active? ? 'Yes' : 'No' %></td>
+      <td align="center"><%= change_class.position %></td>
+    </tr>
+  <% end %>
+</table>

@@ -1,0 +1,60 @@
+<!-- View:    change_class                                      -->
+<!-- Purpose: Displays a listing of the change classes.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<h1>Change Classes</h1>
+
+<% if @change_classes.size > 0 %>
+  <table align="center">
+    <tr>
+      <th class="teraheader">Name</th>
+      <th class="teraheader">Active</th>
+      <th class="teraheader">Position</th>
+      <th class="teraheader">Change Types</th>
+    </tr>
+
+  <% @change_classes.each do |change_class| %>
+    <tr valign="top">
+      <td><%= link_to(h(change_class.name), edit_change_class_path(change_class)) %></td>
+      <td align="center"><%= change_class.active? ? 'Yes' : 'No' %></td>
+      <td align="center"><%= change_class.position %></td>
+      <td>
+        <table cellspacing="0">
+          <tr>
+            <td><%= link_to "Change Types List", change_class_change_types_path(change_class.id) %></td>
+          </tr>
+          <% change_class.change_types.each do |change_type| %>
+            <tr>
+              <td><%=h change_type.name %></td>
+            </tr>
+          <% end %>
+        </table >
+      </td>
+      <td><%# link_to 'Show', change_class %></td>
+      <td><%# link_to 'Edit', edit_change_class_path(change_class) %></td>
+      <td><%# link_to 'Destroy', change_class, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+  </table>
+<% else %>
+  <p align="center">No Change Classes have been recorded.</p>
+<% end %>
+
+
+<hr class="div" align="center" width="80%" />
+
+<table align="center" width="75%" border="0">
+  <tr>
+    <td align="left" width="50%">
+      <%= link_to 'New Change Class', new_change_class_path %>
+    </td>
+    <td align="right" width="50%">
+      <%= link_to 'Return to Admin Portal', { :controller => :admin } %>
+    </td>
+  </tr>
+</table>
+
+<hr class="div" align="center" width="80%" />
+<%# debug @change_classes %>

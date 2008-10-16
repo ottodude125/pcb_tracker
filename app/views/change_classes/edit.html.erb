@@ -1,0 +1,40 @@
+<!-- View:    change_class                                      -->
+<!-- Purpose: Displays the change classes edit form.            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<h1>Edit Change Class</h1>
+
+<% if @change_classes.size > 0 %>
+  
+  <%= render( :partial => 'existing_class_table') %>
+
+<% end %>
+
+<hr class="div" align="center" width="80%" />
+
+<% form_for(@change_class) do |@f| %>
+
+  <%= render( :partial => 'form_table') %>
+  
+  <hr class="div" align="center" width="80%" />
+
+  <table align="center" width="75%" border="0">
+    <tr>
+      <td align="left" width="33%">
+        <%= link_to 'Return to list', change_classes_path %>
+      </td>
+      <td align="center">
+         <%= @f.submit "Update Change Class" %>
+      </td>
+      <td align="right" width="33%">
+        <%= link_to 'Return to Admin Portal', { :controller => :admin } %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" align="center" width="80%" />
+    
+<% end %>
+
