@@ -75,6 +75,13 @@ class Test::Unit::TestCase
     #            :active_role => role,
     #            :roles       => user.roles}
   end
+  
+  
+  def validate_non_admin_redirect
+    assert_response :redirect
+    assert_redirected_to(:controller => 'tracker')
+    assert_equal('Administrators only!  Check your role.', flash['notice'])
+  end
 
 
 end
