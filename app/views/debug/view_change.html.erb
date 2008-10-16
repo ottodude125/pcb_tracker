@@ -1,0 +1,70 @@
+<table align="center" width="100%">
+
+  <% @change_classes.each do |change_class| %>
+    <tr>
+      <td>
+        <table width="100%" border="1">
+          <tr valign="top" bgcolor='lightgrey'>
+            <th class="teraheader" width="100">Class</th> 
+            <td width="200"><%=h change_class.name %></td>
+            <td width="100">&nbsp;<%= change_class.active? ? '' : 'Not' %> Active&nbsp;</td>
+            <td width="100">&nbsp;Position <%= change_class.position.to_s%>&nbsp;</td>
+            <td><%= change_class.definition %></td>
+          <tr>
+          <% change_class.change_types.each do |change_type| %>
+            <tr>
+              <td colspan="5">
+                <table width="98%" align="right" border="1">
+                  <tr bgcolor="lightblue">
+                    <th class="teraheader" width="100">Type</th> 
+                    <td width="200"><%=h change_type.name %></td>
+                    <td width="100">&nbsp;<%= change_type.active? ? '' : 'Not' %> Active&nbsp;</td>
+                    <td width="100">&nbsp;Position <%= change_type.position.to_s%>&nbsp;</td>
+                    <td><%= change_type.definition %></td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <% change_type.change_items.each do |change_item| %>
+              <tr>
+                <td colspan="5">
+                  <table width="96%" align="right" border="1">
+                    <tr bgcolor='#ef8686'>
+                      <th class="teraheader" width="100">Item</th> 
+                      <td width="200"><%=h change_item.name %></td>
+                      <td width="100">&nbsp;<%= change_item.active? ? '' : 'Not' %> Active&nbsp;</td>
+                      <td width="100">&nbsp;Position <%= change_item.position.to_s%>&nbsp;</td>
+                      <td><%= change_item.definition %></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+
+              <% change_item.change_details.each do |change_detail| %>
+                <tr>
+                  <td colspan="5">
+                    <table width="94%" align="right" border="1">
+                      <tr bgcolor='#ffe87f'>
+                      <th class="teraheader" width="100">Detail</th> 
+                      <td width="200"><%=h change_detail.name %></td>
+                      <td width="100">&nbsp;<%= change_detail.active? ? '' : 'Not' %> Active&nbsp;</td>
+                      <td width="100">&nbsp;Position <%= change_detail.position.to_s%>&nbsp;</td>
+                      <td><%= change_detail.definition %></td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+    
+          <% end %>
+        </table>
+      <td>
+    </tr>
+  <% end %>
+
+</table>
+
+
+<%# debug @change_classes %>
