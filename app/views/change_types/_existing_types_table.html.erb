@@ -1,0 +1,28 @@
+<!-- View:    change_types                                      -->
+<!-- Purpose: Displays a table of existing of the change        -->
+<!--          types.                                            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<table align="center" border="1">
+
+  <tr><th class="teraheader" colspan="3">Existing Types</th></tr>
+
+  <tr>
+    <th>Type</th>
+    <th>&nbsp;Active&nbsp;</th>
+    <th>&nbsp;Position&nbsp;</th>
+  </tr>
+
+  <% @change_types.each do |change_type| %>
+    <tr>
+      <td align="center">&nbsp;<%=h change_type.name %>&nbsp;</td>
+      <td align="center"><%= change_type.active? ? 'Yes' : 'No' %></td>
+      <td align="center"><%= change_type.position %></td>
+    </tr>
+  <% end %>
+</table>
+
+<hr class="div" align="center" width="80%" />
+

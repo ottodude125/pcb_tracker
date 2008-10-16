@@ -1,0 +1,37 @@
+<!-- View:    change_types                                      -->
+<!-- Purpose: Displays the change types creation form.          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<h1>New Change Type</h1>
+
+<%= render(:partial => 'parent_table') %>
+
+<% if @change_types.size > 0 %>
+  <%= render( :partial => 'existing_types_table') %>
+<% end %>
+
+<% form_for([@change_class, @change_type]) do |@f|%>
+  
+  <%= render( :partial => 'form_table') %>
+
+  <hr class="div" align="center" width="80%" />
+
+  <table align="center" width="75%" border="0">
+    <tr>
+      <td align="left" width="33%">
+        <%= link_to 'Return to list', change_class_change_types_path(@change_class) %>
+      </td>
+      <td align="center">
+         <%= @f.submit "Create New Change Type" %>
+      </td>
+      <td align="right" width="33%">
+        <%= link_to 'Return to Admin Portal', { :controller => :admin } %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" align="center" width="80%" />
+    
+<% end %>

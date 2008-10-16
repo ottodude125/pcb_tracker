@@ -1,0 +1,67 @@
+<!-- View:    change_types                                      -->
+<!-- Purpose: Displays a listing of the change types.           -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<h1>Change Types</h1>
+
+<%= render(:partial => 'parent_table') %>
+
+<% if @change_types.size > 0 %>
+  <table align="center">
+    <tr>
+      <th class="teraheader">Name</th>
+      <th class="teraheader">Active</th>
+      <th class="teraheader">Position</th>
+      <th class="teraheader">Change Items</th>
+    </tr>
+
+  <% @change_types.each do |change_type| %>
+    <tr valign="top">
+      <td><%= link_to(h(change_type.name), edit_change_class_change_type_path(@change_class, change_type)) %></td>
+      <td align="center"><%= change_type.active? ? 'Yes' : 'No' %></td>
+      <td align="center"><%= change_type.position %></td>
+      <td>
+        <table cellspacing="0">
+          <tr>
+            <td><%= link_to "Change Items List", change_type_change_items_path(change_type.id) %></td>
+          </tr>
+          <% change_type.change_items.each do |change_item| %>
+            <tr>
+              <td><%=h change_item.name %></td>
+            </tr>
+          <% end %>
+        </table >
+      </td>
+      <td><%# link_to 'Show', change_class %></td>
+      <td><%# link_to 'Edit', edit_change_class_path(change_class) %></td>
+      <td><%# link_to 'Destroy', change_class, :confirm => 'Are you sure?', :method => :delete %></td>
+    </tr>
+  <% end %>
+  </table>
+<% else %>
+  <p align="center">No Change Types have been recorded.</p>
+<% end %>
+
+<hr class="div" align="center" width="80%" />
+
+<table align="center" width="75%" border="0">
+  <tr>
+    <td align="left" width="33%">
+      <%= link_to 'New Change Type', new_change_class_change_type_path(@change_class.id) %>
+    </td>
+    <td align="center" width="34%">
+      <%= link_to 'Return to Change Classes', change_classes_path %>
+    </td>
+    <td align="right" width="33%">
+      <%= link_to 'Return to Admin Portal', { :controller => :admin } %>
+    </td>
+  </tr>
+</table>
+
+<hr class="div" align="center" width="80%" />
+
+
+<%# debug @change_class.change_types %>
+<%# debug @change_types %>
