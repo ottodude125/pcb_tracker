@@ -4,6 +4,7 @@ bob:
   id:         1000001
   login:      bob
   password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
+  passwd:     test
   login:      bob
   first_name: Bob
   last_name:  New
@@ -30,6 +31,7 @@ cathy_m:
   login:      cathy_m
   first_name: Cathy
   last_name:  McLaren
+  design_center_id: 1
   email:      Cathy_McLaren@notes.teradyne.com
   password:   9a91e1d8d95b6315991a88121bb0aa9f03ba0dfc # test
   passwd:     test
