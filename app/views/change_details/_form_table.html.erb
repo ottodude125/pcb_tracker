@@ -1,0 +1,38 @@
+<!-- View:    change details                                    -->
+<!-- Purpose: Displays the change detail form for creation and  -->
+<!--          editing.                                          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% if !@f.error_messages.blank? %>
+  <table width="60%" align="center" bgcolor="yellow">
+    <tr><td><%= @f.error_messages %></td></tr>
+  </table>
+<% end %>
+
+<table align="center">
+  <tr>
+     <th class="teraheader" width="100" align="right"><%= @f.label :name %>:&nbsp;</th>
+    <td align="left"><%= @f.text_field :name %></td>
+  </tr>
+
+  <% if @change_details.size > 0 %>
+    <tr>
+      <th class="teraheader" align="right"><%= @f.label :position %>:&nbsp;</th>
+      <td align="left">
+        <%= select(:change_detail, :position, Array.new(@positions){|i|i+1}) %>
+      </td>
+    </tr>
+  <% end %>
+    
+  <tr>
+    <th class="teraheader" align="right"><%= @f.label :active %>:&nbsp;</th>
+    <td align="left"><%= @f.check_box :active %></td>
+  </tr>
+  
+  <tr>
+    <th class="teraheader" align="right"><%= @f.label :definition %>:&nbsp;</th>
+    <td align="left"><%= @f.text_area(:definition, { :rows => '5', :cols => '60' }) %></td>
+  </tr>
+</table>
