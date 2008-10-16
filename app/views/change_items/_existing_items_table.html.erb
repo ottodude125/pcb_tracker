@@ -1,0 +1,25 @@
+<!-- View:    change items                                      -->
+<!-- Purpose: Displays a table of existing of the change items. -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<table align="center" border="1">
+
+  <tr><th class="teraheader" colspan="3">Existing Items</th></tr>
+
+  <tr>
+    <th>Item</th>
+    <th>&nbsp;Active&nbsp;</th>
+    <th>&nbsp;Position&nbsp;</th>
+  </tr>
+
+  <% @change_items.each do |change_item| %>
+    <tr>
+      <td align="center">&nbsp;<%=h change_item.name %>&nbsp;</td>
+      <td align="center"><%= change_item.active? ? 'Yes' : 'No' %></td>
+      <td align="center"><%= change_item.position %></td>
+    </tr>
+  <% end %>
+</table>
+

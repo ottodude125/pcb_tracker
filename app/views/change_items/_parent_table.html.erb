@@ -1,0 +1,14 @@
+<!-- View:    change_items                                      -->
+<!-- Purpose: Displays the parents for the change item.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<hr class="div" align="center" width="80%" />
+<table align="center" border="0" cellspacing="0">
+  <%= render(:partial => 'change_types/parent_row.html.erb', 
+             :locals  => { :change_class => @change_type.change_class }) %>
+  <%= render(:partial => 'parent_row', 
+             :locals  => { :change_type => @change_type }) %>
+</table>
+<hr class="div" align="center" width="80%" />
