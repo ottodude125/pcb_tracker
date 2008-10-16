@@ -16,6 +16,7 @@ class ChangeType < ActiveRecord::Base
   acts_as_list(:scope => :change_class)
   has_many(:change_items, :order => :position)
   
+  validates_presence_of(:name, :message => "can not be blank")
   
   ##############################################################################
   #

@@ -15,6 +15,8 @@ class ChangeClass < ActiveRecord::Base
   acts_as_list
   has_many(:change_types, :order => :position)
   
+  validates_presence_of(:name, :message => "can not be blank")
+  
   
   ##############################################################################
   #
