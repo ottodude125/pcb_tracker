@@ -124,7 +124,6 @@ class OiInstructionController < ApplicationController
       @assignment    = OiAssignment.new(:due_date      => Time.now+1.day,
                                         :complexity_id => OiAssignment.complexity_id("Low"))
       @comment       = OiAssignmentComment.new
-      
       assignment[:design]        = @design
       assignment[:category]      = @category
       assignment[:team_members]  = @team_members
@@ -157,6 +156,15 @@ class OiInstructionController < ApplicationController
       flash[:assignment] = flash[:assignment]
     end
 
+    hw_engineers = @design.get_role_reviewers('HWENG').map { |u| u.name }
+
+    if hw_engineers.size == 1
+      @hw_engineers = hw_engineers.last
+    else
+      count = hw_engineers.size
+      @hw_engineers = hw_engineers[0..(count-2)].join(', ') + ' and ' +
+                      hw_engineers.last
+    end
 
   end
   
@@ -199,7 +207,7 @@ class OiInstructionController < ApplicationController
     params[:team_member].each do |user_id, value|
       team_members << user_id.to_s if value == '1'
     end
-
+    
     team_members_selected = team_members.size > 0
     if !team_members_selected
       member_message = 'Please select a team member or members'
