@@ -1031,7 +1031,13 @@ class TrackerMailer < ActionMailer::Base
     @headers    = {}
     @bcc        = blind_cc
     @cc         = (add_role_members(['PCB Input Gate', 'Manager', 'HCL Manager']) +
-                   [oi_assignment_list[0].oi_instruction.user.email]) - [@recipients]
+                   [oi_assignment_list[0].oi_instruction.user.email])
+    if oi_assignment_list[0].cc_hw_engineer?
+      @cc += design.get_role_reviewers('HWENG').map { |u| u.email }
+    end
+    
+    # Remove duplicates from the CC list.
+    @cc -= [@recipients]
 
     @body['lead_designer']      = oi_assignment_list[0].user
     @body['design']             = design
@@ -1077,7 +1083,14 @@ class TrackerMailer < ActionMailer::Base
     @headers    = {}
     @bcc        = blind_cc
     @cc         = (add_role_members(['PCB Input Gate', 'Manager', 'HCL Manager']) +
-                   [originator.email]) - @recipients
+                   [originator.email])
+    if assignment.cc_hw_engineer?
+      @cc += assignment.oi_instruction.design.get_role_reviewers('HWENG').map { |u| u.email }
+    end
+    
+    # Remove duplicates from the CC list.
+    @cc -= @recipients
+
 
     @body['assignment'] = assignment
                
@@ -1167,15 +1180,16 @@ class TrackerMailer < ActionMailer::Base
     @subject    = "ECO #{eco_task.number} is complete"
     
     doc_control = Role.find(:first, :conditions => "name='doc_control'")
-    @recipients = doc_control.users.map(&:email)
-    @recipients.uniq!
+    if doc_control
+      @recipients = doc_control.users.map(&:email)
+      @recipients.uniq!
+    end
 
     @from    = Pcbtr::SENDER
     @sent_on = sent_on
     @bcc     = blind_cc
     @cc      = add_role_members(['Manager', 'HCL Manager', 'ECO Admin'])
     @cc += (eco_task.users + Role.lcr_designers).sort_by{ |u| u.last_name }.map(&:email)
-    @cc -= @recipients
     @cc.uniq!
 
     @body['eco_task'] = eco_task
