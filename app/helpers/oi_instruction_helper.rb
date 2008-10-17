@@ -58,6 +58,56 @@ module OiInstructionHelper
   
   ######################################################################
   #
+  # fmt_hw_engineers
+  #
+  # Description:
+  # Displays a list of hw engineers available copy on email.
+  # 
+  # hw_engineers - The team members available for work assignments 
+  # selections   - Used to determine whether or not the check box 
+  #                should be checked.
+  # label        - The text string at the top of the table.
+  #
+  ######################################################################
+  #
+  def fmt_hw_engineers(hw_engineers, selections, label)
+  
+    table  = "\n<table width='100%' border='0'>\n"
+    table += "<tr><th colspan='6'>" + label + "</th></tr>\n"
+    
+    col_count = 3
+    
+    count = 0
+    hw_engineers.each do |hw_eng|
+      table += "<tr>" if count == 0
+      table += "\n<td width='25'>"
+      if (selections && selections[hw_eng.id.to_s] == '1')
+        table += check_box("hw_engineer_#{hw_eng.id}", "selected", { 'checked' => 'checked' })
+      else
+        table += check_box("hw_engineer", hw_eng.id.to_s)
+      end
+      table += "</td>"
+      table += '<td width="200">' + hw_eng.name + '</td>'
+      
+      count += 1
+      if count == col_count
+        table += "</tr>\n"
+        count = 0
+      end
+    end
+    
+    hw_engineers.size.upto(col_count) do
+      table += '<td>&nbsp;</td><td>&nbsp;</td>'
+    end
+    
+    table += '</tr>' if count != 0
+    
+    table += '</table>'
+  end
+  
+  
+  ######################################################################
+  #
   # section_assigned?
   #
   # Description:
