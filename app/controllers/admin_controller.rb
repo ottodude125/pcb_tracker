@@ -14,5 +14,8 @@
 
 class AdminController < ApplicationController
 
+  # Do not allow access to this controller unless the user is in the Admin
+  # role.
+  before_filter(:verify_admin_role)
 
 end
