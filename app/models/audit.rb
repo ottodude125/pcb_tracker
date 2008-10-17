@@ -78,6 +78,67 @@ PEER_AUDIT       = 2
   ##############################################################################
   
   
+  # Verify all of the audit's design checks.
+  #
+  # :call-seq:
+  #   verify_all_checks() -> boolean
+  #
+  # Set all design check results, both self and peer, to 'Verified' and
+  # set the audit's state variables to indicate that the audit is complete.
+  def verify_all_checks
+    
+    now = Time.now
+
+    self.trim_checklist_for_design_type
+    self.get_design_checks
+    self.checklist.each_check do |check|
+      if check.is_peer_check?
+        check.design_check.auditor_result     = 'Verified'
+        check.design_check.auditor_checked_on = now
+      end
+      if check.is_self_check?
+        check.design_check.designer_result     = 'Verified'
+        check.design_check.designer_checked_on = now
+      end
+      check.design_check.save
+    end
+
+    completed_checks = self.completed_check_count
+    self.auditor_completed_checks  = completed_checks[:peer]
+    self.auditor_complete          = true
+    self.designer_completed_checks = completed_checks[:self]
+    self.designer_complete         = true
+    self.save
+
+  end
+  
+  
+  # Reset all of the audit's design checks.
+  #
+  # :call-seq:
+  #   clear_all_checks() -> boolean
+  #
+  # Set all design check results, both self and peer, to 'None' and
+  # reset the audit's state variables.
+  def clear_all_checks
+    
+    self.trim_checklist_for_design_type
+    self.get_design_checks
+    self.checklist.each_check do |check|
+      check.design_check.auditor_result  = 'None' if check.is_peer_check?
+      check.design_check.designer_result = 'None' if check.is_self_check?
+      check.design_check.save
+    end
+    
+    self.auditor_completed_checks  = 0
+    self.auditor_complete          = false
+    self.designer_completed_checks = 0
+    self.designer_complete         = false
+    self.save
+    
+  end
+  
+  
   # Report the statu of the audit.
   #
   # :call-seq:
