@@ -1322,11 +1322,30 @@ class Design < ActiveRecord::Base
   def get_role_reviewer(role)
     reviewer = nil
     self.design_reviews.sort_by { |dr| dr.review_type.sort_order }.each do |dr|
-      result   = dr.design_review_results.detect { |drr| drr.role == role}
+      result   = dr.design_review_results.detect { |drr| drr.role == role }
       reviewer = result.reviewer if result
     end
 
     return reviewer
+  end
+  
+  
+  # Retrieve a list of users assigned to the review role for the design.
+  #
+  # :call-seq:
+  #   get_role_reviewers(role) -> []
+  #
+  #  Returns a list of users who have been assigned to the review role
+  #  for the design alphabetized by the last name.
+  #
+  def get_role_reviewers(role_name)
+    role      = Role.find_by_name(role_name)
+    reviewers = []
+    self.design_reviews.each do |dr|
+      result = dr.design_review_results.detect { |drr| drr.role == role }
+      reviewers << result.reviewer if  result
+    end
+    reviewers.uniq.sort_by { |reviewer| reviewer.last_name }
   end
   
   
