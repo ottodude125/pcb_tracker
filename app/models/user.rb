@@ -107,8 +107,7 @@ class User < ActiveRecord::Base
     self.active_role_id        = role.id
     self.password              = self.passwd
     self.password_confirmation = self.passwd
-    self.save
-#    self.update_attribute(:active_role_id, role.id)
+    self.update_attribute(:active_role_id, role.id)
   end
 
   # Retrieve the user's active role.
