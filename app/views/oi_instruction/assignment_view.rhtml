@@ -19,7 +19,7 @@
 <table width="800" align="center" border="0">
 
   <tr valign="top">
-    <th class="teraheader" align="right" width="15%">Comments:</th>
+    <th class="teraheader" align="right" width="30%">Comments:</th>
     <td>
       <%= text_area("post_comment",
                      "comment",
@@ -29,6 +29,17 @@
   </tr>
   
   <tr valign="top">
+    <th class="teraheader" align="right">CC Hardware Engineer(s):</th>
+    <th align="left">
+      <% if session[:user].is_an_lcr_designer? %>
+        <%= check_box("assignment", "cc_hw_engineer", { :disabled => true }) %>
+      <% else %>
+       <%= check_box("assignment", "cc_hw_engineer") %>
+      <% end %>
+    </th>
+  </tr>
+
+    <tr valign="top">
     <th class="teraheader" align="right">Complete:</th>
     <th align="left">
       <%= check_box("assignment", "complete") %>
