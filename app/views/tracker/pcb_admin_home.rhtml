@@ -13,7 +13,7 @@
        align="center"
        rules="cols">
   <tr>
-    <td width="115" valign="top">
+    <td width="125" valign="top">
       <table align="center" rules="rows" cellpadding="5" border="0">
 
         <tr>
@@ -32,13 +32,7 @@
           </td>
         </tr>
         
-        <tr>
-          <td align="center">
-            <%= link_to("PCB Engineering Entry",
-                        { :controller => 'board_design_entry',
-                          :action     => 'originator_list' }) %>
-          </td>
-        </tr>
+        <%= render(:partial => 'pcb_engineering_entry') %>
         
         <% if session[:user].is_a_role_member?('ECO Admin') %>
           <tr>
