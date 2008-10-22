@@ -39,33 +39,21 @@
         </tr>
         <% end %>
 
+        <% if session[:user].is_a_role_member?('ECO Admin') %>
         <tr>
           <th class="teraheader">
             ECO/RELEASE CAD TASKING
           </th>
         </tr>
 
-        <% if session[:user].is_a_role_member?('ECO Admin') %>
-          <tr>
-            <td align="center">
-              <%= link_to("Active ECO CAD Tasks", eco_tasks_url) %>
-            </td>
-          </tr>
-        <% end %>
-        
-        <tr>
-          <th class="teraheader">
-            PCB Engineering Entry
-          </th>
-        </tr>
-
         <tr>
           <td align="center">
-            <%= link_to("PCB Engineering Entry",
-                        { :controller => 'board_design_entry',
-                          :action     => 'originator_list' }) %>
+            <%= link_to("Active ECO CAD Tasks", eco_tasks_url) %>
           </td>
         </tr>
+        <% end %>
+  
+        <%= render(:partial => 'pcb_engineering_entry') %>
         
         <% if session[:active_role].name == 'Admin' %>
         <tr>
