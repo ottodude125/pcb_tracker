@@ -31,13 +31,7 @@
           </td>
         </tr>
         
-        <tr>
-          <td align="center">
-            <%= link_to("PCB Engineering Entry",
-                        { :controller => 'board_design_entry',
-                          :action     => 'originator_list' }) %>
-          </td>
-        </tr>
+        <%= render(:partial => 'pcb_engineering_entry') %>
         
         <tr>
           <td align="center">
