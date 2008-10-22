@@ -39,43 +39,8 @@
         </tr>
         <% end %>
 
-        <tr>
-          <th class="teraheader">
-            PCB Engineering Entry
-          </th>
-        </tr>
+        <%= render(:partial => 'pcb_engineering_entry') %>
 
-        <tr>
-          <td align="center">
-            <%= link_to("PCB Engineering Entry",
-                        { :controller => 'board_design_entry',
-                          :action     => 'originator_list' }) %>
-          </td>
-        </tr>
-        
-        <% if session[:active_role].name == 'Admin' %>
-        <tr>
-          <td align="center">
-            <table>
-              <tr>
-                <td>
-                  <%= link_to("Process PCB Engineering Entries",
-                              { :controller => 'board_design_entry',
-                                :action     => 'processor_list' }) %>
-                </td>
-              </tr>
-              <% if @submissions > 0 %>
-                <tr title="<%= @submissions.to_s %> Board Design <%= @submissions == 1 ? "Entry" : "Entries" %> Submitted">
-                  <td bgcolor="#df4545">
-                    <b>Needs Action</b>
-                  </td>
-                </tr>
-              <% end %>
-            </table>
-          </td>
-        </tr>
-        <% end %>
-        
         <tr>
           <th class="teraheader">
             Reports
