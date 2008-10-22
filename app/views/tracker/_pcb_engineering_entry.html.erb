@@ -1,0 +1,30 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays the link for the PCB Engineering         -->
+<!--          entry screen.                                     -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<tr>
+  <th class="teraheader">PCB Engineering Entry</th>
+</tr>
+
+<tr>
+  <td align="center">
+    <%= link_to("PCB Engineering Entry",
+                { :controller => 'board_design_entry',
+                  :action     => 'originator_list' }) %>
+  </td>
+</tr>
+
+<% if @pending_entries.size > 0 %>
+  <tr>
+    <td bgcolor="red">
+      <% if @pending_entries.size == 1 %>
+        <b>You have an entry that has not been submitted.</b>
+      <% else %>
+        <b>You have entries that have not been submitted.</b>
+      <% end %>
+    </td>
+  </tr>
+<% end %>
