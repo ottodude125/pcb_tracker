@@ -1,3 +1,9 @@
+<!-- View:    board_design_entry                                -->
+<!-- Purpose: Displays the PCB Engineering Entry list.          -->                                            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
 <% @heading = "PCB Engineering Entry List"%>
 
 <% form_tag(:action => 'get_part_number') do %>
@@ -89,3 +95,46 @@
 </table>
 
 <% end %>
+
+<% if @other_entries.size > 0 %>
+
+  <hr class="div" />
+
+  <h2>Other Entries</h2> 
+
+  <table align="center" border="0" cellspacing="0" cellpadding="4">
+
+    <tr class="teraheader">
+      <th></th>
+      <th>PCB Part Number</th>
+      <th>Revision</th>
+      <th>State</th>
+      <th>Originator</th>
+      <th>Details</th>
+    </tr>
+
+    <% @other_entries.each do |entry|%>
+      <tr>
+        <td align="center">
+          <%= link_to('View Entry',
+                      {:action => 'view_entry',
+                       :id     => entry.id,
+                       :viewer => 'peer',
+                       :return => params[:action]},
+                      :title => "View the PCB Engineering Entry") %>
+        </td>
+        <td><%=entry.part_number.pcb_name%></td>
+        <td><%=entry.part_number.pcb_revision%></td>
+        <td><%=entry.state.capitalize%></td>
+        <td><%=entry.user.name%></td>
+        <td><%=entry.platform.name%>/<%=entry.project.name%>/<%=h entry.description%></td>
+      </tr>
+    <% end %>
+    
+  </table>
+
+  <hr class="div" />
+
+<% end %>
+
+<%# debug @other_entries %>
