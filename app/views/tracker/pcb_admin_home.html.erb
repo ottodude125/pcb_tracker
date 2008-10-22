@@ -1,0 +1,224 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays the tracker home page.                   -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @title = "PCB Design Board/Data Tracker" %>
+<%# debug session %>
+
+<table width="100%"
+       border="0" 
+       cellspacing="2"
+       align="center"
+       rules="cols">
+  <tr>
+    <td width="125" valign="top">
+      <table align="center" rules="rows" cellpadding="5" border="0">
+
+        <tr>
+          <td align="center">
+            <%= link_to("All Boards",
+                        { :controller => 'board', :action => 'show_boards' }) %>
+            <br />
+          </td>
+        </tr>
+        
+        <tr>
+          <td align="center">
+            <%= link_to("Board Search",
+                        { :controller => 'board', :action => 'search_options' }) %>
+            <br />
+          </td>
+        </tr>
+        
+        <%= render(:partial => 'pcb_engineering_entry') %>
+        
+        <% if session[:user].is_a_role_member?('ECO Admin') %>
+          <tr>
+            <td align="center">
+              <%= link_to("Active ECO CAD Tasks", eco_tasks_url) %>
+            </td>
+          </tr>
+        <% end %>
+
+        <tr>
+          <td align="center">
+            <%= link_to("Reviewer Workload",
+                        { :controller => 'report',
+                          :action     => 'reviewer_workload' }) %>
+          </td>
+        </tr>
+
+      </table>
+    </td>
+
+    <td>
+      <table width="100%" border="0">
+        <tr>
+          <td>
+            <table width="100%" align="left" border="0">
+
+              <% if @design_list.size > 0 %>
+                <tr>
+                  <td align="left" width="45">
+                    <font size="-2"><b>Criticality</b></font>
+                  </td>
+                  <td>&nbsp;</td>
+                </tr>
+              <% else %>
+                <tr>
+                  <td align="center">
+                    <b>You do not have any active reviews.</b>
+                  </td>
+                </tr>
+              <% end %>
+                
+              <% for design in @design_list %>
+                <% next if (design[:next_review] != nil &&
+                            design[:next_review].review_type.name == "Pre-Artwork" && 
+                            design[:next_review].designer_id != session[:user].id )%>
+                <tr>
+                  <td align="center"
+                      valign="top">
+                    <b><%= design[:design].priority_name %></b>
+                  </td>
+                  <td class="teraheader">
+                    <font color="#ffffff">
+                      <b><%= design[:design].directory_name %> - 
+                      <%= design[:design].board.platform.name %> / 
+                      <%= design[:design].board.project.name %> /
+                      <%= design[:design].board.description %></b>
+                    </font>
+                  </td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                  <td>
+                    <table width="95%" align="right" border="0">
+                      <% if design[:reviews].size > 0 %>
+                        <tr>
+                          <td bgcolor="#ffffff">&nbsp;</td>
+                          <td><font size="-2"><b>Posted</b></font></td>
+                          <td><font size="-2"><b>Status</b></font></td>
+                          <td><font size="-2"><b>Reviewers</b></font></td>
+                          <td><font size="-2"><b>Approvals</b></font></td>
+                          <td><font size="-2"><b>Completed</b></font></td>
+                        </tr>
+                      <% end %>
+
+                      <% for review in design[:reviews] %>
+                        <tr>
+                          <td>
+                            <%= link_to(review[:review].review_name,
+                                        { :controller => 'design_review',
+                                          :action     => 'view',
+                                          :id         => review[:review].id }) %>
+                          </td>
+                          <td>
+                            <font size="-1">
+                              <b><%= review[:review].created_on.strftime("%d-%b-%y") %></b>
+                            </font>
+                          </td>
+                          <td>
+                            <font size="-1">
+                              <b><%= review[:review].review_status.name %></b>
+                            </font>
+                          </td>
+                          <td>
+                            <font size="-1">
+                              <b><%= review[:reviewers] %></b>
+                            </font>
+                          </td>
+                          <td>
+                            <font size="-1">
+                              <b><%= review[:approvals] %></b>
+                            </font>
+                          </td>
+                          <% if review[:approvals] == review[:reviewers] %>
+                            <td>
+                              <font size="-1">
+
+                                <b><%= review[:review].completed_on.strftime("%d-%b-%y") %></b>
+                              </font>
+                            </td>
+                          <% else %>
+                            <td><b>N/A</b></td>
+                          <% end %>
+                        </tr>
+                      <% end %>
+
+                      <% if (design[:next_review] &&
+                             send_ftp_notification?(design[:next_review].design)) %>
+                        
+                          <tr bgcolor="#dfdfdf">
+                            <td colspan="6">
+                              <table width="100%" border="0">
+                                <tr>
+                                  <td width="50%" align="left">
+
+                                    <%= link_to("Send the FTP Notification",
+                                                { :controller => 'design_review',
+                                                  :action     => 'perform_ftp_notification',
+                                                  :id         => design[:next_review].design.id }) %>
+                                  </td>
+                                  <td width="50%" align="left">&nbsp;</td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                      <% elsif (design[:next_review]                 &&
+                             !design[:next_review].review_locked? &&
+                             design[:next_review].designer_id == session[:user].id) %>
+                        <tr bgcolor="#dfdfdf">
+                          <td colspan="6">
+                              <table width="100%" border="0">
+                                <tr>
+                                  <td width="50%" align="left">
+                                    <%= link_to('POST ' +
+                                                design[:next_review].review_type.name +
+                                                ' Review',
+                                                { :controller     => 'design_review',
+                                                  :action         => 'posting_filter',
+                                                  :design_id      => design[:design].id,
+                                                  :review_type_id => design[:next_review].review_type.id }) %>
+                                  </td>
+                                  <td width="50%" align="left">
+                                    <%= link_to('SKIP ' +
+                                                design[:next_review].review_type.name +
+                                                ' Review',
+                                                { :controller     => 'design_review',
+                                                  :action         => 'skip_review',
+                                                  :design_id      => design[:design].id,
+                                                  :review_type_id => design[:next_review].review_type.id },
+                                                { :confirm => "This will cause the " +
+                                                              design[:next_review].review_type.name +
+                                                              " to be skipped and the next review in the " +
+                                                              "review cycle will available for posting.  " +
+                                                              "Are you sure you want to do this?"}) %>
+                                  </td>
+                                </tr>
+                              </table>
+                          </td>
+                        </tr>
+                      <% end %>
+
+                    </table>
+                  </td>
+                </tr>
+              <% end %>
+
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td><hr class="div" /></td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<%# debug @design_list %>
+<%# debug @audits %>
