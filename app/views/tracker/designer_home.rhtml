@@ -26,13 +26,7 @@
                           :action     => 'search_options' }) %> <br />
           </td>
         </tr>
-        <tr>
-          <td align="center">
-            <%= link_to("PCB Engineering Entry",
-                        { :controller => 'board_design_entry',
-                          :action     => 'originator_list' }) %>
-          </td>
-        </tr>
+        <%= render(:partial => 'pcb_engineering_entry') %>
         <% if session[:user].is_an_lcr_designer? && EcoTask.find_open.size > 0 %>
           <tr bgcolor="yellow">
             <td align="center">
