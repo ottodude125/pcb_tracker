@@ -164,7 +164,7 @@
               <td><label for='waived'>Waived</label></td>
             </tr>
             
-            <% if @audit.is_peer_audit? && @audit.is_peer_auditor?(session[:user]) %>
+            <% if @audit.is_peer_audit? && @audit.is_peer_auditor?(@logged_in_user) %>
               <tr>
                 <td>
                   <%= audit_radio_button(check, @audit, 'Comment', !@able_to_check) %>
