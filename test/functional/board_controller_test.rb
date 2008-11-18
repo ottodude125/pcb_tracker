@@ -68,7 +68,7 @@ class BoardControllerTest < Test::Unit::TestCase
   #
   def test_show_boards
   
-    post(:show_boards)
+    get(:show_boards)
 
     assert_equal(1, assigns(:rows))
     assert_equal(8, assigns(:columns))
@@ -162,11 +162,12 @@ class BoardControllerTest < Test::Unit::TestCase
                                 :post_release => 0,
                                 :sg_designs   => 0 } }
   
-    post(:board_design_search,
-         :platform    => { :id    => '' },
-         :project     => { :id    => '' },
-         :user        => { :id    => '' },
-         :review_type => { :phase => 'All'})
+    get(:board_design_search,
+        { :platform    => { :id    => '' },
+          :project     => { :id    => '' },
+          :user        => { :id    => '' },
+          :review_type => { :phase => 'All'} },
+        {})
          
     assert_equal('All Projects',  assigns(:project))
     assert_equal('All Platforms', assigns(:platform))
@@ -184,11 +185,12 @@ class BoardControllerTest < Test::Unit::TestCase
     end 
 
 
-    post(:board_design_search,
-         :platform    => { :id    => '' },
-         :project     => { :id    => '2' },
-         :user        => { :id    => '' },
-         :review_type => { :phase => 'All'})
+    get(:board_design_search,
+        { :platform    => { :id    => '' },
+          :project     => { :id    => '2' },
+          :user        => { :id    => '' },
+          :review_type => { :phase => 'All' } },
+        {})
          
     assert_equal('AWG5000',       assigns(:project))
     assert_equal('All Platforms', assigns(:platform))
@@ -206,11 +208,12 @@ class BoardControllerTest < Test::Unit::TestCase
     end 
 
 
-    post(:board_design_search,
-         :platform    => { :id    => '1' },
-         :project     => { :id    => '' },
-         :user        => { :id    => '' },
-         :review_type => { :phase => 'All'})
+    get(:board_design_search,
+         { :platform    => { :id    => '1' },
+          :project     => { :id    => '' },
+          :user        => { :id    => '' },
+          :review_type => { :phase => 'All' } },
+         {})
          
     assert_equal('All Projects',  assigns(:project))
     assert_equal('Catalyst',      assigns(:platform))
@@ -228,11 +231,12 @@ class BoardControllerTest < Test::Unit::TestCase
     end 
 
 
-    post(:board_design_search,
-         :platform    => { :id    => '2' },
-         :project     => { :id    => '2' },
-         :user        => { :id    => '' },
-         :review_type => { :phase => 'All'})
+    get(:board_design_search,
+        { :platform    => { :id    => '2' },
+          :project     => { :id    => '2' },
+          :user        => { :id    => '' },
+          :review_type => { :phase => 'All' } },
+        {})
          
     assert_equal('AWG5000',       assigns(:project))
     assert_equal('FLEX',          assigns(:platform))
@@ -250,11 +254,12 @@ class BoardControllerTest < Test::Unit::TestCase
     end 
 
 
-    post(:board_design_search,
-         :platform    => { :id    => '' },
-         :project     => { :id    => '' },
-         :user        => { :id    => users(:scott_g).id },
-         :review_type => { :phase => 'All'})
+    get(:board_design_search,
+        { :platform    => { :id    => '' },
+          :project     => { :id    => '' },
+          :user        => { :id    => users(:scott_g).id },
+          :review_type => { :phase => 'All' } },
+        {})
          
     assert_equal('All Projects',  assigns(:project))
     assert_equal('All Platforms', assigns(:platform))
@@ -272,11 +277,12 @@ class BoardControllerTest < Test::Unit::TestCase
     end 
 
 
-    post(:board_design_search,
-         :platform    => { :id    => '' },
-         :project     => { :id    => '' },
-         :user        => { :id    => '' },
-         :review_type => { :phase => 'Final'})
+    get(:board_design_search,
+        { :platform    => { :id    => '' },
+          :project     => { :id    => '' },
+          :user        => { :id    => '' },
+          :review_type => { :phase => 'Final' } },
+        {})
          
     assert_equal('All Projects',  assigns(:project))
     assert_equal('All Platforms', assigns(:platform))
@@ -294,10 +300,11 @@ class BoardControllerTest < Test::Unit::TestCase
 
 
     post(:board_design_search,
-         :platform    => { :id    => '' },
-         :project     => { :id    => '' },
-         :user        => { :id    => '' },
-         :review_type => { :phase => 'Release'})
+         { :platform    => { :id    => '' },
+           :project     => { :id    => '' },
+           :user        => { :id    => '' },
+           :review_type => { :phase => 'Release' } },
+         {})
          
     assert_equal('All Projects',  assigns(:project))
     assert_equal('All Platforms', assigns(:platform))
@@ -334,7 +341,7 @@ class BoardControllerTest < Test::Unit::TestCase
       !(d.part_number.pcb_prefix == '942' && d.part_number.pcb_number == '453') 
     end
     
-    post(:design_information, :part_number => '942-453')
+    get(:design_information, { :part_number => '942-453' }, {})
     
     assert_response(:success)
     designs = assigns(:designs)
@@ -369,14 +376,14 @@ class BoardControllerTest < Test::Unit::TestCase
     
     login_list = [nil,             # Nobody
                   { :id => users(:scott_g).id, :role => 'Designer' }, 
-                  { :id => users(:pat_a).id,   :role => 'Product Support' }]
+                  { :id => users(:pat_a).id,   :role => 'DFM' }]
                   
     login_list.each do |login|
     
-      set_user(login[:id], login[:role]) if login
-    
+      session = login ? set_session(login[:id], login[:role]) : {}
+
       # Call without being logged in and verify the data
-      post(:search_options)
+      post(:search_options, {}, session)
 
       if login && login[:role] == 'Designer'
         assert_equal(login[:id], assigns(:designer).id)
