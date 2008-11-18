@@ -24,10 +24,10 @@
       <% @audit.checklist.sections.each do |section| %>
       
         <%# next if @audit.is_peer_audit? && section.designer_auditor_check_count == 0 %>
-     
+
         <%# JPA, FIND AND DELETE AUDITOR NAME auditor = auditor_name(section.id, @audit_team, @lead) %>
         <% auditor = @audit.auditor(section).name %>
-        <% section_color = auditor == session[:user].name ? "#00ff00" : "#ff0000" %>
+        <% section_color = auditor == @logged_in_user.name ? "#00ff00" : "#ff0000" %>
         <tr>
           <% color = '#' + section.background_color %>
           <td width="10" bgcolor="<%= color %>">&nbsp;</td>
