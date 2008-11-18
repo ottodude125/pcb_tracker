@@ -35,7 +35,7 @@
   <tr>
   
     <td class="label">Originator: </td>
-    <td class="data"  colspan="2"><%= session[:user].name %></td>
+    <td class="data"  colspan="2"><%= @logged_in_user.name %></td>
     
     <td class="label">Division: </td>
     <td class="data">
@@ -45,7 +45,7 @@
       <%= options_from_collection_for_select(@division_list,
                                              "id",
                                              "name",
-                                             session[:user].division_id) %>
+                                             @logged_in_user.division_id) %>
       </select>
     </td>
 
@@ -57,7 +57,7 @@
       <%= options_from_collection_for_select(@location_list,
                                              "id",
                                              "name",
-                                             session[:user].location_id) %>
+                                             @logged_in_user.location_id) %>
       </select>
     </td>
   </tr>
