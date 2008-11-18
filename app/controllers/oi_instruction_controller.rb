@@ -235,7 +235,7 @@ class OiInstructionController < ApplicationController
 
       # Fill out the Outsource Instruction record and save it.
       instruction.design_id = params[:design][:id]
-      instruction.user_id   = session[:user].id
+      instruction.user_id   = @logged_in_user.id
       instruction.save
       
       # Create an assignment record and optional assignment comment for each of the 
@@ -258,7 +258,7 @@ class OiInstructionController < ApplicationController
             
             comment = OiAssignmentComment.new(params[:comment])
             if comment.comment.lstrip != ''
-              comment.user_id          = session[:user].id
+              comment.user_id          = @logged_in_user.id
               comment.oi_assignment_id = assignment.id
               comment.save
             end
@@ -298,7 +298,7 @@ class OiInstructionController < ApplicationController
   def category_details
 
     @design = Design.find(params[:id])
-    my_assignments = @design.my_assignments(session[:user].id).sort_by do |i|
+    my_assignments = @design.my_assignments(@logged_in_user.id).sort_by do |i|
                        i.oi_instruction.oi_category_section.oi_category.id
     end
                       
@@ -330,7 +330,7 @@ class OiInstructionController < ApplicationController
     @category = OiCategory.find(params[:id])
     @design   = Design.find(params[:design_id])
     
-    my_assignments = @design.my_assignments(session[:user].id).delete_if do |a| 
+    my_assignments = @design.my_assignments(@logged_in_user.id).delete_if do |a| 
       a.oi_instruction.oi_category_section.oi_category_id != @category.id
     end
     
@@ -406,14 +406,11 @@ class OiInstructionController < ApplicationController
     if post_comment.size > 0
     
       OiAssignmentComment.new(:comment          => post_comment,
-                              :user_id          => session[:user].id,
+                              :user_id          => @logged_in_user.id,
                               :oi_assignment_id => assignment.id).save
 
       flash['notice'] = 'The work assignment has been updated - mail sent'
-      TrackerMailer.deliver_oi_task_update(assignment, 
-                                           session[:user],
-                                           completed,
-                                           reset)
+      TrackerMailer.deliver_oi_task_update(assignment, @logged_in_user, completed, reset)
     else
       flash['notice'] = 'No updates included with post - the work assignment has not been updated'
     end
@@ -535,7 +532,7 @@ class OiInstructionController < ApplicationController
     @report     = OiAssignmentReport.new(params[:report])
     @assignment = OiAssignment.find(params[:assignment][:id])
     
-    @report.user_id          = session[:user].id
+    @report.user_id          = @logged_in_user.id
     @report.oi_assignment_id = @assignment.id
     
     if @report.score != OiAssignmentReport::NOT_SCORED

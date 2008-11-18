@@ -47,7 +47,7 @@ class AuditController < ApplicationController
     # Process thechecks passed in.
     params.keys.grep(/^check_/).each do |key|
 
-      audit.update_design_check(params[key], session[:user])
+      audit.update_design_check(params[key], @logged_in_user)
 
       if audit.errors.on(:comment_required)
         flash[params[key][:design_check_id].to_i] = audit.errors.on(:comment_required)
@@ -113,7 +113,7 @@ class AuditController < ApplicationController
     @completed_self_checks = @audit.completed_self_audit_check_count(@subsection)
     @completed_peer_checks = @audit.completed_peer_audit_check_count(@subsection)
 
-    @able_to_check = @audit.section_auditor?(@subsection.section, session[:user])
+    @able_to_check = @audit.section_auditor?(@subsection.section, @logged_in_user)
     
   end 
 
@@ -237,7 +237,7 @@ class AuditController < ApplicationController
       peer_auditor_list[section_id] = peer_auditor
     end
     
-    audit.manage_auditor_list(self_auditor_list, peer_auditor_list, session[:user])
+    audit.manage_auditor_list(self_auditor_list, peer_auditor_list, @logged_in_user)
     flash['notice'] = audit.message if audit.message?
 
     redirect_to(:action => 'auditor_list', :id => audit.id)

@@ -343,7 +343,7 @@ class DesignController < ApplicationController
       role         = Role.find(key.split('_')[2])
 
       if !design.is_role_reviewer?(role, new_reviewer)
-        review_in_review = design.set_role_reviewer(role, new_reviewer, session[:user])
+        review_in_review = design.set_role_reviewer(role, new_reviewer, @logged_in_user)
         updated_reviewers = true
       end
       

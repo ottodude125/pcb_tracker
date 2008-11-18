@@ -33,7 +33,6 @@ class DesignReviewController < ApplicationController
   #
   def view
 
-    @user = session[:user]
     session[:return_to] = {:controller => 'design_review',
                            :action     => 'view',
                            :id         => params[:id]}
@@ -43,11 +42,11 @@ class DesignReviewController < ApplicationController
       @design_review  = DesignReview.find(params[:id])
       @review_results = @design_review.review_results_by_role_name
 
-      if @user && @user.is_reviewer?
+      if @logged_in_user && @logged_in_user.is_reviewer?
         
         @my_review_results = []
         @review_results.each do |review_result|
-          @my_review_results << review_result if review_result.reviewer_id == @user.id
+          @my_review_results << review_result if review_result.reviewer_id == @logged_in_user.id
         end
 
         if pre_art_pcb(@design_review, @my_review_results)
@@ -332,7 +331,7 @@ class DesignReviewController < ApplicationController
     # Store the comment if the designer entered one.
     if params[:post_comment][:comment] != ""
       DesignReviewComment.new(:comment          => params[:post_comment][:comment],
-                              :user_id          => session[:user][:id],
+                              :user_id          => @logged_in_user.id,
                               :design_review_id => design_review.id).save
     end
 
@@ -341,11 +340,11 @@ class DesignReviewController < ApplicationController
     TrackerMailer::deliver_design_review_posting_notification(design_review,
                                                               params[:post_comment][:comment])
 
-    if design_review.design_center == session[:user].design_center
+    if design_review.design_center == @logged_in_user.design_center
       redirect_to(:action => 'index', :controller => 'tracker')
     else
       flash['notice'] = 'The design center is not set to your default location - ' +
-                        session[:user].design_center.name
+                        @logged_in_user.design_center.name
       redirect_to(:action => 'view', :id => design_review.id)
     end
 
@@ -405,7 +404,7 @@ class DesignReviewController < ApplicationController
     # Store the comment if the designer entered one.
     if params[:post_comment][:comment] != ""
       DesignReviewComment.new(:comment          => params[:post_comment][:comment],
-                              :user_id          => session[:user][:id],
+                              :user_id          => @logged_in_user.id,
                               :design_review_id => design_review.id).save
     end
 
@@ -414,11 +413,11 @@ class DesignReviewController < ApplicationController
                                                               params[:post_comment][:comment],
                                                               true)
 
-    if design_review.design_center == session[:user].design_center
+    if design_review.design_center == @logged_in_user.design_center
       redirect_to(:action => 'index', :controller => 'tracker')
     else
       flash['notice'] = 'The design center is not set to your default location - ' +
-                        session[:user].design_center.name
+                        @logged_in_user.design_center.name
       redirect_to(:action => 'view', :id => design_review.id)
     end
 
@@ -450,12 +449,10 @@ class DesignReviewController < ApplicationController
  
       design_review = DesignReview.find(params[:design_review][:id])
       comment       = DesignReviewComment.new(:comment => user_comment,
-                                              :user_id => session[:user][:id])
+                                              :user_id => @logged_in_user.id)
       design_review.design_review_comments << comment
 
-      TrackerMailer::deliver_design_review_update(session[:user],
-                                                  design_review,
-                                                  true)
+      TrackerMailer::deliver_design_review_update(@logged_in_user, design_review, true)
                                                   
     end
 
@@ -519,7 +516,7 @@ class DesignReviewController < ApplicationController
     
     flash['notice'] = design_review.design.admin_updates(updates, 
                                                          '', 
-                                                         session[:user])
+                                                         @logged_in_user)
     redirect_to(:action => :view, :id => design_review.id)
 
   end
@@ -638,7 +635,7 @@ class DesignReviewController < ApplicationController
                   :return_to        => params[:return_to])
     else
       
-      document.created_by = session[:user].id
+      document.created_by = @logged_in_user.id
       document.unpacked   = 0
       
       if document.save
@@ -750,7 +747,7 @@ class DesignReviewController < ApplicationController
       
       if @document.data.size < Document::MAX_FILE_SIZE
       
-        @document.created_by = session[:user].id
+        @document.created_by = @logged_in_user.id
         @document.unpacked   = 0
 
         if @document.save
@@ -768,7 +765,7 @@ class DesignReviewController < ApplicationController
             save_failed = false
             
             TrackerMailer::deliver_attachment_update(drd_doc,
-                                                     session[:user])
+                                                     @logged_in_user)
             
           else
             flash['notice'] = "Unable to attach the file."
@@ -973,7 +970,7 @@ class DesignReviewController < ApplicationController
     # Update the history
     cc_list_history = CcListHistory.new
     cc_list_history.design_review_id = details[:design_review].id
-    cc_list_history.user_id          = session[:user].id
+    cc_list_history.user_id          = @logged_in_user.id
     cc_list_history.addressee_id     = user.id
     cc_list_history.action           = 'Added'
     cc_list_history.save
@@ -1029,7 +1026,7 @@ class DesignReviewController < ApplicationController
     # Update the history
     cc_list_history = CcListHistory.new
     cc_list_history.design_review_id = details[:design_review].id
-    cc_list_history.user_id          = session[:user].id
+    cc_list_history.user_id          = @logged_in_user.id
     cc_list_history.addressee_id     = user.id
     cc_list_history.action           = 'Removed'
     cc_list_history.save
@@ -1141,7 +1138,7 @@ class DesignReviewController < ApplicationController
     if review_results[:comments].size > 0
       dr_comment = DesignReviewComment.new
       dr_comment.comment          = review_results[:comments]
-      dr_comment.user_id          = session[:user].id
+      dr_comment.user_id          = @logged_in_user.id
       dr_comment.design_review_id = review_results[:design_review_id]
       dr_comment.save
       
@@ -1241,7 +1238,7 @@ class DesignReviewController < ApplicationController
     end
     
     if comment_update || (result_update && result_update.size > 0)
-      TrackerMailer::deliver_design_review_update(session[:user], 
+      TrackerMailer::deliver_design_review_update(@logged_in_user, 
                                                   design_review,
                                                   comment_update,
                                                   result_update)
@@ -1328,14 +1325,14 @@ class DesignReviewController < ApplicationController
     @design_review.design_review_results.delete_if { |rr| rr.complete? }
 
     @matching_roles = []
-    session[:roles].each do |role|
+    @logged_in_user.roles.each do |role|
 
       next if not role.reviewer?
 
       match = @design_review.design_review_results.detect { |rr| role.id == rr.role_id }
       if match
-        if session[:user].id == match.reviewer_id
-          peers = role.active_users - [session[:user]]
+        if @logged_in_user.id == match.reviewer_id
+          peers = role.active_users - [@logged_in_user]
           @matching_roles << { :design_review => match, :peers => peers }
         else
           @matching_roles << { :design_review => match }
@@ -1508,7 +1505,7 @@ class DesignReviewController < ApplicationController
         design.board.users.each { |user| message += " - #{user.name}\n" }
 
         final_design_review = design.get_design_review('Final')
-        dr_comment = DesignReviewComment.new(:user_id          => session[:user][:id],
+        dr_comment = DesignReviewComment.new(:user_id          => @logged_in_user.id,
                                              :design_review_id => final_design_review.id,
                                              :highlight        => 1,
                                              :comment          => message).save
@@ -1556,20 +1553,20 @@ class DesignReviewController < ApplicationController
         design_review_result = DesignReviewResult.find(
                                  :first,
                                  :conditions => "design_review_id='#{design_review_id}' and " +
-                                                "reviewer_id='#{session[:user].id}' and "     +
+                                                "reviewer_id='#{@logged_in_user.id}' and "     +
                                                 "role_id='#{role.id}'")
 
         if design_review_result
-          is_reviewer = session[:user].id == design_review_result.reviewer_id
+          is_reviewer = @logged_in_user.id == design_review_result.reviewer_id
           design_review_result.reviewer_id = user_id
           design_review_result.save
           peer         = User.find(user_id)
           new_reviewer = peer.name
 
           design_review.record_update(role.display_name, 
-                                      session[:user].name, 
+                                      @logged_in_user.name, 
                                       peer.name,
-                                      session[:user])
+                                      @logged_in_user)
                                       
           if flash_msg == ''
             flash_msg = "#{new_reviewer} is assigned to the #{role.display_name} review"
@@ -1579,7 +1576,7 @@ class DesignReviewController < ApplicationController
 
           if is_reviewer
             TrackerMailer::deliver_reassign_design_review_to_peer(
-                             session[:user],
+                             @logged_in_user,
                              peer,
                              designer,
                              design_review,
@@ -1593,7 +1590,7 @@ class DesignReviewController < ApplicationController
     params.each { |key, value|
 
       next if not key.include?("assign_to_self")
-      next if value[session[:user].id.to_s] == 'no'
+      next if value[@logged_in_user.id.to_s] == 'no'
 
       role = Role.find(key.split('_')[1])
       design_review_result = DesignReviewResult.find(:first,
@@ -1602,15 +1599,15 @@ class DesignReviewController < ApplicationController
 
       if design_review_result
         peer = User.find(design_review_result.reviewer_id)
-        design_review_result.reviewer_id = session[:user].id
+        design_review_result.reviewer_id = @logged_in_user.id
         design_review_result.save
         
         design_review.record_update(role.display_name, 
                                     peer.name, 
-                                    session[:user].name,
-                                    session[:user])
+                                    @logged_in_user.name,
+                                    @logged_in_user)
 
-        new_reviewer = session[:user].name
+        new_reviewer = @logged_in_user.name
         if flash_msg == ''
           flash_msg = "You are assigned to the #{role.display_name} review"
         else
@@ -1618,7 +1615,7 @@ class DesignReviewController < ApplicationController
         end
 
         TrackerMailer::deliver_reassign_design_review_from_peer(
-                         session[:user],
+                         @logged_in_user,
                          peer,
                          designer,
                          design_review,
@@ -1743,7 +1740,7 @@ class DesignReviewController < ApplicationController
     
     flash['notice'] = design.admin_updates(updates, 
                                            params[:post_comment][:comment], 
-                                           session[:user])
+                                           @logged_in_user)
    
     if session[:return_to]
       redirect_to(session[:return_to])
@@ -1826,8 +1823,7 @@ class DesignReviewController < ApplicationController
     # Set the phase of the design to the next non-skipped review.
     design.increment_review
     
-    TrackerMailer::deliver_notify_design_review_skipped(skipped_review,
-                                                        session[:user])
+    TrackerMailer::deliver_notify_design_review_skipped(skipped_review, @logged_in_user)
 
     redirect_to(:controller => 'tracker', :action => 'index')
     
@@ -1942,7 +1938,7 @@ class DesignReviewController < ApplicationController
 
     msg += "\n\n" + post_comment if post_comment.size > 0
 
-    dr_comment = DesignReviewComment.new(:user_id          => session[:user][:id],
+    dr_comment = DesignReviewComment.new(:user_id          => @logged_in_user.id,
                                          :design_review_id => design_review.id,
                                          :highlight        => 1,
                                          :comment          => msg).save
@@ -2033,7 +2029,7 @@ class DesignReviewController < ApplicationController
       fab_msg += " - Removed: #{removed}" if removed != ''
       
       dr_comment = DesignReviewComment.new(:comment          => fab_msg,
-                                           :user_id          => session[:user].id,
+                                           :user_id          => @logged_in_user.id,
                                            :design_review_id => design_review.id).save
       comment_update = true
     end

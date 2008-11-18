@@ -242,20 +242,19 @@ class UserController < ApplicationController
     if params[:new_password].size < 5
       flash['notice'] = 'No Update - the password must be at least 5 characters'
     elsif params[:new_password] == params[:new_password_confirmation]
-      user = User.find(session[:user].id)
-      user.password = params[:new_password]
-      user.passwd   = params[:new_password] if not params[:new_password].empty?
-      user.password_confirmation = params[:new_password_confirmation]
+      @user.password = params[:new_password]
+      @user.passwd   = params[:new_password] if not params[:new_password].empty?
+      @user.password_confirmation = params[:new_password_confirmation]
 
-      if user.save
+      if @user.save
         if not params[:new_password].empty?
-          flash['notice'] = "The password for #{user.name} was updated"
+          flash['notice'] = "The password for #{@user.name} was updated"
           updated = true
         else
           flash['notice'] = 'No Update - no password was entered'
         end
       else
-        flash['notice'] = "The password for #{user.name} was not updated"
+        flash['notice'] = "The password for #{@user.name} was not updated"
       end
     else
       flash['notice'] = 'No Update - the new password and the confirmation do not match'
@@ -352,23 +351,32 @@ class UserController < ApplicationController
   def login
     case request.method
       when :post
-      if session[:user] = User.authenticate(params[:user_login], 
-                                            params[:user_password])
+      if user = User.authenticate(params[:user_login], params[:user_password])
       
-        session[:roles]       = session[:user].roles
-        admin   = Role.find_by_name('Admin')
-        manager = Role.find_by_name('Manager')
-        if session[:roles].include?(admin)
-          session[:active_role] = admin
-        elsif session[:roles].include?(manager)
-          session[:active_role] = manager
-        elsif session[:roles].size > 0
-          session[:active_role] = session[:roles].first
+        # TODO: Remove the dependence on these variables.
+        session[:user_id]  = user.id
+
+        admin    = Role.find_by_name('Admin')
+        manager  = Role.find_by_name('Manager')
+        designer = Role.find_by_name('Designer')
+        
+         # Todo: Remove the dependence on these variables.
+        #case
+        #when user.roles.include?(admin)    then session[:active_role] = admin
+        #when user.roles.include?(manager)  then session[:active_role] = manager
+        #when user.roles.include?(designer) then session[:active_role] = designer
+        #else session[:active_role] = session[:roles].first
+        #end
+        
+        case
+        when user.roles.include?(admin)    then user.active_role = admin
+        when user.roles.include?(manager)  then user.active_role = manager
+        when user.roles.include?(designer) then user.active_role = designer
+        else                                    user.active_role = user.roles.first
         end
 
         flash['notice']  = "Login successful"
-        redirect_back_or_default(:controller => 'tracker',
-                                 :action     => 'index')
+        redirect_back_or_default(:controller => 'tracker', :action => 'index')
       else
         flash.now['notice']  = "Login unsuccessful"
 
@@ -391,7 +399,7 @@ class UserController < ApplicationController
   ######################################################################
   #
   def set_role
-    session[:active_role] = session[:roles].detect { |role| role.id == params[:id].to_i }
+    @logged_in_user.active_role = @logged_in_user.roles.detect { |role| role.id == params[:id].to_i }
     redirect_to(:controller => "tracker")
   end
   
@@ -478,13 +486,15 @@ class UserController < ApplicationController
   ######################################################################
   #
   def logout
+    # TODO: Something remove these.  For now, something is still depending on
+    #       session[:user] getting set to nil
     session[:user]        = nil
-    session[:roles]       = nil
-    session[:return_to]   = nil
-    session[:active_role] = nil
+    #ession[:roles]       = nil
+    #session[:return_to]   = nil
+    #session[:active_role] = nil
+    session[:user_id]     = nil
     
-    redirect_to(:controller => 'tracker',
-		        :action     => 'index')
+    redirect_to(:controller => 'tracker')
   end
     
 

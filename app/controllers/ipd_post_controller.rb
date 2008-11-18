@@ -73,7 +73,7 @@ class IpdPostController < ApplicationController
           last_reply_post.body != body)
         reply_post = IpdPost.new
         reply_post.parent_id = params[:id]
-        reply_post.user_id   = session[:user].id
+        reply_post.user_id   = @logged_in_user.id
         reply_post.body      = body
         if reply_post.save
           flash["notice"] = "Reply post sucessfully created"
@@ -145,7 +145,7 @@ class IpdPostController < ApplicationController
   #
   def create
     @ipd_post = IpdPost.new(params[:ipd_post])
-    @ipd_post.user_id = session[:user].id
+    @ipd_post.user_id = @logged_in_user.id
     if @ipd_post.save
       flash['notice'] = 'Post was successfully created'
       redirect_to(:action => 'manage_email_list',
@@ -184,7 +184,7 @@ class IpdPostController < ApplicationController
     
 
     available_to_cc = User.find_all_by_active(1)
-    available_to_cc.delete_if { |user| user == session[:user] }
+    available_to_cc.delete_if { |user| user == @logged_in_user }
     available_to_cc.delete_if { |user| user == @associated_users['HWENG'] }
     available_to_cc.delete_if { |user| user == @associated_users['Hardware Engineering Manager'] }
     for input_gate in @input_gate_list

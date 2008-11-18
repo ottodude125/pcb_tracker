@@ -64,12 +64,10 @@ class EcoTasksController < ApplicationController
       
       @eco_task.add_users_to_cc_list(params[:eco_task_user][:ids]) if params[:eco_task_user]
 
-      @eco_task.add_comment(@eco_comment, session[:user])
+      @eco_task.add_comment(@eco_comment, @logged_in_user)
         
       if @eco_document
-        eco_document = @eco_task.attach_document(@eco_document,
-                                                 session[:user],
-                                                 true)
+        eco_document = @eco_task.attach_document(@eco_document, @logged_in_user, true)
           
         if !eco_document.errors.empty?
           if eco_document.errors[:empty_document]
@@ -98,8 +96,7 @@ class EcoTasksController < ApplicationController
     eco_task_update = EcoTask.new(params[:eco_task])
     
     # Save any comments that were entered.
-    comment = @eco_task.add_comment(EcoComment.new(params[:eco_comment]), 
-                                    session[:user])
+    comment = @eco_task.add_comment(EcoComment.new(params[:eco_comment]), @logged_in_user)
     task_updated = !comment.comment.blank?
     
     
@@ -111,7 +108,7 @@ class EcoTasksController < ApplicationController
     
     if params[:eco_document] && params[:eco_document][:document] != ''
       @eco_document = @eco_task.attach_document(EcoDocument.new(params[:eco_document]),
-                                                session[:user],
+                                                @logged_in_user,
                                                 true)
                                               
       task_updated = true
@@ -127,7 +124,7 @@ class EcoTasksController < ApplicationController
     
     if params[:eco_attachment] && params[:eco_attachment][:document] != ''
       @eco_attachment = @eco_task.attach_document(EcoDocument.new(params[:eco_attachment]),
-                                                session[:user])
+                                                @logged_in_user)
                                               
       task_updated = true
       if !@eco_attachment.errors.empty?
@@ -143,7 +140,7 @@ class EcoTasksController < ApplicationController
     # If the user deselects all of the ECO Types on the form then the 
     # eco_type_ids field from the form will be nil when submitted.  In that
     # case, load an empty array so that downstream validation works
-    eco_admin = session[:user].is_a_role_member?('ECO Admin')
+    eco_admin = @logged_in_user.is_a_role_member?('ECO Admin')
     if eco_admin 
       if !params[:eco_task][:eco_type_ids]
         params[:eco_task][:eco_type_ids] = []
@@ -155,11 +152,11 @@ class EcoTasksController < ApplicationController
       task_updated |= @eco_task.check_for_processor_update(eco_task_update)      
     end
 
-    eco_task_update_privs = (eco_admin || session[:user].is_an_lcr_designer?)
+    eco_task_update_privs = (eco_admin || @logged_in_user.is_an_lcr_designer?)
 
     if task_updated
       
-      @eco_task.set_user(session[:user])
+      @eco_task.set_user(@logged_in_user)
       
       if !eco_task_update_privs
         flash['notice'] = "ECO #{@eco_task.number} was successfully updated."
