@@ -1,0 +1,373 @@
+<!-- View:    board_design_entry                                -->
+<!-- Purpose: Displays a form to add a new PCB Engineering      -->
+<!--          Entry.                                            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% if @user_action == 'updating' %>
+
+  <% @heading = "PCB Engineering - Updating #{@board_design_entry.design_name}"%>
+
+  <%  action = { :action      => 'update_entry', 
+                 :id          => @board_design_entry.id,
+                 :user_action => 'updating',
+                 :viewer      => @viewer } %>
+
+<% elsif @user_action == 'adding' %>
+
+  <% @heading = "PCB Engineering - New Entry"%>
+  
+  <%action = { :action      => 'update_entry', 
+               :id          => @board_design_entry.id,
+               :user_action => 'adding' } %>
+                      
+<% end %>
+
+<% form_tag(action) do %>
+
+
+<hr class="div" />
+
+<table width="90%" align="center" border="2" cellspacing="0">
+
+<!-- ********************************************************** -->
+  <tr>
+  
+    <td class="label">Originator: </td>
+    <td class="data"  colspan="2"><%= @logged_in_user.name %></td>
+    
+    <td class="label">Division: </td>
+    <td class="data">
+      <select id="board_design_entry_division_id"
+              name="board_design_entry[division_id]">
+      <option value="0"></option>
+      <%= options_from_collection_for_select(@division_list,
+                                             "id",
+                                             "name",
+                                             @logged_in_user.division_id) %>
+      </select>
+    </td>
+
+    <td class="label">Location: </td>
+    <td class="data">
+      <select id="board_design_entry_location_id"
+              name="board_design_entry[location_id]">
+      <option value="0"></option>
+      <%= options_from_collection_for_select(@location_list,
+                                             "id",
+                                             "name",
+                                             @logged_in_user.location_id) %>
+      </select>
+    </td>
+  </tr>
+
+<!-- ********************************************************** -->
+  <tr>
+    <td class="label">PCB Part Number: </td>
+    <td class="data" colspan="2">
+      <%= @board_design_entry.part_number.pcb_name %>
+    </td>
+    <td class="label">Revision: </td>
+    <td class="data" colspan="3">
+      <%= @board_design_entry.part_number.pcb_revision %>
+    </td>
+  </tr>
+  
+<!-- ********************************************************** -->
+  <% if @board_design_entry.new? %>
+  <tr>
+    <td class="label" valign="top">PCBA Part Number: </td>
+    <td class="data" colspan="2">
+      <%= @board_design_entry.part_number.pcba_name %>
+    </td>
+    <td class="label">Revision: </td>
+    <td class="data" colspan="3">
+      <%= @board_design_entry.part_number.pcba_revision %>
+    </td>
+  </tr>
+  <% end %>
+  
+<!-- ********************************************************** -->
+  <% if !@board_design_entry.new? %>
+  <tr>
+    <td class="label" valign="top">ECO Number (if applicable): </td>
+    <td class="data" colspan="6">
+      <%= text_field("board_design_entry", "eco_number", "size" => 40, "maxlength" => 10) %>
+    </td>
+  </tr>
+  <% end %>
+<!-- ********************************************************** -->
+  <tr>
+    <td class="label" valign="top">Platform: </td>
+    <td class="data" colspan="6">
+      <%= select("board_design_entry", 
+                 "platform_id", 
+                 @platform_list.collect { |p| [ p.name, p.id ] }, 
+                 { :include_blank => true },
+                 "class" => 'wide_select' ) %>
+    </td>
+  </tr>
+
+<!-- ********************************************************** -->
+  <tr>
+    <td class="label" valign="top">Project: </td>
+    <td class="data" colspan="6">
+      <%= select("board_design_entry", 
+                 "project_id", 
+                 @project_list.collect { |p| [ p.name, p.id ] }, 
+                 { :include_blank => true },
+                 "class" => 'wide_select' ) %>
+    </td>
+  </tr>
+
+<!-- ********************************************************** -->
+  <tr>
+    <td class="label" valign="top">Board Description: </td>
+    <td class="data" colspan="6">
+      <%= text_field("board_design_entry", "description", "size" => 40, "maxlength" => 40) %>
+    </td>
+  </tr>
+
+<!-- ********************************************************** -->
+  <tr>
+    <td class="label" valign="top">Product Type: </td>
+    <td class="data" colspan="6">
+      <%= select("board_design_entry", 
+                 "product_type_id", 
+                 @product_type_list.collect { |p| [ p.name, p.id ] }, 
+                 { :include_blank => true },
+                 "class" => 'wide_select' ) %>
+
+    </td>
+  </tr>
+  
+<!-- ********************************************************** -->
+  <tr valign="top">
+    <td class="label" valign="top">Location of Review Documents: <br />(\\server_name\...)</td>
+    <td class="data" colspan="6">
+      <%= text_field("board_design_entry", "review_doc_location", "size" => 100, "maxlength" => 100) %>
+      <%# text_area("board_design_entry",
+                    "review_doc_location",
+                    { :rows => '2', :cols => '60' }) %>
+    </td>
+  </tr>
+
+<!-- ********************************************************** -->
+  <tr>
+    <td class="label" valign="top">Design Directory Location: </td>
+    <td class="data" colspan="6" valign="top">
+      <%= select("board_design_entry", 
+                 "design_directory_id", 
+                 @design_dir_list.collect { |dd| [ dd.name, dd.id ] }, 
+                 { :include_blank => true },
+                 "class" => 'wide_select' ) %>
+    </td>
+  </tr>
+
+<!-- ********************************************************** -->
+  <tr>
+    <td class="label" valign="top">Incoming Directory Location: </td>
+    <td class="data" colspan="6" valign="top">
+      <%= select("board_design_entry", 
+                 "incoming_directory_id", 
+                 @incoming_dir_list.collect { |id| [ id.name, id.id ] }, 
+                 { :include_blank => true },
+                 "class" => 'wide_select' ) %>
+    </td>
+  </tr>
+
+<!-- ********************************************************** -->
+  <tr>
+    <td class="label" valign="top">Make From: </td>
+    <td class="data" colspan="6" valign="top">
+      <div id="make_from">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td class="label" width="140">Yes: </td>
+            <td class="data" align="left">
+              <%= radio_button(:board_design_entry, :make_from, '1') %>
+
+              <%= observe_field('board_design_entry_make_from_1',
+                                :update    => :make_from,
+                                :url       => { :action => :process_make_from,
+                                                :id     => @board_design_entry.id,
+                                                :value  => 'yes' }) %>
+            </td>
+            
+            <% if @board_design_entry.make_from? %>
+              <td class="label" width="200" 
+                  title="Identify the original PCB">
+                Original PCB Number: 
+              </td>
+              <td class="data">
+                <%= text_field("board_design_entry", 
+                               "original_pcb_number", 
+                               "size" => 16) %>
+              </td>
+            <% else %>
+              <td>&nbsp;</td>
+            <% end %>
+    
+          </tr>
+          <tr>
+            <td class="label">No: </td>
+            <td class="data" align="left">
+              <%= radio_button(:board_design_entry, :make_from, '0') %>
+
+              <%= observe_field('board_design_entry_make_from_0',
+                                :update    => :make_from,
+                                :url       => { :action => :process_make_from,
+                                                :id     => @board_design_entry.id,
+                                                :value  => 'no' }) %>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+
+<!-- ********************************************************** -->
+  <tr>
+    <td class="label" valign="top">HiPot Testing Required: </td>
+    <td class="data" colspan="6" valign="top">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td class="label" width="140">Yes: </td>
+            <td class="data" align="left">
+              <%= radio_button(:board_design_entry, :hipot_testing_required, '1') %>
+            </td>
+          </tr>
+          <tr>
+            <td class="label">No: </td>
+            <td class="data" align="left">
+              <%= radio_button(:board_design_entry, :hipot_testing_required, '0') %>
+            </td>
+          </tr>
+        </table>
+    </td>
+  </tr>
+
+<!-- ********************************************************** -->
+  <tr>
+    <td class="label" valign="top">Lead Free Devices On Board: </td>
+    <td class="data" colspan="6" valign="top">
+      <div id="lead_free">
+        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td class="label" width="140">Yes: </td>
+            <td class="data" align="left">
+              <%= radio_button(:board_design_entry, :lead_free_devices, '1') %>
+
+              <%= observe_field('board_design_entry_lead_free_devices_1',
+                                :update    => :lead_free,
+                                :url       => { :action => :process_lead_free,
+                                                :id     => @board_design_entry.id,
+                                                :value  => 'yes' }) %>
+            </td>
+            
+            <% if @board_design_entry.lead_free_devices? %>
+              <td class="label" width="100", rowspan="2" valign="top"
+                  title="Identify lead free devices">
+                Device Names:
+              </td>
+              <td class="data" valign="top" rowspan="2">
+                <%= text_area("board_design_entry", 
+                              "lead_free_device_names", 
+                              { :rows => '1', :cols => '35' }) %>
+              </td>
+            <% else %>
+              <td>&nbsp;</td>
+            <% end %>
+
+          </tr>
+          <tr>
+            <td class="label">No: </td>
+            <td class="data" align="left">
+              <%= radio_button(:board_design_entry, :lead_free_devices, '0') %>
+
+              <%= observe_field('board_design_entry_lead_free_devices_0',
+                                :update    => :lead_free,
+                                :url       => { :action => :process_lead_free,
+                                                :id     => @board_design_entry.id,
+                                                :value  => 'no' }) %>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+  
+<!-- ********************************************************** -->
+  <tr valign="top">
+    <td class="label" valign="top">Outline Drawing Number: </td>
+    <td class="data" colspan="6">
+      <%= text_field("board_design_entry", "outline_drawing_number", "size" => 40, "maxlength" => 40) %>
+    </td>
+  </tr>
+
+<!-- ********************************************************** -->
+  <tr valign="top">
+    <td class="label" valign="top">Requested Start Date: </td>
+    <td class="data" colspan="6">
+      <%= date_select(:board_design_entry, 
+                      'requested_start_date',
+                      :start_year => Time.now.strftime("%Y").to_i,
+                      :order      => [:month, :day, :year]) %>
+    </td>
+  </tr>
+
+<!-- ********************************************************** -->
+  <tr valign="top">
+    <td class="label" valign="top">Requested Completion (FTP) Date: </td>
+    <td class="data" colspan="6">
+      <%= date_select(:board_design_entry, 
+                      'requested_completion_date',
+                      :start_year => Time.now.strftime("%Y").to_i,
+                      :order      => [:month, :day, :year]) %>
+    </td>
+  </tr>
+
+<% if @viewer == 'processor' %>
+<!-- ********************************************************** -->
+  <tr>
+    <td class="label" valign="top">Pre-Production Release Number: </td>
+    <td class="data" colspan="6">
+      <%= text_field("board_design_entry", "pre_production_release_number", "size" => 30, "maxlength" => 30) %>
+    </td>
+  </tr>
+<% end %>
+
+</table>
+
+<hr class="div" />
+
+<table width="80%" align="center">
+  <tr>
+    <td align="left">
+      <% if @user_action == 'updating' %>
+        <input type="button" class="form_return" value="Return"
+               onClick="parent.location='<%= url_for( :action => 'view_entry', 
+                                                      :id     => @board_design_entry.id,
+                                                      :viewer => @viewer) %>'" />
+     <% end %>
+    </td>
+    
+
+    <td align="right">
+      <% if @user_action == 'updating'%>
+        <input type="submit" class="form_submit" value="Update Entry" />
+      <% elsif @user_action == 'adding' %>
+        <input type="submit" class="form_submit" value="Next -->" />
+      <% end %>
+    </td>
+  </tr>
+</table>
+
+<% end %>
+
+<%# debug @board_design_entry.new? %>
+<%# debug @user_action %>
+<%# debug @viewer %>
+<%# debug @division_list %>
+
