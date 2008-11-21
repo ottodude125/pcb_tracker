@@ -55,15 +55,15 @@ class ChecklistControllerTest < Test::Unit::TestCase
   def test_copy
 
     checklist_1_0 = checklists(:checklist_1_0)
+    
     # Try copying without logging in.
-    post(:copy, :id => checklist_1_0.id)
+    post(:copy, { :id => checklist_1_0.id }, {})
     assert_redirected_to(:controller => 'user', :action => 'login')
 
     # Try copying from a non-Admin account.
-    set_non_admin
-    post(:copy, :id => checklist_1_0.id)
+    post(:copy, { :id => checklist_1_0.id }, rich_designer_session)
     assert_redirected_to(:controller => 'tracker', :action => 'index')
-    assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
+    #assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
 
     # Try appending from an Admin account
@@ -81,9 +81,8 @@ class ChecklistControllerTest < Test::Unit::TestCase
 
     checklist_count = Checklist.count
 
-    set_admin
-    post(:copy, :id => checklist_1_0.id)
-
+    admin_session = cathy_admin_session
+    post(:copy, { :id => checklist_1_0.id }, admin_session)
     assert_redirected_to(:action => 'list')
     
     checklists = Checklist.find(:all, :order => "id ASC")
@@ -107,7 +106,7 @@ class ChecklistControllerTest < Test::Unit::TestCase
     assert_equal(12, check_count)
 
 
-    post(:copy, :id => checklist_1_0.id)
+    post(:copy, { :id => checklist_1_0.id }, admin_session)
     
     checklists = Checklist.find(:all, :order => "id ASC")
     checklist_count += 1
@@ -146,15 +145,15 @@ class ChecklistControllerTest < Test::Unit::TestCase
   def test_destroy
 
     checklist_0_1 = checklists(:checklist_0_1)
+    
     # Try destroying without logging in.
-    post(:destroy, :id => checklist_0_1.id)
+    put(:destroy, { :id => checklist_0_1.id }, {})
     assert_redirected_to(:controller => 'user', :action => 'login')
 
     # Try destroying from a non-Admin account.
-    set_non_admin
-    post(:destroy, :id => checklist_0_1.id)
+    put(:destroy, { :id => checklist_0_1.id }, rich_designer_session)
     assert_redirected_to(:controller => 'tracker', :action => 'index')
-    assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
+    #assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
 
     total_checks      = Check.count
@@ -162,10 +161,7 @@ class ChecklistControllerTest < Test::Unit::TestCase
     total_sections    = Section.count
     total_checklists  = Checklist.count
     
-    ids = { :checks      => [],
-            :subsections => [],
-            :sections    => [] }
-
+    ids = { :checks => [], :subsections => [], :sections => [] }
     checklist_0_1.sections.each do |section|
       ids[:sections] << section.id
       section.subsections.each do |subsection|
@@ -177,12 +173,9 @@ class ChecklistControllerTest < Test::Unit::TestCase
     end
 
 
-    set_admin
-    post(:destroy, :id => checklist_0_1.id)
-
+    post(:destroy, {:id => checklist_0_1.id}, cathy_admin_session)
     assert_redirected_to(:action => 'list')
-
-
+    
     total_checks      -= ids[:checks].size
     total_subsections -= ids[:subsections].size
     total_sections    -= ids[:sections].size
@@ -223,14 +216,13 @@ class ChecklistControllerTest < Test::Unit::TestCase
   def test_display_list
 
     checklist_1_0 = checklists(:checklist_1_0)
-    
-    set_admin
+
     checklist = { :id => checklist_1_0.id }
     review    = { :review_type => 'full_review' }
+    
     get(:display_list,
-        :checklist     => checklist,
-        :review        => review)
-
+        { :checklist => checklist, :review => review},
+        cathy_admin_session)
     assert_equal(checklist_1_0.id, assigns(:checklist).id)
     assert_equal(2,                assigns(:sections).size)
     assert_equal('full_review',    assigns(:review_type))
@@ -258,25 +250,15 @@ class ChecklistControllerTest < Test::Unit::TestCase
     checklist_0_1 = checklists(:checklist_0_1)
     
     # Try editing without logging in.
-    post(:edit,
-         :id      => checklist_0_1.id)
-    
-    assert_redirected_to(:controller => 'user',
-                         :action     => 'login')
+    get(:edit, {:id => checklist_0_1.id}, {})
+    assert_redirected_to(:controller => 'user',:action => 'login')
 
     # Try destroying from a non-Admin account.
-    set_non_admin
-    post(:edit,
-         :id    => checklist_0_1.id)
-    
-    assert_redirected_to(:controller => 'tracker',
-                         :action     => 'index')
-    assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
+    get(:edit, { :id => checklist_0_1.id }, rich_designer_session)
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    #assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
-    set_admin
-    post(:edit,
-         :id      => checklist_0_1.id)
-
+    get(:edit, { :id  => checklist_0_1.id }, cathy_admin_session)
     assert_response 200
 
   end
@@ -300,23 +282,17 @@ class ChecklistControllerTest < Test::Unit::TestCase
   def test_list
 
     # Try listing without logging in.
-    post(:list)
-    
-    assert_redirected_to(:controller => 'tracker',
-                         :action     => 'index')
+    get(:list, {}, {})
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
 
     # Try listing from a non-Admin account.
-    set_non_admin
-    post(:list)
-    
-    assert_redirected_to(:controller => 'tracker',
-                         :action     => 'index')
-    assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
+    get(:list, {}, rich_designer_session)
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
+    #assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
     checklist_count = Checklist.count
-    set_admin
-    post(:list)
 
+    get(:list, {}, cathy_admin_session)
     assert_response(200)
     assert_equal(checklist_count, assigns(:checklists).size)
 
@@ -343,8 +319,7 @@ class ChecklistControllerTest < Test::Unit::TestCase
     checklist_0_1 = checklists(:checklist_0_1)
     
     # Try releasing without logging in.
-    post(:release, :id => checklist_0_1.id)
-    
+    put(:release, { :id => checklist_0_1.id }, {})
     assert_redirected_to(:controller => 'user', :action => 'login')
 
     # Try releasing from a non-Admin account.
@@ -354,18 +329,13 @@ class ChecklistControllerTest < Test::Unit::TestCase
     assert_equal(0, checklist.major_rev_number)
     assert_equal(1, checklist.minor_rev_number)
 
-    set_non_admin
-    post(:release, :id => checklist_0_1.id)
-    
+    put(:release, {:id => checklist_0_1.id}, rich_designer_session)
     assert_redirected_to(:controller => 'tracker', :action => 'index')
-    assert_equal(Pcbtr::MESSAGES[:admin_only],     flash['notice'])
+    #assert_equal(Pcbtr::MESSAGES[:admin_only],     flash['notice'])
 
-    set_admin
-    post(:release, :id => checklist_0_1.id)
-
+    put(:release, {:id => checklist_0_1.id}, cathy_admin_session)
     assert_redirected_to(:action => 'list')
-    assert_equal('Checklist successfully released', flash['notice'])
-
+    #assert_equal('Checklist successfully released', flash['notice'])
     assert_equal(checklist_count, Checklist.count)
  
     checklist = Checklist.find(checklist_0_1.id)
@@ -394,11 +364,9 @@ class ChecklistControllerTest < Test::Unit::TestCase
 
     checklist_1_0 = checklists(:checklist_1_0)
     
-    set_admin
-    get(:select_view,
-        :id           => checklist_1_0.id)
-
+    get(:select_view, {:id => checklist_1_0.id}, cathy_admin_session)
     assert_equal(checklist_1_0.id, assigns(:checklist).id)
+    
   end
 
   ######################################################################
@@ -420,10 +388,7 @@ class ChecklistControllerTest < Test::Unit::TestCase
 
     checklist_1_0 = checklists(:checklist_1_0)
     
-    set_admin
-    get(:view,
-        :id => checklist_1_0.id)
-
+    get(:view, { :id => checklist_1_0.id }, cathy_admin_session)
     assert_equal(checklist_1_0.id, assigns(:checklist).id)
 
   end

@@ -17,6 +17,7 @@ require 'design_controller'
 class DesignController; def rescue_action(e) raise e end; end
 
 class DesignControllerTest < Test::Unit::TestCase
+  
   def setup
     @controller = DesignController.new
     @request    = ActionController::TestRequest.new
@@ -47,8 +48,7 @@ class DesignControllerTest < Test::Unit::TestCase
   def test_pcb_mechanical_comments
     
     
-    get(:pcb_mechanical_comments, :id => @mx234a.id)
-
+    get(:pcb_mechanical_comments, { :id => @mx234a.id }, {})
     assert_equal(@mx234a.directory_name, assigns(:design).directory_name)
     assert_equal(0, assigns(:comments).size)
     
@@ -61,8 +61,7 @@ class DesignControllerTest < Test::Unit::TestCase
     
     @mx234a.reload
     
-    get(:pcb_mechanical_comments, :id => @mx234a.id)
-
+    get(:pcb_mechanical_comments, { :id => @mx234a.id }, {})
     assert_equal(@mx234a.directory_name, assigns(:design).directory_name)
     assert_equal(1, assigns(:comments).size)
     
@@ -73,8 +72,7 @@ class DesignControllerTest < Test::Unit::TestCase
     
     assert_equal('Full', @mx234a.audit_type)
     
-    get(:convert_checklist_type, :id => @mx234a.id)
-    
+    put(:convert_checklist_type, { :id => @mx234a.id }, {})
     @mx234a.reload
     assert_equal('Full',                                   @mx234a.audit_type)
     assert_equal("Administrators only!  Check your role.", flash['notice'])
@@ -86,59 +84,42 @@ class DesignControllerTest < Test::Unit::TestCase
   def test_convert_checklist_type_flips_audit
     
     assert_equal('Full', @mx234a.audit_type)
-    set_user(users(:cathy_m), "Admin")
     
-    get(:convert_checklist_type, :id => @mx234a.id)
+    get(:convert_checklist_type, { :id => @mx234a.id }, cathy_admin_session)
     
     @mx234a.reload
     assert_equal('Partial', @mx234a.audit_type)
-    assert_equal('The audit has been converted to a Partial audit',
-                 flash['notice'])
+    assert_equal('The audit has been converted to a Partial audit', flash['notice'])
     assert_redirected_to(:action => 'show', :id => @mx234a.id)
     
   end
   
   
-  def NOtest_show_admin_only
-    
-    get(:show, :id => @mx234a.id)
+  def test_show_admin_only
+    get(:show, { :id => @mx234a.id }, {})
     assert_equal("Administrators only!  Check your role.", flash['notice'])
     assert_redirected_to(:controller => 'tracker', :action => 'index')
-    
   end
   
   
-  def NOtest_show
-    
-    set_user(users(:cathy_m), "Admin")
-
-    get(:show, :id => @mx234a.id)
+  def test_show
+    get(:show, { :id => @mx234a.id }, cathy_admin_session)
     assert_equal(@mx234a, assigns(:design))
-    
   end
 
   
   def test_list_admin_only
-    
-    get(:list)
+    get(:list, {}, {})
     assert_equal("Administrators only!  Check your role.", flash['notice'])
     assert_redirected_to(:controller => 'tracker', :action => 'index')
     assert_nil(assigns(:active_designs))
-    
   end
   
   
-  def NOtest_list
-    
-    set_user(users(:cathy_m), "Admin")
-    
-    get(:list)
-    
+  def test_list
+    get(:list, {}, cathy_admin_session)
     assert_nil(flash['notice'])
-    assert_equal([], assigns(:active_designs))
-    
-    
-    
+    #TODO: assert_equal([], assigns(:active_designs))
   end
 
   
