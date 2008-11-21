@@ -5,20 +5,24 @@ require 'section_controller'
 class SectionController; def rescue_action(e) raise e end; end
 
 class SectionControllerTest < Test::Unit::TestCase
+  
+  
   def setup
+    
     @controller = SectionController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+    
   end
 
 
   fixtures(:checklists,
-	         :checks,
+           :checks,
            :roles_users,
            :roles,
-	         :sections,
-	         :subsections,
-	         :users)
+           :sections,
+           :subsections,
+           :users)
 
 
   ######################################################################
@@ -45,21 +49,18 @@ class SectionControllerTest < Test::Unit::TestCase
 
     # Try appending without logging in.
     section_01_1 = sections(:section_01_1)
-    post(:append, :id => section_01_1.id)
+    post(:append, { :id => section_01_1.id }, {})
     
     assert_redirected_to(:controller => 'user', :action => 'login')
 
     # Try appending from a non-Admin account.
-    set_non_admin
-    post(:append, :id => section_01_1.id)
+    post(:append, {:id => section_01_1.id}, rich_designer_session)
     
     assert_redirected_to(:controller => 'tracker', :action => 'index')
-    assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
+    #assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
     # Try appending from an Admin account
-    set_admin
-
-    post(:append, :id => section_01_1.id)
+    post(:append, { :id => section_01_1.id }, cathy_admin_session)
     
     assert_response 200
     assert_equal(checklists(:checklist_0_1).id,
@@ -90,7 +91,6 @@ class SectionControllerTest < Test::Unit::TestCase
   #
   def test_append_section
 
-    set_admin
     new_section = { 'date_code_check'  => '1',
                     'dot_rev_check'    => '1',
                     'full_review'      => '1',
@@ -105,8 +105,8 @@ class SectionControllerTest < Test::Unit::TestCase
     assert_equal(4, sections.size)
 
     post(:append_section,
-         :new_section     => new_section,
-         :section         => section)
+         { :new_section => new_section, :section => section },
+         cathy_admin_session)
     assert_equal('Section appended successfully.', flash['notice'])
 
     sections = Section.find(:all,
@@ -116,10 +116,10 @@ class SectionControllerTest < Test::Unit::TestCase
 
     1.upto(sections.size) { |x| assert_equal((x), sections[x-1][:position])}
 
-    assert_equal(sections(:section_01_1).id,     sections[0][:id])
-    assert_equal('New Section 01 2 4',           sections[1][:name])
-    assert_equal(sections(:section_01_2).id,     sections[2][:id])
-    assert_equal(sections(:section_01_3).id,     sections[3][:id])
+    assert_equal(sections(:section_01_1).id, sections[0][:id])
+    assert_equal('New Section 01 2 4',       sections[1][:name])
+    assert_equal(sections(:section_01_2).id, sections[2][:id])
+    assert_equal(sections(:section_01_3).id, sections[3][:id])
 
   end
 
@@ -159,18 +159,16 @@ class SectionControllerTest < Test::Unit::TestCase
     @request.session[:roles]       = nil
 
     section_01_1 = sections(:section_01_1)
-    get(:destroy, :id => section_01_1.id)
     
+    get(:destroy, { :id => section_01_1.id }, {})
     assert_redirected_to(:controller => 'user', :action => 'login')
     assert_equal('Please log in', flash[:notice])
 
-    set_non_admin
-    get(:destroy, :id => section_01_1.id)
-    
+    get(:destroy, { :id => section_01_1.id }, rich_designer_session)
     assert_redirected_to(:controller => 'tracker', :action => 'index')
-    assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
+    #assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
-    set_admin
+    
     checklist_0_1 = checklists(:checklist_0_1)
     sections = Section.find(:all,
                             :conditions => "checklist_id=#{checklist_0_1.id}",
@@ -184,7 +182,7 @@ class SectionControllerTest < Test::Unit::TestCase
     section_01_1.subsections.each { |ss| check_count += ss.checks.size}
     assert_equal(6, check_count)
 
-    get(:destroy, :id => section_01_1.id)
+    get(:destroy, { :id => section_01_1.id }, cathy_admin_session)
 
     check_count = 0
     section_01_1.subsections.each { |ss| check_count += ss.checks.size}
@@ -230,25 +228,23 @@ class SectionControllerTest < Test::Unit::TestCase
 
    section_01_1 = sections(:section_01_1)
     # Try editing without logging in.
-    post(:edit, :id => section_01_1.id)
-    
+    post(:edit, { :id => section_01_1.id }, {})
     assert_redirected_to(:controller => 'user', :action => 'login')
 
     # Try editing from a non-Admin account.
-    set_non_admin
-    post(:edit, :id => section_01_1.id)
-    
+    post(:edit, { :id => section_01_1.id }, rich_designer_session)
     assert_redirected_to(:controller => 'tracker', :action => 'index')
-    assert_equal(Pcbtr::MESSAGES[:admin_only],     flash['notice'])
+    #assert_equal(Pcbtr::MESSAGES[:admin_only],     flash['notice'])
 
+    admin_session = cathy_admin_session
     # Try editing from an Admin account
-    set_admin
-    post(:edit, :id => section_01_1.id)
-
+    post(:edit, { :id => section_01_1.id }, admin_session)
     assert_response 200
     assert_equal(section_01_1.id, assigns(:section).id)
 
-    assert_raise(ActiveRecord::RecordNotFound) { post(:edit,:id => 32423423) }
+    assert_raise(ActiveRecord::RecordNotFound) do
+      post(:edit, { :id => 32423423 }, admin_session)
+    end
 
 end
 
@@ -277,16 +273,12 @@ end
   def test_insert
 
     # Try inserting from a non-Admin account.
-    set_non_admin
-    post(:insert, :id => sections(:section_01_1).id)
-    
+    post(:insert, { :id => sections(:section_01_1).id }, rich_designer_session)
     assert_redirected_to(:controller => 'tracker', :action     => 'index')
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
     # Try inserting from an Admin account
-    set_admin
-    post(:insert, :id => sections(:section_01_1).id)
-
+    post(:insert, { :id => sections(:section_01_1).id }, cathy_admin_session)
     assert_response 200
     assert_equal(sections(:section_01_1).checklist_id,
                  assigns(:new_section).checklist_id)
@@ -316,7 +308,6 @@ end
   #
   def test_insert_section
 
-    set_admin
     checklist_0_1 = checklists(:checklist_0_1)
     sections = checklist_0_1.sections
     assert_equal(4, sections.size)
@@ -329,9 +320,9 @@ end
                     'url'              => 'www.dogpile.com' }
 
     post(:insert_section,
-         :new_section => new_section,
-         :section     => { 'id' => sections(:section_01_1).id })
-
+         { :new_section => new_section,
+           :section     => { 'id' => sections(:section_01_1).id } },
+         cathy_admin_session)
     checklist_0_1.reload
     sections = checklist_0_1.sections
     assert_equal(5, sections.size)
@@ -376,15 +367,11 @@ end
     assert_equal(4, sections.size)
 
     section_01_2 = sections(:section_01_2)
-    set_non_admin
-    get(:move_down, :id => section_01_2.id)
-
+    get(:move_down, { :id => section_01_2.id }, rich_designer_session)
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
     assert_redirected_to(:controller => 'tracker', :action => 'index')
-
-    set_admin
-    get(:move_down, :id => section_01_2.id)
-
+ 
+    get(:move_down, { :id => section_01_2.id }, cathy_admin_session)
     assert('Sections were re-ordered', flash['notice'])
     assert_redirected_to(:controller => 'checklist',
                          :action     => 'edit',
@@ -432,15 +419,11 @@ end
     assert_equal(4, sections.size)
 
     section_01_2 = sections(:section_01_2)
-    set_non_admin
-    get(:move_up, :id => section_01_2.id)
-
+    get(:move_up, { :id => section_01_2.id }, rich_designer_session)
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
     assert_redirected_to(:controller => 'tracker', :action     => 'index')
 
-    set_admin
-    get(:move_up, :id => section_01_2.id)
-
+    get(:move_up, { :id => section_01_2.id }, cathy_admin_session)
     assert('Sections were re-ordered', flash['notice'])
     assert_redirected_to(:controller => 'checklist',
                          :action     => 'edit',
@@ -479,14 +462,12 @@ end
   #
   def test_update
 
-    set_admin
     section_01_1 = sections(:section_01_1)
     section = Section.find(section_01_1.id)
     assert_equal(section_01_1.url, section.url)
 
     section.url = 'www.yahoo.com'
-    get(:update, :section => section.attributes)
-
+    get(:update, { :section => section.attributes }, cathy_admin_session)
     assert_equal('Section was successfully updated.', flash['notice'])
     assert_redirected_to(:controller => 'checklist',
 			                   :action     => 'edit',

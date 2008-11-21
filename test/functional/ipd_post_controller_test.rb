@@ -19,9 +19,15 @@ class IpdPostController; def rescue_action(e) raise e end; end
 
 class IpdPostControllerTest < Test::Unit::TestCase
   def setup
+    
     @controller = IpdPostController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+        
+    #@siva_e  = users(:siva_e)
+    @scott_g = users(:scott_g)
+    
+    
   end
 
   fixtures(:designs,
@@ -44,26 +50,25 @@ class IpdPostControllerTest < Test::Unit::TestCase
   def test_list
 
     assert_equal(29, IpdPost.count)
-
-    set_user(users(:scott_g).id, 'Designer')
     
+    designer_session = scott_designer_session
     # The la454c design has no idp posts in the database.  Verify
     # that list provides the expected information.
-    post(:list, :design_id => designs(:la454c3).id)
+    post(:list, { :design_id => designs(:la454c3).id }, designer_session)
 
     assert_equal(designs(:la454c3).name, assigns(:design).name)
     assert_equal(0,                      assigns(:ipd_posts).size)
 
     # The mx234a design has 3 idp posts in the database.  Verify
     # that list provides the expected information.
-    post(:list, :design_id => designs(:mx234a).id)
+    get(:list, { :design_id => designs(:mx234a).id }, designer_session)
 
     assert_equal(designs(:mx234a).name,  assigns(:design).name)
     assert_equal(3,                      assigns(:ipd_posts).size)
 
     # The la453b design has 23 ipd posts in the database.  Verify
     # that list provides the expected information.
-    post(:list, :design_id => designs(:la453b).id)
+    get(:list, { :design_id => designs(:la453b).id }, designer_session)
 
     assert_equal(designs(:la453b).name, assigns(:design).name)
     assert_equal(23,                    assigns(:ipd_posts).size)
@@ -83,9 +88,7 @@ class IpdPostControllerTest < Test::Unit::TestCase
   #
   def test_new
   
-    set_user(users(:scott_g).id, 'Designer')
-    
-    post(:new,  :design_id => designs(:la453b).id)
+    get(:new, { :design_id => designs(:la453b).id }, scott_designer_session)
     assert_equal(designs(:la453b).id, assigns(:ipd_post).design_id)
     
   end
@@ -103,7 +106,7 @@ class IpdPostControllerTest < Test::Unit::TestCase
   #
   def test_show
     
-    post(:show, :id => ipd_posts(:mx234a_thread_one).id)
+    get(:show, { :id => ipd_posts(:mx234a_thread_one).id }, {})
     assert_equal(designs(:mx234a).id, assigns(:reply_post).design_id)
 
     root_post = assigns(:root_post)
@@ -134,35 +137,34 @@ class IpdPostControllerTest < Test::Unit::TestCase
   #
   def test_posting
 
-    set_user(users(:scott_g).id, 'Designer')
-
+    designer_session = scott_designer_session
+    
     # The mx243c design has no ipd posts in the database.  Verify
     # that list provides the expected information.
-    post(:list,  :design_id => designs(:mx234c).id)
+    get(:list,  { :design_id => designs(:mx234c).id }, designer_session)
     assert_equal(designs(:mx234c).name,  assigns(:design).name)
     assert_equal(0,                      assigns(:ipd_posts).size)
 
-    set_user(users(:scott_g).id, 'Designer')
     root_post = {:design_id => designs(:mx234c).id,
                  :subject   => "mx234c thread 1",
                  :body      => "mx234c thread 1 BODY"}
-    post(:create, :ipd_post => root_post)
+    post(:create, { :ipd_post => root_post }, designer_session)
     
-    post(:list, :design_id => designs(:mx234c).id)
+    get(:list, { :design_id => designs(:mx234c).id }, designer_session)
     assert_equal(1, assigns(:ipd_posts).size)
 
 
     root_post = {:design_id => designs(:mx234c).id,
                  :subject   => "mx234c thread 2",
                  :body      => "mx234c thread 2 BODY"}
-    post(:create, :ipd_post => root_post)
+    post(:create, { :ipd_post => root_post }, designer_session)
          
     root_post = {:design_id => designs(:mx234c).id,
                  :subject   => "mx234c thread 3",
                  :body      => "mx234c thread 3 BODY"}
-    post(:create, :ipd_post => root_post)
+    post(:create, { :ipd_post => root_post }, designer_session)
 
-    post(:list, :design_id => designs(:mx234c).id)
+    get(:list, { :design_id => designs(:mx234c).id }, designer_session)
     assert_equal(3, assigns(:ipd_posts).size)
     assigns(:ipd_posts).each { |post| assert_equal(0, post.all_children.size) }
 
@@ -170,10 +172,11 @@ class IpdPostControllerTest < Test::Unit::TestCase
                  p.subject == "mx234c thread 3"}
 
     post(:create_reply,
-         :reply_post => {:body => 'mx234c thread 3 REPLY 1'},
-         :id         => thread_3.id)
+         { :reply_post => {:body => 'mx234c thread 3 REPLY 1'},
+           :id         => thread_3.id }, 
+         designer_session)
 
-    post(:list, :design_id => designs(:mx234c).id)
+    get(:list, { :design_id => designs(:mx234c).id }, designer_session)
     assert_equal(3, assigns(:ipd_posts).size)
 
     expected_results = {
@@ -196,10 +199,11 @@ class IpdPostControllerTest < Test::Unit::TestCase
     end
 
     post(:create_reply,
-         :reply_post => {:body => 'mx234c thread 3 REPLY 2'},
-         :id         => thread_3.id)
+         { :reply_post => {:body => 'mx234c thread 3 REPLY 2'},
+           :id         => thread_3.id },
+         designer_session)
 
-    post(:list, :design_id => designs(:mx234c).id)
+    get(:list, { :design_id => designs(:mx234c).id }, designer_session)
     assert_equal(3, assigns(:ipd_posts).size)
 
     expected_results['mx234c thread 3'][:size] = 2
@@ -216,10 +220,11 @@ class IpdPostControllerTest < Test::Unit::TestCase
     end
 
     post(:create_reply,
-         :reply_post => {:body => 'mx234c thread 3 REPLY 3'},
-         :id         => thread_3.id)
+         { :reply_post => {:body => 'mx234c thread 3 REPLY 3'},
+           :id         => thread_3.id },
+         designer_session)
 
-    post(:list, :design_id => designs(:mx234c).id)
+    get(:list, { :design_id => designs(:mx234c).id }, designer_session)
     assert_equal(3, assigns(:ipd_posts).size)
 
     expected_results['mx234c thread 3'][:size] = 3
@@ -239,10 +244,11 @@ class IpdPostControllerTest < Test::Unit::TestCase
                  p.subject == "mx234c thread 1"}
 
     post(:create_reply,
-         :reply_post => {:body => 'mx234c thread 1 REPLY 1'},
-         :id         => thread_1.id)
+         { :reply_post => {:body => 'mx234c thread 1 REPLY 1'},
+           :id         => thread_1.id },
+         designer_session)
 
-    post(:list, :design_id => designs(:mx234c).id)
+    get(:list, { :design_id => designs(:mx234c).id }, designer_session)
     assert_equal(3, assigns(:ipd_posts).size)
 
     expected_results['mx234c thread 1'][:size] = 1
@@ -272,12 +278,11 @@ class IpdPostControllerTest < Test::Unit::TestCase
   ######################################################################
   #
   def test_email_list
-  
-    set_user(users(:scott_g).id, 'Designer')
    
+    designer_session = scott_designer_session
+    
     mx234a_thread_one = ipd_posts(:mx234a_thread_one)
-    post(:manage_email_list,
-         :id => mx234a_thread_one.id)
+    get(:manage_email_list, { :id => mx234a_thread_one.id }, designer_session)
          
     assert_equal(true,              assigns(:posting_new_thread))
     assert_equal(mx234a_thread_one, assigns(:ipd_post))
@@ -353,7 +358,7 @@ class IpdPostControllerTest < Test::Unit::TestCase
       expected_available_cc_list.delete_if { |u| u == user_to_add }
       expected_cc_list << user_to_add
       
-      post(:add_to_thread_list, :id => user_to_add.id)
+      get(:add_to_thread_list, { :id => user_to_add.id }, designer_session)
       
       assert_equal(expected_cc_list, assigns(:optional_cc_list))
       assert_equal(expected_available_cc_list,
@@ -367,7 +372,7 @@ class IpdPostControllerTest < Test::Unit::TestCase
       expected_cc_list.delete_if { |u| u == user_to_remove }
       expected_available_cc_list << user_to_remove
         
-      post(:remove_from_thread_list, :id => user_to_remove.id)
+      get(:remove_from_thread_list, { :id => user_to_remove.id }, designer_session)
         
       assert_equal(expected_cc_list, assigns(:optional_cc_list))
       assert_equal(expected_available_cc_list,
@@ -384,7 +389,7 @@ class IpdPostControllerTest < Test::Unit::TestCase
       users(:b_davie)
     ].sort_by { |u| u.last_name }
     for user_to_add in users_to_add
-      post(:add_to_thread_list, :id => user_to_add.id)
+      post(:add_to_thread_list, { :id => user_to_add.id }, designer_session)
     end
 
     mx234a_thread_one.reload

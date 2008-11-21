@@ -24,24 +24,24 @@ class EcoTasksControllerTest < ActionController::TestCase
   
   def setup
     @patrice_m = users(:patrice_m)
+    @patrice_session = set_session(@patrice_m.id, "ECO Admin")
   end
   
   
   def test_should_get_index_not_signed_in
-    get :index
+    get(:index, {}, {})
     assert_response :success
     assert_not_nil assigns(:eco_tasks)
   end
 
   def test_should_get_index
-    set_user(@patrice_m, 'ECO Admin')
-    get :index
+    get(:index, {}, @patrice_session)
     assert_response :success
     assert_not_nil assigns(:eco_tasks)
   end
 
   def test_should_not_get_new
-    get :new
+    get(:new, {}, {})
     assert_response :redirect
     assert(flash['notice'].include?('unavailable unless logged in.'))
     assert_nil assigns(:eco_task)
@@ -51,8 +51,7 @@ class EcoTasksControllerTest < ActionController::TestCase
   end
 
   def test_should_get_new
-    set_user(@patrice_m, 'ECO Admin')
-    get :new
+    get(:new, {}, @patrice_session)
     assert_response :success
     assert_not_nil assigns(:eco_task)
     assert_not_nil assigns(:eco_document)
@@ -67,15 +66,15 @@ class EcoTasksControllerTest < ActionController::TestCase
   end
   
   def test_should_create_eco_task
-    set_user(@patrice_m, 'ECO Admin')
     assert_difference('EcoTask.count') do
       post(:create,
-           :eco_task     => { :number           => 'p21',
-                              :pcb_revision     => 'B',
-                              :pcba_part_number => '500-010-00',
-                              :eco_type_ids     => ["1", "2"] },
-           :eco_document => { :document => '' },
-           :eco_comment  => { :comment => ''})
+           { :eco_task     => { :number           => 'p21',
+                                :pcb_revision     => 'B',
+                                :pcba_part_number => '500-010-00',
+                                :eco_type_ids     => ["1", "2"] },
+             :eco_document => { :document => '' },
+             :eco_comment  => { :comment => ''} },
+         @patrice_session)
     end
 
     assert_redirected_to eco_tasks_url
@@ -83,46 +82,42 @@ class EcoTasksControllerTest < ActionController::TestCase
 
   
   def test_should_show_eco_task_not_signed_in
-    get :show, :id => eco_tasks(:task_one).id
+    get :show, { :id => eco_tasks(:task_one).id }, {}
     assert_response :success
   end
 
 
   def test_should_show_eco_task
-    set_user(@patrice_m, 'ECO Admin')
-    get :show, :id => eco_tasks(:task_one).id
+    get :show, { :id => eco_tasks(:task_one).id }, @patrice_session
     assert_response :success
   end
 
 
   def test_should_get_edit
-    set_user(@patrice_m, 'ECO Admin')
-    @request.session[:return_to] = 'wrewqe'
-    get :edit, :id => eco_tasks(:task_one).id
+    @patrice_session[:return_to] = 'wrewqe'
+    get :edit, { :id => eco_tasks(:task_one).id }, @patrice_session
     assert_equal(eco_tasks(:task_one).id, assigns(:eco_task).id)
     assert_response :success
   end
 
   def test_should_update_eco_task
-    set_user(@patrice_m, 'ECO Admin')
     eco_task = eco_tasks(:task_one)
     comment_count = eco_task.eco_comments.size
     put(:update, 
-        :id       => eco_task.id, 
-        :eco_task => { :number           => 'p2108',
-                       :pcb_revision     => 'C',
-                       :pcba_part_number => '500-010-00',
-                       :eco_type_ids     => ["1", "2"] },
-                       :eco_document     => { :document => '' },
-                       :eco_comment      => { :comment => 'New Comment'} )
+        { :id       => eco_task.id, 
+          :eco_task => { :number           => 'p2108',
+                         :pcb_revision     => 'C',
+                         :pcba_part_number => '500-010-00',
+                         :eco_type_ids     => ["1", "2"] },
+                         :eco_document     => { :document => '' },
+                         :eco_comment      => { :comment => 'New Comment'} },
+        @patrice_session)
     assert_redirected_to eco_tasks_url
     eco_task.reload
     assert_equal(comment_count+1, eco_task.eco_comments.size)
   end
 
   def test_eco_task_updates
-    
-    set_user(@patrice_m, 'ECO Admin')
 
     baseline_eco_task = EcoTask.find(eco_tasks(:task_one).id)
     comment_count = baseline_eco_task.eco_comments.size
@@ -132,14 +127,15 @@ class EcoTasksControllerTest < ActionController::TestCase
 
     # Change the eco_types
     put(:update, 
-        :id       => baseline_eco_task.id, 
-        :eco_task => { :number           => 'P2000',
-                       :pcb_revision     => 'A',
-                       :pcba_part_number => "600-500-00",
-                       :eco_type_ids     => ["1", "2"],
-                       :completed        => '1',
-                       :closed           => '1',
-                       :document_link    => nil })
+        { :id       => baseline_eco_task.id, 
+          :eco_task => { :number           => 'P2000',
+                         :pcb_revision     => 'A',
+                         :pcba_part_number => "600-500-00",
+                         :eco_type_ids     => ["1", "2"],
+                         :completed        => '1',
+                         :closed           => '1',
+                         :document_link    => nil } },
+        @patrice_session)
     assert_redirected_to eco_tasks_url
     eco_task = EcoTask.find(baseline_eco_task.id)
 
@@ -156,14 +152,15 @@ class EcoTasksControllerTest < ActionController::TestCase
     
     # Change the eco number
     put(:update, 
-        :id       => baseline_eco_task.id, 
-        :eco_task => { :number           => 'P4000',
-                       :pcb_revision     => 'A',
-                       :pcba_part_number => "600-500-00",
-                       :eco_type_ids     => ["1", "2"],
-                       :completed        => '1',
-                       :closed           => '1',
-                       :document_link    => nil })
+        { :id       => baseline_eco_task.id, 
+          :eco_task => { :number           => 'P4000',
+                         :pcb_revision     => 'A',
+                         :pcba_part_number => "600-500-00",
+                         :eco_type_ids     => ["1", "2"],
+                         :completed        => '1',
+                         :closed           => '1',
+                         :document_link    => nil } },
+        @patrice_session)
     assert_redirected_to eco_tasks_url
     eco_task = EcoTask.find(baseline_eco_task.id)
 
@@ -179,14 +176,15 @@ class EcoTasksControllerTest < ActionController::TestCase
     
     # Change the pcb part number
     put(:update, 
-        :id       => baseline_eco_task.id, 
-        :eco_task => { :number           => 'P4000',
-                       :pcb_revision     => 'C',
-                       :pcba_part_number => "600-500-00",
-                       :eco_type_ids     => ["1", "2"],
-                       :completed        => '1',
-                       :closed           => '1',
-                       :document_link    => nil })
+        { :id       => baseline_eco_task.id, 
+          :eco_task => { :number           => 'P4000',
+                         :pcb_revision     => 'C',
+                         :pcba_part_number => "600-500-00",
+                         :eco_type_ids     => ["1", "2"],
+                         :completed        => '1',
+                         :closed           => '1',
+                         :document_link    => nil } },
+        @patrice_session)
     assert_redirected_to eco_tasks_url
     eco_task = EcoTask.find(baseline_eco_task.id)
 
@@ -202,14 +200,15 @@ class EcoTasksControllerTest < ActionController::TestCase
     
     # Change the pcba part number
     put(:update, 
-        :id       => baseline_eco_task.id, 
-        :eco_task => { :number           => 'P4000',
-                       :pcb_revision     => 'C',
-                       :pcba_part_number => "600-555-00",
-                       :eco_type_ids     => ["1", "2"],
-                       :completed        => '1',
-                       :closed           => '1',
-                       :document_link    => nil })
+        { :id       => baseline_eco_task.id, 
+          :eco_task => { :number           => 'P4000',
+                         :pcb_revision     => 'C',
+                         :pcba_part_number => "600-555-00",
+                         :eco_type_ids     => ["1", "2"],
+                         :completed        => '1',
+                         :closed           => '1',
+                         :document_link    => nil } },
+        @patrice_session)
     assert_redirected_to eco_tasks_url
     eco_task = EcoTask.find(baseline_eco_task.id)
 
@@ -225,14 +224,15 @@ class EcoTasksControllerTest < ActionController::TestCase
     
     # Change the closed flag
     put(:update, 
-        :id       => baseline_eco_task.id, 
-        :eco_task => { :number           => 'P4000',
-                       :pcb_revision     => 'C',
-                       :pcba_part_number => "600-555-00",
-                       :eco_type_ids     => ["1", "2"],
-                       :completed        => '1',
-                       :closed           => '0',
-                       :document_link    => nil })
+        { :id       => baseline_eco_task.id, 
+          :eco_task => { :number           => 'P4000',
+                         :pcb_revision     => 'C',
+                         :pcba_part_number => "600-555-00",
+                         :eco_type_ids     => ["1", "2"],
+                         :completed        => '1',
+                         :closed           => '0',
+                         :document_link    => nil } },
+        @patrice_session)
     assert_redirected_to eco_tasks_url
     eco_task = EcoTask.find(baseline_eco_task.id)
 
@@ -248,14 +248,15 @@ class EcoTasksControllerTest < ActionController::TestCase
     
     # Change the completed flag
     put(:update, 
-        :id       => baseline_eco_task.id, 
-        :eco_task => { :number           => 'P4000',
-                       :pcb_revision     => 'C',
-                       :pcba_part_number => "600-555-00",
-                       :eco_type_ids     => ["1", "2"],
-                       :completed        => '0',
-                       :closed           => '0',
-                       :document_link    => nil })
+        { :id       => baseline_eco_task.id, 
+          :eco_task => { :number           => 'P4000',
+                         :pcb_revision     => 'C',
+                         :pcba_part_number => "600-555-00",
+                         :eco_type_ids     => ["1", "2"],
+                         :completed        => '0',
+                         :closed           => '0',
+                         :document_link    => nil } },
+        @patrice_session)
     assert_redirected_to eco_tasks_url
     eco_task = EcoTask.find(baseline_eco_task.id)
 
@@ -271,14 +272,15 @@ class EcoTasksControllerTest < ActionController::TestCase
     
     # Change the baseline
     put(:update, 
-        :id       => baseline_eco_task.id, 
-        :eco_task => { :number           => 'P4000',
-                       :pcb_revision     => 'C',
-                       :pcba_part_number => "600-555-00",
-                       :eco_type_ids     => ["1", "2"],
-                       :completed        => '0',
-                       :closed           => '0',
-                       :document_link    => '/hwnet/dtg_rules' })
+        { :id       => baseline_eco_task.id, 
+          :eco_task => { :number           => 'P4000',
+                         :pcb_revision     => 'C',
+                         :pcba_part_number => "600-555-00",
+                         :eco_type_ids     => ["1", "2"],
+                         :completed        => '0',
+                         :closed           => '0',
+                         :document_link    => '/hwnet/dtg_rules' } },
+        @patrice_session)
     assert_redirected_to eco_tasks_url
     eco_task = EcoTask.find(baseline_eco_task.id)
 

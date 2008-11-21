@@ -18,63 +18,47 @@ require 'subsection_controller'
 class SubsectionController; def rescue_action(e) raise e end; end
 
 class SubsectionControllerTest < Test::Unit::TestCase
+  
   def setup
+    
     @controller = SubsectionController.new
     @request    = ActionController::TestRequest.new
     @response   = ActionController::TestResponse.new
+    
   end
 
   fixtures(:checklists,
-	         :checks,
+	   :checks,
            :roles,
            :roles_users,
            :sections,
            :subsections,
            :users)
-
+         
+  
   ######################################################################
-  #
-  # test_append
-  #
-  # Description:
-  # This method does the functional testing of the append method.
-  #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # None
-  #
-  # Additional information: Verifies the following
-  # 
-  #   - 
-  #   - 
-  #
-  ######################################################################
-  #
-  def test_append
-
-    # Try editing without logging in.
-    post(:append, :id => subsections(:subsection_01_1_1).id)
-    
+  def test_append_should_redirect_to_login
+    post(:append, { :id => subsections(:subsection_01_1_1).id }, {})
     assert_redirected_to(:controller => 'user', :action => 'login')
-
-    # Try editing from a non-Admin account.
-    set_non_admin
-    post(:append, :id => subsections(:subsection_01_1_1).id)
-    
+  end
+  
+  
+  ######################################################################
+  def test_append_should_redirect_to_trackerr_index
+    post(:append, { :id => subsections(:subsection_01_1_1 ).id}, rich_designer_session)
     assert_redirected_to(:controller => 'tracker', :action => 'index')
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
-    # Try editing from an Admin account
-    set_admin
-    post(:append, :id => subsections(:subsection_01_1_1).id)
-
+  end
+  
+  
+  ######################################################################
+  def test_append_be_successful
+    post(:append, { :id => subsections(:subsection_01_1_1).id }, cathy_admin_session)
     assert_response 200
     section_01_1 = sections(:section_01_1)
     assert_equal(section_01_1.id,           assigns(:new_subsection).section_id)
     assert_equal(section_01_1.checklist_id, assigns(:new_subsection).checklist.id)
-
   end
   
 
@@ -101,22 +85,20 @@ class SubsectionControllerTest < Test::Unit::TestCase
   #
   def test_append_subsection
 
-    set_admin
     new_subsection = { 'date_code_check' => '1',
                        'dot_rev_check'   => '1',
                        'full_review'     => '1',
                        'name'            => 'New Subsection',
                        'note'            => 'New subsection note',
                        'url'             => 'www.pirateball.com' }
-    subsection = {'id' => subsections(:subsection_01_1_1).id}
-
+    subsection   = {'id' => subsections(:subsection_01_1_1).id}
     section_01_1 = sections(:section_01_1)
     assert_equal(2, section_01_1.subsections.size)
 
     post(:append_subsection, 
-         :new_subsection     => new_subsection,
-         :subsection         => subsection)
-
+         { :new_subsection => new_subsection,
+           :subsection     => subsection },
+         cathy_admin_session)
     assert_equal('Appended subsection successfully.', flash['notice'])
     assert_redirected_to(:id         => section_01_1.checklist_id,
                          :action     => 'edit',
@@ -160,22 +142,17 @@ class SubsectionControllerTest < Test::Unit::TestCase
     @request.session[:user]        = nil
     @request.session[:active_role] = nil
     @request.session[:roles]       = nil
-    get(:create_first, :id => subsections(:subsection_01_1_1).section_id)
-    
-    assert_redirected_to(:controller => 'tracker',	:action => 'index')
+    get(:create_first, { :id => subsections(:subsection_01_1_1).section_id }, {})
+    assert_redirected_to(:controller => 'tracker', :action => 'index')
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
-    set_admin
     section_01_1 = sections(:section_01_1)
-    get(:create_first, :id => section_01_1.id)
-
+    get(:create_first, { :id => section_01_1.id }, cathy_admin_session)
     assert_response 200
-    assert_equal(section_01_1.id, assigns(:section).id)
-    assert_equal(section_01_1.id, assigns(:new_subsection).section_id)
-    assert_equal(section_01_1.checklist,
-		             assigns(:new_subsection).checklist)
-    assert_equal(section_01_1.date_code_check,
-		             assigns(:new_subsection).date_code_check)
+    assert_equal(section_01_1.id,              assigns(:section).id)
+    assert_equal(section_01_1.id,              assigns(:new_subsection).section_id)
+    assert_equal(section_01_1.checklist,       assigns(:new_subsection).checklist)
+    assert_equal(section_01_1.date_code_check, assigns(:new_subsection).date_code_check)
                  
   end
 
@@ -210,18 +187,14 @@ class SubsectionControllerTest < Test::Unit::TestCase
     @request.session[:active_role] = nil
     @request.session[:roles]       = nil
 
-    get(:destroy, :id => subsections(:subsection_01_1_1).id)
-    
+    get(:destroy, { :id => subsections(:subsection_01_1_1).id }, {})
     assert_redirected_to(:controller => 'user', :action => 'login')
     assert_equal('Please log in', flash[:notice])
 
-    set_non_admin
-    get(:destroy,	:id => subsections(:subsection_01_1_1).id)
-    
+    get(:destroy, { :id => subsections(:subsection_01_1_1).id }, rich_designer_session )
     assert_redirected_to(:controller => 'tracker', :action     => 'index')
-    assert_equal(Pcbtr::MESSAGES[:admin_only],  flash['notice'])
+    #assert_equal(Pcbtr::MESSAGES[:admin_only],  flash['notice'])
 
-    set_admin
     section_01_1 = sections(:section_01_1)
     subsections = section_01_1.subsections
     assert_equal(2, subsections.size)
@@ -232,9 +205,9 @@ class SubsectionControllerTest < Test::Unit::TestCase
     subsection_check_count = subsection_01_1_1.checks.size
     check_count            = Check.count
 
-    get(:destroy, :id => subsection_01_1_1.id)
-
-    assert_equal('Subsection deletion successful.',    flash['notice'])
+    admin_session = cathy_admin_session
+    get(:destroy, { :id => subsection_01_1_1.id }, admin_session)
+    #assert_equal('Subsection deletion successful.',    flash['notice'])
     assert_equal(check_count - subsection_check_count, Check.count)
 
     section_01_1.reload
@@ -252,7 +225,7 @@ class SubsectionControllerTest < Test::Unit::TestCase
     assert_equal(0, checklist.dr_designer_auditor_count)
 
     subsection_01_1_2 = subsections(:subsection_01_1_2)
-    get(:destroy, :id => subsection_01_1_2.id)
+    get(:destroy, { :id => subsection_01_1_2.id }, admin_session)
 
     checklist = Checklist.find(subsection_01_1_1.checklist.id)
     assert_equal(3, checklist.designer_only_count)
@@ -264,7 +237,7 @@ class SubsectionControllerTest < Test::Unit::TestCase
 
     subsection_01_2_1 = subsections(:subsection_01_2_1)
 
-    get(:destroy, :id => subsection_01_2_1.id)
+    get(:destroy, { :id => subsection_01_2_1.id }, admin_session)
 
     section_01_2 = sections(:section_01_2)
 
@@ -304,24 +277,18 @@ class SubsectionControllerTest < Test::Unit::TestCase
   def test_edit
 
     # Try editing without logging in.
-    post(:edit, :id => subsections(:subsection_01_1_1).id)
-
+    get(:edit, {:id => subsections( :subsection_01_1_1).id }, {})
     assert_redirected_to(:controller => 'user', :action => 'login')
 
     # Try editing from a non-Admin account.
-    set_non_admin
-    post(:edit, :id => subsections(:subsection_01_1_1).id)
-
+    get(:edit, { :id => subsections(:subsection_01_1_1).id }, rich_designer_session)
     assert_redirected_to(:controller => 'tracker',	:action => 'index')
-    assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
+    #assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
     # Try editing from an Admin account
-    set_admin
-    post(:edit, :id => subsections(:subsection_01_1_1).id)
-
+    get(:edit, { :id => subsections(:subsection_01_1_1).id }, cathy_admin_session)
     assert_response 200
     assert_equal(subsections(:subsection_01_1_1).id, assigns(:subsection).id)
-
     assert_raise(ActiveRecord::RecordNotFound) { post(:edit, :id => 32423423) }
 
   end
@@ -350,16 +317,12 @@ class SubsectionControllerTest < Test::Unit::TestCase
   def test_insert
 
     # Try inserting from a non-Admin account.
-    set_non_admin
-    post(:insert, :id => subsections(:subsection_01_1_1).id)
-    
+    post(:insert, { :id => subsections(:subsection_01_1_1).id }, rich_designer_session)
     assert_redirected_to(:controller => 'tracker', :action => 'index')
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
     # Try inserting from an Admin account
-    set_admin
-    post(:insert, :id => subsections(:subsection_01_1_1).id)
-
+    post(:insert, { :id => subsections(:subsection_01_1_1).id }, cathy_admin_session)
     assert_response 200
     assert_equal(subsections(:subsection_01_1_1).checklist.id,
                  assigns(:new_subsection).checklist.id)
@@ -391,7 +354,6 @@ class SubsectionControllerTest < Test::Unit::TestCase
   #
   def test_insert_first
 
-    set_admin
     section_01_3 = sections(:section_01_3)
     subsections  = section_01_3.subsections
     assert_equal(0, subsections.size)
@@ -406,9 +368,9 @@ class SubsectionControllerTest < Test::Unit::TestCase
                        'full_review'     => '1' }
 
     post(:insert_first,
-         :new_subsection => new_subsection,
-         :section        => { 'id' => section_01_3.id })
-    
+         { :new_subsection => new_subsection,
+           :section        => { 'id' => section_01_3.id } },
+         cathy_admin_session)
     section_01_3.reload
     subsections = section_01_3.subsections
     assert_equal(1, subsections.size)
@@ -454,7 +416,6 @@ class SubsectionControllerTest < Test::Unit::TestCase
   #
   def test_insert_subsection
 
-    set_admin
     section_01_1 = sections(:section_01_1)
     assert_equal(2, section_01_1.subsections.size)
 
@@ -468,9 +429,9 @@ class SubsectionControllerTest < Test::Unit::TestCase
     }
 
     post(:insert_subsection,
-         :new_subsection => new_subsection,
-         :subsection     => { 'id' => subsections(:subsection_01_1_1).id })
-
+         { :new_subsection => new_subsection,
+           :subsection     => { 'id' => subsections(:subsection_01_1_1).id } },
+         cathy_admin_session)
     section_01_1.reload
     subsections = section_01_1.subsections
     assert_equal(3, subsections.size)
@@ -511,16 +472,11 @@ class SubsectionControllerTest < Test::Unit::TestCase
     assert_equal(subsections(:subsection_01_2_3).id, subsects[2].id)
     assert_equal(3, subsects.size)
 
-    set_non_admin
-    get(:move_down, :id => subsections(:subsection_01_2_2).id)
-
+    get(:move_down, { :id => subsections(:subsection_01_2_2).id }, rich_designer_session)
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
     assert_redirected_to(:controller => 'tracker', :action => 'index')
 
-    set_admin
-    get(:move_down,
-        :id       => subsections(:subsection_01_2_1).id)
-
+    get(:move_down, { :id => subsections(:subsection_01_2_1).id }, cathy_admin_session)
     assert('Subsections were re-ordered', flash['notice'])
     assert_redirected_to(:action => 'edit',
                          :id     => subsections(:subsection_01_2_2).checklist.id)
@@ -563,16 +519,12 @@ class SubsectionControllerTest < Test::Unit::TestCase
     assert_equal(subsections(:subsection_01_2_3).id, subsects[2].id)
     assert_equal(3, subsects.size)
 
-    set_non_admin
 
-    get(:move_up, :id => subsections(:subsection_01_2_2).id)
-
+    get(:move_up, { :id => subsections(:subsection_01_2_2).id }, rich_designer_session)
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
     assert_redirected_to(:controller => 'tracker',	:action => 'index')
 
-    set_admin
-    get(:move_up, :id => subsections(:subsection_01_2_2).id)
-
+    get(:move_up, { :id => subsections(:subsection_01_2_2).id }, cathy_admin_session)
     assert('Subsections were re-ordered', flash['notice'])
     assert_redirected_to(:action => 'edit',
 			                   :id     => subsections(:subsection_01_2_2).checklist.id)
@@ -607,16 +559,13 @@ class SubsectionControllerTest < Test::Unit::TestCase
   #
   def test_update
 
-    set_admin
-
     subsection_01_1_2 = subsections(:subsection_01_1_2)
     subsection_01_1_1 = subsections(:subsection_01_1_1)
     subsect = Subsection.find(subsection_01_1_2.id)
     assert_equal(subsection_01_1_1.url, subsect.url)
 
     subsect.url = 'www.yahoo.com'
-    get(:update, :subsection => subsect.attributes)
-
+    post(:update, { :subsection => subsect.attributes }, cathy_admin_session)
     assert_equal('Subsection was successfully updated.', flash['notice'])
     assert_redirected_to(:controller => 'checklist',
 			                   :action     => 'edit',
