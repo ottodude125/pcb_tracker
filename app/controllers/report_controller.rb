@@ -28,7 +28,7 @@ class ReportController < ApplicationController
   
     role_id = params[:role][:id]
     
-    @all_designs = Design.find_all
+    @all_designs = Design.find(:all)
     @all_designs.delete_if { |d| d.phase_id != Design::COMPLETE }
     
     @all_results         = []
