@@ -19,9 +19,9 @@ module DesignReviewHelper
 
     in_review = ReviewStatus.find_by_name("In Review")
     
-    if session[:user]
+    if @logged_in_user
       review_outstanding = @review_results.find { |rr| 
-        rr.reviewer_id == session[:user].id && rr.no_response?
+        rr.reviewer_id == @logged_in_user.id && rr.no_response?
       }
     end
 
@@ -37,7 +37,7 @@ module DesignReviewHelper
 
     incomplete   = ['No Response', 'WITHDRAWN']
     reassignable = false
-    role_ids     = session[:user].roles.collect { |role| role.id }
+    role_ids     = @logged_in_user.roles.collect { |role| role.id }
     
     design_review.design_review_results.each do |review_result|
       if role_ids.include?(review_result.role_id)
@@ -59,7 +59,7 @@ module DesignReviewHelper
 
   def reviewer_peer(review_results)
 
-    session[:roles].each do |my_role|
+    @logged_in_user.roles.each do |my_role|
       is_peer = review_results.find { |rr| rr.role_id == my_role.id }
       break if is_peer
     end
@@ -71,24 +71,24 @@ module DesignReviewHelper
   
   def permitted_to_update_cc_list
   
-    return session[:active_role].name == 'Admin'     || 
-           session[:active_role].name == 'Designer'  ||
-           session[:active_role].name == 'PCB Admin' ||
+    return @logged_in_user.active_role.name == 'Admin'     || 
+           @logged_in_user.active_role.name == 'Designer'  ||
+           @logged_in_user.active_role.name == 'PCB Admin' ||
            is_manager
   end
   
   
   def permitted_to_remove_self_from_cc_list
   
-    return @users_copied.include?(session[:user])
+    return @users_copied.include?(@logged_in_user)
     
   end
 
 
   def permitted_to_add_self_to_cc_list(reviewer_list)
   
-    return ( !@users_copied.include?(session[:user]) &&
-             !reviewer_list.find { |r| r[:id] == session[:user].id } )
+    return ( !@users_copied.include?(@logged_in_user) &&
+             !reviewer_list.find { |r| r[:id] == @logged_in_user.id } )
     
   end
 
