@@ -242,27 +242,26 @@ class UserController < ApplicationController
     if params[:new_password].size < 5
       flash['notice'] = 'No Update - the password must be at least 5 characters'
     elsif params[:new_password] == params[:new_password_confirmation]
-      @user.password = params[:new_password]
-      @user.passwd   = params[:new_password] if not params[:new_password].empty?
-      @user.password_confirmation = params[:new_password_confirmation]
+      @logged_in_user.password = params[:new_password]
+      @logged_in_user.passwd   = params[:new_password] if not params[:new_password].empty?
+      @logged_in_user.password_confirmation = params[:new_password_confirmation]
 
-      if @user.save
+      if @logged_in_user.save
         if not params[:new_password].empty?
-          flash['notice'] = "The password for #{@user.name} was updated"
+          flash['notice'] = "The password for #{@logged_in_user.name} was updated"
           updated = true
         else
           flash['notice'] = 'No Update - no password was entered'
         end
       else
-        flash['notice'] = "The password for #{@user.name} was not updated"
+        flash['notice'] = "The password for #{@logged_in_user.name} was not updated"
       end
     else
       flash['notice'] = 'No Update - the new password and the confirmation do not match'
     end
     
     if updated
-      redirect_to(:controller => 'tracker',
-                  :action     => 'index')
+      redirect_to(:controller => 'tracker')
     else
       redirect_to(:action => :user_set_password)
     end
@@ -359,14 +358,6 @@ class UserController < ApplicationController
         admin    = Role.find_by_name('Admin')
         manager  = Role.find_by_name('Manager')
         designer = Role.find_by_name('Designer')
-        
-         # Todo: Remove the dependence on these variables.
-        #case
-        #when user.roles.include?(admin)    then session[:active_role] = admin
-        #when user.roles.include?(manager)  then session[:active_role] = manager
-        #when user.roles.include?(designer) then session[:active_role] = designer
-        #else session[:active_role] = session[:roles].first
-        #end
         
         case
         when user.roles.include?(admin)    then user.active_role = admin
