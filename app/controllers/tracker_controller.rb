@@ -21,6 +21,16 @@ class TrackerController < ApplicationController
                             :manager_home,
                             :pcb_admin_home,
                             :reviewer_home])
+                        
+  before_filter(:manager_setup,
+                :only => [ :index,
+                           :manager_list_by_age,
+                           :manager_list_by_design,
+                           :manager_list_by_designer,
+                           :manager_list_by_peer,
+                           :manager_list_by_priority,
+                           :manager_list_by_status,
+                           :manager_list_by_type ])
 
   ######################################################################
   #
@@ -47,8 +57,8 @@ class TrackerController < ApplicationController
     session[:return_to] = {:controller => 'tracker', :action => 'index'}
     flash['notice'] = flash['notice']
     
-    if session[:active_role] != nil
-      case session[:active_role].name
+    if @logged_in_user && @logged_in_user.active_role
+      case @logged_in_user.active_role.name
       when "Designer"
         designer_home_setup
         render( :action => 'designer_home' )
@@ -181,8 +191,6 @@ class TrackerController < ApplicationController
   #
   def manager_list_by_priority
   
-    @generate_role_links = true
-    
     @sort_order            = get_sort_order
     @sort_order[:priority] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order]     = @sort_order
@@ -217,8 +225,6 @@ class TrackerController < ApplicationController
   #
   def manager_list_by_design
     
-    @generate_role_links = true
-  
     @sort_order          = get_sort_order
     @sort_order[:design] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order]   = @sort_order
@@ -254,15 +260,13 @@ class TrackerController < ApplicationController
   #
   def manager_list_by_type
     
-    @generate_role_links = true
-    
     @sort_order        = get_sort_order
     @sort_order[:type] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order] = @sort_order
     
     design_reviews = get_active_reviews
-    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.review_type.name, dr.age] }
-    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.review_type.name, dr.age] }
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.review_type.sort_order, dr.age] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.review_type.sort_order, dr.age] }
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
@@ -290,8 +294,6 @@ class TrackerController < ApplicationController
   #
   def manager_list_by_designer
     
-    @generate_role_links = true
-
     @sort_order            = get_sort_order
     @sort_order[:designer] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order]     = @sort_order
@@ -325,9 +327,7 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def manager_list_by_peer
-    
-    @generate_role_links = true
-  
+   
     @sort_order        = get_sort_order
     @sort_order[:peer] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order] = @sort_order
@@ -362,8 +362,6 @@ class TrackerController < ApplicationController
   #
   def manager_list_by_age
     
-    @generate_role_links = true
-  
     @sort_order        = get_sort_order
     @sort_order[:date] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order] = @sort_order
@@ -399,8 +397,6 @@ class TrackerController < ApplicationController
   #
   def manager_list_by_status
     
-    @generate_role_links = true
-  
     @sort_order          = get_sort_order
     @sort_order[:status] = params[:order] == 'ASC' ? 'DESC' : 'ASC'
     flash[:sort_order]   = @sort_order
@@ -670,7 +666,7 @@ class TrackerController < ApplicationController
   #
   def designer_home_setup
 
-    @designs = Design.get_active_designs_owned_by(session[:user])       
+    @designs = Design.get_active_designs_owned_by(@logged_in_user)       
     @designs.each do |design|
       current_phase           = ReviewType.find(design.phase_id)
       design[:next_review]    = design.design_reviews.detect{ |dr| dr.review_type_id == design.phase_id}
@@ -695,7 +691,7 @@ class TrackerController < ApplicationController
     #
     # Get the audits where the user is the member of an audit team.
     # 
-    my_audit_teams = AuditTeammate.find_all_by_user_id(session[:user].id)
+    my_audit_teams = AuditTeammate.find_all_by_user_id(@logged_in_user.id)
     my_audit_teams.each do |audit_team|
       
       audit = audit_team.audit
@@ -711,7 +707,7 @@ class TrackerController < ApplicationController
     # 
     # TODO Add a class method to Design - find_all_peer_designs(peer)
     peer_designs = Design.find(:all,
-                               :conditions => "peer_id=#{session[:user].id}",
+                               :conditions => "peer_id=#{@logged_in_user.id}",
                                :include    => :audit,
                                :order      => 'created_on')
 
@@ -736,8 +732,8 @@ class TrackerController < ApplicationController
     @work_assignments = false
     @my_assignments   = {}    
     Design.find_all_active.each do |design|
-      @work_assignments                 |= design.have_assignments(session[:user].id)
-      my_assignments                     = design.my_assignments(session[:user].id)
+      @work_assignments                 |= design.have_assignments(@logged_in_user.id)
+      my_assignments                     = design.my_assignments(@logged_in_user.id)
       @my_assignments[design.created_on] = my_assignments if my_assignments.size > 0
     end
     
@@ -761,7 +757,7 @@ class TrackerController < ApplicationController
   #
   def reviewer_home_setup
 
-    me = session[:user]
+    me = @logged_in_user
     review_status_list = [ReviewStatus.find_by_name('In Review').id,
                           ReviewStatus.find_by_name('Pending Repost').id,
                           ReviewStatus.find_by_name('Review On-Hold').id]
@@ -785,7 +781,7 @@ class TrackerController < ApplicationController
         # Capture the reviewer's peer names for display.
         design_review[:peer_list]   = []
         design_review[:peer_result] = []
-        session[:roles].each do |role|
+        @logged_in_user.roles.each do |role|
           if role.reviewer?
             review_results.each do |review_result|
               peer_info = {}
@@ -800,7 +796,7 @@ class TrackerController < ApplicationController
           end
         end
 
-        if design_review.design_review_results.detect { |rr| rr.role.id == session[:active_role].id } 
+        if design_review.design_review_results.detect { |rr| rr.role.id == @logged_in_user.active_role.id } 
           @other_reviews.push(design_review) 
         end
       end
@@ -831,6 +827,8 @@ class TrackerController < ApplicationController
     flash[:sort_order] = @sort_order
       
     design_reviews = get_active_reviews
+
+    # TODO: These sorts are expensive.  Make this faster.
     @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.age] }.reverse
     @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.priority.value, dr.age] }
 
@@ -895,6 +893,14 @@ class TrackerController < ApplicationController
 
     return lists
     
+  end
+  
+
+private
+
+  def manager_setup
+    @generate_role_links = true
+    @pending_entries     = BoardDesignEntry.get_pending_entries(@logged_in_user) if @logged_in_user
   end
   
 
