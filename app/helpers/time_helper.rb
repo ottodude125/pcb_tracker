@@ -183,10 +183,10 @@ module TimeHelper
   
       case self.month
     
-      when 1..3: 1
-      when 4..6: 2
-      when 7..9: 3
-      else       4
+      when 1..3 then 1
+      when 4..6 then 2
+      when 7..9 then 3
+      else           4
       end
     
     end
