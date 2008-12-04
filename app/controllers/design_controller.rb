@@ -64,7 +64,7 @@ class DesignController < ApplicationController
       end
     end
     
-    @reviewers = reviewers.sort_by { |reviewer| reviewer[:last_name] }
+    @reviewers = reviewers.sort_by { |r| r[:last_name] }
       
     # Get all of the users who are on the CC list for the board
     users_on_cc_list = []
@@ -74,16 +74,16 @@ class DesignController < ApplicationController
 
     # Get all of the active users.
     users = User.find(:all, :conditions=>'active=1', :order=>'last_name')
-    @reviewers.each { |rvr| users.delete_if { |user| user.id == rvr[:id] } }
+    @reviewers.each { |rvr| users.delete_if { |u| u.id == rvr[:id] } }
 
     @users_copied     = []
     @users_not_copied = []
-    for user in users
-      next if user.id == @design.designer_id
-      if users_on_cc_list.include?(user.id)
-        @users_copied.push(user)
+    for u in users
+      next if u.id == @design.designer_id
+      if users_on_cc_list.include?(u.id)
+        @users_copied.push(u)
       else
-        @users_not_copied.push(user)
+        @users_not_copied.push(u)
       end
     end
 
