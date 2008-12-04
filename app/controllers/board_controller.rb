@@ -117,7 +117,7 @@ before_filter(:verify_admin_role,
     @platforms = Platform.find(:all, :order => :name)
     @projects  = Project.get_projects
     
-    if (@logged_in_user && @logged_in_user.is_a_role_member?('Designer'))
+    if (@logged_in_user && @logged_in_user.is_designer?)
       @designer = @logged_in_user
     else
       @designer = nil
