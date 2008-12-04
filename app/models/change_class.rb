@@ -14,9 +14,59 @@ class ChangeClass < ActiveRecord::Base
   
   acts_as_list
   has_many(:change_types, :order => :position)
+  has_many(:design_changes)
   
   validates_presence_of(:name, :message => "can not be blank")
   
+ 
+  
+  ##############################################################################
+  #
+  # Class Methods
+  # 
+  ##############################################################################
+  
+  
+  # Retrieve the change classes appropriate for a manager
+  #
+  # :call-seq:
+  #   find_all_active_manager_change_classes() -> [change_class]
+  #
+  # Returns a list of change_class records
+  def self.find_all_active_manager_change_classes
+    self.find(:all, :conditions => "active='1'", :order => 'position')
+  end
+  
+  
+  # Retrieve the change classes appropriate for a designer
+  #
+  # :call-seq:
+  #   find_all_active_designer_change_classes() -> [change_class]
+  #
+  # Returns a list of change_class records
+  def self.find_all_active_designer_change_classes
+    self.find(:all, 
+              :conditions => "active='1' AND manager_only='0'", 
+              :order => 'position')
+  end
+  
+  
+  # Retrieve the change classes appropriate for the user
+  #
+  # :call-seq:
+  #   find_all_active_designer_change_classes() -> [change_class]
+  #
+  # Returns a list of change_class records
+  def self.find_all_active_classes_for_user(user)
+    if user.is_designer?
+      self.find_all_active_designer_change_classes
+    elsif user.is_pcb_management?
+      self.find_all_active_manager_change_classes
+    else
+      []
+    end
+  end
+
   
   ##############################################################################
   #
@@ -56,9 +106,10 @@ class ChangeClass < ActiveRecord::Base
     change_class_update = ChangeClass.new(update)
     
     # Update the editable fields and save
-    self.name       = change_class_update.name
-    self.active     = change_class_update.active
-    self.definition = change_class_update.definition
+    self.name         = change_class_update.name
+    self.active       = change_class_update.active
+    self.manager_only = change_class_update.manager_only
+    self.definition   = change_class_update.definition
     self.save
     
     if self.errors.empty?
