@@ -15,6 +15,8 @@ class ChangeDetail < ActiveRecord::Base
   belongs_to :change_item
   acts_as_list(:scope => :change_item)
   
+  has_many(:design_changes)
+  
   validates_presence_of(:name, :message => "can not be blank")
   
   ##############################################################################

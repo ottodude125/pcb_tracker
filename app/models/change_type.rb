@@ -14,7 +14,9 @@ class ChangeType < ActiveRecord::Base
   
   belongs_to :change_class
   acts_as_list(:scope => :change_class)
+
   has_many(:change_items, :order => :position)
+  has_many(:design_changes)
   
   validates_presence_of(:name, :message => "can not be blank")
   

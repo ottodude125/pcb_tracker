@@ -16,6 +16,7 @@ class ChangeItem < ActiveRecord::Base
   acts_as_list(:scope => :change_type)
   
   has_many(:change_details, :order => :position)
+  has_many(:design_changes)
     
   validates_presence_of(:name, :message => "can not be blank")
 
