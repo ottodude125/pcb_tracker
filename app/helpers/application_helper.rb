@@ -87,7 +87,7 @@ module ApplicationHelper
   ######################################################################
   #
   def is_manager
-    session[:roles].include?(Role.find_by_name("Manager"))
+    @logged_in_user.roles.include?(Role.find_by_name("Manager"))
   end
 
 
@@ -108,7 +108,7 @@ module ApplicationHelper
   ######################################################################
   #
   def is_admin
-    session[:roles].include?(Role.find_by_name("Admin"))
+    @logged_in_user.roles.include?(Role.find_by_name("Admin"))
   end
 
 
@@ -254,8 +254,8 @@ module ApplicationHelper
       
       # Go through the roles list and determine if the user is registered
       # for the role.  If yes, then create the link to change to that role.
-      new_role = session[:user].send(role[:message])
-      if (new_role && (session[:active_role].id != new_role.id))
+      new_role = @logged_in_user.send(role[:message])
+      if (new_role && @logged_in_user && (@logged_in_user.active_role.id != new_role.id))
         links << '<td width="110" align="center">' + 
           link_to(role[:name], { :controller => :user,
                                  :action     => :set_role,
