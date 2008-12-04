@@ -14,7 +14,13 @@
 
 class BoardDesignEntryController < ApplicationController
 
-  before_filter(:verify_logged_in)
+  before_filter(:verify_logged_in, :except => [ :view_entry ])
+  before_filter(:verify_admin_role,
+                :only => [ :process_entry_type,
+                           :processor_list,
+                           :return_entry_to_originator,
+                           :send_back,
+                           :set_entry_type ])
   
 
   ######################################################################
@@ -30,8 +36,9 @@ class BoardDesignEntryController < ApplicationController
   #
   ######################################################################
   #
-  def originator_list
-    @board_design_entries = BoardDesignEntry.get_user_entries(session[:user])
+  def originator_list 
+    @board_design_entries = BoardDesignEntry.get_user_entries(@logged_in_user)
+    @other_entries        = BoardDesignEntry.get_other_pending_entries(@logged_in_user)
   end
 
 
@@ -49,15 +56,8 @@ class BoardDesignEntryController < ApplicationController
   ######################################################################
   #
   def processor_list
-  
-    if !allow_access()
-      flash['notice'] = "Access Prohibited"
-      return
-    end
-  
     @board_design_entries = BoardDesignEntry.get_entries_for_processor
     @pre_art_review       = ReviewType.get_pre_artwork
-
   end
 
 
@@ -74,11 +74,6 @@ class BoardDesignEntryController < ApplicationController
   ######################################################################
   #
   def set_entry_type
-    if !allow_access()
-      flash['notice'] = "Access Prohibited"
-      return
-    end
-  
     @board_design_entry = BoardDesignEntry.find(params[:id])
   end
   
@@ -115,11 +110,6 @@ class BoardDesignEntryController < ApplicationController
   ######################################################################
   #
   def process_entry_type
-    
-    if !allow_access()
-      flash['notice'] = "Access Prohibited"
-      return
-    end
     
     board_design_entry = BoardDesignEntry.find(params[:id])
     entry_type = params[:design_type] == 'new' ? 'new' : 'dot_rev'
@@ -164,7 +154,7 @@ class BoardDesignEntryController < ApplicationController
       flash['notice'] = 'The entry has been deleted from the database'
       TrackerMailer::deliver_originator_board_design_entry_deletion(
         board_design_entry.design_name,
-        session[:user])
+        @logged_in_user)
                                              
     else
       flash['notice'] = 'The request to delete the entry failed - Contact DTG'
@@ -185,20 +175,11 @@ class BoardDesignEntryController < ApplicationController
   # 
   # Parameters from params
   # id - the identifier for the board design entry.
-  # 
-  # TODO: Only allow admins to access.
   #
   ######################################################################
   #
   def send_back
-
-    if !allow_access()
-      flash['notice'] = "Access Prohibited"
-      return
-    end
-
-    @board_design_entry = BoardDesignEntry.find(params[:id])
-    
+    @board_design_entry = BoardDesignEntry.find(params[:id])    
   end
   
   
@@ -218,20 +199,14 @@ class BoardDesignEntryController < ApplicationController
   #
   def return_entry_to_originator
   
-    if !allow_access()
-      flash['notice'] = "Access Prohibited"
-      return
-    end
-
     board_design_entry = BoardDesignEntry.find(params[:id])
     
     board_design_entry.originated
     board_design_entry.update_attribute('input_gate_comments', 
                                         params[:board_design_entry][:input_gate_comments])
-  
     TrackerMailer::deliver_board_design_entry_return_to_originator(
       board_design_entry,
-      session[:user])
+      @logged_in_user)
 
     redirect_to(:action => 'processor_list')
   
@@ -346,8 +321,8 @@ class BoardDesignEntryController < ApplicationController
     @part_number.pcba_dash_number = params[:pcba_dash_number] if params[:pcba_dash_number].size > 0
     @part_number.pcba_revision    = params[:part_number][:pcba_revision] if params[:part_number][:pcba_revision] != '0'
 
-    
-    @board_design_entry = BoardDesignEntry.add_entry(@part_number, session[:user])
+
+    @board_design_entry = BoardDesignEntry.add_entry(@part_number, @logged_in_user)
       
     if @board_design_entry
       
@@ -500,19 +475,8 @@ class BoardDesignEntryController < ApplicationController
       flash['notice'] = "Entry #{@board_design_entry.part_number.full_display_name} has been updated"
 
       #Update the user's division and/or location if it has changed.
-       if (session[:user].division_id != @board_design_entry.division_id ||
-           session[:user].location_id != @board_design_entry.location_id)
-
-        session[:user].division_id = @board_design_entry.division_id
-        session[:user].location_id = @board_design_entry.location_id
- 
-        user = User.find(session[:user].id)
-        user.division_id = @board_design_entry.division_id
-        user.location_id = @board_design_entry.location_id
-        user.password    = ''
-        user.save
-
-      end
+      @logged_in_user.save_division(@board_design_entry.division_id)
+      @logged_in_user.save_location(@board_design_entry.location_id)
       
       if params[:user_action] == 'adding'
         redirect_to(:action      => 'design_constraints',
@@ -1042,7 +1006,7 @@ class BoardDesignEntryController < ApplicationController
     elsif !document
       flash['notice'] = 'No file was specified'
     else
-      document.created_by = session[:user].id
+      document.created_by = @logged_in_user.id
       document.unpacked   = 0
       if document.save
         case params[:document_type]
@@ -1185,7 +1149,7 @@ class BoardDesignEntryController < ApplicationController
         if reviewer_record.role_id != ig_role.id
           reviewer_id = reviewer_record.user_id
         else
-          reviewer_id = session[:user].id
+          reviewer_id = @logged_in_user.id
         end
 
         board_reviewer = BoardReviewer.new(:board_id    => board.id,
@@ -1229,8 +1193,8 @@ class BoardDesignEntryController < ApplicationController
                         :eco_number       => board_design_entry.eco_number,
                         :design_type      => type,
                         :priority_id      => params[:priority][:id],
-                        :pcb_input_id     => session[:user][:id],
-                        :created_by       => session[:user][:id])
+                        :pcb_input_id     => @logged_in_user.id,
+                        :created_by       => @logged_in_user.id)
                   
     if design.save
       flash['notice'] += "Design created ... "
@@ -1303,17 +1267,6 @@ class BoardDesignEntryController < ApplicationController
 
 
   private
-  
-  def allow_access
-  
-    if session[:user].roles.detect { |r| r.name == 'Admin' }
-      true
-    else
-      redirect_to(:controller => 'tracker', :action => 'index')
-      false
-    end
-  
-  end
   
   
 end
