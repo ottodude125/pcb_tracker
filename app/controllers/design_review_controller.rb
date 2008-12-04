@@ -2097,14 +2097,14 @@ class DesignReviewController < ApplicationController
       
       design.set_reviewer(Role.find_by_name("Valor"), peer)
 
-      for design_review in design.design_reviews
-        design_review.priority_id = priority.id
-        if (design_review.review_type.name != 'Release' &&
-            design_review.review_type.name != 'Pre-Artwork')
-          design_review.designer_id = designer.id
-          design_review.design_center_id = designer.design_center_id
+      for review in design.design_reviews
+        review.priority_id = priority.id
+        if (review.review_type.name != 'Release' &&
+            review.review_type.name != 'Pre-Artwork')
+          review.designer_id = designer.id
+          review.design_center_id = designer.design_center_id
         end
-        design_review.save
+        review.save
       end
 
       results[:alternate_msg] += "Criticality is #{priority.name}, " if priority_update
