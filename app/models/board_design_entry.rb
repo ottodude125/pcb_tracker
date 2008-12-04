@@ -105,6 +105,28 @@ class BoardDesignEntry < ActiveRecord::Base
   end
   
   
+  # Find all of the user's enties that are in originated state
+  # 
+  # :call-seq:
+  #   BoardDesignEntry.get_pending_entries(user) -> array
+  #
+  # Returns a list of the user's entries that have been originated.
+  def self.get_pending_entries(user)
+    self.find(:all, :conditions => "state='originated' AND user_id=#{user.id}")
+  end
+  
+  
+  # Find all enties not submitted by the user that are not complete.
+  # 
+  # :call-seq:
+  #   BoardDesignEntry.get_other_pending_entries(user) -> array
+  #
+  # Returns a list of incomplete entries that the user did not originate.
+  def self.get_other_pending_entries(user)
+    self.find(:all, :conditions => "state != 'complete'") - user.board_design_entries
+  end
+  
+  
   ######################################################################
   #
   # submission_count
