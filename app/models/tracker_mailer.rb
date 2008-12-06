@@ -37,7 +37,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = designer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     cc_list     = [peer.email] + add_role_members(['Manager', 'PCB Input Gate'])
     @cc         = (cc_list - [@recipients]).uniq
     @bcc        = blind_cc
@@ -73,7 +73,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = peer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     cc_list     = [designer.email] + add_role_members(['Manager', 'PCB Input Gate'])
     @cc         = cc_list.uniq - [@recipients]
     @bcc        = blind_cc
@@ -111,7 +111,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients      = reviewer_list(design_review)
     @from            = Pcbtr::SENDER
     @sent_on         = sent_at
-    @headers         = {}
+    #@headers         = {}
     @bcc             = blind_cc
     @cc              = copy_to(design_review) - recipients
     @body['message'] = message
@@ -172,7 +172,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = reviewer_list(design_review)
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
     @cc         = (copy_to(design_review) - @recipients).uniq
 
@@ -224,7 +224,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients  = @recipients.uniq
     @from        = Pcbtr::SENDER
     @sent_on     = sent_at
-    @headers     = {}
+    #@headers     = {}
     @bcc         = blind_cc
     @cc          = ((copy_to(design_review) + cc_list) - @recipients).uniq
 
@@ -261,7 +261,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = reviewer_list(design_review)
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     cc = copy_to(design_review) + copy_to_on_milestone(design_review.design.board)
 
     case design_review.review_type.name
@@ -306,7 +306,7 @@ class TrackerMailer < ActionMailer::Base
                      User.find(rr.reviewer_id).email }.uniq
     @from        = Pcbtr::SENDER
     @sent_on     = sent_at
-    @headers     = {}
+    #@headers     = {}
     @bcc         = blind_cc
     cc           = copy_to(final_review) + copy_to_on_milestone(final_review.design.board)
     
@@ -346,7 +346,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = reviewer_list(design_review)
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
     cc = copy_to(design_review) + copy_to_on_milestone(design_review.design.board)
 
@@ -405,7 +405,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = recipients.uniq
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
 
     cc          = [poster.email] + 
@@ -476,7 +476,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = recipients.uniq
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
 
     cc = [updated_by.email] + add_role_members(['Manager', 'PCB Input Gate'])
@@ -505,7 +505,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = [user.email]
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @cc         = []
 
   end
@@ -537,7 +537,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = recipients.uniq
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
     
   end
@@ -565,7 +565,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = reviewer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
 
     @body[:review_list] = reviewer[:results]
@@ -605,7 +605,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = peer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
     
     cc_list =  [user.email]
@@ -653,7 +653,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = peer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
 
     cc_list =  [user.email]
@@ -694,7 +694,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = add_role_members(['Manager', 'PCB Input Gate'])
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
     @cc         = [design_review.design.designer.email]
 
@@ -724,7 +724,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = user.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @cc         = []
     @bcc        = blind_cc
 
@@ -753,7 +753,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = []
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
 
     cc          = add_role_members(['Manager', 'PCB Input Gate'])
@@ -805,7 +805,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = designer.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
     @cc         = peer.email
 
@@ -841,7 +841,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = add_role_members(['PCB Input Gate'])
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
     cc          = [originator.email] + add_role_members(['Manager'])
     @cc         = cc.uniq - @recipients
@@ -877,7 +877,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = [board_design_entry.user.email]
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
     @cc         = (add_role_members(['PCB Input Gate', 'Manager']) - @recipients).uniq
 
@@ -906,10 +906,10 @@ class TrackerMailer < ActionMailer::Base
     @subject    = 'The ' + board_design_entry.part_number.pcb_display_name +
                   ' has been submitted for entry to PCB Design'
                   
-    @recipients = add_role_members(['PCB Input Gate', 'Manager'])
+    @recipients = add_role_members(['PCB Input Gate', 'Manager']).uniq
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
     @cc         = [board_design_entry.user.email] - @recipients
 
@@ -992,7 +992,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = [new_reviewer.email]
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
     @cc         = [old_reviewer.email] + add_role_members(['PCB Input Gate', 'Manager'])
 
@@ -1028,7 +1028,7 @@ class TrackerMailer < ActionMailer::Base
     @recipients = oi_assignment_list[0].user.email
     @from       = Pcbtr::SENDER
     @sent_on    = sent_on
-    @headers    = {}
+    #@headers    = {}
     @bcc        = blind_cc
     @cc         = (add_role_members(['PCB Input Gate', 'Manager', 'HCL Manager']) +
                    [oi_assignment_list[0].oi_instruction.user.email])
@@ -1071,26 +1071,39 @@ class TrackerMailer < ActionMailer::Base
                   'Work Assignment Update'
     @subject += completed ? " - Completed" : (reset ? " - Reopened" : '')
 
-    case
-    when assignment.oi_instruction.user_id == originator.id
+    @cc = []
+    # If the user making the update is the designer assigned to perform the
+    # task
+    if assignment.user_id == originator.id
+      # The recipient is the designer who made the original assignment 
+      @recipients = [assignment.oi_instruction.user.email, ]
+      # If the designer has been changed since the assignment was created,
+      # add the new designer to the recipient list.
+      if originator.id != assignment.oi_instruction.design.designer_id
+        @recipients << assignment.oi_instruction.design.designer.email
+      end
+    else
+      # The recipient is the designer assigned to perform the task
       @recipients = [assignment.user.email]
-    when assignment.user_id == originator.id
-      @recipients = [assignment.oi_instruction.user.email]
+      # If the designer has been changed since the assignment was created,
+      # add the new designer to the recipient list.
+      if originator.id != assignment.oi_instruction.design.designer_id
+        @cc << assignment.oi_instruction.design.designer.email
+      end
     end
 
-    @from       = Pcbtr::SENDER
-    @sent_on    = sent_on
-    @headers    = {}
-    @bcc        = blind_cc
-    @cc         = (add_role_members(['PCB Input Gate', 'Manager', 'HCL Manager']) +
-                   [originator.email])
+    @from    = Pcbtr::SENDER
+    @sent_on = sent_on
+    #@headers = {}
+    @bcc     = blind_cc
+    @cc     += add_role_members(['PCB Input Gate', 'Manager', 'HCL Manager']) +
+               [assignment.oi_instruction.user.email, originator.email]
     if assignment.cc_hw_engineer?
       @cc += assignment.oi_instruction.design.get_role_reviewers('HWENG').map { |u| u.email }
     end
     
     # Remove duplicates from the CC list.
-    @cc -= @recipients
-
+    @cc = @cc.uniq - @recipients
 
     @body['assignment'] = assignment
                
@@ -1122,7 +1135,7 @@ class TrackerMailer < ActionMailer::Base
     @subject         = subject
     @from            = Pcbtr::SENDER
     @sent_on         = sent_on
-    @headers         = {}
+    #@headers         = {}
     @bcc             = recipients.uniq.collect { |u| u.email }
     @body['message'] = message
     
