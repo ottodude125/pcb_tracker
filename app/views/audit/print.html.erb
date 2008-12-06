@@ -1,0 +1,186 @@
+<!-- View:    print                                             -->
+<!-- Purpose: Displays the list of checks.                      -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = 'PCB Tracker - Peer Audit Checklist Results (Rev ' +
+              @audit.checklist.revision + ')' %>
+<%# debug session %>
+
+<%# form_tag(url_for(session[:return_to])) do %>
+
+<table width="90%" align="center">
+  <tr>
+    <% if params[:search] %>
+    <td align="left">
+      <input type="button" value="Back" 
+             onClick="parent.location='<%= url_for( :controller => 'design', 
+                                                    :action     => 'view',
+                                                    :id         => @audit.design_id ) %>'" />
+    </td>
+    <% end %>
+    <td align="right">
+      <input type="button" value="Home" 
+             onClick="parent.location='<%= url_for( :controller => 'tracker', 
+                                                    :action     => 'index' ) %>'" />
+    </td>
+  </tr>
+</table>
+
+<hr class="div" />
+
+  <table align="center" border="0">
+    <tr>
+      <th align="left" width="170">PCB Part Number: </th>
+      <td width="200"><%= @audit.design.part_number.pcb_display_name %></td>
+	  <% if @audit.design.part_number.new? %>
+        <th align="left" width="170">PCBA Part Number: </th>
+        <td width="200"><%= @audit.design.part_number.pcba_display_name %></td>
+      <% end %>
+    </tr>
+    <tr>
+      <th align="left">Current Designer: </th>
+      <td><%= @audit.design.designer.name %></td>
+      <th align="left">Current Peer Auditor: </th>
+      <td><%= @audit.design.peer.name %></td>
+    </tr>
+    <tr>
+      <% stats = @audit.completion_stats %>
+      <th align="left">Self: </th>
+      <td><%= sprintf("%3.f", stats[:self]) %>%#37; Complete</td>
+      <th align="left">Peer: </th>
+      <td><%= sprintf("%3.f", stats[:peer]) %>%#37; Complete</td>
+    </tr>
+  </table>
+
+<hr class="div" />
+
+  <% @audit.checklist.sections.each do |section| %>
+    <% color = '#' + section.background_color %>
+    
+    <% section.subsections.each do |subsection| %>
+
+      <table rules="rows" class="peer_check_outer_box">
+        <tr>
+          <td colspan="2">
+            <% if section.name != '' %>
+              <font size="+1"><b><%= h section.name %><br/></b></font>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td align="left">
+	        <% if subsection.name != '' %>
+              <b><%= h subsection.name %><br/></b>
+            <% end %>
+            <% if subsection.note != '' %>
+              <b>Note:</b> <%= h subsection.note %><br/>
+            <% end %>
+          </td>
+        </tr>
+        
+        <tr>
+          <td colspan="2">
+            <table align="right" class="peer_check_inner_box" rules="all">
+              <% subsection.checks.each do |check| %>
+                <tr>
+                  <td width="60%" valign="top" rowspan="2">
+                    <% if check.title != '' %>
+                      <b><%= h check.title %></b>
+                    <% end %>
+                    <% if check.check != '' %>
+                      <%= h check.check %>
+                    <% end %>
+                  </td>
+                  <% if check.design_check.designer_result != 'None' %>
+                    <td align="center" width="40%">
+                    <b><font size="-2">
+                      <%= check.design_check.designer_result %>
+                      by 
+                      <%= check.design_check.self_auditor.name %>
+                      <br/>
+                      <%= check.design_check.designer_checked_on.strftime("%a %b %d, %Y @ %I:%M %p")%>
+                    </font></b></td>
+                <% else %>
+                  <td width="40%" bgcolor="<%= color %>">&nbsp;</td>
+                <% end %>
+              </tr>
+              <% if check.designer_auditor? %>
+                <tr>
+                  <% if check.design_check.auditor_result != 'None' %>
+                    <td align="center" width="30%">
+                      <b><font size="-2">
+                        <%= check.design_check.auditor_result %>
+                        by
+                        <%# check[:auditor] %>
+                        <%= check.design_check.peer_auditor.name %>
+                        <br/>
+                        <%= check.design_check.auditor_checked_on.strftime("%a %b %d, %Y @ %I:%M %p") %>
+                    </font></b></td>
+                  <% else %>
+                    <td width="30%" bgcolor="<%= color %>">&nbsp;</td>
+                  <% end %>
+                </tr>
+              <% else %>
+                <tr>
+                  <td width="30%" bgcolor="#000000">&nbsp;</td>
+                </tr>
+              <% end %>
+              <% if check.design_check.audit_comments.size > 0 %>
+                <tr>
+                  <td colspan="2">
+                    <table width="100%" border="0">
+                      <tr>
+                        <td><b><u>Comments</u></b></td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <table width="95%" align="right" rules="all">
+                            <% check.design_check.audit_comments.each do |comment| %>
+                              <tr>
+                                <td>
+                                  <b><%= comment.user.name %> [<%= comment.created_on.strftime("%a %b %d, %Y @ %I:%M %p") %>] </b>
+                                  <br/>
+                                  <%=h comment.comment %>
+                                </td>
+                              </tr>
+                            <% end %>
+                          </table>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          </table>
+        </td>
+      </tr>
+    </table>
+    <% end %>
+  <% end %>
+<hr class="div" />
+
+<table width="90%" align="center">
+  <tr>
+    <% if params[:search] %>
+    <td align="left">
+      <input type="button" value="Back" 
+             onClick="parent.location='<%= url_for( :controller => 'design', 
+                                                    :action     => 'view',
+                                                    :id         => @audit.design_id ) %>'" />
+    </td>
+    <% end %>
+    <td align="right">
+      <input type="button" value="Home" 
+             onClick="parent.location='<%= url_for( :controller => 'tracker', 
+                                                    :action     => 'index' ) %>'" />
+    </td>
+  </tr>
+</table>
+
+<%# end %>
+
+<%# debug params %>
+<%# debug @audit.design_id%>
