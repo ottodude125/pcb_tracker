@@ -19,6 +19,7 @@ class Design < ActiveRecord::Base
 
   has_and_belongs_to_many :fab_houses
 
+  has_many :design_changes,            :order => 'approved, created_at ASC'
   has_many :design_review_documents
   has_many :design_reviews
   has_many :design_updates
@@ -184,6 +185,82 @@ class Design < ActiveRecord::Base
     designs.each { |design| design.audit.get_design_checks if design.audit.is_peer_audit? }
 
   end
+  
+   
+  # Provide the number of approved hours of adjustment that have been
+  # applied to the schedule.
+  #
+  # :call-seq:
+  #   total_approved_schedule_impact_hours() -> float
+  #
+  def total_approved_schedule_impact_hours
+    delta  = 0.0
+    self.design_changes.each do |design_change|
+      if design_change.approved?
+        delta += design_change.schedule_impact
+      end
+    end
+    delta
+   end
+   
+   
+  # Provide the number of pending hours of adjustment that have been
+  # applied to the schedule.
+  #
+  # :call-seq:
+  #   total_pending_schedule_impact_hours() -> float
+  #
+   def total_pending_schedule_impact_hours
+    delta  = 0.0
+    self.design_changes.each do |design_change|
+      if !design_change.approved?
+        delta += design_change.schedule_impact
+      end
+    end
+    delta
+   end
+   
+   
+  # The number of approved changes that have been applied to the
+  # original schedule.
+  #
+  # :call-seq:
+  #   total_approved_schedule_change_count() -> integer
+  #
+   def total_approved_schedule_change_count
+     self.design_changes.count(:conditions => "approved=true")
+   end
+
+
+  # Indicate if there are any approved schedule changes for the design
+  #
+  # :call-seq:
+  #   total_approved_schedule_changes?() -> boolean
+  #
+   def total_approved_schedule_changes?
+     self.total_approved_schedule_change_count > 0
+   end
+
+   
+  # The number of pending changes that have been applied to the
+  # original schedule.
+  #
+  # :call-seq:
+  #   total_pending_schedule_change_count() -> integer
+  #
+   def total_pending_schedule_change_count
+     self.design_changes.count(:conditions => "approved=false")
+   end
+
+  
+  # Indicate if there are any pending schedule changes for the design
+  #
+  # :call-seq:
+  #   total_pending_schedule_changes?() -> boolean
+  #
+   def total_pending_schedule_changes?
+     self.total_pending_schedule_change_count > 0
+   end
   
 
   ######################################################################
