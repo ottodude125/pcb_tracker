@@ -48,9 +48,9 @@
     <tr>
       <% stats = @audit.completion_stats %>
       <th align="left">Self: </th>
-      <td><%= sprintf("%3.f", stats[:self]) %>% Complete</td>
+      <td><%= sprintf("%3.f", stats[:self]) %>%#37; Complete</td>
       <th align="left">Peer: </th>
-      <td><%= sprintf("%3.f", stats[:peer]) %>% Complete</td>
+      <td><%= sprintf("%3.f", stats[:peer]) %>%#37; Complete</td>
     </tr>
   </table>
 
