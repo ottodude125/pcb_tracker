@@ -12,7 +12,7 @@
 <%# debug @check %>
 <%# debug @design_check %>
 <%# debug @design_check.audit.auditor_id %>
-<%# debug @user.id %>
+<%# debug @logged_in_user.id %>
 <%# debug @design_check.audit.designer_id %>
 
 
@@ -51,7 +51,7 @@
             <tr height="27">
               <% for i in 0..(@results_bar.size - 1) %>
                 <% if i == @display_index %>
-                  <td width="8" bgcolor=<%=@results_bar[i] %>
+                  <td width="8" bgcolor=<%=@results_bar[i] %>>
                     <font size="+1"><b>^</b></font>
                   </td>
                 <% else %>
