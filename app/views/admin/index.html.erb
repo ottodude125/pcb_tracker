@@ -1,0 +1,197 @@
+<!-- View: admin                                                -->
+<!-- Purpose: Displays the functions available for an Admin.    -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Tracker Administration" %>
+
+<% form_tag(:controller => 'tracker', :action => 'index') do -%>
+
+<hr class="div" />
+
+<table width="80%"
+        align="center"
+        border="3"
+        cellspacing="2"
+        cellpadding="2"
+        bgcolor="#dfdfdf"
+        rules="all">
+
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Board Prefixes",
+                  { :controller => 'prefix', :action => 'list' }) %>
+    </th>
+    <td valign="top">View board prefix information (obsolete)</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Change", change_classes_path) %>
+    </th>
+    <td valign="top">Add, view, modify change classes, types, items, details, and associated definitions</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Debug Views",
+                  { :controller => 'debug', :action => 'index' }) %>
+    </th>
+    <td valign="top">Debug / Experimental (potentially released as a report) Views of the data</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Design Centers",
+                  { :controller => 'design_center', :action => 'list' }) %>
+    </th>
+    <td valign="top">Add, view, and modify design center information</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Design Center/Designer Assignments",
+                  { :controller => 'design_center_manager',
+                    :action     => 'design_center_assignment' }) %>
+    </th>
+    <td valign="top">Assign designers to design centers</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Design Directories",
+                  { :controller => 'design_directory', :action => 'list' }) %>
+    </th>
+    <td valign="top">Add, view, and modify the HW Design Directories</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Design Updates/Fixes",
+                  { :controller => 'design', :action => 'list' }) %>
+    </th>
+    <td valign="top">View and update, active designs.</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Divisions",
+                  { :controller => 'division', :action => 'list' }) %>
+    </th>
+    <td valign="top">Add, view, and modify Teradyne divisions</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Document Types",
+                  { :controller => 'document_type', :action => 'list' }) %>
+    </th>
+    <td valign="top">Add, view, and modify attachment document types</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Fabrication Houses",
+                  { :controller => 'fab_house', :action => 'list' }) %>
+    </th>
+    <td valign="top">Add, view, and modify Fab. House information</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Incoming Directories",
+                  { :controller => 'incoming_directory', :action => 'list' }) %>
+    </th>
+    <td valign="top">Add, view, and modify the PCB Entry Directories</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Locations",
+                  { :controller => 'location', :action => 'list' }) %>
+    </th>
+    <td valign="top">Add, view, and modify Teradyne locations</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Message Broadcast",
+                  { :controller => 'tracker', :action => 'message_broadcast' }) %>
+    </th>
+    <td valign="top">Send email to the PCB Design Tracker users</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Peer Audit Checklist",
+                  { :controller => 'checklist', :action => 'list' })%>
+    </th>
+    <td valign="top">List, modify, and release Peer Audit Checklists</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Platforms",
+                  { :controller => 'platform', :action => 'list' })%>
+    </th>
+    <td valign="top">Add, list, and modify Teradyne tester platform information</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Product Type",
+                  { :controller => 'product_type', :action => 'list' })%>
+    </th>
+    <td valign="top">Add, list, and modify Product Types</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Projects",
+                  { :controller => 'project', :action => 'list' })%>
+    </th>
+    <td valign="top">Add, list, and modify project/instrument information</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Review/Role Assignment",
+                  { :controller => 'review_manager',
+                    :action     => 'review_type_role_assignment' })%>
+    </th>
+    <td valign="top">Assign the review groups to the various reviews</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Review Criticalities",
+                  { :controller => 'priority', :action => 'list' })%>
+    </th>
+    <td valign="top">Add, view, and modify review criticality values</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Review Roles",
+                  { :controller => 'role', :action => 'list_review_roles' })%>
+    </th>
+    <td valign="top">Manage reviewer roles</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Review Statuses",
+                  { :controller => 'review_status', :action => 'list' })%>
+    </th>
+    <td valign="top">Add, view, and modify review statuses</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Review Types",
+                  { :controller => 'review_type', :action => 'list' })%>
+    </th>
+    <td valign="top">Add, view, and modify review types</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Roles",
+                  { :controller => 'role', :action => 'list' })%>
+    </th>
+    <td valign="top">View, add, and modify user roles</td>
+  </tr>
+  <tr>
+    <th width="35%" align="left" valign="top">
+      <%= link_to("Users",
+                  { :controller => 'user', :action => 'list' })%>
+    </th>
+    <td valign="top">Add and modify user information</td>
+  </tr>
+
+</table>
+
+<hr class="div" />
+
+<input type="submit" value="Home" />
+
+<% end %>
