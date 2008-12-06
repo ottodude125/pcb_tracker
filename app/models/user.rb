@@ -104,10 +104,11 @@ class User < ActiveRecord::Base
   #
   #  Set the user's active role to the role passed in.
   def active_role=(role)
-    self.active_role_id        = role.id
-    self.password              = self.passwd
-    self.password_confirmation = self.passwd
-    self.update_attribute(:active_role_id, role.id)
+   if self.active_role_id != role.id
+     self.password              = ''
+      self.update_attribute(:active_role_id, role.id)
+      self.reload
+    end
   end
 
   # Retrieve the user's active role.
@@ -157,6 +158,41 @@ class User < ActiveRecord::Base
     designer && !self.employee?
   end
   
+  
+  # Update the user's division
+  #
+  # :call-seq:
+  #   save_division() -> nil
+  #
+  #  Updated the user record's division_id field with the new division
+  #  id if the division_id passed in does not match the existing 
+  #  division_id field.
+  def save_division(division_id)
+    if self.division_id != division_id
+      self.password    = ''
+      self.update_attribute(:division_id, division_id)
+      self.reload
+    end
+  end
+  
+
+  # Update the user's location
+  #
+  # :call-seq:
+  #   save_location() -> nil
+  #
+  #  Updated the user record's location_id field with the new location
+  #  id if the location_id passed in does not match the existing 
+  #  location_id field.
+  def save_location(location_id)
+    if self.location_id != location_id
+      self.password    = ''
+      self.update_attribute(:location_id, location_id)
+      self.reload
+    end
+  end
+  
+
   ######################################################################
   #
   # is_designer?
