@@ -629,7 +629,7 @@ class DesignReview < ActiveRecord::Base
   ######################################################################
   #
   def role_reviewer(role)
-    result = self.design_review_results.detect { |result| result.role_id == role.id }
+    result = self.design_review_results.detect { |r| r.role_id == role.id }
     return User.find(result.reviewer_id) if result
   end
   
