@@ -1,0 +1,34 @@
+<!-- View: audit                                                -->
+<!-- Purpose: Alternates light and dark grey in the list of.    -->
+<!--          audits.                                           -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<tr class="<%= designers_board_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td align="center">
+    <% audit_id = designers_board_stripes.id %>
+    <% name = designers_board_stripes[:my_design_metrics][:display_name] %>
+    <%= link_to name, { :action => 'show_sections', :id => audit_id } %>
+  </td>
+  <td align="center">
+    <%= designers_board_stripes[:my_design_metrics][:designer_check_count] %>
+  </td>
+  <td align="center">
+    <%= sprintf("%4.1f",
+	designers_board_stripes[:my_design_metrics][:designer_percent_complete]) %>
+  </td>
+  <td align="center">
+    <%= designers_board_stripes[:my_design_metrics][:auditor] %>
+  </td>
+  <td align="center">
+    <%= designers_board_stripes[:my_design_metrics][:auditor_check_count] %>
+  </td>
+  <td align="center">
+    <%= sprintf("%4.1f",
+                designers_board_stripes[:my_design_metrics][:auditor_check_complete]) %>
+  </td>
+  <td align="center">
+    <%= designers_board_stripes[:my_design_metrics][:auditor_questions] %>
+  </td>
+</tr>
