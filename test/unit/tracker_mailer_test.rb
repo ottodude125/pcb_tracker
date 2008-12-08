@@ -33,6 +33,7 @@ class TrackerMailerTest < Test::Unit::TestCase
            :design_review_results,
            :design_reviews,
            :designs,
+           :documents,
            :fab_houses,
            :ftp_notifications,
            :ipd_posts,
@@ -1052,9 +1053,9 @@ class TrackerMailerTest < Test::Unit::TestCase
     assert_equal('Catalyst/AC/(pcb252_234_a0_g): Work Assignment Update - Completed',
                  response.subject)
     response_to = response.to.sort_by { |address| address }
-    expected_to = [@scott_g.email]
-    
-    assert_equal(expected_to, response_to)
+    expected_to = [@scott_g.email, @bob_g.email].sort
+
+    assert_equal(expected_to,      response_to.sort)
     assert_equal([Pcbtr::SENDER],  response.from)
     assert_equal(@now.to_s,        response.date.to_s)
     
@@ -1088,7 +1089,8 @@ class TrackerMailerTest < Test::Unit::TestCase
     expected_cc = [@cathy_m.email, 
                    @scott_g.email,
                    @jan_k.email, 
-                   @jim_l.email, 
+                   @jim_l.email,
+                   @bob_g.email,
                    @bala_g.email].sort
     assert_equal(expected_cc, response_cc)
 
