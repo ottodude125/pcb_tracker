@@ -73,7 +73,7 @@ class DesignReviewResultTest < Test::Unit::TestCase
     results = { 'No Response' => true,
                 'APPROVED'    => false,
                 'WAIVED'      => false,
-                'COMMENTED'   => true, 
+                'COMMENTED'   => false, 
                 'REJECTED'    => false }
                 
     drr = DesignReviewResult.new
