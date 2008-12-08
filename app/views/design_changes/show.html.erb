@@ -1,0 +1,122 @@
+
+<% @heading = @design_change.approval_status + 
+              'Schedule Change for the ' + @design_change.design.directory_name + ' Design' %>
+
+<hr class="div" align="center" width="800" />
+
+<table align="center" border='0' cellpadding="1">
+  
+  <tr>
+    <th class="teraheader" align="right" width="160">Submitted By:&nbsp;</th>
+    <td class="change_list" width="200"><%=  @design_change.designer.name %></td>
+    <th class="teraheader" align="right" width="50">On:&nbsp;</th>
+    <td class="change_list" width="150"><%=  @design_change.created_at.simple_date %></td>
+  </tr>
+  
+  <tr>
+    <th class='teraheader' align="right">Approved:&nbsp;</th>
+    <td class="change_list" align="left" colspan="3">
+      <%= @design_change.approved? ? 'Yes' : 'No'  %>
+    </td>
+  </tr>
+
+  <% if @design_change.approved? %>
+    <tr>
+      <th class='teraheader' align="right">Approved By:&nbsp;</th>
+      <td class="change_list" align="left"><%= @design_change.manager.name  %></td>
+
+      <th class='teraheader' align="right">On:&nbsp;</th>
+      <td class="change_list" align="left">
+        <%= @design_change.approved_at.simple_date  %>
+      </td>
+    </tr>  
+  <% end %>
+
+  <tr>
+    <th class="teraheader" colspan="4">Change Details</th>
+  </tr>
+  
+  <tr>
+    <th class='teraheader' align="right">Schedule Impact:&nbsp;</th>
+    <td class="change_list" colspan="3">
+      <%= @design_change.schedule_impact_statement %>
+    </td>
+  </tr>
+
+  <% if @design_change.change_class_set? %>
+    <tr>
+      <th class='teraheader' align="right">Class:&nbsp;</th>
+      <td class="change_list" colspan="3"><%= @design_change.change_class.name %></td>
+    </tr>
+  <% end %>
+  
+  <% if @design_change.change_type_set? %>
+    <tr>
+      <th class='teraheader' align="right">Type:&nbsp;</th>
+      <td class="change_list" colspan="3"><%= @design_change.change_type.name %></td>
+    </tr>
+  <% end %>
+  
+  <% if @design_change.change_item_set? %>
+    <tr>
+      <th class='teraheader' align="right">Item:&nbsp;</th>
+      <td class="change_list" colspan="3"><%= @design_change.change_item.name %></td>
+    </tr>
+  <% end %>
+  
+  <% if @design_change.change_detail_set? %>
+    <tr>
+      <th class='teraheader' align="right">Detail:&nbsp;</th>
+      <td class="change_list" colspan="3"><%= @design_change.change_detail.name %></td>
+    </tr>
+  <% end %>
+  
+  <tr>
+    <th class="teraheader" colspan="4">Comments</th>
+  </tr>
+  
+  <tr valign="top">
+    <th class="teraheader" align="right">Submitter:&nbsp;</th>
+    <td class="change_list" colspan="3">
+      <%=h @design_change.designer_comment %>
+    </td>
+  </tr>
+  
+  <% if !@design_change.manager_comment.blank? %>
+    <tr valign="top">
+      <th class="teraheader" align="right">Approver:&nbsp;</th>
+      <td class="change_list" colspan="3">
+        <%=h @design_change.manager_comment %>
+      </td>
+    </tr>
+  <% end  %>
+  
+</table>
+
+
+<% if @logged_in_user %>
+  <hr class="div" align="center" width="800" />
+    <table width="720" border="0" align="center">
+      <tr>
+        <td align="left" width="33%">
+          <% link = @logged_in_user.is_manager? && !@design_change.approved? ? 'Edit/Approve' : 'Edit' %>
+          <%= link_to link, edit_design_change_url(@design_change) %>
+        </td>
+        <td align="center" width="34%">
+          <%= link_to 'Return to List',
+              { :controller => 'design_changes',
+                :action     => 'index',
+                :id         => @design_change.design.id } %>
+        </td>
+        <td align="right" width="33%">
+          <%= link_to("Delete Entry", design_change_url(@design_change),
+                      :confirm => "Click 'OK' to remove the entry from the database.",
+                      :method => :delete) %>
+        </td>
+      </tr>
+    </table>
+  <hr class="div" align="center" width="800" />
+<% end %>
+
+
+<%# debug @design_change %>

@@ -1,0 +1,112 @@
+<table class="design_change_table">
+
+  <!-- ****************************************************************** -->
+  <!-- Manager's Approval Checkbox and approval date if alaready approved -->
+  <!-- ****************************************************************** -->
+  <% if @design_change.id && @logged_in_user.is_manager? %>
+    <tr valign="top">
+      <th class="design_change_table_header">Approve:&nbsp;</th>
+      <td colspan="2" class="design_change_table_col_2_and_3">
+        <%= check_box(:design_change, :approved) %>
+      </td>
+    </tr>
+    
+    <% if @design_change.approved? %>
+      <th class="design_change_table_header">Approved On:&nbsp;</th>
+      <td colspan="2" class=design_change_table_col_2_and_3">
+        <%= @design_change.approved_at.simple_date %>
+      </td>
+    <% end %>
+  <% end  %>
+      
+  <tr>
+    <th class="teraheader" align="center"><u>Schedule Impact</u></th>          
+  </tr>
+      
+  <!-- ****************************************************************** -->
+  <!-- Hours -->
+  <!-- ****************************************************************** -->
+  <% if @design_change.errors[:hours] %>
+    <tr bgcolor="yellow">
+      <td class="design_change_table_header">&nbsp;</td>
+      <td colspan="2" class="design_change_table_warning">
+        <%=h @design_change.errors[:hours] %>
+      </td>
+    </tr>
+  <% end %>
+
+  <tr valign="top">
+    <th class="design_change_table_header">Hours:&nbsp;</th>
+    <td colspan="2" class="design_change_table_col_2_and_3">
+      <%= text_field(:design_change, :hours) %>
+    </td>
+  </tr>
+
+  <!-- ****************************************************************** -->
+  <!-- Schedule Impact -->
+  <!-- ****************************************************************** -->
+  <tr valign="top">
+    <th class="design_change_table_header">No Change:&nbsp;</th>
+    <td colspan="2" class="design_change_table_col_2_and_3">
+      <%= radio_button(:design_change, :impact, 'None') %>
+    </td>
+  </tr>
+  
+  <tr valign="top">
+    <th class="design_change_table_header">Add:&nbsp;</th>
+    <td colspan="2" class="design_change_table_col_2_and_3">
+      <%= radio_button(:design_change, :impact, 'Added') %>
+    </td>
+  </tr>
+  
+  <tr valign="top">
+    <th class="design_change_table_header">Remove:&nbsp;</th>
+    <td colspan="2" class="design_change_table_col_2_and_3">
+      <%= radio_button(:design_change, :impact, 'Removed') %>
+    </td>
+  </tr>
+
+  <tr>
+    <th class="teraheader" align="center"><u>Comments</u></th>          
+  </tr>
+  
+  <!-- ****************************************************************** -->
+  <!-- Submitter's Comments -->
+  <!-- ****************************************************************** -->
+  <% if @design_change.errors[:designer_comment] %>
+    <tr bgcolor="yellow">
+      <td class="design_change_table_header">&nbsp;</td>
+      <td colspan="2" class="design_change_table_warning">
+        <%=h @design_change.errors[:designer_comment] %>
+      </td>
+    </tr>
+  <% end %>
+
+  <tr valign="top">
+    <th class="design_change_table_header">Submitter:&nbsp;</th>
+    <td colspan="2" class="design_change_table_col_2_and_3">
+      <% if !@design_change.id || (@design_change.id && @design_change.designer == @logged_in_user) %>
+        <%= text_area(:design_change, :designer_comment, :cols=>"60", :rows=>"5") %>
+      <% else %>
+        <%=h @design_change.designer_comment %>
+      <% end %>
+    </td>
+  </tr>
+  
+  <!-- ****************************************************************** -->
+  <!-- Approver's Comments -->
+  <!-- ****************************************************************** -->
+  <% if @design_change.id %>
+    <tr valign="top">
+      <th class="design_change_table_header">Approver:&nbsp;</th>
+      <td colspan="2" class="design_change_table_col_2_and_3">
+        <% if @logged_in_user.is_manager? %>
+          <%= text_area(:design_change, :manager_comment, :cols=>"60", :rows=>"5") %>
+        <% else  %>
+          <%=h @design_change.manager_comment %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+
+</table>

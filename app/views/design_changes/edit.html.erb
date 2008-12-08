@@ -1,0 +1,52 @@
+<!-- View:    design_change                                    -->
+<!-- Purpose: Displays the design change details creation form.        -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<% @heading = 'Edit Schedule Change entry for the ' + @design_change.design.directory_name + ' Design' %>
+
+  <hr class="div" align="center" width="90%" />
+    
+  <%# form_for(:design_change, design_change_url(@design_change), 
+               :html => { :method => :put }) do |@f| %>
+  <% form_for(:design_change, 
+              :url => design_change_path(@design_change),
+              :html => { :method => :put }) do |@f| %>
+  <%# form_for(:design_change,
+              :url => { :controller => :design_changes,
+                        :action     => :update,
+                        :id         => @design_change.id }) do |@f| %>
+
+    <%= hidden_field "design_change", "design_id" %>
+    
+    <div id="design_change_form_details">
+
+      <%= render( :partial => 'design_change_form_dynamic') %>
+
+    </div>
+    
+    <%= render( :partial => 'design_change_form_static') %>
+    
+    <hr class="div" align="center" width="90%" />
+    
+    <table width="80%" align="center" border="0">
+      <tr>
+        <td width="50%" align="left">
+          <%= @f.submit "Update Change Entry" %>          
+        </td>
+        <td width="50%" align="right">
+          <%= link_to 'Return to List', 
+              { :controller => 'design_changes',
+                :action     => 'index',
+                :id         => @design_change.design.id } %>
+        </td>
+      </tr>
+    </table>
+
+    <hr class="div" align="center" width="90%" />
+ 
+  <% end %>
+
+<%# debug @design_change  %>

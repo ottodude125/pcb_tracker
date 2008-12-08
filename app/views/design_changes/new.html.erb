@@ -1,0 +1,49 @@
+<!-- View:    design_change                                    -->
+<!-- Purpose: Displays the design change details creation form.        -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<% @heading = 'New Schedule Change entry for the ' + @design.directory_name + ' Design' %>
+
+  <hr class="div" align="center" width="90%" />
+    
+  <% form_for(:design_change, :url => design_changes_path) do |@f| %>
+
+    <%= hidden_field "design_change", "design_id" %>
+    
+    <div id="design_change_form_details">
+
+      <%= render( :partial => 'design_change_form_dynamic') %>
+
+    </div>
+    
+
+    <%= render( :partial => 'design_change_form_static') %>
+
+    <hr class="div" align="center" width="90%" />
+    
+    <table width="80%" align="center" border="0">
+      <tr>
+        <td width="50%" align="left">
+          <%= @f.submit "Create Change Entry" %>          
+        </td>
+        <td width="50%" align="right">
+          <%= link_to 'Return to List', 
+              { :controller => 'design_changes',
+                :action     => 'index',
+                :id         => @design_change.design.id } %>
+        </td>
+      </tr>
+    </table>
+
+    <hr class="div" align="center" width="90%" />
+ 
+  <% end %>
+
+
+<%# debug @design %>
+<%# debug @design_change %>
+<%# debug @change_classes %>
+<%# debug @user.name %>

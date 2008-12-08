@@ -1,0 +1,36 @@
+<% @heading = 'Schedule Changes Pending Approval' %>
+
+<table class="design_change_pending_table">
+  
+  <% @design_changes.each do |design_change| %>
+
+    <tr>
+      
+      <td width="200">
+        <%= link_to design_change.design.directory_name, 
+                    edit_design_change_url(design_change) %>
+      </td>
+      <td align="center" width="200"><%= design_change.created_at.simple_date %></td>
+      <td width="300"><%= design_change.schedule_impact_statement %></td>
+      
+    </tr>
+
+  <% end %>
+  
+</table>
+
+
+<br />
+<hr class="div" align="center" width="800" />
+    
+<table width="700" align="center" border="0">
+  <tr>
+    <td align="center">
+      <%= link_to 'Home', 
+              { :controller => 'tracker',
+                :action     => 'index' } %>
+    </td>
+  </tr>
+</table>
+
+<hr class="div" align="center" width="800" />

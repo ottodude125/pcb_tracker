@@ -1,0 +1,80 @@
+<!-- View:    design changes index                              -->
+<!-- Purpose: Displays a listing of the design changes.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = 'Schedule Changes for the ' + @design.directory_name + ' Design' %>
+
+<% if @design.design_changes.size > 0 %>
+
+  <% if @design.total_approved_schedule_changes? %>
+    <h2><%= summarize('Approved', @design.total_approved_schedule_impact_hours) %></h2>
+  <% end %>
+  <% if @design.total_pending_schedule_changes? %>
+    <h2><%= summarize('Pending', @design.total_pending_schedule_impact_hours) %></h2>
+  <% end %>
+  
+  <table align="center" cellspacing="1" border="0">
+    <tr>
+      <th width="45">&nbsp;</th>
+      <th class="teraheader" width="70">Hours</th>
+      <th class="teraheader" width="80">State</th>
+      <th class="teraheader" width="100">Date</th>
+      <th class="teraheader" width="150">Class</th>
+      <th class="teraheader" width="150">Type</th>
+      <th class="teraheader" width="150">Item</th>
+      <th class="teraheader" width="150">Detail</th>
+    </tr>
+
+  <% @design.design_changes.each do |design_change| %>
+    <tr valign="top">
+      <td class="change_list">
+        <%= link_to 'Details', design_change_url(design_change) %>
+      </td>
+      <td class="change_list" align="right">
+        <%= sprintf "%+4.1f", design_change.schedule_impact %>&nbsp;&nbsp;&nbsp;
+      </td>
+      <td class="change_list" align="center">
+        <%= design_change.approved? ? 'Approved'  : 'Pending' %>
+      </td>
+      <td class="change_list" align="center">
+        <%= design_change.created_at.simple_date %>
+      </td>
+      <td class="change_list">
+        <%= design_change.change_class.name  if design_change.change_class_set? %>
+      </td>
+      <td class="change_list">
+        <%= design_change.change_type.name   if design_change.change_type_set? %>
+      </td>
+      <td class="change_list">
+        <%= design_change.change_item.name   if design_change.change_item_set? %>
+      </td>
+      <td class="change_list">
+        <%= design_change.change_detail.name if design_change.change_detail_set? %>
+      </td>
+    </tr>
+  <% end %>
+  </table>
+<% else %>
+  <p align="center">No Schedule Changes have been submitted for this design.</p>
+<% end %>
+
+<hr class="div" align="center" width="970" />
+
+<table align="center" width="650" border="0">
+  <tr>
+    <td align="left" width="50%">
+      <%= link_to 'New Schedule Change', { :controller => :design_changes,
+                                           :action     => :new,
+                                           :design_id  => @design.id } %>
+    </td>
+    <td align="right" width="50%">
+      <%= link_to 'Home', { :controller => :tracker } %>
+    </td>
+  </tr>
+</table>
+
+<hr class="div" align="center" width="970" />
+
+<%# debug @design.design_changes %>
