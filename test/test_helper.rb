@@ -26,55 +26,82 @@ class Test::Unit::TestCase
 
   # Add more helper methods to be used by all tests here...
   
-  def  set_admin
-    user = users(:cathy_m)
-    @request.session[:user]        = user
-    @request.session[:active_role] = Role.find_by_name('Admin')
-    @request.session[:roles]       = user.roles
+  def set_session(user_id, role_name)
+    user             = User.find(user_id)
+    role             = Role.find_by_name(role_name)
+    user.active_role = role
+    
+    { :user_id     => user_id }
+  end
+  
+
+  def bob_designer_session
+   set_session(users(:bob_g).id, 'Designer')
   end
 
-
-  def set_non_admin
-    user = users(:rich_m)
-    @request.session[:user]        = user
-    @request.session[:active_role] = Role.find_by_name('Designer')
-    @request.session[:roles]       = user.roles
+  def cathy_admin_session
+    set_session(users(:cathy_m).id, 'Admin')
+  end
+   
+  def cathy_designer_session
+    set_session(users(:cathy_m).id, 'Designer')
+  end
+  
+  def cathy_input_gate_session
+    set_session(users(:cathy_m).id, 'PCB Input Gate')
+  end
+  
+  def dan_slm_vendor_session
+    set_session(users(:dan_g).id, 'SLM-Vendor')
+  end
+  
+  def jim_manager_session
+    set_session(users(:jim_l).id, 'Manager')
+  end
+  
+  def jim_pcb_design_session
+    set_session(users(:jim_l).id, 'PCB Design')
   end
 
-
-  def set_designer
-    user = users(:rich_m)
-    @request.session[:user]        = user
-    @request.session[:active_role] = Role.find_by_name('Designer')
-    @request.session[:roles]       = user.roles
+  def john_hweng_session
+    set_session(users(:john_j).id, 'HWENG')
+  end
+  
+  def lee_hweng_session
+    set_session(users(:lee_s).id, 'HWENG')
+  end
+  
+  def matt_planning_session
+    set_session(users(:matt_d).id, 'Planning')
   end
 
-
-  def set_manager
-    user = users(:jim_l)
-    @request.session[:user]        = user
-    @request.session[:active_role] = Role.find_by_name('Manager')
-    @request.session[:roles]       = user.roles
+  def pat_dfm_session
+    set_session(users(:pat_a).id, 'DFM')
+  end
+  
+  def patrice_pcb_admin_session
+    set_session(users(:patrice_m).id, 'PCB Admin')
   end
 
-
-  def set_reviewer
-    user = users(:pat_a)
-    @request.session[:user]        = user
-    @request.session[:active_role] = Role.find_by_name('DFM')
-    @request.session[:roles]       = user.roles
+  def rich_designer_session
+    set_session(users(:rich_m).id, 'Designer')
   end
-
-
-  def set_user(user_id, role)
-    user = User.find(user_id)
-    @request.session[:user]        = user
-    @request.session[:active_role] = Role.find_by_name(role)
-    @request.session[:roles]       = user.roles
-    #session = {:user        => user,
-    #            :active_role => role,
-    #            :roles       => user.roles}
+  
+  def rich_reviewer_session
+    set_session(users(:rich_a).id, 'hweng')
   end
+  
+  def scott_designer_session
+    set_session(users(:scott_g).id, 'Designer')
+  end
+  
+  def siva_designer_session
+    set_session(users(:siva_e).id, 'Designer')
+  end
+  
+  def ted_dft_session
+    set_session(users(:ted_p).id, 'CE-DFT')
+  end  
   
   
   def validate_non_admin_redirect
