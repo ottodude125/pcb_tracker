@@ -25,7 +25,17 @@ class DocumentTest < Test::Unit::TestCase
 
 
   ######################################################################
-  def test_truth
-    assert_kind_of Document,  @document
+  def notest_should_remove_blank_char_from_filename
+
+    document_field = document.new( :content_type => 'text/plain',
+                                   :original_filename => 'ECO Data.txt')
+                     
+    document = Document.new
+    puts document.inspect
+    document.document = document_field
+    
+    puts document.inspect
+    
+    
   end
 end
