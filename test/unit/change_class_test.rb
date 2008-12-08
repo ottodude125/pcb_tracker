@@ -99,15 +99,15 @@ class ChangeClassTest < ActiveSupport::TestCase
   def test_add_to_end
     
     change_class = ChangeClass.new( :name       => 'New Class',
-                                    :position   => 3,
+                                    :position   => 4,
                                     :active     => true,
                                     :definition => 'Tack on to end')
     change_class.add_to_list
     change_class.reload
 
-    assert_equal(3,                ChangeClass.count)
+    assert_equal(4,                ChangeClass.count)
     assert_equal('New Class',      change_class.name)
-    assert_equal(3,                change_class.position)
+    assert_equal(4,                change_class.position)
     assert_equal(true,             change_class.active)
     assert_equal('Tack on to end', change_class.definition)
     
@@ -124,7 +124,7 @@ class ChangeClassTest < ActiveSupport::TestCase
     change_class.add_to_list
     change_class.reload
 
-    assert_equal(3,                      ChangeClass.count)
+    assert_equal(4,                      ChangeClass.count)
     assert_equal('New Class',            change_class.name)
     assert_equal(2,                      change_class.position)
     assert_equal(true,                   change_class.active)
@@ -148,7 +148,7 @@ class ChangeClassTest < ActiveSupport::TestCase
     change_class.add_to_list
     change_class.reload
 
-    assert_equal(3,           ChangeClass.count)
+    assert_equal(4,           ChangeClass.count)
     assert_equal('New Class', change_class.name)
     assert_equal(1,           change_class.position)
     assert_equal(true,        change_class.active)
