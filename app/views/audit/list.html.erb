@@ -1,0 +1,44 @@
+<!-- View:    audit                                             -->
+<!-- Purpose: Displays the list of existing audits along with   -->
+<!--          an option to create a new audit.                   -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "PCB Tracker - Board Audits" %>
+
+<% form_tag(:action => 'add') do %>
+
+  <hr class="div" />
+
+  <table width="90%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+    <tr>
+      <th colspan="2" width="15%">
+	<%= link_to 'Board', { :action => 'list' } %>
+      </th>
+      <th width="10%">Type</th>
+      <th width="15%">Platform</th>
+      <th width="20%">Project</th>
+      <th width="20%">Designer</th>
+      <th width="20%">Auditor</th>
+    </tr>
+    <tr bgcolor="#9F9F9F">
+      <td colspan="7">&nbsp;</td>
+    </tr>
+
+    <%= render_collection_of_partials "audit_list_stripes", @audits %>
+  </table>
+
+  <% pages = pagination_links @audit_pages %>
+
+  <% if pages %>
+    <p><b>Pages:</b> <%= pages %>
+  <% end %>
+
+
+  <hr class="div" />
+
+  <input type="submit" value="New Audit" />
+  <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
+
+<% end %>
