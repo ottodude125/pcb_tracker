@@ -80,6 +80,9 @@ scott_g:
   created_on: 20050510104114
   updated_on: 20050510104114
   access:     20050510104114
+  location_id: 5
+  division_id: 2
+  active_role_id: 2
 
 rich_m:
   id:         5002
