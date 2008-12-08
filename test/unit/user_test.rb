@@ -18,8 +18,10 @@ User.salt = 'change-me'
 
 class UserTest < Test::Unit::TestCase
   
-  fixtures :eco_comments, 
+  fixtures :divisions,
+           :eco_comments, 
            :eco_documents,
+           :locations,
            :roles,
            :users
   
@@ -37,6 +39,12 @@ class UserTest < Test::Unit::TestCase
     @pcb_admin      = roles(:pcb_admin)
     @tracker_admin  = roles(:admin)
     @valor          = roles(:valor)
+    
+    @std = divisions(:std)
+    @atb = divisions(:atb)
+    
+    @boston        = locations(:boston)
+    @north_reading = locations(:north_reading)
     
   end
   
@@ -211,6 +219,78 @@ class UserTest < Test::Unit::TestCase
     assert_equal('98740ff87bade6d895010bceebbd9f718e7856bb', u.password)
     
   end
+  
+  
+  def test_should_not_update_division_id
+    assert_equal(@std.name, @scott_g.division.name)
+    password = @scott_g.password
+    
+    @scott_g.save_division(@std.id)
+    
+    @scott_g.reload
+    assert_equal(@std.name, @scott_g.division.name)
+    assert_equal(password,  @scott_g.password)
+   end
+  
+  
+  def test_should_update_division_id
+    assert_equal(@std.name, @scott_g.division.name)
+    password = @scott_g.password
+    
+    @scott_g.save_division(@atb.id)
+    
+    @scott_g.reload
+    assert_equal(@atb.name, @scott_g.division.name)
+    assert_equal(password,  @scott_g.password)
+   end
 
+  
+  def test_should_not_update_location_id
+    assert_equal(@boston.name, @scott_g.location.name)
+    password = @scott_g.password
+    
+    @scott_g.save_location(@boston.id)
+    
+    @scott_g.reload
+    assert_equal(@boston.name, @scott_g.location.name)
+    assert_equal(password,     @scott_g.password)
+  end
+  
+  
+  def test_should_update_location_id
+    assert_equal(@boston.name, @scott_g.location.name)
+    password = @scott_g.password
+    
+    @scott_g.save_location(@north_reading.id)
+    
+    @scott_g.reload
+    assert_equal(@north_reading.name, @scott_g.location.name)
+    assert_equal(password,  @scott_g.password)
+  end
+  
+  
+  def test_should_not_update_active_role_id
+    assert_equal(@designer.display_name, @scott_g.active_role.display_name)
+    password = @scott_g.password
+    
+    @scott_g.active_role = @designer
+    
+    @scott_g.reload
+    assert_equal(@designer.display_name, @scott_g.active_role.display_name)
+    assert_equal(password,     @scott_g.password)
+  end
+
+  
+  def test_should_update_active_role_id
+    assert_equal(@designer.display_name, @scott_g.active_role.display_name)
+    password = @scott_g.password
+    
+    @scott_g.active_role = @valor
+    
+    @scott_g.reload
+    assert_equal(@valor.display_name, @scott_g.active_role.display_name)
+    assert_equal(password,  @scott_g.password)
+  end
+  
   
 end
