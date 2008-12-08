@@ -1,0 +1,60 @@
+#
+# $Id$
+#
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+
+mx234a_design_change:
+  id:               1006
+  design_id:        1
+  designer_comment: This is a new design change
+  change_class_id:  1
+  change_type_id:   11
+  change_item_id:   113
+  change_detail_id: 1133
+  
+design_change_already_approved_too:
+  id:               1005
+  approved:         true
+  design_id:        1
+  change_class_id:  1
+  change_type_id:   11
+  change_item_id:   113
+  change_detail_id: 1131
+
+design_change_already_approved:
+  id:               1004
+  approved:         true
+  design_id:        1
+  change_class_id:  1
+  change_type_id:   11
+  change_item_id:   113
+  change_detail_id: 1131
+
+design_change_id_set_nonexistent:
+  id:               1003
+  design_id:        1
+  change_class_id:  123456
+  change_type_id:   123456
+  change_item_id:   123456
+  change_detail_id: 123456
+
+design_change_ids_set:
+  id:               1002
+  design_id:        1
+  change_class_id:  1
+  change_type_id:   11
+  change_item_id:   113
+  change_detail_id: 1131
+
+design_change_ids_zero:
+  id:               1001
+  design_id:        1
+  change_class_id:  0
+  change_type_id:   0
+  change_item_id:   0
+  change_detail_id: 0
+
+empty_design_change:
+  id: 1000
+  design_id:        1
