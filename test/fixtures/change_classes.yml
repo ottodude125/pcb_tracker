@@ -16,3 +16,10 @@ change_class_2:
   position:   2
   active:     false
   definition: Describes the second class
+
+change_class_3:
+  id:         3
+  name:       Class 3
+  position:   3
+  active:     true
+  definition: Describes a class with no types.
