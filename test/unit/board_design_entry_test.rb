@@ -39,7 +39,13 @@ class BoardDesignEntryTest < Test::Unit::TestCase
     @mx234a             = board_design_entries(:mx234a)
     @mx234c             = board_design_entries(:mx234c)
     
+    @all_entries = [@av714b, @la021c, @mx008b4,
+                    @mx234a, @mx234c, @mx008b4_ecoP123456]
+    
     @cathy_m = users(:cathy_m)
+    @ben_b   = users(:ben_b)
+    @lee_s   = users(:lee_s)
+    @john_j  = users(:john_j)
     
   end
 
@@ -491,6 +497,46 @@ class BoardDesignEntryTest < Test::Unit::TestCase
       end
     end
   
+  end
+  
+  
+  ######################################################################
+  def test_should_get_no_pending_entries_cathy
+    pending_entries_cathy = BoardDesignEntry.get_pending_entries(@cathy_m)
+    assert_equal(0, pending_entries_cathy.size)
+  end
+  
+  
+  ######################################################################
+  def test_should_get_no_pending_entries_john
+    pending_entries_john = BoardDesignEntry.get_pending_entries(@john_j)
+    assert_equal(0, pending_entries_john.size)
+  end
+  
+  
+  ######################################################################
+  def test_should_get_av714b_entry
+    pending_entries_ben = BoardDesignEntry.get_pending_entries(@ben_b)
+    assert_equal(1, pending_entries_ben.size)
+  end
+  
+  
+  ######################################################################
+  def test_should_get_all_entries
+    other_pending_entries = BoardDesignEntry.get_other_pending_entries(@cathy_m)
+    assert_equal(@all_entries.size, other_pending_entries.size)
+    other_pending_entries -= @all_entries
+    assert_equal(0, other_pending_entries.size)
+  end
+  
+  
+  ######################################################################
+  def test_should_get_bens_and_lees_entries
+    other_pending_entries = BoardDesignEntry.get_other_pending_entries(@john_j)
+    expected_entries = [@av714b, @la021c]
+    assert_equal(expected_entries.size, other_pending_entries.size)
+    other_pending_entries -= expected_entries
+    assert_equal(0, other_pending_entries.size)
   end
   
   
