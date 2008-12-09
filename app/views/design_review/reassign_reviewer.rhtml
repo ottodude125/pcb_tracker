@@ -23,7 +23,7 @@
           <b>Current Reviewer: </b>
         </td>
         <td width="25%">
-          <%= User.find(match[:design_review].reviewer_id).name %>
+          <%= match[:design_review].reviewer.name %>
         </td>
 
         <% if match[:peers] %>
@@ -31,12 +31,10 @@
             <b>Assign To: </b>
           </td>
           <td>
-            <%= collection_select(:user,
-                                     match[:design_review].role.name,
-                                     match[:peers],
-                                     "id", 
-                                     'last_name_first',
-                                     {:prompt=>true}) %>
+            <select id="user_<%=match[:design_review].role.name%>" name="user[<%=match[:design_review].role.name%>]">
+              <option value="0">Select an Alternate Reviewer</option>
+              <%= options_from_collection_for_select(match[:peers], :id, :last_name_first )%>
+            </select>
           </td>
         <% else %>
           <td align="right">
@@ -45,7 +43,7 @@
           <td>
             <% role = match[:design_review].role %>
             <%= check_box("id_#{role.id}_assign_to_self",
-                          session[:user].id,
+                          @logged_in_user.id,
                           {},
                           'yes',
                           'no') %> 
