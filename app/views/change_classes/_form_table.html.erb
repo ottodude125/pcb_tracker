@@ -13,7 +13,7 @@
 
 <table align="center">
   <tr>
-     <th class="teraheader" width="100" align="right"><%= @f.label :name %>:&nbsp;</th>
+     <th class="teraheader" width="120" align="right"><%= @f.label :name %>:&nbsp;</th>
     <td align="left"><%= @f.text_field :name %></td>
   </tr>
 
@@ -27,11 +27,16 @@
   <% end %>
     
   <tr>
+    <th class="teraheader" align="right"><%= @f.label :manager_only %>:&nbsp;</th>
+    <td align="left"><%= @f.check_box :manager_only %></td>
+  </tr>
+  
+  <tr>
     <th class="teraheader" align="right"><%= @f.label :active %>:&nbsp;</th>
     <td align="left"><%= @f.check_box :active %></td>
   </tr>
   
-  <tr>
+  <tr valign="top">
     <th class="teraheader" align="right"><%= @f.label :definition %>:&nbsp;</th>
     <td align="left"><%= @f.text_area(:definition, { :rows => '5', :cols => '60' }) %></td>
   </tr>
