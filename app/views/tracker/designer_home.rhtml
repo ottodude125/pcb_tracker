@@ -27,7 +27,7 @@
           </td>
         </tr>
         <%= render(:partial => 'pcb_engineering_entry') %>
-        <% if session[:user].is_an_lcr_designer? && EcoTask.find_open.size > 0 %>
+        <% if @logged_in_user.is_an_lcr_designer? && EcoTask.find_open.size > 0 %>
           <tr bgcolor="yellow">
             <td align="center">
               <%= link_to("Active ECO CAD Tasks", eco_tasks_url) %>
@@ -46,7 +46,7 @@
         
       </table>
     </td>
-    <% if session[:active_role].name == "Designer" %>
+    <% if @logged_in_user.active_role.name == "Designer" %>
       <td>
         <table width="100%" border="0">
           <tr>
@@ -281,7 +281,7 @@
                                              class="small_font_wide_button" />
                                     </td>
                                     <td width="34%" align="center">
-                                    <% if session[:user].has_access?(['Designer']) && session[:user].employee? %>
+                                    <% if @logged_in_user.is_designer? && @logged_in_user.employee? %>
 
                                       <input type="button" value='<%= "Outsource Instructions" %>'
                                              title="Create/View/Update Instructions to low cost regions"
@@ -449,8 +449,8 @@
                           </td>
                         </tr>
                         
-                        <% if session[:user].id == audit.design.peer_id  && 
-                              !audit.is_complete?                        &&
+                        <% if @logged_in_user.id == audit.design.peer_id  &&
+                              !audit.is_complete?                         &&
                               !audit.skip? %>
                         <tr>
                           <td>
