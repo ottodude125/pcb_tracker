@@ -7,7 +7,7 @@
 
 <tr align="center" class="<%= eco_tasks_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
   <td>
-    <% if session[:user] %>
+    <% if @user %>
       <%= link_to "#{eco_tasks_list_stripes.number}", edit_eco_task_path(eco_tasks_list_stripes) %>
     <% else %>
       <%= link_to "#{eco_tasks_list_stripes.number}", eco_task_path(eco_tasks_list_stripes) %>

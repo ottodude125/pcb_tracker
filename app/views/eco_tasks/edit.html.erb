@@ -7,7 +7,7 @@
 <% @heading =  "ECO CAD Task: Edit ECO Number #{@eco_task.number}" %>
 
 <%# error_messages_for :eco_task %>
-<% eco_admin = session[:user].is_a_role_member?('ECO Admin') %>
+<% eco_admin = @logged_in_user.is_a_role_member?('ECO Admin') %>
 
 <% form_for(@eco_task, :html => {:multipart => true} ) do |f| %>
 
@@ -203,7 +203,7 @@
       <td>
         <table width="100%">
           <tr>
-            <% if ((eco_admin || session[:user].is_an_lcr_designer?) && 
+            <% if ((eco_admin || @logged_in_user.is_an_lcr_designer?) && 
                    !@eco_task.closed?) %>
               <td width="30">
                 <%= check_box("eco_task", "completed")%>
@@ -222,7 +222,7 @@
                   </tr>
                 </table>
               <% else %>
-                <% if eco_admin || session[:user].is_an_lcr_designer? %>
+                <% if eco_admin || @logged_in_user.is_an_lcr_designer? %>
                   <b>Mark Task Complete</b>
                 <% else %>
                   <b>No</b>
@@ -383,6 +383,6 @@
 
 <%# debug "eco admin: #{eco_admin}" %>
 <%# debug session[:return_to] %>
-<%# debug session[:user].roles %>
+<%# debug @logged_in_user.roles %>
 <%# debug @eco_task.attachments? %>
 <%# debug @eco_task.attachments %>

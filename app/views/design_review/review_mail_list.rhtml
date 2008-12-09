@@ -118,7 +118,7 @@
                 <%= link_to_remote("Remove me from the CC List",
                                    :update => 'selections',
                                    :url    => {:action=>'remove_from_list'},
-                                   :with   => "'id=#{session[:user].id}'") %>
+                                   :with   => "'id=#{@logged_in_user.id}'") %>
               </td>
             </tr>
           <% end %>
@@ -173,7 +173,7 @@
                 <%= link_to_remote("Add me to the CC List",
                                    :update => 'selections',
                                    :url    => {:action=>'add_to_list'},
-                                   :with   => "'id=#{session[:user].id}'") %>
+                                   :with   => "'id=#{@logged_in_user.id}'") %>
               </td>
             </tr>
           <% end %>
