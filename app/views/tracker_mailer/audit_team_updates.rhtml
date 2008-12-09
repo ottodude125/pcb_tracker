@@ -18,12 +18,12 @@
 ------------------------------------------------------------------------
 <% if @audit_team['self'].size + @audit_team['peer'].size > 0 %>
 <% if @audit_team['self'].size > 0 %>Self Audit:<% end %>
-<% for member in @audit_team['self'] %>
-  <%= member.user.name %> - <%= member.section.name %><% end %>
+<% @audit_team['self'].each do |member_self_team| %>
+  <%= member_self_team.user.name %> - <%= member_self_team.section.name %><% end %>
   
 <% if @audit_team['peer'].size > 0 %>Peer Audit:<% end %>
-<% for member in @audit_team['peer'] %>
-  <%= member.user.name %> - <%= member.section.name %><% end %>
+<% @audit_team['peer'].each do |member_peer_team| %>
+  <%= member_peer_team.user.name %> - <%= member_peer_team.section.name %><% end %>
 <% else %>
 No teammates have been assigned to assist in completing the self or peer audits.
 <% end %>
