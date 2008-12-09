@@ -7,11 +7,7 @@
 <% @title = "PCB Design Board/Data Tracker" %>
 <%# debug session %>
 
-<table width="100%"
-       border="0" 
-       cellspacing="2"
-       align="center"
-       rules="cols">
+<table width="100%" border="0" cellspacing="2" align="center" rules="cols">
   <tr>
     <td width="125" valign="top">
       <table align="center" rules="rows" cellpadding="5" border="0">
@@ -34,7 +30,7 @@
         
         <%= render(:partial => 'pcb_engineering_entry') %>
         
-        <% if session[:user].is_a_role_member?('ECO Admin') %>
+        <% if @logged_in_user.is_a_role_member?('ECO Admin') %>
           <tr>
             <td align="center">
               <%= link_to("Active ECO CAD Tasks", eco_tasks_url) %>
@@ -77,7 +73,7 @@
               <% for design in @design_list %>
                 <% next if (design[:next_review] != nil &&
                             design[:next_review].review_type.name == "Pre-Artwork" && 
-                            design[:next_review].designer_id != session[:user].id )%>
+                            design[:next_review].designer_id != @logged_in_user.id )%>
                 <tr>
                   <td align="center"
                       valign="top">
@@ -169,7 +165,7 @@
                           </tr>
                       <% elsif (design[:next_review]                 &&
                              !design[:next_review].review_locked? &&
-                             design[:next_review].designer_id == session[:user].id) %>
+                             design[:next_review].designer_id == @logged_in_user.id) %>
                         <tr bgcolor="#dfdfdf">
                           <td colspan="6">
                               <table width="100%" border="0">
