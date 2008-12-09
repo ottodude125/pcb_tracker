@@ -27,7 +27,7 @@
           </td>
         </tr>
         <%= render(:partial => 'pcb_engineering_entry') %>
-        <% if session[:user].is_an_lcr_designer? && EcoTask.find_open.size > 0 %>
+        <% if @logged_in_user.is_an_lcr_designer? && EcoTask.find_open.size > 0 %>
           <tr bgcolor="yellow">
             <td align="center">
               <%= link_to("Active ECO CAD Tasks", eco_tasks_url) %>
@@ -46,7 +46,7 @@
         
       </table>
     </td>
-    <% if session[:active_role].name == "Designer" %>
+    <% if @logged_in_user.active_role.name == "Designer" %>
       <td>
         <table width="100%" border="0">
           <tr>
@@ -272,7 +272,7 @@
                               <td colspan="4" align="left">
                                 <table border="0" width="100%">
                                   <tr>
-                                    <td width="33%" align="left">
+                                    <td width="25%" align="left">
                                       <input type="button" value='<%= "In-Process Dialogue" %>'
                                              title="Initiate and discuss all in-process changes."
                                              onClick="parent.location='<%= url_for(:controller => 'ipd_post',
@@ -280,8 +280,8 @@
                                                                                    :design_id  => design.id) %>'"
                                              class="small_font_wide_button" />
                                     </td>
-                                    <td width="34%" align="center">
-                                    <% if session[:user].has_access?(['Designer']) && session[:user].employee? %>
+                                    <td width="25%" align="center">
+                                    <% if @logged_in_user.is_designer? && @logged_in_user.employee? %>
 
                                       <input type="button" value='<%= "Outsource Instructions" %>'
                                              title="Create/View/Update Instructions to low cost regions"
@@ -293,7 +293,20 @@
                                       &nbsp;
                                     <% end %>
                                     </td>
-                                    <td width="33%" align="right">
+                                    <td width="25%" align="center">
+                                    <% if @logged_in_user.is_designer? && @logged_in_user.employee? %>
+
+                                      <input type="button" value='<%= "Schedule Change" %>'
+                                             title="Create/View/Update Schedule Changes"
+                                             onClick="parent.location='<%= url_for(:controller => 'design_changes',
+                                                                                   :action     => 'index',
+                                                                                   :id  => design.id) %>'"
+                                             class="small_font_wide_button" />
+                                    <% else %>
+                                      &nbsp;
+                                    <% end %>
+                                    </td>
+                                    <td width="25%" align="right">
                                       <% if !(design.audit.is_complete? || design.audit.skip?) %>
                                       <input type="button" value='<%= "Audit Assignments" %>'
                                              title="Set the assignments for self and peer audits."
@@ -449,8 +462,8 @@
                           </td>
                         </tr>
                         
-                        <% if session[:user].id == audit.design.peer_id  && 
-                              !audit.is_complete?                        &&
+                        <% if @logged_in_user.id == audit.design.peer_id  &&
+                              !audit.is_complete?                         &&
                               !audit.skip? %>
                         <tr>
                           <td>
