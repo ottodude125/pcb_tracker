@@ -46,7 +46,8 @@ module LoginSystem
       return true  
     end
 
-    if session[:user] and authorize?(session[:user])
+    user = User.find(session[:user_id]) if session[:user_id]
+    if user and authorize?(user)
       return true
     end
 
