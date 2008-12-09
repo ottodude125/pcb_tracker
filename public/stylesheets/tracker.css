@@ -56,6 +56,11 @@ a:active  { color: #ff0000; }
   text-align: center;
 }
 
+.changenote {
+  font-size: 10px;
+  font-style: bold;
+}
+
 .keytable {
   border-collapse: colapse;
   border: 4px double #444;
@@ -76,7 +81,7 @@ a:active  { color: #ff0000; }
 
 .keyscore {
   font-size: 10px;
-  font-style: italic; bold;
+  font-style: italic, bold;
 }
 
 .keyvalue {
@@ -353,5 +358,101 @@ table.sortable thead {
     color: #666666;
     cursor: default;
     font-weight: bold;
+}
+
+.change_sheet { 
+    width:        900px;
+    margin-right: auto;
+    margin-left:  auto;
+    text-align:   center;
+    background-color: #cffbff
+}
+.inner_change_sheet {
+    padding: 10px;
+    background-color: #333;
+    border: 1px dotted red;
+}
+
+.design_change_bar {
+    width:  780px;
+    background-color: #df9999;
+    margin-right: auto;
+    margin-left:  auto;
+    text-align:   center;
+}
+
+.design_change_label {
+    width:       180px;
+    margin-top:    2px;
+    text-align:  right;
+    font-weight: bold;
+    background-color: lightblue;
+}
+
+.design_change_selection {
+    margin-left:      182px;
+    margin-top:         2px;
+    width:            240px;
+    background-color: red;
+}
+.teraheader {
+  background: #023a94;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.design_change_table {
+    width:            800px;
+    margin-right:     auto;
+    margin-left:      auto;
+/*    background-color: olive;*/
+    border-spacing:   0px;
+    padding:          0px;
+/*    border:           2px solid red; */
+}
+
+.design_change_table_header {
+  background: #023a94;
+  font-size:  14px;
+  color:      #ffffff;
+  width:      160px;
+  text-align: right;
+}
+
+.design_change_table_warning {
+    font-size:   12px;
+    text-align:  left;
+    color:       red;
+    font-weight: bold;    
+}
+
+.design_change_table_col_2 {
+    width:     210px;
+}
+
+
+.design_change_table_col_3 {
+    width:     440px;
+}
+
+.design_change_table_col_2_and_3 {
+    width:     650px;
+}
+
+.change_list {
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size:   12px;
+  line-height: 15px;
+  font-weight: bold;
+}
+
+.design_change_pending_table {
+
+    margin-right:     auto;
+    margin-left:      auto;
+    background-color: #efefef;
+    border-spacing:   2px;
+    padding:          2px;
+    border:           5px outset #023a94;
 }
 
