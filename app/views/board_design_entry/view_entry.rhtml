@@ -1,9 +1,16 @@
+<!-- View:    board_design_entry                                -->
+<!-- Purpose: Displays a PCB Engineering Entry.                 -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
 <% @heading = "PCB Engineering: #{@board_design_entry.part_number.pcb_display_name} - " %>
 <% @heading += params[:design_review_id] ? "Input Entry Checklist" : "Design Entry Requirements" %>
 
 <table width="80%" align="center">
   <tr>
     <% processor = params[:viewer] == 'processor' %>
+    <% peer      = params[:viewer] == 'peer' %>
     <% @return   = processor ? 'processor_list' : 'originator_list' %>
     <% return_to = @return == 'originator_list' ? 'Entry' : 'Processor' %>
     <td align="center">
@@ -56,7 +63,7 @@
           <% end %>
           <th class="teraheader">Design Details</th>
           <% if ( @board_design_entry.modifiable? &&
-                  ( !@board_design_entry.submitted? && !processor ) ||
+                  ( !@board_design_entry.submitted? && !(processor || peer) ) ||
                   (  @board_design_entry.submitted? && processor  ) )  %>
             <td width="90" align="right">
               <%= link_to('Update', 
@@ -258,7 +265,7 @@
           <% end %>
           <th class="teraheader">Design Constraints</th>
           <% if ( @board_design_entry.modifiable? &&
-                  ( !@board_design_entry.submitted? && !processor ) ||
+                  ( !@board_design_entry.submitted? && !(processor || peer) ) ||
                   (  @board_design_entry.submitted? && processor  ) )  %>
             <td width="90" align="right">
               <%= link_to('Update', 
@@ -338,7 +345,7 @@
           <% end %>
           <th class="teraheader">Management Team</th>
           <% if ( @board_design_entry.modifiable? &&
-                  ( !@board_design_entry.submitted? && !processor ) ||
+                  ( !@board_design_entry.submitted? && !(processor || peer) ) ||
                   (  @board_design_entry.submitted? && processor  ) )  %>
             <td width="90" align="right">
               <%= link_to('Update', 
@@ -416,7 +423,7 @@
           <% end %>
           <th class="teraheader">Review Team</th>
           <% if ( @board_design_entry.modifiable? &&
-                  ( !@board_design_entry.submitted? && !processor ) ||
+                  ( !@board_design_entry.submitted? && !(processor || peer) ) ||
                   (  @board_design_entry.submitted? && processor  ) )  %>
             <td width="90" align="right">
               <%= link_to('Update', 
@@ -509,7 +516,7 @@
           <% end %>
           <th class="teraheader">Attachments</th>
           <% if ( @board_design_entry.modifiable? &&
-                  ( !@board_design_entry.submitted? && !processor ) ||
+                  ( !@board_design_entry.submitted? && !(processor || peer) ) ||
                   (  @board_design_entry.submitted? && processor  ) )  %>
             <td width="90" align="right">
               <%= link_to('Update', 
@@ -584,7 +591,7 @@
           <% end %>
           <th class="teraheader">Comments</th>
           <% if ( @board_design_entry.modifiable? &&
-                  ( !@board_design_entry.submitted? && !processor ) ||
+                  ( !@board_design_entry.submitted? && !(processor || peer) ) ||
                   (  @board_design_entry.submitted? && processor  ) )  %>
             <td width="90" align="right">
               <% action = params[:viewer] == 'processor' ? 'view_processor_comments' : 'view_originator_comments' %>
