@@ -34,7 +34,7 @@
     </td>
   </tr>
   
-  <% if session[:user].employee? %>
+  <% if @logged_in_user.employee? %>
   <tr valign="top">
     <th class="teraheader" align="right">Designer:</th>
     <% line += 1 %>

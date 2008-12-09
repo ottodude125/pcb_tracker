@@ -39,7 +39,7 @@
       <%= oi_assignments[category.id][:completed] %>
     </td>
     <td title="Create assigments for <%= category.name %>">
-      <% if session[:user].employee? %>
+      <% if @logged_in_user.employee? %>
         <%= link_to('Create',
                     { :controller => 'oi_instruction',
                       :action     => 'section_selection',

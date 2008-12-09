@@ -75,7 +75,7 @@ function setFocus() {
       </td>
     </tr>
     <tr>
-      <% if session[:user] == nil %>
+      <% if !@logged_in_user %>
         <td>
           <% form_tag(:controller => "user", :action => "login") do %>
             Login: <input id="user_login" name="user_login" size="20" type="text" value="" />
@@ -93,10 +93,10 @@ function setFocus() {
             <tr bgcolor="white">
               <td align="left">
                 <font color="#023a94">
-                  &nbsp;&nbsp;<%= session[:user].name %>
+                  &nbsp;&nbsp;<%= @logged_in_user.name %>
                   -
-                  <% if session[:active_role] %>
-                    <%= session[:active_role].generalized_name %>
+                  <% if @logged_in_user %>
+                    <%= @logged_in_user.active_role.generalized_name %>
                   <% else %>
                     &nbsp;
                   <% end %>
@@ -114,7 +114,7 @@ function setFocus() {
         </td>
       <% end %>
     </tr>
-    <% if session[:user] == nil %>
+    <% if !@logged_in_user %>
     <tr>
         <td colspan="4" align="left" bgcolor="#f6f792">
           <%= link_to('Login Help',
@@ -132,10 +132,10 @@ function setFocus() {
         </td>
       </tr>
     <% end %>
-    <% if session[:user] != nil %>
+    <% if @logged_in_user %>
       <tr bgcolor="#ffffff">
         <td colspan="1">
-          <%= link_to("&nbsp;Logout #{session[:user].name}",
+          <%= link_to("&nbsp;Logout #{@logged_in_user.name}",
                       { :controller => "user",
                         :action     => "logout" }) %>
         </td>
@@ -143,7 +143,7 @@ function setFocus() {
           <%= link_to("Change Password", 
           			  { :controller => "user",
           			    :action     => "user_set_password",
-          			    :id         => session[:user].id }) %>
+          			    :id         => @logged_in_user.id }) %>
         </td>
       </tr>
     <% end %>
