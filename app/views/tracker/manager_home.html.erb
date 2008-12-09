@@ -7,11 +7,7 @@
 <% @title = "PCB Design Board/Data Tracker" %>
 <%# debug session %>
 
-<table width="100%"
-       border="0" 
-       cellspacing="2"
-       align="center"
-       rules="cols">
+<table width="100%" border="0" cellspacing="2" align="center" rules="cols">
   <tr>
     <td width="155" valign="top">
       <table align="center" rules="rows" cellpadding="5" border="0">
@@ -31,7 +27,7 @@
           </td>
         </tr>
 
-        <% if session[:active_role].name == 'Admin' %>
+        <% if @logged_in_user.active_role.name == 'Admin' %>
         <tr>
           <td align="center">
             <%= link_to("Admin Portal", { :controller => "admin" }) %>
@@ -39,7 +35,7 @@
         </tr>
         <% end %>
 
-        <% if session[:user].is_a_role_member?('ECO Admin') %>
+        <% if @logged_in_user.is_a_role_member?('ECO Admin') %>
         <tr>
           <th class="teraheader">
             ECO/RELEASE CAD TASKING
@@ -55,7 +51,7 @@
   
         <%= render(:partial => 'pcb_engineering_entry') %>
         
-        <% if session[:active_role].name == 'Admin' %>
+        <% if @logged_in_user.active_role.name == 'Admin' %>
         <tr>
           <td align="center">
             <table>
@@ -77,13 +73,28 @@
           </td>
         </tr>
         <% end %>
+
+        <% if DesignChange.pending_approval? %>
+          <tr>
+            <th class="teraheader">
+              <font color="red">Design Change</font>
+            </th>
+          </tr>
+          <tr>
+            <td align="center">
+              <%= link_to "#{DesignChange.pending_count} Changes Pending Approval", 
+                          pending_list_design_changes_url %>
+            </td>
+        </tr>
+
+        <% end %>
         
         <tr>
           <th class="teraheader">
             Reports
           </th>
         </tr>
-
+        
         <tr>
           <td align="center">
             <%= link_to("ECO CAD Tasking", eco_task_reports_url) %>
