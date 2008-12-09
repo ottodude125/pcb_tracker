@@ -31,14 +31,6 @@
           </td>
         </tr>
 
-        <% if session[:active_role].name == 'Admin' %>
-        <tr>
-          <td align="center">
-            <%= link_to("Admin Portal", { :controller => "admin" }) %>
-          </td>
-        </tr>
-        <% end %>
-
         <%= render(:partial => 'pcb_engineering_entry') %>
 
         <tr>
