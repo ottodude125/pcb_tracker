@@ -7,13 +7,13 @@
   <table width="45%" border="0" >
     <tr>
       <th width="50%" align="right">Current Role: </th>
-      <td> <%= session[:active_role].display_name %></td>
+      <td> <%= @user.active_role.display_name %></td>
     </tr>
     <tr>
       <th align="right">New Role: </th>
       <td>
         <select id="role_id" name="role[id]">
-          <%= options_from_collection_for_select(session[:roles].sort_by { |r| r.display_name }, 
+          <%= options_from_collection_for_select(@user.roles.sort_by { |r| r.display_name }, 
                                                  "id", 
                                                  "display_name", 
                                                  "role_id") %>
