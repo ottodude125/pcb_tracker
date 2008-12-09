@@ -28,8 +28,8 @@
 
 <% if @design_review.posting_count > 0 &&
       @design_review.review_status.name != "Review Completed" &&
-      ((session[:user].id == @design_review.design.designer_id || 
-       (session[:user].id == @design_review.design.pcb_input_id &&
+      ((@logged_in_user.id == @design_review.design.designer_id || 
+       (@logged_in_user.id == @design_review.design.pcb_input_id &&
         @design_review.review_type.name == 'Pre-Artwork'))) %>
   <tr>
     <td align="center">
