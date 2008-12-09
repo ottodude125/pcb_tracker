@@ -30,19 +30,19 @@
           </tr>
           <tr>
             <td>
-              <label for="user_first_name">First name:</label<br />
+              <label for="user_first_name">First name:</label><br />
               <%= text_field "user", "first_name", "size" => 20 %> 
             </td>
           </tr>
           <tr>
             <td colspan="2">
-              <label for="user_last_name">Last name:</label<br />
+              <label for="user_last_name">Last name:</label><br />
               <%= text_field "user", "last_name", "size" => 30 %> 
             </td>
           </tr>
           <tr>
             <td colspan="2">
-              <label for="user_email">Email:</label<br />
+              <label for="user_email">Email:</label><br />
               <%= text_field "user", "email", "size" => 30 %> 
             </td>
           </tr>
@@ -79,19 +79,19 @@
             <td valign="top">
               <table align="center"
                       border="0">
-                <% for role in @roles[ranges[2][:start]..ranges[2][:stop]] %>
+                <% for r in @roles[ranges[2][:start]..ranges[2][:stop]] %>
                   <tr>
                     <td align="left"
                          valign="top">
-                      <% if @uroles[role['name']] %>
-                        <%= check_box "role", role.id, {'checked'=>'checked'} %> 
+                      <% if @uroles[r['name']] %>
+                        <%= check_box "role", r.id, {'checked'=>'checked'} %> 
                       <% else %>
-                        <%= check_box "role", role.id %> 
+                        <%= check_box "role", r.id %> 
                       <% end %>
                     </td>
                     <td align="left">
                       <label for="role_name"><%= role.display_name %></label>
-                      <% if role.reviewer? %>
+                      <% if r.reviewer? %>
                         Reviewer
                       <% end %>
                     </td>
