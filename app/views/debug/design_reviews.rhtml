@@ -117,7 +117,7 @@
       <% if dr.designer_id > 0 %>
         <td><%= User.find(dr.designer_id).name %></td>
       <% else %>
-        <td><b>Not Set</td></b>
+        <td><b>Not Set</b></td>
       <% end %>
       <% if dr.design_center_id > 0 %>
         <td><%= dr.design_center.name %></td>

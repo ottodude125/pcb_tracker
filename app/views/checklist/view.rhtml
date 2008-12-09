@@ -37,14 +37,14 @@
       <% for subsection in displaySection[1] %>
         <% if subsection["name"] != '' %>
           <tr>
-            <td bgcolor=<%= color %>><i><b>subsection: </></i></td>
+            <td bgcolor=<%= color %>><i><b>subsection: </b></i></td>
             <td> <b><%= subsection["name"] %></b></td>
           </tr>
         <% end %>
         <% if subsection["note"] != '' %>
           <tr>
             <td align="right" bgcolor=<%= color %>><i><b>note: </b></i></td>
-            <td> <%= subsection["note"] %></i> </td>
+            <td> <i><%= subsection["note"] %></i> </td>
           </tr>
         <% end %>
       <% end %>
