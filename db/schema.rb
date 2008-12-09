@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 1) do
+ActiveRecord::Schema.define(:version => 3) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer   "design_check_id", :limit => 12, :default => 0, :null => false
@@ -145,6 +145,46 @@ ActiveRecord::Schema.define(:version => 1) do
     t.timestamp "created_on"
   end
 
+  create_table "change_classes", :force => true do |t|
+    t.string   "name"
+    t.integer  "position",     :limit => 11
+    t.boolean  "manager_only",               :default => false, :null => false
+    t.boolean  "active"
+    t.text     "definition"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "change_details", :force => true do |t|
+    t.string   "name"
+    t.integer  "position",       :limit => 11
+    t.integer  "change_item_id", :limit => 11
+    t.boolean  "active"
+    t.text     "definition"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "change_items", :force => true do |t|
+    t.string   "name"
+    t.integer  "position",       :limit => 11
+    t.integer  "change_type_id", :limit => 11
+    t.boolean  "active"
+    t.text     "definition"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "change_types", :force => true do |t|
+    t.string   "name"
+    t.integer  "position",        :limit => 11
+    t.integer  "change_class_id", :limit => 11
+    t.boolean  "active"
+    t.text     "definition"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "checklists", :force => true do |t|
     t.integer   "major_rev_number",                  :limit => 3,  :default => 0, :null => false
     t.integer   "minor_rev_number",                  :limit => 3,  :default => 0, :null => false
@@ -186,6 +226,24 @@ ActiveRecord::Schema.define(:version => 1) do
     t.string  "pcb_path", :limit => 64, :default => "", :null => false
     t.string  "hw_path",  :limit => 64, :default => "", :null => false
     t.integer "active",   :limit => 3,  :default => 0,  :null => false
+  end
+
+  create_table "design_changes", :force => true do |t|
+    t.integer  "design_id",        :limit => 11, :default => 0
+    t.integer  "change_detail_id", :limit => 11, :default => 0
+    t.integer  "change_item_id",   :limit => 11, :default => 0
+    t.integer  "change_type_id",   :limit => 11, :default => 0
+    t.integer  "change_class_id",  :limit => 11, :default => 0
+    t.integer  "designer_id",      :limit => 11, :default => 0
+    t.integer  "manager_id",       :limit => 11, :default => 0
+    t.boolean  "approved",                       :default => false
+    t.float    "hours",                          :default => 0.0
+    t.string   "impact",           :limit => 8,  :default => "None"
+    t.datetime "approved_at"
+    t.text     "designer_comment"
+    t.text     "manager_comment"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "design_checks", :force => true do |t|
@@ -445,6 +503,7 @@ ActiveRecord::Schema.define(:version => 1) do
     t.integer   "user_id",           :limit => 12, :default => 0, :null => false
     t.integer   "complexity_id",     :limit => 3,  :default => 0, :null => false
     t.timestamp "created_on"
+    t.integer   "cc_hw_engineer",    :limit => 3,  :default => 0, :null => false
     t.integer   "complete",          :limit => 3,  :default => 0, :null => false
     t.timestamp "completed_on"
     t.timestamp "due_date"
