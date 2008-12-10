@@ -77,7 +77,7 @@
                       <%= check_box "role", role.id %>
                     </td>
                      <td align="left">
-                      <label for="role_name"><%= role['name'] %></label>
+                      <label for="role_name"><%= role.display_name %></label>
                       <% if role.reviewer? %>
                         Reviewer
                       <% end %>
@@ -96,7 +96,7 @@
                       <%= check_box "role", role.id %> 
                     </td>
                     <td align="left">
-                      <label for="role_name"><%= role['name'] %></label>
+                      <label for="role_name"><%= role.display_name %></label>
                       <% if role.reviewer? %>
                         Reviewer
                       <% end %>
