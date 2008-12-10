@@ -19,9 +19,9 @@
             </td>
             <% stats = @design.audit.completion_stats %>
             <th width="50" align="right" class="th1">Self: </th>
-            <td width="140"> <%= sprintf("%3.f", stats[:self]) %>%#37; Complete</td>
+            <td width="140"> <%= sprintf("%3.f", stats[:self]) %>&#37; Complete</td>
             <th width="50" align="right" class="th1">Peer: </th>
-            <td width="140"> <%= sprintf("%3.f", stats[:peer]) %>%#37; Complete</td>
+            <td width="140"> <%= sprintf("%3.f", stats[:peer]) %>&#37; Complete</td>
           </tr>
         </table>
       <% else %>
