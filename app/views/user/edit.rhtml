@@ -58,8 +58,7 @@
                       border="0">
                 <% for role in @roles[ranges[1][:start]..ranges[1][:stop]] %>
                   <tr>
-                    <td align="left"
-                         valign="top">
+                    <td align="left" valign="top">
                       <% if @uroles[role['name']] %>
                         <%= check_box "role", role.id, {'checked'=>'checked'} %> 
                       <% else %>
@@ -81,8 +80,7 @@
                       border="0">
                 <% for r in @roles[ranges[2][:start]..ranges[2][:stop]] %>
                   <tr>
-                    <td align="left"
-                         valign="top">
+                    <td align="left" valign="top">
                       <% if @uroles[r['name']] %>
                         <%= check_box "role", r.id, {'checked'=>'checked'} %> 
                       <% else %>
@@ -90,7 +88,7 @@
                       <% end %>
                     </td>
                     <td align="left">
-                      <label for="role_name"><%= role.display_name %></label>
+                      <label for="role_name"><%= r.display_name %></label>
                       <% if r.reviewer? %>
                         Reviewer
                       <% end %>
