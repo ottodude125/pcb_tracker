@@ -130,7 +130,7 @@ class UserController < ApplicationController
   ######################################################################
   #
   def signup
-    @roles    = Role.find_all_by_active('1', 'display_name ASC')
+    @roles    = Role.find_all_active
     @new_user = User.new(:employee => '1', :active => '1')
   end 
 
@@ -150,8 +150,8 @@ class UserController < ApplicationController
   #
   def edit
 
-    @roles = Role.find(:all, :order => 'display_name ASC')
-    @user = User.find(params[:id])
+    @roles     = Role.find_all_active
+    @user      = User.find(params[:id])
     user_roles = @user.roles
 
     @uroles = {}
