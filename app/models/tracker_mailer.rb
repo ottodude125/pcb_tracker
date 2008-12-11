@@ -500,8 +500,8 @@ class TrackerMailer < ActionMailer::Base
   #
   def user_password(user, sent_at = Time.now)
 
-    @subject    = "Your password"
-    @body       = {:password => user.passwd}
+    @subject    = "Your PCB Design Tracker login id and password"
+    @body       = { :user => user }
     @recipients = [user.email]
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
