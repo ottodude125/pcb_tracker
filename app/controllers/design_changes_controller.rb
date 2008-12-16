@@ -2,7 +2,7 @@
 #
 # Copyright 2005, by Teradyne, Inc., Boston MA
 #
-# File: design_changes_controller.rbapplicationapplication
+# File: design_changes_controller.rb
 #
 # This contains the logic to create and modify change details.
 #
