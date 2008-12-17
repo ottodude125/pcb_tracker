@@ -543,31 +543,7 @@ class DesignReviewController < ApplicationController
   ######################################################################
   #
   def review_attachments
- 
     @design_review = DesignReview.find(params[:design_review_id])
-    board_docs     = @design_review.design.board.design_review_documents
-
-    @documents = []
-    DocumentType.get_document_types.each do |doc_type|
-    
-      docs = board_docs.collect { |d| d if d.document_type_id == doc_type.id }.compact
-
-      next if docs.size == 0
-      
-      if doc_type.name != "Other"
-        display_doc = docs.pop
-      
-        # Check against zero because document has been popped off
-        display_doc[:multiple_docs] = (docs.size > 0)
-        @documents.push(display_doc)
-      else
-        docs.reverse.each do |display_doc|
-          display_doc[:multiple_docs] = false
-          @documents.push(display_doc)
-        end
-      end
-    end
-
   end
   
   
@@ -618,41 +594,26 @@ class DesignReviewController < ApplicationController
   ######################################################################
   #
   def save_update
-  
+
     document = Document.new(params[:document]) if params[:document][:document] != ""
-    
-    if !document
-      flash['notice'] = 'No file was specified'
-      redirect_to(:action           => :update_documents,
-                  :design_review_id => params[:design_review][:id],
-                  :document_id      => params[:doc_id],
-                  :return_to        => params[:return_to])
-    elsif document.data.size >= Document::MAX_FILE_SIZE
-      flash['notice'] = "Files must be smaller than #{Document::MAX_FILE_SIZE} characters"
+
+    if !document || document.data.size == 0
+      if !document
+        flash['notice'] = 'No file was specified - Please specify a document'
+      else
+        flash['notice'] = 'Empty file - The document was not stored'
+      end
       redirect_to(:action           => :update_documents,
                   :design_review_id => params[:design_review][:id],
                   :document_id      => params[:doc_id],
                   :return_to        => params[:return_to])
     else
-      
-      document.created_by = @logged_in_user.id
-      document.unpacked   = 0
-      
-      if document.save
-        
-        design_review = DesignReview.find(params[:design_review][:id])
-        board         = Board.find(design_review.design.board_id)
-        existing_drd  = DesignReviewDocument.find(params[:doc_id])
-        
-        drd_doc                  = DesignReviewDocument.new
-        drd_doc.document_type_id = existing_drd.document_type_id
-        drd_doc.board_id         = board.id
-        drd_doc.design_id        = design_review.design_id
-        drd_doc.document_id      = document.id
-        drd_doc.save
-        
-        doc_type_name = DocumentType.find(drd_doc.document_type_id).name
-        flash['notice'] = "The #{doc_type_name} document has been updated."
+      existing_drd  = DesignReviewDocument.find(params[:doc_id])
+      document_type = DocumentType.find(existing_drd.document_type_id)
+      design_review = DesignReview.find(params[:design_review][:id])
+
+      if document.attach(design_review, document_type, @logged_in_user)
+        flash['notice'] = "The #{document_type.name} document has been updated."
         if params[:return_to] == 'initial_attachments'
           redirect_to(:controller => 'design',
                       :action     => 'initial_attachments',
@@ -661,6 +622,8 @@ class DesignReviewController < ApplicationController
           redirect_to(:action           => :review_attachments,
                       :design_review_id => params[:design_review][:id])
         end
+      else
+        flash['notice'] = document.errors[:file_size]
       end
     end
   end
@@ -732,52 +695,30 @@ class DesignReviewController < ApplicationController
   #
   def save_attachment
 
-    @document = Document.new(params[:document]) if params[:document][:document] != ""
+    @document   = Document.new(params[:document]) if params[:document][:document] != ""
+    save_failed = true
     
-    if params[:document_type][:id] == ''
-      save_failed = true
-      flash['notice'] = 'Please select the document type'
-    elsif !@document
-      save_failed = true
-      flash['notice'] = 'No name provided - Please specify a document'
-    elsif @document.data.size == 0
-      save_failed = true
-      flash['notice'] = 'Empty file - The document was not stored'
+    if params[:document_type][:id] == '' || !@document || @document.data.size == 0
+      flash['notice'] = 'Please select the document type' if params[:document_type][:id] == ''
+      if !@document
+        flash['notice'] += '<br />' if flash['notice']
+        flash['notice'] += 'No name provided - Please specify a document'
+      elsif @document.data.size == 0
+        flash['notice'] = '<br />'  if flash['notice']
+        flash['notice'] = 'Empty file - The document was not stored'
+      end
     else
-      
-      if @document.data.size < Document::MAX_FILE_SIZE
-      
-        @document.created_by = @logged_in_user.id
-        @document.unpacked   = 0
+      document_type = DocumentType.find(params[:document_type][:id])
+      design_review = DesignReview.find(params[:design_review][:id])
 
-        if @document.save
-          drd_doc = DesignReviewDocument.new
-          
-          drd_doc.document_type_id = params[:document_type][:id]
-          drd_doc.board_id         = params[:board][:id]
-          drd_doc.design_id        = DesignReview.find(params[:design_review][:id]).design_id
-          drd_doc.document_id      = @document.id
-          
-          if drd_doc.save
-          
-            doc_type_name = DocumentType.find(drd_doc.document_type_id).name
-            flash['notice'] = "File #{@document.name} (#{doc_type_name}) has been attached"
-            save_failed = false
-            
-            TrackerMailer::deliver_attachment_update(drd_doc,
-                                                     @logged_in_user)
-            
-          else
-            flash['notice'] = "Unable to attach the file."
-          end
-        else
-        end
+      if @document.attach(design_review, document_type, @logged_in_user)
+        flash['notice'] = "File #{@document.name} (#{document_type.name}) has been attached"
+        save_failed     = false
       else
-        save_failed = true
-        flash['notice'] = "Files must be smaller than #{Document::MAX_FILE_SIZE} characters"
+        flash['notice'] = @document.errors[:file_size]
       end
     end
-    
+
     if save_failed
       redirect_to(:action           => :add_attachment,
                   :id               => params[:id],
@@ -855,19 +796,10 @@ class DesignReviewController < ApplicationController
   ######################################################################
   #
   def list_obsolete
-  
-    @design_review = DesignReview.find(params[:id])
-    @docs = DesignReviewDocument.find(:all,
-                                      :conditions => ("board_id='#{@design_review.design.board.id}' " +
-                                                      "AND document_type_id='#{params[:document_type_id]}'"))
-                                        
-    @docs.sort_by { |drd| drd.document.created_on}
-    @docs.reverse!
-                              
-    # Discard the last entry
-    latest_doc = @docs.shift
-    @document_type_name = DocumentType.find(latest_doc.document_type_id).name
-
+    @design_review      = DesignReview.find(params[:id])
+    document_type       = DocumentType.find(params[:document_type_id])
+    @document_type_name = document_type.name
+    @docs = @design_review.design.board.get_obsolete_document_list(document_type).reverse
   end
 
 
