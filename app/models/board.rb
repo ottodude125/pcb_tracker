@@ -84,9 +84,9 @@ class Board < ActiveRecord::Base
   # Returns the most recent version of the document type
   def get_current_document(document_type)
 
-    @documents = self.design_review_documents
+    documents = self.design_review_documents
 
-    docs = @documents.collect { |d| d if d.document_type_id == document_type.id }.compact
+    docs = documents.collect { |d| d if d.document_type_id == document_type.id }.compact
     if document_type.name != 'Other' && docs.size > 0
       docs.sort_by { |d| d.document.created_on }.pop
     else
@@ -105,8 +105,8 @@ class Board < ActiveRecord::Base
   def get_obsolete_document_list(document_type)
 
     if document_type.name != 'Other'
-      @documents = self.design_review_documents
-      docs = @documents.collect { |d| d if d.document_type_id == document_type.id }.compact
+      documents = self.design_review_documents
+      docs = documents.collect { |d| d if d.document_type_id == document_type.id }.compact
       if docs.size > 0
         docs = docs.sort_by { |d| d.document.created_on }
       end
@@ -127,12 +127,12 @@ class Board < ActiveRecord::Base
   #
   # Returns the most recent version of the document type
   def multiple_documents?(document_type)
-    @documents = self.design_review_documents
+    documents = self.design_review_documents
 
     other_document = document_type.name == 'Other'
     if !other_document
-      @documents |= self.design_review_documents
-      docs = @documents.collect { |d| d if d.document_type_id == document_type.id }.compact
+      documents |= self.design_review_documents
+      docs = documents.collect { |d| d if d.document_type_id == document_type.id }.compact
     end
 
     !other_document && docs.size > 1
@@ -148,10 +148,10 @@ class Board < ActiveRecord::Base
  #
  # Returns an array of documents
  def get_documents_other
-    @documents = self.design_review_documents
+    documents = self.design_review_documents
 
     doc_type_other = DocumentType.find_by_name('Other')
-    @documents.collect { |d| d if d.document_type_id == doc_type_other.id }.compact
+    documents.collect { |d| d if d.document_type_id == doc_type_other.id }.compact
   end
   
   
