@@ -17,6 +17,9 @@ class BoardTest < Test::Unit::TestCase
 
 
   fixtures(:boards,
+           :design_review_documents,
+           :documents,
+           :document_types,
            :platforms,
            :prefixes,
            :projects,
@@ -97,6 +100,75 @@ class BoardTest < Test::Unit::TestCase
     assert_equal(lisa_a.id, board_reviewer.reviewer_id)
     assert_equal(la753.id,  board_reviewer.board_id)
     
+  end
+
+
+  ######################################################################
+  def test_should_have_no_current_documents
+    assert_equal([], boards(:la453).current_document_list)
+  end
+
+
+  ######################################################################
+  def test_should_have_current_documents
+    assert_equal([design_review_documents(:mx234a_eng_notes_doc),
+                  design_review_documents(:mx234a_stackup_doc),
+                  design_review_documents(:mx234a_other_1_doc),
+                  design_review_documents(:mx234a_other_2_doc)],
+                 boards(:mx234).current_document_list)
+  end
+
+
+  ######################################################################
+  def test_get_current_other_document
+    assert_equal(nil, boards(:mx234).get_current_document(document_types(:other)))
+  end
+
+
+  ######################################################################
+  def test_get_current_outline_drawing_document
+    assert_equal(nil, boards(:mx234).get_current_document(document_types(:outline_drawing)))
+  end
+
+
+  ######################################################################
+  def test_get_current_stackup_document
+    assert_equal(design_review_documents(:mx234a_stackup_doc),
+                 boards(:mx234).get_current_document(document_types(:stackup)))
+  end
+
+
+  ######################################################################
+  def test_should_get_empty_list_of_obsolet_documents
+    assert_equal([], boards(:la453).get_obsolete_document_list(document_types(:stackup)))
+    assert_equal([], boards(:mx234).get_obsolete_document_list(document_types(:outline_drawing)))
+    assert_equal([], boards(:mx234).get_obsolete_document_list(document_types(:eng_inst)))
+    assert_equal([], boards(:mx234).get_obsolete_document_list(document_types(:other)))
+  end
+
+
+  ######################################################################
+  def test_should_get_loaded_list_of_obsolete_documents
+    assert_equal([design_review_documents(:mx234a_obsolete_stackup_doc)],
+                 boards(:mx234).get_obsolete_document_list(document_types(:stackup)))
+  end
+
+
+  ######################################################################
+  def test_multiple_documents_method
+    assert(!boards(:la453).multiple_documents?(document_types(:stackup)))
+    assert(!boards(:mx234).multiple_documents?(document_types(:other)))
+    assert(!boards(:mx234).multiple_documents?(document_types(:eng_inst)))
+    assert( boards(:mx234).multiple_documents?(document_types(:stackup)))
+  end
+
+
+  ######################################################################
+  def test_get_documents_other
+    assert_equal([], boards(:la453).get_documents_other)
+    assert_equal([design_review_documents(:mx234a_other_1_doc),
+                  design_review_documents(:mx234a_other_2_doc)],
+                 boards(:mx234).get_documents_other)
   end
 
 
