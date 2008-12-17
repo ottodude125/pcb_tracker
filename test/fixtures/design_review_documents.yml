@@ -26,3 +26,9 @@ mx234a_other_2_doc:
   design_id:        1
   document_type_id: 3
   document_id:      4
+mx234a_obsolete_stackup_doc:
+  id:               5
+  board_id:         1
+  design_id:        1
+  document_type_id: 1
+  document_id:      5

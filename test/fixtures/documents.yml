@@ -14,13 +14,18 @@ mx234a_other_document_1:
   created_on:   20060222114526
   created_by:   5001
 mx234a_eng_notes_document:
-  id:         3
-  name:       eng_notes.xls
-  created_on: 20060222114526
-  created_by: 7001
+  id:           3
+  name:         eng_notes.xls
+  created_on:   20060222114526
+  created_by:   7001
 mx234a_other_document_2:
-  id:         4
-  name:       go_red_sox.xls
-  created_on: 20060222114526
-  created_by: 5001
-
+  id:           4
+  name:         go_red_sox.xls
+  created_on:   20060222114526
+  created_by:   5001
+mx234a_obsolete_stackup_document:
+  id:           5
+  name:         mx234a_stackup.doc
+  created_on:   20050222114526
+  created_by:   4000
+  data:         'The mx234a old Stackup Document'
