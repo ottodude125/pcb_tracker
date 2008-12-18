@@ -746,10 +746,9 @@ class TrackerMailer < ActionMailer::Base
   #
   ######################################################################
   #
-  def attachment_update(design_review_document, user, sent_at = Time.now)
+  def attachment_update(design_review_document, user, subject, sent_at = Time.now)
 
-    @subject    = subject_prefix(design_review_document.design) +
-                  'A document has been attached'
+    @subject    = subject_prefix(design_review_document.design) + subject
     @recipients = []
     @from       = Pcbtr::SENDER
     @sent_on    = sent_at
