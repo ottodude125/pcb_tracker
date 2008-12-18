@@ -543,8 +543,10 @@ class TrackerMailerTest < Test::Unit::TestCase
 
     response = TrackerMailer.create_user_password(@scott_g,
                                                   @now)
-    assert_equal('Your password', response.subject)
-    assert_equal("Your password is #{@scott_g.passwd}\n\nPCB DESIGN TRACKER URL - #{Pcbtr::PCBTR_BASE_URL}tracker\n",
+    assert_equal('Your PCB Design Tracker login id and password',
+                  response.subject)
+    assert_equal("Login:    #{@scott_g.login}\n" +
+                 "Password: #{@scott_g.passwd}\n\nPCB DESIGN TRACKER URL - #{Pcbtr::PCBTR_BASE_URL}tracker\n",
                  response.body)
     assert_equal([@scott_g.email], response.to)
     assert_equal([Pcbtr::SENDER],  response.from)
@@ -711,12 +713,14 @@ class TrackerMailerTest < Test::Unit::TestCase
 
   ##############################################################################
   def test_attachment_update
-  
+
+    subject  = 'TESTING: A document has been attached'
     response = TrackerMailer.create_attachment_update(@mx234a_stackup_doc,
                                                       @lee_s,
+                                                      subject,
                                                       @now)
                  
-    assert_equal('Catalyst/AC/(pcb252_234_a0_g): A document has been attached',
+    assert_equal("Catalyst/AC/(pcb252_234_a0_g): #{subject}",
                  response.subject)
     response_to = response.to.sort_by { |address| address }
     
