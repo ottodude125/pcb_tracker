@@ -2,3 +2,12 @@ Design:       <%= @document.design.detailed_name %>
 Document:     <%= @document.document.name %>
 Type:         <%= @document.document_type.name %>
 Attached By:  <%= @attached_by %>
+<% if @document.design.board.multiple_documents?(@document.document_type) %>
+Obsolete <%= @document.document_type.name %> documents
+
+<% @document.design.board.get_obsolete_document_list(@document.document_type).reverse.each do |doc| %>  Document:    <%= doc.document.name %>
+  Attached By: <%= doc.document.user.name %>
+  Attached On: <%= doc.document.created_on.simple_date_with_timestamp %>
+  -----------------------------------------------------------------------------
+<% end %>
+<% end %>
