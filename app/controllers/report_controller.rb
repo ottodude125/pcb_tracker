@@ -212,48 +212,25 @@ class ReportController < ApplicationController
   ######################################################################
   #
   def reviewer_workload
-  
-    status_list = ReviewStatus.find(:all)
-  
-    # Get all of the design reviews that have not been completed
-    review_completed = status_list.detect { |rs| rs.name == 'Review Completed' }
-    review_skipped   = status_list.detect { |rs| rs.name == 'Review Skipped' }
-    not_started      = status_list.detect { |rs| rs.name == 'Not Started' }
-    terminated       = status_list.detect { |rs| rs.name == 'Review Terminate'}
-    condition        = "review_status_id != '#{review_completed.id}' AND " +
-                       "review_status_id != '#{not_started.id}'      AND " +
-                       "review_status_id != '#{review_skipped.id}'   AND " +
-                       "review_status_id != '#{terminated.id}'"
- 
-    design_reviews = DesignReview.find(:all, :conditions => condition)
-    
+
     if params[:id]
-      @design_review = DesignReview.find(params[:id])
-      reviewer_ids  = @design_review.design_review_results.collect { |drr| drr.reviewer_id } 
+      @design_review            = DesignReview.find(params[:id])
+      incomplete_design_reviews = [@design_review]
+    else
+      incomplete_design_reviews = DesignReview.in_process_design_reviews
     end
 
-    reviewer_list = {}
-    design_reviews.each do |design_review|
-      design_review.design_review_results.each do |drr|
-        if !reviewer_ids ||
-           (reviewer_ids && reviewer_ids.include?(drr.reviewer_id) )
-          if !reviewer_list[drr.reviewer_id]
-            reviewer_list[drr.reviewer_id] = { :user    => User.find(drr.reviewer_id), 
-                                               :results => [] }
-          end
-          reviewer_list[drr.reviewer_id][:results] << drr
-        end
+    result_hash = {}
+    incomplete_design_reviews.each do |design_review|
+      design_review.unprocessed_results.each do |review_result|
+        result_hash[review_result.reviewer] = [] unless result_hash[review_result.reviewer]
+        result_hash[review_result.reviewer] << review_result
       end
     end
-    
-    #Sort each of the review results by result and criticality
-    reviewer_list.each do |reviewer_id, user_results| 
-      user_results[:results] = user_results[:results].sort_by { |drr| [drr.result, drr.design_review.priority.value] }
-    end
-    
-    reviewer_list  = reviewer_list.to_a.sort_by { |e| e[1][:user].last_name }
-    @reviewer_list = reviewer_list.collect { |e| e[1] }
-    
+
+    @reviewer_result_list = result_hash.to_a.sort_by { |r| r[0].last_name }
+
+
   end
   
   
