@@ -1699,8 +1699,7 @@ class DesignReviewController < ApplicationController
   
     @design_review   = DesignReview.find(params[:id])
     @design          = @design_review.design
-    @review_results  = @design_review.review_results_by_role_name.dup
-    @review_results.delete_if { |rr| rr.result == 'WAIVED' || rr.result == "APPROVED" }
+    @review_results  = @design_review.unprocessed_results
     
     render(:layout => false)
     
