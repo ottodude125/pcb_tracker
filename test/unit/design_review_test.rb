@@ -38,11 +38,23 @@ class DesignReviewTest < Test::Unit::TestCase
     @mx234a_release_review   = design_reviews(:mx234a_release)
     
     @mx234a_pre_artwork_hw = design_review_results(:mx234a_pre_artwork_hw)
-    
-    @ben_b   = users(:ben_b)
-    @scott_g = users(:scott_g)
-    @cathy_m = users(:cathy_m)
-    @lee_s   = users(:lee_s)
+
+    @rich_a    = users(:rich_a)
+    @lisa_a    = users(:lisa_a)
+    @ben_b     = users(:ben_b)
+    @art_d     = users(:art_d)
+    @matt_d    = users(:matt_d)
+    @espo      = users(:espo)
+    @tom_f     = users(:tom_f)
+    @anthony_g = users(:anthony_g)
+    @scott_g   = users(:scott_g)
+    @john_g    = users(:john_g)
+    @dan_g     = users(:dan_g)
+    @heng_k    = users(:heng_k)
+    @jim_l     = users(:jim_l)
+    @dave_m    = users(:dave_m)
+    @cathy_m   = users(:cathy_m)
+    @lee_s     = users(:lee_s)
     
     @admin    = roles(:admin)
     @designer = roles(:designer)
@@ -65,44 +77,44 @@ class DesignReviewTest < Test::Unit::TestCase
                     :reviewer => nil,
                     :comments => [design_review_comments(:comment_two)] },
                   { :role     => @hweng,
-                    :reviewer => users(:lee_s),
+                    :reviewer => @lee_s,
                     :comments => [] },
                   { :role     => roles(:valor),
-                    :reviewer => users(:lisa_a),
+                    :reviewer => @lisa_a,
                     :comments => [design_review_comments(:comment_three)] },
                   { :role     => roles(:ce_dft),
-                    :reviewer => users(:espo),
+                    :reviewer => @espo,
                     :comments => [] },
                   { :role     => roles(:dfm),
-                    :reviewer => users(:heng_k),
+                    :reviewer => @heng_k,
                     :comments => [] },
                   { :role     => roles(:tde),
-                    :reviewer => users(:rich_a),
+                    :reviewer => @rich_a,
                     :comments => [] },
                   { :role     => roles(:mechanical),
-                    :reviewer => users(:tom_f),
+                    :reviewer => @tom_f,
                     :comments => [] },
                   { :role     => roles(:pcb_design),
-                    :reviewer => users(:jim_l),
+                    :reviewer => @jim_l,
                     :comments => [design_review_comments(:comment_two)] },
                   { :role     => roles(:planning),
-                    :reviewer => users(:matt_d),
+                    :reviewer => @matt_d,
                     :comments => [] },
                   { :role     => roles(:pcb_input_gate),
-                    :reviewer => users(:cathy_m),
+                    :reviewer => @cathy_m,
                     :comments => [design_review_comments(:comment_four),
                                   design_review_comments(:comment_one)] },
                   { :role     => roles(:library),
-                    :reviewer => users(:dave_m),
+                    :reviewer => @dave_m,
                     :comments => [] },
                   { :role     => roles(:pcb_mechanical),
-                    :reviewer => users(:john_g),
+                    :reviewer => @john_g,
                     :comments => [] },
                   { :role     => roles(:slm_bom),
                     :reviewer => users(:art_d),
                     :comments => [] },
                   { :role     => roles(:slm_vendor),
-                    :reviewer => users(:dan_g),
+                    :reviewer => @dan_g,
                     :comments => [] },
                   { :role     => roles(:operations_manager),
                     :reviewer => nil,
@@ -123,7 +135,7 @@ class DesignReviewTest < Test::Unit::TestCase
                     :reviewer => nil,
                     :comments => [] },
                   { :role     => roles(:mechanical_manufacturing),
-                    :reviewer => users(:anthony_g),
+                    :reviewer => @anthony_g,
                     :comments => [] } ]
   
     test_data.each do |test|
@@ -190,74 +202,74 @@ class DesignReviewTest < Test::Unit::TestCase
                    :group_id    => roles(:dfm).id,
                    :reviewers   => [users(:pat_a),
                                     users(:john_ju),
-                                    users(:heng_k)],
-                   :reviewer_id => users(:heng_k).id},
+                                    @heng_k],
+                   :reviewer_id => @heng_k.id},
                  { :group       => roles(:ce_dft).display_name,
                    :group_id    => roles(:ce_dft).id,
-                   :reviewers   => [users(:espo),
+                   :reviewers   => [@espo,
                                     users(:ted_p)],
-                   :reviewer_id => users(:espo).id},
+                   :reviewer_id => @espo.id},
                  { :group       => roles(:library).display_name,
                    :group_id    => roles(:library).id,
-                   :reviewers   => [users(:dave_m),
+                   :reviewers   => [@dave_m,
                                     users(:sheela_p)],
-                   :reviewer_id => users(:dave_m).id},
+                   :reviewer_id => @dave_m.id},
                  { :group       => roles(:hweng).display_name,
                    :group_id    => roles(:hweng).id,
-                   :reviewers   => [users(:rich_a),
-                                    users(:ben_b),
+                   :reviewers   => [@rich_a,
+                                    @ben_b,
                                     users(:john_j),
-                                    users(:lee_s)],
-                   :reviewer_id => users(:lee_s).id},
+                                    @lee_s],
+                   :reviewer_id => @lee_s.id},
                  { :group       => roles(:mechanical).display_name,
                    :group_id    => roles(:mechanical).id,
-                   :reviewers   => [users(:tom_f),
+                   :reviewers   => [@tom_f,
                                     users(:dave_l)],
-                   :reviewer_id => users(:tom_f).id},
+                   :reviewer_id => @tom_f.id},
                  { :group       => roles(:mechanical_manufacturing).display_name,
                    :group_id    => roles(:mechanical_manufacturing).id,
-                   :reviewers   => [users(:anthony_g),
+                   :reviewers   => [@anthony_g,
                                     users(:tony_p)],
-                   :reviewer_id => users(:anthony_g).id},
+                   :reviewer_id => @anthony_g.id},
                  { :group       => roles(:planning).display_name,
                    :group_id    => roles(:planning).id,
                    :reviewers   => [users(:tina_d),
-                                    users(:matt_d)],
-                   :reviewer_id => users(:matt_d).id},
+                                    @matt_d],
+                   :reviewer_id => @matt_d.id},
                  { :group       => roles(:pcb_input_gate).display_name,
                    :group_id    => roles(:pcb_input_gate).id,
                    :reviewers   => [users(:jan_k),
-                                    users(:cathy_m)],
-                   :reviewer_id => users(:cathy_m).id},
+                                    @cathy_m],
+                   :reviewer_id => @cathy_m.id},
                  { :group       => roles(:pcb_design).display_name,
                    :group_id    => roles(:pcb_design).id,
-                   :reviewers   => [users(:jim_l)],
-                   :reviewer_id => users(:jim_l).id},
+                   :reviewers   => [@jim_l],
+                   :reviewer_id => @jim_l.id},
                  { :group       => roles(:pcb_mechanical).display_name,
                    :group_id    => roles(:pcb_mechanical).id,
-                   :reviewers   => [users(:john_g),
+                   :reviewers   => [@john_g,
                                     users(:mary_t)],
-                   :reviewer_id => users(:john_g).id},
+                   :reviewer_id => @john_g.id},
                  { :group       => roles(:slm_bom).display_name,
                    :group_id    => roles(:slm_bom).id,
                    :reviewers   => [users(:art_d)],
                    :reviewer_id => users(:art_d).id},
                  { :group       => roles(:slm_vendor).display_name,
                    :group_id    => roles(:slm_vendor).id,
-                   :reviewers   => [users(:dan_g)],
-                   :reviewer_id => users(:dan_g).id},
+                   :reviewers   => [@dan_g],
+                   :reviewer_id => @dan_g.id},
                  { :group       => roles(:tde).display_name,
                    :group_id    => roles(:tde).id,
-                   :reviewers   => [users(:rich_a),
+                   :reviewers   => [@rich_a,
                                     users(:man_c)],
-                   :reviewer_id => users(:rich_a).id},
+                   :reviewer_id => @rich_a.id},
                  { :group       => roles(:valor).display_name,
                    :group_id    => roles(:valor).id,
-                   :reviewers   => [users(:lisa_a),
-                                    users(:scott_g),
+                   :reviewers   => [@lisa_a,
+                                    @scott_g,
                                     users(:bob_g),
                                     users(:rich_m)],
-                   :reviewer_id => users(:lisa_a).id}
+                   :reviewer_id => @lisa_a.id}
                 ]
            
     reviewer_list = @mx234a_pre_art_review.generate_reviewer_selection_list
@@ -555,7 +567,7 @@ class DesignReviewTest < Test::Unit::TestCase
     assert(!design_review.review_locked?)
     
   
-    scott_g      = users(:scott_g)
+    scott_g      = @scott_g
     scott_glover = scott_g.name
     next_review  = DesignReview.new(:designer_id    => scott_g.id,
                                     :review_type_id => release_review_type.id,
@@ -590,7 +602,7 @@ class DesignReviewTest < Test::Unit::TestCase
     #   review not locked, 
     #   current user not designer, 
     #   next review not same as design phase
-    assert(!design_review.post_review?(next_review, users(:ben_b)))
+    assert(!design_review.post_review?(next_review, @ben_b))
     
     # FALSE
     #   review not locked, 
@@ -603,7 +615,7 @@ class DesignReviewTest < Test::Unit::TestCase
 
     assert_equal(release_review_type.id, design.phase_id)
     assert_equal(release_review_type.id, next_review.review_type_id)
-    assert(!design_review.post_review?(next_review, users(:ben_b)))
+    assert(!design_review.post_review?(next_review, @ben_b))
 
     # FALSE
     #   review locked, 
@@ -636,7 +648,7 @@ class DesignReviewTest < Test::Unit::TestCase
     #   review locked, 
     #   current user not designer, 
     #   next review not same as design phase
-    assert(!design_review.post_review?(next_review, users(:ben_b)))
+    assert(!design_review.post_review?(next_review, @ben_b))
     
     # FALSE
     #   review locked, 
@@ -649,7 +661,7 @@ class DesignReviewTest < Test::Unit::TestCase
 
     assert_equal(release_review_type.id, design.phase_id)
     assert_equal(release_review_type.id, next_review.review_type_id)
-    assert(!design_review.post_review?(next_review, users(:ben_b)))
+    assert(!design_review.post_review?(next_review, @ben_b))
   
   end
   
@@ -1095,5 +1107,159 @@ class DesignReviewTest < Test::Unit::TestCase
     assert_equal(0,          @mx234a_placement_review.design_updates.size)
 
   end
+
+
+  ######################################################################
+  def test_summary_data
+
+    summary_data = DesignReview.summary_data
+    summary_data.each do |key, design_reviews|
+      design_reviews.each do |design_review|
+        quarter      = 'Q' + design_review.created_on.current_quarter.to_s
+        year         = design_review.created_on.strftime("%Y")
+        year_quarter = year + quarter
+
+        assert(design_review.posting_count > 0)
+        assert_equal(key, year_quarter)
+      end
+    end
+  end
+
+
+  ######################################################################
+  def test_in_process_design_reviews
+
+    all_design_reviews       = DesignReview.find(:all)
+    in_process_design_reviews = DesignReview.in_process_design_reviews
+    in_process_design_reviews.each do |design_review|
+      assert(design_review.posting_count > 0)
+      assert(design_review.review_status.name == 'In Review')
+    end
+
+    (all_design_reviews - in_process_design_reviews).each do |dr|
+      assert(dr.review_status.name != 'In Review')
+    end
+
+  end
+
+
+  ######################################################################
+  def test_inactive_reviewers_all_active
+    assert(!@mx234a_pre_art_review.inactive_reviewers?)
+  end
+
+
+  ######################################################################
+  def test_inactive_reviewers_all_inactive
+    @mx234a_pre_art_review.design_review_results.each do |drr|
+       drr.reviewer.password = ''
+       drr.reviewer.update_attribute(:active, false)
+    end
+
+    assert(@mx234a_pre_art_review.inactive_reviewers?)
+  end
+
+
+  ######################################################################
+  def test_inactive_reviewers_one_inactive
+    @cathy_m.password = ''
+    @cathy_m.update_attribute(:active, false)
+    assert(@mx234a_pre_art_review.inactive_reviewers?)
+  end
+
+
+  ######################################################################
+  def test_inactive_reviewers_list_all_active
+    assert_equal([], @mx234a_pre_art_review.inactive_reviewers)
+  end
+
+
+  ######################################################################
+  def test_inactive_reviewers_list_all_inactive
+    @mx234a_pre_art_review.design_review_results.each do |drr|
+      drr.reviewer.password = ''
+      drr.reviewer.update_attribute(:active, false)
+    end
+
+    expected_reviewers = [@rich_a,    @lisa_a,    @lee_s,   @espo,
+                          @jim_l,     @dan_g,     @art_d,   @matt_d,
+                          @heng_k,    @john_g,    @cathy_m, @anthony_g,
+                          @tom_f,     @dave_m].sort_by { |r| r.last_name}
+    assert_equal(expected_reviewers,
+                 @mx234a_pre_art_review.inactive_reviewers.sort_by { |r| r.last_name})
+  end
+
+
+  ######################################################################
+  def test_inactive_reviewers_list_one_inactive
+    @cathy_m.password = ''
+    @cathy_m.update_attribute(:active, false)
+    assert_equal([@cathy_m], @mx234a_pre_art_review.inactive_reviewers)
+  end
+
+
+  ######################################################################
+  def test_results_with_inactive_users_list_all_active
+    assert_equal([], @mx234a_pre_art_review.results_with_inactive_users)
+  end
+
+
+  ######################################################################
+  def test_results_with_inactive_users_list_all_inactive
+    @mx234a_pre_art_review.design_review_results.each do |drr|
+      drr.reviewer.password = ''
+      drr.reviewer.update_attribute(:active, false)
+    end
+
+    expected_results = @mx234a_pre_art_review.design_review_results.sort_by { |result| result.role_id }
+    results_with_inactive_users = @mx234a_pre_art_review.results_with_inactive_users.sort_by do |result|
+      result.role_id
+    end.collect { |r| r.role.display_name}
+    
+    assert_equal(expected_results.size, results_with_inactive_users.size)
+    assert_equal(expected_results.collect { |r| r.role.display_name}, results_with_inactive_users)
+  end
+
+
+  ######################################################################
+  def test_results_with_inactive_users_list_one_inactive
+    @cathy_m.password = ''
+    @cathy_m.update_attribute(:active, false)
+    assert_equal([design_review_results(:mx234a_pre_artwork_pcb_ig)],
+                 @mx234a_pre_art_review.results_with_inactive_users)
+  end
+
+
+  ######################################################################
+  def test_unprocessed_results_list_all_processed
+    @mx234a_pre_art_review.design_review_results.each do |drr|
+      drr.result = 'APPROVED'
+    end
+    assert_equal([], @mx234a_pre_art_review.unprocessed_results)
+  end
+
+
+  ######################################################################
+  def test_unprocessed_results_list_all_unprocessed
+    expected_results = @mx234a_pre_art_review.design_review_results.sort_by { |result| result.role_id }
+    unprocessed_results = @mx234a_pre_art_review.unprocessed_results.sort_by do |result|
+      result.role_id
+    end.collect { |r| r.role.display_name}
+
+    assert_equal(expected_results.size, unprocessed_results.size)
+    assert_equal(expected_results.collect { |r| r.role.display_name}, unprocessed_results)
+  end
+
+
+  ######################################################################
+  def test_unprocessed_results_list_one_unprocessed
+    @mx234a_pre_art_review.design_review_results.each do |drr|
+      next if drr.id == design_review_results(:mx234a_pre_artwork_pcb_ig).id
+      drr.result = 'APPROVED'
+    end
+    assert_equal([design_review_results(:mx234a_pre_artwork_pcb_ig)],
+                 @mx234a_pre_art_review.unprocessed_results)
+  end
+
 
 end
