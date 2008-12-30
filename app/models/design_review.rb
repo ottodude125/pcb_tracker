@@ -27,6 +27,13 @@ class DesignReview < ActiveRecord::Base
   SATURDAY = 6
 
 
+  # Retrieve all design reviews that have been posted at least once.
+  #
+  # :call-seq:
+  #   summaru_data() -> {design_reviews}
+  #
+  #  Returns a hash of design reviewx accessed by the year and quarter.
+  #
   def self.summary_data
     
     design_reviews = self.find( :all,
@@ -44,6 +51,91 @@ class DesignReview < ActiveRecord::Base
     
     sorted_by_quarter
 
+  end
+
+
+  # Retrieve a list of design reviews that are active.
+  #
+  # :call-seq:
+  #   in_process_design_reviews() -> [design_reviews]
+  #
+  #  Returns a list of design reviewx that are active
+  #
+  def self.in_process_design_reviews
+    status_in_review = ReviewStatus.find(:first, :conditions => "name='In Review'")
+    status_waived    = ReviewStatus.find(:first, :conditions => "name='Review Waived'")
+    DesignReview.find(:all,
+                      :conditions => "review_status_id='#{status_in_review.id}' OR " +
+                                     "review_status_id='#{status_waived.id}'")
+  end
+
+
+  # Indicate if there are inactive reviewers assigned to active design reviews
+  #
+  # :call-seq:
+  #   inactive_reviewers?() -> boolean
+  #
+  # The flag is set to true if there are any inactive reviewers assigned to
+  # active reviews
+  #
+  def inactive_reviewers?
+    self.inactive_reviewers unless @results_with_inactive_users
+    @results_with_inactive_users.size > 0
+  end
+
+
+  # Provide a list of reviewer results with inactive reviewers that are assigned
+  # to active design reviews
+  #
+  # :call-seq:
+  #   results_with_inactive_users() -> [design_review_result]
+  #
+  # An array of design review result records.  One for each of the inactive
+  # reviewers assigned to the review
+  #
+  def results_with_inactive_users
+    self.inactive_reviewers unless @results_with_inactive_users
+    @results_with_inactive_users
+  end
+
+
+  # Provide a list of inactive reviewers assigned to active design reviews
+  #
+  # :call-seq:
+  #   inactive_reviewers() -> [user]
+  #
+  # An array of user records.  One for each of the inactive reviewers assigned
+  # to the review
+  #
+  def inactive_reviewers
+
+    results_with_inactive_users = [] unless @results_with_inactive_users
+
+    self.design_review_results.each do |drr|
+      unless drr.reviewer.active?
+        results_with_inactive_users << drr
+      end
+    end unless @inactive_reviewer_list
+
+    @results_with_inactive_users = results_with_inactive_users unless @results_with_inactive_users
+    @results_with_inactive_users.collect { |result| result.reviewer }
+
+  end
+
+
+  # Provide a list of review results that have not been processed
+  #
+  # :call-seq:
+  #   unprocessed_results() -> [design_review_result]
+  #
+  # An array of design review result records
+  #
+  def unprocessed_results
+    unprocessed_results = []
+    self.design_review_results.each do |drr|
+      unprocessed_results << drr unless drr.complete?
+    end
+    unprocessed_results.sort_by { |result| result.reviewer.last_name }
   end
 
 
