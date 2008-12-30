@@ -428,7 +428,7 @@ la453a1_pre_artwork:
   completed_on:     2000-04-09 00:00:00
 la453a1_placement:
   id:               121
-  posting_count:    0
+  posting_count:    1
   design_id:        4
   designer_id:      5000
   design_center_id: 1
@@ -669,7 +669,7 @@ la454c3_pre_artwork:
   completed_on:     2000-04-09 00:00:00
 la454c3_placement:
   id:               521
-  posting_count:    0
+  posting_count:    3
   design_id:        8
   designer_id:      5000
   design_center_id: 1

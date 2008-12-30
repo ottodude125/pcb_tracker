@@ -38,4 +38,8 @@ review_terminated:
   id:     9
   name:   Review Terminate
   active: 1
+review_waived:
+  id:     10
+  name:   Review Waived
+  active: 1
 
