@@ -39,7 +39,7 @@
     </tr>
 
     <!-- The user is not logged in                                           -->
-    <% if !@user %>
+    <% if !@logged_in_user %>
       <tr>
        <td align="left">
           <%= render_partial("attachment_list_button") %>
@@ -85,17 +85,17 @@
 
             <%= render_partial("buttons_roles_all") %>
             
-            <% if @user.is_reviewer? %>
+            <% if @logged_in_user.is_reviewer? %>
               <%= render_partial("buttons_role_reviewer")%>
             <% end %>
             
-            <% if (@user.is_pcb_management? || 
-                   @user.is_pcb_admin?      ||
-                   @user.is_tracker_admin?) %>
+            <% if (@logged_in_user.is_pcb_management? ||
+                   @logged_in_user.is_pcb_admin?      ||
+                   @logged_in_user.is_tracker_admin?) %>
               <%= render_partial("buttons_roles_admin_management")%>
             <% end %>
             
-            <% if @user.is_designer? %>
+            <% if @logged_in_user.is_designer? %>
               <%= render_partial("buttons_role_designer")%>
             <% end %>
  
@@ -118,7 +118,28 @@
     </tr>
     <tr>
       <td colspan="2">
-        <%= render_partial("reviewer_list_stripes") %>
+        <table width="100%">
+          <% if @design_review.inactive_reviewers? %>
+            <tr>
+              <td>
+                <table bgcolor="yellow">
+                  <% @design_review.inactive_reviewers.each do |user| %>
+                    <tr>
+                      <td>
+                        WARNING: <%= user.name %> is no longer active in the tracker.
+                      </td>
+                    </tr>
+                  <% end unless @design_review.review_complete? %>
+                </table>
+              </td>
+            </tr>
+          <% end %>
+          <tr>
+            <td>
+              <%= render_partial("reviewer_list_stripes") %>
+            </td>
+          </tr>
+        </table>
       </td>
     </tr>
   </table>
