@@ -12,7 +12,7 @@
 <% end %>
 
 <table align="center" border="0">
-  <% @reviewer_list.each do |entry| %>
+  <% @reviewer_result_list.each do |reviewer| %>
   <tr>
     <td>
       <table width="100%" border="1">
@@ -21,7 +21,7 @@
             <table width="100%" border="0">
               <tr>
                 <th align="left" width="33%">
-                  <%= entry[:user].name %>
+                  <%= reviewer[0].name %>
                 </th>
                 <td align="center" width="34%">
                   <% if @design_review %>
@@ -37,6 +37,11 @@
                                                                      :action     => 'index' ) %>'" />
                 </td>
               </tr>
+              <% if !reviewer[0].active? %>
+                <tr bgcolor="yellow">
+                  <td colspan="3">WARNING: This user is no longer active in the tracker.</td>
+                </tr>
+              <% end %>
             </table>
           </td>
         </tr>
@@ -52,7 +57,7 @@
                 <td class="smallheading">Posting Date</td>
                 <td class="smallheading">Age</td>
               </tr>
-              <% entry[:results].each do |rr| %>
+              <% reviewer[1].each do |rr| %>
 			    <% bgcolor = rr.result == "No Response" ? '#ef7787' : '#c7df8b' %>
                 <tr valign="top" bgcolor="<%= bgcolor %>">
                   <td width="145">
