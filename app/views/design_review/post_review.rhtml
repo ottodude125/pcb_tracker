@@ -84,6 +84,34 @@
         </table>
       </td>
     </tr>
+
+    <% if @design_review.inactive_reviewers? %>
+      <tr>
+        <td>&nbsp;</td>
+        <td>
+          <table width="100%" bgcolor="yellow">
+            <tr>
+              <td bgcolor="yellow" align="center">
+                <font color="red">
+                  <b>
+                    WARNING! The following assigned reviewers are marked as
+                    inactive in the tracker - Please assign a new reviewer
+                  </b>
+                </font>
+              </td>
+            </tr>
+            <% @design_review.results_with_inactive_users.each do |drr| %>
+              <tr>
+                <td bgcolor="yellow">
+                  &nbsp;&nbsp;<b><%= drr.reviewer.name%> - <%= drr.role.display_name %></b>
+                </td>
+              </tr>
+            <% end  %>
+          </table>
+        </td>
+      </tr>
+    <% end %>
+
     <tr>
       <th>STEP</th>
       <td>&nbsp;</td>
