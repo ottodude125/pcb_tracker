@@ -1028,20 +1028,19 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(mx234a.id,           assigns(:design_review).id)
     assert_equal(designs(:mx234a).id, assigns(:design_review).design_id)
 
-    documents = assigns(:documents)
+    documents = assigns(:design_review).design.board.current_document_list
     assert_equal(4, documents.size)
 
-    expected_documents = [ set_document(1, 'mx234a_stackup.doc', 'Cathy McLaren'),
+    expected_documents = [ set_document(4, 'eng_notes.xls',      'Lee Schaff'),
+                           set_document(1, 'mx234a_stackup.doc', 'Cathy McLaren'),
                            set_document(3, 'go_pirates.xls',     'Scott Glover'),
-                           set_document(3, 'go_red_sox.xls',     'Scott Glover'),
-                           set_document(4, 'eng_notes.xls',      'Lee Schaff') ]
+                           set_document(3, 'go_red_sox.xls',     'Scott Glover')]
 
-    for document in documents
-      expected_doc = expected_documents.pop
-      assert_equal(expected_doc[:document_type_id], document["document_type_id"])
+    documents.each_with_index do |document, i|
+      expected_doc = expected_documents[i]
+      assert_equal(expected_doc[:document_type_id], document.document_type_id)
       assert_equal(expected_doc[:document_name],    document.document.name)
-      assert_equal(expected_doc[:creator],          
-                   User.find(document.document.created_by).name)
+      assert_equal(expected_doc[:creator],          document.document.user.name)
     end
     
   end
