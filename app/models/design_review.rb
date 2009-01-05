@@ -84,6 +84,18 @@ class DesignReview < ActiveRecord::Base
   end
 
 
+  # Retrieve the comments entered by the user
+  #
+  # :call-seq:
+  #   comments(user) -> [design_review_comment]
+  #
+  # A list of design_review_comments entered by the user
+  #
+  def comments(user)
+    self.design_review_comments.to_ary.find_all { |comment| comment.user == user }
+  end
+
+
   # Provide a list of reviewer results with inactive reviewers that are assigned
   # to active design reviews
   #
@@ -115,7 +127,7 @@ class DesignReview < ActiveRecord::Base
       unless drr.reviewer.active?
         results_with_inactive_users << drr
       end
-    end unless @inactive_reviewer_list
+    end unless @results_with_inactive_users
 
     @results_with_inactive_users = results_with_inactive_users unless @results_with_inactive_users
     @results_with_inactive_users.collect { |result| result.reviewer }
