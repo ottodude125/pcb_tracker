@@ -19,7 +19,7 @@ p { margin: 0 }
   </tr>
   <tr>
     <td>Action</td>
-    <td><%= @params.delete('action') %></td>
+    <td><%= @params.delete('action') %>
   </tr>
   <tr>
     <td>Controller</td>
@@ -42,8 +42,8 @@ p { margin: 0 }
     <td><%= @env['HTTP_USER_AGENT'] %></td>
   </tr>
   
-  <% if @session[:user] -%>
-    <% user = @session[:user] -%>
+  <% if @session[:user_id] -%>
+    <% user = User.find(@session[:user_id]) -%>
     <tr>
       <td>User Id</td>
       <td><%= user.id %></td>
@@ -68,18 +68,18 @@ p { margin: 0 }
 <hr />
 <h3>Params</h3>
 <hr />
-<% for key, val in params -%>
+<% @params.each do |key, val| -%>
   <p><b><%= key %></b></p>
   <p><%= val.to_yaml.to_a.join("</p>\n<p>    ") %></p>
-<% end if params -%>
+<% end -%>
 
 <hr />
 <h3>Session</h3>
 <hr />
-<% for key, val in session -%>
+<%  @session.each do |key, val| -%>
   <p><b><%= key %></b></p>
   <p><%= val.to_yaml.to_a.join("</p>\n<p>    ") %></p>
-<% end if session -%>
+<% end -%>
   
 <hr />
 <h3>Environment</h3>
