@@ -1262,4 +1262,18 @@ class DesignReviewTest < Test::Unit::TestCase
   end
 
 
+  ######################################################################
+  def test_no_comments_expected
+    assert_equal([], @mx234a_pre_art_review.comments(@john_g))
+  end
+
+
+  ######################################################################
+  def test_comments_expected
+    assert_equal([design_review_comments(:comment_four),
+                  design_review_comments(:comment_one)],
+                @mx234a_pre_art_review.comments(@cathy_m))
+  end
+
+
 end
