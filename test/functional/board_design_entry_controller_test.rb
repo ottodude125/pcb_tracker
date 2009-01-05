@@ -1089,11 +1089,11 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     assert_response(200)
     board_design_list = assigns(:board_design_entries)
     assert_equal(1, board_design_list.size)
-    assert_equal(4, Document.count)
+    assert_equal(5, Document.count)
 
     
     post(:destroy, { :id => board_design_list[0].id }, hweng_session)
-    assert_equal(1, Document.count)
+    assert_equal(2, Document.count)
 
     
     post(:originator_list, {}, hweng_session)
