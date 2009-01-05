@@ -569,6 +569,8 @@ class TrackerMailer < ActionMailer::Base
     @bcc        = blind_cc
 
     @body[:review_list] = reviewer[:results]
+    @body = {:review_list => reviewer[:results],
+             :reviewer    => reviewer}
 
   end
   
