@@ -26,6 +26,17 @@ module CoreExtensions
     def simple_date
       self.strftime("%d-%b-%y")
     end
+
+
+    # Provide the time in the dd-mm-yy format.
+    #
+    # :call-seq:
+    #   simpla_date_with_timestamp -> String
+    #
+    # Returns a formatted string the represents the date.
+    def simple_date_with_timestamp
+      self.strftime("%d-%b-%y, %I:%M %p")
+    end
     
   end
   
