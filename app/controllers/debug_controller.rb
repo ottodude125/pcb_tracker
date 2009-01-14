@@ -321,11 +321,26 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   end
 
 
+  def active_users
+   @users = User.find(:all, :conditions => 'active=true', :order => 'last_name')
+   @title = 'Active Users'
+   render(:action => 'users')
+  end
+
+
   def users
    @users = User.find(:all, :order => 'last_name')
+   @title = 'All Users'
   end
-  
-  
+
+
+  def inactive_users
+   @users = User.find(:all, :conditions => 'active=false', :order => 'last_name')
+   @title = 'Inactive Users'
+   render(:action => 'users')
+  end
+
+
   def select_reviewers
     
     @review_types = ReviewType.get_review_types
