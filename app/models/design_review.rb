@@ -27,10 +27,76 @@ class DesignReview < ActiveRecord::Base
   SATURDAY = 6
 
 
+  # Retrieve a list of all active design reviews
+  #
+  # :call-seq:
+  #   active_design_reviews(user) -> [design_reviews]
+  #
+  #  Returns a list of design reviews.
+  #
+  def self.active_design_reviews
+    status_in_review      = ReviewStatus.find_by_name('In Review')
+    status_pending_repost = ReviewStatus.find_by_name('Pending Repost')
+    status_on_hold        = ReviewStatus.find_by_name('Review On-Hold')
+
+    @active_design_reviews = DesignReview.find(:all,
+                                               :conditions => "review_status_id='#{status_in_review.id}'      OR " +
+                                                              "review_status_id='#{status_pending_repost.id}' OR " +
+                                                              "review_status_id='#{status_on_hold.id}'")
+    @active_design_reviews = @active_design_reviews.sort_by { |dr| [dr.priority.value, -dr.age] }
+    @active_design_reviews
+  end
+
+
+  # Retrieve a list of all active processed reviews for which the user is
+  # assigned to perform at least one of the role reviews
+  #
+  # :call-seq:
+  #   my_processed_reviews(user) -> [design_reviews]
+  #
+  #  Returns a list of design reviews.
+  #
+  def self.my_processed_reviews(user)
+    DesignReview.active_design_reviews unless @active_design_reviews
+    my_processed_reviews = @active_design_reviews.to_ary.find_all { |dr| dr.is_reviewer?(user) }
+    my_processed_reviews.delete_if { |dr| !dr.reviewer_is_complete?(user) }
+    my_processed_reviews
+  end
+
+
+  # Retrieve a list of all active unprocessed reviews for which the user is
+  # assigned to perform at least one of the role reviews
+  #
+  # :call-seq:
+  #   my_unprocessed_reviews(user) -> [design_reviews]
+  #
+  #  Returns a list of design reviews.
+  #
+  def self.my_unprocessed_reviews(user)
+    DesignReview.active_design_reviews unless @active_design_reviews
+    my_unprocessed_reviews = @active_design_reviews.to_ary.find_all { |dr| dr.is_reviewer?(user) }
+    my_unprocessed_reviews.delete_if { |dr| dr.reviewer_is_complete?(user) }
+  end
+
+  
+  # Retrieve a list of all active reviews for which the user is not assigned to
+  # perform any of the role reviews
+  #
+  # :call-seq:
+  #   reviews_assigned_to_peers(user) -> [design_reviews]
+  #
+  #  Returns a list of design reviews.
+  #
+  def self.reviews_assigned_to_peers(user)
+    DesignReview.active_design_reviews unless @active_design_reviews
+    @active_design_reviews.to_ary.find_all { |dr| !dr.is_reviewer?(user) && dr.my_roles(user) != [] }
+  end
+
+
   # Retrieve all design reviews that have been posted at least once.
   #
   # :call-seq:
-  #   summaru_data() -> {design_reviews}
+  #   summary_data() -> {design_reviews}
   #
   #  Returns a hash of design reviewx accessed by the year and quarter.
   #
@@ -70,6 +136,102 @@ class DesignReview < ActiveRecord::Base
   end
 
 
+  # Retrieve the roles that the user is a member of for the the review.
+  #
+  # :call-seq:
+  #   my_roles(user) -> [role]
+  #
+  # Returns a list of role records 
+  #
+  def my_roles(user)
+    user.roles & self.design_review_results.collect { |drr| drr.role }
+  end
+
+
+  # Retrieve the roles that the user is assigned to for the review
+  #
+  # :call-seq:
+  #   my_assigned_roles(user) -> [role]
+  #
+  # Returns a list of role records
+  #
+  def my_assigned_roles(user)
+    roles = []
+    self.my_roles(user).each do |role|
+      design_review_result = self.design_review_results.detect { |drr| drr.role == role }
+      roles << role if design_review_result.reviewer == user
+    end
+    roles
+  end
+
+
+  # Retrieve the results for the roles that the user is assigned to for the review
+  #
+  # :call-seq:
+  #   my_results(user) -> [design_review_result]
+  #
+  # Returns a list of design_review_result records
+  #
+  def my_results(user)
+    self.design_review_results.to_ary.find_all { |drr| drr.reviewer == user }
+  end
+
+
+  # Retrieve the results for the peers of the user for the review
+  #
+  # :call-seq:
+  #   my_peer_results(user) -> [design_review_result]
+  #
+  # Returns a list of design_review_result records
+  #
+  def my_peer_results(user)
+    results = []
+    (self.my_roles(user) - self.my_assigned_roles(user)).each do |role|
+      results << self.design_review_results.detect { |drr| drr.role == role }
+    end
+    results
+  end
+
+
+  # Indicate if the reviewer has completed the review for all of the assigned
+  # roles
+  #
+  # :call-seq:
+  #   reviewer_is_complete?(user) -> boolean
+  #
+  # Returns a flag that indicate whether or not the user has completed the
+  # review.
+  #
+  def reviewer_is_complete?(user)
+
+    complete = true
+
+    self.my_assigned_roles(user).each do |my_role|
+      my_review_result = self.design_review_results.detect { |drr| drr.role == my_role }
+      complete = my_review_result.positive_response?
+      break if !complete
+    end
+
+    complete
+
+  end
+
+
+  # Indicate if the design review is active based the value in the review
+  # status field
+  #
+  # :call-seq:
+  #   active?() -> boolean
+  #
+  # The flag is set to true if the review status indicates that the design
+  # review is active.
+  #
+  def active?
+    name = self.review_status.name
+    name == 'In Review' || name == 'Pending Repost' || name == 'Review On-Hold'
+  end
+
+  
   # Indicate if there are inactive reviewers assigned to active design reviews
   #
   # :call-seq:
