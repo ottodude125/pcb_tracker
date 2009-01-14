@@ -757,52 +757,9 @@ class TrackerController < ApplicationController
   #
   def reviewer_home_setup
 
-    me = @logged_in_user
-    review_status_list = [ReviewStatus.find_by_name('In Review').id,
-                          ReviewStatus.find_by_name('Pending Repost').id,
-                          ReviewStatus.find_by_name('Review On-Hold').id]
-
-    design_reviews = []
-    review_status_list.each do |review_status_id|
-      design_reviews += DesignReview.find_all_by_review_status_id(review_status_id)
-    end
-
-    design_reviews = design_reviews.sort_by { |dr| [dr.priority.value, (10000 - dr.age)] }
-
-    @my_reviews    = []
-    @other_reviews = []
-    design_reviews.each do |design_review|
-      review_results = design_review.design_review_results
-    
-      if review_results.detect { |rr| rr.reviewer_id == me.id}
-        @my_reviews.push(design_review)
-      else
-
-        # Capture the reviewer's peer names for display.
-        design_review[:peer_list]   = []
-        design_review[:peer_result] = []
-        @logged_in_user.roles.each do |role|
-          if role.reviewer?
-            review_results.each do |review_result|
-              peer_info = {}
-              if role.id == review_result.role_id
-                peer_info[:name]   = User.find(review_result.reviewer_id).name
-                peer_info[:role]   = role.name
-                design_review[:peer_list].push(peer_info)
-                
-                design_review[:peer_result].push(review_result.result)
-              end
-            end
-          end
-        end
-
-        if design_review.design_review_results.detect { |rr| rr.role.id == @logged_in_user.active_role.id } 
-          @other_reviews.push(design_review) 
-        end
-      end
-    end
-    
-    @my_reviews.sort_by { |dr| [dr.priority.value, dr.age] }
+    @my_processed_reviews      = DesignReview.my_processed_reviews(@logged_in_user)
+    @my_unprocessed_reviews    = DesignReview.my_unprocessed_reviews(@logged_in_user)
+    @reviews_assigned_to_peers = DesignReview.reviews_assigned_to_peers(@logged_in_user)
 
   end
   
