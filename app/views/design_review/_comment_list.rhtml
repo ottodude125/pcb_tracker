@@ -4,7 +4,12 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<tr>
+<% hilight = comment_list.user == @logged_in_user %>
+<% if hilight %>
+  <tr bgcolor="yellow">
+<% else %>
+  <tr>
+<% end %>
   <td width="50%">
     <font size="-2">
       <b>Posted By:</b> <%= comment_list.user.name %>
@@ -12,11 +17,16 @@
   </td>
   <td width="50%">
     <font size="-2">
-      <b>Date:</b> <%= comment_list.created_on.strftime("%d-%b-%y, %I:%M %p")%>
+      <b>Date:</b> <%= comment_list.created_on.simple_date_with_timestamp %>
     </font>
   </td>
 </tr>
-<tr>
+
+<% if hilight %>
+  <tr bgcolor="yellow">
+<% else %>
+  <tr>
+<% end %>
   <td colspan="2">
     <% if !comment_list.highlight? %>
       <table width="99%" border="2" cellpadding="1" cellspacing="2" align="center">
