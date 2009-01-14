@@ -52,39 +52,6 @@ module TrackerHelper
 
   ######################################################################
   #
-  # get_my_results
-  #
-  # Description:
-  # Returns a list of the user's results for the design review.
-  #
-  ######################################################################
-  #
-  def get_my_results(review_id)
-
-    my_results = []
-
-    review_results = DesignReviewResult.find_all_by_design_review_id(review_id)
-    my_review_results = review_results.delete_if do |r| 
-      r.reviewer_id != @logged_in_user.id 
-    end
-
-    inlude_role = my_review_results.size > 1
-
-    my_review_results.each { |result|
-      my_result = []
-      my_result.push(result.result)
-      my_result.push(' (' + result.role.name + ')') if inlude_role
-      my_results.push(my_result)
-    }
-
-
-    return my_results
-    
-  end
-  
-  
-  ######################################################################
-  #
   # post_next_review_prompt?
   #
   # Description:
