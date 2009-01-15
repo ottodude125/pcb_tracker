@@ -15,14 +15,19 @@ require File.dirname(__FILE__) + '/../test_helper'
 
 class DesignReviewTest < Test::Unit::TestCase
 
-  fixtures(:designs,
+  fixtures(:boards,
+           :designs,
            :design_centers,
            :design_reviews,
            :design_review_comments,
            :design_review_results,
+           :design_updates,
+           :part_numbers,
+           :prefixes,
            :priorities,
            :review_statuses,
            :review_types,
+           :revisions,
            :roles,
            :roles_users,
            :users)
@@ -31,11 +36,14 @@ class DesignReviewTest < Test::Unit::TestCase
   ######################################################################
   def setup
     
-    @mx234a_pre_art_review   = design_reviews(:mx234a_pre_artwork)
-    @mx234a_placement_review = design_reviews(:mx234a_placement)
-    @mx234a_routing_review   = design_reviews(:mx234a_routing)
-    @mx234a_final_review     = design_reviews(:mx234a_final)
-    @mx234a_release_review   = design_reviews(:mx234a_release)
+    @mx234a_pre_art_review     = design_reviews(:mx234a_pre_artwork)
+    @mx234a_placement_review   = design_reviews(:mx234a_placement)
+    @mx234a_routing_review     = design_reviews(:mx234a_routing)
+    @mx234a_final_review       = design_reviews(:mx234a_final)
+    @mx234a_release_review     = design_reviews(:mx234a_release)
+    @la455b_placement_review   = design_reviews(:la455b_placement)
+    @mx600a_pre_artwork_review = design_reviews(:mx600a_pre_artwork)
+
     
     @mx234a_pre_artwork_hw = design_review_results(:mx234a_pre_artwork_hw)
 
@@ -56,9 +64,25 @@ class DesignReviewTest < Test::Unit::TestCase
     @cathy_m   = users(:cathy_m)
     @lee_s     = users(:lee_s)
     
-    @admin    = roles(:admin)
-    @designer = roles(:designer)
-    @hweng    = roles(:hweng)
+    @admin           = roles(:admin)
+    @ce_dft          = roles(:ce_dft)
+    @designer        = roles(:designer)
+    @dfm             = roles(:dfm)
+    @hweng           = roles(:hweng)
+    @library         = roles(:library)
+    @manager         = roles(:manager)
+    @mechanical      = roles(:mechanical)
+    @ops_manager     = roles(:operations_manager)
+    @pcb_admin       = roles(:pcb_admin)
+    @pcb_design      = roles(:pcb_design)
+    @pcb_input_gate  = roles(:pcb_input_gate)
+    @pcb_mechanical  = roles(:pcb_mechanical)
+    @planning        = roles(:planning)
+    @program_manager = roles(:program_manager)
+    @slm_bom         = roles(:slm_bom)
+    @slm_vendor      = roles(:slm_vendor)
+    @tde             = roles(:tde)
+    @valor           = roles(:valor)
     
   end
 
@@ -73,56 +97,56 @@ class DesignReviewTest < Test::Unit::TestCase
                   { :role     => @designer,
                     :reviewer => nil,
                     :comments => [design_review_comments(:comment_three)] },
-                  { :role     => roles(:manager),
+                  { :role     => @manager,
                     :reviewer => nil,
                     :comments => [design_review_comments(:comment_two)] },
                   { :role     => @hweng,
                     :reviewer => @lee_s,
                     :comments => [] },
-                  { :role     => roles(:valor),
+                  { :role     => @valor,
                     :reviewer => @lisa_a,
                     :comments => [design_review_comments(:comment_three)] },
-                  { :role     => roles(:ce_dft),
+                  { :role     => @ce_dft,
                     :reviewer => @espo,
                     :comments => [] },
-                  { :role     => roles(:dfm),
+                  { :role     => @dfm,
                     :reviewer => @heng_k,
                     :comments => [] },
-                  { :role     => roles(:tde),
+                  { :role     => @tde,
                     :reviewer => @rich_a,
                     :comments => [] },
-                  { :role     => roles(:mechanical),
+                  { :role     => @mechanical,
                     :reviewer => @tom_f,
                     :comments => [] },
-                  { :role     => roles(:pcb_design),
+                  { :role     => @pcb_design,
                     :reviewer => @jim_l,
                     :comments => [design_review_comments(:comment_two)] },
-                  { :role     => roles(:planning),
+                  { :role     => @planning,
                     :reviewer => @matt_d,
                     :comments => [] },
-                  { :role     => roles(:pcb_input_gate),
+                  { :role     => @pcb_input_gate,
                     :reviewer => @cathy_m,
                     :comments => [design_review_comments(:comment_four),
                                   design_review_comments(:comment_one)] },
-                  { :role     => roles(:library),
+                  { :role     => @library,
                     :reviewer => @dave_m,
                     :comments => [] },
-                  { :role     => roles(:pcb_mechanical),
+                  { :role     => @pcb_mechanical,
                     :reviewer => @john_g,
                     :comments => [] },
-                  { :role     => roles(:slm_bom),
-                    :reviewer => users(:art_d),
+                  { :role     => @slm_bom,
+                    :reviewer => @art_d,
                     :comments => [] },
-                  { :role     => roles(:slm_vendor),
+                  { :role     => @slm_vendor,
                     :reviewer => @dan_g,
                     :comments => [] },
-                  { :role     => roles(:operations_manager),
+                  { :role     => @ops_manager,
                     :reviewer => nil,
                     :comments => [] },
-                  { :role     => roles(:pcb_admin),
+                  { :role     => @pcb_admin,
                     :reviewer => nil,
                     :comments => [] },
-                  { :role     => roles(:program_manager),
+                  { :role     => @program_manager,
                     :reviewer => nil,
                     :comments => [] },
                   { :role     => roles(:compliance_emc),
@@ -198,19 +222,19 @@ class DesignReviewTest < Test::Unit::TestCase
   def test_generate_reviewer_lists
     
     keys = [:group, :group_id, :reviewers, :reviewer_id]
-    gold_list = [{ :group       => roles(:dfm).display_name,
-                   :group_id    => roles(:dfm).id,
+    gold_list = [{ :group       => @dfm.display_name,
+                   :group_id    => @dfm.id,
                    :reviewers   => [users(:pat_a),
                                     users(:john_ju),
                                     @heng_k],
                    :reviewer_id => @heng_k.id},
-                 { :group       => roles(:ce_dft).display_name,
-                   :group_id    => roles(:ce_dft).id,
+                 { :group       => @ce_dft.display_name,
+                   :group_id    => @ce_dft.id,
                    :reviewers   => [@espo,
                                     users(:ted_p)],
                    :reviewer_id => @espo.id},
-                 { :group       => roles(:library).display_name,
-                   :group_id    => roles(:library).id,
+                 { :group       => @library.display_name,
+                   :group_id    => @library.id,
                    :reviewers   => [@dave_m,
                                     users(:sheela_p)],
                    :reviewer_id => @dave_m.id},
@@ -221,8 +245,8 @@ class DesignReviewTest < Test::Unit::TestCase
                                     users(:john_j),
                                     @lee_s],
                    :reviewer_id => @lee_s.id},
-                 { :group       => roles(:mechanical).display_name,
-                   :group_id    => roles(:mechanical).id,
+                 { :group       => @mechanical.display_name,
+                   :group_id    => @mechanical.id,
                    :reviewers   => [@tom_f,
                                     users(:dave_l)],
                    :reviewer_id => @tom_f.id},
@@ -231,40 +255,40 @@ class DesignReviewTest < Test::Unit::TestCase
                    :reviewers   => [@anthony_g,
                                     users(:tony_p)],
                    :reviewer_id => @anthony_g.id},
-                 { :group       => roles(:planning).display_name,
-                   :group_id    => roles(:planning).id,
+                 { :group       => @planning.display_name,
+                   :group_id    => @planning.id,
                    :reviewers   => [users(:tina_d),
                                     @matt_d],
                    :reviewer_id => @matt_d.id},
-                 { :group       => roles(:pcb_input_gate).display_name,
-                   :group_id    => roles(:pcb_input_gate).id,
+                 { :group       => @pcb_input_gate.display_name,
+                   :group_id    => @pcb_input_gate.id,
                    :reviewers   => [users(:jan_k),
                                     @cathy_m],
                    :reviewer_id => @cathy_m.id},
-                 { :group       => roles(:pcb_design).display_name,
-                   :group_id    => roles(:pcb_design).id,
+                 { :group       => @pcb_design.display_name,
+                   :group_id    => @pcb_design.id,
                    :reviewers   => [@jim_l],
                    :reviewer_id => @jim_l.id},
-                 { :group       => roles(:pcb_mechanical).display_name,
-                   :group_id    => roles(:pcb_mechanical).id,
+                 { :group       => @pcb_mechanical.display_name,
+                   :group_id    => @pcb_mechanical.id,
                    :reviewers   => [@john_g,
                                     users(:mary_t)],
                    :reviewer_id => @john_g.id},
-                 { :group       => roles(:slm_bom).display_name,
-                   :group_id    => roles(:slm_bom).id,
+                 { :group       => @slm_bom.display_name,
+                   :group_id    => @slm_bom.id,
                    :reviewers   => [users(:art_d)],
                    :reviewer_id => users(:art_d).id},
-                 { :group       => roles(:slm_vendor).display_name,
-                   :group_id    => roles(:slm_vendor).id,
+                 { :group       => @slm_vendor.display_name,
+                   :group_id    => @slm_vendor.id,
                    :reviewers   => [@dan_g],
                    :reviewer_id => @dan_g.id},
-                 { :group       => roles(:tde).display_name,
-                   :group_id    => roles(:tde).id,
+                 { :group       => @tde.display_name,
+                   :group_id    => @tde.id,
                    :reviewers   => [@rich_a,
                                     users(:man_c)],
                    :reviewer_id => @rich_a.id},
-                 { :group       => roles(:valor).display_name,
-                   :group_id    => roles(:valor).id,
+                 { :group       => @valor.display_name,
+                   :group_id    => @valor.id,
                    :reviewers   => [@lisa_a,
                                     @scott_g,
                                     users(:bob_g),
@@ -792,37 +816,32 @@ class DesignReviewTest < Test::Unit::TestCase
     reviews.each { |key, dr_data| assert_equal(boston, dr_data[:review].design_center) }
     
     reviews.each do |key, dr_data|
-    
+
       dr_data[:review].design_updates.clear
     
       assert(!dr_data[:review].update_design_center(nil, @cathy_m))
-      
-      assert_equal(boston, dr_data[:review].design_center) 
+      assert_equal(boston,     dr_data[:review].design_center)
       dr_data[:review].reload
-      assert_equal(boston, dr_data[:review].design_center)
-      
-      assert_equal(0, dr_data[:review].design_updates.size)
+      assert_equal(boston,     dr_data[:review].design_center)
+      assert_equal(0,          dr_data[:review].design_updates.size)
 
     end
 
-    reviews.each do |key, dr_data| 
+    reviews.each do |key, dr_data|
       assert(!dr_data[:review].update_design_center(boston, @cathy_m))
-      
-      assert_equal(boston, dr_data[:review].design_center)
+      assert_equal(boston,     dr_data[:review].design_center)
       dr_data[:review].reload
-      assert_equal(boston, dr_data[:review].design_center)
-      
-      assert_equal(0, dr_data[:review].design_updates.size)
-
+      assert_equal(boston,     dr_data[:review].design_center)
+      assert_equal(0,          dr_data[:review].design_updates.size)
     end
 
     reviews.each do |key, dr_data| 
       assert(dr_data[:review].update_design_center(oregon, @cathy_m))
       
-      assert_equal(oregon, dr_data[:review].design_center)
+      assert_equal(oregon,     dr_data[:review].design_center)
       dr_data[:review].reload
-      assert_equal(oregon, dr_data[:review].design_center)
-      assert_equal(1, dr_data[:review].design_updates.size)
+      assert_equal(oregon,     dr_data[:review].design_center)
+      assert_equal(1,          dr_data[:review].design_updates.size)
       update_list = dr_data[:review].design_updates
 
       update = update_list[0]
@@ -1273,6 +1292,250 @@ class DesignReviewTest < Test::Unit::TestCase
     assert_equal([design_review_comments(:comment_four),
                   design_review_comments(:comment_one)],
                 @mx234a_pre_art_review.comments(@cathy_m))
+  end
+
+
+  ######################################################################
+  def test_no_active_design_reviews
+    DesignReview.delete_all
+    assert_equal([], DesignReview.active_design_reviews)
+  end
+
+
+  ######################################################################
+  def test_active_design_reviews_only_returns_active_reviews
+    DesignReview.active_design_reviews.each do |dr|
+      assert(dr.in_review? || dr.pending_repost? || dr.on_hold?)
+    end
+  end
+
+
+  ######################################################################
+  def test_active_design_reviews_only_skips_nonactive_reviews
+    active_design_reviews = DesignReview.active_design_reviews
+    all_design_reviews    = DesignReview.find(:all)
+    (all_design_reviews - active_design_reviews).each do |dr|
+      assert(!(dr.in_review? || dr.pending_repost? || dr.on_hold?))
+    end
+  end
+
+
+  ######################################################################
+  def test_active
+    design_review              = DesignReview.new
+    active_review_status_names = ['In Review', 'Pending Repost', 'Review On-Hold']
+
+    ReviewStatus.find(:all).each do |review_status|
+      design_review.review_status = review_status
+      if active_review_status_names.detect { |name| name == design_review.review_status.name }
+        assert(design_review.active?)
+      else
+        assert(!design_review.active?)
+      end
+    end
+    
+  end
+
+
+  ######################################################################
+  def notest_dump
+    active_design_reviews = DesignReview.active_design_reviews
+    active_design_reviews.each do |design_review|
+      puts '^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^'
+      puts 'Design Review:  ' + design_review.id.to_s
+      puts 'Name:           ' + design_review.design.directory_name
+      puts 'Status:         ' + design_review.review_status.name
+      puts 'Type:           ' + design_review.review_type.name
+      puts 'Review Results: ' + design_review.design_review_results.size.to_s
+      design_review.design_review_results.each do |drr|
+        puts '  --------------------------------------------------------'
+        puts '  DRR:      ' + drr.id.to_s
+        puts '  Result:   ' + drr.result
+        puts '  Reviewer: ' + drr.reviewer.name
+        puts '  Role:     ' + drr.role.name
+      end
+    end
+  end
+
+
+  ######################################################################
+  def test_my_processed_reviews
+
+    my_processed_design_reviews = DesignReview.my_processed_reviews(@espo)
+    my_processed_design_reviews.each do |dr|
+      dr.design_review_results.each do |drr|
+        assert(drr.result == 'APPROVED' || drr.result == 'WAIVED') if drr.reviewer == @espo
+      end
+      dr.design_review_results.delete_if { |drr| drr.reviewer == @espo }
+    end
+
+    # Look through the other results and make sure that either the review was not
+    # assigned to espo, or if it was then espo has not processed the review.
+    (DesignReview.active_design_reviews - my_processed_design_reviews).each do |dr|
+      dr.design_review_results.each do |drr|
+        assert((drr.reviewer != @espo) ||
+               ( (drr.reviewer == @espo) &&
+                !(drr.result == 'APPROVED' || drr.result == 'WAIVED')) )
+      end
+    end
+
+  end
+
+
+  ######################################################################
+  def test_my_unprocessed_reviews
+
+    my_unprocessed_design_reviews = DesignReview.my_unprocessed_reviews(@espo)
+    my_unprocessed_design_reviews.each do |dr|
+      dr.design_review_results.each do |drr|
+        assert(drr.result != 'APPROVED' && drr.result != 'WAIVED') if drr.reviewer == @espo
+      end
+      dr.design_review_results.delete_if { |drr| drr.reviewer == @espo }
+    end
+
+    # Look through the other results and make sure that either the review was not
+    # assigned to espo, or if it was then espo has processed the review.
+    (DesignReview.active_design_reviews - my_unprocessed_design_reviews).each do |dr|
+      dr.design_review_results.each do |drr|
+        assert((drr.reviewer != @espo) ||
+               ( (drr.reviewer == @espo) &&
+                (drr.result == 'APPROVED' || drr.result == 'WAIVED')) )
+      end
+    end
+
+  end
+
+
+  ######################################################################
+  def test_aaa_reviews_assigned_to_peers_role_in_all_reviews
+
+  #
+  #  Named test_aaa_reviews_assigned_to_peers_role_in_all_reviews to force
+  #  the test to run before test_no_active_design_reviews.  There is not
+  #  obvious reason why this fails when that test is run first.
+  #  TODO: Figure it out.
+  #
+
+    reviews_assigned_to_peers = DesignReview.reviews_assigned_to_peers(@lee_s)
+    reviews_assigned_to_peers.each do |dr|
+      assert(!dr.design_review_results.detect { |drr| drr.reviewer == @lee_s })
+    end
+
+    # Look through the other results and make sure that if the user has a role
+    # in the review that the user is assigned.
+    (DesignReview.active_design_reviews - reviews_assigned_to_peers).each do |dr|
+      review_roles   = dr.design_review_results.collect { |drr| drr.role }
+      roles_assigned = review_roles & @lee_s.roles != []
+      assert(!roles_assigned || (roles_assigned && dr.is_reviewer?(@lee_s)))
+    end
+
+  end
+
+
+  ######################################################################
+  def test_reviews_assigned_to_peers_role_not_in_all_reviews
+
+    reviews_assigned_to_peers = DesignReview.reviews_assigned_to_peers(@lisa_a)
+    reviews_assigned_to_peers.each do |dr|
+      assert(!dr.design_review_results.detect { |drr| drr.reviewer == @lisa_a })
+    end
+
+    # Look through the other results and make sure that if the user has a role
+    # in the review that the user is assigned.
+    (DesignReview.active_design_reviews - reviews_assigned_to_peers).each do |dr|
+      review_roles = dr.design_review_results.collect { |drr| drr.role }
+      roles_assigned = review_roles & @lisa_a.roles != []
+      assert(!roles_assigned || (roles_assigned && dr.is_reviewer?(@lisa_a)))
+    end
+
+  end
+
+
+  ######################################################################
+  def test_my_roles_no_roles
+    assert_equal([], @la455b_placement_review.my_roles(@matt_d))
+  end
+
+
+  ######################################################################
+  def test_my_roles_one_role
+    assert_equal([@ce_dft], @la455b_placement_review.my_roles(@espo))
+  end
+
+
+  ######################################################################
+  def test_my_roles_multiple_roles
+    assert_equal([@hweng, @tde], @mx600a_pre_artwork_review.my_roles(@rich_a))
+  end
+
+
+  ######################################################################
+  def test_complete_no_roles
+    assert(@la455b_placement_review.reviewer_is_complete?(@matt_d))
+  end
+
+
+  ######################################################################
+  def test_complete_one_role
+    assert(@la455b_placement_review.reviewer_is_complete?(@espo))
+  end
+
+
+  ######################################################################
+  def test_incomplete_one_role
+    assert(!@la455b_placement_review.reviewer_is_complete?(@tom_f))
+  end
+
+
+  ######################################################################
+  def test_complete_multiple_roles
+    assert(@mx600a_pre_artwork_review.reviewer_is_complete?(@rich_a))
+  end
+
+
+  ######################################################################
+  def test_incomplete_multiple_roles_hw_role_incomplete
+    hw_result = design_review_results(:pcb252_600_a0_o_pre_artwork_hw)
+    hw_result.result = 'No Response'
+    hw_result.save
+    @mx600a_pre_artwork_review.reload
+    assert(!@mx600a_pre_artwork_review.reviewer_is_complete?(@rich_a))
+  end
+
+
+  ######################################################################
+  def test_incomplete_multiple_roles_tde_role_incomplete
+    tde_result = design_review_results(:pcb252_600_a0_o_pre_artwork_tde)
+    tde_result.result = 'No Response'
+    tde_result.save
+    @mx600a_pre_artwork_review.reload
+    assert(!@mx600a_pre_artwork_review.reviewer_is_complete?(@rich_a))
+  end
+
+
+  ######################################################################
+  def test_incomplete_multiple_roles_both_roles_incomplete
+    hw_result = design_review_results(:pcb252_600_a0_o_pre_artwork_hw)
+    hw_result.result = 'No Response'
+    hw_result.save
+    tde_result = design_review_results(:pcb252_600_a0_o_pre_artwork_tde)
+    tde_result.result = 'No Response'
+    tde_result.save
+    @mx600a_pre_artwork_review.reload
+    assert(!@mx600a_pre_artwork_review.reviewer_is_complete?(@rich_a))
+  end
+
+
+  ######################################################################
+  def test_my_peer_results_no_peers
+    assert_equal([], @mx234a_release_review.my_peer_results(@lee_s))
+  end
+
+
+  ######################################################################
+  def test_my_peer_results_peers
+    assert_equal([design_review_results(:pcb252_600_a0_o_pre_artwork_hw)],
+                 @mx600a_pre_artwork_review.my_peer_results(@lee_s))
   end
 
 
