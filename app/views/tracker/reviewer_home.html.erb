@@ -48,34 +48,16 @@
       <table border="0" width="100%">
         <tr>
           <td>
-            <table align="left" border="0" cellspacing="0" width="100%">
-      	      <tr>
-                <th colspan="8" class="teraheader">
-                  My Reviews
-                </th>
-              </tr>
-              
-              <% if @my_reviews.size > 0 %>
-                <tr class="subheading">
-                  <th align="left" width="60">&nbsp;</th>
-                  <th align="left" width="160">PCB Part Number Rev</th>
-                  <th align="left" width="100">Type</th>
-                  <th align="left" width="70">Status</th>
-                  <th align="left" width="140">Posted By</th>
-                  <th align="left" width="45" title="Age in work days">Age</th>
-                  <td>&nbsp;</td>
-                </tr>
-                <%= render( :partial    => 'reviewer_home_list_stripes',
-                            :collection => @my_reviews,
-                            :locals     => { :my_reviews => true } )%>
-              <% else %>
-                <tr>
-                  <th>
-                    You have no active reviews.
-                  </th>
-                </tr>
-              <% end %>
-            </table>
+            <%= render( :partial    => 'reviewers_list',
+                        :locals     => { :title   => "My Unprocessed Reviews",
+                                         :reviews => @my_unprocessed_reviews }) %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <%= render( :partial    => 'reviewers_list',
+                        :locals     => { :title   => "My Processed Reviews",
+                                         :reviews => @my_processed_reviews }) %>
           </td>
         </tr>
       </table>
@@ -84,34 +66,32 @@
 
   <tr>
     <td>
-      <table border="0">
+      <table border="0" width="100%">
         <tr>
           <td>
-            <table align="left" border="0" cellspacing="0">
+            <table align="left" border="0" cellspacing="0" width="100%">
       	      <tr>
                 <th colspan="8" class="teraheader">
                   Other Reviews
                 </th>
               </tr>
-              
-              <% if @other_reviews.size > 0 %>
+
+              <% if @reviews_assigned_to_peers.size > 0 %>
                 <tr class="subheading">
                   <th align="left" width="60">&nbsp;</th>
-                  <th align="left" width="160">PCB Part Number Rev</th>
+                  <th align="l@my_unprocessed_reviews@my_unprocessed_reviewseft" width="160">PCB Part Number Rev</th>
                   <th align="left" width="100">Type</th>
                   <th align="left" width="70">Status</th>
-                  <th align="left" width="140">Posted By</th>
+                  <th align="l@my_unprocessed_reviewseft" width="140">Posted By</th>
                   <th align="left" width="45" title="Age in work days">Age</th>
-                  <th align="left" width="100">Results</th>
-                  <th align="left" width="180">Reviewer(s)</th>
                 </tr>
                 <%= render( :partial    => 'reviewer_home_list_stripes',
-                            :collection => @other_reviews,
+                            :collection => @reviews_assigned_to_peers,
                             :locals     => { :my_reviews => false } )%>
               <% else %>
                 <tr>
                   <th>
-                    There are no active reviews.
+                    None
                   </th>
                 </tr>
               <% end %>
