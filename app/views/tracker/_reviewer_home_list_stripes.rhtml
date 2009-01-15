@@ -8,7 +8,7 @@
 <tr class="<%= reviewer_home_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
 
   <td align="left" class="th1">
-    <%= Priority.find(reviewer_home_list_stripes.priority_id).name %>
+    <%= reviewer_home_list_stripes.priority.name %>
   </td>
   <td>
     <%= link_to(reviewer_home_list_stripes.design.directory_name,
@@ -53,52 +53,43 @@
         </td>
       </tr>
     </table>
-    <table cellpadding="0" cellspacing="1" border="0">
-      <% for result in get_my_results(reviewer_home_list_stripes.id) %>
-        <tr>
-          <% if result.size == 1 %>
-            <td class="reviewer_peer"><%= result[0] %></td>
-          <% elsif result.size == 2 %>
-            <td class="reviewer_peer"><%= result[0] %> - <%= result[1]%></td>
-          <% else %>
-            <td>&nbsp;</td>
-          <% end %>
-        </tr>
-      <% end %>
-    </table>
-  </td>
-  <% else %>
-  <td>
-    <table border="0" cellpadding="0" cellspacing="0">
-      <% for result in reviewer_home_list_stripes[:peer_result] %>
-        <tr>
-          <td class="reviewer_peer">
-            <%= result %>
-          </td>
-        </tr>
-      <% end %>
-    </table>
-  </td>
-  <td>
-    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <% for reviewer in reviewer_home_list_stripes[:peer_list] %>
-        <tr>
-          <td class="reviewer_peer" valign="top">
-            <%= reviewer[:name] %>
-          </td>
-          <td class="reviewer_peer">
-            <% if reviewer_home_list_stripes[:peer_list].size > 1 %>
-              <%= reviewer[:role] %>
-            <% else %>
-              &nbsp;
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
+    <table>
+      <tr>
+        <td><b><%= reviewer_home_list_stripes.comments(@logged_in_user).size %> Comments</b></td>
+      </tr>
     </table>
   </td>
   <% end %>
   
 </tr>
 
+<% if !my_reviews || 1==1 %>
+  <tr class="<%= reviewer_home_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
+    <td>&nbsp;</td>
+    <% columns = my_reviews ? 6 : 5 %>
+    <td colspan="<%= columns %> ">
+      <table width="500" border="0" cellspacing="1">
+        <tr>
+          <th width="30%">Role</th>
+          <th width="30%">Reviewer</th>
+          <th width="40%">Result</th>
+        </tr>
+        <% reviewer_home_list_stripes.my_results(@logged_in_user).each do |result| %>
+          <tr>
+            <td><%= result.role.name %></td>
+            <td><%= result.reviewer.name %></td>
+            <td><%= result.result %></td>
+          </tr>
+        <% end if my_reviews %>
+        <% reviewer_home_list_stripes.my_peer_results(@logged_in_user).each do |result| %>
+          <tr>
+            <td><%= result.role.name %></td>
+            <td><%= result.reviewer.name %></td>
+            <td><%= result.result %></td>
+          </tr>
+        <% end %>
+      </table>
+    </td>
+  </tr>
+<% end %>
 
