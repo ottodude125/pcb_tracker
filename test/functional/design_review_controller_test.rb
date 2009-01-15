@@ -626,7 +626,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     assert_equal(14, pre_artwork_dr.design_review_results.size)
     for review_result in pre_artwork_dr.design_review_results
-      assert_equal('None', review_result.result)
+      assert_equal('No Response', review_result.result)
     end
 
     assert_equal(0, pre_artwork_dr.design_review_comments.size)
@@ -694,7 +694,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     assert_equal(9, mx234a_final.design_review_results.size)
     for review_result in mx234a_final.design_review_results
-      assert_equal('None', review_result.result)
+      assert_equal('No Response', review_result.result)
     end
 
     assert_equal(0, mx234a_final.design_review_comments.size)
@@ -818,7 +818,7 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     assert_equal(14, mx234a_pre_artwork.design_review_results.size)
     for review_result in mx234a_pre_artwork.design_review_results
-      assert_equal('None', review_result.result)
+      assert_equal('No Response', review_result.result)
     end
 
     assert_equal(4, mx234a_pre_artwork.design_review_comments.size)
