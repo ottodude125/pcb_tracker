@@ -7,7 +7,7 @@
 
 <table border="1" width="80%" cellspacing="1" cellpadding="2">
   <tr>
-    <td colspan="4">
+    <td colspan="5">
       <table width="100%" cellspacing="0">
         <tr class="teraheader">
           <th align="left" width="50%" class="teraheader">Review Results</th>
@@ -23,6 +23,14 @@
     </td>
   </tr>
 
+  <tr class="teraheader">
+    <th>Reviewer</th>
+    <th>Role</th>
+    <th>Result</th>
+    <th>Timestamp</th>
+    <th>Comments</th>
+  </tr>
+
   <% @review_results.each do |review_result| %>
     <% if review_result.result == "No Response" %>
     <tr class="no_response">
@@ -36,17 +44,52 @@
     <tr class="withdrawn">
     <% end %>
 
+    <% bold_entry = review_result.reviewer == @logged_in_user %>
+
       <td align="left">
-        <%= User.find(review_result.reviewer_id).name %>
+        <% if bold_entry %>
+          <b>
+        <% end  %>
+        <%= review_result.reviewer.name %>
+        <% if bold_entry %>
+          </b>
+        <% end  %>
       </td>
       <td align="left">
+        <% if bold_entry %>
+          <b>
+        <% end  %>
         <%= review_result.role.display_name %>
+        <% if bold_entry %>
+          </b>
+        <% end  %>
       </td>
       <td align="left">
+        <% if bold_entry %>
+          <b>
+        <% end  %>
         <%= review_result.result %>
+        <% if bold_entry %>
+          </b>
+        <% end  %>
       </td>
       <td align="left">
-        <%= review_result.reviewed_on.strftime("%d-%b-%y, %I:%M %p") %>
+        <% if bold_entry %>
+          <b>
+        <% end  %>
+        <%= review_result.reviewed_on.simple_date_with_timestamp %>
+        <% if bold_entry %>
+          </b>
+        <% end  %>
+      </td>
+      <td align="center">
+        <% if bold_entry %>
+          <b>
+        <% end  %>
+        <%= review_result.design_review.comments(review_result.reviewer).size %>
+        <% if bold_entry %>
+          </b>
+        <% end  %>
       </td>
     </tr>
   <% end %>
