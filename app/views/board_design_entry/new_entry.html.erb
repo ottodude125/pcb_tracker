@@ -7,20 +7,22 @@
 
 <% if @user_action == 'updating' %>
 
-  <% @heading = "PCB Engineering - Updating #{@board_design_entry.design_name}"%>
+  <% @heading = "PCB Engineering - Updating #{@board_design_entry.design_name}"
 
-  <%  action = { :action      => 'update_entry', 
-                 :id          => @board_design_entry.id,
-                 :user_action => 'updating',
-                 :viewer      => @viewer } %>
+     action   = { :action      => 'update_entry',
+                  :id          => @board_design_entry.id,
+                  :user_action => 'updating',
+                  :viewer      => @viewer }
+     user     = @board_design_entry.user %>
 
 <% elsif @user_action == 'adding' %>
 
-  <% @heading = "PCB Engineering - New Entry"%>
+  <% @heading = "PCB Engineering - New Entry"
   
-  <%action = { :action      => 'update_entry', 
-               :id          => @board_design_entry.id,
-               :user_action => 'adding' } %>
+     action   = { :action      => 'update_entry',
+                  :id          => @board_design_entry.id,
+                  :user_action => 'adding' }
+     user     = @logged_in_user %>
                       
 <% end %>
 
@@ -35,7 +37,7 @@
   <tr>
   
     <td class="label">Originator: </td>
-    <td class="data"  colspan="2"><%= @logged_in_user.name %></td>
+    <td class="data"  colspan="2"><%= user.name %></td>
     
     <td class="label">Division: </td>
     <td class="data">
@@ -45,7 +47,7 @@
       <%= options_from_collection_for_select(@division_list,
                                              "id",
                                              "name",
-                                             @logged_in_user.division_id) %>
+                                             user.division_id) %>
       </select>
     </td>
 
@@ -57,7 +59,7 @@
       <%= options_from_collection_for_select(@location_list,
                                              "id",
                                              "name",
-                                             @logged_in_user.location_id) %>
+                                             user.location_id) %>
       </select>
     </td>
   </tr>
