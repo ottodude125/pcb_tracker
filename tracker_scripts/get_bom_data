@@ -7,13 +7,19 @@
 # $Id$
 #####################################################
 
-if [ "X$1" = "X" ]; then
-  output_path=/hwnet/dtg_devel/tcbom/tracker_data.txt
+if [ $# = 0 ] ; then
+    outfile=/hwnet/dtg_devel/tcbom/tracker_data.txt
 else
-  output_path=$1
+    outfile=$1
+fi
+
+rooted=`echo $outfile | awk '/^\//{print}'`
+if [ X$rooted = X ]; then
+    #unrooted
+    outfile=$PWD/$outfile
 fi
 
 cd /hwnet/dtg_devel/web/etg/apps/pcbtr_production_branch/pcb_tracker
 
 /usr/local/bin/ruby script/runner -e production 'Design.bom_upload_data' > \
-    $output_path
+    $outfile
