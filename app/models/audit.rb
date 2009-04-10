@@ -1707,6 +1707,67 @@ PEER_AUDIT       = 2
     end
       
   end
+
+
+  # Dump the audit and all of the associated design checks
+  #
+  # :call-seq:
+  #   dump_all() -> []
+  #
+  #  Produces a dump of the audit.
+  def dump_all
+    puts "----------------------------------------------------------------------"
+    puts "  AUDIT ID: #{self.id}\t\t\tDESIGN:   #{self.design.directory_name}"
+    puts "  DESIGN CHECKS: #{self.design_checks.size.to_s}"
+    puts "  SELF COMPLETE: #{self.designer_complete?.to_s} " +
+         "  #{self.designer_completed_checks.to_s} (#{self.self_percent_complete.to_s}%)\t\t" +
+         "  PEER COMPLETE: #{self.auditor_complete?.to_s}  " +
+         "  #{self.auditor_completed_checks.to_s} (#{self.peer_percent_complete.to_s}%)"
+    puts "----------------------------------------------------------------------"
+
+    self.design_checks.each do |design_check|
+      printf("  DESIGN CHECK ID: %5d\n", design_check.id)
+      printf("     Self Auditor: %25s  Result: %10s     At: %25s\n",
+             User.find(design_check.designer_id).name,
+             design_check.designer_result,
+             design_check.designer_checked_on.format_dd_mm_yy_at_timestamp.to_s) if design_check.designer_id > 0
+      printf("     Peer Auditor: %25s  Result: %10s     At: %25s\n",
+             User.find(design_check.auditor_id).name,
+             design_check.auditor_result,
+             design_check.auditor_checked_on.format_dd_mm_yy_at_timestamp.to_s) if design_check.auditor_id > 0
+    end
+    
+    puts "----------------------------------------------------------------------"
+  end
+
+
+  # Reset the audit and all of the associated design checks
+  #
+  # :call-seq:
+  #   reset() -> []
+  #
+  #  Updates the audit record to reset as well as all of the associated
+  #  design check records.
+  def reset
+    self.skip                      = false
+    self.designer_complete         = false
+    self.designer_completed_checks = 0
+    self.auditor_complete          = false
+    self.auditor_completed_checks  = 0
+    self.save
+
+    now = Time.now
+    self.design_checks.each do |design_check|
+      design_check.auditor_result      = 'None'
+      design_check.designer_result     = 'None'
+      design_check.auditor_checked_on  = now
+      design_check.designer_checked_on = now
+      design_check.save
+    end
+
+    nil
+    
+  end
     
   
   ##############################################################################
