@@ -80,7 +80,7 @@ class OiAssignmentTest < Test::Unit::TestCase
   ######################################################################
   def test_task_email_update_header
   
-    date_assigned = Time.local(2007, 'feb', 15, 13, 16).strftime("%d-%b-%y, %I:%M %p %Z")
+    date_assigned = Time.local(2007, 'feb', 15, 13, 16).format_dd_mon_yy('timestamp')
     assert_equal("------------------------------------------------------------------------\n" +
                  "         Design : pcb252_234_a0_g\n"                                        +
                  "       Category : Placement\n"                                              +
@@ -92,8 +92,8 @@ class OiAssignmentTest < Test::Unit::TestCase
                  "------------------------------------------------------------------------\n",
                  @first_assignment.email_update_header)
  
-    date_assigned  = Time.local(2007, 'feb', 16, 11, 20).strftime("%d-%b-%y, %I:%M %p %Z")
-    date_completed = Time.local(2007, 'mar',  9, 16, 45).strftime("%d-%b-%y, %I:%M %p %Z")
+    date_assigned  = Time.local(2007, 'feb', 16, 11, 20).format_dd_mon_yy('timestamp')
+    date_completed = Time.local(2007, 'mar',  9, 16, 45).format_dd_mon_yy('timestamp')
     assert_equal("------------------------------------------------------------------------\n" +
                  "         Design : pcb252_234_a0_g\n"                                        +
                  "       Category : Placement\n"                                              +
