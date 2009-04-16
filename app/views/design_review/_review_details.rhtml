@@ -42,8 +42,8 @@
     </td>
     <td width="150" class="th1">Design Data:</td>
     <td>
-      <% if @design_review.design_center_id > 0 %>
-        <%= link_to(@design_review.design_center.name,
+      <% if @design_review.design.design_center %>
+        <%= link_to(@design_review.design.design_center.name,
                     design_center_path(@design_review),
                     :popup => true) %>
       <% else %>
@@ -67,7 +67,7 @@
   <% if @design_review.on_hold? %>
   <tr>
     <td class="th1">Placed On Hold:</td>
-    <td><%= @design_review.placed_on_hold_on.strftime("%d-%b-%y, %I:%M %p") %></td>
+    <td><%= @design_review.placed_on_hold_on.format_dd_mon_yy('timestamp') %></td>
     <td class="th1">Days On Hold:</td>
     <td><%= sprintf("%4.1f", @design_review.time_on_hold.to_f / 1.day) %></td>
   </tr>
@@ -79,7 +79,7 @@
     <% if @design_review.posting_count > 0 %>
       <td class="th1">Originally Posted:</td>
       <td>
-        <%= @design_review.created_on.strftime("%d-%b-%y, %I:%M %p") %>
+        <%= @design_review.created_on.format_dd_mon_yy('timestamp') %>
       </td>
     <% end %>
   </tr>
@@ -106,7 +106,7 @@
     <% if @design_review.posting_count > 0 %>
       <td class="th1">Last Posted:</td>
       <td>
-        <%= @design_review.reposted_on.strftime("%d-%b-%y, %I:%M %p") %>
+        <%= @design_review.reposted_on.format_dd_mon_yy('timestamp') %>
       </td>
     <% end %>
   </tr>
