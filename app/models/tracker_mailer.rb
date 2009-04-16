@@ -208,7 +208,11 @@ class TrackerMailer < ActionMailer::Base
                           cc_list = [],
                           sent_at = Time.now)
 
-    design_review = design.get_phase_design_review
+    if !design.complete?
+      design_review = design.get_phase_design_review
+    else
+      design_review = design.design_reviews.last
+    end
     @subject     = subject_prefix(design)                 + 
                    'The '                                 +
                    design_review.review_type.name         +
@@ -541,6 +545,24 @@ class TrackerMailer < ActionMailer::Base
     @bcc        = blind_cc
     
   end
+
+
+  def ping_design_center_summary(design_center_summary, sent_at = Time.now)
+
+    @subject    = 'Summary of design center setttings'
+    @body       = { :summary => design_center_summary }
+
+    recipients = add_role_members(['Manager', 'PCB Input Gate'])
+
+    @recipients = recipients.uniq
+    @from       = Pcbtr::SENDER
+    @sent_on    = sent_at
+    #@cc         = design_center_summary[:link_bad].collect { |d| d.get_phase_design_review.designer.email}
+    #@cc        -= @recipients
+    @bcc        = blind_cc
+
+  end
+
 
 
   ######################################################################
