@@ -256,7 +256,7 @@ class Checklist < ActiveRecord::Base
     self.minor_rev_number = 0
     self.major_rev_number = latest_release.major_rev_number + 1
     self.released         = 1
-    self.released_on      = ''
+    self.released_on      = Time.now
     self.new_design_self_check_count = self.full_review_self_check_count
     self.new_design_peer_check_count = self.full_review_peer_check_count
     self.bareboard_design_self_check_count = self.partial_review_self_check_count
