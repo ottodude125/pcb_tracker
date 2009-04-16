@@ -28,7 +28,7 @@
         <% for design_center in @design_centers[ranges[1][:start]..ranges[1][:stop]] %>
           <tr>
             <td align="left">
-              <% if @design_review.design_center_id == design_center.id %>
+              <% if @design_review.design.design_center_id == design_center.id %>
                 <%= radio_button(:design_center,
                                  'location',
                                  design_center.id,
@@ -52,7 +52,7 @@
         <% for design_center in @design_centers[ranges[2][:start]..ranges[2][:stop]] %>
           <tr>
             <td align="left">
-              <% if @design_review.design_center_id == design_center.id %>
+              <% if @design_review.design.design_center_id == design_center.id %>
                 <%= radio_button(:design_center,
                                  'location',
                                  design_center.id,
