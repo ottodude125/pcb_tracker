@@ -13,6 +13,7 @@
 class Design < ActiveRecord::Base
 
   belongs_to :board
+  belongs_to :design_center
   belongs_to :priority
   belongs_to :part_number
   belongs_to :revision
@@ -41,6 +42,12 @@ class Design < ActiveRecord::Base
   # Class Methods
   # 
   ##############################################################################
+
+
+  def self.http_object
+    @@h = @@h ||= Net::HTTP::new("boarddev.teradyne.com")
+    @@h
+  end
 
 
   # Generates a list of active designs with information that is used to load
@@ -184,6 +191,18 @@ class Design < ActiveRecord::Base
     # Load the design checks for statistics.
     designs.each { |design| design.audit.get_design_checks if design.audit.is_peer_audit? }
 
+  end
+
+
+
+  def surfboards_path
+    "/surfboards/#{self.design_center.pcb_path}/#{self.directory_name}/"
+  end
+
+
+  def data_location_correct?
+    self.design_center_id != 0 &&
+    Design.http_object.get(self.surfboards_path).code == '200'
   end
   
    
@@ -1043,13 +1062,10 @@ class Design < ActiveRecord::Base
       design_review.review_status_id = active == '1' ? not_started.id : review_skipped.id
       
       if review_type.name == "Pre-Artwork"
-        design_review.designer_id      = self.pcb_input_id
-        design_review.design_center_id = User.find(self.pcb_input_id).design_center_id
+        design_review.designer_id = self.pcb_input_id
       elsif review_type.name == 'Release'
         #TODO: This assumes there is only one PCB ADMIN - fix
-        pcb_admin = User.find_by_first_name_and_last_name('Patrice', 'Michaels')
-        design_review.designer_id      = pcb_admin.id
-        design_review.design_center_id = pcb_admin.design_center_id
+        design_review.designer_id = User.find_by_first_name_and_last_name('Patrice', 'Michaels').id
       end
       
       self.design_reviews << design_review
@@ -1160,13 +1176,6 @@ class Design < ActiveRecord::Base
       original_designer    = dr.designer
       original_criticality = dr.priority
 
-      # All design reviews will get any update to the design center.
-      old_design_center_name = dr.update_design_center(update[:design_center], user)
-      if old_design_center_name
-        changes[:design_center] = { :old => old_design_center_name, 
-                                    :new => update[:design_center].name }
-      end
-
       next if dr.review_status.name == "Review Completed"
 
       if dr.update_criticality(update[:criticality], user)
@@ -1218,7 +1227,13 @@ class Design < ActiveRecord::Base
        self.pcb_input_id != update[:pcb_input_gate].id
       self.pcb_input_id = update[:pcb_input_gate].id
     end
-    
+
+    old_design_center_name = self.set_design_center(update[:design_center], user)
+    if old_design_center_name
+      changes[:design_center] = { :old => old_design_center_name,
+                                  :new => update[:design_center].name }
+    end
+
     if update[:designer] && self.designer_id != update[:designer].id
       self.record_update('Designer', 
                           self.designer.name, 
@@ -1728,7 +1743,41 @@ class Design < ActiveRecord::Base
     
   end
   
-  
+  #JPA
+  ######################################################################
+  #
+  # set_design_center
+  #
+  # Description:
+  # This method updates the design center attribute and records the
+  # update.
+  #
+  # Parameters:
+  # design_center - the new value for the design center attribute
+  # user          - the user who made the update
+  #
+  # Return value:
+  # The old design center name if the design center was updated.
+  # Otherwise, nil
+  ####################################################################
+  #
+  def set_design_center(design_center, user)
+
+    if design_center && self.design_center_id != design_center.id
+      old_design_center_name = self.design_center_id > 0 ? self.design_center.name : 'Not Set'
+      self.record_update('Design Center',
+                         old_design_center_name,
+                         design_center.name,
+                         user)
+      self.design_center = design_center
+      self.save
+    end
+
+    old_design_center_name
+
+  end
+
+
 ########################################################################
 ########################################################################
   private
