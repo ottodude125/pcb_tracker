@@ -51,7 +51,7 @@ module ReportHelper
   ######################################################################
   #
   def display_date(date)
-    date.to_time.strftime("%B %d, %Y")
+    date.to_time.format_month_dd_yyyy
   end
 
 
