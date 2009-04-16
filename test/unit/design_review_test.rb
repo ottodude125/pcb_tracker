@@ -23,6 +23,7 @@ class DesignReviewTest < Test::Unit::TestCase
            :design_review_results,
            :design_updates,
            :part_numbers,
+           :posting_timestamps,
            :prefixes,
            :priorities,
            :review_statuses,
@@ -810,49 +811,6 @@ class DesignReviewTest < Test::Unit::TestCase
                         :updates => @mx234a_release_review.design_updates } }
          
     ###
-    ###  Test update_design_center(design_center, user)
-    ###
-
-    reviews.each { |key, dr_data| assert_equal(boston, dr_data[:review].design_center) }
-    
-    reviews.each do |key, dr_data|
-
-      dr_data[:review].design_updates.clear
-    
-      assert(!dr_data[:review].update_design_center(nil, @cathy_m))
-      assert_equal(boston,     dr_data[:review].design_center)
-      dr_data[:review].reload
-      assert_equal(boston,     dr_data[:review].design_center)
-      assert_equal(0,          dr_data[:review].design_updates.size)
-
-    end
-
-    reviews.each do |key, dr_data|
-      assert(!dr_data[:review].update_design_center(boston, @cathy_m))
-      assert_equal(boston,     dr_data[:review].design_center)
-      dr_data[:review].reload
-      assert_equal(boston,     dr_data[:review].design_center)
-      assert_equal(0,          dr_data[:review].design_updates.size)
-    end
-
-    reviews.each do |key, dr_data| 
-      assert(dr_data[:review].update_design_center(oregon, @cathy_m))
-      
-      assert_equal(oregon,     dr_data[:review].design_center)
-      dr_data[:review].reload
-      assert_equal(oregon,     dr_data[:review].design_center)
-      assert_equal(1,          dr_data[:review].design_updates.size)
-      update_list = dr_data[:review].design_updates
-
-      update = update_list[0]
-      assert_equal(dr_data[:review], update.design_review)
-      assert_equal('Design Center',  update.what)
-      assert_equal(boston.name,      update.old_value)
-      assert_equal(oregon.name,      update.new_value)
-      assert_equal(@cathy_m,         update.user)
-    end
-
-    ###
     ###  Test update_criticality(criticality, user)
     ###
 
@@ -1536,6 +1494,54 @@ class DesignReviewTest < Test::Unit::TestCase
   def test_my_peer_results_peers
     assert_equal([design_review_results(:pcb252_600_a0_o_pre_artwork_hw)],
                  @mx600a_pre_artwork_review.my_peer_results(@lee_s))
+  end
+
+
+  ######################################################################
+  def test_design_review_with_no_posting_timestamps
+    assert_equal([], @mx234a_release_review.posting_timestamps)
+  end
+
+
+  ######################################################################
+  def test_design_review_with_posting_timestamps
+
+    assert_equal(3, @mx234a_pre_art_review.posting_timestamps.size)
+
+    time = @mx234a_pre_art_review.posting_timestamps.first.posted_at
+    @mx234a_pre_art_review.posting_timestamps.each do |timestamp|
+      assert(time <= timestamp.posted_at)
+      time = timestamp.posted_at
+    end
+
+
+  end
+
+
+  ######################################################################
+  def test_set_posting_timestamps_time_specified
+
+    time = Time.now
+    @mx234a_pre_art_review.set_posting_timestamp(time)
+    last_timestamp = @mx234a_pre_art_review.posting_timestamps.last
+
+    assert(time.to_i == last_timestamp.posted_at.to_i)
+
+  end
+
+
+  ######################################################################
+  def test_set_posting_timestamps_time_not_specified
+
+    start_time = Time.now
+    sleep 1
+    @mx234a_pre_art_review.set_posting_timestamp
+    sleep 1
+    last_timestamp = @mx234a_pre_art_review.posting_timestamps.last
+
+    assert(start_time < last_timestamp.posted_at &&
+           Time.now   > last_timestamp.posted_at)
+
   end
 
 

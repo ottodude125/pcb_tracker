@@ -40,12 +40,12 @@ class ChecklistTest < Test::Unit::TestCase
 
     @checklist.major_rev_number = 4
     @checklist.minor_rev_number = 1
-    @checklist.released = 0
-    @checklist.used = 0
+    @checklist.released    = 0
+    @checklist.used        = 0
     @checklist.released_on = "2005-5-23 00:00:00"
     @checklist.released_by = 3
-    @checklist.created_on = "2005-5-24 00:00:00"
-    @checklist.created_by = 4
+    @checklist.created_on  = "2005-5-24 00:00:00"
+    @checklist.created_by  = 4
 
     assert @checklist.save
     @checklist.reload
@@ -186,9 +186,13 @@ class ChecklistTest < Test::Unit::TestCase
     assert_nil(released_checklist.id)
     assert(!released_checklist.released?)
     assert(!released_checklist.locked?)
+    timestamp_before_release = Time.now
     
     checklist = Checklist.find(:first)
+    assert_nil(checklist.released_on)
+
     message   = checklist.release
+
     assert_equal('Checklist successfully released', message)
     
     # The checklist that was just released should be returned.
@@ -198,6 +202,8 @@ class ChecklistTest < Test::Unit::TestCase
     assert_equal(1, released_checklist.major_rev_number)
     assert(released_checklist.released?)
     assert(released_checklist.locked?)
+    assert(timestamp_before_release.to_i       <= released_checklist.released_on.to_i)
+    assert(released_checklist.released_on.to_i <= Time.now.to_i)
     
   end
   

@@ -1148,38 +1148,24 @@ end
     gold_design_reviews['Final'][:design_center]       = oregon
     gold_design_reviews['Release'][:design_center]     = oregon
 
+    timestamp_before_update = Time.now
     la455b.admin_updates(update, "", @jim_l)
   
     validate_design(gold_design, la455b)
     validate_design_reviews(gold_design_reviews, la455b.design_reviews)
  
     design_updates = DesignUpdate.find(:all) - existing_design_updates
-    assert_equal(5, design_updates.size)
-    assert_equal('Pre-Artwork',       design_updates[0].design_review.review_type.name)
+
+    assert_equal(1, design_updates.size)
+    assert_equal(la455b.id,           design_updates[0].design_id)
+    assert_equal(@jim_l.id,           design_updates[0].user_id)
     assert_equal('Design Center',     design_updates[0].what)
     assert_equal('Boston (Harrison)', design_updates[0].old_value)
     assert_equal('Oregon',            design_updates[0].new_value)
-    assert_equal('Placement',         design_updates[1].design_review.review_type.name)
-    assert_equal('Design Center',     design_updates[1].what)
-    assert_equal('Boston (Harrison)', design_updates[1].old_value)
-    assert_equal('Oregon',            design_updates[1].new_value)
-    assert_equal('Routing',           design_updates[2].design_review.review_type.name)
-    assert_equal('Design Center',     design_updates[2].what)
-    assert_equal('Boston (Harrison)', design_updates[2].old_value)
-    assert_equal('Oregon',            design_updates[2].new_value)
-    assert_equal('Final',             design_updates[3].design_review.review_type.name)
-    assert_equal('Design Center',     design_updates[3].what)
-    assert_equal('Boston (Harrison)', design_updates[3].old_value)
-    assert_equal('Oregon',            design_updates[3].new_value)
-    assert_equal('Release',           design_updates[4].design_review.review_type.name)
-    assert_equal('Design Center',     design_updates[4].what)
-    assert_equal('Boston (Harrison)', design_updates[4].old_value)
-    assert_equal('Oregon',            design_updates[4].new_value)
+    assert(timestamp_before_update.to_i      <= design_updates[0].created_on.to_i)
+    assert(design_updates[0].created_on.to_i <= Time.now.to_i)
+
     existing_design_updates += design_updates
-    0.upto(design_updates.size-1) do |i| 
-      assert_equal(@jim_l.name, design_updates[i].user.name)
-      assert_equal(0,           design_updates[i].design_id)
-    end
 
     # Update the status
     update = { :status => on_hold 
@@ -1456,8 +1442,6 @@ end
 
      am = msg + "DESIGNER"
      assert_equal(check_val[:designer].name,      dr.designer.name,      am)
-     am = msg + "DESIGN CITY"
-     assert_equal(check_val[:design_center].name, dr.design_center.name, am)
      am = msg + 'CRITICALITY'
      assert_equal(check_val[:criticality].name,   dr.priority.name,      am)
      am = msg + 'STATUS'

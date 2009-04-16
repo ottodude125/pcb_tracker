@@ -991,14 +991,14 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     fridley_dc         = @fridley
 
     mx234a = DesignReview.find(mx234a_pre_artwork.id)
-    assert_equal(boston_dc.id, mx234a.design_center.id)
+    assert_equal(boston_dc.id, mx234a.design.design_center.id)
 
     post(:update_design_center,
          { :design_review  => { :id => mx234a_pre_artwork.id },
            :design_center  => { :location => fridley_dc.id } },
          scott_designer_session)
     mx234a = DesignReview.find(mx234a_pre_artwork.id)
-    assert_equal(fridley_dc.id, mx234a.design_center.id)
+    assert_equal(fridley_dc.id, mx234a.design.design_center.id)
     assert_equal('252-234-a0 g has been updated - the updates were recorded and mail was sent', 
                  flash['notice'])
     assert_redirected_to(:action => :view, :id => mx234a.id)
@@ -1738,8 +1738,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
 
     pre_art_design_review = DesignReview.find(mx234a.id)
     assert_equal(@in_review.id, pre_art_design_review.review_status_id)
-    assert_equal('09-05-06',
-                 pre_art_design_review.completed_on.strftime('%d-%m-%y'))
+    assert_equal('09-May-06',
+                 pre_art_design_review.completed_on.format_dd_mon_yy)
 
 
     # Handle special proessing for PCB Design Manager
@@ -1786,8 +1786,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(ReviewType.get_placement.id,
                  mx234a_design.phase_id)
     assert_equal('Review Completed', mx234a_pre_art_dr.review_status.name)
-    assert_equal(Time.now.strftime('%d-%m-%y'),
-                 mx234a_pre_art_dr.completed_on.strftime('%d-%m-%y'))
+    assert_equal(Time.now.format_dd_mon_yy,
+                 mx234a_pre_art_dr.completed_on.format_dd_mon_yy)
     assert_equal(17, 
                  DesignReviewComment.find_all_by_design_review_id(mx234a.id).size)
 
@@ -2007,8 +2007,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
                  mx234a_design.phase_id)
     assert_equal('Review Completed', 
                  mx234a_placement_dr.review_status.name)
-    assert_equal(Time.now.strftime('%d-%m-%y'),
-                 mx234a_placement_dr.completed_on.strftime('%d-%m-%y'))
+    assert_equal(Time.now.format_dd_mon_yy,
+                 mx234a_placement_dr.completed_on.format_dd_mon_yy)
 
     #
     # THE ROUTING REVIEW
@@ -2192,8 +2192,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
                  mx234a_design.phase_id)
     assert_equal('Review Completed', 
                  mx234a_routing_dr.review_status.name)
-    assert_equal(Time.now.strftime('%d-%m-%y'),
-                 mx234a_routing_dr.completed_on.strftime('%d-%m-%y'))
+    assert_equal(Time.now.format_dd_mon_yy,
+                 mx234a_routing_dr.completed_on.format_dd_mon_yy)
 
     #
     # THE FINAL REVIEW
@@ -2441,8 +2441,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
                  mx234a_design.phase_id)
     assert_equal('Review Completed', 
                  mx234a_final_dr.review_status.name)
-    assert_equal(Time.now.strftime('%d-%m-%y'),
-                 mx234a_final_dr.completed_on.strftime('%d-%m-%y'))
+    assert_equal(Time.now.format_dd_mon_yy,
+                 mx234a_final_dr.completed_on.format_dd_mon_yy)
 
     #
     # THE RELEASE REVIEW
@@ -2597,8 +2597,8 @@ class DesignReviewControllerTest < Test::Unit::TestCase
     assert_equal(Design::COMPLETE, mx234a_design.phase_id)
     assert_equal('Review Completed', 
                  mx234a_release_dr.review_status.name)
-    assert_equal(Time.now.strftime('%d-%m-%y'),
-                 mx234a_release_dr.completed_on.strftime('%d-%m-%y'))
+    assert_equal(Time.now.format_dd_mon_yy,
+                 mx234a_release_dr.completed_on.format_dd_mon_yy)
 
   end
 
