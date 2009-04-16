@@ -22,7 +22,7 @@
       <% if @checklist.released? %>
           <td>Yes</td>
           <th align="right">Release Date: </th>
-          <td><%= @checklist.released_on.strftime("%d-%b-%y") %></td>
+          <td><%= @checklist.released_on.format_dd_mon_yy %></td>
         </tr>
         <tr>
           <th align="right">Times used: </th>

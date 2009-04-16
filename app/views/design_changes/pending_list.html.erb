@@ -10,7 +10,7 @@
         <%= link_to design_change.design.directory_name, 
                     edit_design_change_url(design_change) %>
       </td>
-      <td align="center" width="200"><%= design_change.created_at.simple_date %></td>
+      <td align="center" width="200"><%= design_change.created_at.format_dd_mon_yy %></td>
       <td width="300"><%= design_change.schedule_impact_statement %></td>
       
     </tr>

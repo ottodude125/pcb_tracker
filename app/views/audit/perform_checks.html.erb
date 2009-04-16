@@ -224,7 +224,7 @@
           <td align="left">
             <%= check.design_check.designer_result %>
             @
-            <%= check.design_check.designer_checked_on.strftime("%a %b %d, %Y @ %I:%M %p") %>
+            <%= check.design_check.designer_checked_on.format_dd_mm_yy_at_timestamp %>
           </td>
         <% end %>
       </tr>
@@ -252,7 +252,7 @@
           <td align="left">
             <%= check.design_check.auditor_result %>
             @
-            <%= check.design_check.auditor_checked_on.strftime("%a %b %d, %Y @ %I:%M %p") %>
+            <%= check.design_check.auditor_checked_on.format_dd_mm_yy_at_timestamp %>
           </td>
         <% end %>
       </tr>
@@ -277,7 +277,7 @@
                       </tr>
                       <tr>
                         <td>
-                          <b><%= comment.created_on.strftime("%a %b %d, %Y @ %I:%M %p") %></b>
+                          <b><%= comment.created_on.format_dd_mm_yy_at_timestamp %></b>
                         </td>
                       </tr>
                     </table>

@@ -24,9 +24,9 @@
         <td align="center"><%= review_result.design_review.posting_count %></td>
         <td align="center"><%= review_result.role.name %></td>
         <td align="center"><%= review_result.result %></td>
-        <td align="center"><%= review_result.design_review.created_on.strftime('%m/%d/%y %I:%M %p') %></td>
-        <td align="center"><%= review_result.design_review.reposted_on.strftime('%m/%d/%y %I:%M %p') %></td>
-        <td align="center"><%= review_result.reviewed_on.strftime('%m/%d/%y %I:%M %p') %></td>
+        <td align="center"><%= review_result.design_review.created_on.format_dd_mon_yy('timestamp') %></td>
+        <td align="center"><%= review_result.design_review.reposted_on.format_dd_mon_yy('timestamp') %></td>
+        <td align="center"><%= review_result.reviewed_on.format_dd_mon_yy('timestamp') %></td>
       </tr>
     
     <% end %>

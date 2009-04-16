@@ -71,7 +71,7 @@
       <% else %>
         <td><b>Not Set</b></td>
       <% end %>
-      <td><%= design.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
+      <td><%= design.created_on.format_dd_mon_yy('timestamp') %></td>
       <td align="center">
         <%= link_to(design.design_reviews.size,
                     { :action => 'design_reviews',

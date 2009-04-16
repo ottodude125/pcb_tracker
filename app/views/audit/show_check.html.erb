@@ -358,7 +358,7 @@
                     </td>
                     <tr>
                       <td>
-                        <b><%= comment.created_on.strftime("%a %b %d, %Y @ %I:%M %p") %></b>
+                        <b><%= comment.created_on.format_day_mon_dd_yyyy_at_timestamp%></b>
                       </td>
                   </tr></table>
                 </td>

@@ -14,7 +14,7 @@
     <% if @design_change.approved? %>
       <th class="design_change_table_header">Approved On:&nbsp;</th>
       <td colspan="2" class=design_change_table_col_2_and_3">
-        <%= @design_change.approved_at.simple_date %>
+        <%= @design_change.approved_at.format_dd_mon_yy %>
       </td>
     <% end %>
   <% end  %>

@@ -43,13 +43,13 @@
       <% if checklist.released? %>
         <td>Yes</td>
         <td><%= checklist.used %></td>
-        <td><%= checklist.released_on.strftime("%d-%b-%y") %></td>
+        <td><%= checklist.released_on.format_dd_mon_yy %></td>
       <% else %>
         <td>No</td>
         <td><%= checklist.used %></td>
         <td>N/A</td>
       <% end %>
-      <td><%= checklist.created_on.strftime("%d-%b-%y") %></td>
+      <td><%= checklist.created_on.format_dd_mon_yy %></td>
       <td><%= checklist.sections.size %></td>
       <% subsection_count, check_count = get_summary_data(checklist) %>
       <td><%= subsection_count %></td>

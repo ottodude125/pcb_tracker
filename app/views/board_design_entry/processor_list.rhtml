@@ -19,7 +19,7 @@
       <td align="center"><%= entry.part_number.pcb_revision %></td>
       <td><%= entry.user.name %></td>
       <td align="center"><%= (entry.submitted? || entry.ready_to_post?) ? 'Yes' : 'No' %></td>
-      <td><%= entry.submitted_on.strftime("%B %d, %Y") if entry.submitted? || entry.ready_to_post? %></td>
+      <td><%= entry.submitted_on.format_month_dd_yyyy if entry.submitted? || entry.ready_to_post? %></td>
       <td align="center">
         <% label = entry.modifiable? ? 'View/Update' : 'View' %>
         <%= link_to(label, 

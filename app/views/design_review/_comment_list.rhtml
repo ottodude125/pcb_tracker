@@ -17,7 +17,7 @@
   </td>
   <td width="50%">
     <font size="-2">
-      <b>Date:</b> <%= comment_list.created_on.simple_date_with_timestamp %>
+      <b>Date:</b> <%= comment_list.created_on.format_dd_mon_yy('timestamp') %>
     </font>
   </td>
 </tr>

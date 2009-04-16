@@ -19,7 +19,7 @@
         </tr>
         <tr>
           <td><b>Released On:</b></td>
-          <td><%= @checklist["released_on"].strftime("%d-%b-%y") %></td>
+          <td><%= @checklist.released_on.format_dd_mon_yy %></td>
         </tr>
       <% end %>
 

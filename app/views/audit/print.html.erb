@@ -100,7 +100,7 @@
                       by 
                       <%= check.design_check.self_auditor.name %>
                       <br/>
-                      <%= check.design_check.designer_checked_on.strftime("%a %b %d, %Y @ %I:%M %p")%>
+                      <%= check.design_check.designer_checked_on.format_day_mon_dd_yyyy_at_timestamp %>
                     </font></b></td>
                 <% else %>
                   <td width="40%" bgcolor="<%= color %>">&nbsp;</td>
@@ -116,7 +116,7 @@
                         <%# check[:auditor] %>
                         <%= check.design_check.peer_auditor.name %>
                         <br/>
-                        <%= check.design_check.auditor_checked_on.strftime("%a %b %d, %Y @ %I:%M %p") %>
+                        <%= check.design_check.auditor_checked_on.format_day_mon_dd_yyyy_at_timestamp %>
                     </font></b></td>
                   <% else %>
                     <td width="30%" bgcolor="<%= color %>">&nbsp;</td>
@@ -140,7 +140,7 @@
                             <% check.design_check.audit_comments.each do |comment| %>
                               <tr>
                                 <td>
-                                  <b><%= comment.user.name %> [<%= comment.created_on.strftime("%a %b %d, %Y @ %I:%M %p") %>] </b>
+                                  <b><%= comment.user.name %> [<%= comment.created_on.format_day_mon_dd_yyyy_at_timestamp %>] </b>
                                   <br/>
                                   <%=h comment.comment %>
                                 </td>

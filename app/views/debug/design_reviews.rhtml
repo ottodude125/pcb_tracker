@@ -84,7 +84,7 @@
         <b>Not Set</b>
       <% end %>
     </td>
-    <td><%= @design.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
+    <td><%= @design.created_on.format_dd_mon_yy('timestamp') %></td>
   </tr>
 
 </table>
@@ -135,9 +135,9 @@
       </td>
       <td><%= dr.priority_id > 0 ? dr.priority.name : 'Not Set' %></td>
       <td><%= User.find(dr.creator_id).name %>
-      <td><%= dr.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
-      <td><%= dr.reposted_on.strftime("%d-%b-%y, %I:%M %p") %></td>
-      <td><%= dr.completed_on.strftime("%d-%b-%y, %I:%M %p") %></td>
+      <td><%= dr.created_on.format_dd_mon_yy('timestamp') %></td>
+      <td><%= dr.reposted_on.format_dd_mon_yy('timestamp') %></td>
+      <td><%= dr.completed_on.format_dd_mon_yy('timestamp') %></td>
     
     </tr>
     
@@ -164,7 +164,7 @@
               <td><%= User.find(result.reviewer_id).name %> (<%= result.reviewer_id %>)</td>
               <td><%= result.role.display_name %> (<%= result.role_id %>)</td>
               <td><%= result.result %></td>
-              <td><%= result.reviewed_on.strftime("%d-%b-%y, %I:%M %p") %></td>
+              <td><%= result.reviewed_on.format_dd_mon_yy('timestamp') %></td>
             </tr>
           <% end %>
           

@@ -48,7 +48,7 @@
         </td>
         <td><%= DocumentType.find(drd.document_type_id).name %></td>
         <td><%= User.find(drd.document.created_by).name %></td>
-        <td><%= drd.document.created_on.strftime("%d-%b-%y, %I:%M %p") %></td>
+        <td><%= drd.document.created_on.format_dd_mon_yy('timestamp') %></td>
         <td>
           <% if drd.document_type.name != "Other" %>
             <%= link_to("Update",

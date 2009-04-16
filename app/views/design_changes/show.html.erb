@@ -10,7 +10,7 @@
     <th class="teraheader" align="right" width="160">Submitted By:&nbsp;</th>
     <td class="change_list" width="200"><%=  @design_change.designer.name %></td>
     <th class="teraheader" align="right" width="50">On:&nbsp;</th>
-    <td class="change_list" width="150"><%=  @design_change.created_at.simple_date %></td>
+    <td class="change_list" width="150"><%=  @design_change.created_at.format_dd_mon_yy %></td>
   </tr>
   
   <tr>
@@ -27,7 +27,7 @@
 
       <th class='teraheader' align="right">On:&nbsp;</th>
       <td class="change_list" align="left">
-        <%= @design_change.approved_at.simple_date  %>
+        <%= @design_change.approved_at.format_dd_mon_yy %>
       </td>
     </tr>  
   <% end %>

@@ -39,7 +39,7 @@
         <%= design_change.approved? ? 'Approved'  : 'Pending' %>
       </td>
       <td class="change_list" align="center">
-        <%= design_change.created_at.simple_date %>
+        <%= design_change.created_at.format_dd_mon_yy %>
       </td>
       <td class="change_list">
         <%= design_change.change_class.name  if design_change.change_class_set? %>

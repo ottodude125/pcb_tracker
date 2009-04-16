@@ -25,7 +25,7 @@
         <td align="center"><%= entry.part_number.pcb_revision %></td>
         <td align="center"><%= entry.submitted? ? "Yes" : "No" %></td>
         <% if entry.submitted? %>
-          <td><%= entry.submitted_on.strftime("%B %d, %Y") %></td>
+          <td><%= entry.submitted_on.format_month_dd_yyyy %></td>
         <% else %>
           <td>&nbsp;</td>
         <% end %>
