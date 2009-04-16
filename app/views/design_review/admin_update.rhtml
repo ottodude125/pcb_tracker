@@ -67,14 +67,16 @@
         <%= @release_poster.name %>
       </td>
         <td>
-          <select id="release_poster"
-                  name="release_poster[id]"
-                  class="name_select">
-          <%= options_from_collection_for_select(@designers,
-                                                 "id",
-                                                 "last_name_first",
-                                                 @release_poster.id) %>
-          </select>
+          <% if !@design_review.design.complete? %>
+            <select id="release_poster" name="release_poster[id]" class="name_select">
+              <%= options_from_collection_for_select(@designers,
+                                                     "id",
+                                                     "last_name_first",
+                                                     @release_poster.id) %>
+              </select>
+            <% else %>
+              This design has been released
+            <% end %>
         </td>
     </tr>
     
@@ -84,19 +86,23 @@
         <%= @design_review.design.designer.name %>
       </td>
       <td>
-        <div id="designers">
-          <select id="designer" name="designer[id]" class="name_select">
-          <option value="">Please select</option>
-          <%= options_from_collection_for_select(@designer_list,
-                                                 "id",
-                                                 "last_name_first",
-                                                 @design_review.design.designer_id) %>
-          </select>
-          <%= observe_field("designer",
-                            :update => "peer_auditors",
-                            :url => { :action => :display_peer_auditor_select },
-                            :with => "'id=' + escape(value)") %>
-        </div>
+        <% if !@design_review.design.complete? %>
+          <div id="designers">
+            <select id="designer" name="designer[id]" class="name_select">
+            <option value="">Please select</option>
+            <%= options_from_collection_for_select(@designer_list,
+                                                   "id",
+                                                   "last_name_first",
+                                                   @design_review.design.designer_id) %>
+            </select>
+            <%= observe_field("designer",
+                              :update => "peer_auditors",
+                              :url => { :action => :display_peer_auditor_select },
+                              :with => "'id=' + escape(value)") %>
+          </div>
+        <% else %>
+          This design has been released
+        <% end %>
       </td>
     </tr>
     <% if !(@design_review.design.audit.skip? || @design_review.design.audit.is_complete?) %>
@@ -153,8 +159,8 @@
     <tr>
       <th align="left">Design Center:</th>
       <td align="left">
-        <% if @design_review.design_center_id > 0 %>
-          <%= @design_review.design_center.name %>
+        <% if @design_review.design.design_center_id %>
+          <%= @design_review.design.design_center.name %>
         <% else %>
           <b>Not Set</b>
         <% end %>
@@ -166,7 +172,7 @@
         <%= options_from_collection_for_select(@design_centers,
                                                "id",
                                                "name",
-                                               @design_review.design_center_id) %>
+                                               @design_review.design.design_center_id) %>
         </select>
       </td>
     </tr>
@@ -175,14 +181,16 @@
       <th align="left">Criticality:</th>
       <td align="left"><%= @design_review.design.priority_name %></td>
       <td>
-        <select id="priority"
-                name="priority[id]"
-                class="name_select">
-        <%= options_from_collection_for_select(@priorities,
-                                               "id",
-                                               "name",
-                                               @design_review.design.priority_id) %>
-        </select>
+        <% if !@design_review.design.complete? %>
+          <select id="priority" name="priority[id]" class="name_select">
+            <%= options_from_collection_for_select(@priorities,
+                                                   "id",
+                                                   "name",
+                                                   @design_review.design.priority_id) %>
+          </select>
+        <% else %>
+          This design has been released
+        <% end %>
       </td>
     </tr>
 
@@ -218,7 +226,7 @@
   <h2>Optional Comment</h2>
   
   <p class="note">
-    NOTE: The tracker automatically generates a comment to indicate any modifications made above.
+    NOTE: Post a comment to indicate the reason for the change.
   </p>
   
   <p align="center">
