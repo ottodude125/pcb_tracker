@@ -395,8 +395,10 @@ class OiInstructionController < ApplicationController
     if completed || reset
       assignment.complete     = completed ? 1 : 0
       assignment.completed_on = Time.now if completed
-      assignment.save
     end
+
+    assignment.cc_hw_engineer = params[:assignment][:cc_hw_engineer] == '1'
+    assignment.save
     
     post_comment = ""
     post_comment = "-- TASK COMPLETE --\n" if completed
