@@ -69,4 +69,46 @@ class Ping < ActiveRecord::Base
   end
 
 
+  def self.check_design_centers
+
+    new_release = false
+    h = Net::HTTP::new("boarddev.teradyne.com") if !new_release
+
+    if Time.now.strftime("%A") == "Monday"  && "Fred" == "Barney"
+      designs = Design.find(:all)
+    else
+      designs = Design.find_all_active
+    end
+
+    summary = { :link_good => [], :link_bad => [] }
+    designs.each do |design|
+
+      if new_release
+        if design.design_center.data_found?
+          summary[:link_good] << design
+        else
+          summary[:link_bad]  << design
+        end
+      elsif !new_release
+        review = design.design_reviews.detect { |r| r.review_type.name == design.phase.name }
+        if review
+          link = "/surfboards/#{review.design_center.pcb_path}/#{design.directory_name}/public/"
+        else
+          link = '/no_good/'
+        end
+        if h.get(link).code == "200"
+          summary[:link_good] << design
+        else
+          summary[:link_bad]  << design
+        end
+      end
+    end
+
+    summary[:link_good].sort_by { |d| d.directory_name }
+    summary[:link_bad].sort_by  { |d| d.directory_name }
+    TrackerMailer::deliver_ping_design_center_summary(summary)
+
+  end
+
+
 end
