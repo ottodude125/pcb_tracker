@@ -19,12 +19,19 @@ class DesignReview < ActiveRecord::Base
   belongs_to :review_type
 
   has_many(:design_review_comments, :order => 'created_on DESC')
+  has_many(:posting_timestamps,     :order => 'posted_at')
   has_many(:design_review_results)
   has_many(:design_updates)
   
   
   SUNDAY   = 0
   SATURDAY = 6
+
+
+  def self.http_object
+    @@h = @@h ||= Net::HTTP::new("boarddev.teradyne.com")
+    @@h
+  end
 
 
   # Retrieve a list of all active design reviews
@@ -232,6 +239,26 @@ class DesignReview < ActiveRecord::Base
   end
 
   
+  # Retrieve the comments entered by the user
+  #
+  # :call-seq:
+  #   comments(user) -> [design_review_comment]
+  #
+  # A list of design_review_comments entered by the user
+  #
+  def comments(user)
+    self.design_review_comments.to_ary.find_all { |comment| comment.user == user }
+  end
+
+
+  #
+  # NOTE: inactive_reviewers?, results_with_inactive_users, and inactive_reviewers
+  #       all depend on or set the @results_with_inactive_users global variable.
+  #       This variable is set in inactive_reviewers.  The other two metheds that
+  #       use it depend on it being set and will call inactive_reviewers to set it
+  #       if it is not set.  This was done to cache the information.
+  #
+
   # Indicate if there are inactive reviewers assigned to active design reviews
   #
   # :call-seq:
@@ -243,18 +270,6 @@ class DesignReview < ActiveRecord::Base
   def inactive_reviewers?
     self.inactive_reviewers unless @results_with_inactive_users
     @results_with_inactive_users.size > 0
-  end
-
-
-  # Retrieve the comments entered by the user
-  #
-  # :call-seq:
-  #   comments(user) -> [design_review_comment]
-  #
-  # A list of design_review_comments entered by the user
-  #
-  def comments(user)
-    self.design_review_comments.to_ary.find_all { |comment| comment.user == user }
   end
 
 
@@ -282,18 +297,11 @@ class DesignReview < ActiveRecord::Base
   # to the review
   #
   def inactive_reviewers
-
-    results_with_inactive_users = [] unless @results_with_inactive_users
-
-    self.design_review_results.each do |drr|
-      unless drr.reviewer.active?
-        results_with_inactive_users << drr
-      end
-    end unless @results_with_inactive_users
-
-    @results_with_inactive_users = results_with_inactive_users unless @results_with_inactive_users
-    @results_with_inactive_users.collect { |result| result.reviewer }
-
+    unless @results_with_inactive_users
+      @results_with_inactive_users =
+        self.design_review_results.select { |drr| drr.reviewer && !drr.reviewer.active? }
+    end
+    @results_with_inactive_users.collect { |drr| drr.reviewer }
   end
 
 
@@ -978,40 +986,6 @@ class DesignReview < ActiveRecord::Base
   
   ######################################################################
   #
-  # update_design_center
-  #
-  # Description:
-  # This method updates the design center attribute and records the 
-  # update.
-  #
-  # Parameters:
-  # design_center - the new value for the design center attribute
-  # user          - the user who made the update
-  #
-  # Return value:
-  # The old design center name if the design center was updated.
-  # Otherwise, nil
-  ####################################################################
-  #
-  def update_design_center(design_center, user)
-
-    if design_center && self.design_center_id != design_center.id
-      old_design_center_name = self.design_center_id > 0 ? self.design_center.name : 'Not Set'
-      self.record_update('Design Center', 
-                         old_design_center_name,
-                         design_center.name, 
-                         user)
-      self.design_center = design_center
-      self.save
-    end
-    
-    old_design_center_name
-
-  end
-  
-  
-  ######################################################################
-  #
   # update_criticality
   #
   # Description:
@@ -1248,7 +1222,24 @@ class DesignReview < ActiveRecord::Base
     self.design.board.platform.name + ' / ' + self.design.board.project.name
   end
 
-######################################################################
+
+  def set_posting_timestamp(timestamp = Time.now)
+    self.posting_timestamps << PostingTimestamp.new(:posted_at => timestamp)
+  end
+  
+
+  def surfboards_path
+    "/surfboards/#{self.design_center.pcb_path}/#{self.design.directory_name}/"
+  end
+
+
+  def data_found?
+    #puts "\t\t\t\t\t\t\tCHECKING #{self.design_center.name} (#{self.surfboards_path})"
+    DesignReview.http_object.get(self.surfboards_path).code == '200'
+  end
+
+
+  ######################################################################
 ######################################################################
 private
 ######################################################################
