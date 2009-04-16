@@ -1,0 +1,10 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+mx234a_pre_artwork_second_post:
+  design_review_id: 1
+  posted_at:        2006-10-15 09:33:57
+mx234a_pre_artwork_first_post:
+  design_review_id: 1
+  posted_at:        2006-09-15 09:33:57
+mx234a_pre_artwork_third_post:
+  design_review_id: 1
+  posted_at:        2007-09-15 09:33:57
