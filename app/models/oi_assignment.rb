@@ -161,11 +161,11 @@ class OiAssignment < ActiveRecord::Base
            'Step : '.rjust(col)          + self.oi_instruction.oi_category_section.name             + "\n" +
            'Team Lead : '.rjust(col)     + self.oi_instruction.user.name                            + "\n" +
            'Designer : '.rjust(col)      + self.user.name                                           + "\n" +
-           'Date Assigned : '.rjust(col) + self.created_on.strftime("%d-%b-%y, %I:%M %p %Z")        + "\n" +
+           'Date Assigned : '.rjust(col) + self.created_on.format_dd_mon_yy('timestamp')            + "\n" +
            'Complete : '.rjust(col)
     if self.complete?
       hdr += "Yes\n" +
-             'Completed On : '.rjust(col) + self.completed_on.strftime("%d-%b-%y, %I:%M %p %Z") + "\n"
+             'Completed On : '.rjust(col) + self.completed_on.format_dd_mon_yy('timestamp') + "\n"
     else
       hdr += "No\n"
     end
