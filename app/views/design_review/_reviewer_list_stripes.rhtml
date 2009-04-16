@@ -68,7 +68,7 @@
         <% if bold_entry %>
           <b>
         <% end  %>
-        <%= review_result.result %>
+        <%= review_result.result != 'NONE' ? review_result.result : '&nbsp;' %>
         <% if bold_entry %>
           </b>
         <% end  %>
@@ -77,7 +77,7 @@
         <% if bold_entry %>
           <b>
         <% end  %>
-        <%= review_result.reviewed_on.simple_date_with_timestamp %>
+        <%= review_result.reviewed_on ? review_result.reviewed_on.format_dd_mon_yy('timestamp') : '&nbsp;'  %>
         <% if bold_entry %>
           </b>
         <% end  %>
