@@ -27,6 +27,9 @@ ActionController::Routing::Routes.draw do |map|
   #map.resources :change_details
   #map.resources :change_items
   #map.resources :change_class, :has_many => :change_types
+
+#  map.resources :review_attachments
+  map.resources :design_changes, :collection => { :pending_list => :get }
   map.resources :eco_tasks
   map.resources :eco_task_reports
   map.resources :eco_documents
@@ -43,10 +46,10 @@ ActionController::Routing::Routes.draw do |map|
   #   map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
   # This route can be invoked with purchase_url(:id => product.id)
 
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
+# Sample resource route (maps HTTP verbs to controller actions automatically):
   #   map.resources :products
 
-  # Sample resource route with options:
+# Sample resource route with options:
   #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
 
   # Sample resource route with sub-resources:
@@ -61,9 +64,12 @@ ActionController::Routing::Routes.draw do |map|
   # In the event that only the root is provided in the URL,
   # display the tracker home page (index).
   map.root :controller => 'tracker', :action => 'index'
+  
+  map.connect "_vti_bin/owssvr.dll", :controller => 'tracker', :action => 'index'
+  map.connect "MSOffice/cltreq.asp", :controller => 'tracker', :action => 'index'
 
   # See how all your routes lay out with "rake routes"
-
+  
   # Install the default routes as the lowest priority.
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
