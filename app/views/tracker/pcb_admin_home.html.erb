@@ -113,7 +113,7 @@
                           </td>
                           <td>
                             <font size="-1">
-                              <b><%= review[:review].created_on.strftime("%d-%b-%y") %></b>
+                              <b><%= review[:review].created_on.format_dd_mon_yy %></b>
                             </font>
                           </td>
                           <td>
@@ -135,7 +135,7 @@
                             <td>
                               <font size="-1">
 
-                                <b><%= review[:review].completed_on.strftime("%d-%b-%y") %></b>
+                                <b><%= review[:review].completed_on.format_dd_mon_yy %></b>
                               </font>
                             </td>
                           <% else %>

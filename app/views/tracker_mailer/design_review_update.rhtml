@@ -3,7 +3,7 @@
 <% end %>
 <% if @comments %>COMMENTS:<% @comments.each do |comment| %>
 =================================================================
-Entered by: <%= comment.user.name %> on <%= comment.created_on.strftime("%d-%b-%y")%> at <%= comment.created_on.strftime("%I:%M %p %Z")%>
+Entered by: <%= comment.user.name %> on <%= comment.created_on.format_dd_mm_yy_at_timestamp %>
 <%=  comment.comment %><% end %><% end %>
 =================================================================
 

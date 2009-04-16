@@ -33,7 +33,7 @@
       <td><%= update.old_value %></td>
       <td><%= update.new_value %></td>
       <td><%= update.user.name %></td>
-      <td><%= update.created_on.strftime("%d-%b-%y, %I:%M %p %Z") %></td>
+      <td><%= update.created_on.format_dd_mon_yy('timestamp') %></td>
     </tr>
   <% end %>
 </table>

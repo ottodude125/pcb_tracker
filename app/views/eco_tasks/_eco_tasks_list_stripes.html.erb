@@ -18,7 +18,7 @@
   <td>
     <% if eco_tasks_list_stripes.specification_identified? %>
       <% if eco_tasks_list_stripes.started_at != nil %>
-      <%= eco_tasks_list_stripes.started_at.strftime("%d-%b-%y %H:%M") %>
+      <%= eco_tasks_list_stripes.started_at.format_dd_mon_yy('timestamp')  %>
       <% else %>
         NULL
       <% end %>
@@ -28,7 +28,7 @@
   </td>
   <td>
     <% if eco_tasks_list_stripes.completed? %>
-      <%= eco_tasks_list_stripes.completed_at.strftime("%d-%b-%y %H:%M") %>
+      <%= eco_tasks_list_stripes.completed_at.format_dd_mon_yy('timestamp')  %>
     <% end %>
   </td>
   <td><%= eco_tasks_list_stripes.state %></td>

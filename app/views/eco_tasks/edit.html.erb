@@ -89,7 +89,7 @@
         <% if eco_admin %>
           <%= date_select(:eco_task, :screened_at) %>
         <% else %>
-          <%= @eco_task.screened_at.strftime("%d-%b-%y %H:%M")%>
+          <%= @eco_task.screened_at.format_dd_mon_yy('timestamp') %>
         <% end %>
       </td>
     </tr>
@@ -191,7 +191,7 @@
       <th class="teraheader" align="right">Started:&nbsp;</th>
       <td>
         <% if @eco_task.specification_identified? %>
-          <%= @eco_task.started_at.strftime("%d-%b-%y %H:%M") %>
+          <%= @eco_task.started_at.format_dd_mon_yy('timestamp') %>
         <% else %>
           <b>Not Started</b>
         <% end %>
@@ -217,7 +217,7 @@
                   <tr>
                     <th width="120" class="teraheader" align="right">Complete At:&nbsp;</th>
                     <td>
-                      <%= @eco_task.completed_at.strftime("%d-%b-%y %H:%M") %>
+                      <%= @eco_task.completed_at.format_dd_mon_yy('timestamp') %>
                     </td>
                   </tr>
                 </table>
@@ -253,7 +253,7 @@
                     <tr>
                       <th width="120" class="teraheader" align="right">Closed At:&nbsp;</th>
                       <td>
-                        <%= @eco_task.closed_at.strftime("%d-%b-%y %H:%M") %>
+                        <%= @eco_task.closed_at.format_dd_mon_yy('timestamp') %>
                       </td>
                     </tr>
                   </table>
@@ -344,7 +344,7 @@
 	                      :action => "get_attachment",
                               :id     => attachment.id) %>
                 </td>
-                <td><%= attachment.created_at.strftime("%d-%b-%y, %I:%M %p %Z")  %>
+                <td><%= attachment.created_at.format_dd_mon_yy('timestamp')  %>
                 </td>
                 <td><%=h attachment.user.name %></td>
                 <% if eco_admin %>

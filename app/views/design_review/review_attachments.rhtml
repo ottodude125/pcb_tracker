@@ -47,7 +47,7 @@
         <td>PCB Input Form</td>
         <td><%= @design_review.design.board_design_entry.originator %></td>
         <td>
-          <%= @design_review.design.board_design_entry.submitted_on.simple_date_with_timestamp %>
+          <%= @design_review.design.board_design_entry.submitted_on.format_dd_mon_yy('timestamp') %>
         </td>
       </tr>
     <% end %>
@@ -60,7 +60,7 @@
         </td>
         <td><%= drd.document_type.name %></td>
         <td><%= drd.document.user.name %></td>
-        <td><%= drd.document.created_on.simple_date_with_timestamp %></td>
+        <td><%= drd.document.created_on.format_dd_mon_yy('timestamp') %></td>
         <td>
           <% if drd.document_type.name != "Other" && @logged_in_user %>
             <%= link_to("Update",

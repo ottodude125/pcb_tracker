@@ -110,7 +110,7 @@ function setFocus() {
           </table>
         </td>
         <td align="right"> 
-          <%= Time.now.strftime("%d-%b-%y, %I:%M %p %Z") %>
+          <%= Time.now.format_dd_mon_yy('timestamp') %>
         </td>
       <% end %>
     </tr>

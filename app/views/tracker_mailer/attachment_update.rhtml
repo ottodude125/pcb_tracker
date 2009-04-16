@@ -7,7 +7,7 @@ Obsolete <%= @document.document_type.name %> documents
 
 <% @document.design.board.get_obsolete_document_list(@document.document_type).reverse.each do |doc| %>  Document:    <%= doc.document.name %>
   Attached By: <%= doc.document.user.name %>
-  Attached On: <%= doc.document.created_on.simple_date_with_timestamp %>
+  Attached On: <%= doc.document.created_on.format_dd_mon_yy('timestamp') %>
   -----------------------------------------------------------------------------
 <% end %>
 <% end %>

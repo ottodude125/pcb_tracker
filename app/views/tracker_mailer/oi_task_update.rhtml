@@ -4,7 +4,7 @@
 <% @assignment.oi_assignment_comments.sort_by { |c| c.created_on }.reverse[0..2].each do |comment| %>
 ----------------------------------------------------------------------
 Posted By: <%= comment.user.name %>
-Date:      <%= comment.created_on.strftime("%d-%b-%y, %I:%M %p") %>
+Date:      <%= comment.created_on.format_dd_mon_yy('timestamp') %>
 
 <%= comment.comment %><% end %>
 

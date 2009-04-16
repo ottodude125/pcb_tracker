@@ -80,7 +80,7 @@
                     <%= rr.result %>
                   </td>
                   <td width="120">
-                    <%= rr.design_review.created_on.strftime("%d-%b-%y") %>
+                    <%= rr.design_review.created_on.format_dd_mon_yy %>
                   </td>
                   <td>
                     <%= rr.design_review.age_in_days %>

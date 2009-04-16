@@ -65,7 +65,7 @@
     <th class="teraheader" align="right">Date Assigned:</th>
       <% line += 1 %>
       <%= start_td(line) %>
-      <%= @assignment.created_on.strftime("%d-%b-%y, %I:%M %p %Z") %>
+      <%= @assignment.created_on.format_dd_mon_yy('timestamp') %>
     </td>
   </tr>
 
@@ -74,7 +74,7 @@
       <th class="teraheader" align="right">Date Completed:</th>
         <% line += 1 %>
         <%= start_td(line) %>
-        <%= @assignment.completed_on.strftime("%d-%b-%y, %I:%M %p %Z") %>
+        <%= @assignment.completed_on.format_dd_mon_yy('timestamp') %>
       </td>
     </tr>
   <% end %>
@@ -83,7 +83,7 @@
     <th class="teraheader" align="right">Due Date:</th>
     <% line += 1 %>
     <%= start_td(line) %>
-      <%= @assignment.due_date.strftime("%d-%b-%y") %>
+      <%= @assignment.due_date.format_dd_mon_yy %>
     </td>
   </tr>
 

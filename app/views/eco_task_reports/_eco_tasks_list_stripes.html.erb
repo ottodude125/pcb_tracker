@@ -15,11 +15,11 @@
   </td>
   <td><%=h eco_tasks_list_stripes.pcba_part_number %></td>
   <td><%=h eco_tasks_list_stripes.pcb_revision %></td>
-  <td><%= eco_tasks_list_stripes.screened_at.strftime("%d-%b-%y") %></td>
+  <td><%= eco_tasks_list_stripes.screened_at.format_dd_mon_yy %></td>
   <td>
     <% if eco_tasks_list_stripes.specification_identified? %>
       <% if eco_tasks_list_stripes.started_at != nil %>
-        <%= eco_tasks_list_stripes.started_at.strftime("%d-%b-%y") %>
+        <%= eco_tasks_list_stripes.started_at.format_dd_mon_yy %>
       <% end %>
     <% else %>
       Not Started
@@ -27,14 +27,14 @@
   </td>
   <td>
     <% if eco_tasks_list_stripes.completed_at %>
-      <%= eco_tasks_list_stripes.completed_at.strftime("%d-%b-%y") %>
+      <%= eco_tasks_list_stripes.completed_at.format_dd_mon_yy %>
     <% else %>
       &nbsp;
     <% end %>
   </td>
   <td>
     <% if eco_tasks_list_stripes.closed_at %>
-      <%= eco_tasks_list_stripes.closed_at.strftime("%d-%b-%y") %>
+      <%= eco_tasks_list_stripes.closed_at.format_dd_mon_yy %>
     <% else %>
       &nbsp;
     <% end %>

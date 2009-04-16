@@ -112,7 +112,7 @@
                                             :id         => review.id }) %>
                             </td>
                             <td class="th1">
-                              <%= review.created_on.strftime("%d-%b-%y") %>
+                              <%= review.created_on.format_dd_mon_yy %>
                             </td>
                             <td class="th1">
                               <%= review.review_status.name %>
@@ -125,7 +125,7 @@
                             </td>
                             <td class="th1">
                               <% if review[:approvals] == review[:reviewers] %>
-                                <%= review.completed_on.strftime("%d-%b-%y") %>
+                                <%= review.completed_on.format_dd_mon_yy %>
                               <% else %>
                                 N/A
                               <% end %>

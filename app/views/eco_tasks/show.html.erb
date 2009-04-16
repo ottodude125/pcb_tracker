@@ -25,7 +25,7 @@
 
   <tr>
     <th class="teraheader" align="right">Date Screened:&nbsp;</th>
-    <td><%= @eco_task.screened_at.strftime("%d-%b-%y") %></td>
+    <td><%= @eco_task.screened_at.format_dd_mon_yy %></td>
   </tr>
 
   <tr>
@@ -65,7 +65,7 @@
     <th class="teraheader" align="right">Started On:&nbsp;</th>
     <td>
       <% if @eco_task.specification_attached? %>
-        <%= @eco_task.created_at.strftime("%d-%b-%y") %>
+        <%= @eco_task.created_at.format_dd_mon_yy %>
       <% else %>
         Not
       <% end %>
@@ -80,7 +80,7 @@
   <% if @eco_task.completed? %>
     <tr>
       <th class="teraheader" align="right">Completed At:&nbsp;</th>
-      <td><%= @eco_task.completed_at.strftime("%d-%b-%y") %></td>
+      <td><%= @eco_task.completed_at.format_dd_mon_yy %></td>
     </tr>
   <% end %>
 
@@ -92,7 +92,7 @@
   <% if @eco_task.closed? %>
     <tr>
       <th class="teraheader" align="right">Closed At:&nbsp;</th>
-      <td><%= @eco_task.closed_at.strftime("%d-%b-%y") %></td>
+      <td><%= @eco_task.closed_at.format_dd_mon_yy %></td>
     </tr>
   <% end %>
 
