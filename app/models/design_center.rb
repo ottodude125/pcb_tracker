@@ -12,9 +12,11 @@
 
 class DesignCenter < ActiveRecord::Base
 
-  has_many :design_reviews
-  has_many :ftp_notifications
-  has_many :users
+  has_one    :design
+
+  has_many   :design_reviews
+  has_many   :ftp_notifications
+  has_many   :users
 
   validates_uniqueness_of :name
 
@@ -24,6 +26,9 @@ class DesignCenter < ActiveRecord::Base
   # Class Methods
   # 
   ##############################################################################
+
+
+  @@h = @@h ||= Net::HTTP::new("boarddev.teradyne.com")
 
   
   ######################################################################
@@ -41,9 +46,23 @@ class DesignCenter < ActiveRecord::Base
   #
   ######################################################################
   #
-  def DesignCenter.get_all_active(sort = 'name ASC')
-    DesignCenter.find_all_by_active(1, sort)
+  def self.get_all_active(sort = 'name ASC')
+    self.find_all_by_active(1, sort)
   end
-  
 
+
+  ##############################################################################
+  #
+  # Instance Methods
+  #
+  ##############################################################################
+
+
+  def data_found?
+    link     = "/surfboards/#{self.pcb_path}/#{self.design_review.design.directory_name}/"
+    response = @@h.get(link)
+    response.code == '200'
+  end
+
+  
 end
