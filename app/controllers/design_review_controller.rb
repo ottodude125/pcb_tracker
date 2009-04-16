@@ -1480,7 +1480,7 @@ class DesignReviewController < ApplicationController
     if new_reviewers
       # Reassign the review to the new reviewer
       new_reviewers.each { |role_name, user_id|
-        next if user_id == ''
+        next if user_id == '' || user_id == '0'
         role = Role.find_by_name(role_name)
         design_review_result = DesignReviewResult.find(
                                  :first,
@@ -1653,7 +1653,7 @@ class DesignReviewController < ApplicationController
     if params[:pcb_input_gate]
       updates[:pcb_input_gate] = User.find(params[:pcb_input_gate][:id])
     end
-    if params[:designer][:id] != ''
+    if params[:designer] && params[:designer][:id] != ''
       updates[:designer]       = User.find(params[:designer][:id])
     end
     if params[:peer] && params[:peer][:id] != ''
@@ -1667,7 +1667,7 @@ class DesignReviewController < ApplicationController
     end
 
     updates[:design_center]  = DesignCenter.find(params[:design_center][:id])
-    updates[:criticality]    = Priority.find(params[:priority][:id])
+    updates[:criticality]    = Priority.find(params[:priority][:id]) if params[:priority]
 
     
     flash['notice'] = design.admin_updates(updates, 
@@ -2021,9 +2021,11 @@ class DesignReviewController < ApplicationController
       design = design_review.design
       priority_update = design.priority_id != priority.id
       
-      design.peer_id     = peer.id
-      design.designer_id = designer.id
-      design.priority_id = priority.id
+      design.peer_id          = peer.id
+      design.designer_id      = designer.id
+      design.priority_id      = priority.id
+      # JPA - VERIFY THIS 
+      #design.design_center_id = designer.design_center_id
       design.save
       
       design.set_reviewer(Role.find_by_name("Valor"), peer)
@@ -2033,7 +2035,6 @@ class DesignReviewController < ApplicationController
         if (review.review_type.name != 'Release' &&
             review.review_type.name != 'Pre-Artwork')
           review.designer_id = designer.id
-          review.design_center_id = designer.design_center_id
         end
         review.save
       end
