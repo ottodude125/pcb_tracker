@@ -1,0 +1,9 @@
+<%= 'The design center settings are incorrect for the following designs'  if @summary[:link_bad].size > 0 %>
+<% @summary[:link_bad].each do |design| %>
+<%= sprintf("%-20s%-15s%-20s%-20s", design.directory_name, design.phase.name, design.get_phase_design_review.design_center.name, design.get_phase_design_review.designer.name) %>
+<% end %>
+
+<%= 'The design center settings are correct for the following designs'  if @summary[:link_good].size > 0 %>
+<% @summary[:link_good].each do |design| %>
+<%= sprintf("%-20s%-15s%-20s%-20s", design.directory_name, design.phase.name, design.get_phase_design_review.design_center.name, design.get_phase_design_review.designer.name) %>
+<% end %>
