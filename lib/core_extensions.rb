@@ -17,25 +17,105 @@ module CoreExtensions
   ######################################################################
 
     
-    # Provide the time in the dd-mm-yy format.
-    # 
-    # :call-seq:
-    #   simpla_date -> String
+    # Provide a formatted timestamp
     #
-    # Returns a formatted string the represents the date.
-    def simple_date
-      self.strftime("%d-%b-%y")
+    # :call-seq:
+    #   format_dd_mon_yy(boolean) -> String
+    #
+    # Returns a formatted string that represents the date with an
+    # optional timestamp.
+    #
+    # Format of string:
+    #
+    #    if argument is FALSE:    dd-mon-yy
+    #    if argument is TRUE:     dd-mon-yy, hh:mmm [AM|PM] TZ
+    #
+    #        where:    dd  - 2 digit number representing the day of the month
+    #                  mon - 3 character abbreviation for the month
+    #                  yy  - 2  digit number representing the year
+    #                  hh  - 2 digit number representing the hour
+    #                  mm  - 2 digit number representing the minutes
+    #                  TZ  - Time Zone
+    #
+    # Example:         18-Apr-09
+    #                  18-Apr-09, 07:14 AM
+    #
+    def format_dd_mon_yy(timestamp=false)
+      result  = self.strftime("%d-%b-%y")
+      result += self.strftime(", %I:%M %p %Z") if timestamp
+      result
     end
 
 
-    # Provide the time in the dd-mm-yy format.
+    # Provide a formatted timestamp
     #
     # :call-seq:
-    #   simpla_date_with_timestamp -> String
+    #   format_month_dd_yyyy
     #
-    # Returns a formatted string the represents the date.
-    def simple_date_with_timestamp
-      self.strftime("%d-%b-%y, %I:%M %p")
+    # Returns a formatted string that represents the date.
+    #
+    # Format of string:
+    #
+    #    month dd, yyyy
+    #
+    #        where:    month - the unabreviated month in English
+    #                  dd    - 2 digit number representing the day of the month
+    #                  yyyy  - 4  digit number representing the year
+    #
+    # Example:         April 18, 09
+    #
+    def format_month_dd_yyyy
+      self.strftime("%B %d, %Y")
+    end
+
+
+    # Provide a formatted timestamp
+    #
+    # :call-seq:
+    #   format_dd_mm_yy_at_timestamp
+    #
+    # Returns a formatted string that represents the date.
+    #
+    # Format of string:
+    #
+    #    month dd, yyyy at hh:mm [AM|PM] TZ
+    #
+    #        where:    month - the unabreviated month in English
+    #                  dd    - 2 digit number representing the day of the month
+    #                  yyyy  - 4  digit number representing the year
+    #                  hh  - 2 digit number representing the hour
+    #                  mm  - 2 digit number representing the minutes
+    #                  TZ  - Time Zone
+    #
+    # Example:         18-Apr-09 at 11:23 AM EST
+    #
+    def format_dd_mm_yy_at_timestamp
+      self.strftime("%d-%b-%y at %I:%M %p %Z")
+    end
+
+
+    # Provide a formatted timestamp
+    #
+    # :call-seq:
+    #   format_day_mon_dd_yyyy_at_timestamp
+    #
+    # Returns a formatted string that represents the date.
+    #
+    # Format of string:
+    #
+    #    day mon dd, yyyy @ hh:mm [AM|PM] TZ
+    #
+    #        where:    month - the unabreviated month in English
+    #                  dd    - 2 digit number representing the day of the month
+    #                  yyyy  - 4  digit number representing the year
+    #                  hh  - 2 digit number representing the hour
+    #                  mm  - 2 digit number representing the minutes
+    #                  TZ  - Time Zone
+    #
+    # Example:         Tue Jan 27, 2009 @ 11:30 AM EST
+    #
+    def format_day_mon_dd_yyyy_at_timestamp
+      self.strftime("%a %b %d, %Y @ %I:%M %p %Z")
     end
     
   end
