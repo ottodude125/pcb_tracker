@@ -1188,6 +1188,7 @@ class BoardDesignEntryController < ApplicationController
     design = Design.new(:board_id         => board.id,
                         :part_number_id   => board_design_entry.part_number_id,
                         :phase_id         => phase_id,
+                        :design_center_id => @logged_in_user.design_center_id,
                         :revision_id      => board_design_entry.revision_id,
                         :numeric_revision => board_design_entry.numeric_revision,
                         :eco_number       => board_design_entry.eco_number,
