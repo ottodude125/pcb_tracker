@@ -26,7 +26,7 @@
   <tr bgcolor="#dfdfdf">
     <td colspan="2"><b>Posted By:</b>
         <%= @root_post.user.name %> <b>On:</b>
-        <%= @root_post.created_at.strftime('%d-%b-%y at %I:%M %p') %>
+        <%= @root_post.created_at.format_dd_mm_yy_at_timestamp %>
     </td>
   </tr>
   
@@ -47,7 +47,7 @@
       <tr bgcolor="#dfdfdf">
         <td colspan="2"><b>Posted By:</b>
           <%= child_post.user.name %> <b>On:</b>
-          <%= child_post.created_at.strftime('%d-%b-%y at %I:%M %p') %>
+          <%= child_post.created_at.format_dd_mm_yy_at_timestamp %>
         </td>
       </tr>
       <tr bgcolor="#efefef">
@@ -61,7 +61,7 @@
         
   <% end %>
 
-  <% if @user %>
+  <% if @logged_in_user %>
     <tr>
       <td colspan="2" align="center">
         <p><label for="reply_post_body">Reply</label><br/>
