@@ -77,7 +77,7 @@ class Design < ActiveRecord::Base
       planner_name  = planner ? planner.name  : ''
       
       pcb_path = '/hwnet/' + 
-                 current_design_review.design_center.pcb_path + '/' +
+                 design.design_center.pcb_path + '/' +
                  design.directory_name + '/'
       
       puts(design.part_number.pcba_display_name          + '|' +
