@@ -21,7 +21,7 @@
 
         <% @my_review_results.each do |review_result| %>
 
-          <% if review_result.no_response? %>
+          <%# if review_result.no_response? %>
 
             <tr>
               <th class="th1"><%= review_result.role.display_name %></th>
@@ -47,7 +47,7 @@
               </td>
             </tr>
 
-          <% end %>
+          <%# end %>
           
         <% end %>
         
