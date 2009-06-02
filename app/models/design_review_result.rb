@@ -23,8 +23,8 @@ class DesignReviewResult < ActiveRecord::Base
  
   REVIEW_COMPLETE = [APPROVED, REJECTED, WAIVED]
   POSITIVE_RESULT = [APPROVED, WAIVED]
-  NO_RESULT       = [NO_RESPONSE]
-# NO_RESULT       = [COMMENTED, NO_RESPONSE]
+#  NO_RESULT       = [NO_RESPONSE]
+  NO_RESULT       = [COMMENTED, NO_RESPONSE]
 
   ######################################################################
   #
