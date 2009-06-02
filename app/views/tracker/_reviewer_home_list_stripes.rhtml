@@ -11,10 +11,14 @@
     <%= reviewer_home_list_stripes.priority.name %>
   </td>
   <td>
+    <% if ( reviewer_home_list_stripes.design) %>
     <%= link_to(reviewer_home_list_stripes.design.directory_name,
                   { :controller => 'design_review',
                     :action     => :view,
                     :id         => reviewer_home_list_stripes.id })%>
+    <% else %>
+      "unknown"
+    <% end %>
   </td>
   <td>
     <%= reviewer_home_list_stripes.review_name %>
@@ -29,7 +33,7 @@
     <%= reviewer_home_list_stripes.display_age_in_days %>
   </td>
   
-  <% if my_reviews %>
+  <% if my_reviews && reviewer_home_list_stripes.design %>
   <td>
     <table width="100%" border="0">
       <tr>
