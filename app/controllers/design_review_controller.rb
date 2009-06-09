@@ -1100,7 +1100,7 @@ class DesignReviewController < ApplicationController
           rr.role_id.to_s == review_result[:id]
         end
 
-        if review_result[:result] != 'COMMENT' && review_record && !ignore_rejection
+        if review_result[:result] != 'COMMENTED' && review_record && !ignore_rejection
           review_record.result      = review_result[:result]
           review_record.reviewed_on = Time.now
           review_record.save
@@ -1131,7 +1131,7 @@ class DesignReviewController < ApplicationController
       elsif review_results[:roles].size > 0
 
         # If all of the reviews have a positive response, the review is complete
-        response = ['WITHDRAWN', 'No Response', 'REJECTED', 'COMMENT']
+        response = ['WITHDRAWN', 'No Response', 'REJECTED', 'COMMENTED']
         outstanding_result = review_result_list.detect { |rr| response.include?(rr.result) }
 
         if not outstanding_result
