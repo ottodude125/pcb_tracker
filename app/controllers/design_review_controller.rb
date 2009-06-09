@@ -1131,7 +1131,7 @@ class DesignReviewController < ApplicationController
       elsif review_results[:roles].size > 0
 
         # If all of the reviews have a positive response, the review is complete
-        response = ['WITHDRAWN', 'No Response', 'REJECTED']
+        response = ['WITHDRAWN', 'No Response', 'REJECTED', 'COMMENT']
         outstanding_result = review_result_list.detect { |rr| response.include?(rr.result) }
 
         if not outstanding_result
