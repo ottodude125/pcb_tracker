@@ -5,7 +5,6 @@
            design.design_center.pcb_path,
            design.directory_name) %>
 <% end %>
-
 <%= 'The design exists where specified for the following designs'  if @summary[:link_good].size > 0 %>
 <% @summary[:link_good].each do |design| %>
    <%= sprintf("%s - %s/%s",
