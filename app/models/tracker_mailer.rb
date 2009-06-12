@@ -968,7 +968,7 @@ class TrackerMailer < ActionMailer::Base
 
     content_type "text/html"
     
-    @recipients = ['paul_altimonte@notes.teradyne.com']
+    @recipients = ['ron_dallas@notes.teradyne.com','joyce_boehm@notes.teradyne.com']
     @from       = Pcbtr::SENDER
     @subject    = "[Error] exception in #{env['REQUEST_URI']}"
     @sent_on    = sent_on
@@ -1388,7 +1388,7 @@ class TrackerMailer < ActionMailer::Base
   ######################################################################
   #
   def blind_cc
-    ['paul_altimonte@notes.teradyne.com']
+    []
   end
   
   
