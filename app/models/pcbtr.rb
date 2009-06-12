@@ -38,7 +38,7 @@ class Pcbtr < ActiveRecord::Base
     TRACKER_ROOT   = 'http://' + Pcbtr.hostname + '.icd.teradyne.com:8000'
     SENDER         = 'DEVEL_PCB_TRACKER'
   end
-  EAVESDROP      = 'paul_altimonte@notes.teradyne.com'
+  EAVESDROP      = 'ron_dallas@notes.teradyne.com'
 
   
 end

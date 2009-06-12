@@ -43,8 +43,8 @@ class Ping < ActiveRecord::Base
     active_reviews.each do |dr|
     
       # Remove the results if they have been addressed      
-      dr.design_review_results.delete_if { |drr| drr.result != 'No Response' }
-      
+      dr.design_review_results.delete_if { |drr| ! drr.no_response? }
+
       dr.design_review_results.each do |drr|
         reviewer = drr.reviewer
         user_list << reviewer if !user_list.include?(reviewer)
@@ -57,10 +57,10 @@ class Ping < ActiveRecord::Base
     
     user_list = user_list.sort_by { |u| u.last_name }
     
-    user_list.each do |reviewer|
-      TrackerMailer::deliver_ping_reviewer(reviewer)
-      sleep(1)
-    end
+    #user_list.each do |reviewer|
+    #  TrackerMailer::deliver_ping_reviewer(reviewer)
+    #  sleep(1)
+    #end
     
     sleep(10)
 
@@ -68,6 +68,44 @@ class Ping < ActiveRecord::Base
 
   end
 
+  ######################################################################
+  #
+  # send_message
+  #
+  # Description:
+  # Goes through all of the design reviews and sends a reminder to the
+  # reviewer.  A summary is sent to the managers and PCB input gates.
+  #
+  ######################################################################
+  #
+  def self.send_summary()
+
+    in_review      = ReviewStatus.find_by_name("In Review")
+    active_reviews = DesignReview.find( :all,
+                                        :conditions => "review_status_id=#{in_review.id}",
+                                        :order      => "created_on" )
+
+    user_list = []
+    active_reviews.each do |dr|
+    
+      # Remove the results if they have been addressed
+      dr.design_review_results.delete_if { |drr| ! drr.no_response? }
+ 
+      dr.design_review_results.each do |drr|
+        reviewer = drr.reviewer
+        user_list << reviewer if !user_list.include?(reviewer)
+        user = user_list.detect { |u| u.id == reviewer.id }
+        user[:results] = [] if ! user[:results]
+        user[:results] << drr
+      end
+
+    end
+
+    user_list = user_list.sort_by { |u| u.last_name }
+    
+    TrackerMailer::deliver_ping_summary(user_list, active_reviews)
+
+  end
 
   def self.check_design_centers
 
@@ -82,7 +120,7 @@ class Ping < ActiveRecord::Base
 
     summary = { :link_good => [], :link_bad => [] }
     designs.each do |design|
-
+      next unless design.design_center
       if new_release
         if design.design_center.data_found?
           summary[:link_good] << design
@@ -92,7 +130,7 @@ class Ping < ActiveRecord::Base
       elsif !new_release
         review = design.design_reviews.detect { |r| r.review_type.name == design.phase.name }
         if review
-          link = "/surfboards/#{review.design_center.pcb_path}/#{design.directory_name}/public/"
+          link = "/surfboards/#{design.design_center.pcb_path}/#{design.directory_name}/public/"
         else
           link = '/no_good/'
         end
