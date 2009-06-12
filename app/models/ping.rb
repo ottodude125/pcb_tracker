@@ -43,8 +43,9 @@ class Ping < ActiveRecord::Base
     active_reviews.each do |dr|
     
       # Remove the results if they have been addressed      
-      dr.design_review_results.delete_if { |drr| ! drr.no_response? }
-
+      dr.design_review_results.delete_if { |drr| drr.result != 'No Response' &&
+                                                 drr.result != 'Commented'}
+      
       dr.design_review_results.each do |drr|
         reviewer = drr.reviewer
         user_list << reviewer if !user_list.include?(reviewer)
@@ -90,7 +91,8 @@ class Ping < ActiveRecord::Base
     
       # Remove the results if they have been addressed
       dr.design_review_results.delete_if { |drr| ! drr.no_response? }
- 
+      #drr.result != 'No Response' and drr.result != 'Commented'
+
       dr.design_review_results.each do |drr|
         reviewer = drr.reviewer
         user_list << reviewer if !user_list.include?(reviewer)
@@ -121,19 +123,20 @@ class Ping < ActiveRecord::Base
     summary = { :link_good => [], :link_bad => [] }
     designs.each do |design|
       next unless design.design_center
+      next unless design.design_center.pcb_path
       if new_release
         if design.design_center.data_found?
           summary[:link_good] << design
         else
           summary[:link_bad]  << design
         end
-      elsif !new_release
-        review = design.design_reviews.detect { |r| r.review_type.name == design.phase.name }
-        if review
+      else
+        #review = design.design_reviews.detect { |r| r.review_type.name == design.phase.name }
+        #if review
           link = "/surfboards/#{design.design_center.pcb_path}/#{design.directory_name}/public/"
-        else
-          link = '/no_good/'
-        end
+        #else
+        #  link = '/no_good/'
+        #end
         if h.get(link).code == "200"
           summary[:link_good] << design
         else

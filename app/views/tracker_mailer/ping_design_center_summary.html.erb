@@ -1,9 +1,15 @@
-<%= 'The design center settings are incorrect for the following designs'  if @summary[:link_bad].size > 0 %>
+<%= 'The design does not exist at specified location for the following designs'  if @summary[:link_bad].size > 0 %>
 <% @summary[:link_bad].each do |design| %>
-<%= sprintf("%-20s%-15s%-20s%-20s", design.directory_name, design.phase.name, design.get_phase_design_review.design_center.name, design.get_phase_design_review.designer.name) %>
+   <%= sprintf("%s - %s/%s",
+           design.directory_name,
+           design.design_center.pcb_path,
+           design.directory_name) %>
 <% end %>
 
-<%= 'The design center settings are correct for the following designs'  if @summary[:link_good].size > 0 %>
+<%= 'The design exists where specified for the following designs'  if @summary[:link_good].size > 0 %>
 <% @summary[:link_good].each do |design| %>
-<%= sprintf("%-20s%-15s%-20s%-20s", design.directory_name, design.phase.name, design.get_phase_design_review.design_center.name, design.get_phase_design_review.designer.name) %>
+   <%= sprintf("%s - %s/%s",
+           design.directory_name,
+           design.design_center.pcb_path,
+           design.directory_name) %>
 <% end %>
