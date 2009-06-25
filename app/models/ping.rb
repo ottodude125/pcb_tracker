@@ -58,10 +58,10 @@ class Ping < ActiveRecord::Base
     
     user_list = user_list.sort_by { |u| u.last_name }
     
-    #user_list.each do |reviewer|
-    #  TrackerMailer::deliver_ping_reviewer(reviewer)
-    #  sleep(1)
-    #end
+    user_list.each do |reviewer|
+      TrackerMailer::deliver_ping_reviewer(reviewer)
+      sleep(1)
+    end
     
     sleep(10)
 
