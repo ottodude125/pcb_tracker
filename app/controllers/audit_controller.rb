@@ -244,5 +244,27 @@ class AuditController < ApplicationController
   
   end
 
+  ######################################################################
+  #
+  # reset_check_list
+  #
+  # Description:
+  # This method uses the information passed in from the user
+  # to clear all of the audit status information
+  # It is available only to the designer of a board
+  #
+  # Parameters:
+  # params[:audit][:id]   - The ID of the audit.
+  #
+  #
+  ######################################################################
+  #
+  def reset_check_list
+    audit = Audit.find(params[:audit_id])
+    design = params[:design]
+    audit.clear_all_checks
+    flash['notice'] = "checklists for '#{design}' cleared"
+    redirect_to("/audit/show_sections/#{params[:audit_id]}")
+  end
 
 end # class AuditController
