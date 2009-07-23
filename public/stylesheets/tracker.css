@@ -456,3 +456,6 @@ table.sortable thead {
     border:           5px outset #023a94;
 }
 
+.wide_select {
+    width:            200px
+}
