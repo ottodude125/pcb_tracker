@@ -414,7 +414,7 @@ class BoardDesignEntryController < ApplicationController
       notice += "  <li>Platform</li>"                  if !bde.platform_id
       notice += "  <li>Product Type</li>"              if !bde.product_type_id
       notice += "  <li>Project</li>"                   if !bde.project_id
-      notice += "  <li>Revision</li>"                  if !bde.revision_id?
+      notice += "  <li>Revision</li>"                  if !bde.revision_id
       notice += "</ul>"
       flash['notice'] = notice
       
