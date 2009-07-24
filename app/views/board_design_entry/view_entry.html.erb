@@ -219,7 +219,7 @@
       <% if @board_design_entry.requested_start_date %>
         <%= @board_design_entry.requested_start_date.format_month_dd_yyyy %>
       <% else %>
-        <font color="red">Not Set</font>
+        <font color="red"><b>Not Set</b></font>
       <% end %>
     </td>
 
@@ -228,7 +228,7 @@
       <% if @board_design_entry.requested_completion_date %>
         <%= @board_design_entry.requested_completion_date.format_month_dd_yyyy %>
       <% else %>
-        <font color="red">Not Set</font>
+        <font color="red"><b>Not Set</b></font>
       <% end %>
     </td>
   </tr>
@@ -365,7 +365,7 @@
   <% if !@board_design_entry.all_manager_reviewers_assigned? %>
     <tr bgcolor="red">
       <td colspan="1">
-      	<b>EVERY MANAGER ROLE NEEDS TO BE ASSIGNED!</b>
+      	<b>EVERY MANAGER ROLE NEEDS TO BE ASSIGNED OR CHECKED OFF AS 'NOT REQUIRED'!</b>
       </td>
     </tr>
   <% end %>
@@ -373,16 +373,22 @@
   <% rows        = (@managers.size + 1) / 2 %>
   <% 1.upto(rows) { |i| %>
     <tr valign="top">
-      <th align="right"><%= @managers[i-1].role.display_name %>: </th>
-      <% if @managers[i-1].user_id == 0 %>
-        <td align="left"><font color="red"><b>Not Set</b></font></td>
-      <% else %>
-        <td align="left"><%=  @managers[i-1].user.name %></td>
-      <% end %>
+      <%# First column %>
+        <th align="right"><%= @managers[i-1].role.display_name %>: </th>
+        <% if !@managers[i-1+rows].required? %>
+          <td align="left"><font color="red">Not Required</font></td>
+        <% elsif @managers[i-1+rows].user_id == 0 %>
+          <td align="left"><font color="red"><b>Not Set</b></font></td>
+        <% else %>
+          <td align="left"><%=  @managers[i-1+rows].user.name %></td>
+        <% end %>
 
+      <%# Second column %>
       <% if @managers[i-1+rows] %>
         <th align="right"><%= @managers[i-1+rows].role.display_name %>: </th>
-        <% if @managers[i-1+rows].user_id == 0 %>
+        <% if !@managers[i-1+rows].required? %>
+          <td align="left"><font color="red">Not Required</font></td>
+        <% elsif @managers[i-1+rows].user_id == 0 %>
           <td align="left"><font color="red"><b>Not Set</b></font></td>
         <% else %>
           <td align="left"><%=  @managers[i-1+rows].user.name %></td>
