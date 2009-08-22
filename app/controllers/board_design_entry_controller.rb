@@ -604,7 +604,8 @@ class BoardDesignEntryController < ApplicationController
       entry_user = @board_design_entry.board_design_entry_users.detect{ |eu| eu.role_id == role.id }
       @managers << { :role         => role,
                      :manager_list => role.active_users,
-                     :manager_id   => entry_user ? entry_user.user_id : 0 }
+                     :manager_id   => entry_user ? entry_user.user_id : 0,
+                     :required      => !entry_user || (entry_user && entry_user.required?) }
     end
 
   end

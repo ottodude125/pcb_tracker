@@ -82,24 +82,32 @@
 
           <table bgcolor="#ffffff">
 
-            <tr><th align="center">Other Actions</th></tr>
+            <tr><th align="center" colspan="2">Other Actions</th></tr>
+            <tr>
+              <td valign="top">
+                 <table>
+                 <%= render_partial("buttons_roles_all") %>
 
-            <%= render_partial("buttons_roles_all") %>
+                 <% if @logged_in_user.is_reviewer? %>
+                      <%= render_partial("buttons_role_reviewer")%>
+                 <% end %>
+
+                 <% if @logged_in_user.is_designer? %>
+                      <%= render_partial("buttons_role_designer")%>
+                 <% end %>
+                 </table>
+              </td>
+              <td valign="top">
+                 <table>
+                 <% if (@logged_in_user.is_pcb_management? ||
+                        @logged_in_user.is_pcb_admin?      ||
+                        @logged_in_user.is_tracker_admin?) %>
+                     <%= render_partial("buttons_roles_admin_management")%>
+                 <% end %>
+                  </table>
+              </td>
+           </tr>
             
-            <% if @logged_in_user.is_reviewer? %>
-              <%= render_partial("buttons_role_reviewer")%>
-            <% end %>
-            
-            <% if (@logged_in_user.is_pcb_management? ||
-                   @logged_in_user.is_pcb_admin?      ||
-                   @logged_in_user.is_tracker_admin?) %>
-              <%= render_partial("buttons_roles_admin_management")%>
-            <% end %>
-            
-            <% if @logged_in_user.is_designer? %>
-              <%= render_partial("buttons_role_designer")%>
-            <% end %>
- 
           </table>
 
         </td>

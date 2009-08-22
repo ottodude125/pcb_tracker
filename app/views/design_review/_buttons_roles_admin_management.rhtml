@@ -27,16 +27,26 @@
   </td>
 </tr>
 
-<%# TODO THIS IS FOR FUTURE USE  %>
-<% if 1 == 0 %>
 <tr>
   <td>
-    <input type="button" value='<%= "Schedule Change" %>'
-           title="Create/View/Update Schedule Changes"
-           onClick="parent.location='<%= url_for(:controller => 'design_changes',
-                                                 :action     => 'index',
-                                                 :id         => @design_review.design.id) %>'"
+    <input type="button" value="Update FAB Vendors"
+           title="Use to change the FAB vendors assigned to a design"
+           onClick="parent.location='<%= url_for(:controller => 'design_review',
+                                                 :action     => 'update_fab_houses',
+                                                 :id         => @design_review.id) %>'"
            class="small_font_wide_button" />
   </td>
 </tr>
-<% end %>
+
+<tr>
+  <td>
+    <input type="button" value="Change Engineering Location"
+           title="Use to change the engineering location of the design"
+           onClick="parent.location='<%= url_for(:controller        => 'design_review',
+                                                 :action            => 'change_design_dir',
+                                                 :design_review_id  => @design_review.id) %>'"
+           class="small_font_wide_button" />
+  </td>
+</tr>
+
+

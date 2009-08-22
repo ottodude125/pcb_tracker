@@ -93,7 +93,7 @@ class Role < ActiveRecord::Base
   #
   def self.get_open_reviewer_roles
     drr_list = self.get_review_roles
-    drr_list.delete_if { |role| role.default_reviewer_id != 0 }
+    #drr_list.delete_if { |role| role.default_reviewer_id != 0 }
     drr_list
   end
 

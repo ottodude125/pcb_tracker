@@ -375,12 +375,12 @@
     <tr valign="top">
       <%# First column %>
         <th align="right"><%= @managers[i-1].role.display_name %>: </th>
-        <% if !@managers[i-1+rows].required? %>
+        <% if !@managers[i-1].required? %>
           <td align="left"><font color="red">Not Required</font></td>
-        <% elsif @managers[i-1+rows].user_id == 0 %>
+        <% elsif @managers[i-1].user_id == 0 %>
           <td align="left"><font color="red"><b>Not Set</b></font></td>
         <% else %>
-          <td align="left"><%=  @managers[i-1+rows].user.name %></td>
+          <td align="left"><%=  @managers[i-1].user.name %></td>
         <% end %>
 
       <%# Second column %>
