@@ -1,7 +1,7 @@
 # $Header$
 --- 
 cwd:         /hwnet/dtg_devel/web/etg/apps/pcbtr_production_branch/pcb_tracker/
-port:        "8001"
+port:        "8020"
 user:        dtg
 group:       dtg
 environment: production
