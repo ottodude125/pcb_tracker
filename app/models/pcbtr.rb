@@ -34,9 +34,9 @@ class Pcbtr < ActiveRecord::Base
     TRACKER_ROOT   = 'http://boarddev.teradyne.com/pcbtr'
     SENDER         = 'PCB_Tracker'
   else
-    PCBTR_BASE_URL = 'http://' + Pcbtr.hostname + '.icd.teradyne.com:8000/'
-    TRACKER_ROOT   = 'http://' + Pcbtr.hostname + '.icd.teradyne.com:8000'
-    SENDER         = 'DEVEL_PCB_TRACKER'
+    PCBTR_BASE_URL = 'http://boarddev-beta.teradyne.com/pcbtr/'
+    TRACKER_ROOT   = 'http://boarddev-beta.teradyne.com/pcbtr/'
+    SENDER         = 'DEVEL_PCB_Tracker'
   end
   EAVESDROP      = 'ron_dallas@notes.teradyne.com'
 
