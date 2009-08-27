@@ -1157,7 +1157,7 @@ class DesignReviewController < ApplicationController
     end
     
     if review_results[:fab_houses]
-      fab_msg = post_fab_house_updates(design_review.design, review_results[:fab_houses])
+      fab_msg = post_fab_house_updates(design_review, review_results[:fab_houses])
       dr_comment = DesignReviewComment.new(:comment          => fab_msg,
         :user_id          => @logged_in_user.id,
         :design_review_id => design_review.id).save
