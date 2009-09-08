@@ -71,7 +71,7 @@
             <td>
               <%= @design_review.review_name %>
             </td>
-            <% if @design_review.design_center == @logged_in_user.design_center %>
+            <% if @design_review.design.design_center == @logged_in_user.design_center %>
               <td colspan="2">&nbsp;</td>
             <% else %>
               <td colspan="2" bgcolor="yellow"><font color="red"><b>
