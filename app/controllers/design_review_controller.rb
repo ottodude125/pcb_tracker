@@ -151,15 +151,18 @@ class DesignReviewController < ApplicationController
       placement_review = design_reviews.find { |dr| dr.review_type.name == 'Placement' }
       routing_review   = design_reviews.find { |dr| dr.review_type.name == 'Routing' }
       placement_results = placement_review.design_review_results
-      
-      routing_review.design_review_results.each do |routing_result|
-        if !placement_results.detect { |pr| pr.role_id == routing_result.role_id }
-          DesignReviewResult.new(
-            :design_review_id => placement_review.id,
-            :reviewer_id      => routing_result.reviewer_id,
-            :role_id          => routing_result.role_id,
-            :result           => routing_result.result,
-            :reviewed_on      => routing_result.reviewed_on).save
+
+      #if there are routing reviews, create new review results based on them.
+      if routing_review
+        routing_review.design_review_results.each do |routing_result|
+          if !placement_results.detect { |pr| pr.role_id == routing_result.role_id }
+            DesignReviewResult.new(
+              :design_review_id => placement_review.id,
+              :reviewer_id      => routing_result.reviewer_id,
+              :role_id          => routing_result.role_id,
+              :result           => routing_result.result,
+              :reviewed_on      => routing_result.reviewed_on).save
+          end
         end
       end
     end
@@ -206,9 +209,10 @@ class DesignReviewController < ApplicationController
 
       # Remove the routing design review and review results for this design
       routing_review = design_reviews.detect { |dr| dr.review_type_id == routing_review.id }
-      routing_review_results = 
+      if routing_review
+        routing_review_results =
         DesignReviewResult.delete_all("design_review_id=#{routing_review.id}")
-
+      end
       DesignReview.delete(routing_review.id) if routing_review_results
 
     end
