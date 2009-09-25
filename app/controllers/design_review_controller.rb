@@ -40,6 +40,8 @@ class DesignReviewController < ApplicationController
     if params[:id]
 
       @design_review  = DesignReview.find(params[:id])
+      @brd_dsn_entry  = BoardDesignEntry.find(:first,
+         :conditions => "design_id='#{@design_review.design_id}'")
       @review_results = @design_review.review_results_by_role_name
 
       if @logged_in_user && @logged_in_user.is_reviewer?

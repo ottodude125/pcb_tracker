@@ -79,6 +79,14 @@ class Design < ActiveRecord::Base
       pcb_path = '/hwnet/' + 
                  design.design_center.pcb_path + '/' +
                  design.directory_name + '/'
+
+      brd_dsn_entry = BoardDesignEntry.find( :first,
+        :conditions => "design_id='#{design.id}'")
+
+      eng_path = '/hwnet/' +
+          brd_dsn_entry.design_directory_name + '/' +
+          design.directory_name + '/'
+
       
       puts(design.part_number.pcba_display_name          + '|' +
            design.part_number.pcb_display_name           + '|' +
@@ -88,7 +96,7 @@ class Design < ActiveRecord::Base
            hweng_email                                   + '|' +
            design.designer.email                         + '|' +
            pcb_path                                      + '|' +
-           design.board_design_entry.review_doc_location + '|')
+           eng_path                                      + '|')
     end
  
   end

@@ -40,7 +40,7 @@
     <td width="220">
       <%= poster_name(@design_review) %>
     </td>
-    <td width="150" class="th1">Design Data:</td>
+    <td width="150" class="th1">PCB Design Data:</td>
     <td>
       <% if @design_review.design.design_center %>
         <%= link_to(@design_review.design.design_center.name,
@@ -49,6 +49,13 @@
       <% else %>
         <b>Not Set</b>
       <% end %>
+      (<b>Eng Dir: </b>
+      <% if @brd_dsn_entry %>
+           <%=  @brd_dsn_entry.design_directory.name %>
+      <% else %>
+          XXX
+      <% end %>
+      )
     </td>
   </tr>
   <tr>
