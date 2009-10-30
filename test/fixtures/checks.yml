@@ -923,7 +923,7 @@ check_2859:
   subsection_id: "551"
 #  section_id: "341"
   dot_rev_check: "1"
-  url: etg.teradyne.com/boarddev/mfggate/bareboardTech/Valor/
+  url: boarddev.teradyne.com/boarddev/mfggate/bareboardTech/Valor/
   id: "2859"
   check_type: designer_auditor
   check: ""
@@ -983,7 +983,7 @@ check_2889:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#naming
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#naming
   id: "2889"
   check_type: designer_only
   check: "Outline Symbol file name matches Outline Drawing number and rev, i.e. ol39366601c_100.bsm per \"Outline Naming Conventions\" "
@@ -1091,7 +1091,7 @@ check_2860:
   subsection_id: "551"
 #  section_id: "341"
   dot_rev_check: "1"
-  url: etg.teradyne.com/boarddev/mfggate/bareboardTech/Valor/index.php?file=odbbrdimport.html
+  url: boarddev.teradyne.com/boarddev/mfggate/bareboardTech/Valor/index.php?file=odbbrdimport.html
   id: "2860"
   check_type: designer_auditor
   check: Exists
@@ -1175,7 +1175,7 @@ check_2778:
   subsection_id: "533"
 #  section_id: "331"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/layout/fab/laservia.pdf
+  url: boarddev.teradyne.com/boarddev/layout/fab/laservia.pdf
   id: "2778"
   check_type: designer_auditor
   check: Drill size is same as finished hole
@@ -1211,7 +1211,7 @@ check_2890:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#begin
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#begin
   id: "2890"
   check_type: designer_only
   check: Check status, user units mils, accuracy 2
@@ -1262,7 +1262,7 @@ check_2779:
   subsection_id: "533"
 #  section_id: "331"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/mfggate/bareboardTech/Valor/index.php?file=drillcheck.html
+  url: boarddev.teradyne.com/boarddev/mfggate/bareboardTech/Valor/index.php?file=drillcheck.html
   id: "2779"
   check_type: designer_auditor
   check: Hole/drill quantities match Drill Tool Manager in Valor
@@ -1286,7 +1286,7 @@ check_2891:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=mastertext.html
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=mastertext.html
   id: "2891"
   check_type: designer_only
   check: Check text parameters, per "Text Guidelines for master_*.brd and master_outline_*.dra.
@@ -1351,7 +1351,7 @@ check_2892:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#outline
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#outline
   id: "2892"
   check_type: designer_only
   check: Compare all outline shape lengths and geometries to outline drawing. Width 0 mils, per "Creating the Outline"
@@ -1471,7 +1471,7 @@ check_2894:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=mastertext.html
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=mastertext.html
   id: "2894"
   check_type: designer_only
   check: Check dimension and note text heights, per "Text Requirements"
@@ -1543,7 +1543,7 @@ check_2895:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#slots
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#slots
   id: "2895"
   check_type: designer_only
   check: Slots are drawn and dimensioned, per "Slots and Cutouts" and "Figure 1"
@@ -1714,7 +1714,7 @@ check_2898:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#tooling
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#tooling
   id: "2898"
   check_type: designer_only
   check: "Tooling holes, countersunk holes are shown, per \xE2\x80\x9CTooling Holes, Countersinks and Counterbores\xE2\x80\x9D"
@@ -1774,7 +1774,7 @@ check_2899:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#outline
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#outline
   id: "2899"
   check_type: designer_only
   check: "0/0 location at lower left hand tooling hole, per \xE2\x80\x9CCreating an Outline\xE2\x80\x9D"
@@ -2029,7 +2029,7 @@ check_2900:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#pin1
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#pin1
   id: "2900"
   check_type: designer_only
   check: "Check location of markers for connector reference points, per \xE2\x80\x9CPin 1 Locations\xE2\x80\x9D"
@@ -2077,7 +2077,7 @@ check_2901:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#keepins
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#keepins
   id: "2901"
   check_type: designer_only
   check: Check to mechanical outline drawing and/or PC Design Standards
@@ -2187,7 +2187,7 @@ check_2902:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#packkeepins
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#packkeepins
   id: "2902"
   check_type: designer_only
   check: Check to mechanical outline drawing and/or PC Design Standards
@@ -2259,7 +2259,7 @@ check_2903:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#keepouts
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#keepouts
   id: "2903"
   check_type: designer_only
   check: Check to mechanical outline drawing and/or PC Design standards
@@ -2319,7 +2319,7 @@ check_2904:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#viakeepouts
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#viakeepouts
   id: "2904"
   check_type: designer_only
   check: Check to mechanical outline drawing and/or PC Design Standards
@@ -2379,7 +2379,7 @@ check_2905:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#thieving
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#thieving
   id: "2905"
   check_type: designer_only
   check: Check to mechanical outline drawing and/or PC Design Standards
@@ -2427,7 +2427,7 @@ check_2906:
   subsection_id: "556"
 #  section_id: "345"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#packkeepouts
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/index.php?file=outline_symbol.html#packkeepouts
   id: "2906"
   check_type: designer_only
   check: "Check package keepout; height package text, for height requirements, per \xE2\x80\x9CPackage Keepouts: Top or Bottom, or All and Height Restrictions\xE2\x80\x9D"

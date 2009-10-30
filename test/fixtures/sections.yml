@@ -148,7 +148,7 @@ section_342:
   position: "15"
   checklist_id: "101"
   dot_rev_check: "1"
-  url: etg.teradyne.com/boarddev/mfggate/bareboardTech/Readme
+  url: boarddev.teradyne.com/boarddev/mfggate/bareboardTech/Readme
   id: "342"
 section_331: 
   date_code_check: "1"
@@ -208,7 +208,7 @@ section_345:
   position: "2"
   checklist_id: "101"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/standards/mechanical/allegroSymbol/
+  url: boarddev.teradyne.com/boarddev/standards/mechanical/allegroSymbol/
   id: "345"
 section_334: 
   date_code_check: "0"

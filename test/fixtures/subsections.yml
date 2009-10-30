@@ -209,7 +209,7 @@ subsection_547:
 #  checklist_id: "101"
   section_id: "339"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
+  url: boarddev.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
   id: "547"
   note: Refer to PCB Design/Document Control Release Package Standard
 subsection_536: 
@@ -264,7 +264,7 @@ subsection_550:
 #  checklist_id: "101"
   section_id: "340"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
+  url: boarddev.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
   id: "550"
   note: Refer to PCB Design/Document Control Release Package Standard
 subsection_549: 
@@ -297,7 +297,7 @@ subsection_527:
 #  checklist_id: "101"
   section_id: "331"
   dot_rev_check: "1"
-  url: etg.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
+  url: boarddev.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
   id: "527"
   note: Refer to PCB Design/Document Control Release Package Standard
 subsection_551: 
@@ -440,7 +440,7 @@ subsection_532:
 #  checklist_id: "101"
   section_id: "331"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/layout/fab/fabdrawing_right.html
+  url: boarddev.teradyne.com/boarddev/layout/fab/fabdrawing_right.html
   id: "532"
   note: Refer to Fabrication Drawing Standard
 subsection_555: 
@@ -462,7 +462,7 @@ subsection_544:
 #  checklist_id: "101"
   section_id: "338"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
+  url: boarddev.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
   id: "544"
   note: Refer to PCB Design/Document Control Release Package Standard
 subsection_533: 
@@ -473,7 +473,7 @@ subsection_533:
 #  checklist_id: "101"
   section_id: "331"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/layout/fab/fabdrawing_right.html
+  url: boarddev.teradyne.com/boarddev/layout/fab/fabdrawing_right.html
   id: "533"
   note: Refer to Fabrication Drawing Standard
 subsection_556: 
@@ -495,7 +495,7 @@ subsection_545:
 #  checklist_id: "101"
   section_id: "338"
   dot_rev_check: "0"
-  url: etg.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
+  url: boarddev.teradyne.com/boarddev/layout/fab/PCBDESIGN_DOCCONTROL_CHECKLIST.doc
   id: "545"
   note: Refer to PCB Design/Document Control Release Package Standard
 subsection_534: 
