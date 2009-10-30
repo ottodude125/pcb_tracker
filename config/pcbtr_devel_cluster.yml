@@ -1,10 +1,10 @@
 # $Header$
 --- 
-cwd:         /hwnet/dtg_devel/web/etg/apps/pcbtr_development_branch/pcb_tracker/
+cwd:         /hwnet/dtg_devel/web/boarddev/apps/pcbtr_development_branch/pcb_tracker/
 port:        "8020"
 user:        dtg
 group:       dtg
 environment: development
 address:     127.0.0.1
-pid_file:    /hwnet/dtg_devel/web/etg/apps/pcbtr_development_branch/pcb_tracker/shared/pids/mongrel.pid
+pid_file:    /hwnet/dtg_devel/web/boarddev/apps/pcbtr_development_branch/pcb_tracker/shared/pids/mongrel.pid
 servers:     4

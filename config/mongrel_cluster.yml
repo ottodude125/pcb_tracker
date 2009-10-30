@@ -1,10 +1,10 @@
 --- 
-cwd: /hwnet/dtg_devel/web/etg/apps/pcb_tracker_rorV2/pcb_tracker/public
-log_file: /hwnet/dtg_devel/web/etg/apps/pcb_tracker_rorV2/pcb_tracker/log/mongrel.log
+cwd: /hwnet/dtg_devel/web/boarddev/apps/pcb_tracker_rorV2/pcb_tracker/public
+log_file: /hwnet/dtg_devel/web/boarddev/apps/pcb_tracker_rorV2/pcb_tracker/log/mongrel.log
 port: "8000"
 environment: development
 user: dtg
 group: dtg
 address: 127.0.0.1
-pid_file: /hwnet/dtg_devel/web/etg/apps/pcb_tracker_rorV2//pcb_tracker/shared/pids/mongrel.pid
+pid_file: /hwnet/dtg_devel/web/boarddev/apps/pcb_tracker_rorV2/pcb_tracker/shared/pids/mongrel.pid
 servers: 2
