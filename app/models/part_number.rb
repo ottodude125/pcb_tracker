@@ -702,9 +702,9 @@ class PartNumber < ActiveRecord::Base
                                              "pcb_number='#{self.pcba_number}' AND " +
                                              "pcb_dash_number='#{self.pcba_dash_number}' AND " +
                                              "pcb_revision='#{self.pcba_revision}'")
-    pcb_pn = PartNumber.find( :first,
-                              :conditions => "pcb_prefix='#{self.pcba_prefix}' AND " +
-                                             "pcb_number='#{self.pcba_number}'")
+    #pcb_pn = PartNumber.find( :first,
+    #                          :conditions => "pcb_prefix='#{self.pcba_prefix}' AND " +
+    #                                         "pcb_number='#{self.pcba_number}'")
     if !self.pcba_pn_equal?(PartNumber.initial_part_number)
       pcba_pn = PartNumber.find( :first,
                                  :conditions => "pcba_prefix='#{self.pcba_prefix}' AND " +
@@ -755,9 +755,14 @@ class PartNumber < ActiveRecord::Base
                                              "pcb_number='#{self.pcb_number}' AND " +
                                              "pcb_dash_number='#{self.pcb_dash_number}' AND " +
                                              "pcb_revision='#{self.pcb_revision}'")
+    #pcba_pn = PartNumber.find( :first,
+    #                          :conditions => "pcba_prefix='#{self.pcb_prefix}' AND " +
+    #                                         "pcba_number='#{self.pcb_number}'")
     pcba_pn = PartNumber.find( :first,
-                               :conditions => "pcba_prefix='#{self.pcb_prefix}' AND " +
-                                              "pcba_number='#{self.pcb_number}'")
+      :conditions => "pcba_prefix='#{self.pcba_prefix}' AND " +
+                     "pcba_number='#{self.pcba_number}' AND " +
+                     "pcba_dash_number='#{self.pcba_dash_number}' AND " +
+                     "pcba_revision='#{self.pcba_revision}'")
     if pcb_pn
       self.set_error_message('The supplied PCB Part Number already exists as ' +
                              'a PCB Part Number in the database - YOUR PART ' +
