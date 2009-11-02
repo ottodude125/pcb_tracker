@@ -16,16 +16,16 @@
     </td>
   </tr>
   <% if @design_review.design.part_number.new? %>
-  <tr>
-    <td width="130" class="th1">PCBA Part Number:</td>
-    <td>
-      <%= @design_review.design.part_number.pcba_name %>
-    </td>
-    <td class="th1">Revision:</td>
-    <td>
-      <%= @design_review.design.part_number.pcba_revision %>
-    </td>
-  </tr>
+    <tr>
+      <td width="130" class="th1">PCBA Part Number:</td>
+      <td>
+        <%= @design_review.design.part_number.pcba_name %>
+      </td>
+      <td class="th1">Revision:</td>
+      <td>
+        <%= @design_review.design.part_number.pcba_revision %>
+      </td>
+    </tr>
   <% end %>
   <tr>
     <td width="130" class="th1">Description:</td>
@@ -44,16 +44,16 @@
     <td>
       <% if @design_review.design.design_center %>
         <%= link_to(@design_review.design.design_center.name,
-                    design_center_path(@design_review),
-                    :popup => true) %>
+          design_center_path(@design_review),
+          :popup => true) %>
       <% else %>
         <b>Not Set</b>
       <% end %>
       (<b>Eng Dir: </b>
-      <% if @brd_dsn_entry %>
-           <%=  @brd_dsn_entry.design_directory.name %>
+      <% if @brd_dsn_entry && @brd_dsn_entry.design_directory %>
+        <%=  @brd_dsn_entry.design_directory.name %>
       <% else %>
-          XXX
+        XXX
       <% end %>
       )
     </td>
@@ -69,15 +69,15 @@
     <td><%= @design_review.review_status.name %></td>
     <td class="th1">Total Days On Hold:</td>
     <td><%= sprintf("%4.1f", @design_review.time_on_hold_total.to_f / 1.day) %></td>
-  </tr> 
-  
-  <% if @design_review.on_hold? %>
-  <tr>
-    <td class="th1">Placed On Hold:</td>
-    <td><%= @design_review.placed_on_hold_on.format_dd_mon_yy('timestamp') %></td>
-    <td class="th1">Days On Hold:</td>
-    <td><%= sprintf("%4.1f", @design_review.time_on_hold.to_f / 1.day) %></td>
   </tr>
+
+  <% if @design_review.on_hold? %>
+    <tr>
+      <td class="th1">Placed On Hold:</td>
+      <td><%= @design_review.placed_on_hold_on.format_dd_mon_yy('timestamp') %></td>
+      <td class="th1">Days On Hold:</td>
+      <td><%= sprintf("%4.1f", @design_review.time_on_hold.to_f / 1.day) %></td>
+    </tr>
   <% end %>
 
   <tr>
@@ -109,7 +109,7 @@
         </table>
       </td>
     <% end %>
-    
+
     <% if @design_review.posting_count > 0 %>
       <td class="th1">Last Posted:</td>
       <td>
