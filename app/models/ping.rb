@@ -137,7 +137,8 @@ class Ping < ActiveRecord::Base
         #else
         #  link = '/no_good/'
         #end
-        if h.get(link).code == "200"
+        code = h.get(link).code
+        if code == "200" || code == "301"
           summary[:link_good] << design
         else
           summary[:link_bad]  << design
