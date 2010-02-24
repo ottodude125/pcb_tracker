@@ -759,10 +759,10 @@ class PartNumber < ActiveRecord::Base
     #                          :conditions => "pcba_prefix='#{self.pcb_prefix}' AND " +
     #                                         "pcba_number='#{self.pcb_number}'")
     pcba_pn = PartNumber.find( :first,
-      :conditions => "pcba_prefix='#{self.pcba_prefix}' AND " +
-                     "pcba_number='#{self.pcba_number}' AND " +
-                     "pcba_dash_number='#{self.pcba_dash_number}' AND " +
-                     "pcba_revision='#{self.pcba_revision}'")
+      :conditions => "pcba_prefix='#{self.pcb_prefix}' AND " +
+                     "pcba_number='#{self.pcb_number}' AND " +
+                     "pcba_dash_number='#{self.pcb_dash_number}' AND " +
+                     "pcba_revision='#{self.pcb_revision}'")
     if pcb_pn
       self.set_error_message('The supplied PCB Part Number already exists as ' +
                              'a PCB Part Number in the database - YOUR PART ' +
