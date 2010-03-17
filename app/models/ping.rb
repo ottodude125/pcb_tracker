@@ -133,7 +133,7 @@ class Ping < ActiveRecord::Base
       else
         #review = design.design_reviews.detect { |r| r.review_type.name == design.phase.name }
         #if review
-          link = "/surfboards/#{design.design_center.pcb_path}/#{design.directory_name}"
+          link = "/surfboards/#{design.design_center.pcb_path}/#{design.directory_name}/"
         #else
         #  link = '/no_good/'
         #end
