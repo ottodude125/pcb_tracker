@@ -1,0 +1,25 @@
+#!/bin/sh
+
+#####################################################
+# Used to retrieve the data used to upload BOMs to 
+# TeamCenter
+#####################################################
+# $Id$
+#####################################################
+
+if [ $# = 0 ] ; then
+    outfile=/hwnet/dtg_devel/tcbom/tracker_data.txt
+else
+    outfile=$1
+fi
+
+rooted=`echo $outfile | awk '/^\//{print}'`
+if [ X$rooted = X ]; then
+    #unrooted
+    outfile=$PWD/$outfile
+fi
+
+cd /hwnet/dtg_devel/web/boarddev/apps/pcbtr_development_branch/pcb_tracker
+
+/usr/local/bin/ruby script/runner -e development 'Design.bom_upload_data' > \
+    $outfile
