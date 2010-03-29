@@ -83,7 +83,7 @@ class Design < ActiveRecord::Base
       brd_dsn_entry = BoardDesignEntry.find( :first,
         :conditions => "design_id='#{design.id}'")
 
-      eng_path = '/hwnet/' +
+      eng_path = # '/hwnet/' + # /hwnet is in the database name
           brd_dsn_entry.design_directory_name + '/' +
           design.directory_name + '/'
 
