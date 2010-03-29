@@ -1236,10 +1236,23 @@ class Design < ActiveRecord::Base
       self.pcb_input_id = update[:pcb_input_gate].id
     end
 
+    old_pcb_path = '/hwnet/' +
+      self.design_center.pcb_path + '/' +
+      self.directory_name
     old_design_center_name = self.set_design_center(update[:design_center], user)
     if old_design_center_name
       changes[:design_center] = { :old => old_design_center_name,
                                   :new => update[:design_center].name }
+      # call the program to rename assembly folders in the NPI BOM data to reflect the
+      # movement of the design.
+      new_pcb_path = '/hwnet/' +
+        self.design_center.pcb_path + '/' +
+        self.directory_name
+      cmd = "/hwnet/dtg_devel/web/boarddev/cgi-bin/npi_boms/rename_assembly_folder.pl" +
+        " " + self.part_number.pcba_name +
+        " " + old_pcb_path +
+        " " + new_pcb_path
+      system(cmd)
     end
 
     if update[:designer] && self.designer_id != update[:designer].id
