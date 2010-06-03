@@ -1416,18 +1416,20 @@ class DesignReviewController < ApplicationController
     # Identify the unique members for the FTP Notification FTP list.
     if @design.board_design_entry
       ops_manager = @design.board_design_entry.board_design_entry_users.detect { |u| u.role.name == 'Operations Manager'}
-    else
-      flash['notice'] = "" if !flash['notice']
-      flash['notice'] += "<br />WARNING: THE OPERATIONS MANAGER WAS NOT AUTOMATICALLY ADDED TO THE CC LIST"
+      if ! ops_manager
+        flash['notice'] = "" if !flash['notice']
+        flash['notice'] += "<br />WARNING: THE OPERATIONS MANAGER WAS NOT AUTOMATICALLY ADDED TO THE CC LIST"
+      end
     end
-    ftp_cc_list = [User.find_by_login('ftpgrp'), User.find_by_login('cedftgrp')]
-    ftp_cc_list << ops_manager.user if ops_manager
-    ftp_cc_list.each { |cc| @design.board.users << cc if !@design.board.users.detect { |u| u.id == cc.id }}
 
     # Get all of the users who are in the CC list for the board.
     users_on_cc_list = []
     @design.board.users.each { |user| users_on_cc_list.push(user.id) }
-
+    # Add the default users
+    users_on_cc_list.push(ops_manager).id if ops_manager
+    users_on_cc_list.push(User.find_by_login('ftpgrp').id)
+    users_on_cc_list.push(User.find_by_login('cedftgrp').id)
+        
     # Get all of the users, remove the reviewer names, and add the full name.
     users = User.find(:all,
       :conditions => 'active=1',
