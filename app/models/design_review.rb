@@ -64,7 +64,7 @@ class DesignReview < ActiveRecord::Base
   #  Returns a list of design reviews.
   #
   def self.my_processed_reviews(user)
-    DesignReview.active_design_reviews unless @active_design_reviews
+    DesignReview.active_design_reviews #unless @active_design_reviews
     my_processed_reviews = @active_design_reviews.to_ary.find_all { |dr| dr.is_reviewer?(user) }
     my_processed_reviews.delete_if { |dr| !dr.reviewer_is_complete?(user) }
     my_processed_reviews
@@ -80,7 +80,7 @@ class DesignReview < ActiveRecord::Base
   #  Returns a list of design reviews.
   #
   def self.my_unprocessed_reviews(user)
-    DesignReview.active_design_reviews unless @active_design_reviews
+    DesignReview.active_design_reviews #unless @active_design_reviews
     my_unprocessed_reviews = @active_design_reviews.to_ary.find_all { |dr| dr.is_reviewer?(user) }
     my_unprocessed_reviews.delete_if { |dr| dr.reviewer_is_complete?(user) }
   end
@@ -95,7 +95,7 @@ class DesignReview < ActiveRecord::Base
   #  Returns a list of design reviews.
   #
   def self.reviews_assigned_to_peers(user)
-    DesignReview.active_design_reviews unless @active_design_reviews
+    DesignReview.active_design_reviews #unless @active_design_reviews
     @active_design_reviews.to_ary.find_all { |dr| !dr.is_reviewer?(user) && dr.my_roles(user) != [] }
   end
 
