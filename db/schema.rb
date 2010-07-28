@@ -9,13 +9,13 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 3) do
+ActiveRecord::Schema.define(:version => 4) do
 
   create_table "audit_comments", :force => true do |t|
-    t.integer   "design_check_id", :limit => 12, :default => 0, :null => false
-    t.integer   "user_id",         :limit => 12, :default => 0, :null => false
-    t.timestamp "created_on"
-    t.text      "comment",                                      :null => false
+    t.integer  "design_check_id", :limit => 12, :default => 0, :null => false
+    t.integer  "user_id",         :limit => 12, :default => 0, :null => false
+    t.datetime "created_on"
+    t.text     "comment",                                      :null => false
   end
 
   add_index "audit_comments", ["design_check_id"], :name => "design_check_id"
@@ -42,51 +42,51 @@ ActiveRecord::Schema.define(:version => 3) do
   end
 
   create_table "board_design_entries", :force => true do |t|
-    t.integer   "part_number_id",                 :limit => 12,  :default => 0,            :null => false
-    t.integer   "location_id",                    :limit => 3,   :default => 0,            :null => false
-    t.integer   "division_id",                    :limit => 3,   :default => 0,            :null => false
-    t.integer   "platform_id",                    :limit => 3,   :default => 0,            :null => false
-    t.integer   "project_id",                     :limit => 3,   :default => 0,            :null => false
-    t.string    "description",                    :limit => 80,  :default => "",           :null => false
-    t.string    "pre_production_release_number",  :limit => 32,  :default => "",           :null => false
-    t.integer   "product_type_id",                :limit => 3,   :default => 0,            :null => false
-    t.string    "review_doc_location",            :limit => 128, :default => "",           :null => false
-    t.integer   "prefix_id",                      :limit => 3,   :default => 0,            :null => false
-    t.string    "number",                         :limit => 3,   :default => "",           :null => false
-    t.integer   "revision_id",                    :limit => 3,   :default => 0,            :null => false
-    t.integer   "numeric_revision",               :limit => 3,   :default => 0,            :null => false
-    t.string    "eco_number",                     :limit => 7,   :default => "",           :null => false
-    t.string    "entry_type",                     :limit => 16,  :default => "",           :null => false
-    t.integer   "user_id",                        :limit => 12,  :default => 0,            :null => false
-    t.string    "state",                          :limit => 16,  :default => "originated", :null => false
-    t.timestamp "submitted_on"
-    t.integer   "make_from",                      :limit => 3,   :default => 0,            :null => false
-    t.string    "original_pcb_number",            :limit => 16,  :default => "",           :null => false
-    t.string    "outline_drawing_number",         :limit => 32,  :default => "",           :null => false
-    t.integer   "hipot_testing_required",         :limit => 3,   :default => 0,            :null => false
-    t.integer   "lead_free_devices",              :limit => 3,   :default => 0,            :null => false
-    t.text      "lead_free_device_names",                                                  :null => false
-    t.integer   "design_directory_id",            :limit => 3,   :default => 0
-    t.integer   "incoming_directory_id",          :limit => 3,   :default => 0
-    t.integer   "differential_pairs",             :limit => 3,   :default => 0,            :null => false
-    t.integer   "controlled_impedance",           :limit => 3,   :default => 0,            :null => false
-    t.integer   "scheduled_nets",                 :limit => 3,   :default => 0,            :null => false
-    t.integer   "propagation_delay",              :limit => 3,   :default => 0,            :null => false
-    t.integer   "matched_propagation_delay",      :limit => 3,   :default => 0,            :null => false
-    t.integer   "outline_drawing_document_id",    :limit => 12,  :default => 0,            :null => false
-    t.integer   "pcb_attribute_form_document_id", :limit => 12,  :default => 0,            :null => false
-    t.integer   "teradyne_stackup_document_id",   :limit => 12,  :default => 0,            :null => false
-    t.text      "originator_comments",                                                     :null => false
-    t.text      "input_gate_comments",                                                     :null => false
-    t.timestamp "requested_start_date"
-    t.timestamp "requested_completion_date"
-    t.integer   "details_complete",               :limit => 3,   :default => 0,            :null => false
-    t.integer   "constraints_complete",           :limit => 3,   :default => 0,            :null => false
-    t.integer   "management_team_complete",       :limit => 3,   :default => 0,            :null => false
-    t.integer   "review_team_complete",           :limit => 3,   :default => 0,            :null => false
-    t.integer   "attachments_complete",           :limit => 3,   :default => 0,            :null => false
-    t.integer   "comments_complete",              :limit => 3,   :default => 0,            :null => false
-    t.integer   "design_id",                      :limit => 12,  :default => 0,            :null => false
+    t.integer  "part_number_id",                 :limit => 12,  :default => 0,            :null => false
+    t.integer  "location_id",                    :limit => 3,   :default => 0,            :null => false
+    t.integer  "division_id",                    :limit => 3,   :default => 0,            :null => false
+    t.integer  "platform_id",                    :limit => 3,   :default => 0,            :null => false
+    t.integer  "project_id",                     :limit => 3,   :default => 0,            :null => false
+    t.string   "description",                    :limit => 80,  :default => "",           :null => false
+    t.string   "pre_production_release_number",  :limit => 32,  :default => "",           :null => false
+    t.integer  "product_type_id",                :limit => 3,   :default => 0,            :null => false
+    t.string   "review_doc_location",            :limit => 128, :default => "",           :null => false
+    t.integer  "prefix_id",                      :limit => 3,   :default => 0,            :null => false
+    t.string   "number",                         :limit => 3,   :default => "",           :null => false
+    t.integer  "revision_id",                    :limit => 3,   :default => 0,            :null => false
+    t.integer  "numeric_revision",               :limit => 3,   :default => 0,            :null => false
+    t.string   "eco_number",                     :limit => 7,   :default => "",           :null => false
+    t.string   "entry_type",                     :limit => 16,  :default => "",           :null => false
+    t.integer  "user_id",                        :limit => 12,  :default => 0,            :null => false
+    t.string   "state",                          :limit => 16,  :default => "originated", :null => false
+    t.datetime "submitted_on"
+    t.integer  "make_from",                      :limit => 3,   :default => 0,            :null => false
+    t.string   "original_pcb_number",            :limit => 16,  :default => "",           :null => false
+    t.string   "outline_drawing_number",         :limit => 32,  :default => "",           :null => false
+    t.integer  "hipot_testing_required",         :limit => 3,   :default => 0,            :null => false
+    t.integer  "lead_free_devices",              :limit => 3,   :default => 0,            :null => false
+    t.text     "lead_free_device_names",                                                  :null => false
+    t.integer  "design_directory_id",            :limit => 3,   :default => 0
+    t.integer  "incoming_directory_id",          :limit => 3,   :default => 0
+    t.integer  "differential_pairs",             :limit => 3,   :default => 0,            :null => false
+    t.integer  "controlled_impedance",           :limit => 3,   :default => 0,            :null => false
+    t.integer  "scheduled_nets",                 :limit => 3,   :default => 0,            :null => false
+    t.integer  "propagation_delay",              :limit => 3,   :default => 0,            :null => false
+    t.integer  "matched_propagation_delay",      :limit => 3,   :default => 0,            :null => false
+    t.integer  "outline_drawing_document_id",    :limit => 12,  :default => 0,            :null => false
+    t.integer  "pcb_attribute_form_document_id", :limit => 12,  :default => 0,            :null => false
+    t.integer  "teradyne_stackup_document_id",   :limit => 12,  :default => 0,            :null => false
+    t.text     "originator_comments",                                                     :null => false
+    t.text     "input_gate_comments",                                                     :null => false
+    t.datetime "requested_start_date"
+    t.datetime "requested_completion_date"
+    t.integer  "details_complete",               :limit => 3,   :default => 0,            :null => false
+    t.integer  "constraints_complete",           :limit => 3,   :default => 0,            :null => false
+    t.integer  "management_team_complete",       :limit => 3,   :default => 0,            :null => false
+    t.integer  "review_team_complete",           :limit => 3,   :default => 0,            :null => false
+    t.integer  "attachments_complete",           :limit => 3,   :default => 0,            :null => false
+    t.integer  "comments_complete",              :limit => 3,   :default => 0,            :null => false
+    t.integer  "design_id",                      :limit => 12,  :default => 0,            :null => false
   end
 
   add_index "board_design_entries", ["part_number_id"], :name => "part_number_id"
@@ -138,17 +138,17 @@ ActiveRecord::Schema.define(:version => 3) do
   add_index "boards_users", ["user_id"], :name => "user_id"
 
   create_table "cc_list_histories", :force => true do |t|
-    t.integer   "design_review_id", :limit => 12, :default => 0,  :null => false
-    t.integer   "user_id",          :limit => 12, :default => 0,  :null => false
-    t.integer   "addressee_id",     :limit => 12, :default => 0,  :null => false
-    t.string    "action",           :limit => 8,  :default => "", :null => false
-    t.timestamp "created_on"
+    t.integer  "design_review_id", :limit => 12, :default => 0,  :null => false
+    t.integer  "user_id",          :limit => 12, :default => 0,  :null => false
+    t.integer  "addressee_id",     :limit => 12, :default => 0,  :null => false
+    t.string   "action",           :limit => 8,  :default => "", :null => false
+    t.datetime "created_on"
   end
 
   create_table "change_classes", :force => true do |t|
     t.string   "name"
     t.integer  "position",     :limit => 11
-    t.boolean  "manager_only",               :default => false, :null => false
+    t.integer  "manager_only", :limit => 1,  :default => 0, :null => false
     t.boolean  "active"
     t.text     "definition"
     t.datetime "created_at"
@@ -186,24 +186,24 @@ ActiveRecord::Schema.define(:version => 3) do
   end
 
   create_table "checklists", :force => true do |t|
-    t.integer   "major_rev_number",                  :limit => 3,  :default => 0, :null => false
-    t.integer   "minor_rev_number",                  :limit => 3,  :default => 0, :null => false
-    t.integer   "released",                          :limit => 3,  :default => 0, :null => false
-    t.integer   "used",                              :limit => 3,  :default => 0, :null => false
-    t.timestamp "released_on"
-    t.integer   "released_by",                       :limit => 12, :default => 0, :null => false
-    t.timestamp "created_on"
-    t.integer   "created_by",                        :limit => 12, :default => 0, :null => false
-    t.integer   "designer_only_count",               :limit => 3,  :default => 0, :null => false
-    t.integer   "designer_auditor_count",            :limit => 3,  :default => 0, :null => false
-    t.integer   "dc_designer_only_count",            :limit => 3,  :default => 0, :null => false
-    t.integer   "dc_designer_auditor_count",         :limit => 3,  :default => 0, :null => false
-    t.integer   "dr_designer_only_count",            :limit => 3,  :default => 0, :null => false
-    t.integer   "dr_designer_auditor_count",         :limit => 3,  :default => 0, :null => false
-    t.integer   "new_design_self_check_count",       :limit => 12, :default => 0, :null => false
-    t.integer   "new_design_peer_check_count",       :limit => 12, :default => 0, :null => false
-    t.integer   "bareboard_design_self_check_count", :limit => 12, :default => 0, :null => false
-    t.integer   "bareboard_design_peer_check_count", :limit => 12, :default => 0, :null => false
+    t.integer  "major_rev_number",                  :limit => 3,  :default => 0, :null => false
+    t.integer  "minor_rev_number",                  :limit => 3,  :default => 0, :null => false
+    t.integer  "released",                          :limit => 3,  :default => 0, :null => false
+    t.integer  "used",                              :limit => 3,  :default => 0, :null => false
+    t.datetime "released_on"
+    t.integer  "released_by",                       :limit => 12, :default => 0, :null => false
+    t.datetime "created_on"
+    t.integer  "created_by",                        :limit => 12, :default => 0, :null => false
+    t.integer  "designer_only_count",               :limit => 3,  :default => 0, :null => false
+    t.integer  "designer_auditor_count",            :limit => 3,  :default => 0, :null => false
+    t.integer  "dc_designer_only_count",            :limit => 3,  :default => 0, :null => false
+    t.integer  "dc_designer_auditor_count",         :limit => 3,  :default => 0, :null => false
+    t.integer  "dr_designer_only_count",            :limit => 3,  :default => 0, :null => false
+    t.integer  "dr_designer_auditor_count",         :limit => 3,  :default => 0, :null => false
+    t.integer  "new_design_self_check_count",       :limit => 12, :default => 0, :null => false
+    t.integer  "new_design_peer_check_count",       :limit => 12, :default => 0, :null => false
+    t.integer  "bareboard_design_self_check_count", :limit => 12, :default => 0, :null => false
+    t.integer  "bareboard_design_peer_check_count", :limit => 12, :default => 0, :null => false
   end
 
   create_table "checks", :force => true do |t|
@@ -247,14 +247,14 @@ ActiveRecord::Schema.define(:version => 3) do
   end
 
   create_table "design_checks", :force => true do |t|
-    t.integer   "audit_id",            :limit => 12, :default => 0,      :null => false
-    t.integer   "check_id",            :limit => 12, :default => 0,      :null => false
-    t.integer   "auditor_id",          :limit => 12, :default => 0,      :null => false
-    t.string    "auditor_result",      :limit => 10, :default => "None", :null => false
-    t.timestamp "auditor_checked_on"
-    t.integer   "designer_id",         :limit => 12, :default => 0,      :null => false
-    t.string    "designer_result",     :limit => 10, :default => "None", :null => false
-    t.timestamp "designer_checked_on"
+    t.integer  "audit_id",            :limit => 12, :default => 0,      :null => false
+    t.integer  "check_id",            :limit => 12, :default => 0,      :null => false
+    t.integer  "auditor_id",          :limit => 12, :default => 0,      :null => false
+    t.string   "auditor_result",      :limit => 10, :default => "None", :null => false
+    t.datetime "auditor_checked_on"
+    t.integer  "designer_id",         :limit => 12, :default => 0,      :null => false
+    t.string   "designer_result",     :limit => 10, :default => "None", :null => false
+    t.datetime "designer_checked_on"
   end
 
   add_index "design_checks", ["audit_id"], :name => "audit_id"
@@ -266,11 +266,11 @@ ActiveRecord::Schema.define(:version => 3) do
   end
 
   create_table "design_review_comments", :force => true do |t|
-    t.integer   "design_review_id", :limit => 12, :default => 0, :null => false
-    t.integer   "user_id",          :limit => 12, :default => 0, :null => false
-    t.timestamp "created_on"
-    t.integer   "highlight",        :limit => 3,  :default => 0, :null => false
-    t.text      "comment",                                       :null => false
+    t.integer  "design_review_id", :limit => 12, :default => 0, :null => false
+    t.integer  "user_id",          :limit => 12, :default => 0, :null => false
+    t.datetime "created_on"
+    t.integer  "highlight",        :limit => 3,  :default => 0, :null => false
+    t.text     "comment",                                       :null => false
   end
 
   create_table "design_review_documents", :force => true do |t|
@@ -283,63 +283,64 @@ ActiveRecord::Schema.define(:version => 3) do
   add_index "design_review_documents", ["board_id"], :name => "board_id"
 
   create_table "design_review_results", :force => true do |t|
-    t.integer   "design_review_id", :limit => 12, :default => 0,      :null => false
-    t.integer   "reviewer_id",      :limit => 12, :default => 0,      :null => false
-    t.integer   "role_id",          :limit => 12, :default => 0,      :null => false
-    t.string    "result",           :limit => 16, :default => "NONE", :null => false
-    t.timestamp "reviewed_on"
+    t.integer  "design_review_id", :limit => 12, :default => 0,      :null => false
+    t.integer  "reviewer_id",      :limit => 12, :default => 0,      :null => false
+    t.integer  "role_id",          :limit => 12, :default => 0,      :null => false
+    t.string   "result",           :limit => 16, :default => "NONE", :null => false
+    t.datetime "reviewed_on"
   end
 
   add_index "design_review_results", ["design_review_id"], :name => "design_review_id"
 
   create_table "design_reviews", :force => true do |t|
-    t.integer   "posting_count",      :limit => 3,  :default => 0, :null => false
-    t.integer   "design_id",          :limit => 12, :default => 0, :null => false
-    t.integer   "designer_id",        :limit => 12, :default => 0, :null => false
-    t.integer   "design_center_id",   :limit => 3,  :default => 0, :null => false
-    t.integer   "review_status_id",   :limit => 3,  :default => 0, :null => false
-    t.integer   "review_type_id",     :limit => 3,  :default => 0, :null => false
-    t.integer   "review_type_id_2",   :limit => 3,  :default => 0, :null => false
-    t.integer   "priority_id",        :limit => 3,  :default => 0, :null => false
-    t.integer   "creator_id",         :limit => 12, :default => 0, :null => false
-    t.integer   "total_time_on_hold", :limit => 12, :default => 0, :null => false
-    t.timestamp "created_on"
-    t.timestamp "placed_on_hold_on"
-    t.timestamp "reposted_on"
-    t.timestamp "completed_on"
+    t.integer  "posting_count",      :limit => 3,  :default => 0, :null => false
+    t.integer  "design_id",          :limit => 12, :default => 0, :null => false
+    t.integer  "designer_id",        :limit => 12, :default => 0, :null => false
+    t.integer  "design_center_id",   :limit => 3,  :default => 0, :null => false
+    t.integer  "review_status_id",   :limit => 3,  :default => 0, :null => false
+    t.integer  "review_type_id",     :limit => 3,  :default => 0, :null => false
+    t.integer  "review_type_id_2",   :limit => 3,  :default => 0, :null => false
+    t.integer  "priority_id",        :limit => 3,  :default => 0, :null => false
+    t.integer  "creator_id",         :limit => 12, :default => 0, :null => false
+    t.integer  "total_time_on_hold", :limit => 12, :default => 0, :null => false
+    t.datetime "created_on"
+    t.datetime "placed_on_hold_on"
+    t.datetime "reposted_on"
+    t.datetime "completed_on"
   end
 
   add_index "design_reviews", ["design_id"], :name => "design_id"
 
   create_table "design_updates", :force => true do |t|
-    t.integer   "design_id",        :limit => 12, :default => 0,  :null => false
-    t.integer   "design_review_id", :limit => 12, :default => 0,  :null => false
-    t.integer   "user_id",          :limit => 12, :default => 0,  :null => false
-    t.string    "what",             :limit => 32, :default => "", :null => false
-    t.string    "old_value",        :limit => 32, :default => "", :null => false
-    t.string    "new_value",        :limit => 32, :default => "", :null => false
-    t.timestamp "created_on"
+    t.integer  "design_id",        :limit => 12, :default => 0,  :null => false
+    t.integer  "design_review_id", :limit => 12, :default => 0,  :null => false
+    t.integer  "user_id",          :limit => 12, :default => 0,  :null => false
+    t.string   "what",             :limit => 32, :default => "", :null => false
+    t.string   "old_value",        :limit => 32, :default => "", :null => false
+    t.string   "new_value",        :limit => 32, :default => "", :null => false
+    t.datetime "created_on"
   end
 
   add_index "design_updates", ["design_id"], :name => "design_id"
   add_index "design_updates", ["design_review_id"], :name => "design_review_id"
 
   create_table "designs", :force => true do |t|
-    t.string    "name",             :limit => 12, :default => "",   :null => false
-    t.integer   "part_number_id",   :limit => 12, :default => 0,    :null => false
-    t.integer   "phase_id",         :limit => 3,  :default => 0,    :null => false
-    t.integer   "priority_id",      :limit => 3,  :default => 0,    :null => false
-    t.integer   "board_id",         :limit => 12, :default => 0,    :null => false
-    t.integer   "revision_id",      :limit => 3,  :default => 0,    :null => false
-    t.integer   "suffix_id",        :limit => 3,  :default => 0
-    t.integer   "numeric_revision", :limit => 3,  :default => 0,    :null => false
-    t.string    "eco_number",       :limit => 7,  :default => "",   :null => false
-    t.string    "design_type",      :limit => 15, :default => "''", :null => false
-    t.integer   "designer_id",      :limit => 12, :default => 0,    :null => false
-    t.integer   "peer_id",          :limit => 12, :default => 0,    :null => false
-    t.integer   "pcb_input_id",     :limit => 12, :default => 0,    :null => false
-    t.timestamp "created_on"
-    t.integer   "created_by",       :limit => 12, :default => 0,    :null => false
+    t.string   "name",             :limit => 12, :default => "",   :null => false
+    t.integer  "part_number_id",   :limit => 12, :default => 0,    :null => false
+    t.integer  "design_center_id", :limit => 11, :default => 0,    :null => false
+    t.integer  "phase_id",         :limit => 3,  :default => 0,    :null => false
+    t.integer  "priority_id",      :limit => 3,  :default => 0,    :null => false
+    t.integer  "board_id",         :limit => 12, :default => 0,    :null => false
+    t.integer  "revision_id",      :limit => 3,  :default => 0,    :null => false
+    t.integer  "suffix_id",        :limit => 3,  :default => 0
+    t.integer  "numeric_revision", :limit => 3,  :default => 0,    :null => false
+    t.string   "eco_number",       :limit => 7,  :default => "",   :null => false
+    t.string   "design_type",      :limit => 15, :default => "''", :null => false
+    t.integer  "designer_id",      :limit => 12, :default => 0,    :null => false
+    t.integer  "peer_id",          :limit => 12, :default => 0,    :null => false
+    t.integer  "pcb_input_id",     :limit => 12, :default => 0,    :null => false
+    t.datetime "created_on"
+    t.integer  "created_by",       :limit => 12, :default => 0,    :null => false
   end
 
   create_table "designs_fab_houses", :id => false, :force => true do |t|
@@ -366,12 +367,12 @@ ActiveRecord::Schema.define(:version => 3) do
   end
 
   create_table "documents", :force => true do |t|
-    t.binary    "data",         :limit => 16777215,                 :null => false
-    t.integer   "unpacked",     :limit => 3,        :default => 1,  :null => false
-    t.string    "name",         :limit => 100,      :default => "", :null => false
-    t.string    "content_type", :limit => 100,      :default => "", :null => false
-    t.integer   "created_by",   :limit => 12,       :default => 0,  :null => false
-    t.timestamp "created_on"
+    t.binary   "data",         :limit => 16777215,                 :null => false
+    t.integer  "unpacked",     :limit => 3,        :default => 1,  :null => false
+    t.string   "name",         :limit => 100,      :default => "", :null => false
+    t.string   "content_type", :limit => 100,      :default => "", :null => false
+    t.integer  "created_by",   :limit => 12,       :default => 0,  :null => false
+    t.datetime "created_on"
   end
 
   create_table "eco_comments", :force => true do |t|
@@ -396,7 +397,7 @@ ActiveRecord::Schema.define(:version => 3) do
     t.string   "number",           :limit => 16
     t.string   "pcb_revision",     :limit => 2
     t.string   "pcba_part_number", :limit => 10
-    t.string   "directory_name",   :limit => 13
+    t.string   "directory_name",   :limit => 25
     t.integer  "eco_type_id",      :limit => 11
     t.boolean  "completed",                      :default => false, :null => false
     t.boolean  "closed",                         :default => false, :null => false
@@ -449,17 +450,17 @@ ActiveRecord::Schema.define(:version => 3) do
   end
 
   create_table "ipd_posts", :force => true do |t|
-    t.integer   "root_id",    :limit => 12, :default => 0,  :null => false
-    t.integer   "parent_id",  :limit => 12, :default => 0,  :null => false
-    t.integer   "depth",      :limit => 12, :default => 0,  :null => false
-    t.integer   "lft",        :limit => 12, :default => 0,  :null => false
-    t.integer   "rgt",        :limit => 12, :default => 0,  :null => false
-    t.timestamp "updated_at"
-    t.timestamp "created_at"
-    t.integer   "design_id",  :limit => 12, :default => 0,  :null => false
-    t.integer   "user_id",    :limit => 12, :default => 0,  :null => false
-    t.string    "subject",                  :default => "", :null => false
-    t.text      "body",                                     :null => false
+    t.integer  "root_id",    :limit => 12, :default => 0,  :null => false
+    t.integer  "parent_id",  :limit => 12, :default => 0,  :null => false
+    t.integer  "depth",      :limit => 12, :default => 0,  :null => false
+    t.integer  "lft",        :limit => 12, :default => 0,  :null => false
+    t.integer  "rgt",        :limit => 12, :default => 0,  :null => false
+    t.datetime "updated_at"
+    t.datetime "created_at"
+    t.integer  "design_id",  :limit => 12, :default => 0,  :null => false
+    t.integer  "user_id",    :limit => 12, :default => 0,  :null => false
+    t.string   "subject",                  :default => "", :null => false
+    t.text     "body",                                     :null => false
   end
 
   add_index "ipd_posts", ["lft", "rgt"], :name => "lft"
@@ -479,34 +480,34 @@ ActiveRecord::Schema.define(:version => 3) do
   end
 
   create_table "oi_assignment_comments", :force => true do |t|
-    t.integer   "oi_assignment_id", :limit => 12, :default => 0, :null => false
-    t.integer   "user_id",          :limit => 12, :default => 0, :null => false
-    t.timestamp "created_on"
-    t.text      "comment",                                       :null => false
+    t.integer  "oi_assignment_id", :limit => 12, :default => 0, :null => false
+    t.integer  "user_id",          :limit => 12, :default => 0, :null => false
+    t.datetime "created_on"
+    t.text     "comment",                                       :null => false
   end
 
   add_index "oi_assignment_comments", ["oi_assignment_id"], :name => "oi_assignment_id"
 
   create_table "oi_assignment_reports", :force => true do |t|
-    t.integer   "oi_assignment_id", :limit => 12, :default => 0, :null => false
-    t.integer   "score",            :limit => 3,  :default => 0, :null => false
-    t.integer   "user_id",          :limit => 12, :default => 0, :null => false
-    t.timestamp "created_on"
-    t.text      "comment",                                       :null => false
+    t.integer  "oi_assignment_id", :limit => 12, :default => 0, :null => false
+    t.integer  "score",            :limit => 3,  :default => 0, :null => false
+    t.integer  "user_id",          :limit => 12, :default => 0, :null => false
+    t.datetime "created_on"
+    t.text     "comment",                                       :null => false
   end
 
   add_index "oi_assignment_reports", ["oi_assignment_id"], :name => "oi_assignment_id"
   add_index "oi_assignment_reports", ["user_id"], :name => "user_id"
 
   create_table "oi_assignments", :force => true do |t|
-    t.integer   "oi_instruction_id", :limit => 12, :default => 0, :null => false
-    t.integer   "user_id",           :limit => 12, :default => 0, :null => false
-    t.integer   "complexity_id",     :limit => 3,  :default => 0, :null => false
-    t.timestamp "created_on"
-    t.integer   "cc_hw_engineer",    :limit => 3,  :default => 0, :null => false
-    t.integer   "complete",          :limit => 3,  :default => 0, :null => false
-    t.timestamp "completed_on"
-    t.timestamp "due_date"
+    t.integer  "oi_instruction_id", :limit => 12, :default => 0, :null => false
+    t.integer  "user_id",           :limit => 12, :default => 0, :null => false
+    t.integer  "complexity_id",     :limit => 3,  :default => 0, :null => false
+    t.datetime "created_on"
+    t.integer  "cc_hw_engineer",    :limit => 3,  :default => 0, :null => false
+    t.integer  "complete",          :limit => 3,  :default => 0, :null => false
+    t.datetime "completed_on"
+    t.datetime "due_date"
   end
 
   add_index "oi_assignments", ["oi_instruction_id"], :name => "oi_instruction_id"
@@ -533,14 +534,14 @@ ActiveRecord::Schema.define(:version => 3) do
   add_index "oi_category_sections", ["oi_category_id"], :name => "oi_category_id"
 
   create_table "oi_instructions", :force => true do |t|
-    t.integer   "design_id",              :limit => 12, :default => 0,  :null => false
-    t.integer   "oi_category_section_id", :limit => 12, :default => 0,  :null => false
-    t.integer   "user_id",                :limit => 12, :default => 0,  :null => false
-    t.timestamp "created_on"
-    t.integer   "complete",               :limit => 3,  :default => 0,  :null => false
-    t.timestamp "completed_on"
-    t.string    "allegro_board_symbol",   :limit => 32, :default => "", :null => false
-    t.string    "details",                :limit => 1,  :default => "", :null => false
+    t.integer  "design_id",              :limit => 12, :default => 0,  :null => false
+    t.integer  "oi_category_section_id", :limit => 12, :default => 0,  :null => false
+    t.integer  "user_id",                :limit => 12, :default => 0,  :null => false
+    t.datetime "created_on"
+    t.integer  "complete",               :limit => 3,  :default => 0,  :null => false
+    t.datetime "completed_on"
+    t.string   "allegro_board_symbol",   :limit => 32, :default => "", :null => false
+    t.string   "details",                :limit => 1,  :default => "", :null => false
   end
 
   add_index "oi_instructions", ["design_id"], :name => "design_id"
@@ -570,6 +571,11 @@ ActiveRecord::Schema.define(:version => 3) do
   create_table "platforms", :force => true do |t|
     t.integer "active", :limit => 3,  :default => 0,  :null => false
     t.string  "name",   :limit => 32, :default => "", :null => false
+  end
+
+  create_table "posting_timestamps", :id => false, :force => true do |t|
+    t.integer  "design_review_id", :limit => 11
+    t.datetime "posted_at"
   end
 
   create_table "prefixes", :force => true do |t|
@@ -696,22 +702,22 @@ ActiveRecord::Schema.define(:version => 3) do
   end
 
   create_table "users", :force => true do |t|
-    t.string    "login",            :limit => 80
-    t.string    "first_name",       :limit => 32
-    t.string    "last_name",        :limit => 32
-    t.integer   "employee",         :limit => 3,  :default => 1,  :null => false
-    t.integer   "design_center_id", :limit => 3,  :default => 0
-    t.integer   "active_role_id",   :limit => 12, :default => 0,  :null => false
-    t.string    "email",            :limit => 60, :default => "", :null => false
-    t.string    "password",         :limit => 40
-    t.string    "passwd",           :limit => 40
-    t.integer   "active",           :limit => 3,  :default => 0,  :null => false
-    t.integer   "division_id",      :limit => 3,  :default => 0,  :null => false
-    t.integer   "location_id",      :limit => 3,  :default => 0,  :null => false
-    t.integer   "invited",          :limit => 3,  :default => 0,  :null => false
-    t.timestamp "created_on"
-    t.timestamp "updated_on"
-    t.timestamp "access"
+    t.string   "login",            :limit => 80
+    t.string   "first_name",       :limit => 32
+    t.string   "last_name",        :limit => 32
+    t.integer  "employee",         :limit => 3,  :default => 1,  :null => false
+    t.integer  "design_center_id", :limit => 3,  :default => 0
+    t.integer  "active_role_id",   :limit => 12, :default => 0,  :null => false
+    t.string   "email",            :limit => 60, :default => "", :null => false
+    t.string   "password",         :limit => 40
+    t.string   "passwd",           :limit => 40
+    t.integer  "active",           :limit => 3,  :default => 0,  :null => false
+    t.integer  "division_id",      :limit => 3,  :default => 0,  :null => false
+    t.integer  "location_id",      :limit => 3,  :default => 0,  :null => false
+    t.integer  "invited",          :limit => 3,  :default => 0,  :null => false
+    t.datetime "created_on"
+    t.datetime "updated_on"
+    t.datetime "access"
   end
 
 end
