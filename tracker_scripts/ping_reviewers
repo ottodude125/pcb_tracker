@@ -7,6 +7,6 @@
 # $Id$
 #####################################################
 
-cd /hwnet/dtg_devel/web/boarddev/apps/pcbtr_development_branch/pcb_tracker
+cd /hwnet/dtg_devel/web/boarddev/apps/pcbtr_production_branch/pcb_tracker
 
 /usr/local/bin/ruby script/runner -e production 'Ping.send_message'
