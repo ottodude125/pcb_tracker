@@ -3,7 +3,7 @@ Type:                        <%= @eco_task.eco_types.collect { |et| et.name }.jo
 Assembled Board Part Number: <%=h @eco_task.pcba_part_number %>
 Bare Board Revision:         <%=h @eco_task.pcb_revision %>
 
-Reference:  <%= Pcbtr::TRACKER_ROOT + eco_task_path(@eco_task) %>
+Reference:  <%= Pcbtr::PCBTR_BASE_URL %>eco_tasks/<%=  @eco_task.id %>
                         
 
 <% if @eco_task.eco_comments.size > 0 %>COMMENTS:<% @eco_task.eco_comments.each do |comment| %>
