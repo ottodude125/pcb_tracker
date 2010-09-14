@@ -124,7 +124,18 @@
       <th class="teraheader" align="right" valign="top">Comment:&nbsp;</th>
       <td><%= text_area("eco_comment", "comment", :cols=>"60", :rows=>"5") %></td>
     </tr>
-
+    <tr>
+      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
+      <td><%= file_field('eco_attachment1', 'document') %></td>
+    </tr>
+    <tr>
+      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
+      <td><%= file_field('eco_attachment2', 'document') %></td>
+    </tr>
+    <tr>
+      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
+      <td><%= file_field('eco_attachment3', 'document') %></td>
+    </tr>
     <tr>
       <th class="teraheader" align="right" valign="top">CC List:&nbsp;</th>
       <td>

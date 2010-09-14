@@ -65,7 +65,7 @@ class EcoTasksController < ApplicationController
       @eco_task.add_users_to_cc_list(params[:eco_task_user][:ids]) if params[:eco_task_user]
 
       @eco_task.add_comment(@eco_comment, @logged_in_user)
-        
+
       if @eco_document
         eco_document = @eco_task.attach_document(@eco_document, @logged_in_user, true)
           
@@ -78,7 +78,52 @@ class EcoTasksController < ApplicationController
           end
         end
       end
-        
+
+    if params[:eco_attachment1] && params[:eco_attachment1][:document] != ''
+      @eco_attachment = @eco_task.attach_document(EcoDocument.new(params[:eco_attachment1]),
+                                                @logged_in_user)
+                                             
+      task_updated = true
+      if !@eco_attachment.errors.empty?
+        if @eco_attachment.errors[:empty_document]
+          flash['notice'] += "<br />#{@eco_attachment.errors[:empty_document]}"
+        end
+        if @eco_attachment.errors[:document_too_large]
+          flash['notice'] += "<br />#{@eco_attachment.errors[:document_too_large]}"
+        end
+      end
+    end
+
+   if params[:eco_attachment2] && params[:eco_attachment2][:document] != ''
+      @eco_attachment = @eco_task.attach_document(EcoDocument.new(params[:eco_attachment2]),
+                                                @logged_in_user)
+
+      task_updated = true
+      if !@eco_attachment.errors.empty?
+        if @eco_attachment.errors[:empty_document]
+          flash['notice'] += "<br />#{@eco_attachment.errors[:empty_document]}"
+        end
+        if @eco_attachment.errors[:document_too_large]
+          flash['notice'] += "<br />#{@eco_attachment.errors[:document_too_large]}"
+        end
+      end
+    end
+
+   if params[:eco_attachment3] && params[:eco_attachment3][:document] != ''
+      @eco_attachment = @eco_task.attach_document(EcoDocument.new(params[:eco_attachment3]),
+                                                @logged_in_user)
+
+      task_updated = true
+      if !@eco_attachment.errors.empty?
+        if @eco_attachment.errors[:empty_document]
+          flash['notice'] += "<br />#{@eco_attachment.errors[:empty_document]}"
+        end
+        if @eco_attachment.errors[:document_too_large]
+          flash['notice'] += "<br />#{@eco_attachment.errors[:document_too_large]}"
+        end
+      end
+    end
+       
       TrackerMailer::deliver_eco_task_message(@eco_task, 'Task Created')
         
       redirect_to(eco_tasks_url)
