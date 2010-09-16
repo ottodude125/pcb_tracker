@@ -44,7 +44,7 @@ a:active  { color: #ff0000; }
 
 
 .actiontable {
-  border-collapse: colapse;
+  border-collapse: collapse;
   border: 10px double #444;
   border-color: #023a94;
   background-color: #dfe9ff;
@@ -52,17 +52,17 @@ a:active  { color: #ff0000; }
 
 .note {
   font-size: 10px;
-  font-style: bold;
+  font-weight: bold;
   text-align: center;
 }
 
 .changenote {
   font-size: 10px;
-  font-style: bold;
+  font-weight: bold;
 }
 
 .keytable {
-  border-collapse: colapse;
+  border-collapse: collapse;
   border: 4px double #444;
   border-color: #023a94;
   background-color: #dfe9ff;
@@ -81,7 +81,8 @@ a:active  { color: #ff0000; }
 
 .keyscore {
   font-size: 10px;
-  font-style: italic, bold;
+  font-style: italic;
+  font-weight: bold;
 }
 
 .keyvalue {
@@ -194,7 +195,7 @@ a:hover { color: #fff; background-color:#000; }
   border-width:   0;
   border-spacing: 0;
   width:          80%;
-  padding:        1;
+  padding:        1px;
 }
 
 .review_summary{
@@ -324,7 +325,7 @@ a:hover { color: #fff; background-color:#000; }
 
 #ErrorExplanation {
   width: 400px;
-  border: 2px solid #red;
+  border: 2px solid red;
   padding: 7px;
   padding-bottom: 12px;
   margin-bottom: 20px;
