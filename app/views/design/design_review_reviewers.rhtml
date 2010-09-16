@@ -119,6 +119,13 @@
 
 <% end %>
 
+<% form_tag(:action => 'add_review_role',
+            :id     => @design.id ) do %>
+ 
+<input class="form_submit" type="submit" value="Add Review Role" />
+
+<% end %>
+
 <% if inactive_warning %>
   <p><b>Note:</b> Names in red indicate that the user is not active in the tracker.</p>
 <% end %>

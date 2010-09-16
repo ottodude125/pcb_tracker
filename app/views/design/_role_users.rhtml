@@ -1,0 +1,13 @@
+<%#
+# To change this template, choose Tools | Templates
+# and open the template in the editor.
+%>
+
+<%= collection_select(:add,
+                      :name_id,
+                      @users,
+                      :id,
+                      :last_name_first,
+                      {:include_blank => false},
+                      "class" => 'name_select'
+                     ) %>

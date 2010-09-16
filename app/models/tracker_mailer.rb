@@ -1026,7 +1026,42 @@ class TrackerMailer < ActionMailer::Base
     @body['role']          = role
     
   end
-  
+
+  ######################################################################
+  #
+  # review_role_creation_notification
+  #
+  # Description:
+  # This method generates mail to indicate that a review role has been
+  # added to a review
+  #
+  # Parameters:
+  #   designer_review - the design review
+  #   role            - the role added
+  #   reviewer        - the person assigned to the review
+  #   sent_at         - the timestamp for the mail header (defaults to Time.now)
+  ######################################################################
+
+  def review_role_creation_notification(
+      design,
+      role,
+      reviewer,
+      sent_at = Time.now )
+
+    @subject = subject_prefix(design) +
+        role.display_name             +
+        ' added'
+
+    @recipients = [reviewer.email,'dtg@teradyne.com']
+    @from       = Pcbtr::SENDER
+    @sent_on    = sent_at
+    @bcc        = blind_cc
+
+    @body['design']    = design
+    @body['role']      = role
+    @body['reviewer']  = reviewer
+    
+  end
   
   ######################################################################
   #

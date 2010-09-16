@@ -310,8 +310,70 @@ class DesignController < ApplicationController
     end
     
   end
-  
-  
+
+  ######################################################################
+  #
+  # add_review_role
+  #
+  # Description:
+  # Adds a review role, that was initially not required, to an existing design.
+  #
+  # Parameters from params
+  # id - identifies the design
+  # role_id - the role
+  # user_id - the user
+  #
+  ######################################################################
+  #
+  def add_review_role
+    @design  = Design.find(params[:id])
+    @review_roles = Role.get_review_roles + Role.get_manager_review_roles
+    @review_roles.delete_if { |r| @design.role_review_count(r) > 0 }
+    if ( params[:role_id])  #update the design
+      role_id = params[:role_id]
+      reviewer = User.find(params[:add][:name_id])
+      #add the role to each design review results
+      design_reviews = @design.design_reviews.sort_by { |dr| dr.review_type.sort_order }
+      design_reviews.delete_if { |dr| dr.review_complete? }
+      role = Role.find(role_id)
+      design_reviews.each do |dr|
+        if ! dr.role_reviewer(role) # don't reassign
+          next if !role.included_in_design_review?(dr.design)
+          next if !role.review_types.include?(dr.review_type)
+          drr = DesignReviewResult.new(:reviewer_id => reviewer.id,  :role_id => role_id )
+          dr.design_review_results << drr
+        end
+      end
+      TrackerMailer::deliver_review_role_creation_notification(@design,
+        role, reviewer)
+      flash["notice"]  = "The #{role.display_name} role has been added"
+      flash["notice"] += "<br />Mail has been sent to #{reviewer.name}"
+      redirect_to :action => 'design_review_reviewers', :id => params[:id]
+    else
+      #display the form to fill in the data
+    end
+  end
+
+  ######################################################################
+  #
+  # get_role_users
+  #
+  # Description:
+  # An AJAX function to return the users for a specified role
+  #
+  # Parameters from params
+  # id - the role id
+  #
+  # Creates a select list of users for the role
+  #
+  ######################################################################
+  #
+  def get_role_users
+    role=Role.find(params[:role_id])
+    @users = role.active_users
+    render :partial => 'role_users'
+  end
+
   ######################################################################
   #
   # process_reviewer_modifications

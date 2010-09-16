@@ -1,0 +1,42 @@
+<%#
+# To change this template, choose Tools | Templates
+# and open the template in the editor.
+%>
+
+<% @heading = "Add Review Role" %>
+<table border='0' align="center">
+  <tr>
+    <td class="th1" align="right">Design:</td>
+    <td><%= @design.detailed_name %></td>
+  </tr>
+  <tr>
+    <td class="th1" align="right">Phase:</td>
+    <td><%= @design.phase.name %></td>
+  </tr>
+</table>
+
+<% form_tag(:action => 'add_review_role',
+            :id     => @design.id ) do %>
+<table>
+    <tr>
+    <td>Select role to add:</td>
+     <td><select id="role" name="role_id" class="name_select">
+       <option value="0">Please Select</option>
+       <%  @review_roles.each do |rr| %>
+       <option value="<%=  rr.id %>"><%=  rr.display_name %></option>
+       <% end %>
+       </select>
+       <%= observe_field(:role, :url => { :action => :get_role_users },
+                  :update => :reviewers_div,
+                  :with => :role_id ) %>
+    </td>
+ </tr>
+ <tr>
+   <td>Select reviewer:</td>
+   <td><div id="reviewers_div">Select Role First</div></td>
+ </tr>
+ </table>
+
+<input class="form_submit" type="submit" value="Add Review Role" />
+
+<% end %>
