@@ -120,7 +120,42 @@
   </tr>
   <tr><td colspan="4"><hr class="div" /></td></tr>
 </table>
-  
+
+ <table border="0" cellspacing="0" width="100%" align="center">
+    <tr>
+      <th class="teraheader" colspan="2">Attachments</th>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr>
+      <td align="center">
+        <% if @eco_task.attachments? %>
+          <table border="0">
+            <tr>
+              <th class="teraheader" width="300">Document</th>
+              <th class="teraheader" width="200">Attached On</th>
+              <th class="teraheader" width="300">Attached By</th>
+            </tr>
+            <% @eco_task.attachments.each do |attachment| %>
+              <tr>
+                <td>
+                  <%= link_to(attachment.name,
+	                      :action => "get_attachment",
+                              :id     => attachment.id) %>
+                </td>
+                <td><%= attachment.created_at.format_dd_mon_yy('timestamp')  %>
+                </td>
+                <td><%=h attachment.user.name %></td>
+              </tr>
+            <% end %>
+          </table>
+        <% else %>
+          <b>No Attachments</b>
+        <% end %>
+      </td>
+    </tr>
+    <tr><td colspan="3"><hr class="div" /></td></tr>
+   </table>
+ 
   <% if @eco_task.eco_comments.size > 0 %>
     <table border="0" cellspacing="0" width="100%" align="center">
       <tr>
