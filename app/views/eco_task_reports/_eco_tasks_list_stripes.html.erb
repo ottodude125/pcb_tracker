@@ -17,10 +17,10 @@
   <td><%=h eco_tasks_list_stripes.pcb_revision %></td>
   <td><%= eco_tasks_list_stripes.screened_at.format_dd_mon_yy %></td>
   <td>
-    <% if eco_tasks_list_stripes.specification_identified? %>
+    <%# if eco_tasks_list_stripes.specification_identified? %>
       <% if eco_tasks_list_stripes.started_at != nil %>
         <%= eco_tasks_list_stripes.started_at.format_dd_mon_yy %>
-      <% end %>
+      <%# end %>
     <% else %>
       Not Started
     <% end %>
