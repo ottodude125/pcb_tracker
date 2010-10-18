@@ -52,7 +52,7 @@
   <% @review_roles.each_with_index do |role, j| %>
   
     <% inactive_reviewer = false %>
-  
+    <%  if ( ! @logged_in_user.is_reviewer? ) || ( @logged_in_user.is_reviewer? && @logged_in_user.is_a_role_member?(role.name) )%>
     <tr valign='top'>
 
       <td class="teraheader"><%= role.display_name %></td>
@@ -113,7 +113,7 @@
       <% end %>
 
     </tr>
-    
+    <% end %>
   <% end %>
 </table>
 

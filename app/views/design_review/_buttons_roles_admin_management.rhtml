@@ -18,17 +18,6 @@
 
 <tr>
   <td>
-    <input type="button" value="Update Reviewer List"
-           title="Use to update users assigned to perform reviews"
-           onClick="parent.location='<%= url_for(:controller => 'design', 
-                                                 :action     => 'design_review_reviewers',
-                                                 :id         => @design_review.design_id) %>'"
-           class="small_font_wide_button" />
-  </td>
-</tr>
-
-<tr>
-  <td>
     <input type="button" value="Update FAB Vendors"
            title="Use to change the FAB vendors assigned to a design"
            onClick="parent.location='<%= url_for(:controller => 'design_review',
