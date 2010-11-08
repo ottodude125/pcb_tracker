@@ -1416,19 +1416,21 @@ class DesignReviewController < ApplicationController
     # Identify the unique members for the FTP Notification FTP list.
     if @design.board_design_entry
       ops_manager = @design.board_design_entry.board_design_entry_users.detect { |u| u.role.name == 'Operations Manager'}
-      if ! ops_manager
+      if ops_manager
+        @design.board.users << User.find(ops_manager.user_id)
+      else
         flash['notice'] = "" if !flash['notice']
         flash['notice'] += "<br />WARNING: THE OPERATIONS MANAGER WAS NOT AUTOMATICALLY ADDED TO THE CC LIST"
       end
     end
 
     # Get all of the users who are in the CC list for the board.
+    # Add the default users
+    @design.board.users << User.find_by_login('ftpgrp')
+    @design.board.users << User.find_by_login('cedftgrp')
+
     users_on_cc_list = []
     @design.board.users.each { |user| users_on_cc_list.push(user.id) }
-    # Add the default users
-    users_on_cc_list.push(ops_manager).id if ops_manager
-    users_on_cc_list.push(User.find_by_login('ftpgrp').id)
-    users_on_cc_list.push(User.find_by_login('cedftgrp').id)
         
     # Get all of the users, remove the reviewer names, and add the full name.
     users = User.find(:all,
@@ -1483,7 +1485,7 @@ class DesignReviewController < ApplicationController
           ftp_notification.division_id      == '0'         ||
           ftp_notification.design_center_id == '0')
 
-      flash['notice'] = "Please provide all to the data requied for the FTP Notification.  The notification was not sent."
+      flash['notice'] = "Please provide all the data requied for the FTP Notification.  The notification was not sent."
       redirect_to(:action              => "perform_ftp_notification", 
         :id                  => params[:id],
         :assembly_bom_number => ftp_notification.assembly_bom_number,
