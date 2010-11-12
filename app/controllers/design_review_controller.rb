@@ -1424,11 +1424,13 @@ class DesignReviewController < ApplicationController
       end
     end
 
-    # Get all of the users who are in the CC list for the board.
-    # Add the default users
-    @design.board.users << User.find_by_login('ftpgrp')
-    @design.board.users << User.find_by_login('cedftgrp')
+    # Add the default users from the FTP Notify role
+    role = Role.find(:first, :conditions => {:name => 'ftp_notify'})
+    role.active_users.each { |user|
+      @design.board.users << user
+    }
 
+    # Get all of the users who are in the CC list for the board.
     users_on_cc_list = []
     @design.board.users.each { |user| users_on_cc_list.push(user.id) }
         
