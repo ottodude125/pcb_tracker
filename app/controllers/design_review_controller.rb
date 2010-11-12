@@ -1416,7 +1416,7 @@ class DesignReviewController < ApplicationController
     # Identify the unique members for the FTP Notification FTP list.
     if @design.board_design_entry
       ops_manager = @design.board_design_entry.board_design_entry_users.detect { |u| u.role.name == 'Operations Manager'}
-      if ops_manager
+      if ops_manager.user_id > 0
         @design.board.users << User.find(ops_manager.user_id)
       else
         flash['notice'] = "" if !flash['notice']
