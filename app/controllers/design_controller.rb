@@ -328,7 +328,7 @@ class DesignController < ApplicationController
   def add_review_role
     @design  = Design.find(params[:id])
     @review_roles = Role.get_review_roles + Role.get_manager_review_roles
-    @review_roles.delete_if { |r| @design.role_review_count(r) > 0 }
+    @review_roles.delete_if { |r| @design.role_open_review_count(r) > 0 }
     if ( params[:role_id])  #update the design
       role_id = params[:role_id]
       reviewer = User.find(params[:add][:name_id])

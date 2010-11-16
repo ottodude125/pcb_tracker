@@ -495,7 +495,9 @@ class TrackerController < ApplicationController
   #
   def deliver_broadcast_message
   
-    if params[:mail][:message].strip.size == 0
+    message = params[:mail][:message].strip
+
+    if message.size == 0
     
       flash[:roles] = params[:roles]
       
@@ -513,16 +515,16 @@ class TrackerController < ApplicationController
           entry = role.to_a
           
           if entry[1] == '1'
-            recipients += Role.find(entry[0]).active_users
+            recipients += Role.find(entry[0]).active_users.collect { |u| u.email }
           end
           
         end
       end
       
       if recipients.size > 0
-
+        message += "\n\n" + recipients.join("\n")
         TrackerMailer::deliver_broadcast_message(params[:mail][:subject],
-                                                 params[:mail][:message],
+                                                 message,
                                                  recipients)
 
         flash['notice'] = 'The message has been sent'
