@@ -18,6 +18,17 @@
 
 <tr>
   <td>
+    <input type="button" value="Change Part Numbers"
+           title="Use to change the oart numbers assigned to the design"
+           onClick="parent.location='<%= url_for(:controller        => 'design_review',
+                                                 :action            => 'change_part_numbers',
+                                                 :id                => @design_review.id) %>'"
+           class="small_font_wide_button" />
+  </td>
+</tr>
+
+<tr>
+  <td>
     <input type="button" value="Update FAB Vendors"
            title="Use to change the FAB vendors assigned to a design"
            onClick="parent.location='<%= url_for(:controller => 'design_review',

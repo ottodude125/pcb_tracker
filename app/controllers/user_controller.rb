@@ -413,7 +413,7 @@ class UserController < ApplicationController
     @user        = User.new(params[:new_user])
     @user.passwd = @user.password
     
-    # If the user left the login and/or email fields blank, set
+    # If the user left the login, email or design_center_id fields blank, set
     # to the default
     if @user.login == ''
       @user.login = @user.first_name[0..0].downcase + 

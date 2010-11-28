@@ -7,7 +7,7 @@
 
 <% if @user_action == 'updating' %>
 
-  <% @heading = "PCB Engineering - Updating #{@board_design_entry.design_name}"%>
+  <% @heading = "PCB Engineering - Updating #{@board_design_entry.pcb_number}"%>
 
   <%= start_form_tag(:action      => 'update_entry', 
                      :id          => @board_design_entry.id,

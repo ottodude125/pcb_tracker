@@ -41,7 +41,7 @@ class DesignReviewController < ApplicationController
 
       @design_review  = DesignReview.find(params[:id])
       @brd_dsn_entry  = BoardDesignEntry.find(:first,
-         :conditions => "design_id='#{@design_review.design_id}'")
+        :conditions => "design_id='#{@design_review.design_id}'")
       @review_results = @design_review.review_results_by_role_name
 
       if @logged_in_user && @logged_in_user.is_reviewer?
@@ -201,7 +201,9 @@ class DesignReviewController < ApplicationController
     design_reviews = Design.find(params[:design_id]).design_reviews
     @design_review = design_reviews.detect { |dr| dr.review_type_id == review_type.id }
 
-    # Handle the combined Placement/Routing reviews
+    flash['notice'] = "Can't Post a design if it is on hold" if @design_review.on_hold?
+    
+    # Handle the combined Placement/Routing reviews    
     if params[:combine_placement_routing] == '1'
 
       routing_review = ReviewType.get_routing
@@ -213,7 +215,7 @@ class DesignReviewController < ApplicationController
       routing_review = design_reviews.detect { |dr| dr.review_type_id == routing_review.id }
       if routing_review
         routing_review_results =
-        DesignReviewResult.delete_all("design_review_id=#{routing_review.id}")
+          DesignReviewResult.delete_all("design_review_id=#{routing_review.id}")
       end
       DesignReview.delete(routing_review.id) if routing_review_results
 
@@ -246,6 +248,8 @@ class DesignReviewController < ApplicationController
 
     @design_review = DesignReview.find(params[:design_review_id])
     @reviewers     = @design_review.generate_reviewer_selection_list
+    flash['notice'] = "Can't Repost a design if it is on hold" if @design_review.on_hold?
+
 
     render( :action => 'post_review' )
 
@@ -598,16 +602,12 @@ class DesignReviewController < ApplicationController
 
   end
 
-
-
-
   ######################################################################
   #
-  # review_attachments
+  # change_part_number
   #
   # Description:
-  # This method retrieves the design review and the documents associated with
-  # the design review.
+  # This method gathers the data used to populate the change part number form.
   #
   # Parameters from params
   # [:design_review_id] - Used to identify the design review.
@@ -619,783 +619,984 @@ class DesignReviewController < ApplicationController
   #
   ######################################################################
   #
-  def review_attachments
-    @design_review = DesignReview.find(params[:design_review_id])
-  end
-  
-  
-  ######################################################################
-  #
-  # update_documents
-  #
-  # Description:
-  # This method gathers the information to display update a document.
-  #
-  # Parameters from params
-  # [:design_review_id] - Used to identify the design review.
-  # [:document_id] - Used to identify the document.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def update_documents
-    @drd           = DesignReviewDocument.new
-    @design_review = DesignReview.find(params[:design_review_id])
-    @existing_drd  = DesignReviewDocument.find(params[:document_id])
-    @document_type = DocumentType.find(@existing_drd.document_type_id)
-  end
-  
-  
-  ######################################################################
-  #
-  # save_update
-  #
-  # Description:
-  # This method stores the document identified by the user.
-  #
-  # Parameters from params
-  # [:document] - The document that will be stored.
-  # [:design_review][:id] - Used to identify the design review.
-  # [:doc_id] - Used to identify the document.
-  # [:return_to] - Used to control the navigation.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def save_update
-
-    document = Document.new(params[:document]) if params[:document][:document] != ""
-
-    if !document || document.data.size == 0
-      if !document
-        flash['notice'] = 'No file was specified - Please specify a document'
-      else
-        flash['notice'] = 'Empty file - The document was not stored'
-      end
-      redirect_to(:action           => :update_documents,
-        :design_review_id => params[:design_review][:id],
-        :document_id      => params[:doc_id],
-        :return_to        => params[:return_to])
+  def change_part_numbers
+    @design_review   = DesignReview.find(params[:id])
+    if flash['rows']
+      @rows = flash['rows']
     else
-      existing_drd  = DesignReviewDocument.find(params[:doc_id])
-      document_type = DocumentType.find(existing_drd.document_type_id)
-      design_review = DesignReview.find(params[:design_review][:id])
+      @rows = PartNum.find(:all,
+        :conditions => { :design_id => @design_review.design_id},
+        :order => "'use','prefix','number','dash'" )
+    end
+    (@rows.size+1..5).each do
+      @rows << PartNum.new( :use => "pcba",  :revision => "a" )
+    end
+    @heading = "#{@design_review.design.name} - Modify Part Numbers"
+    @next_value    = "Update Part Numbers"
+    @next_action   = { :action => 'update_part_numbers', :id => @design_review.id }
+    @cancel_value  = "Return to Design Review"
+    @cancel_action = { :action => 'view', :id => @design_review.id}
+    render :template => 'shared/enter_part_numbers'
+  end
 
-      if document.attach(design_review, document_type, @logged_in_user)
-        flash['notice'] = "The #{document_type.name} document has been updated."
-        if params[:return_to] == 'initial_attachments'
-          redirect_to(:controller => 'design',
-            :action     => 'initial_attachments',
-            :design_id  => design_review.design_id)
-        else
-          redirect_to(:action           => :review_attachments,
-            :design_review_id => params[:design_review][:id])
+  ######################################################################
+  #
+  # update_part_number
+  #
+  # Description:
+  # This method updates the part numbers for the design.
+  #
+  # Parameters from params
+  # id - Used to identify the design review.
+  # Part number rows from form
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def update_part_numbers
+    design_review   = DesignReview.find(params[:id])
+    design_id        = design_review.design_id
+
+    #create part number objects from form data
+    pnums = params[:rows].values.collect { |row| PartNum.new(row) }
+
+    #check for a valid PCB part number
+    pcb  = pnums.detect { |pnum| pnum.use == 'pcb' }
+    unless pcb.valid_pcb_part_number?
+      flash['notice'] = "A valid PCB part number like '123-456-78' must be specified"
+      flash['rows'] = pnums
+      redirect_to( :action => 'change_part_numbers',
+        :id => design_review.id ) and return
+    end
+
+    #a valid PCB part number was specified
+ 
+    #check for duplicates already assigned
+    fail = 0
+    flash['notice'] = ''
+    pnums.each do | pnum |
+      if pnum.part_num_exists? == 1 && PartNum.get_part_number(pnum).design_id != design_id
+        flash['notice'] += "Part number #{pnum.name_string} exists<br>\n"
+        fail = 1
+      end
+    end
+    if fail == 1
+      flash['rows'] = pnums
+      redirect_to( :action => 'change_part_numbers',
+        :id => design_review.id ) and return
+    end
+
+    # get current numbers to add to comment
+    design = Design.find(design_id)
+    old_pcb_num = design.pcb_number
+    old_pcba_nums = design.pcbas_string
+
+    # delete the current part numbers for the design
+    PartNum.delete_all(:design_id => design_id )
+
+    #save and relate the partnumbers to the design
+    fail = 0
+    flash['notice'] = ''
+    pnums.each do |pnum|
+      unless pnum[:prefix] == ""
+        pnum.design_id = design_id
+        if ! pnum.save
+          flash['notify'] += "Couldn't create part number #{pnum.name_string}"
+          fail = 1
         end
-      else
-        flash['notice'] = document.errors[:file_size]
-      end
-    end
-  end
-
-
-  ######################################################################
-  #
-  # add_attachment
-  #
-  # Description:
-  # This method retrieves the document types the board for adding an attachment
-  #
-  # Parameters from params
-  # [:id] - Used to identify the board.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def add_attachment
-
-    @document       = Document.new
-    @document_types = DocumentType.get_active_document_types
-    
-    if params[:design_review] != nil
-      design_review_id = params[:design_review][:id]
-    else
-      design_review_id = params[:design_review_id]
-    end
-   
-   
-    @design_review = DesignReview.find(design_review_id)
-    @board = Board.find(params[:id])
-    
-    # Eliminate document types that are already attached.
-    documents = DesignReviewDocument.find(:all,
-      :conditions => "design_id='#{@design_review.design_id}'")
-    other = DocumentType.find_by_name('Other')
-
-    for doc in documents
-      next if doc.document_type_id == other.id
-      @document_types.delete_if { |dt| dt.id == doc.document_type_id }
-    end
-
-  end
-
-
-  ######################################################################
-  #
-  # save_attachment
-  #
-  # Description:
-  # This method saves the attachment that the user selected.
-  #
-  # Parameters from params
-  # [:id] - Used to identify the board.
-  # [:document_type][:id] - Identifies the type of document.
-  # [:return_to] - Used to control navigation
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def save_attachment
-
-    @document   = Document.new(params[:document]) if params[:document][:document] != ""
-    save_failed = true
-    
-    if params[:document_type][:id] == '' || !@document || @document.data.size == 0
-      flash['notice'] = 'Please select the document type' if params[:document_type][:id] == ''
-      if !@document
-        flash['notice'] += '<br />' if flash['notice']
-        flash['notice'] += 'No name provided - Please specify a document'
-      elsif @document.data.size == 0
-        flash['notice'] = '<br />'  if flash['notice']
-        flash['notice'] = 'Empty file - The document was not stored'
-      end
-    else
-      document_type = DocumentType.find(params[:document_type][:id])
-      design_review = DesignReview.find(params[:design_review][:id])
-
-      if @document.attach(design_review, document_type, @logged_in_user)
-        flash['notice'] = "File #{@document.name} (#{document_type.name}) has been attached"
-        save_failed     = false
-      else
-        flash['notice'] = @document.errors[:file_size]
       end
     end
 
-    if save_failed
-      redirect_to(:action           => :add_attachment,
-        :id               => params[:id],
-        :design_review_id => params[:design_review][:id],
-        :return_to        => params[:return_to])
-    elsif params[:return_to] == 'initial_attachments'
-      redirect_to(:controller => 'design',
-        :action     => 'initial_attachments',
-        :design_id  => drd_doc.design_id)
+    #create 'new' entries for comment
+    new_pcb_num = design.pcb_number
+    new_pcba_nums = design.pcbas_string
+
+    if fail == 1
+      flash['rows'] = pnums
+      redirect_to( :action => 'change_part_numbers',
+        :id => design_review.id ) and return
     else
-      redirect_to(:action           => :review_attachments,
-        :id               => params[:id],
-        :design_review_id => params[:design_review][:id])
-    end
-  end
-  
-  
-  ######################################################################
-  #
-  # get_attachment
-  #
-  # Description:
-  # This method retrieves the attachment selected by the user.
-  #
-  # Parameters from params
-  # [:design_review_id] - Used to identify the design review.
-  # [:document_type][:id] - Identifies the type of document.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def get_attachment
-    @document = Document.find(params[:id])
-    if @document.unpacked == 1
-      send_data(@document.data.to_a.pack("H*"),
-        :filename    => @document.name,
-        :type        => @document.content_type,
-        :disposition => "inline")
-    else
-      send_data(@document.data.to_a,
-        :filename    => @document.name,
-        :type        => @document.content_type,
-        :disposition => "inline")
-    end
-
-  rescue
-  
-    flash['notice'] = 'Can not retrieve the attachment without an ID'
-    redirect_to(:controller => 'tracker', :action => 'index')
-   
-  end
-  
-  
-  ######################################################################
-  #
-  # list_obsolete
-  #
-  # Description:
-  # This method gathers the information to display a list of obsolete
-  # documents.
-  #
-  # Parameters from params
-  # [:id] - Used to identify the design review.
-  # [:document_type_id] - Identifies the type of document.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def list_obsolete
-    @design_review      = DesignReview.find(params[:id])
-    document_type       = DocumentType.find(params[:document_type_id])
-    @document_type_name = document_type.name
-    @docs = @design_review.design.board.get_obsolete_document_list(document_type).reverse
-  end
-
-
-  ######################################################################
-  #
-  # review_mail_list
-  #
-  # Description:
-  # This method gathers the information to the mail list information for the 
-  # design review.
-  #
-  # Parameters from params
-  # [:design_review_id] - Used to identify the design review.
-  # [:document_type][:id] - Identifies the type of document.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def review_mail_list
-
-    @design_review = DesignReview.find(params[:design_review_id])
-    @design        = @design_review.design
-
-    # Grab the reviewer names, their functions and sort the list by the
-    # reviewer's last name.
-    reviewers = []
-    @design_review.design_review_results.each do |review_result|
-      reviewers.push({ :name      => review_result.reviewer.name,
-          :group     => review_result.role.name,
-          :last_name => review_result.reviewer.last_name,
-          :id        => review_result.reviewer_id })
-    end
-    @reviewers = reviewers.sort_by { |reviewer| reviewer[:last_name] }
-
-    # Get all of the users who are in the CC list for the board.
-    users_on_cc_list = []
-    @design.board.users.each { |user| users_on_cc_list.push(user.id) }
-
-    # Get all of the users, remove the reviewer names, and add the full name.
-    users = User.find(:all,
-      :conditions => 'active=1',
-      :order      => 'last_name ASC')
-    @reviewers.each { |reviewer| users.delete_if { |user| user.id == reviewer[:id] } }
-
-    @users_copied     = []
-    @users_not_copied = []
-    users.each do |user|
-      next if user.id == @design.designer_id
-      if users_on_cc_list.include?(user.id)
-        @users_copied.push(user)
-      else
-        @users_not_copied.push(user)
-      end
-    end
-    
-    details = {}
-    details[:design]        = @design
-    details[:design_review] = @design_review
-    details[:reviewers]     = @reviewers
-    details[:copied]        = @users_copied
-    details[:not_copied]    = @users_not_copied
-    details[:action]        = params[:action]
-    flash[:details]         = details
-
-  end
-
-
-  ######################################################################
-  #
-  # add_to_list
-  #
-  # Description:
-  # This method updates the CC list with the user that was selected to be
-  # added.
-  #
-  # Parameters from params
-  # [:id] - Identifies the user to be added to the CC list.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def add_to_list
-
-    details    = flash[:details]
-    @reviewers = details[:reviewers]
-
-    user = User.find(params[:id])
-
-    # Update the database.
-    details[:design].board.users << user
-    
-    # Update the history
-    cc_list_history = CcListHistory.new
-    cc_list_history.design_review_id = details[:design_review].id
-    cc_list_history.user_id          = @logged_in_user.id
-    cc_list_history.addressee_id     = user.id
-    cc_list_history.action           = 'Added'
-    cc_list_history.save
-
-    # Update the display lists.
-    details[:not_copied].delete_if { |u| u.id == user.id }
-
-    copied = details[:copied]
-    user[:name] = user.first_name + ' ' + user.last_name
-    copied.push(user)
-    details[:copied] = copied.sort_by { |u| u.last_name }
-
-    @users_copied     = details[:copied]
-    @users_not_copied = details[:not_copied]
-    @action           = details[:action]
-    
-    flash[:details] = details
-    flash[:ack]     = "Added #{user[:name]} to the CC list"
-
-    render(:layout=>false)
-
-  end
-
-
-  ######################################################################
-  #
-  # remove_from_list
-  #
-  # Description:
-  # This method updates the CC list with the user that was selected to be
-  # removed.
-  #
-  # Parameters from params
-  # [:id] - Identifies the user to be removed from the CC list.
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def remove_from_list
-    
-    details    = flash[:details]
-    @reviewers = details[:reviewers]
-
-    user = User.find(params[:id])
-
-    # Update the database.
-    details[:design].board.users.delete(user)
-    
-    # Update the history
-    cc_list_history = CcListHistory.new
-    cc_list_history.design_review_id = details[:design_review].id
-    cc_list_history.user_id          = @logged_in_user.id
-    cc_list_history.addressee_id     = user.id
-    cc_list_history.action           = 'Removed'
-    cc_list_history.save
-
-    # Update the display lists.
-    details[:copied].delete_if { |u| u.id == user.id }
-
-    not_copied = details[:not_copied]
-    user[:name] = user.first_name + ' ' + user.last_name
-    not_copied.push(user)
-    details[:not_copied] = not_copied.sort_by { |u| u.last_name }
-
-    @users_copied     = details[:copied]
-    @users_not_copied = details[:not_copied]
-    @action           = details[:action]
-
-    flash[:details] = details
-    flash[:ack]     = "Removed #{user[:name]} from the CC list"
-
-    render(:layout=>false)
-
-  end
-  
-  
-  ######################################################################
-  #
-  # reviewer_results
-  #
-  # Description:
-  #
-  # Parameters from params
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def reviewer_results
-
-    # Go through the results for each role and look for a rejection
-    rejected = false
-    roles    = []
-    params.each { |key, value|
-
-      if key.include?("role_id")
-        result = value.to_a
-        rejected = ((result[0][1] == "REJECTED") || rejected)
-        
-        # Save the results to store in flash
-        roles << { :id                      => key.split('_')[2],
-          :design_review_result_id => result[0][0],
-          :result                  => result[0][1] }
-      end
-    }
-
-    # Save the data in flash
-    review_results = {
-      :comments         => params["post_comment"]["comment"],
-      :design_review_id => params["design_review"]["id"],
-      :roles            => roles,
-      :priority         => params["priority"],
-      :designer         => params["designer"],
-      :peer             => params["peer"],
-      :fab_houses       => params["fab_house"]
-    }
-    flash[:review_results] = review_results
-
-    if roles .size == 0 && params["post_comment"]["comment"].strip == ""
-      flash['notice'] = "No information was provided - no update was recorded"
-      redirect_to(:action => 'view', :id => params["design_review"]["id"])
-    elsif not rejected
-      redirect_to(:action => :post_results)
-    else
-      redirect_to(:action => :confirm_rejection)
-    end
-  end
-  
-  
-  ######################################################################
-  #
-  # post_results
-  #
-  # Description:
-  #
-  # Parameters from params
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def post_results
-
-    ignore_rejection = params[:note] && params[:note] == 'ignore'
-
-    review_results    = flash[:review_results]
-    flash_msg         = ''
-    fab_msg           = ''
-    comment_update    = false
-    review_complete   = false
-    results_recorded  = 0
-    result_update     = {}
-    design_review     = DesignReview.find(review_results[:design_review_id])
-    
-    if review_results[:comments].size > 0
+      change = 0
       dr_comment = DesignReviewComment.new
-      dr_comment.comment          = review_results[:comments]
+      dr_comment.comment          = "Part numbers changed.\n"
+      if old_pcb_num != new_pcb_num
+        dr_comment.comment = dr_comment.comment + "PCB part number:\nOld = " +
+          old_pcb_num + "\nNew = " + new_pcb_num +"\n\n"
+        change = 1
+      end
+      if old_pcba_nums != new_pcba_nums
+        dr_comment.comment = dr_comment.comment + "PCBA part numbers:\nOld = " +
+          old_pcba_nums + "\nNew = " + new_pcba_nums
+        change = 1
+      end
       dr_comment.user_id          = @logged_in_user.id
-      dr_comment.design_review_id = review_results[:design_review_id]
-      dr_comment.save
-      
-      comment_update = true
-    end
-
-    # Check to see if the reviewer is PCB Design performing a Pre_Artwork review
-    # Only the PCB Design Approval screen returns a non-nil value in
-    # review_results[:priority].
-    if (design_review.review_type.name == "Pre-Artwork" && review_results[:priority])
-      results = post_pcb_design_results(design_review, review_results)
-      design_review.reload
-    end
-    
-    if review_results[:fab_houses]
-      fab_msg = post_fab_house_updates(design_review, review_results[:fab_houses])
-      dr_comment = DesignReviewComment.new(:comment          => fab_msg,
-        :user_id          => @logged_in_user.id,
-        :design_review_id => design_review.id).save
-      comment_update = true if fab_msg !=''
-    end
-
-    if design_review.in_review?
-
-      review_result_list = design_review.design_review_results
-
-      rejection_entered = false
-      review_results[:roles].each do |review_result|
-
-        review_record = review_result_list.detect do |rr| 
-          rr.role_id.to_s == review_result[:id]
-        end
-
-        if review_result[:result] != 'COMMENTED' && review_record && !ignore_rejection
-          review_record.result      = review_result[:result]
-          review_record.reviewed_on = Time.now
-          review_record.save
-          results_recorded += 1
-
-          result_update[review_record.role.name] = review_result[:result]
-
-          rejection_entered = review_result[:result] == "REJECTED" || rejection_entered
-        end
-      end
-
-
-      # Go through the design review list and withdraw the approvals and set the 
-      # status to "Pending Repost"
-      if rejection_entered
-
-        for review_result in review_result_list
-          if review_result.result == "APPROVED"
-            review_result.result = "WITHDRAWN"
-            review_result.save
-          end
-        end
-
-        pending_repost = ReviewStatus.find_by_name('Pending Repost')
-        design_review.review_status_id = pending_repost.id
-        design_review.save
-
-      elsif review_results[:roles].size > 0
-
-        # If all of the reviews have a positive response, the review is complete
-        response = ['WITHDRAWN', 'No Response', 'REJECTED', 'COMMENTED']
-        outstanding_result = review_result_list.detect { |rr| response.include?(rr.result) }
-
-        if not outstanding_result
-          review_completed = ReviewStatus.find_by_name('Review Completed')
-          design_review.review_status_id = review_completed.id
-          design_review.completed_on     = Time.now
-          design_review.save
-          review_complete = true
-
-          # Check the design's designer and priority information against the 
-          # next review, if there is one, and update the design record, if they
-          # do not match.
-          not_started = ReviewStatus.find_by_name("Not Started")
-          design = Design.find(design_review.design_id)
-
-          design_reviews = DesignReview.find_all_by_design_id(design.id)
-          design_reviews = design_reviews.sort_by { |dr| dr.review_type.sort_order}
-
-          for design_rvw in design_reviews
-            if design_rvw.review_status.id == not_started.id
-              next_design_review = design_rvw
-              break
-            end
-          end
-
-          if next_design_review
-            design.designer_id = next_design_review.designer_id
-            design.priority_id = next_design_review.priority_id
-            design.phase_id    = next_design_review.review_type_id
-          else
-            design.phase_id = Design::COMPLETE
-          end
-          design.save
-        end
-      end
-    end
-    
-    if comment_update || (result_update && result_update.size > 0)
-      TrackerMailer::deliver_design_review_update(@logged_in_user, 
-        design_review,
-        comment_update,
-        result_update)
-    end
-
-    if review_complete
-      TrackerMailer::deliver_design_review_complete_notification(design_review)
-    end
-
-    if results && !results[:success]
-      flash_msg = results[:alternate_msg]
-      flash_msg += " - Your comments have been recorded" if comment_update
-    elsif (design_review.in_review? || design_review.review_complete?)
-      updated    = comment_update || results || results_recorded > 0
-      flash_msg  = 'Design Review updated with'  if updated
-      flash_msg += ' comments'                   if comment_update
-      flash_msg += ' and' if comment_update && results_recorded > 0
-      flash_msg += ' the review result'     if results_recorded > 0
-      flash_msg += 's'                      if results_recorded > 1
-      flash_msg += ' ' + results[:alternate_msg]  if results
-      #flash_msg += ' ' + fab_msg                  if fab_msg != ''
-      flash_msg += ' - mail was sent'
-    else
-      flash_msg  = "Design Review status is '#{design_review.review_status.name}': "
-      if comment_update
-        flash_msg += "comments were recorded and review results were discarded - mail was sent"
+      dr_comment.design_review_id = design_review.id
+      if change == 1
+        dr_comment.save
+        flash['notice'] = "The new part numbers have been assigned"
       else
-        flash_msg += "the review results were discarded - no mail was sent"
+        flash['notice'] = "The part numbers are unchanged"
+      end
+      redirect_to(:action      => 'view',
+        :id          => design_review.id) and return
+    end
+  end
+
+
+
+######################################################################
+#
+# review_attachments
+#
+# Description:
+# This method retrieves the design review and the documents associated with
+# the design review.
+#
+# Parameters from params
+# [:design_review_id] - Used to identify the design review.
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def review_attachments
+  @design_review = DesignReview.find(params[:design_review_id])
+end
+  
+  
+######################################################################
+#
+# update_documents
+#
+# Description:
+# This method gathers the information to display update a document.
+#
+# Parameters from params
+# [:design_review_id] - Used to identify the design review.
+# [:document_id] - Used to identify the document.
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def update_documents
+  @drd           = DesignReviewDocument.new
+  @design_review = DesignReview.find(params[:design_review_id])
+  @existing_drd  = DesignReviewDocument.find(params[:document_id])
+  @document_type = DocumentType.find(@existing_drd.document_type_id)
+end
+  
+  
+######################################################################
+#
+# save_update
+#
+# Description:
+# This method stores the document identified by the user.
+#
+# Parameters from params
+# [:document] - The document that will be stored.
+# [:design_review][:id] - Used to identify the design review.
+# [:doc_id] - Used to identify the document.
+# [:return_to] - Used to control the navigation.
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def save_update
+
+  document = Document.new(params[:document]) if params[:document][:document] != ""
+
+  if !document || document.data.size == 0
+    if !document
+      flash['notice'] = 'No file was specified - Please specify a document'
+    else
+      flash['notice'] = 'Empty file - The document was not stored'
+    end
+    redirect_to(:action           => :update_documents,
+      :design_review_id => params[:design_review][:id],
+      :document_id      => params[:doc_id],
+      :return_to        => params[:return_to])
+  else
+    existing_drd  = DesignReviewDocument.find(params[:doc_id])
+    document_type = DocumentType.find(existing_drd.document_type_id)
+    design_review = DesignReview.find(params[:design_review][:id])
+
+    if document.attach(design_review, document_type, @logged_in_user)
+      flash['notice'] = "The #{document_type.name} document has been updated."
+      if params[:return_to] == 'initial_attachments'
+        redirect_to(:controller => 'design',
+          :action     => 'initial_attachments',
+          :design_id  => design_review.design_id)
+      else
+        redirect_to(:action           => :review_attachments,
+          :design_review_id => params[:design_review][:id])
+      end
+    else
+      flash['notice'] = document.errors[:file_size]
+    end
+  end
+end
+
+
+######################################################################
+#
+# add_attachment
+#
+# Description:
+# This method retrieves the document types the board for adding an attachment
+#
+# Parameters from params
+# [:id] - Used to identify the board.
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def add_attachment
+
+  @document       = Document.new
+  @document_types = DocumentType.get_active_document_types
+    
+  if params[:design_review] != nil
+    design_review_id = params[:design_review][:id]
+  else
+    design_review_id = params[:design_review_id]
+  end
+   
+   
+  @design_review = DesignReview.find(design_review_id)
+  @board = Board.find(params[:id])
+    
+  # Eliminate document types that are already attached.
+  documents = DesignReviewDocument.find(:all,
+    :conditions => "design_id='#{@design_review.design_id}'")
+  other = DocumentType.find_by_name('Other')
+
+  for doc in documents
+    next if doc.document_type_id == other.id
+    @document_types.delete_if { |dt| dt.id == doc.document_type_id }
+  end
+
+end
+
+
+######################################################################
+#
+# save_attachment
+#
+# Description:
+# This method saves the attachment that the user selected.
+#
+# Parameters from params
+# [:id] - Used to identify the board.
+# [:document_type][:id] - Identifies the type of document.
+# [:return_to] - Used to control navigation
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def save_attachment
+
+  @document   = Document.new(params[:document]) if params[:document][:document] != ""
+  save_failed = true
+    
+  if params[:document_type][:id] == '' || !@document || @document.data.size == 0
+    flash['notice'] = 'Please select the document type' if params[:document_type][:id] == ''
+    if !@document
+      flash['notice'] += '<br />' if flash['notice']
+      flash['notice'] += 'No name provided - Please specify a document'
+    elsif @document.data.size == 0
+      flash['notice'] = '<br />'  if flash['notice']
+      flash['notice'] = 'Empty file - The document was not stored'
+    end
+  else
+    document_type = DocumentType.find(params[:document_type][:id])
+    design_review = DesignReview.find(params[:design_review][:id])
+
+    if @document.attach(design_review, document_type, @logged_in_user)
+      flash['notice'] = "File #{@document.name} (#{document_type.name}) has been attached"
+      save_failed     = false
+    else
+      flash['notice'] = @document.errors[:file_size]
+    end
+  end
+
+  if save_failed
+    redirect_to(:action           => :add_attachment,
+      :id               => params[:id],
+      :design_review_id => params[:design_review][:id],
+      :return_to        => params[:return_to])
+  elsif params[:return_to] == 'initial_attachments'
+    redirect_to(:controller => 'design',
+      :action     => 'initial_attachments',
+      :design_id  => drd_doc.design_id)
+  else
+    redirect_to(:action           => :review_attachments,
+      :id               => params[:id],
+      :design_review_id => params[:design_review][:id])
+  end
+end
+  
+  
+######################################################################
+#
+# get_attachment
+#
+# Description:
+# This method retrieves the attachment selected by the user.
+#
+# Parameters from params
+# [:design_review_id] - Used to identify the design review.
+# [:document_type][:id] - Identifies the type of document.
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def get_attachment
+  @document = Document.find(params[:id])
+  if @document.unpacked == 1
+    send_data(@document.data.to_a.pack("H*"),
+      :filename    => @document.name,
+      :type        => @document.content_type,
+      :disposition => "inline")
+  else
+    send_data(@document.data.to_a,
+      :filename    => @document.name,
+      :type        => @document.content_type,
+      :disposition => "inline")
+  end
+
+rescue
+  
+  flash['notice'] = 'Can not retrieve the attachment without an ID'
+  redirect_to(:controller => 'tracker', :action => 'index')
+   
+end
+  
+  
+######################################################################
+#
+# list_obsolete
+#
+# Description:
+# This method gathers the information to display a list of obsolete
+# documents.
+#
+# Parameters from params
+# [:id] - Used to identify the design review.
+# [:document_type_id] - Identifies the type of document.
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def list_obsolete
+  @design_review      = DesignReview.find(params[:id])
+  document_type       = DocumentType.find(params[:document_type_id])
+  @document_type_name = document_type.name
+  @docs = @design_review.design.board.get_obsolete_document_list(document_type).reverse
+end
+
+
+######################################################################
+#
+# review_mail_list
+#
+# Description:
+# This method gathers the information to the mail list information for the 
+# design review.
+#
+# Parameters from params
+# [:design_review_id] - Used to identify the design review.
+# [:document_type][:id] - Identifies the type of document.
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def review_mail_list
+
+  @design_review = DesignReview.find(params[:design_review_id])
+  @design        = @design_review.design
+
+  # Grab the reviewer names, their functions and sort the list by the
+  # reviewer's last name.
+  reviewers = []
+  @design_review.design_review_results.each do |review_result|
+    reviewers.push({ :name      => review_result.reviewer.name,
+        :group     => review_result.role.name,
+        :last_name => review_result.reviewer.last_name,
+        :id        => review_result.reviewer_id })
+  end
+  @reviewers = reviewers.sort_by { |reviewer| reviewer[:last_name] }
+
+  # Get all of the users who are in the CC list for the board.
+  users_on_cc_list = []
+  @design.board.users.each { |user| users_on_cc_list.push(user.id) }
+
+  # Get all of the users, remove the reviewer names, and add the full name.
+  users = User.find(:all,
+    :conditions => 'active=1',
+    :order      => 'last_name ASC')
+  @reviewers.each { |reviewer| users.delete_if { |user| user.id == reviewer[:id] } }
+
+  @users_copied     = []
+  @users_not_copied = []
+  users.each do |user|
+    next if user.id == @design.designer_id
+    if users_on_cc_list.include?(user.id)
+      @users_copied.push(user)
+    else
+      @users_not_copied.push(user)
+    end
+  end
+    
+  details = {}
+  details[:design]        = @design
+  details[:design_review] = @design_review
+  details[:reviewers]     = @reviewers
+  details[:copied]        = @users_copied
+  details[:not_copied]    = @users_not_copied
+  details[:action]        = params[:action]
+  flash[:details]         = details
+
+end
+
+
+######################################################################
+#
+# add_to_list
+#
+# Description:
+# This method updates the CC list with the user that was selected to be
+# added.
+#
+# Parameters from params
+# [:id] - Identifies the user to be added to the CC list.
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def add_to_list
+
+  details    = flash[:details]
+  @reviewers = details[:reviewers]
+
+  user = User.find(params[:id])
+
+  # Update the database.
+  details[:design].board.users << user
+    
+  # Update the history
+  cc_list_history = CcListHistory.new
+  cc_list_history.design_review_id = details[:design_review].id
+  cc_list_history.user_id          = @logged_in_user.id
+  cc_list_history.addressee_id     = user.id
+  cc_list_history.action           = 'Added'
+  cc_list_history.save
+
+  # Update the display lists.
+  details[:not_copied].delete_if { |u| u.id == user.id }
+
+  copied = details[:copied]
+  user[:name] = user.first_name + ' ' + user.last_name
+  copied.push(user)
+  details[:copied] = copied.sort_by { |u| u.last_name }
+
+  @users_copied     = details[:copied]
+  @users_not_copied = details[:not_copied]
+  @action           = details[:action]
+    
+  flash[:details] = details
+  flash[:ack]     = "Added #{user[:name]} to the CC list"
+
+  render(:layout=>false)
+
+end
+
+
+######################################################################
+#
+# remove_from_list
+#
+# Description:
+# This method updates the CC list with the user that was selected to be
+# removed.
+#
+# Parameters from params
+# [:id] - Identifies the user to be removed from the CC list.
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def remove_from_list
+    
+  details    = flash[:details]
+  @reviewers = details[:reviewers]
+
+  user = User.find(params[:id])
+
+  # Update the database.
+  details[:design].board.users.delete(user)
+    
+  # Update the history
+  cc_list_history = CcListHistory.new
+  cc_list_history.design_review_id = details[:design_review].id
+  cc_list_history.user_id          = @logged_in_user.id
+  cc_list_history.addressee_id     = user.id
+  cc_list_history.action           = 'Removed'
+  cc_list_history.save
+
+  # Update the display lists.
+  details[:copied].delete_if { |u| u.id == user.id }
+
+  not_copied = details[:not_copied]
+  user[:name] = user.first_name + ' ' + user.last_name
+  not_copied.push(user)
+  details[:not_copied] = not_copied.sort_by { |u| u.last_name }
+
+  @users_copied     = details[:copied]
+  @users_not_copied = details[:not_copied]
+  @action           = details[:action]
+
+  flash[:details] = details
+  flash[:ack]     = "Removed #{user[:name]} from the CC list"
+
+  render(:layout=>false)
+
+end
+  
+  
+######################################################################
+#
+# reviewer_results
+#
+# Description:
+#
+# Parameters from params
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def reviewer_results
+
+  # Go through the results for each role and look for a rejection
+  rejected = false
+  roles    = []
+  params.each { |key, value|
+
+    if key.include?("role_id")
+      result = value.to_a
+      rejected = ((result[0][1] == "REJECTED") || rejected)
+        
+      # Save the results to store in flash
+      roles << { :id                      => key.split('_')[2],
+        :design_review_result_id => result[0][0],
+        :result                  => result[0][1] }
+    end
+  }
+
+  # Save the data in flash
+  review_results = {
+    :comments         => params["post_comment"]["comment"],
+    :design_review_id => params["design_review"]["id"],
+    :roles            => roles,
+    :priority         => params["priority"],
+    :designer         => params["designer"],
+    :peer             => params["peer"],
+    :fab_houses       => params["fab_house"]
+  }
+  flash[:review_results] = review_results
+
+  if roles .size == 0 && params["post_comment"]["comment"].strip == ""
+    flash['notice'] = "No information was provided - no update was recorded"
+    redirect_to(:action => 'view', :id => params["design_review"]["id"])
+  elsif not rejected
+    redirect_to(:action => :post_results)
+  else
+    redirect_to(:action => :confirm_rejection)
+  end
+end
+  
+  
+######################################################################
+#
+# post_results
+#
+# Description:
+#
+# Parameters from params
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def post_results
+
+  ignore_rejection = params[:note] && params[:note] == 'ignore'
+
+  review_results    = flash[:review_results]
+  flash_msg         = ''
+  fab_msg           = ''
+  comment_update    = false
+  review_complete   = false
+  results_recorded  = 0
+  result_update     = {}
+  design_review     = DesignReview.find(review_results[:design_review_id])
+    
+  if review_results[:comments].size > 0
+    dr_comment = DesignReviewComment.new
+    dr_comment.comment          = review_results[:comments]
+    dr_comment.user_id          = @logged_in_user.id
+    dr_comment.design_review_id = review_results[:design_review_id]
+    dr_comment.save
+      
+    comment_update = true
+  end
+
+  # Check to see if the reviewer is PCB Design performing a Pre_Artwork review
+  # Only the PCB Design Approval screen returns a non-nil value in
+  # review_results[:priority].
+  if (design_review.review_type.name == "Pre-Artwork" && review_results[:priority])
+    results = post_pcb_design_results(design_review, review_results)
+    design_review.reload
+  end
+    
+  if review_results[:fab_houses]
+    fab_msg = post_fab_house_updates(design_review, review_results[:fab_houses])
+    dr_comment = DesignReviewComment.new(:comment          => fab_msg,
+      :user_id          => @logged_in_user.id,
+      :design_review_id => design_review.id).save
+    comment_update = true if fab_msg !=''
+  end
+
+  if design_review.in_review?
+
+    review_result_list = design_review.design_review_results
+
+    rejection_entered = false
+    review_results[:roles].each do |review_result|
+
+      review_record = review_result_list.detect do |rr|
+        rr.role_id.to_s == review_result[:id]
+      end
+
+      if review_result[:result] != 'COMMENTED' && review_record && !ignore_rejection
+        review_record.result      = review_result[:result]
+        review_record.reviewed_on = Time.now
+        review_record.save
+        results_recorded += 1
+
+        result_update[review_record.role.name] = review_result[:result]
+
+        rejection_entered = review_result[:result] == "REJECTED" || rejection_entered
       end
     end
-    flash['notice'] = flash_msg
-    
-    redirect_to(:action => :view, :id => review_results[:design_review_id])
-  end
-  
-  
-  ######################################################################
-  #
-  # confirm_rejection
-  #
-  # Description:
-  #
-  # Parameters from params
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def confirm_rejection
-  
-    review_results = flash[:review_results]    
-    
-    flash[:review_results] = review_results
-    
-    @design_review_id = review_results[:design_review_id]
-    
-  end
 
 
-  ######################################################################
-  #
-  # reassign_reviewer
-  #
-  # Description:
-  #
-  # Parameters from params
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def reassign_reviewer
+    # Go through the design review list and withdraw the approvals and set the
+    # status to "Pending Repost"
+    if rejection_entered
 
-    @design_review = DesignReview.find(params[:design_review_id])
-
-    # Remove reviewer results if the reviewer has already completed the 
-    # review. 
-    @design_review.design_review_results.delete_if { |rr| rr.complete? }
-
-    @matching_roles = []
-    @logged_in_user.roles.each do |role|
-
-      next if not role.reviewer?
-
-      match = @design_review.design_review_results.detect { |rr| role.id == rr.role_id }
-      if match
-        if @logged_in_user.id == match.reviewer_id
-          peers = role.active_users - [@logged_in_user]
-          @matching_roles << { :design_review => match, :peers => peers }
-        else
-          @matching_roles << { :design_review => match }
+      for review_result in review_result_list
+        if review_result.result == "APPROVED"
+          review_result.result = "WITHDRAWN"
+          review_result.save
         end
       end
-    end
 
+      pending_repost = ReviewStatus.find_by_name('Pending Repost')
+      design_review.review_status_id = pending_repost.id
+      design_review.save
+
+    elsif review_results[:roles].size > 0
+
+      # If all of the reviews have a positive response, the review is complete
+      response = ['WITHDRAWN', 'No Response', 'REJECTED', 'COMMENTED']
+      outstanding_result = review_result_list.detect { |rr| response.include?(rr.result) }
+
+      if not outstanding_result
+        review_completed = ReviewStatus.find_by_name('Review Completed')
+        design_review.review_status_id = review_completed.id
+        design_review.completed_on     = Time.now
+        design_review.save
+        review_complete = true
+
+        # Check the design's designer and priority information against the
+        # next review, if there is one, and update the design record, if they
+        # do not match.
+        not_started = ReviewStatus.find_by_name("Not Started")
+        design = Design.find(design_review.design_id)
+
+        design_reviews = DesignReview.find_all_by_design_id(design.id)
+        design_reviews = design_reviews.sort_by { |dr| dr.review_type.sort_order}
+
+        for design_rvw in design_reviews
+          if design_rvw.review_status.id == not_started.id
+            next_design_review = design_rvw
+            break
+          end
+        end
+
+        if next_design_review
+          design.designer_id = next_design_review.designer_id
+          design.priority_id = next_design_review.priority_id
+          design.phase_id    = next_design_review.review_type_id
+        else
+          design.phase_id = Design::COMPLETE
+        end
+        design.save
+      end
+    end
+  end
+    
+  if comment_update || (result_update && result_update.size > 0)
+    TrackerMailer::deliver_design_review_update(@logged_in_user,
+      design_review,
+      comment_update,
+      result_update)
   end
 
+  if review_complete
+    TrackerMailer::deliver_design_review_complete_notification(design_review)
+  end
 
-  ######################################################################
-  #
-  # perform_ftp_notification
-  #
-  # Description:
-  #   Creates the ftp notification that will be stored with the design 
-  #   and sent to the interested parties.
-  #
-  # Parameters from params
-  #   id - design identifier
-  #
-  ######################################################################
-  #
-  def perform_ftp_notification
+  if results && !results[:success]
+    flash_msg = results[:alternate_msg]
+    flash_msg += " - Your comments have been recorded" if comment_update
+  elsif (design_review.in_review? || design_review.review_complete?)
+    updated    = comment_update || results || results_recorded > 0
+    flash_msg  = 'Design Review updated with'  if updated
+    flash_msg += ' comments'                   if comment_update
+    flash_msg += ' and' if comment_update && results_recorded > 0
+    flash_msg += ' the review result'     if results_recorded > 0
+    flash_msg += 's'                      if results_recorded > 1
+    flash_msg += ' ' + results[:alternate_msg]  if results
+    #flash_msg += ' ' + fab_msg                  if fab_msg != ''
+    flash_msg += ' - mail was sent'
+  else
+    flash_msg  = "Design Review status is '#{design_review.review_status.name}': "
+    if comment_update
+      flash_msg += "comments were recorded and review results were discarded - mail was sent"
+    else
+      flash_msg += "the review results were discarded - no mail was sent"
+    end
+  end
+  flash['notice'] = flash_msg
+    
+  redirect_to(:action => :view, :id => review_results[:design_review_id])
+end
   
-    @design              = Design.find(params[:id])
-    final_design_review  = @design.design_reviews.detect { |dr| dr.review_type.name == "Final" }
-    @reviewers           = final_design_review.design_review_results.collect { |drr| User.find(drr.reviewer_id) }
-    @divisions           = Division.find(:all, :conditions => "active=1")
-    @design_centers      = DesignCenter.find(:all, :conditions => "active=1")
-    @fab_houses          = FabHouse.find(:all, :conditions => "active=1")
+  
+######################################################################
+#
+# confirm_rejection
+#
+# Description:
+#
+# Parameters from params
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def confirm_rejection
+  
+  review_results = flash[:review_results]
+    
+  flash[:review_results] = review_results
+    
+  @design_review_id = review_results[:design_review_id]
+    
+end
 
 
-    @ftp_notification = FtpNotification.new(:design_id => @design.id)
+######################################################################
+#
+# reassign_reviewer
+#
+# Description:
+#
+# Parameters from params
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def reassign_reviewer
 
-    if params[:division_id]
-      @ftp_notification.division_id = params[:division_id].to_i
-    elsif @design.board_design_entry
-      @ftp_notification.division_id = @design.board_design_entry.division_id
-    else
-      @ftp_notification.division_id = 0
+  @design_review = DesignReview.find(params[:design_review_id])
+
+  # Remove reviewer results if the reviewer has already completed the
+  # review.
+  @design_review.design_review_results.delete_if { |rr| rr.complete? }
+
+  @matching_roles = []
+  @logged_in_user.roles.each do |role|
+
+    next if not role.reviewer?
+
+    match = @design_review.design_review_results.detect { |rr| role.id == rr.role_id }
+    if match
+      if @logged_in_user.id == match.reviewer_id
+        peers = role.active_users - [@logged_in_user]
+        @matching_roles << { :design_review => match, :peers => peers }
+      else
+        @matching_roles << { :design_review => match }
+      end
     end
-    @ftp_notification.design_center_id = params[:design_center_id] ? params[:design_center_id].to_i : final_design_review.design_center_id
-    if params[:vendor_id]
-      @ftp_notification.fab_house_id = params[:vendor_id].to_i
-    elsif @design.fab_houses.size > 0
-      @ftp_notification.fab_house_id = @design.fab_houses[0].fab_house_id
+  end
+
+end
+
+
+######################################################################
+#
+# perform_ftp_notification
+#
+# Description:
+#   Creates the ftp notification that will be stored with the design 
+#   and sent to the interested parties.
+#
+# Parameters from params
+#   id - design identifier
+#
+######################################################################
+#
+def perform_ftp_notification
+  
+  @design              = Design.find(params[:id])
+  final_design_review  = @design.design_reviews.detect { |dr| dr.review_type.name == "Final" }
+  @reviewers           = final_design_review.design_review_results.collect { |drr| User.find(drr.reviewer_id) }
+  @divisions           = Division.find(:all, :conditions => "active=1")
+  @design_centers      = DesignCenter.find(:all, :conditions => "active=1")
+  @fab_houses          = FabHouse.find(:all, :conditions => "active=1")
+
+
+  @ftp_notification = FtpNotification.new(:design_id => @design.id)
+
+  if params[:division_id]
+    @ftp_notification.division_id = params[:division_id].to_i
+  elsif @design.board_design_entry
+    @ftp_notification.division_id = @design.board_design_entry.division_id
+  else
+    @ftp_notification.division_id = 0
+  end
+  @ftp_notification.design_center_id = params[:design_center_id] ? params[:design_center_id].to_i : final_design_review.design_center_id
+  if params[:vendor_id]
+    @ftp_notification.fab_house_id = params[:vendor_id].to_i
+  elsif @design.fab_houses.size > 0
+    @ftp_notification.fab_house_id = @design.fab_houses[0].fab_house_id
+  else
+    @ftp_notification.fab_house_id = 0
+  end
+    
+  @ftp_notification.assembly_bom_number = params[:assembly_bom_number] ? params[:assembly_bom_number] : ''
+  @ftp_notification.revision_date       = params[:revision_date]       ? params[:revision_date]       : ''
+  @ftp_notification.file_data           = params[:file_data]           ? params[:file_data]           : ''
+    
+
+  # Grab the reviewer names, their functions and sort the list by the
+  # reviewer's last name.
+  reviewers = []
+  final_design_review.design_review_results.each do |review_result|
+    reviewers.push({ :name      => review_result.reviewer.name,
+        :group     => review_result.role.name,
+        :last_name => review_result.reviewer.last_name,
+        :id        => review_result.reviewer_id })
+  end
+  @reviewers = reviewers.sort_by { |reviewer| reviewer[:last_name] }
+
+  # Identify the unique members for the FTP Notification FTP list.
+  if @design.board_design_entry
+    ops_manager = @design.board_design_entry.board_design_entry_users.detect { |u| u.role.name == 'Operations Manager'}
+    if ops_manager.user_id > 0
+      @design.board.users << User.find(ops_manager.user_id)
     else
-      @ftp_notification.fab_house_id = 0
+      flash['notice'] = "" if !flash['notice']
+      flash['notice'] += "<br />WARNING: THE OPERATIONS MANAGER WAS NOT AUTOMATICALLY ADDED TO THE CC LIST"
     end
+  end
+
+  # Add the default users from the FTP Notify role
+   role = Role.find(:first, :conditions => {:name => 'ftp_notify'})
+   role.active_users.each { |user|
+        @design.board.users << user
+   }
+
+  # Get all of the users who are in the CC list for the board.
+  users_on_cc_list = []
+  @design.board.users.each { |user| users_on_cc_list.push(user.id) }
+        
+  # Get all of the users, remove the reviewer names, and add the full name.
+  users = User.find(:all,
+    :conditions => 'active=1',
+    :order      => 'last_name ASC')
+  @reviewers.each { |reviewer| users.delete_if { |user| user.id == reviewer[:id] } }
+    
+  @users_copied     = []
+  @users_not_copied = []
+  users.each do |user|
+    next if user.id == @design.designer_id
+    if users_on_cc_list.include?(user.id)
+      @users_copied.push(user)
+    else
+      @users_not_copied.push(user)
+    end
+  end
     
     @ftp_notification.assembly_bom_number = params[:assembly_bom_number] ? params[:assembly_bom_number] : ''
     @ftp_notification.revision_date       = params[:revision_date]       ? params[:revision_date]       : ''
@@ -1460,738 +1661,737 @@ class DesignReviewController < ApplicationController
     details[:action]        = params[:action]
     flash[:details]         = details
 
-  end
+end
+######################################################################
+#
+# send_ftp_notification
+#
+# Description:
+#   Gathers the information for the ftp notification comment/message
+#
+# Parameters from params
+#   id - design review identifier
+#
+######################################################################
+#
+def send_ftp_notification
 
+  ftp_notification           = FtpNotification.new(params[:ftp_notification])
+  ftp_notification.design_id = params[:id]
 
-  ######################################################################
-  #
-  # send_ftp_notification
-  #
-  # Description:
-  #   Gathers the information for the ftp notification comment/message
-  #
-  # Parameters from params
-  #   id - design review identifier
-  #
-  ######################################################################
-  #
-  def send_ftp_notification
+  # Verify that all of the information has been provided before processing.
+  if (ftp_notification.assembly_bom_number.strip == "" ||
+        ftp_notification.file_data.strip           == "" ||
+        ftp_notification.fab_house_id     == '0'         ||
+        ftp_notification.division_id      == '0'         ||
+        ftp_notification.design_center_id == '0')
 
-    ftp_notification           = FtpNotification.new(params[:ftp_notification])
-    ftp_notification.design_id = params[:id]
+    flash['notice'] = "Please provide all the data requied for the FTP Notification.  The notification was not sent."
+    redirect_to(:action              => "perform_ftp_notification",
+      :id                  => params[:id],
+      :assembly_bom_number => ftp_notification.assembly_bom_number,
+      :file_data           => ftp_notification.file_data,
+      :division_id         => ftp_notification.division_id,
+      :design_center_id    => ftp_notification.design_center_id,
+      :vendor_id           => ftp_notification.fab_house_id)
 
-    # Verify that all of the information has been provided before processing.
-    if (ftp_notification.assembly_bom_number.strip == "" ||  
-          ftp_notification.file_data.strip           == "" ||
-          ftp_notification.fab_house_id     == '0'         ||
-          ftp_notification.division_id      == '0'         ||
-          ftp_notification.design_center_id == '0')
+  else
 
-      flash['notice'] = "Please provide all the data requied for the FTP Notification.  The notification was not sent."
-      redirect_to(:action              => "perform_ftp_notification", 
-        :id                  => params[:id],
-        :assembly_bom_number => ftp_notification.assembly_bom_number,
-        :file_data           => ftp_notification.file_data,
-        :division_id         => ftp_notification.division_id,
-        :design_center_id    => ftp_notification.design_center_id,
-        :vendor_id           => ftp_notification.fab_house_id)
-
-    else
-
-      design   = Design.find(params[:id])
-      if !design.ftp_notification
+    design   = Design.find(params[:id])
+    if !design.ftp_notification
       
-        ftp_notification.save
+      ftp_notification.save
         
-        message  = "NO RESPONSE IS REQUIRED!\n"
-        message += "NOTIFICATION THAT FILES HAVE BEEN FTP'D TO VENDOR FOR BOARD FABRICATION\n"
-        message += "Date: " + Time.now.to_s + "\n"
-        message += "Division: " + ftp_notification.division.name + "\n"
-        message += "Assembly/BOM Number: " + ftp_notification.assembly_bom_number + "\n"
-        message += "Design Files Location -\n"
-        message += "   UNIX:     /hwnet/" + ftp_notification.design_center.pcb_path
-        message += "/" + ftp_notification.design.directory_name + "/public/\n"
-        message += "   WINDOWS:  \\\\ter.teradyne.com\\hwnet\\" + ftp_notification.design_center.pcb_path
-        message += "\\" + ftp_notification.design.directory_name + "\\public\\\n"
-        message += "Files Size, Date, and Name: " + ftp_notification.file_data + "\n"
-        message += "Vendor: " + ftp_notification.fab_house.name + "\n"
+      message  = "NO RESPONSE IS REQUIRED!\n"
+      message += "NOTIFICATION THAT FILES HAVE BEEN FTP'D TO VENDOR FOR BOARD FABRICATION\n"
+      message += "Date: " + Time.now.to_s + "\n"
+      message += "Division: " + ftp_notification.division.name + "\n"
+      message += "Assembly/BOM Number: " + ftp_notification.assembly_bom_number + "\n"
+      message += "Design Files Location -\n"
+      message += "   UNIX:     /hwnet/" + ftp_notification.design_center.pcb_path
+      message += "/" + ftp_notification.design.directory_name + "/public/\n"
+      message += "   WINDOWS:  \\\\ter.teradyne.com\\hwnet\\" + ftp_notification.design_center.pcb_path
+      message += "\\" + ftp_notification.design.directory_name + "\\public\\\n"
+      message += "Files Size, Date, and Name: " + ftp_notification.file_data + "\n"
+      message += "Vendor: " + ftp_notification.fab_house.name + "\n"
         
-        TrackerMailer::deliver_ftp_notification(message, ftp_notification)
+      TrackerMailer::deliver_ftp_notification(message, ftp_notification)
 
-        # Save the FTP Notification in the design's final review.
-        message += "\n\nThis notification was delivered to the following people.\n"
-        message += " - all of the reviewers\n"
-        design.board.users.each { |user| message += " - #{user.name}\n" }
+      # Save the FTP Notification in the design's final review.
+      message += "\n\nThis notification was delivered to the following people.\n"
+      message += " - all of the reviewers\n"
+      design.board.users.each { |user| message += " - #{user.name}\n" }
 
-        final_design_review = design.get_design_review('Final')
-        dr_comment = DesignReviewComment.new(:user_id          => @logged_in_user.id,
-          :design_review_id => final_design_review.id,
-          :highlight        => 1,
-          :comment          => message).save
+      final_design_review = design.get_design_review('Final')
+      dr_comment = DesignReviewComment.new(:user_id          => @logged_in_user.id,
+        :design_review_id => final_design_review.id,
+        :highlight        => 1,
+        :comment          => message).save
                
         
-        flash['notice'] = "The FTP Notification has been sent"
-      else
-        flash['notice'] = "The FTP Notification has already been sent for this design.  " +
-          "The notification was not sent."
-      end
-      redirect_to(:controller => 'tracker', :action => 'index')
+      flash['notice'] = "The FTP Notification has been sent"
+    else
+      flash['notice'] = "The FTP Notification has already been sent for this design.  " +
+        "The notification was not sent."
     end
-
+    redirect_to(:controller => 'tracker', :action => 'index')
   end
 
+end
 
-  ######################################################################
-  #
-  # update_review_assignments
-  #
-  # Description:
-  #
-  # Parameters from params
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def update_review_assignments
 
-    design_review_id = params[:id]
-    new_reviewers    = params[:user]
-    design_review    = DesignReview.find(design_review_id)
-    designer         = User.find(design_review.designer_id)
-    flash_msg        = ''
+######################################################################
+#
+# update_review_assignments
+#
+# Description:
+#
+# Parameters from params
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def update_review_assignments
 
-    if new_reviewers
-      # Reassign the review to the new reviewer
-      new_reviewers.each { |role_name, user_id|
-        next if user_id == '' || user_id == '0'
-        role = Role.find_by_name(role_name)
-        design_review_result = DesignReviewResult.find(
-          :first,
-          :conditions => "design_review_id='#{design_review_id}' and " +
-            "reviewer_id='#{@logged_in_user.id}' and "     +
-            "role_id='#{role.id}'")
+  design_review_id = params[:id]
+  new_reviewers    = params[:user]
+  design_review    = DesignReview.find(design_review_id)
+  designer         = User.find(design_review.designer_id)
+  flash_msg        = ''
 
-        if design_review_result
-          is_reviewer = @logged_in_user.id == design_review_result.reviewer_id
-          design_review_result.reviewer_id = user_id
-          design_review_result.save
-          peer         = User.find(user_id)
-          new_reviewer = peer.name
-
-          design_review.record_update(role.display_name, 
-            @logged_in_user.name,
-            peer.name,
-            @logged_in_user)
-                                      
-          if flash_msg == ''
-            flash_msg = "#{new_reviewer} is assigned to the #{role.display_name} review"
-          else
-            flash_msg += " and #{new_reviewer} is assigned to the #{role.display_name} review"
-          end
-
-          if is_reviewer
-            TrackerMailer::deliver_reassign_design_review_to_peer(
-              @logged_in_user,
-              peer,
-              designer,
-              design_review,
-              role)
-          end
-        end
-      }
-    end
-
-    # Check to see if any "assign_to_self" box is check.
-    params.each { |key, value|
-
-      next if not key.include?("assign_to_self")
-      next if value[@logged_in_user.id.to_s] == 'no'
-
-      role = Role.find(key.split('_')[1])
-      design_review_result = DesignReviewResult.find(:first,
-        :conditions => "design_review_id='#{design_review_id}' and" +
-          " role_id='#{role.id}'")
+  if new_reviewers
+    # Reassign the review to the new reviewer
+    new_reviewers.each { |role_name, user_id|
+      next if user_id == '' || user_id == '0'
+      role = Role.find_by_name(role_name)
+      design_review_result = DesignReviewResult.find(
+        :first,
+        :conditions => "design_review_id='#{design_review_id}' and " +
+          "reviewer_id='#{@logged_in_user.id}' and "     +
+          "role_id='#{role.id}'")
 
       if design_review_result
-        peer = User.find(design_review_result.reviewer_id)
-        design_review_result.reviewer_id = @logged_in_user.id
+        is_reviewer = @logged_in_user.id == design_review_result.reviewer_id
+        design_review_result.reviewer_id = user_id
         design_review_result.save
-        
-        design_review.record_update(role.display_name, 
-          peer.name,
-          @logged_in_user.name,
-          @logged_in_user)
+        peer         = User.find(user_id)
+        new_reviewer = peer.name
 
-        new_reviewer = @logged_in_user.name
+        design_review.record_update(role.display_name,
+          @logged_in_user.name,
+          peer.name,
+          @logged_in_user)
+                                      
         if flash_msg == ''
-          flash_msg = "You are assigned to the #{role.display_name} review"
+          flash_msg = "#{new_reviewer} is assigned to the #{role.display_name} review"
         else
-          flash_msg += " and you are assigned to the #{role.display_name} review"
+          flash_msg += " and #{new_reviewer} is assigned to the #{role.display_name} review"
         end
 
-        TrackerMailer::deliver_reassign_design_review_from_peer(
-          @logged_in_user,
-          peer,
-          designer,
-          design_review,
-          role)
+        if is_reviewer
+          TrackerMailer::deliver_reassign_design_review_to_peer(
+            @logged_in_user,
+            peer,
+            designer,
+            design_review,
+            role)
+        end
+      end
+    }
+  end
+
+  # Check to see if any "assign_to_self" box is check.
+  params.each { |key, value|
+
+    next if not key.include?("assign_to_self")
+    next if value[@logged_in_user.id.to_s] == 'no'
+
+    role = Role.find(key.split('_')[1])
+    design_review_result = DesignReviewResult.find(:first,
+      :conditions => "design_review_id='#{design_review_id}' and" +
+        " role_id='#{role.id}'")
+
+    if design_review_result
+      peer = User.find(design_review_result.reviewer_id)
+      design_review_result.reviewer_id = @logged_in_user.id
+      design_review_result.save
+        
+      design_review.record_update(role.display_name,
+        peer.name,
+        @logged_in_user.name,
+        @logged_in_user)
+
+      new_reviewer = @logged_in_user.name
+      if flash_msg == ''
+        flash_msg = "You are assigned to the #{role.display_name} review"
+      else
+        flash_msg += " and you are assigned to the #{role.display_name} review"
       end
 
-    }
-
-    if flash_msg != ''
-      flash['notice'] = flash_msg + ' - mail was sent'
-    else
-      flash['notice'] = 'Nothing selected - no assignments were made'
+      TrackerMailer::deliver_reassign_design_review_from_peer(
+        @logged_in_user,
+        peer,
+        designer,
+        design_review,
+        role)
     end
 
-    redirect_to(:action => :view, :id => design_review_id)
+  }
 
+  if flash_msg != ''
+    flash['notice'] = flash_msg + ' - mail was sent'
+  else
+    flash['notice'] = 'Nothing selected - no assignments were made'
   end
 
+  redirect_to(:action => :view, :id => design_review_id)
 
-  ######################################################################
-  #
-  # admin_update
-  #
-  # Description:
-  # Gathers the data for the admin/manager update screen.
-  #
-  # Parameters from params
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def admin_update
-    
-    if session['flash'][:sort_order]
-      session['flash'][:sort_order] = session['flash'][:sort_order]
-    end
-    
-    @design_review = DesignReview.find(params[:id])
-    
-    @designers           = Role.active_designers
-    @designer_list       = @designers - [@design_review.design.peer]
-    @peer_list           = @designers - [@design_review.design.designer]
-    @pcb_input_gate_list = Role.find_by_name('PCB Input Gate').active_users
-    @priorities          = Priority.get_priorities
-    @design_centers      = DesignCenter.get_all_active
-    
-    @review_statuses = []
-    if @design_review.in_review? || @design_review.on_hold?
-      @review_statuses << ReviewStatus.find_by_name('In Review')
-      @review_statuses << ReviewStatus.find_by_name('Review On-Hold')
-    end
+end
 
-    @release_poster = @design_review.design.get_design_review('Release').designer
-    
-    selects = { :designer  => @design_review.design.designer, 
-      :peer      => @design_review.design.peer,
-      :designers => @designers }
-    flash[:selects] = selects
 
+######################################################################
+#
+# admin_update
+#
+# Description:
+# Gathers the data for the admin/manager update screen.
+#
+# Parameters from params
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def admin_update
+    
+  if session['flash'][:sort_order]
+    session['flash'][:sort_order] = session['flash'][:sort_order]
+  end
+    
+  @design_review = DesignReview.find(params[:id])
+    
+  @designers           = Role.active_designers
+  @designer_list       = @designers - [@design_review.design.peer]
+  @peer_list           = @designers - [@design_review.design.designer]
+  @pcb_input_gate_list = Role.find_by_name('PCB Input Gate').active_users
+  @priorities          = Priority.get_priorities
+  @design_centers      = DesignCenter.get_all_active
+    
+  @review_statuses = []
+  if @design_review.in_review? || @design_review.on_hold?
+    @review_statuses << ReviewStatus.find_by_name('In Review')
+    @review_statuses << ReviewStatus.find_by_name('Review On-Hold')
   end
 
-
-  ####################################################################
-  #
-  # update_fab_houses
-  #
-  # Description:
-  # Up dates the fab houses associated with a design
-  # Parameters from params
-  # id - the design review
-  #
-  ######################################################################
-  #
-  def update_fab_houses
-
-    session[:return_to] = {:controller => 'design_review',
-      :action     => 'view',
-      :id         => params[:id]}
-
-    if params[:id]
-      @design_review  = DesignReview.find(params[:id])
-      design_fab_houses = {}
-      @design_review.design.fab_houses.each { |dfh| design_fab_houses[dfh.id] = dfh }
-
-      @fab_houses = FabHouse.get_all_active
-      @fab_houses.each { |fh| fh[:selected] = design_fab_houses[fh.id] != nil }
-    else
-
-      flash['notice'] = "No ID was provided - unable to access the design review"
-      redirect_to(:controller => 'tracker', :action => 'index')
-    end
-
-  end
-
-
-  ######################################################################
-  #
-  # process_admin_update
-  #
-  # Description:
-  # Updates the based on user input on the admin update screen.
-  #
-  # Parameters from params
-  #
-  # Return value:
-  # None
-  #
-  # Additional information:
-  #
-  ######################################################################
-  #
-  def process_admin_update
-
-    if session['flash'][:sort_order]
-      session['flash'][:sort_order] = session['flash'][:sort_order]
-    end
+  @release_poster = @design_review.design.get_design_review('Release').designer
     
-    # Normally this logic would go in the model.  But the admin update
-    # screen is designed to prevent the user from designating the same
-    # person as both the designer and the peer auditor.  There is a remote
-    # chance that the user could select the same person for both roles.
-    # Since te chance is remote I am dealing with it here.
-    if params[:peer] && params[:peer][:id] == params[:designer][:id]
-      redirect_to(:action => 'admin_update', :id => params[:id])
-      flash['notice'] = 'The peer and the designer must be different - update not recorded'
-      return
-    end
-    
-    design = DesignReview.find(params[:id]).design
+  selects = { :designer  => @design_review.design.designer,
+    :peer      => @design_review.design.peer,
+    :designers => @designers }
+  flash[:selects] = selects
 
-    updates = {}
-    if params[:pcb_input_gate]
-      updates[:pcb_input_gate] = User.find(params[:pcb_input_gate][:id])
-    end
-    if params[:designer] && params[:designer][:id] != ''
-      updates[:designer]       = User.find(params[:designer][:id])
-    end
-    if params[:peer] && params[:peer][:id] != ''
-      updates[:peer]           = User.find(params[:peer][:id])
-    end
-    if params[:review_status]
-      updates[:status]         = ReviewStatus.find(params[:review_status][:id])
-    end
-    if params[:release_poster]
-      updates[:release_poster] = User.find(params[:release_poster][:id])
-    end
-
-    updates[:design_center]  = DesignCenter.find(params[:design_center][:id])
-    updates[:criticality]    = Priority.find(params[:priority][:id]) if params[:priority]
-
-    
-    flash['notice'] = design.admin_updates(updates, 
-      params[:post_comment][:comment],
-      @logged_in_user)
-   
-    if session[:return_to]
-      redirect_to(session[:return_to])
-    else
-      redirect_to(:action => "index", :controller => "tracker" )
-    end
-    
-  end
+end
 
 
-  ######################################################################
-  #
-  # get_review_result_details
-  #
-  # Description:
-  # Retrieves the design review results for display.
-  #
-  # Parameters from params
-  # id - the design review id
-  #
-  ######################################################################
-  #
-  def get_review_result_details
-  
-    @design_review   = DesignReview.find(params[:id])
-    @design          = @design_review.design
-    @review_results  = @design_review.unprocessed_results
-    
-    render(:layout => false)
-    
-  end 
+####################################################################
+#
+# update_fab_houses
+#
+# Description:
+# Up dates the fab houses associated with a design
+# Parameters from params
+# id - the design review
+#
+######################################################################
+#
+def update_fab_houses
 
+  session[:return_to] = {:controller => 'design_review',
+    :action     => 'view',
+    :id         => params[:id]}
 
-  ######################################################################
-  #
-  # hide_review_result_details
-  #
-  # Description:
-  # Empties out the area used by get_review_result_details() 
-  #
-  # Parameters from params
-  # id - the design review id
-  #
-  ######################################################################
-  #
-  def hide_review_result_details
-  
-    @design_review = DesignReview.find(params[:id])
-    @design        = @design_review.design
-    
-    render(:layout => false)
-    
-  end 
+  if params[:id]
+    @design_review  = DesignReview.find(params[:id])
+    design_fab_houses = {}
+    @design_review.design.fab_houses.each { |dfh| design_fab_houses[dfh.id] = dfh }
 
+    @fab_houses = FabHouse.get_all_active
+    @fab_houses.each { |fh| fh[:selected] = design_fab_houses[fh.id] != nil }
+  else
 
-  ######################################################################
-  #
-  # skip_review
-  #
-  # Description:
-  # Sets the design review to skipped and updates the phase of the design.
-  #
-  # Parameters from params
-  # design_id - the design id
-  #
-  ######################################################################
-  #
-  def skip_review
-  
-    design = Design.find(params[:design_id])
-    
-    # Update the status of the review that is being skipped.
-    skipped_review_status = ReviewStatus.find_by_name("Review Skipped")
-    skipped_review = design.design_reviews.detect { |dr| 
-      dr.review_type_id == design.phase_id }
-    skipped_review.review_status_id = skipped_review_status.id
-    skipped_review.save
-    
-    # Set the phase of the design to the next non-skipped review.
-    design.increment_review
-    
-    TrackerMailer::deliver_notify_design_review_skipped(skipped_review, @logged_in_user)
-
+    flash['notice'] = "No ID was provided - unable to access the design review"
     redirect_to(:controller => 'tracker', :action => 'index')
-    
-  end
-  
-  
-  ######################################################################
-  #
-  # display_designer_select
-  #
-  # Description:
-  # Redisplays the designer selection box with the name of the peer
-  # that was selected removed from the list of designers.
-  # 
-  # This method is called in response to an AJAX call when the user
-  # makes a selection from the Peer Select box.
-  #
-  # Parameters from params
-  # id - the user id of the peer that was selected.
-  #
-  ######################################################################
-  #
-  def display_designer_select
-  
-    selects         = flash[:selects]
-    selects[:peer]  = selects[:designers].detect { |d| d.id==params[:id].to_i}
-    flash[:selects] = selects
-    
-    @designers   = selects[:designers] - [selects[:peer]]
-    @designer_id = selects[:designer].id
-    
-    render(:layout => false)
-  
-  end
-  
-
-  ######################################################################
-  #
-  # display_peer_auditor_select
-  #
-  # Description:
-  # Redisplays the peer selection box with the name of the designer
-  # that was selected removed from the list of peers.
-  # 
-  # This method is called in response to an AJAX call when the user
-  # makes a selection from the Designer Select box.
-  #
-  # Parameters from params
-  # id - the user id of the designer that was selected.
-  #
-  ######################################################################
-  #
-  def display_peer_auditor_select
-  
-    selects            = flash[:selects]
-    selects[:designer] = selects[:designers].detect { |d| d.id==params[:id].to_i}
-    flash[:selects]    = selects
-    
-    @peer_list = selects[:designers] - [selects[:designer]]
-    @peer_id   = selects[:peer].id
-    
-    render(:layout => false)
-  
   end
 
+end
 
-  ######################################################################
-  #
-  # process_update_fab_houses
-  #
-  # Description:
-  #   Updates the FAB houses - called from admin button on review form
-  # Parameters from params
-  # id         - the review id
-  # fab_houses - list of fab house from review
-  #
-  ######################################################################
-  #
-  def process_update_fab_houses
 
-    design_review = DesignReview.find(params[:design_review][:id])
-    fab_msg = post_fab_house_updates(design_review, params["fab_house"] )
-    dr_comment = DesignReviewComment.new(
-      :comment          => fab_msg,
+######################################################################
+#
+# process_admin_update
+#
+# Description:
+# Updates the based on user input on the admin update screen.
+#
+# Parameters from params
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def process_admin_update
+
+  if session['flash'][:sort_order]
+    session['flash'][:sort_order] = session['flash'][:sort_order]
+  end
+    
+  # Normally this logic would go in the model.  But the admin update
+  # screen is designed to prevent the user from designating the same
+  # person as both the designer and the peer auditor.  There is a remote
+  # chance that the user could select the same person for both roles.
+  # Since the chance is remote I am dealing with it here.
+  if params[:peer] && params[:peer][:id] != "" &&
+     params[:peer][:id] == params[:designer][:id]
+    redirect_to(:action => 'admin_update', :id => params[:id])
+    flash['notice'] = 'The peer and the designer must be different - update not recorded'
+    return
+  end
+    
+  design = DesignReview.find(params[:id]).design
+
+  updates = {}
+  if params[:pcb_input_gate]
+    updates[:pcb_input_gate] = User.find(params[:pcb_input_gate][:id])
+  end
+  if params[:designer] && params[:designer][:id] != ''
+    updates[:designer]       = User.find(params[:designer][:id])
+  end
+  if params[:peer] && params[:peer][:id] != ''
+    updates[:peer]           = User.find(params[:peer][:id])
+  end
+  if params[:review_status]
+    updates[:status]         = ReviewStatus.find(params[:review_status][:id])
+  end
+  if params[:release_poster]
+    updates[:release_poster] = User.find(params[:release_poster][:id])
+  end
+
+  updates[:design_center]  = DesignCenter.find(params[:design_center][:id])
+  updates[:criticality]    = Priority.find(params[:priority][:id]) if params[:priority]
+  updates[:eco_number]     = params[:eco_number]
+    
+  flash['notice'] = design.admin_updates(updates,
+    params[:post_comment][:comment],
+    @logged_in_user)
+   
+  if session[:return_to]
+    redirect_to(session[:return_to])
+  else
+    redirect_to(:action => "index", :controller => "tracker" )
+  end
+    
+end
+
+
+######################################################################
+#
+# get_review_result_details
+#
+# Description:
+# Retrieves the design review results for display.
+#
+# Parameters from params
+# id - the design review id
+#
+######################################################################
+#
+def get_review_result_details
+  
+  @design_review   = DesignReview.find(params[:id])
+  @design          = @design_review.design
+  @review_results  = @design_review.unprocessed_results
+    
+  render(:layout => false)
+    
+end 
+
+
+######################################################################
+#
+# hide_review_result_details
+#
+# Description:
+# Empties out the area used by get_review_result_details() 
+#
+# Parameters from params
+# id - the design review id
+#
+######################################################################
+#
+def hide_review_result_details
+  
+  @design_review = DesignReview.find(params[:id])
+  @design        = @design_review.design
+    
+  render(:layout => false)
+    
+end 
+
+
+######################################################################
+#
+# skip_review
+#
+# Description:
+# Sets the design review to skipped and updates the phase of the design.
+#
+# Parameters from params
+# design_id - the design id
+#
+######################################################################
+#
+def skip_review
+  
+  design = Design.find(params[:design_id])
+    
+  # Update the status of the review that is being skipped.
+  skipped_review_status = ReviewStatus.find_by_name("Review Skipped")
+  skipped_review = design.design_reviews.detect { |dr|
+    dr.review_type_id == design.phase_id }
+  skipped_review.review_status_id = skipped_review_status.id
+  skipped_review.save
+    
+  # Set the phase of the design to the next non-skipped review.
+  design.increment_review
+    
+  TrackerMailer::deliver_notify_design_review_skipped(skipped_review, @logged_in_user)
+
+  redirect_to(:controller => 'tracker', :action => 'index')
+    
+end
+  
+  
+######################################################################
+#
+# display_designer_select
+#
+# Description:
+# Redisplays the designer selection box with the name of the peer
+# that was selected removed from the list of designers.
+# 
+# This method is called in response to an AJAX call when the user
+# makes a selection from the Peer Select box.
+#
+# Parameters from params
+# id - the user id of the peer that was selected.
+#
+######################################################################
+#
+def display_designer_select
+  
+  selects         = flash[:selects]
+  selects[:peer]  = selects[:designers].detect { |d| d.id==params[:id].to_i}
+  flash[:selects] = selects
+    
+  @designers   = selects[:designers] - [selects[:peer]]
+  @designer_id = selects[:designer].id
+    
+  render(:layout => false)
+  
+end
+  
+
+######################################################################
+#
+# display_peer_auditor_select
+#
+# Description:
+# Redisplays the peer selection box with the name of the designer
+# that was selected removed from the list of peers.
+# 
+# This method is called in response to an AJAX call when the user
+# makes a selection from the Designer Select box.
+#
+# Parameters from params
+# id - the user id of the designer that was selected.
+#
+######################################################################
+#
+def display_peer_auditor_select
+  
+  selects            = flash[:selects]
+  selects[:designer] = selects[:designers].detect { |d| d.id==params[:id].to_i}
+  flash[:selects]    = selects
+    
+  @peer_list = selects[:designers] - [selects[:designer]]
+  @peer_id   = selects[:peer].id
+    
+  render(:layout => false)
+  
+end
+
+
+######################################################################
+#
+# process_update_fab_houses
+#
+# Description:
+#   Updates the FAB houses - called from admin button on review form
+# Parameters from params
+# id         - the review id
+# fab_houses - list of fab house from review
+#
+######################################################################
+#
+def process_update_fab_houses
+
+  design_review = DesignReview.find(params[:design_review][:id])
+  fab_msg = post_fab_house_updates(design_review, params["fab_house"] )
+  dr_comment = DesignReviewComment.new(
+    :comment          => fab_msg,
+    :user_id          => @logged_in_user.id,
+    :design_review_id => design_review.id).save
+  redirect_to(:action => :view, :id => params[:design_review][:id])
+end
+########################################################################
+########################################################################
+private
+########################################################################
+########################################################################
+  
+  
+######################################################################
+#
+# create_comment
+#
+# Description:
+# This method creates the comment for design review modifications made
+# by the managers and designers
+#
+# Parameters
+# design_review - the designer review that is being modified
+# post_comment  - the associated comment entered by the user
+# changes       - contains the modifications that were made to the 
+#                 design review
+#
+######################################################################
+#
+def create_comment(design_review, post_comment, changes)
+  
+  msg = ''
+    
+  if changes[:designer]
+    msg += "The Lead Designer was changed from #{changes[:designer][:old]} to #{changes[:designer][:new]}\n"
+  end
+  if changes[:peer]
+    msg += "The Peer Auditor was changed from #{changes[:peer][:old]} to #{changes[:peer][:new]}\n"
+  end
+  if changes[:pcb_input_gate]
+    msg += "The PCB Input Gate was changed from #{changes[:pcb_input_gate][:old]} to #{changes[:pcb_input_gate][:new]}\n"
+  end
+  if changes[:priority]
+    msg += "The Criticality was changed from #{changes[:priority][:old]} to #{changes[:priority][:new]}\n"
+  end
+  if changes[:design_center]
+    msg += "The Design Center was changed from #{changes[:design_center][:old]} to #{changes[:design_center][:new]}\n"
+  end
+  if changes[:review_status]
+    msg += "The design review status was changed from #{changes[:review_status][:old]} to #{changes[:review_status][:new]}\n"
+  end
+
+  msg += "\n\n" + post_comment if post_comment.size > 0
+
+  dr_comment = DesignReviewComment.new(:user_id          => @logged_in_user.id,
+    :design_review_id => design_review.id,
+    :highlight        => 1,
+    :comment          => msg).save
+end
+  
+  
+######################################################################
+#
+# pre_art_pcb
+#
+# Description:
+# This method determines if the design review is a Pre-Artwork design
+# review and if the role is PCB Design.
+# 
+# TODO: This should be moved to the design_review model
+#
+# Parameters
+# design_review  - the designer review
+# review_results - 
+#
+######################################################################
+#
+def pre_art_pcb(design_review, review_results)
+  return (review_results.find { |rr| rr.role.name == "PCB Design" } &&
+      design_review.review_type.name == "Pre-Artwork")
+end
+
+
+######################################################################
+#
+# post_fab_house_updates
+#
+# Description:
+# This method builds and stores the comment that is generated when
+# the fab houses are updated by SLM Vendor
+#
+# Parameters:
+# design_review  - the designer review that is being modified
+# fab_house_list - the list of fab_houses
+#
+# Return Value:
+# A boolean that indicates that a comment was generated when true.
+#
+######################################################################
+#
+def post_fab_house_updates(design_review, fab_house_list)
+
+  comment_update = false
+
+  # Check to see if the reviewer is an SLM-Vendor reviewer.
+  # review_results[:fab_houses] will be non-nil.
+  added   = ''
+  removed = ''
+  fab_house_list.each do |id, selected|
+
+    fab_house = FabHouse.find(id)
+    # Update the design
+    design = design_review.design
+    if selected == '0' && design.fab_houses.include?(fab_house)
+      design.fab_houses.delete(fab_house)
+      if removed == ''
+        removed = fab_house.name
+      else
+        removed += ', ' + fab_house.name
+      end
+    elsif selected == '1' && !design.fab_houses.include?(fab_house)
+      design.fab_houses << fab_house
+      if added == ''
+        added = fab_house.name
+      else
+        added += ', ' + fab_house.name
+      end
+    end
+
+    # Update the board
+    board = design.board
+    if selected == '0' && board.fab_houses.include?(fab_house)
+      board.fab_houses.delete(fab_house)
+    elsif selected == '1' && !board.fab_houses.include?(fab_house)
+      board.fab_houses << fab_house
+    end
+  end
+
+  if added !=  '' || removed != ''
+    fab_msg = 'Updated the fab houses '
+
+    fab_msg += " - Added: #{added}"     if added   != ''
+    fab_msg += " - Removed: #{removed}" if removed != ''
+
+    dr_comment = DesignReviewComment.new(:comment          => fab_msg,
       :user_id          => @logged_in_user.id,
       :design_review_id => design_review.id).save
-    redirect_to(:action => :view, :id => params[:design_review][:id])
+    comment_update = true
   end
-  ########################################################################
-  ########################################################################
-  private
-  ########################################################################
-  ########################################################################
-  
-  
-  ######################################################################
-  #
-  # create_comment
-  #
-  # Description:
-  # This method creates the comment for design review modifications made
-  # by the managers and designers
-  #
-  # Parameters
-  # design_review - the designer review that is being modified
-  # post_comment  - the associated comment entered by the user
-  # changes       - contains the modifications that were made to the 
-  #                 design review
-  #
-  ######################################################################
-  #
-  def create_comment(design_review, post_comment, changes)
-  
-    msg = ''
+
+  comment_update
+
+end
+
+
+######################################################################
+#
+# post_pcb_design_results
+#
+# Description:
+# This method builds and stores the comment that is generated when
+# PCB Design performs the Pre-Artwork design review.
+#
+# Parameters:
+# design_review  - the designer review that is being modified
+# review_results - the list of inputs provided by PCB Design for the
+#                  Pre-Artwork design review.
+# 
+# Return Value:
+# The message that will be loaded into flash['notice'] by the caller.
+#
+######################################################################
+#
+def post_pcb_design_results(design_review, review_results)
+
+  results = {:success       => true,
+    :alternate_msg => 'The following updates have been made - '}
+
+  audit_skipped = design_review.design.audit.skip?
     
-    if changes[:designer]
-      msg += "The Lead Designer was changed from #{changes[:designer][:old]} to #{changes[:designer][:new]}\n"
-    end
-    if changes[:peer]
-      msg += "The Peer Auditor was changed from #{changes[:peer][:old]} to #{changes[:peer][:new]}\n"
-    end
-    if changes[:pcb_input_gate]
-      msg += "The PCB Input Gate was changed from #{changes[:pcb_input_gate][:old]} to #{changes[:pcb_input_gate][:new]}\n"
-    end
-    if changes[:priority]
-      msg += "The Criticality was changed from #{changes[:priority][:old]} to #{changes[:priority][:new]}\n"
-    end
-    if changes[:design_center]
-      msg += "The Design Center was changed from #{changes[:design_center][:old]} to #{changes[:design_center][:new]}\n"
-    end
-    if changes[:review_status]
-      msg += "The design review status was changed from #{changes[:review_status][:old]} to #{changes[:review_status][:new]}\n"
-    end
+  if !audit_skipped &&
+      (review_results[:designer]["id"] == '' ||
+        review_results[:peer]["id"] == '')
+    results[:success]       = false
+    results[:alternate_msg] = 'The Designer and Peer must be specified - results not recorded'
+  elsif !audit_skipped &&
+      (review_results[:designer]["id"] ==
+        review_results[:peer]["id"])
+    results[:success]       = false
+    results[:alternate_msg] = 'The Designer and Peer must be different - results not recorded'
+  elsif audit_skipped && review_results[:designer]["id"] == ''
+    results[:success]       = false
+    results[:alternate_msg] = 'The Designer must be specified - results not recorded'
+  else
 
-    msg += "\n\n" + post_comment if post_comment.size > 0
-
-    dr_comment = DesignReviewComment.new(:user_id          => @logged_in_user.id,
-      :design_review_id => design_review.id,
-      :highlight        => 1,
-      :comment          => msg).save
-  end
-  
-  
-  ######################################################################
-  #
-  # pre_art_pcb
-  #
-  # Description:
-  # This method determines if the design review is a Pre-Artwork design
-  # review and if the role is PCB Design.
-  # 
-  # TODO: This should be moved to the design_review model
-  #
-  # Parameters
-  # design_review  - the designer review
-  # review_results - 
-  #
-  ######################################################################
-  #
-  def pre_art_pcb(design_review, review_results)
-    return (review_results.find { |rr| rr.role.name == "PCB Design" } &&
-        design_review.review_type.name == "Pre-Artwork")
-  end
-
-
-  ######################################################################
-  #
-  # post_fab_house_updates
-  #
-  # Description:
-  # This method builds and stores the comment that is generated when
-  # the fab houses are updated by SLM Vendor
-  #
-  # Parameters:
-  # design_review  - the designer review that is being modified
-  # fab_house_list - the list of fab_houses
-  #
-  # Return Value:
-  # A boolean that indicates that a comment was generated when true.
-  #
-  ######################################################################
-  #
-  def post_fab_house_updates(design_review, fab_house_list)
-
-    comment_update = false
-
-    # Check to see if the reviewer is an SLM-Vendor reviewer.
-    # review_results[:fab_houses] will be non-nil.
-    added   = ''
-    removed = ''
-    fab_house_list.each do |id, selected|
-
-      fab_house = FabHouse.find(id)
-      # Update the design
-      design = design_review.design
-      if selected == '0' && design.fab_houses.include?(fab_house)
-        design.fab_houses.delete(fab_house)
-        if removed == ''
-          removed = fab_house.name
-        else
-          removed += ', ' + fab_house.name
-        end
-      elsif selected == '1' && !design.fab_houses.include?(fab_house)
-        design.fab_houses << fab_house
-        if added == ''
-          added = fab_house.name
-        else
-          added += ', ' + fab_house.name
-        end
-      end
-
-      # Update the board
-      board = design.board
-      if selected == '0' && board.fab_houses.include?(fab_house)
-        board.fab_houses.delete(fab_house)
-      elsif selected == '1' && !board.fab_houses.include?(fab_house)
-        board.fab_houses << fab_house
-      end
-    end
-
-    if added !=  '' || removed != ''
-      fab_msg = 'Updated the fab houses '
-
-      fab_msg += " - Added: #{added}"     if added   != ''
-      fab_msg += " - Removed: #{removed}" if removed != ''
-
-      dr_comment = DesignReviewComment.new(:comment          => fab_msg,
-        :user_id          => @logged_in_user.id,
-        :design_review_id => design_review.id).save
-      comment_update = true
-    end
-
-    comment_update
-
-  end
-
-
-  ######################################################################
-  #
-  # post_pcb_design_results
-  #
-  # Description:
-  # This method builds and stores the comment that is generated when
-  # PCB Design performs the Pre-Artwork design review.
-  #
-  # Parameters:
-  # design_review  - the designer review that is being modified
-  # review_results - the list of inputs provided by PCB Design for the
-  #                  Pre-Artwork design review.
-  # 
-  # Return Value:
-  # The message that will be loaded into flash['notice'] by the caller.
-  #
-  ######################################################################
-  #
-  def post_pcb_design_results(design_review, review_results)
-
-    results = {:success       => true,
-      :alternate_msg => 'The following updates have been made - '}
-
-    audit_skipped = design_review.design.audit.skip?
-    
-    if !audit_skipped &&
-        (review_results[:designer]["id"] == '' ||
-          review_results[:peer]["id"] == '')
-      results[:success]       = false
-      results[:alternate_msg] = 'The Designer and Peer must be specified - results not recorded'
-    elsif !audit_skipped &&
-        (review_results[:designer]["id"] ==
-          review_results[:peer]["id"])
-      results[:success]       = false
-      results[:alternate_msg] = 'The Designer and Peer must be different - results not recorded'
-    elsif audit_skipped && review_results[:designer]["id"] == ''
-      results[:success]       = false
-      results[:alternate_msg] = 'The Designer must be specified - results not recorded'
+    designer = User.find(review_results[:designer]["id"])
+    if !audit_skipped
+      peer = User.find(review_results[:peer]["id"])
     else
+      peer = User.new
+    end
+    priority = Priority.find(review_results[:priority]["id"])
 
-      designer = User.find(review_results[:designer]["id"])
-      if !audit_skipped
-        peer = User.find(review_results[:peer]["id"])
-      else 
-        peer = User.new
-      end
-      priority = Priority.find(review_results[:priority]["id"])
-
-      design = design_review.design
-      priority_update = design.priority_id != priority.id
+    design = design_review.design
+    priority_update = design.priority_id != priority.id
       
-      design.peer_id          = peer.id
-      design.designer_id      = designer.id
-      design.priority_id      = priority.id
-      # JPA - VERIFY THIS 
-      #design.design_center_id = designer.design_center_id
-      design.save
+    design.peer_id          = peer.id
+    design.designer_id      = designer.id
+    design.priority_id      = priority.id
+    # JPA - VERIFY THIS
+    #design.design_center_id = designer.design_center_id
+    design.save
       
-      design.set_reviewer(Role.find_by_name("Valor"), peer)
+    design.set_reviewer(Role.find_by_name("Valor"), peer)
 
-      for review in design.design_reviews
-        review.priority_id = priority.id
-        if (review.review_type.name != 'Release' &&
-              review.review_type.name != 'Pre-Artwork')
-          review.designer_id = designer.id
-        end
-        review.save
+    for review in design.design_reviews
+      review.priority_id = priority.id
+      if (review.review_type.name != 'Release' &&
+            review.review_type.name != 'Pre-Artwork')
+        review.designer_id = designer.id
       end
-
-      results[:alternate_msg] += "Criticality is #{priority.name}, " if priority_update
-      results[:alternate_msg] += "the Designer is #{designer.name}"
-      if !audit_skipped
-        results[:alternate_msg] += " and the Peer is #{peer.name}"
-      end
-
+      review.save
     end
 
-    return results
-    
+    results[:alternate_msg] += "Criticality is #{priority.name}, " if priority_update
+    results[:alternate_msg] += "the Designer is #{designer.name}"
+    if !audit_skipped
+      results[:alternate_msg] += " and the Peer is #{peer.name}"
+    end
+
   end
+
+  return results
+    
+end
   
   
 

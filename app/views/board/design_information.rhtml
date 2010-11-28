@@ -11,13 +11,13 @@
 <table width="80%" align="center" border="0" cellspacing="2" cellpadding="2" rules="all">
 
   <% @designs.each do |design| %>
-  <% design_reviews = design.design_reviews.sort_by { |dr| dr.review_type.sort_order } %>
-    <tr class="teraheader">
+     <tr class="teraheader">
       <td>
-        <b><%= design.directory_name %></b>
+        <b><%= design.directory_name %>&nbsp;&nbsp;/&nbsp;&nbsp;PCBA(s): </b> <%=design.pcbas_string%>
       </td>
     </tr>
-    <% design[:sorted_design_reviews].each do |review| %>
+    <% design_reviews = design.design_reviews.sort_by { |dr| dr.review_type.sort_order }
+       design_reviews.each do |review| %>
       <tr>
         <td>
           <table width="98%" align="right" border="0">

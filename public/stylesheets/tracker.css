@@ -36,11 +36,15 @@ pre {
   font-size: 11px;
 }
 
-a {font: 11px Verdana, Geneva, Arial, Helvetica, sans-serif;}
+a {font: 11px Verdana, Geneva, Arial, Helvetica, sans-serif;
+    color: #000; }
 a:link    { color: #0000ff; }
-a:visited { color: #ff00ff; }
-a:hover   { color: #00ccff; }
 a:active  { color: #ff0000; }
+a:visited { color: #666; }
+a:hover { color: #fff; background-color:#000; }
+
+.board_table { font: 11px Verdana, Geneva, Arial, Helvetica, sans-serif; }
+/* same as a: - used for null cells in table*/
 
 
 .actiontable {
@@ -118,9 +122,7 @@ a:active  { color: #ff0000; }
 .reviewresults {
 }
 
-a { color: #000; }
-a:visited { color: #666; }
-a:hover { color: #fff; background-color:#000; }
+
 
 .fieldWithErrors {
   padding: 2px;
@@ -245,6 +247,7 @@ a:hover { color: #fff; background-color:#000; }
   font-size: 14px;
   color: #ffffff;
 }
+
 .subheading {
   font-size: 12px;
 }
@@ -396,11 +399,7 @@ table.sortable thead {
     width:            240px;
     background-color: red;
 }
-.teraheader {
-  background: #023a94;
-  font-size: 14px;
-  color: #ffffff;
-}
+
 
 .design_change_table {
     width:            800px;
@@ -460,3 +459,5 @@ table.sortable thead {
 .wide_select {
     width:            200px
 }
+
+

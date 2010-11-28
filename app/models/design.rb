@@ -26,6 +26,8 @@ class Design < ActiveRecord::Base
   has_many :design_updates
   has_many :ipd_posts
   has_many :oi_instructions
+  #has_many :part_numbers
+  has_many :part_nums
 
   has_one   :audit
   has_one   :board_design_entry
@@ -87,18 +89,19 @@ class Design < ActiveRecord::Base
           brd_dsn_entry.design_directory_name + '/' +
           design.directory_name + '/'
 
-      
-      puts(design.part_number.pcba_display_name          + '|' +
-           design.part_number.pcb_display_name           + '|' +
-           design.phase.name                             + '|' +
-           current_design_review.review_status.name      + '|' +
-           planner_email                                 + '|' +
-           hweng_email                                   + '|' +
-           design.designer.email                         + '|' +
-           pcb_path                                      + '|' +
-           eng_path                                      + '|')
+      PartNum.get_design_pcba_part_numbers(design.id).each do |pcba|
+        puts(pcba.name_string                             + '|' +
+            design.pcb_display                            + '|' +
+            design.phase.name                             + '|' +
+            current_design_review.review_status.name      + '|' +
+            planner_email                                 + '|' +
+            hweng_email                                   + '|' +
+            design.designer.email                         + '|' +
+            pcb_path                                      + '|' +
+            eng_path                                      + '|')
+      end
     end
- 
+
   end
 
   
@@ -120,9 +123,9 @@ class Design < ActiveRecord::Base
   def self.get_unique_pcb_numbers
     
     designs =Design.find(:all)
-    designs.delete_if { |d| d.part_number_id == 0 }
-    designs.collect { |design| design.part_number.pcb_unique_number }.uniq.sort
-    
+    designs.delete_if { |d| d.pcb_number == nil }
+    #designs.collect { |design| design.part_number.pcb_unique_number }.uniq.sort
+    designs.collect { |design| PartNum.get_design_pcb_part_number(design.id).uniq_name }.uniq.sort
   end
   
   
@@ -167,7 +170,9 @@ class Design < ActiveRecord::Base
               :order      => 'created_on')
   end
   
-  
+  def is_active?
+    self.phase_id != Design::COMPLETE
+  end
   ######################################################################
   #
   # get_active_designs_owned_by
@@ -188,7 +193,9 @@ class Design < ActiveRecord::Base
     pre_art_phase_id = ReviewType.get_pre_artwork.id
 
     designs  = Design.find(:all,
-                           :conditions => "designer_id='#{designer.id}' AND phase_id!='#{Design::COMPLETE}' AND phase_id!='#{pre_art_phase_id}'",
+                           :conditions => "designer_id='#{designer.id}' " +
+                                      "AND phase_id!='#{Design::COMPLETE}' " +
+                                      "", #AND phase_id!='#{pre_art_phase_id}'",
                            :order      => 'created_on') +
                Design.find(:all,
                            :conditions => "pcb_input_id='#{designer.id}' AND phase_id='#{pre_art_phase_id}'",
@@ -780,7 +787,7 @@ class Design < ActiveRecord::Base
     logger.info("Design.name called")
     logger.info("#################################")
     logger.info("#################################")
-    self.part_number.pcb_display_name
+    self.pcb_display
   end
   
   
@@ -1248,11 +1255,13 @@ class Design < ActiveRecord::Base
       new_pcb_path = '/hwnet/' +
         self.design_center.pcb_path + '/' +
         self.directory_name
-      cmd = "/hwnet/dtg_devel/web/boarddev/cgi-bin/npi_boms/rename_assembly_folder.pl" +
-        " " + self.part_number.pcba_name +
-        " " + old_pcb_path +
-        " " + new_pcb_path
-      system(cmd)
+      PartNum.get_design_pcba_part_numbers(self).each { |pcba|
+        cmd = "/hwnet/dtg_devel/web/boarddev/cgi-bin/npi_boms/rename_assembly_folder.pl" +
+          " " + pcba.name_string +
+          " " + old_pcb_path +
+          " " + new_pcb_path
+        system(cmd)
+      }
     end
 
     if update[:designer] && self.designer_id != update[:designer].id
@@ -1265,6 +1274,13 @@ class Design < ActiveRecord::Base
     
     if update[:criticality] && self.priority_id != update[:criticality].id
       self.priority  = update[:criticality] 
+    end
+
+    if update[:eco_number] && self.eco_number != update[:eco_number]
+      old_eco_number = self.eco_number
+      self.eco_number = update[:eco_number]
+      changes[:ecn_number] = { :old => old_eco_number,
+                               :new => update[:eco_number]}
     end
     
     audit = self.audit
@@ -1312,7 +1328,7 @@ class Design < ActiveRecord::Base
         modification_comment(comment, changes), 
         cc_list)
 
-      self.part_number.pcb_display_name + 
+      self.pcb_number +
       ' has been updated - the updates were recorded and mail was sent'
       
     else
@@ -1700,8 +1716,12 @@ class Design < ActiveRecord::Base
   #
   def directory_name
     
-    directory_name = self.part_number.directory_name
-    return directory_name if directory_name != ''
+    pnum = PartNum.get_design_pcb_part_number(self.id)
+    if pnum 
+      directory_name = "pcb" + pnum.prefix + "_" +
+      pnum.number + "_" + pnum.dash + "_" + pnum.revision
+      return directory_name
+    end
     
     # If execution reaches this point then the design was originated
     # under the old part numbering schema and the directory is based on 
@@ -1796,6 +1816,63 @@ class Design < ActiveRecord::Base
 
     old_design_center_name
 
+  end
+
+   ######################################################################
+  #
+  # pcb_number
+  #
+  # Description:
+  # This method returns the pcb number.
+  #
+  ######################################################################
+  #
+  def pcb_number
+    pnum = PartNum.get_design_pcb_part_number(self.id)
+    if pnum
+      pnum.name_string
+    else
+      ""
+    end
+    #PartNum.get_design_pcb_part_number(self.id).name_string
+  end
+
+  def pcb_number?
+    PartNum.get_design_pcb_part_number(self.id)?true:nil
+  end
+
+  def pcb_rev
+    PartNum.get_design_pcb_part_number(self.id).rev_string
+  end
+
+  def pcb_display
+    PartNum.get_design_pcb_part_number(self.id).name_string +
+      ' ' +
+      PartNum.get_design_pcb_part_number(self.id).rev_string
+  end
+
+
+  ######################################################################
+  #
+  # pcba part numbers
+  #
+  # Description:
+  # These methods returns the pcba part number.
+  #
+  ######################################################################
+  #
+  def pcbas_string
+    first = 1
+    pcbas = ""
+    PartNum.get_design_pcba_part_numbers(self.id).each { |pcba|
+      if first == 1
+        pcbas = pcba.name_string
+        first = 0
+      else
+        pcbas = pcbas + ", " + pcba.name_string
+      end
+    }
+    pcbas
   end
 
 

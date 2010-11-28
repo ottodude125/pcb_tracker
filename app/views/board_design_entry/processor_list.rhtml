@@ -13,10 +13,11 @@
     <th align="left">Submit Date</th>
     <td>&nbsp;</td>
   </tr>
-  <% for entry in @board_design_entries %>
+  <% for entry in @board_design_entries
+    pcb_part_number = entry.pcb_number%>
     <tr>
-      <td align="center"><%= entry.part_number.pcb_name %></td>
-      <td align="center"><%= entry.part_number.pcb_revision %></td>
+      <td align="center"><%= entry.pcb_number%></td>
+      <td align="center"><%= entry.pcb_rev %></td>
       <td><%= entry.user.name %></td>
       <td align="center"><%= (entry.submitted? || entry.ready_to_post?) ? 'Yes' : 'No' %></td>
       <td><%= entry.submitted_on.format_month_dd_yyyy if entry.submitted? || entry.ready_to_post? %></td>
@@ -62,7 +63,7 @@
                        :id     => entry.id,
                        :return => params[:action]},
                       :title  => "Delete the PDB Engineering Entry",
-                      :confirm => "Do you really want to delete the #{entry.design_name}?  Click 'OK' to remove the entry, otherwise click 'Cancel'.") %>
+                      :confirm => "Do you really want to delete the #{entry.pcb_number}?\n  Click 'OK' to remove the entry, otherwise click 'Cancel'.") %>
         </td>
       <% end %>
     </tr>

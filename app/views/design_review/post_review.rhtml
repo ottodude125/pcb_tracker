@@ -15,9 +15,17 @@
   <% action = { :action => 'repost' } %>
 <% end %>
 
-  <% form_tag(action) do %>
 
   <hr class="div" />
+
+ <% if @design_review.on_hold?
+  style = 'style="display:none";'%>
+  <font size="+1"><b>Review is On-Hold - Post/Repost disabled</b></font>
+ <%end%>
+
+ <div <%=  style %> >
+ <% form_tag(action ) do %>
+
 
   <%= hidden_field "design_review", "id" %>
 
@@ -31,13 +39,13 @@
           	  PCB Part Number:
           	</th>
 			<td width="300">
-			  <%= @design_review.design.part_number.pcb_display_name %>
+			  <%= @design_review.design.pcb_display %>
 			</td>
           	<th align="left" width="150">
           	  PCBA Part Number:
           	</th>
 			<td width="300">
-			  <%= @design_review.design.part_number.pcba_display_name %>
+			  <%= @design_review.design.pcbas_string %>
 			</td>
           </tr>
           <tr>
@@ -75,7 +83,7 @@
         </table>
       </td>
     </tr>
-
+    
     <% if @design_review.inactive_reviewers? %>
       <tr>
         <td>&nbsp;</td>
@@ -177,15 +185,17 @@
     <tr>
       <th valign="top">3</th>
       <td valign="top">
-        <% if mode == 'POST' %>
-          <input type="submit" class="buttonPost" value="Post <%= @design_review.review_type.name %> Review" />
-        <% else %>
-          <input type="submit" class="buttonPost" value="Repost <%= @design_review.review_type.name %> Review" />
-        <% end %>
+        <% if ! @design_review.on_hold? %>
+            <% if mode == 'POST' %>
+              <input type="submit" class="buttonPost" value="Post <%= @design_review.review_type.name %> Review" />
+            <% else %>
+              <input type="submit" class="buttonPost" value="Repost <%= @design_review.review_type.name %> Review" />
+            <% end %>
+          <% end %>
       </td>
     </tr>
   </table>
-
+</div>
   <hr class="div" />
 
   <input type="button" value="Cancel Posting" class="buttonStop" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />

@@ -7,7 +7,8 @@
 
 <% if @user_action == 'updating' %>
 
-  <% @heading = "PCB Engineering - Updating #{@board_design_entry.design_name}"
+  <% @heading = "PCB Engineering - Design Details " + 
+   @board_design_entry.pcb_number + " - Updating"
 
      action   = { :action      => 'update_entry',
                   :id          => @board_design_entry.id,
@@ -17,7 +18,8 @@
 
 <% elsif @user_action == 'adding' %>
 
-  <% @heading = "PCB Engineering - New Entry"
+  <% @heading = "PCB Engineering - Design Details "  +
+  @board_design_entry.pcb_number + " - New Entry"
   
      action   = { :action      => 'update_entry',
                   :id          => @board_design_entry.id,
@@ -68,37 +70,24 @@
   <tr>
     <td class="label">PCB Part Number: </td>
     <td class="data" colspan="2">
-      <%= @board_design_entry.part_number.pcb_name %>
+      <%= @board_design_entry.pcb_number %>
     </td>
     <td class="label">Revision: </td>
     <td class="data" colspan="3">
-      <%= @board_design_entry.part_number.pcb_revision %>
+      <%= @board_design_entry.pcb_rev %>
     </td>
   </tr>
   
 <!-- ********************************************************** -->
   <% if @board_design_entry.new? %>
   <tr>
-    <td class="label" valign="top">PCBA Part Number: </td>
-    <td class="data" colspan="2">
-      <%= @board_design_entry.part_number.pcba_name %>
-    </td>
-    <td class="label">Revision: </td>
-    <td class="data" colspan="3">
-      <%= @board_design_entry.part_number.pcba_revision %>
+    <td class="label" valign="top">PCBA Part Number(s): </td>
+    <td class="data" colspan="6">
+      <%= @board_design_entry.pcbas_string %>
     </td>
   </tr>
   <% end %>
   
-<!-- ********************************************************** -->
-  <% if !@board_design_entry.new? %>
-  <tr>
-    <td class="label" valign="top">ECO Number (if applicable): </td>
-    <td class="data" colspan="6">
-      <%= text_field("board_design_entry", "eco_number", "size" => 40, "maxlength" => 10) %>
-    </td>
-  </tr>
-  <% end %>
 <!-- ********************************************************** -->
   <tr>
     <td class="label" valign="top">Platform: </td>
@@ -181,59 +170,50 @@
 
 <!-- ********************************************************** -->
   <tr>
+    <%  mkfrm = @board_design_entry.make_from? %>
     <td class="label" valign="top">Make From: </td>
-    <td class="data" colspan="6" valign="top">
-      <div id="make_from">
-        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <td class="data" colspan="2" valign="top">
+        <table cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td class="label" width="140">Yes: </td>
             <td class="data" align="left">
-              <%= radio_button(:board_design_entry, :make_from, '1') %>
-
-              <%= observe_field('board_design_entry_make_from_1',
-                                :update    => :make_from,
-                                :url       => { :action => :process_make_from,
-                                                :id     => @board_design_entry.id,
-                                                :value  => 'yes' }) %>
-            </td>
-            
-            <% if @board_design_entry.make_from? %>
-              <td class="label" width="200" 
-                  title="Identify the original PCB">
-                Original PCB Number: 
-              </td>
-              <td class="data">
-                <%= text_field("board_design_entry", 
-                               "original_pcb_number", 
-                               "size" => 16) %>
-              </td>
-            <% else %>
-              <td>&nbsp;</td>
-            <% end %>
-    
+             <%= radio_button_tag('board_design_entry[make_from]', 1,
+               mkfrm == true ? true:false,
+               :onclick => "$(\'make_from\').style.display = \'block';" ) %>
+            </td>                
           </tr>
           <tr>
             <td class="label">No: </td>
             <td class="data" align="left">
-              <%= radio_button(:board_design_entry, :make_from, '0') %>
-
-              <%= observe_field('board_design_entry_make_from_0',
-                                :update    => :make_from,
-                                :url       => { :action => :process_make_from,
-                                                :id     => @board_design_entry.id,
-                                                :value  => 'no' }) %>
+              <%= radio_button_tag('board_design_entry[make_from]', 0, mkfrm == true ? false:true,
+                :onclick => "$(\'make_from\').style.display = \'none';" ) %>
             </td>
           </tr>
         </table>
-      </div>
+    </td>
+    <td class="data" colspan="4">
+   <div id="make_from" <%=  mkfrm == true ? "style=display:'block'" :
+  "style=\"display: none;\""%> >
+      <table><tr>
+      <td class="label" width="200"
+        title="Identify the original PCB">
+      Original PCB Number 1:
+      </td>
+      <td class="data">
+      <%= text_field("board_design_entry",
+        "original_pcb_number",
+        "size" => 16) %>
+      </td>
+      </tr></table>
+   </div>
     </td>
   </tr>
 
 <!-- ********************************************************** -->
   <tr>
     <td class="label" valign="top">HiPot Testing Required: </td>
-    <td class="data" colspan="6" valign="top">
-        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+    <td class="data" colspan="2" valign="top">
+        <table cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td class="label" width="140">Yes: </td>
             <td class="data" align="left">
@@ -248,58 +228,85 @@
           </tr>
         </table>
     </td>
+    <td class="data" colspan="4" valign="top">&nbsp;</td>
   </tr>
 
 <!-- ********************************************************** -->
+<tr>
+  <td class="label" valign="top">RoHS design:</td>
+  <td class="data" colspan="2" valign="top">
+    <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="label" width="140">Yes: </td>
+          <td class="data" align="left">
+            <%= radio_button(:board_design_entry, :rohs, '1', :checked => true ) %>
+          </td>
+        </tr>
+        <tr>
+          <td class="label">No: </td>
+          <td class="data" align="left">
+            <%= radio_button(:board_design_entry, :rohs, '0') %>
+          </td>
+        </tr>
+      </table>
+    </td>
+   <td class="data" colspan="4" valign="top">&nbsp;</td>
+  </tr>
+  <!-- ********************************************************** -->
   <tr>
-    <td class="label" valign="top">Lead Free Devices On Board: </td>
-    <td class="data" colspan="6" valign="top">
-      <div id="lead_free">
-        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <td class="label" valign="top">Manual Thieving:</td>
+      <td class="data" colspan="2" valign="top">
+        <table cellpadding="0" cellspacing="0" border="0">
           <tr>
             <td class="label" width="140">Yes: </td>
             <td class="data" align="left">
-              <%= radio_button(:board_design_entry, :lead_free_devices, '1') %>
-
-              <%= observe_field('board_design_entry_lead_free_devices_1',
-                                :update    => :lead_free,
-                                :url       => { :action => :process_lead_free,
-                                                :id     => @board_design_entry.id,
-                                                :value  => 'yes' }) %>
+              <%= radio_button(:board_design_entry, :thieving, '1') %>
             </td>
-            
-            <% if @board_design_entry.lead_free_devices? %>
-              <td class="label" width="100" rowspan="2" valign="top"
-                  title="Identify lead free devices">
-                Device Names:
-              </td>
-              <td class="data" valign="top" rowspan="2">
-                <%= text_area("board_design_entry", 
-                              "lead_free_device_names", 
-                              { :rows => '1', :cols => '35' }) %>
-              </td>
-            <% else %>
-              <td>&nbsp;</td>
-            <% end %>
-
           </tr>
           <tr>
             <td class="label">No: </td>
             <td class="data" align="left">
-              <%= radio_button(:board_design_entry, :lead_free_devices, '0') %>
-
-              <%= observe_field('board_design_entry_lead_free_devices_0',
-                                :update    => :lead_free,
-                                :url       => { :action => :process_lead_free,
-                                                :id     => @board_design_entry.id,
-                                                :value  => 'no' }) %>
+              <%= radio_button(:board_design_entry, :thieving, '0',  :checked => true ) %>
             </td>
           </tr>
         </table>
-      </div>
+      </td>
+      <td class="data" colspan="4" valign="top">
+        THIEVING is non-functional copper patterns that are added to a
+        design to balance the layers and improve manufacturability(fabrication
+        drawing: note 9)<br>
+        This is very important on designs that use thin core material where the
+        copper on either side of the thin core is not a full plane.
+      </td>
+    </tr>
+<!-- ********************************************************** -->
+<tr>
+    <td class="label" valign="top">Copper Free Areas:</td>
+    <td class="data" colspan="2" valign="top">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="label" width="140">Yes: </td>
+          <td class="data" align="left">
+            <%= radio_button(:board_design_entry, :no_copper, '1', :checked => true ) %>
+          </td>
+        </tr>
+        <tr>
+          <td class="label">No: </td>
+          <td class="data" align="left">
+            <%= radio_button(:board_design_entry, :no_copper, '0', :checked => true ) %>
+          </td>
+        </tr>
+      </table>
     </td>
-  </tr>
-  
+      <td class="data" colspan="4" valign="top">
+        Will this design have areas that must be free of copper and/or thieving?<br>
+        Mechanical route keepout areas are defined on the mechanical outline
+        drawing and will be transferred to the fabrication drawing as a
+        "COPPER KEEPOUT AREA" label. Copper keepout areas required for signal
+        integrity must be communicated to PCB Design by the Hardware Engineer.
+      </td>
+   </tr>
+
 <!-- ********************************************************** -->
   <tr valign="top">
     <td class="label" valign="top">Outline Drawing Number: </td>
@@ -329,16 +336,6 @@
                       :order      => [:month, :day, :year]) %>
     </td>
   </tr>
-
-<% if @viewer == 'processor' %>
-<!-- ********************************************************** -->
-  <tr>
-    <td class="label" valign="top">Pre-Production Release Number: </td>
-    <td class="data" colspan="6">
-      <%= text_field("board_design_entry", "pre_production_release_number", "size" => 30, "maxlength" => 30) %>
-    </td>
-  </tr>
-<% end %>
 
 </table>
 

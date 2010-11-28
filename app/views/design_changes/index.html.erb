@@ -6,6 +6,13 @@
 
 <% @heading = 'Schedule Changes for the ' + @design.directory_name + ' Design' %>
 
+<p align="center">The Schedule Change function has not been deployed. Please click the "home"
+link to return.</p>
+ <p align="center"><%= link_to 'Home', { :controller => :tracker } %></p>
+<hr class="div" align="center" width="970" />
+
+<% if false #hide rest of page%>
+
 <% if @design.design_changes.size > 0 %>
 
   <% if @design.total_approved_schedule_changes? %>
@@ -78,3 +85,4 @@
 <hr class="div" align="center" width="970" />
 
 <%# debug @design.design_changes %>
+<% end %>

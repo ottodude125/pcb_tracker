@@ -1,0 +1,37 @@
+<SCRIPT type="text/javascript">
+  <!-- This code makes the jump from the part number prefix to the -->
+  <!-- part number number.                                         -->
+  function doNext(el)
+  {
+    if ( el.value.length < el.getAttribute('maxlength') ) return;
+    for (i=0; i< el.form.elements.length; i++) {
+      if (el.form.elements[i].tabIndex == el.tabIndex+1) {
+        el.form.elements[i].focus();
+        if (el.form.elements[i].type == "text") {
+          el.form.elements[i].select();
+        }
+        break;
+      }
+    }
+}
+
+</SCRIPT>
+
+<h1>New part_num</h1>
+
+<%=@errors %>
+
+<% form_tag( :action => 'create' )  do %>
+  <% @tabindex = 0  %>
+  <% row_num = 0 %>
+  <table>
+    <% @rows.each do | row | %>
+      <%= render(:partial    => "pn_row",
+        :object   => row,
+        :locals => {:row_num => row_num += 1 } ) %>
+    <% end %>
+  </table>
+  <p>
+    <%= submit_tag("Create" )%>
+  </p>
+<% end %>

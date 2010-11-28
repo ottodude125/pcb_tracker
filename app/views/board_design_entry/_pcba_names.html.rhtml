@@ -1,0 +1,8 @@
+<%# $Header$ %>
+
+
+<% separator = "" %>
+<% @pcba_part_numbers.each do |pcba| -%>
+  <%=separator + pcba.name_string -%>
+  <% separator = " / " -%>
+<%end -%>

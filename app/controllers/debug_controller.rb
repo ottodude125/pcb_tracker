@@ -415,7 +415,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   
   
   def part_numbers
-    @part_numbers = PartNumber.find(:all)
+    @part_numbers = PartNum.find(:all)
     designs       = Design.find(:all)
     bde_list      = BoardDesignEntry.find(:all)
     
@@ -423,7 +423,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
       pn_designs = []
       pn_bdes    = []
       
-      designs.each { |d| pn_designs << d if d.part_number_id == pn.id }
+      designs.each { |d| pn_designs << d if d.pcba_number == pn.name_string }
       pn[:design_count] = pn_designs.size
       if pn_designs.size == 0
         pn[:design_id] = '-'

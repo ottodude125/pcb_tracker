@@ -9,7 +9,10 @@
 <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
 <hr class="div" />
 
-  
+<p align="center"><%=@type.upcase%> Part numbers
+<input type="button" value='Show <%=@type2.upcase%> Part Numbers'
+onClick="parent.location='<%= url_for( :controller => 'board', :action => 'show_boards', :type => @type2 ) %>'" />
+</p>
 <table width="90%" border="1" cellspacing="0" cellpadding="0" align="center" rules="cols">
          	
   <tr class="teraheader">
@@ -22,12 +25,16 @@
     <tr>
 	  	
       <% 0.upto(@columns-1) do |col| %>
-        <% break if !@part_numbers[row][col] %>
-        <td align="center">     
-		  <%= link_to(@part_numbers[row][col],
-                      { :action       => :design_information,
-                        :part_number  => @part_numbers[row][col] }) %>
-        </td>
+          <td class="board_table" align="center">
+              <% if @part_numbers[row][col] %>
+                  <%= link_to(@part_numbers[row][col],
+                     { :action       => :design_information,
+                       :part_number  => @part_numbers[row][col],
+                       :type => @type}) %>
+              <% else %>
+                &nbsp;
+              <% end %>
+            </td>
       <% end %>
 	  	
     </tr>

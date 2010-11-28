@@ -6,29 +6,24 @@
 
 <table border="0" width="100%">
   <tr>
-    <td width="130" class="th1">PCB Part Number:</td>
-    <td>
-      <%= @design_review.design.part_number.pcb_name %>
-    </td>
+    <td class="th1">PCB Part Number:</td>
+    <td> <%= @design_review.design.pcb_number %></td>
     <td class="th1">Revision:</td>
-    <td>
-      <%= @design_review.design.part_number.pcb_revision %>
-    </td>
+    <td> <%= @design_review.design.pcb_rev %></td>
   </tr>
-  <% if @design_review.design.part_number.new? %>
     <tr>
-      <td width="130" class="th1">PCBA Part Number:</td>
-      <td>
-        <%= @design_review.design.part_number.pcba_name %>
-      </td>
-      <td class="th1">Revision:</td>
-      <td>
-        <%= @design_review.design.part_number.pcba_revision %>
-      </td>
-    </tr>
-  <% end %>
+      <td class="th1">PCBA Part Number(s):</td>
+      <td><%= @design_review.design.pcbas_string %></td>
+      <td class="th1">ECN Number:</td>
+      <td> <% if @design_review.design.eco_number != '' %>
+          <%=@design_review.design.eco_number%>
+        <%else%>
+        <b><font color="red">Not Set</font></b>
+        <% end %>
+       </td>
+     </tr>
   <tr>
-    <td width="130" class="th1">Description:</td>
+    <td class="th1">Description:</td>
     <td colspan="3">
       <%= @design_review.design.board.platform.name %> /
       <%= @design_review.design.board.project.name %> /
@@ -36,11 +31,11 @@
     </td>
   </tr>
   <tr>
-    <td class="th1">Posted By:</td>
-    <td width="220">
+    <td class="th1">Designer:</td>
+    <td>
       <%= poster_name(@design_review) %>
     </td>
-    <td width="150" class="th1">PCB Design Data:</td>
+    <td class="th1">PCB Design Data:</td>
     <td>
       <% if @design_review.design.design_center %>
         <%= link_to(@design_review.design.design_center.name,

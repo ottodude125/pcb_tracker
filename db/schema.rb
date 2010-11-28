@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 4) do
+ActiveRecord::Schema.define(:version => 7) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :limit => 12, :default => 0, :null => false
@@ -87,6 +87,9 @@ ActiveRecord::Schema.define(:version => 4) do
     t.integer  "attachments_complete",           :limit => 3,   :default => 0,            :null => false
     t.integer  "comments_complete",              :limit => 3,   :default => 0,            :null => false
     t.integer  "design_id",                      :limit => 12,  :default => 0,            :null => false
+    t.boolean  "rohs"
+    t.boolean  "thieving"
+    t.boolean  "no_copper"
   end
 
   add_index "board_design_entries", ["part_number_id"], :name => "part_number_id"
@@ -334,7 +337,7 @@ ActiveRecord::Schema.define(:version => 4) do
     t.integer  "revision_id",      :limit => 3,  :default => 0,    :null => false
     t.integer  "suffix_id",        :limit => 3,  :default => 0
     t.integer  "numeric_revision", :limit => 3,  :default => 0,    :null => false
-    t.string   "eco_number",       :limit => 7,  :default => "",   :null => false
+    t.string   "eco_number",       :limit => 10, :default => ""
     t.string   "design_type",      :limit => 15, :default => "''", :null => false
     t.integer  "designer_id",      :limit => 12, :default => 0,    :null => false
     t.integer  "peer_id",          :limit => 12, :default => 0,    :null => false
@@ -557,6 +560,16 @@ ActiveRecord::Schema.define(:version => 4) do
     t.string "pcba_number",      :limit => 3, :default => "", :null => false
     t.string "pcba_dash_number", :limit => 2, :default => "", :null => false
     t.string "pcba_revision",    :limit => 1, :default => "", :null => false
+  end
+
+  create_table "part_nums", :force => true do |t|
+    t.string  "prefix",                :limit => 3
+    t.string  "number",                :limit => 3
+    t.string  "dash",                  :limit => 2
+    t.string  "revision",              :limit => 1
+    t.string  "use",                   :limit => 5
+    t.integer "board_design_entry_id", :limit => 11
+    t.integer "design_id",             :limit => 11
   end
 
   create_table "permissions", :force => true do |t|

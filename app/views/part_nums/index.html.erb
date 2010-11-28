@@ -1,0 +1,18 @@
+<h1>Listing part_nums</h1>
+
+<table>
+  <tr>
+  </tr>
+
+<% for part_num in @part_nums %>
+  <tr>
+    <td><%= link_to 'Show', part_num %></td>
+    <td><%= link_to 'Edit', edit_part_num_path(part_num) %></td>
+    <td><%= link_to 'Destroy', part_num, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New part_num', new_part_num_path %>

@@ -20,9 +20,9 @@
   <% @active_designs.each do |design| %>
     <tr>
       <td align="center">
-        <%= link_to(design.part_number.pcb_name, :action => 'show', :id => design.id) %>
+        <%= link_to(design.pcb_name, :action => 'show', :id => design.id) %>
       </td>
-	  <td align="center"><%= design.part_number.pcb_revision %></td>
+	  <td align="center"><%= design.pcb_rev %></td>
 	  <td align="center"><%= design.audit_type %></td>
     </tr>
   <% end %>

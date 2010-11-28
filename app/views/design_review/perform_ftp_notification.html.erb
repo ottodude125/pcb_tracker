@@ -7,7 +7,7 @@
 
 
 <% @heading = 'FTP Notification for the  ' +
-              @design.part_number.pcb_display_name %>
+              @design.pcb_number %>
 
 <% form_tag(:action => 'send_ftp_notification', :id => @design.id) do %>
   

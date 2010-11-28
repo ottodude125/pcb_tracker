@@ -1,0 +1,68 @@
+<!-- View:    design review                     -->
+<!-- Purpose: Displays a part number row                           -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<tr>
+  <td width="200" class="label" align="right">
+    <% if pn_row.use %>
+      <%=pn_row.use.upcase%>
+      <input TYPE ="hidden"
+    name="rows[<%=row_num%>][use]"
+    value="<%=pn_row.use%>" />
+    <% else %>
+     <INPUT TYPE="text"
+           name="rows[<%=row_num%>][use]"
+           size="3"
+           MAXLENGTH=3
+           TABINDEX=<%=@tabindex += 1%>
+           value="<%=pn_row.use%>"
+           onKeyUp="doNext(this)" />
+     <% end %>
+  </td>
+  <td class="data">
+    <INPUT TYPE="text"
+           name="rows[<%=row_num%>][prefix]"
+           size="3"
+           MAXLENGTH=3
+           TABINDEX=<%=@tabindex += 1%>
+           value="<%=pn_row.prefix%>"
+           onKeyUp="doNext(this)" />
+  </td>
+
+  <td class="data">-</td>
+
+  <td class="data">
+    <INPUT TYPE="text"
+           name="rows[<%=row_num%>][number]"
+           size="3"
+           MAXLENGTH="3"
+           TABINDEX=<%=@tabindex += 1%>
+           value="<%=pn_row.number%>"
+           onKeyUp="doNext(this)" />
+  </td>
+
+  <td class="data">-</td>
+
+  <td class="data">
+    <INPUT TYPE="text"
+           name="rows[<%=row_num%>][dash]"
+           size="2"
+           MAXLENGTH="2"
+           TABINDEX=<%=@tabindex += 1%>
+           value="<%=pn_row.dash%>"
+           onKeyUp="doNext(this)" />
+  </td>
+  <td class="data">-</td>
+
+  <td class="data">
+    <INPUT TYPE="text"
+           name="rows[<%=row_num%>][revision]"
+           size="1"
+           MAXLENGTH="1"
+           value="<%=pn_row.revision%>"
+           onKeyUp="doNext(this)" />
+  </td>
+
+</tr>

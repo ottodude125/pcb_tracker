@@ -22,6 +22,7 @@ class BoardDesignEntry < ActiveRecord::Base
   belongs_to :revision
   
   has_many   :board_design_entry_users
+  has_many   :part_nums
   
   belongs_to :part_number
   belongs_to :user
@@ -158,7 +159,6 @@ class BoardDesignEntry < ActiveRecord::Base
   # This method adds an entry to the board design entry table.
   #
   # Parameters:
-  # part_number - the PCB/PCBA part number
   # user        - the user originating the entry
   #
   # Return value:
@@ -167,35 +167,20 @@ class BoardDesignEntry < ActiveRecord::Base
   #
   ######################################################################
   #
-  def self.add_entry(part_number, user)
+  def self.add_entry(user)
 
-    duplicate_part_number = part_number.exists?
-    part_number.get_id
-    
-    bde = part_number.board_design_entry if part_number.id
+    bde = BoardDesignEntry.new(:user_id                => user.id,
+      :division_id            => user.division_id,
+      :location_id            => user.location_id,
+      :lead_free_device_names => '',
+      :originator_comments    => '',
+      :input_gate_comments    => '')
 
-    # Verify that the entry does not exist before creating a new board design
-    # entry
-    if !(duplicate_part_number || bde)
-
-      part_number.save
-      part_number.reload
-
-      bde = BoardDesignEntry.new(:user_id                => user.id,
-                                 :division_id            => user.division_id,
-                                 :location_id            => user.location_id,
-                                 :part_number_id         => part_number.id,
-                                 :lead_free_device_names => '',
-                                 :originator_comments    => '',
-                                 :input_gate_comments    => '')
-      
-      bde.save
-      bde.load_design_team
-
-    end
+    bde.save
+    bde.load_design_team
 
     bde
-    
+
   end
 
   
@@ -244,8 +229,8 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #
   def new?
-    #self.part_number ? self.part_number.new? : true
-    (self.part_number_id > 0 && self.part_number) ? self.part_number.new? : true
+    #(self.part_number_id > 0 && self.part_number) ? self.part_number.new? : true
+    self.pcb_number ? false : true
   end
 
 
@@ -298,7 +283,7 @@ class BoardDesignEntry < ActiveRecord::Base
   #
   def design_name
 
-    if self.part_number_id == 0
+    if 1 == 2  # self.part_number_id == 0
       design_name  = self.prefix.pcb_mnemonic + self.number
       design_name += self.revision.name  if self.revision && self.revision_id > 0
   
@@ -316,7 +301,7 @@ class BoardDesignEntry < ActiveRecord::Base
                              self.revision.name,
                              self.numeric_revision) + ')'
     else
-      self.part_number.name
+      self.pcb_number
     end
     
   end
@@ -580,14 +565,27 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #
   def pcb_number
+    PartNum.get_bde_pcb_part_number(self).name_string
+  end
+
+  def pcb_number_OBS
     if self.number && self.revision && self.numeric_revision
       self.prefix.pcb_number(self.number, self.revision_name, self.numeric_revision)
     else
       NOT_SET
     end
   end
-  
 
+  def pcb_rev
+    PartNum.get_bde_pcb_part_number(self).rev_string
+  end
+
+  def pcb_display
+    PartNum.get_bde_pcb_part_number(self).name_string +
+      ' ' +
+      PartNum.get_bde_pcb_part_number(self).rev_string
+  end
+  
   ######################################################################
   #
   # pcba_part_number
@@ -597,14 +595,31 @@ class BoardDesignEntry < ActiveRecord::Base
   #
   ######################################################################
   #
-  def pcba_part_number
+  def pcbas_string
+    first = 1
+    pcbas = ""
+    PartNum.get_bde_pcba_part_numbers(self).each { |pcba|
+      if first == 1
+        pcbas = pcba.name_string
+        first = 0
+      else
+        pcbas = pcbas + ", " + pcba.name_string
+      end
+    }
+    pcbas
+  end
+
+  def pcba_part_number_OBS
     if self.number && self.revision && self.numeric_revision
       self.prefix.pcb_a_part_number(self.number, self.revision_name, '0')
     else
       NOT_SET
     end
   end
-  
+
+  def full_name
+    self.pcb_display + ' / ' + self.pcbas_string
+  end
   
   ######################################################################
   #

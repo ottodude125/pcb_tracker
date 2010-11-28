@@ -21,8 +21,8 @@
     </tr>
     <% @board_design_entries.each do |entry| %>
       <tr>
-        <td align="center"><%= entry.part_number.pcb_name %></td>
-        <td align="center"><%= entry.part_number.pcb_revision %></td>
+        <td align="center"><%= entry.pcb_number%></td>
+        <td align="center"><%= entry.pcb_rev%></td>
         <td align="center"><%= entry.submitted? ? "Yes" : "No" %></td>
         <% if entry.submitted? %>
           <td><%= entry.submitted_on.format_month_dd_yyyy %></td>
@@ -44,7 +44,7 @@
                          :return => params[:action]},
                         :title  => "Used to submit the PCB Engineering Entry to PCB Design",
                         :confirm => "Click 'OK' to submit the " + 
-                                    entry.part_number.pcb_display_name +
+                                    entry.pcb_number  +
                                     " to PCB Design for processing.  Otherwise, click 'Cancel'.") %>
           <% else %>
             &nbsp;
@@ -58,7 +58,7 @@
                          :return => params[:action]},
                         :title  => "Used to delete the PDB Engineering Entry",
                         :confirm => 'Do you really want to delete the ' +
-                                    entry.part_number.pcb_display_name + '  Click ' +
+                                      entry.pcb_number + " design.\n Click " +
                                     "'OK' to remove the entry, otherwise click 'Cancel'.") %>
           <% else %>
             &nbsp;
@@ -123,8 +123,8 @@
                        :return => params[:action]},
                       :title => "View the PCB Engineering Entry") %>
         </td>
-        <td><%= entry.part_number.pcb_name %></td>
-        <td><%= entry.part_number.pcb_revision %></td>
+        <td><%= entry.pcb_number %></td>
+        <td><%= entry.pcb_rev %></td>
         <td><%= entry.state.capitalize %></td>
         <td><%= entry.user.name %></td>
         <td>

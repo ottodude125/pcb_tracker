@@ -1,0 +1,12 @@
+<h1>Editing part_num</h1>
+
+<% form_for(@part_num) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @part_num %> |
+<%= link_to 'Back', part_nums_path %>

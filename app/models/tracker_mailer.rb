@@ -104,7 +104,7 @@ class TrackerMailer < ActionMailer::Base
   def ftp_notification(message, ftp_notification, sent_at = Time.now)
 
     design_review = ftp_notification.design.get_design_review("Final")
-    
+
     @subject         = subject_prefix(ftp_notification.design)      +
                        "Bare Board Files have been transmitted to " +
                        ftp_notification.fab_house.name
@@ -113,8 +113,12 @@ class TrackerMailer < ActionMailer::Base
     @sent_on         = sent_at
     #@headers         = {}
     @bcc             = blind_cc
-    @cc              = copy_to(design_review) - recipients
-    @body['message'] = message
+    @cc              = copy_to(design_review)# - @recipients
+    text = "recipents: " + @recipients.join(", ") + "\n" +
+           "cc       : " + @cc.join(", ") + "\n" +
+           "bcc      : " + @bcc.join(", ") + "\n" +
+           message
+    @body['message'] = text
 
   end
   
@@ -894,7 +898,7 @@ class TrackerMailer < ActionMailer::Base
                                               processor,
                                               sent_at = Time.now)
 
-    @subject    = 'The ' + board_design_entry.part_number.pcb_display_name +
+    @subject    = 'The ' + board_design_entry.pcb_number +
                   ' design entry has been returned by PCB'
               
     @recipients = [board_design_entry.user.email]
@@ -926,7 +930,7 @@ class TrackerMailer < ActionMailer::Base
   #
   def board_design_entry_submission(board_design_entry, sent_at = Time.now)
 
-    @subject    = 'The ' + board_design_entry.part_number.pcb_display_name +
+    @subject    = 'The ' + board_design_entry.pcb_number  +
                   ' has been submitted for entry to PCB Design'
                   
     @recipients = add_role_members(['PCB Input Gate', 'Manager']).uniq
@@ -1194,7 +1198,7 @@ class TrackerMailer < ActionMailer::Base
     @from            = Pcbtr::SENDER
     @sent_on         = sent_on
     #@headers         = {}
-    @bcc             = recipients.uniq.collect { |u| u.email }
+    @cc             = recipients.uniq
     @body['message'] = message
     
   end

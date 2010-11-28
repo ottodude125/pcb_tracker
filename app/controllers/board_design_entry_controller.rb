@@ -136,30 +136,32 @@ class BoardDesignEntryController < ApplicationController
   ######################################################################
   #
   def destroy
+    board_design_entry = BoardDesignEntry.find(:first, :conditions => { :id => params[:id] })
+    pcb_number = board_design_entry.pcb_number
+    if board_design_entry
+      board_design_entry.board_design_entry_users.destroy_all
+      board_design_entry.part_nums.destroy_all
 
-    board_design_entry = BoardDesignEntry.find(params[:id])
+      Document.find(board_design_entry.outline_drawing_document_id).destroy \
+        if board_design_entry.outline_drawing_document_id?
+      Document.find(board_design_entry.pcb_attribute_form_document_id).destroy \
+        if board_design_entry.pcb_attribute_form_document_id?
+      Document.find(board_design_entry.teradyne_stackup_document_id).destroy \
+        if board_design_entry.teradyne_stackup_document_id?
 
-    board_design_entry.board_design_entry_users.destroy_all
-    board_design_entry.part_number.destroy
-    
-    Document.find(board_design_entry.outline_drawing_document_id).destroy \
-      if board_design_entry.outline_drawing_document_id?
-    Document.find(board_design_entry.pcb_attribute_form_document_id).destroy \
-      if board_design_entry.pcb_attribute_form_document_id?
-    Document.find(board_design_entry.teradyne_stackup_document_id).destroy \
-      if board_design_entry.teradyne_stackup_document_id?
-    
-    if board_design_entry.destroy
+      if board_design_entry.destroy
 
-      flash['notice'] = 'The entry has been deleted from the database'
-      TrackerMailer::deliver_originator_board_design_entry_deletion(
-        board_design_entry.design_name,
-        @logged_in_user)
-                                             
+        flash['notice'] = 'The entry has been deleted from the database'
+        TrackerMailer::deliver_originator_board_design_entry_deletion(
+          pcb_number,
+          @logged_in_user)
+
+      else
+        flash['notice'] = 'The request to delete the entry failed - Contact DTG'
+      end
     else
-      flash['notice'] = 'The request to delete the entry failed - Contact DTG'
+      flash['notice'] = 'The entry could not be found'
     end
-    
     redirect_to(:action => params[:return])
 
   end
@@ -218,21 +220,153 @@ class BoardDesignEntryController < ApplicationController
   # get_part_number
   #
   # Description:
-  # This method gathers the data for the first screen displayed when 
-  # creating a new board entry.
+  # Get the part number(s) for a board_design_entry
   # 
-  # Parameters from params
+  # Parameters
   # None
   #
   ######################################################################
   #
   def get_part_number
-    @user_action    = 'adding'
-    @new_entry      = 'true'
-    @initial_prompt = true
-    
-    @pcb_part_number  = PartNumber.new
+    if params[:rows]
+      @rows = params[:rows].values.collect { |row| PartNum.new(row) }
+     else
+      @rows = [ PartNum.new( :use => "pcb",  :revision => "a" ) ]
+    end
+    (@rows.size+1..5).each do
+      @rows << PartNum.new( :use => "pcba",  :revision => "a" )
+    end
+
+    @heading       = "PCB Engineering - New Entry"
+    @next_value    = "Next -->"
+    @next_action   = { :action => 'create_board_design_entry' }
+    @cancel_value  = "Cancel / Return to PCB Engineering Entry List"
+    @cancel_action = { :action => 'originator_list'}
+    @id            = ""
+    render :template => 'shared/enter_part_numbers'
   end
+
+  ######################################################################
+  #
+  # change_part_number
+  #
+  # Description:
+  # Change the part number(s) for a board_design_entry
+  #
+  # Parameters
+  # id => board_design_entry.id
+  #
+  ######################################################################
+  #
+  def change_part_numbers
+
+    @board_design_entry   = BoardDesignEntry.find(params[:id])
+    if flash['rows']
+      @rows = flash['rows']
+    else
+      @rows = PartNum.find(:all,
+      :conditions => { :board_design_entry_id => @board_design_entry.id},
+      :order => "'use','prefix','number','dash'" )
+    end
+    #add more rows to make a total of 5
+    (@rows.size+1..5).each do
+      @rows << PartNum.new( :use => "pcba",  :revision => "a" )
+    end
+    @heading       = "PCB Engineering - Update Part Numbers"
+    @next_value    = "Update Part Numbers"
+    @next_action   = { :action => 'update_part_numbers', :id =>@board_design_entry.id}
+    @cancel_value  = "Cancel / Return View Design Entry"
+    @cancel_action = { :action => 'view_entry', :id =>@board_design_entry.id}
+    render :template => 'shared/enter_part_numbers'
+  end
+
+  ######################################################################
+  #
+  # update_part_numbers
+  #
+  # Description:
+  # Change the part number(s) for a board_design_entry
+  #
+  # Parameters
+  # id => board_design_entry.id
+  #
+  ######################################################################
+  #
+  def update_part_numbers
+
+    board_design_entry_id = params[:id]
+    board_design_entry  = BoardDesignEntry.find(params[:id])
+
+    #create part number objects from form data
+    pnums = params[:rows].values.collect { |row| PartNum.new(row) }
+
+    #check for a valid PCB part number
+    pcb  = pnums.detect { |pnum| pnum.use == 'pcb' }
+    unless pcb.valid_pcb_part_number?
+      flash['notice'] = "A valid PCB part number like '123-456-78' must be specified"
+      flash['rows'] = pnums
+      redirect_to( :action => 'change_part_numbers',
+        :id => board_design_entry_id ) and return
+    end
+
+    #a valid PCB part number was specified
+
+    #check for duplicates already assigned
+    fail = 0
+    flash['notice'] = ''
+    pnums.each do | pnum |
+      if pnum.part_num_exists? == 1 &&
+          PartNum.get_part_number(pnum).board_design_entry_id != board_design_entry_id
+        flash['notice'] += "Part number #{pnum.name_string} exists<br>\n"
+        fail = 1
+      end
+    end
+    if fail == 1
+      flash['rows'] = pnums
+      redirect_to( :action => 'change_part_numbers',
+        :id => board_design_entry_id ) and return
+    end
+
+    old_pcb_num = board_design_entry.pcb_number
+    old_pcba_nums = board_design_entry.pcbas_string
+
+    # delete the current part numbers for the design entry
+    PartNum.delete_all(:board_design_entry_id => board_design_entry_id)
+
+    #save and relate the partnumbers to the design
+    fail = 0
+    flash['notice'] = ''
+    pnums.each do |pnum|
+      unless pnum[:prefix] == ""
+        pnum.board_design_entry_id = board_design_entry_id
+        if ! pnum.save
+          flash['notify'] += "Couldn't create part number #{pnum.name_string}"
+          fail = 1
+        end
+      end
+    end
+
+    #create 'new' entries for notifier
+    new_pcb_num = board_design_entry.pcb_number
+    new_pcba_nums = board_design_entry.pcbas_string
+
+
+    if fail == 1
+      flash['rows'] = pnums
+      redirect_to( :action => 'change_part_numbers',
+        :id => board_design_entry_id ) and return
+    else
+      change = 0
+      if old_pcb_num != new_pcb_num || old_pcba_nums != new_pcba_nums
+        flash['notice'] = "The new part numbers have been assigned"
+      else
+        flash['notice'] = "The part numbers are unchanged"
+      end
+      redirect_to(:action      => 'view_entry',
+        :id          => board_design_entry_id ) and return
+    end
+  end
+
 
   ######################################################################
   #
@@ -251,15 +385,14 @@ class BoardDesignEntryController < ApplicationController
   
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @user_action        = params[:user_action]
-
-    @design_dir_list   = DesignDirectory.get_active_design_directories
-    @division_list     = Division.get_active_divisions
-    @incoming_dir_list = IncomingDirectory.get_active_incoming_directories
-    @location_list     = Location.get_active_locations
-    @platform_list     = Platform.get_active_platforms
-    @product_type_list = ProductType.get_active_product_types
-    @project_list      = Project.get_active_projects
-    @revision_list     = Revision.get_revisions
+    @design_dir_list    = DesignDirectory.get_active_design_directories
+    @division_list      = Division.get_active_divisions
+    @incoming_dir_list  = IncomingDirectory.get_active_incoming_directories
+    @location_list      = Location.get_active_locations
+    @platform_list      = Platform.get_active_platforms
+    @product_type_list  = ProductType.get_active_product_types
+    @project_list       = Project.get_active_projects
+    @revision_list      = Revision.get_revisions
 
   end
   
@@ -308,44 +441,51 @@ class BoardDesignEntryController < ApplicationController
   #
   def create_board_design_entry
 
-    # Verify before continuing.
-    #  - the required information was entered
-    @part_number = PartNumber.initial_part_number
-    
-    @part_number.pcb_prefix       = params[:pcb_prefix]
-    @part_number.pcb_number       = params[:pcb_number]
-    @part_number.pcb_dash_number  = params[:pcb_dash_number]
-    @part_number.pcb_revision     = params[:part_number][:pcb_revision]
-    @part_number.pcba_prefix      = params[:pcba_prefix]      if params[:pcba_prefix].size > 0
-    @part_number.pcba_number      = params[:pcba_number]      if params[:pcba_number].size > 0
-    @part_number.pcba_dash_number = params[:pcba_dash_number] if params[:pcba_dash_number].size > 0
-    @part_number.pcba_revision    = params[:part_number][:pcba_revision] if params[:part_number][:pcba_revision] != '0'
-
-
-    @board_design_entry = BoardDesignEntry.add_entry(@part_number, @logged_in_user)
-      
-    if @board_design_entry
-      
-      flash['notice'] = "The design entry has been stored in the database"
-        
-      redirect_to(:action      => 'new_entry', 
-                  :id          => @board_design_entry.id,
-                  :user_action => 'adding')
-    else
-    
-      flash['notice'] = @part_number.error_message
-    
-      @user_action      = 'adding'
-      @new_entry        = 'true'
-      @pcb_part_number  = @part_number
-      @pcba_part_number = @part_number
-      
-      render(:action => 'get_part_number')
-    
+    #check to ensure that a legal PCB part number was specified
+    pcb = nil
+    params[:rows].each_value do |row|
+      unless row[:prefix] == ""
+        pcb = PartNum.new(row) if row[:use] == "pcb"
+      end
     end
+    unless pcb && pcb.valid_pcb_part_number?
+      flash['notice'] = "A valid PCB part number like '123-456-78' must be specified"
+      redirect_to :action => 'get_part_number', :rows => params[:rows]
+    else
+
+      #PCB part number specified
+      @board_design_entry = BoardDesignEntry.add_entry(@logged_in_user)
+
+      if @board_design_entry
+        #save and relate the partnumbers to the board design entry
+        fail = 0
+        @errors = []
+        @rows   = []
+        params[:rows].each_value do |pnum|
+          unless pnum[:prefix] == ""
+            num = PartNum.new(pnum)
+            num.board_design_entry_id = @board_design_entry.id
+            @rows << num
+            if ! num.save
+              fail = 1
+              @errors << num.errors
+            end
+          end
+        end
+
+        flash['notice'] = "The design entry has been stored in the database"
         
+        redirect_to(:action      => 'new_entry',
+          :id          => @board_design_entry.id,
+          :user_action => 'adding')
+      else
+        flash['notice'] = "Failed to create the board design entry"
+        render(:action => 'get_part_number')
+
+      end
+
+    end
   end
-  
   
   ######################################################################
   #
@@ -393,11 +533,11 @@ class BoardDesignEntryController < ApplicationController
   ######################################################################
   #
   def update_entry
-  
+
     @board_design_entry = BoardDesignEntry.find(params[:id])
     bde                 = BoardDesignEntry.new(params[:board_design_entry])
     bde.id              = params[:id]
-    bde.part_number_id  = @board_design_entry.part_number_id
+    #bde.part_number_id  = @board_design_entry.part_number_id
     @viewer             = params[:viewer]
     
     # Verify that the required information was submitted before proceeding.
@@ -444,7 +584,7 @@ class BoardDesignEntryController < ApplicationController
         last_design = board.designs.sort_by { |d| d.revision.name }.pop
         
         if last_design.revision.name > bde.revision.name
-          flash['notice'] = "#{bde.part_number.full_display_name} not created - a newer revision exists in the system"    
+          flash['notice'] = "#{bde.full_name} not created - a newer revision exists in the system"    
           redirect_to(:action      => 'edit_entry',
                       :id          => @board_design_entry.id,
                       :user_action => 'adding',
@@ -472,7 +612,7 @@ class BoardDesignEntryController < ApplicationController
     
     if @board_design_entry.update_attributes(params[:board_design_entry])
 
-      flash['notice'] = "Entry #{@board_design_entry.part_number.full_display_name} has been updated"
+      flash['notice'] = "Entry #{@board_design_entry.pcb_number} has been updated"
 
       #Update the user's division and/or location if it has changed.
       @logged_in_user.save_division(@board_design_entry.division_id)
@@ -598,7 +738,7 @@ class BoardDesignEntryController < ApplicationController
   
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @user_action        = params[:user_action]
-    
+
     @managers = []
     Role.get_open_manager_reviewer_roles.each do |role|
       entry_user = @board_design_entry.board_design_entry_users.detect{ |eu| eu.role_id == role.id }
@@ -775,7 +915,7 @@ class BoardDesignEntryController < ApplicationController
   
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @user_action        = params[:user_action]
-
+    
   end
   
   
@@ -1187,7 +1327,7 @@ class BoardDesignEntryController < ApplicationController
     end
     
     design = Design.new(:board_id         => board.id,
-                        :part_number_id   => board_design_entry.part_number_id,
+                        #:part_number_id   => board_design_entry.part_number_id,
                         :phase_id         => phase_id,
                         :design_center_id => @logged_in_user.design_center_id,
                         :revision_id      => board_design_entry.revision_id,
@@ -1235,6 +1375,15 @@ class BoardDesignEntryController < ApplicationController
       board_design_entry.ready_to_post
       board_design_entry.design_id = design.id
       board_design_entry.save
+
+      #add the design id to the part numbers for the board_design_entry
+      pcb_num=PartNum.get_bde_pcb_part_number(board_design_entry)
+      pcb_num.design_id = design.id
+      pcb_num.save
+      PartNum.get_bde_pcba_part_numbers(board_design_entry).each do |pcba|
+        pcba.design_id = design.id
+        pcba.save
+      end
       
     else
       flash['notice'] = "The design already exists - this should never occur"

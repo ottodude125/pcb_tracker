@@ -2,7 +2,7 @@ Criticality   PCB Number    PCBA Number   Review         Age      Comments     R
                                                          (Days)
 --------------------------------------------------------------------------------------
 <% @review_list.each do |entry| dr = entry.design_review %>
-<%= sprintf('%-14s%-14s%-14s%-15s%-9s%-13s%-15s', dr.priority.name, dr.design.part_number.pcb_display_name, dr.design.part_number.pcba_display_name, dr.review_type.name, dr.age/1.day, dr.comments(@reviewer).size.to_s, entry.role.display_name) %><% end %>
+<%= sprintf('%-14s%-14s%-14s%-15s%-9s%-13s%-15s', dr.priority.name, dr.design.pcb_number, dr.design.pcbas_string, dr.review_type.name, dr.age/1.day, dr.comments(@reviewer).size.to_s, entry.role.display_name) %><% end %>
 
 
 Please review these boards as soon as possible using the PCB Tracker.

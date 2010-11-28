@@ -447,10 +447,10 @@ class DesignController < ApplicationController
     
     # Detect if any designs do not have a part number every design in the 
     # list that does not have a part number
-    no_part_number = active_designs.detect { |d| d.part_number_id == 0 }
+    no_part_number = active_designs.detect { |d| d.pcb_number == nil }
     
     if no_part_number
-      active_designs.delete_if { |d| d.part_number_id == 0 }
+      active_designs.delete_if { |d| d.pcb_number == nil }
       flash['notice'] = "Designs exist that have no associated part number"
     end
     

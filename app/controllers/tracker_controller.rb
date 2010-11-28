@@ -80,9 +80,10 @@ class TrackerController < ApplicationController
       end
     else
       # No user is identified.
-      @designs = Design.get_active_designs#.sort_by { |d| d.part_number.pcba_name }
-      @designs.delete_if { |d| d.part_number_id == 0 }
-      @designs = @designs.sort_by { |d| d.part_number.pcba_name }
+      @pcbas   = PartNum.get_active_pcbas
+      @designs = Design.get_active_designs
+      #@designs.delete_if { |d| d.pcb_number }
+      @designs = @designs.sort_by { |d| d.pcbas_string }
       
     end
     
@@ -230,8 +231,8 @@ class TrackerController < ApplicationController
     flash[:sort_order]   = @sort_order
     
     design_reviews = get_active_reviews
-    @active_reviews   = design_reviews[:active].sort_by   { |dr| dr.design.part_number.pcb_display_name }
-    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| dr.design.part_number.pcb_display_name }
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| dr.design.pcb_display }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| dr.design.pcb_display }
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
@@ -498,7 +499,6 @@ class TrackerController < ApplicationController
     message = params[:mail][:message].strip
 
     if message.size == 0
-    
       flash[:roles] = params[:roles]
       
       flash['notice'] = 'The mail message was not sent - there was no message'

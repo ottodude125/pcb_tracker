@@ -29,18 +29,21 @@ before_filter(:verify_admin_role,
   # Collects the data to display the show boards page.
   # 
   # Parameters from params
-  # None
+  # type (pcb vs pcba)
   #
   ######################################################################
   #
   def show_boards
+
+    @type = params[:type] || 'pcb'
+    @type2 = @type=="pcb"?"pcba":"pcb"
     
     flash['notice'] = ''
-    unique_pcb_part_numbers = Design.get_unique_pcb_numbers
+    unique_part_numbers = PartNum.get_unique_part_numbers(@type)
 
     @columns = 8
-    @rows    = (unique_pcb_part_numbers.size) / @columns
-    @rows   += 1 if unique_pcb_part_numbers.size.remainder(@columns) > 0
+    @rows    = (unique_part_numbers.size) / @columns
+    @rows   += 1 if unique_part_numbers.size.remainder(@columns) > 0
 
     @part_numbers = []
     0.upto(@rows-1) { |row| @part_numbers[row] = [] }
@@ -49,9 +52,9 @@ before_filter(:verify_admin_role,
     # in a table.
     col = 0
     row = 0
-    unique_pcb_part_numbers.each_with_index do |element, i|
+    unique_part_numbers.each_with_index do |element, i|
 
-      @part_numbers[row][col] = element
+      @part_numbers[row][col] = element.number
 
       row += 1
       if row == @rows
@@ -81,7 +84,7 @@ before_filter(:verify_admin_role,
   def design_information
 
     #Get the board information
-    @designs = PartNumber.get_designs(params[:part_number])
+    @designs = PartNum.get_designs(params[:part_number],params[:type])
     
     flash['notice'] = 'Number of designs - ' + @designs.size.to_s
     if @designs.size.to_s == 0
@@ -89,11 +92,7 @@ before_filter(:verify_admin_role,
     else
       # First sort the designs by name, then sort the reviews by review order.
       @designs = @designs.sort_by { |design| design.id }
-      @designs.each do |design|
-        design[:sorted_design_reviews] = 
-          design.design_reviews.sort_by { |dr| dr.review_type.sort_order }
-        @detailed_name = design.detailed_name  
-      end
+      @detailed_name = @designs[0].detailed_name
     end
   end
   

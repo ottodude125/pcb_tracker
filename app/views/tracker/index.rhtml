@@ -35,11 +35,13 @@
         </tr>
 
 
-        <% @designs.each do |design| %>
-          <% design_review = design.get_phase_design_review %>
+        <% @pcbas.each do |pcba|
+          design = Design.find(:first, :conditions => {:id => pcba.design_id})
+          design_review = design.get_phase_design_review
+        %>
           <tr>
-            <td> <%= design.part_number.pcba_display_name %></td>
-            <td> <%= design.part_number.pcb_display_name %></td>
+            <td> <%= pcba.name_string %></td>
+            <td> <%= design.pcb_number %></td>
             <td> <%= link_to(design.phase.name,
                              { :controller => 'design_review',
                                :action     => :view,

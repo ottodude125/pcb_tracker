@@ -146,7 +146,34 @@
   </table>
   <hr class='div' />
 
-  <h2>Design Review Updates</h2>
+    <% if @review_statuses.size > 0 %>
+    <h2>Design Review Updates</h2>
+    <table align="center" border="0">
+    <tr>
+      <td width="150">&nbsp;</td>
+      <th align="left" width="200">Current Value</th>
+      <th align="left">New Value</th>
+    </tr>
+
+       <tr>
+        <th align="left">Status:</th>
+        <td align="left"><%= @design_review.review_status.name %></td>
+        <td>
+          <select id="review_status"
+                  name="review_status[id]"
+                  class="name_select">
+            <%= options_from_collection_for_select(@review_statuses,
+              "id",
+              "name",
+              @design_review.review_status_id) %>
+          </select>
+        </td>
+      </tr>
+    </table>
+    <hr class='div' />
+  <% end %>
+
+  <h2>Design Updates</h2>
 
   <table align="center" border="0">
     <tr>
@@ -154,8 +181,7 @@
       <th align="left" width="200">Current Value</th>
       <th align="left">New Value</th>
     </tr>
-    
-    
+
     <tr>
       <th align="left">Design Center:</th>
       <td align="left">
@@ -194,22 +220,19 @@
       </td>
     </tr>
 
-    <% if @review_statuses.size > 0 %>
     <tr>
-      <th align="left">Status:</th>
-      <td align="left"><%= @design_review.review_status.name %></td>
-      <td>
-        <select id="review_status"
-                name="review_status[id]"
-                class="name_select">
-        <%= options_from_collection_for_select(@review_statuses,
-                                               "id",
-                                               "name",
-                                               @design_review.review_status_id) %>
-        </select>
+      <th align="left">ECN Number:</th>
+      <td align="left">
+        <% if @design_review.design.eco_number != '' %>
+          <%=@design_review.design.eco_number%>
+        <%else%>
+        <b><font color="red">Not Set</font></b>
+        <% end %>
       </td>
+      <td>
+        <input type="text" name="eco_number" class="name_select" value="<%=@design_review.design.eco_number%>"/>
+        </td>
     </tr>
-    <% end %>
 
     <% if @design_review.design.audit.skip? %>
       <tr>

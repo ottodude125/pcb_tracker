@@ -4,7 +4,7 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% @heading = "PCB Engineering: #{@board_design_entry.part_number.pcb_display_name} - " %>
+<% @heading = "PCB Engineering: #{@board_design_entry.pcb_number} - " %>
 <% @heading += params[:design_review_id] ? "Input Entry Checklist" : "Design Entry Requirements" %>
 
 <table width="80%" align="center">
@@ -83,24 +83,28 @@
   <tr valign="top">
     <th align="right" width="25%">PCB Part Number: </th>
     <td width="25%" align="left">
-      <%= @board_design_entry.part_number.pcb_name %>
+      <%=  @board_design_entry.pcb_number %>
+      &nbsp;
+      <%= if ( @board_design_entry.modifiable? &&
+                  ( !@board_design_entry.submitted? && !(processor || peer) ) ||
+                  (  @board_design_entry.submitted? && processor  ) )
+      link_to('Change',
+  { :action    => 'change_part_numbers',
+    :id        => @board_design_entry.id,
+  }) 
+      end %>
     </td>
 
     <th align="right" width="25%">Revision: </th>
     <td align="left">
-      <%= @board_design_entry.part_number.pcb_revision %>
+      <%= @board_design_entry.revision_name %>
     </td>
   </tr>
   
   <tr valign="top">
-    <th align="right" width="25%">PCBA Part Number: </th>
-    <td width="25%" align="left">
-      <%= @board_design_entry.part_number.pcba_name %>
-    </td>
-
-    <th align="right" width="25%">Revision: </th>
-    <td align="left">
-      <%= @board_design_entry.part_number.pcba_revision %>
+    <th align="right" width="25%">PCBA Part Number(s): </th>
+    <td width="25%" align="left" colspan="3">
+      <%= @board_design_entry.pcbas_string %>
     </td>
   </tr>
   
@@ -146,11 +150,13 @@
     <th align="right">Product Type: </th>
     <td align="left"><%= @board_design_entry.product_type_name %></td>
   </tr>
-  
+
+  <% if @board_design_entry.pre_production_release_number != '' %>
   <tr valign="top">
     <th align="right">Pre-Production Release Number: </th>
     <td align="left"><%= @board_design_entry.pre_production_release_number %></td>
   </tr>
+  <% end %>
   
   <tr valign="top">
     <th align="right">Location of Review Documents: </th>
@@ -187,6 +193,7 @@
     </td>
   </tr>
 
+  <% if @board_design_entry.rohs == nil %>
   <tr valign="top">
     <th align="right">Lead Free Devices: </th>
     <td align="left">
@@ -200,7 +207,28 @@
       </td>
     <% end %>
   </tr>
+  <% else %>
+  <tr valign="top">
+    <th align="right">RoHS Design: </th>
+    <td align="left">
+      <%= @board_design_entry.rohs? ? 'Yes' : 'No' %>
+    </td>
+  </tr>
 
+  <tr valign="top">
+    <th align="right">Manual Thieving: </th>
+    <td align="left">
+      <%= @board_design_entry.thieving? ? 'Yes' : 'No' %>
+    </td>
+  </tr>
+
+  <tr valign="top">
+    <th align="right">Copper Free Areas: </th>
+    <td align="left">
+      <%= @board_design_entry.no_copper? ? 'Yes' : 'No' %>
+    </td>
+  </tr>
+ <% end %>
   <tr valign="top">
     <th align="right">Design Directory Location: </th>
     <td align="left">

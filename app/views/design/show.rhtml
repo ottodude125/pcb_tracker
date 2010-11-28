@@ -4,34 +4,24 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% @heading =  @design.part_number.pcb_display_name + ' - Details' %>
+<% @heading =  @design.pcb_number + ' - Details' %>
 
 <hr class="div" />
 
 <table align="center" border="0" cellspacing="0" cellpadding="0" rules="all">
 
   <tr>
-  	<td>
+    <td>
       <table cellspacing="1">
         <tr>
           <th class="teraheader" width="150">PCB Number</th>
-		  <td align="center" width="125"> <b>
-		    <%= @design.part_number.pcb_name %>
-		  </b></td>
-          <% if @design.part_number.pcb_revision != '' %>
-            <th class="teraheader" width="100">Revision</th>
-		    <td align="center" width="25"> <%= @design.part_number.pcb_revision %></td>
-          <% end %>
-		  <% if @design.part_number.new? %>
-            <th class="teraheader" width="150">PCBA Number</th>
-            <td align="center" width="125"><b>
-              <%= @design.part_number.pcba_name %>
-			</b></td>
-            <% if @design.part_number.pcba_revision != '' %>
-              <th class="teraheader" width="100">Revision</th>
-              <td align="center" width="25"> <%= @design.part_number.pcba_revision %></td>
-            <% end %>
-          <% end %>
+          <td align="center" width="125"> <b>
+              <%= @design.pcb_display %>
+          </b></td>
+          <th class="teraheader" width="150">PCBA Number</th>
+          <td align="center" width="125"><b>
+              <%= @design.pcbas_string %>
+          </b></td>
         </tr>
       </table>
     </td>

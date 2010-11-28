@@ -1,6 +1,6 @@
 <% @heading = 'PCB Engineering - ' +
-              @board_design_entry.part_number.full_display_name +
-              ' Design Entry - Management Team' %>
+               @board_design_entry.pcb_number +
+              ' - Management Team' %>
 
 <%= render(:partial => 'nav_bar',
            :locals  => { :back_action => 'design_constraints',

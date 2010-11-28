@@ -11,6 +11,7 @@
 ########################################################################
 #
 ActionController::Routing::Routes.draw do |map|
+  map.resources :part_nums
 
   map.resources :change_classes do |change_classes|
     change_classes.resources :change_types, :name_prefix => "change_class_"
