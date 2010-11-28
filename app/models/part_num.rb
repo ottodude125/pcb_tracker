@@ -140,6 +140,7 @@ def get_part_number(pn)
         :prefix => partnum.pcba_prefix,
         :number => partnum.pcba_number,
         :dash => partnum.pcba_dash_number,
+        :use    => "pcba",
         :revision => partnum.pcba_revision).save
       pcbas = PartNum.find(:all, :conditions => {
           :design_id => id,
@@ -177,6 +178,7 @@ def get_part_number(pn)
         :prefix => partnum.pcb_prefix,
         :number => partnum.pcb_number,
         :dash => partnum.pcb_dash_number,
+        :use  => "pcb",
         :revision => partnum.pcb_revision).save
       pcb = PartNum.find(:first, :conditions => {
           :design_id => id,

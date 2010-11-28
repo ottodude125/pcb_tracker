@@ -565,7 +565,12 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #
   def pcb_number
-    PartNum.get_bde_pcb_part_number(self).name_string
+    pnum=PartNum.get_bde_pcb_part_number(self.id)
+    if pnum
+	pnum.name_string
+    else
+        ""
+    end
   end
 
   def pcb_number_OBS
@@ -577,13 +582,13 @@ class BoardDesignEntry < ActiveRecord::Base
   end
 
   def pcb_rev
-    PartNum.get_bde_pcb_part_number(self).rev_string
+    PartNum.get_bde_pcb_part_number(self.id).rev_string
   end
 
   def pcb_display
-    PartNum.get_bde_pcb_part_number(self).name_string +
+    PartNum.get_bde_pcb_part_number(self.id).name_string +
       ' ' +
-      PartNum.get_bde_pcb_part_number(self).rev_string
+      PartNum.get_bde_pcb_part_number(self.id).rev_string
   end
   
   ######################################################################
@@ -598,7 +603,7 @@ class BoardDesignEntry < ActiveRecord::Base
   def pcbas_string
     first = 1
     pcbas = ""
-    PartNum.get_bde_pcba_part_numbers(self).each { |pcba|
+    PartNum.get_bde_pcba_part_numbers(self.id).each { |pcba|
       if first == 1
         pcbas = pcba.name_string
         first = 0
