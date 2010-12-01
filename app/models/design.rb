@@ -1279,8 +1279,7 @@ class Design < ActiveRecord::Base
     if update[:eco_number] && self.eco_number != update[:eco_number]
       old_eco_number = self.eco_number
       self.eco_number = update[:eco_number]
-      changes[:ecn_number] = { :old => old_eco_number,
-                               :new => update[:eco_number]}
+      #changes[:ecn_number] = { :old => old_eco_number, :new => update[:eco_number]}
     end
     
     audit = self.audit
@@ -1922,6 +1921,9 @@ class Design < ActiveRecord::Base
     end
     if changes[:review_status]
       msg += "The design review status was changed from #{changes[:review_status][:old]} to #{changes[:review_status][:new]}\n"
+    end
+    if changes[:ecn_number]
+      msg += "The ECN number was changed from #{changes[:ecn_number][:old]} to #{changes[:ecn_number][:new]}\n"
     end
 
     msg += "\n\n" + post_comment if post_comment.size > 0
