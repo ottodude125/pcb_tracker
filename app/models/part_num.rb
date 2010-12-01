@@ -365,8 +365,12 @@ def get_part_number(pn)
   def self.get_active_pcbas
     pcbas   = []
     PartNum.find(:all, :conditions => { :use => 'pcba' } ).each { |pnum|
-     pcbas << pnum if pnum.design_id != nil &&
-          Design.find(:first, :conditions => {:id => pnum.design_id}).is_active?
+     if ! pnum.design_id.blank?
+       design = Design.find(:first, :conditions => {:id => pnum.design_id})
+       if ! design.blank?
+          pcbas << pnum if design.is_active?
+       end
+     end
     }
     pcbas.sort_by { |p| p.name_string }
   end
