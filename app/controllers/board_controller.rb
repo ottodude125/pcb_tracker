@@ -84,7 +84,8 @@ before_filter(:verify_admin_role,
   def design_information
 
     #Get the board information
-    @designs = PartNum.get_designs(params[:part_number],params[:type])
+    @type = params[:type] || 'pcb'
+    @designs = PartNum.get_designs(params[:part_number],@type)
     
     flash['notice'] = 'Number of designs - ' + @designs.size.to_s
     if @designs.size.to_s == 0
