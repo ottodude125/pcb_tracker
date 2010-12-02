@@ -31,10 +31,13 @@
     </td>
   </tr>
   <tr>
-    <td class="th1">Designer:</td>
-    <td>
-      <%= poster_name(@design_review) %>
-    </td>
+    <%  if @design_review.review_type.name == "Pre-Artwork" %>
+       <td class="th1">Poster:</td>
+       <td><%= @design_review.design.input_gate.name %>
+    <% else %>>
+      <td class="th1">Designer:</td>
+      <td><%= @design_review.designer.name %>
+    <%  end %>
     <td class="th1">PCB Design Data:</td>
     <td>
       <% if @design_review.design.design_center %>
