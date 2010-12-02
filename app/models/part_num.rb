@@ -133,19 +133,6 @@ def get_part_number(pn)
     pcbas = PartNum.find(:all, :conditions => {
         :board_design_entry_id => id,
         :use => "pcba" })
-    unless pcbas
-      # look up in old database and load into new
-      partnum = BoardDesignEntry.find(id).part_number
-      pcba = PartNum.new(:board_design_entry_id => id,
-        :prefix => partnum.pcba_prefix,
-        :number => partnum.pcba_number,
-        :dash => partnum.pcba_dash_number,
-        :use    => "pcba",
-        :revision => partnum.pcba_revision).save
-      pcbas = PartNum.find(:all, :conditions => {
-          :design_id => id,
-          :use => "pcba" })
-    end
     pcbas
   end
 
@@ -170,20 +157,6 @@ def get_part_number(pn)
     pcb = PartNum.find(:first, :conditions => {
         :board_design_entry_id => id,
         :use => "pcb" })
-    unless pcb
-      # look up in old database and load into new
-      partnum = BoardDesignEntry.find(id).part_number
-      pcb = PartNum.new(
-        :board_design_entry_id => id,
-        :prefix => partnum.pcb_prefix,
-        :number => partnum.pcb_number,
-        :dash => partnum.pcb_dash_number,
-        :use  => "pcb",
-        :revision => partnum.pcb_revision).save
-      pcb = PartNum.find(:first, :conditions => {
-          :design_id => id,
-          :use => "pcb" })
-    end
     pcb
   end
 
@@ -208,20 +181,6 @@ def get_part_number(pn)
     pcbas = PartNum.find(:all, :conditions => {
         :design_id => id,
         :use => "pcba" })
-    unless pcbas.size > 0
-      # look up in old database and load into new
-      partnumber = Design.find(id).part_number
-      pcba = PartNum.new(
-        :design_id => id,
-        :prefix    => partnumber.pcba_prefix,
-        :number    => partnumber.pcba_number,
-        :dash      => partnumber.pcba_dash_number,
-        :revision  => partnumber.pcba_revision,
-        :use       => "pcba").save
-      pcbas = PartNum.find(:all, :conditions => {
-          :design_id => id,
-          :use => "pcba" })
-    end
     pcbas
   end
 
@@ -245,20 +204,6 @@ def get_part_number(pn)
   def self.get_design_pcb_part_number(id)
     pcb = PartNum.find(:first, :conditions => {
         :design_id => id, :use => "pcb" } )
-    unless pcb
-      # look up in old database and load into new
-      partnum = Design.find(id).part_number
-      pcb = PartNum.new(
-        :design_id => id,
-        :prefix    => partnum.pcb_prefix,
-        :number    => partnum.pcb_number,
-        :dash      => partnum.pcb_dash_number,
-        :revision  => partnum.pcb_revision,
-        :use       => "pcb").save
-      pcb = PartNum.find(:first, :conditions => {
-          :design_id => id,
-          :use => "pcb" })
-    end
     pcb
   end
 
