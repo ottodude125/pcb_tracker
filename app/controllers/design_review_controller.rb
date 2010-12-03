@@ -2351,26 +2351,27 @@ def post_pcb_design_results(design_review, review_results)
     results[:success]       = false
     results[:alternate_msg] = 'The Designer must be specified - results not recorded'
   else
+    design = design_review.design
 
     designer = User.find(review_results[:designer]["id"])
+    design.designer_id      = designer.id
+    
+    priority = Priority.find(review_results[:priority]["id"])
+    priority_update = design.priority_id != priority.id
+    design.priority_id      = priority.id
+
     if !audit_skipped
       peer = User.find(review_results[:peer]["id"])
-    else
-      peer = User.new
+      design.peer_id          = peer.id
     end
-    priority = Priority.find(review_results[:priority]["id"])
-
-    design = design_review.design
-    priority_update = design.priority_id != priority.id
-      
-    design.peer_id          = peer.id
-    design.designer_id      = designer.id
-    design.priority_id      = priority.id
-    # JPA - VERIFY THIS
-    #design.design_center_id = designer.design_center_id
+    
     design.save
       
-    design.set_reviewer(Role.find_by_name("Valor"), peer)
+    if !audit_skipped
+      design.set_reviewer(Role.find_by_name("Valor"), peer)
+    else
+      results[:alternate_msg] += 'No Valor reviewer set (Audit Skipped) - '
+    end
 
     for review in design.design_reviews
       review.priority_id = priority.id
