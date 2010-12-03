@@ -1739,6 +1739,26 @@ def send_ftp_notification
 
 end
 
+######################################################################
+#
+# Skip FTP notification
+#
+# Description:
+#
+# Parameters design.id
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
+def skip_ftp_notification
+  design              = Design.find(params[:id])
+  FtpNotification.new(:design_id => design.id).save
+  redirect_to(:controller => 'tracker', :action => 'index')
+end
 
 ######################################################################
 #

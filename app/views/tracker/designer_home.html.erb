@@ -153,7 +153,13 @@
                                                   :action     => 'perform_ftp_notification',
                                                   :id         => design.id }) %>
                                   </td>
-                                  <td width="50%" align="left">&nbsp;</td>
+                                  <td width="50%" align="left">
+
+                                    <%= link_to("Skip the FTP Notification",
+                                                { :controller => 'design_review',
+                                                  :action     => 'skip_ftp_notification',
+                                                  :id         => design.id }) %>
+                                  </td>
                                 </tr>
                               </table>
                             </td>
