@@ -350,7 +350,7 @@ class DesignReviewController < ApplicationController
     TrackerMailer::deliver_design_review_posting_notification(design_review,
       params[:post_comment][:comment])
 
-    if design_review.design_center == @logged_in_user.design_center
+    if design_review.design.design_center == @logged_in_user.design_center
       redirect_to(:action => 'index', :controller => 'tracker')
     else
       flash['notice'] = 'The design center is not set to your default location - ' +
@@ -423,7 +423,7 @@ class DesignReviewController < ApplicationController
       params[:post_comment][:comment],
       true)
 
-    if design_review.design_center == @logged_in_user.design_center
+    if design_review.design.design_center == @logged_in_user.design_center
       redirect_to(:action => 'index', :controller => 'tracker')
     else
       flash['notice'] = 'The design center is not set to your default location - ' +
