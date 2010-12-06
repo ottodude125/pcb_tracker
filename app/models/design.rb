@@ -1279,7 +1279,7 @@ class Design < ActiveRecord::Base
     if update[:eco_number] && self.eco_number != update[:eco_number]
       old_eco_number = self.eco_number
       self.eco_number = update[:eco_number]
-      #changes[:ecn_number] = { :old => old_eco_number, :new => update[:eco_number]}
+      changes[:ecn_number] = { :old => old_eco_number, :new => update[:eco_number]}
     end
     
     audit = self.audit
