@@ -923,13 +923,14 @@ def save_attachment
   save_failed = true
     
   if params[:document_type][:id] == '' || !@document || @document.data.size == 0
-    flash['notice'] = 'Please select the document type' if params[:document_type][:id] == ''
+    flash['notice'] = ''
+    flash['notice'] += 'Please select the document type' if params[:document_type][:id] == ''
     if !@document
-      flash['notice'] += '<br />' if flash['notice']
+      flash['notice'] += '<br />' if flash['notice'].size > 0
       flash['notice'] += 'No name provided - Please specify a document'
     elsif @document.data.size == 0
-      flash['notice'] = '<br />'  if flash['notice']
-      flash['notice'] = 'Empty file - The document was not stored'
+      flash['notice'] += '<br />'  if flash['notice'].size > 0
+      flash['notice'] += 'Empty file - The document was not stored'
     end
   else
     document_type = DocumentType.find(params[:document_type][:id])
