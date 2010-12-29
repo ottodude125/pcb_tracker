@@ -124,7 +124,8 @@
                               <%= review[:approvals] %>
                             </td>
                             <td class="th1">
-                              <% if review[:approvals] == review[:reviewers] %>
+                              <% if review[:approvals] == review[:reviewers] &&
+                                 ! review.completed_on.blank? %>
                                 <%= review.completed_on.format_dd_mon_yy %>
                               <% else %>
                                 N/A
