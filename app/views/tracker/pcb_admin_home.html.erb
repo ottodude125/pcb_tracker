@@ -131,7 +131,8 @@
                               <b><%= review[:approvals] %></b>
                             </font>
                           </td>
-                          <% if review[:approvals] == review[:reviewers] %>
+                          <% if review[:approvals] == review[:reviewers]  &&
+                                 ! review[:review].completed_on.blank? %>
                             <td>
                               <font size="-1">
 
