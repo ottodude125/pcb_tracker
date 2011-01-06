@@ -48,11 +48,10 @@
     <% end %>
     <td class="teraheader">&nbsp;</td>
   </tr>
-
   <% @review_roles.each_with_index do |role, j| %>
   
     <% inactive_reviewer = false %>
-    <%  if ( ! @logged_in_user.is_reviewer? ) || ( @logged_in_user.is_reviewer? && @logged_in_user.is_a_role_member?(role.name) )%>
+    <%  if ( @logged_in_user.active_role.reviewer == 0 ) || ( @logged_in_user.is_reviewer? && @logged_in_user.is_a_role_member?(role.name) )%>
     <tr valign='top'>
 
       <td class="teraheader"><%= role.display_name %></td>
