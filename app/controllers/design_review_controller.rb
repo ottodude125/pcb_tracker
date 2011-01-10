@@ -1311,11 +1311,8 @@ def post_results
   end
     
   if review_results[:fab_houses]
-    fab_msg = post_fab_house_updates(design_review, review_results[:fab_houses])
-    dr_comment = DesignReviewComment.new(:comment          => fab_msg,
-      :user_id          => @logged_in_user.id,
-      :design_review_id => design_review.id).save
-    comment_update = true if fab_msg !=''
+    # post_fab_house_updates creates a comment
+    comment_update = post_fab_house_updates(design_review, review_results[:fab_houses])
   end
 
   if design_review.in_review?
