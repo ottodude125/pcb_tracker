@@ -34,9 +34,14 @@ function setFocus() {
 }
 // End -->
 </script>
+<% if ! Pcbtr.production_environment? %>
+  <style type="text/css">
+    body { background-image:url('http://boarddev-beta.teradyne.com/images/development.png');}
+  </style>
+<% end %>
 </head>
 
-<body OnLoad="setFocus()">
+  <body OnLoad="setFocus()">
 
   <table cellpadding="1" width="100%" class="bottomnav" border='0'>
     <tr class="teraheader">
