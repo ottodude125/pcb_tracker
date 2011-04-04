@@ -20,6 +20,20 @@ class DesignReviewController < ApplicationController
 
   ######################################################################
   #
+  # index
+  #
+  # Description:
+  # A null stub to prevent an error message
+  #
+  ######################################################################
+  #
+  def index
+      flash['notice'] = "No ID was provided - unable to access the design review"
+      redirect_to(:controller => 'tracker', :action => 'index')
+  end
+
+  ######################################################################
+  #
   # view
   #
   # Description:
