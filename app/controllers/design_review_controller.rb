@@ -1692,13 +1692,27 @@ def send_ftp_notification
   ftp_notification.design_id = params[:id]
 
   # Verify that all of the information has been provided before processing.
-  if (ftp_notification.assembly_bom_number.strip == "" ||
-        ftp_notification.file_data.strip           == "" ||
-        ftp_notification.fab_house_id     == '0'         ||
-        ftp_notification.division_id      == '0'         ||
-        ftp_notification.design_center_id == '0')
+  notice = ""
+  if ftp_notification.assembly_bom_number.strip == "" 
+    notice += "<br> * Assembly/BOM Number missing"
+  end
+  if ftp_notification.file_data.strip == ""
+    notice += "<br> * File data missing"
+  end
+  if ftp_notification.division_id == 0
+    notice += "<br> * Division not selected"
+  end
+  if ftp_notification.design_center_id == 0
+    notice += "<br> * Design File Location not selected"
+  end
+  if ftp_notification.fab_house_id == 0
+    notice += "<br> * Vendor not selected"
+  end
+
+if notice != ""
 
     flash['notice'] = "Please provide all the data requied for the FTP Notification.  The notification was not sent."
+    flash['notice'] += notice
     redirect_to(:action              => "perform_ftp_notification",
       :id                  => params[:id],
       :assembly_bom_number => ftp_notification.assembly_bom_number,
