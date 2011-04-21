@@ -109,7 +109,7 @@ class DesignReviewController < ApplicationController
   ######################################################################
   #
   def posting_filter
-
+x
     review = ReviewType.find(params["review_type_id"])
 
     if review.name != 'Placement'
@@ -158,7 +158,7 @@ class DesignReviewController < ApplicationController
   ######################################################################
   #
   def process_placement_routing
-
+y
     design_id = flash[:design_id]
     
     if params["combine"]["reviews"] == '1'

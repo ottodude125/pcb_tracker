@@ -172,17 +172,29 @@
                             <td colspan="6">
                               <table width="100%" border="0">
                                 <tr>
-                                  <td width="50%" align="left">
-
+                                  <td align="left">
                                     <%= link_to('POST ' +
                                                 design[:next_review].review_type.name +
                                                 ' Review',
                                                 { :controller     => 'design_review',
-                                                  :action         => 'posting_filter',
+                                                  :action         => 'post_review',
                                                   :design_id      => design.id,
                                                   :review_type_id => design[:next_review].review_type.id }) %>
                                   </td>
-                                  <td width="50%" align="left">
+                                  <% if design[:next_review].review_type.name == "Placement" -%>
+                                  <td align="center">
+                                    <%= link_to('POST ' +
+                                                'Combined Placement and Route' +
+                                                ' Review',
+                                                { :controller     => 'design_review',
+                                                  :action         => 'post_review',
+                                                  :design_id      => design.id,
+                                                  :review_type_id => design[:next_review].review_type.id,
+                                                  :combine_placement_routing => 1 }
+                                                  ) %>
+                                  </td>
+                                  <% end -%>
+                                  <td align="right">
                                     <%= link_to('SKIP ' +
                                                 design[:next_review].review_type.name +
                                                 ' Review',
