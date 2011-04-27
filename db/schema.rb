@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 7) do
+ActiveRecord::Schema.define(:version => 20110426194243) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :limit => 12, :default => 0, :null => false
@@ -400,7 +400,7 @@ ActiveRecord::Schema.define(:version => 7) do
     t.string   "number",           :limit => 16
     t.string   "pcb_revision",     :limit => 2
     t.string   "pcba_part_number", :limit => 10
-    t.string   "directory_name",   :limit => 25
+    t.string   "directory_name",   :limit => 40
     t.integer  "eco_type_id",      :limit => 11
     t.boolean  "completed",                      :default => false, :null => false
     t.boolean  "closed",                         :default => false, :null => false
@@ -436,13 +436,15 @@ ActiveRecord::Schema.define(:version => 7) do
   end
 
   create_table "ftp_notifications", :force => true do |t|
-    t.integer "design_id",           :limit => 12, :default => 0,  :null => false
-    t.integer "division_id",         :limit => 3,  :default => 0,  :null => false
-    t.integer "design_center_id",    :limit => 3,  :default => 0,  :null => false
-    t.integer "fab_house_id",        :limit => 3,  :default => 0,  :null => false
-    t.string  "assembly_bom_number", :limit => 32, :default => "", :null => false
-    t.string  "file_data",           :limit => 64, :default => "", :null => false
-    t.string  "revision_date",       :limit => 8,  :default => "", :null => false
+    t.integer  "design_id",           :limit => 12, :default => 0,  :null => false
+    t.integer  "division_id",         :limit => 3,  :default => 0,  :null => false
+    t.integer  "design_center_id",    :limit => 3,  :default => 0,  :null => false
+    t.integer  "fab_house_id",        :limit => 3,  :default => 0,  :null => false
+    t.string   "assembly_bom_number", :limit => 32, :default => "", :null => false
+    t.string   "file_data",           :limit => 64, :default => "", :null => false
+    t.string   "revision_date",       :limit => 8,  :default => "", :null => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "ftp_notifications", ["design_id"], :name => "design_id"
