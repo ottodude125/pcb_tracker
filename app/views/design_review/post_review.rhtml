@@ -148,6 +148,7 @@
             </td>
             <td width="50%"
                 valign="top">
+              <% if ranges[2][:start] %>
               <table border="0"
                      width="100%">
                 <% for reviewer_list in @reviewers[ranges[2][:start]..ranges[2][:stop]] %>
@@ -167,6 +168,7 @@
                 <% end %>
 
               </table>
+              <% end %>
             </td>
           </tr>
         </table>
