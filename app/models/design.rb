@@ -1066,6 +1066,12 @@ class Design < ActiveRecord::Base
     review_skipped = ReviewStatus.find_by_name('Review Skipped')
     review_types   = ReviewType.get_active_review_types
 
+    #Find the ECN Manager for the design
+    ecn_manager_role = Role.find_by_name("ECN")
+    ecn_manager = board_team_list.detect do |x|
+      x.role_id == ecn_manager_role.id
+    end
+
     #Go through each of the review types and setup a review.
     review_types_list.each do |review, active|
 
@@ -1079,12 +1085,12 @@ class Design < ActiveRecord::Base
       if review_type.name == "Pre-Artwork"
         design_review.designer_id = self.pcb_input_id
       elsif review_type.name == 'Release'
-        #TODO: This assumes there is only one PCB ADMIN - fix
-        design_review.designer_id = User.find_by_first_name_and_last_name('Patrice', 'Michaels').id
+        design_review.designer_id = ecn_manager.user_id
       end
       
       self.design_reviews << design_review
 
+      # Create Design Review Result entries
       design_review.add_reviewers(board_team_list)
 
     end
@@ -1266,12 +1272,12 @@ class Design < ActiveRecord::Base
 
     if update[:designer] && self.designer_id != update[:designer].id
       self.record_update('Designer', 
-                          self.designer.name, 
-                          update[:designer].name,
-                          user)
-     self.designer_id = update[:designer].id
-    end
-    
+        self.designer.name,
+        update[:designer].name,
+        user)
+      self.designer_id = update[:designer].id
+   end
+
     if update[:criticality] && self.priority_id != update[:criticality].id
       self.priority  = update[:criticality] 
     end
