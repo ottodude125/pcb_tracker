@@ -274,7 +274,7 @@ class TrackerMailer < ActionMailer::Base
 
     case design_review.review_type.name
     when "Release"
-      cc.push("STD_DC_ECO_Inbox@notes.teradyne.com") if Pcbtr.production_environment?
+      #cc.push("STD_DC_ECO_Inbox@notes.teradyne.com") if Pcbtr.production_environment?
     when "Final"
       pcb_admin = Role.find_by_name("PCB Admin")
       cc       += pcb_admin.active_users.collect { |u| u.email }
