@@ -111,6 +111,7 @@
       </tr>
     <% end %>
 
+    <% if @reviewers.size > 0 %>
     <tr>
       <th>STEP</th>
       <td>&nbsp;</td>
@@ -118,8 +119,9 @@
     <tr>
       <th valign="top">1</th>
       <td>
+ 
         <font size="+1"><b>Verify the Reviewers</b></font><br />
-        <table border="0"
+         <table border="0"
                width="100%">
           <tr>
             <% ranges = split_into_cols(@reviewers, 2) %>
@@ -187,7 +189,7 @@
     <tr>
       <th valign="top">3</th>
       <td valign="top">
-        <% if ! @design_review.on_hold? %>
+        <% if ! @design_review.on_hold? && @reviewers.size > 0 %>
             <% if mode == 'POST' %>
               <input type="submit" class="buttonPost" value="Post <%= @design_review.review_type.name %> Review" />
             <% else %>
@@ -196,6 +198,15 @@
           <% end %>
       </td>
     </tr>
+    <% else %>
+    <tr><td>&nbsp;</td></tr>
+    <tr>
+      <td>&nbsp;</td>
+      <td><font size="+1"><b>There are no reviewers</b></font><br />
+          Add some in order to post the review<br />
+      </td>
+    </tr>
+    <% end %>
   </table>
 </div>
   <hr class="div" />
