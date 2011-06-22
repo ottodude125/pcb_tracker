@@ -115,5 +115,13 @@
       </td>
     <% end %>
   </tr>
+  <% if @design_review.design.ftp_notification %>
+    <tr valign="top">
+      <td class="th1">FTP Date:</td>
+      <td>
+        <%= @design_review.design.ftp_notification.created_at.format_dd_mon_yy('timestamp') %>
+      </td>
+    </tr>
+  <% end %>
 </table>
 
