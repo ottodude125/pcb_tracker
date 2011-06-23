@@ -107,7 +107,7 @@
             No Audit
           <% end %>
         </td>
-        <td align="left" class="th1">FTP: </td><td><%= design.ftp_notification.created_at.format_dd_mon_yy('timestamp') if design.ftp_notification %> </td>
+        <td align="left" class="th1">FTP: </td><td><%= design.ftp_notification.created_at.format_dd_mon_yy('timestamp') if design.ftp_notification && design.ftp_notification.created_at%> </td>
         <td align="right">
 
           <%= link_to_remote('Show Details',

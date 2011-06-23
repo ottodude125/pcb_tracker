@@ -115,7 +115,8 @@
       </td>
     <% end %>
   </tr>
-  <% if @design_review.design.ftp_notification %>
+  <% unless ( @design_review.design.ftp_notification.blank? ||
+      @design_review.design.ftp_notification.created_at.blank? ) %>
     <tr valign="top">
       <td class="th1">FTP Date:</td>
       <td>
