@@ -110,8 +110,8 @@
     <% end %>
   </tr>
   <tr valign="top">
-    <% if ( ! @design_review.design.ftp_notification.blank? ||
-       ! @design_review.design.ftp_notification.created_at.blank? ) %>
+    <% unless ( @design_review.design.ftp_notification.blank? ||
+       @design_review.design.ftp_notification.created_at.blank? ) %>
       <td class="th1">FTP Date:</td>
       <td>
         <%= @design_review.design.ftp_notification.created_at.format_dd_mon_yy('timestamp') %>
