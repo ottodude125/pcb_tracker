@@ -98,13 +98,7 @@
         <td class="th1">Fab Houses:</td>
       <% end %>
       <td>
-        <table>
-          <% for fab_house in @design_review.design.fab_houses %>
-            <tr>
-              <td><%=h fab_house.name %></td>
-            </tr>
-          <% end %>
-        </table>
+          <%= h @design_review.design.fab_houses.map { |f| f.name}.join('<br\>') %>
       </td>
     <% end %>
 
@@ -115,14 +109,22 @@
       </td>
     <% end %>
   </tr>
-  <% unless ( @design_review.design.ftp_notification.blank? ||
-      @design_review.design.ftp_notification.created_at.blank? ) %>
-    <tr valign="top">
+  <tr valign="top">
+    <% if ( ! @design_review.design.ftp_notification.blank? ||
+       ! @design_review.design.ftp_notification.created_at.blank? ) %>
       <td class="th1">FTP Date:</td>
       <td>
         <%= @design_review.design.ftp_notification.created_at.format_dd_mon_yy('timestamp') %>
       </td>
-    </tr>
-  <% end %>
-</table>
+    <%  else %>
+      <td>&nbsp;</td><td>&nbsp;</td>
+    <% end %>
+    <% if ( ! @design_review.completed_on.blank?) %>
+      <td class="th1">Completion Date:</td>
+      <td><%= @design_review.completed_on.format_dd_mon_yy('timestamp') %>
+    <% else %>
+      <td>&nbsp;</td><td>&nbsp;</td>
+    <% end %>
+  </tr>
+  </table>
 
