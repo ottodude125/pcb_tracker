@@ -14,12 +14,12 @@
 <br />
 <table align="center" border="0">
   <tr class="teraheader" valign="top" align="left">
-    <th width="170">Category</th>
-    <th>Total<br />Sections</th>
-    <th>Assignments</th>
+    <th width="170" valign="bottom">Category</th>
+    <th valign="bottom">Total<br />Sections</th>
+    <th valign="bottom">Assignments</th>
     <th valign="bottom">Completed</th>
     <th colspan="2" valign="bottom">Create/View</th>
-    <th>Report Card</th>
+    <th valign="bottom">Report Card</th>
     <th valign="bottom">Completed</th>
     <th valign="bottom">To Do</th>
   </tr>
@@ -59,7 +59,7 @@
     <% if oi_assignments[category.id][:completed] > 0 %>
       <td align="center"
           title="Follow the link to fill out the report card for the completed assignments">
-        <%= link_to('Feedback',
+        <%= link_to('Report Card',
                     { :action     => 'report_card_list',
                       :id         => category.id,
                       :design_id  => @design.id})  %>
