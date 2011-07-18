@@ -98,7 +98,7 @@
         <td class="th1">Fab Houses:</td>
       <% end %>
       <td>
-          <%= h @design_review.design.fab_houses.map { |f| f.name}.join('<br\>') %>
+          <%= @design_review.design.fab_houses.map { |f|  h f.name}.join('<br />') %>
       </td>
     <% end %>
 
