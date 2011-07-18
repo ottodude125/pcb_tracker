@@ -966,7 +966,7 @@ def save_attachment
   elsif params[:return_to] == 'initial_attachments'
     redirect_to(:controller => 'design',
       :action     => 'initial_attachments',
-      :design_id  => drd_doc.design_id)
+      :design_id  => design_review.design_id)
   else
     redirect_to(:action           => :review_attachments,
       :id               => params[:id],
