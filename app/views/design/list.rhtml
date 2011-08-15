@@ -9,7 +9,7 @@
 
 <hr class="div" />
 
-<table align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+<table align="center" border="1" cellspacing="2" cellpadding="2" >
 
   <tr class="teraheader">
   	<th width="170">PCB Part Number</th>
@@ -20,7 +20,7 @@
   <% @active_designs.each do |design| %>
     <tr>
       <td align="center">
-        <%= link_to(design.pcb_name, :action => 'show', :id => design.id) %>
+        <%= link_to(design.pcb_display, :action => 'show', :id => design.id) %>
       </td>
 	  <td align="center"><%= design.pcb_rev %></td>
 	  <td align="center"><%= design.audit_type %></td>
