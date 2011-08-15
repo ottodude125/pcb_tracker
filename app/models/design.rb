@@ -1196,6 +1196,7 @@ class Design < ActiveRecord::Base
 
       original_designer    = dr.designer
       original_criticality = dr.priority
+      original_review_status = dr.review_status.name
 
       next if dr.review_status.name == "Review Completed"
 
@@ -1205,7 +1206,7 @@ class Design < ActiveRecord::Base
       end
       
       if dr.update_review_status(update[:status], user)
-        changes[:review_status] = { :old => dr.review_status.name, 
+        changes[:review_status] = { :old => original_review_status,
                                     :new => update[:status].name}
       end 
       
