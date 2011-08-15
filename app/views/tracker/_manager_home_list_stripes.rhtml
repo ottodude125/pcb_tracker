@@ -34,7 +34,11 @@
     <%= design_review.review_name %>
   </td>
   <td>
-    <%= design_review.review_status.name %>
+    <%= if design_review.on_hold?
+      '<font color="red"><b>' + design_review.review_status.name  + '</b></font>'
+    else
+      design_review.review_status.name
+    end %>
   </td>
   <td>
     <% if design_review.review_status.name != 'Not Started' %>
