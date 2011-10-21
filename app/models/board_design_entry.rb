@@ -230,7 +230,7 @@ class BoardDesignEntry < ActiveRecord::Base
   #
   def new?
     #(self.part_number_id > 0 && self.part_number) ? self.part_number.new? : true
-    self.pcb_number ? false : true
+    self.pcb_number.blank? ? true : false
   end
 
 
