@@ -761,7 +761,6 @@ class TrackerController < ApplicationController
 
     @my_processed_reviews      = DesignReview.my_processed_reviews(@logged_in_user)
     @my_unprocessed_reviews    = DesignReview.my_unprocessed_reviews(@logged_in_user)
-    @reviews_assigned_to_peers = DesignReview.reviews_assigned_to_peers(@logged_in_user)
 
   end
   
