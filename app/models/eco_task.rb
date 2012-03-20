@@ -203,7 +203,8 @@ class EcoTask < ActiveRecord::Base
   # document is attached.
   #
   def specification_attached?
-    self.eco_documents.detect { |d| d.specification? } != nil
+    #self.eco_documents.detect { |d| d.specification? } != nil
+    self.eco_documents.count( :conditions => "specification != 0" ) > 0
   end
   
   
