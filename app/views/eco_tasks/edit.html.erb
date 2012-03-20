@@ -140,10 +140,11 @@
     <tr>
       <th class="teraheader" align="right">ECO/Release Document:&nbsp;</th>
       <td>
-        <% if @eco_task.specification_attached? %>
-          <%= link_to(@eco_task.specification.name,
+        <% specification = @eco_task.spec_id_name
+           if specification %>
+          <%= link_to(specification.name,
 	              :action => "get_attachment",
-                      :id     => @eco_task.specification.id) %>
+                      :id     => specification.id) %>
         <% else %>
           <% if eco_admin %>
             <%= file_field('eco_document', 'document' ) %>
@@ -154,7 +155,7 @@
       </td>
     </tr>
 
-    <% if eco_admin && @eco_task.specification_attached? %>
+    <% if eco_admin && specification %>
       <tr>
         <th class="teraheader" align="right">Delete ECO/Release Document:&nbsp;</th>
         <td>
@@ -190,7 +191,7 @@
     <tr>
       <th class="teraheader" align="right">Started:&nbsp;</th>
       <td>
-        <% if @eco_task.specification_identified? %>
+        <% if specification %>
           <%= @eco_task.started_at.format_dd_mon_yy('timestamp') %>
         <% else %>
           <b>Not Started</b>

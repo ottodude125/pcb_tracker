@@ -220,6 +220,11 @@ class EcoTask < ActiveRecord::Base
     return self.eco_documents.detect { |d| d.specification? }
   end
   
+  def spec_id_name
+    sql = "SELECT id, name FROM eco_documents 
+           WHERE eco_task_id = ? AND specification = 1",self.id
+    return EcoDocument.find_by_sql(sql)[0]
+  end
   
   # Remove the ECO Task specification from the database.
   #
