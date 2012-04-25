@@ -239,13 +239,15 @@
         <tr>
           <td class="label" width="140">Yes: </td>
           <td class="data" align="left">
-            <%= radio_button(:board_design_entry, :rohs, '1', :checked => true ) %>
+            <%= radio_button_tag('board_design_entry[rohs]', '1',
+              !!@board_design_entry.rohs ) %>
           </td>
         </tr>
         <tr>
           <td class="label">No: </td>
           <td class="data" align="left">
-            <%= radio_button(:board_design_entry, :rohs, '0') %>
+            <%= radio_button_tag('board_design_entry[rohs]', '0',
+              !@board_design_entry.rohs ) %>
           </td>
         </tr>
       </table>
@@ -260,13 +262,15 @@
           <tr>
             <td class="label" width="140">Yes: </td>
             <td class="data" align="left">
-              <%= radio_button(:board_design_entry, :thieving, '1') %>
+              <%= radio_button_tag('board_design_entry[thieving]', '1',
+                !!@board_design_entry.thieving ) %>
             </td>
           </tr>
           <tr>
             <td class="label">No: </td>
             <td class="data" align="left">
-              <%= radio_button(:board_design_entry, :thieving, '0',  :checked => true ) %>
+              <%= radio_button_tag('board_design_entry[thieving]', '0',
+                !@board_design_entry.thieving ) %>
             </td>
           </tr>
         </table>
@@ -274,7 +278,7 @@
       <td class="data" colspan="4" valign="top">
         THIEVING is non-functional copper patterns that are added to a
         design to balance the layers and improve manufacturability(fabrication
-        drawing: note 9)<br>
+        drawing: note 9)<br/>
         This is very important on designs that use thin core material where the
         copper on either side of the thin core is not a full plane.
       </td>
@@ -287,13 +291,15 @@
         <tr>
           <td class="label" width="140">Yes: </td>
           <td class="data" align="left">
-            <%= radio_button(:board_design_entry, :no_copper, '1', :checked => true ) %>
+            <%= radio_button_tag('board_design_entry[no_copper]', '1',
+              !!@board_design_entry.no_copper) %>
           </td>
         </tr>
         <tr>
           <td class="label">No: </td>
           <td class="data" align="left">
-            <%= radio_button(:board_design_entry, :no_copper, '0', :checked => true ) %>
+            <%= radio_button_tag('board_design_entry[no_copper]', '0',
+              !@board_design_entry.no_copper) %>
           </td>
         </tr>
       </table>
