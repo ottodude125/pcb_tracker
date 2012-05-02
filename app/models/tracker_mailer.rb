@@ -358,11 +358,17 @@ class TrackerMailer < ActionMailer::Base
     @bcc        = blind_cc
     cc = copy_to(design_review) + copy_to_on_milestone(design_review.design.board)
 
+    if design_review.review_type.name == "Pre-Artwork"
+      slm_notify = Role.find_by_name("SLM-Vendor Notify")
+      cc += slm_notify.active_users.collect { |u| u.email }
+    end
     if design_review.review_type.name == "Final"
       pcb_admin = Role.find_by_name("PCB Admin")
       cc += pcb_admin.active_users.collect { |u| u.email }
+      slm_notify = Role.find_by_name("SLM-Vendor Notify")
+      cc += slm_notify.active_users.collect { |u| u.email }
     end
-    @cc = (cc - @recipients).uniq
+   @cc = (cc - @recipients).uniq
 
     @body['user']          = design_review.designer
     @body['comments']      = comment
