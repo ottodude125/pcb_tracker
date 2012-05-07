@@ -28,10 +28,11 @@
       <table class="sortable" id="anyid" border="1" cellspacing="0" cellpadding="1">
 
         <tr align="center">
-          <th width="200">PCBA Part Number</th>
-          <th width="200">PCB Part Number</th>
-          <th width="200">Phase</th>
-          <th width="200">Review Status</th>
+          <th>PCBA Number</th>
+          <th>PCB Number</th>
+          <th>Name</th>
+          <th>Phase</th>
+          <th>Review Status</th>
         </tr>
 
 
@@ -40,13 +41,14 @@
           design_review = design.get_phase_design_review
         %>
           <tr>
-            <td> <%= pcba.name_string %></td>
-            <td> <%= design.pcb_number %></td>
-            <td> <%= link_to(design.phase.name,
+            <td align="center"> <%= pcba.name_string %></td>
+            <td align="center"> <%= design.pcb_number %></td>
+            <td> &nbsp;<%= design.board.project.name + " / " +design.board.description %> </td>
+            <td align="center"> <%= link_to(design.phase.name,
                              { :controller => 'design_review',
                                :action     => :view,
                                :id         => design_review.id })%>
-            <td> <%= design_review.review_status.name %></td>
+            <td align="center"> <%= design_review.review_status.name %></td>
           </tr>
         <% end %>
 
