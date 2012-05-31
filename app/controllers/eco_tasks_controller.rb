@@ -139,6 +139,8 @@ class EcoTasksController < ApplicationController
 
     @eco_task       = EcoTask.find(params[:id])
     eco_task_update = EcoTask.new(params[:eco_task])
+
+    flash['notice']=''
     
     # Save any comments that were entered.
     comment = @eco_task.add_comment(EcoComment.new(params[:eco_comment]), @logged_in_user)
