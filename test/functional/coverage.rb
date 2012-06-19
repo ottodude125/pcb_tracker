@@ -1,6 +1,6 @@
 # module COVERAGE__ originally (c) NAKAMURA Hiroshi, under Ruby's license
 # module PrettyCoverage originally (c) Simon Strandgaard, under Ruby's license
-# minor modifications by Mauricio Julio Fernández Pradier
+# minor modifications by Mauricio Julio Fernï¿½ndez Pradier
 
 require 'fileutils'
 require 'rbconfig'

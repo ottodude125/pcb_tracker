@@ -1,1 +1,16 @@
-Section:    <%= @check.section.name %>Subsection: <%= @check.subsection.name %>Check:      <% if @check.title.size > 0 %><%= @check.title %> - <% end %><%= @check.check %>Comment entered by Peer Reviewer:<%= @comment %>
+Section:    <%= @check.section.name %>
+
+Subsection: <%= @check.subsection.name %>
+
+
+
+Check:      <% if @check.title.size > 0 %><%= @check.title %> - <% end %><%= @check.check %>
+
+
+
+Comment entered by Peer Reviewer:
+
+
+
+<%= @comment %>
+
