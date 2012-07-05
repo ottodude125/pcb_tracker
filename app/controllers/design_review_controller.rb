@@ -1746,7 +1746,7 @@ if notice != ""
       # Save the FTP Notification in the design's final review.
       message += "\n\nThis notification was delivered to the following people.\n"
       message += " - all of the reviewers\n"
-      design.board.users.each { |user| message += " - #{user.name}\n" }
+      design.board.users.uniq.each { |user| message += " - #{user.name}\n" }
 
       final_design_review = design.get_design_review('Final')
       dr_comment = DesignReviewComment.new(:user_id          => @logged_in_user.id,
