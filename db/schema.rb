@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110426194243) do
+ActiveRecord::Schema.define(:version => 20120620155128) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :limit => 12, :default => 0, :null => false
@@ -87,9 +87,9 @@ ActiveRecord::Schema.define(:version => 20110426194243) do
     t.integer  "attachments_complete",           :limit => 3,   :default => 0,            :null => false
     t.integer  "comments_complete",              :limit => 3,   :default => 0,            :null => false
     t.integer  "design_id",                      :limit => 12,  :default => 0,            :null => false
-    t.boolean  "rohs"
-    t.boolean  "thieving"
-    t.boolean  "no_copper"
+    t.boolean  "rohs",                                          :default => true
+    t.boolean  "thieving",                                      :default => false
+    t.boolean  "no_copper",                                     :default => false
   end
 
   add_index "board_design_entries", ["part_number_id"], :name => "part_number_id"
@@ -395,6 +395,8 @@ ActiveRecord::Schema.define(:version => 20110426194243) do
     t.boolean  "specification",                       :default => false
     t.binary   "data",          :limit => 2147483647,                    :null => false
   end
+
+  add_index "eco_documents", ["eco_task_id"], :name => "index_eco_documents_on_eco_task_id"
 
   create_table "eco_tasks", :force => true do |t|
     t.string   "number",           :limit => 16
@@ -733,6 +735,7 @@ ActiveRecord::Schema.define(:version => 20110426194243) do
     t.datetime "created_on"
     t.datetime "updated_on"
     t.datetime "access"
+    t.string   "ldap_account"
   end
 
 end
