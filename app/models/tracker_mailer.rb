@@ -978,7 +978,7 @@ class TrackerMailer < ActionMailer::Base
 
     content_type "text/html"
     
-    @recipients = ['ron_dallas@notes.teradyne.com','joyce_boehm@notes.teradyne.com']
+    @recipients = ['dtg_ror_devel@lists.teradyne.com']
     @from       = Pcbtr::SENDER
     @subject    = "[Error] exception in #{env['REQUEST_URI']}"
     @sent_on    = sent_on
