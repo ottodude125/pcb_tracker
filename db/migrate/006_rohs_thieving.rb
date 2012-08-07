@@ -6,9 +6,9 @@ class RohsThieving < ActiveRecord::Migration
   end
 
   def self.down
-    add_column :board_design_entries, :rohs
-    add_column :board_design_entries, :thieving
-    add_column :board_design_entries, :no_copper
+    remove_column :board_design_entries, :rohs
+    remove_column :board_design_entries, :thieving
+    remove_column :board_design_entries, :no_copper
   end
 end
 
