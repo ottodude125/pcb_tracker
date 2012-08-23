@@ -1038,7 +1038,7 @@ def get_attachment
 
   @document = Document.find(params[:id])
   if @document.unpacked == 1
-    send_data(@document.data.to_a.pack("H*"),
+    send_data(@document.data.lines.to_a.pack("H*"),
       :filename    => @document.name,
       :type        => @document.content_type,
       :disposition => "inline")
