@@ -11,17 +11,10 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class DesignReviewResultTest < Test::Unit::TestCase
+class DesignReviewResultsTest < ActiveSupport::TestCase
   
-  
-  fixtures :design_review_results,
-           :roles,
-           :roles_users,
-           :users
-
-
   def setup
     @mx234a_pre_artwork_hw = design_review_results(:mx234a_pre_artwork_hw)
     
@@ -77,11 +70,11 @@ class DesignReviewResultTest < Test::Unit::TestCase
                 'REJECTED'    => false }
                 
     drr = DesignReviewResult.new
-    results.each do |result, expected_return|
-      drr.result = result
-      assert_equal(expected_return, drr.no_response?)
-    end
-    
+    drr.result = 'No Response'
+    assert_equal(true, drr.no_response?)
+
+    drr.result = 'APPROVED'
+    assert_equal(false, drr.no_response?)
   end
   
   

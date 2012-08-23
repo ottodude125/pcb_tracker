@@ -1,10 +1,10 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'section_controller'
 
 # Re-raise errors caught by the controller.
 class SectionController; def rescue_action(e) raise e end; end
 
-class SectionControllerTest < Test::Unit::TestCase
+class SectionControllerTest < ActionController::TestCase
   
   
   def setup

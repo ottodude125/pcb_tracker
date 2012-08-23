@@ -14,9 +14,9 @@
 
 <hr class="div" align="center" width="80%" />
 
-<% form_for(@change_class) do |@f| %>
+<% form_for(@change_class) do |f| %>
 
-  <%= render( :partial => 'form_table') %>
+  <%= render( :partial => 'form_table', :locals => { :f => f } ) %>
   
   <hr class="div" align="center" width="80%" />
 
@@ -26,7 +26,7 @@
         <%= link_to 'Return to list', change_classes_path %>
       </td>
       <td align="center">
-         <%= @f.submit "Create New Change Class" %>
+         <%= f.submit "Create New Change Class" %>
       </td>
       <td align="right" width="33%">
         <%= link_to 'Return to Admin Portal', { :controller => :admin } %>

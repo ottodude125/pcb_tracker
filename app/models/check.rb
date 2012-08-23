@@ -345,7 +345,9 @@ class Check < ActiveRecord::Base
   #
   # If there is no associated design check a nil is returned.
   def design_check
-    self[:design_check]
+    #self[:design_check]
+    self[:check]
+    #DesignCheck.find_by_check_id(self.id)  ### THERE CAN BE MULTIPLE Matches
   end
   
   
@@ -356,7 +358,8 @@ class Check < ActiveRecord::Base
   #
   # Associates the design check that is passed in with the check.
  def design_check=(design_check)
-    self[:design_check] = design_check
+    #self[:design_check] = design_check
+    self[:check] = design_check
   end
   
   

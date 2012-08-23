@@ -10,7 +10,7 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'user_controller'
 
 # Set salt to 'change-me' because thats what the fixtures assume. 
@@ -19,7 +19,7 @@ User.salt = 'change-me'
 # Raise errors beyond the default web-based presentation
 class UserController; def rescue_action(e) raise e end; end
 
-class UserControllerTest < Test::Unit::TestCase
+class UserControllerTest < ActionController::TestCase
   
   fixtures :users
   fixtures :roles
@@ -76,7 +76,7 @@ class UserControllerTest < Test::Unit::TestCase
     assert_equal('Login successful', flash['notice'])
     
     post(:edit, { :id => @cathy_m.id }, rich_designer_session)
-    assert_redirected_to :action => "index", :controller => "tracker"
+    assert_redirected_to( :action => "index", :controller => "tracker" )
     #assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
     # Log in as a manager and try to edit a user record.
@@ -87,7 +87,7 @@ class UserControllerTest < Test::Unit::TestCase
     #assert_equal('Login successful', flash['notice'])
     
     post(:edit, { :id => @cathy_m.id }, jim_manager_session)
-    assert_redirected_to :action => "index", :controller => "tracker"
+    assert_redirected_to( :action => "index", :controller => "tracker" )
     #assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
   end
@@ -111,7 +111,7 @@ class UserControllerTest < Test::Unit::TestCase
     assert_equal('Login successful', flash['notice'])
     
     post(:edit, { :id => @cathy_m.id }, cathy_admin_session)
-    assert_template "user/edit"
+    assert_template("user/edit", "Template should be 'user/edit'")
 
   end
 
@@ -130,12 +130,13 @@ class UserControllerTest < Test::Unit::TestCase
 
     post(:login,
          { :user_login => "bob", :user_password => "test"},
-         { :return_to => "/bogus/location" })
-    assert(@response.has_session_object?(:user_id))
-    session_user = User.find(@response.session[:user_id])
+         { :return_to => "/bogus/location" } )
+    assert_equal("Login successful", flash['notice'])
+    assert(session['user_id'] , "Session variable 'user_id' not set")
+    session_user = User.find(session['user_id'])
     assert_equal("bob",                             session_user.login)
     assert_equal('Admin',                           session_user.active_role.name)
-    assert_equal("http://localhost/bogus/location", @response.redirect_url)
+    assert_redirected_to("/bogus/location")
   end
 
  
@@ -206,7 +207,7 @@ class UserControllerTest < Test::Unit::TestCase
          admin_session)
 
     #assert_equal("Account created for Roberto Clemente", flash['notice'])
-    assert_redirected_to(:controller => 'user', :action => 'list')
+    assert_redirected_to(:controller => 'user', :action => 'list', :alpha => 'C' )
     
     new_user = User.find_by_last_name "Clemente"
     assert_equal('rclemente',                           new_user.login)
@@ -236,7 +237,7 @@ class UserControllerTest < Test::Unit::TestCase
                       :password   => "newpassword", 
                       :password_confirmation => "wrongpassword" } },
          {})
-    assert_redirected_to :action => "index"
+    assert_redirected_to( :controller => 'tracker', :action => "index" )
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
 
@@ -265,8 +266,9 @@ class UserControllerTest < Test::Unit::TestCase
          { :user_login    => "bob",
            :user_password => "not_correct" },
          {})
-    assert(!@response.has_session_object?(:user))
-    assert(@response.has_template_object?("login"))
+    assert_equal("Login unsuccessful", flash['notice'])
+    assert(!session['user_id'], "User ID should not be set")
+    assert_template('login', "Template should be 'login'")
     
   end
   
@@ -284,10 +286,9 @@ class UserControllerTest < Test::Unit::TestCase
   def test_login_logoff
 
     post(:login, { :user_login => "bob", :user_password => "test" }, {})
-    assert(@response.has_session_object?(:user_id))
-
+    assert(session['user_id'], "User ID should be set")
     get(:logout, {}, {})
-    assert(!@response.has_session_object?(:user_id))
+    assert(!session['user_id'],"User ID should not be set")
 
   end
 
@@ -327,15 +328,15 @@ class UserControllerTest < Test::Unit::TestCase
   def test_change_password
 
     post(:change_password, { :id => @rich_m.id }, {})
-    assert_redirected_to :action => "index"
+    assert_redirected_to( :controller => 'tracker', :action => "index" )
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
     post(:change_password, { :id => @rich_m.id }, cathy_admin_session)
 
     assert_response 200
-    assert(@response.has_session_object?(:user_id))
+    assert(session['user_id'], "User ID should be set")
     assert_equal(@rich_m.last_name, assigns(:user).last_name)
-    assert_template "change_password"
+    assert_template( "change_password", "Template should be 'change_password'")
     
   end
 
@@ -359,7 +360,7 @@ class UserControllerTest < Test::Unit::TestCase
            :new_password              => 'Go_Red_Sox',
            :new_password_confirmation => 'Go_Red_Sox' },
          {})
-    assert_redirected_to :action => "index"
+    assert_redirected_to( :controller => 'tracker', :action => "index" )
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
     post(:reset_password, 
@@ -368,7 +369,7 @@ class UserControllerTest < Test::Unit::TestCase
            :new_password_confirmation => 'Go_Red_Sox' },
          admin_session)
 
-    assert_redirected_to :action => :list
+    assert_redirected_to( :action => 'list' )
     #assert_equal('The password for Rich Miller was updated', flash['notice'])
 
     post(:reset_password, 
@@ -377,7 +378,7 @@ class UserControllerTest < Test::Unit::TestCase
            :new_password_confirmation => 'Go_Yankees' },
          admin_session)
 
-    assert_redirected_to :action => :change_password, :id => @rich_m.id
+    assert_redirected_to( :action => :change_password, :id => @rich_m.id )
     #assert_equal('No Update - the new password and the confirmation do not match',
     #             flash['notice'])
 
@@ -397,7 +398,7 @@ class UserControllerTest < Test::Unit::TestCase
   def test_update
 
     post(:update, { :user => { :id => @rich_m.id } }, {})
-    assert_redirected_to :action => "index"
+    assert_redirected_to( :controller => 'tracker', :action => "index" )
     assert_equal(Pcbtr::MESSAGES[:admin_only], flash['notice'])
 
     assert_equal(2, @rich_m.roles.size)

@@ -1,0 +1,75 @@
+<!-- View:    reassign_reviewer.rhtml                                       -->
+<!-- Purpose: Displays the reassign reviewer form for the    -->
+<!--                 user.                                                                     -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<% @heading = "#{@design_review.design.directory_name} - Reassign Reviewer" %>
+
+<%= form_tag(:action => 'update_review_assignments', :id => @design_review.id) do %>
+
+  <% for match in @matching_roles %>
+
+    <table align="center" width="80%" border="0">
+      <tr>
+        <th class="teraheader" colspan="4">
+          <%= match[:design_review].role.display_name %>
+        </th>
+      </tr>
+      <tr valign="top">
+        <td align="right" width="25%">
+          <b>Current Reviewer: </b>
+        </td>
+        <td width="25%">
+          <%= match[:design_review].reviewer.name %>
+        </td>
+
+        <% if match[:peers] %>
+          <td align="right">
+            <b>Assign To: </b>
+          </td>
+          <td>
+            <select id="user_<%=match[:design_review].role.name%>" name="user[<%=match[:design_review].role.name%>]">
+              <option value="0">Select an Alternate Reviewer</option>
+              <%= options_from_collection_for_select(match[:peers], :id, :last_name_first )%>
+            </select>
+          </td>
+        <% else %>
+          <td align="right">
+            <b>Reassign to myself: </b>
+          </td>
+          <td>
+            <% role = match[:design_review].role %>
+            <%= check_box("id_#{role.id}_assign_to_self",
+                          @logged_in_user.id,
+                          {},
+                          'yes',
+                          'no') %> 
+          </td>
+        <% end %>
+      </tr>
+    </table>
+
+    <br />
+
+  <% end %>
+
+  <table width="80%" align="center">
+    <tr>
+      <td align="left">
+        <input class="form_return" type="button" value="Return - No Changes" 
+               onClick="parent.location='<%= url_for_stored() %>'" />
+      </td>
+      <td align="right">
+        <input class="form_submit" type="submit" value="Reassign" />
+      </td>
+    </tr>
+  </table>
+
+<% end %>
+
+<%# debug @matching_roles %>
+
+

@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: DesignCheck</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/models/design_check.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">ActiveRecord::Base
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-add">::add</a>
+    
+    <li><a href="#method-i-auditor_verified-3F">#auditor_verified?</a>
+    
+    <li><a href="#method-i-comment_required-3F">#comment_required?</a>
+    
+    <li><a href="#method-i-peer_auditor">#peer_auditor</a>
+    
+    <li><a href="#method-i-peer_auditor_assigned-3F">#peer_auditor_assigned?</a>
+    
+    <li><a href="#method-i-peer_auditor_checked-3F">#peer_auditor_checked?</a>
+    
+    <li><a href="#method-i-peer_auditor_issue-3F">#peer_auditor_issue?</a>
+    
+    <li><a href="#method-i-self_auditor">#self_auditor</a>
+    
+    <li><a href="#method-i-self_auditor_assigned-3F">#self_auditor_assigned?</a>
+    
+    <li><a href="#method-i-self_auditor_checked-3F">#self_auditor_checked?</a>
+    
+    <li><a href="#method-i-update_auditor_result">#update_auditor_result</a>
+    
+    <li><a href="#method-i-update_designer_result">#update_designer_result</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class DesignCheck</h1>
+
+  <div id="description" class="description">
+    
+<p>Copyright 2005, by Teradyne, Inc., Boston MA</p>
+
+<p>File: design_check.rb</p>
+
+<p>This file maintains the state for design checks.</p>
+
+<p>$Id$</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <!-- Constants -->
+    <section id="constants-list" class="section">
+      <h3 class="section-header">Constants</h3>
+      <dl>
+      
+        <dt id="AUDITOR_COMPLETE_RESULTS">AUDITOR_COMPLETE_RESULTS
+        
+        <dd class="description">
+        
+      
+        <dt id="AUDITOR_INCOMPLETE_RESULTS">AUDITOR_INCOMPLETE_RESULTS
+        
+        <dd class="description">
+        
+      
+      </dl>
+    </section>
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-add" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add</span><span
+            class="method-args">(audit, check)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignCheck.html#method-c-add">::add</a></p>
+
+<p>Description: Adds a design check to the database for the given audit /
+check  pair</p>
+
+<p>Parameters: audit - the audit to associate the design check with check -
+the check to associate the design check with</p>
+
+<p>Return value: None</p>
+          
+
+          
+          <div class="method-source-code" id="add-source">
+            <pre><span class="ruby-comment"># File app/models/design_check.rb, line 50</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">add</span>(<span class="ruby-identifier">audit</span>, <span class="ruby-identifier">check</span>)
+  <span class="ruby-identifier">dc</span> = <span class="ruby-constant">DesignCheck</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:audit_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">audit</span>.<span class="ruby-identifier">id</span>, <span class="ruby-value">:check_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">id</span>)
+  <span class="ruby-identifier">fail</span> <span class="ruby-string">'Design check not saved'</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">dc</span>.<span class="ruby-identifier">save</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- add-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- add-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-auditor_verified-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">auditor_verified?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Indicate if the peer auditor has verified the design check.</p>
+
+<p>:call-seq“</p>
+
+<pre>auditor_verified?() -&gt; boolean</pre>
+
+<p>If the peer auditor has verified the check then TRUE is returned, otherwise
+FALSE is returned.</p>
+          
+
+          
+          <div class="method-source-code" id="auditor_verified-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_check.rb, line 266</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">auditor_verified?</span>
+  <span class="ruby-constant">AUDITOR_COMPLETE_RESULTS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">auditor_result</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- auditor_verified-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- auditor_verified-3F-method -->
+
+    
+      <div id="method-i-comment_required-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">comment_required?</span><span
+            class="method-args">(designer_result, auditor_result)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignCheck.html#method-i-comment_required-3F">#comment_required?</a></p>
+
+<p>Description: Indicates if a comment is recquired for the update.</p>
+
+<p>Parameters: designer_result - the result entered by the designer
+auditor_result  - the result entered by the auditor</p>
+
+<p>Return value: TRUE if the peer auditor has completed the design check,
+FALSE  otherwise.</p>
+          
+
+          
+          <div class="method-source-code" id="comment_required-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_check.rb, line 186</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">comment_required?</span>(<span class="ruby-identifier">designer_result</span>, <span class="ruby-identifier">auditor_result</span>)
+
+  <span class="ruby-comment"># Checking the check for the check type is overkill.</span>
+  <span class="ruby-identifier">check</span> = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">find</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">check_id</span>)
+  <span class="ruby-keyword">case</span> 
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">designer_result</span> <span class="ruby-operator">==</span> <span class="ruby-string">'No'</span>
+      <span class="ruby-identifier">check</span>.<span class="ruby-identifier">yes_no?</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">designer_result</span> <span class="ruby-operator">==</span> <span class="ruby-string">'Waived'</span>
+      <span class="ruby-identifier">check</span>.<span class="ruby-identifier">designer_only?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">designer_auditor?</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-identifier">auditor_result</span>  <span class="ruby-operator">==</span> <span class="ruby-string">'Waived'</span>  <span class="ruby-operator">||</span> <span class="ruby-identifier">auditor_result</span> <span class="ruby-operator">==</span> <span class="ruby-string">'Comment'</span>
+      <span class="ruby-identifier">check</span>.<span class="ruby-identifier">designer_auditor?</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- comment_required-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- comment_required-3F-method -->
+
+    
+      <div id="method-i-peer_auditor" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">peer_auditor</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignCheck.html#method-i-peer_auditor">#peer_auditor</a></p>
+
+<p>Description: Provides a user record for the peer auditor</p>
+
+<p>Return value: A user record</p>
+          
+
+          
+          <div class="method-source-code" id="peer_auditor-source">
+            <pre><span class="ruby-comment"># File app/models/design_check.rb, line 75</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">peer_auditor</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">auditor_id</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> 
+    <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">auditor_id</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:first_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Not'</span>, <span class="ruby-value">:last_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Assigned'</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span>
+  <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:first_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Not'</span>, <span class="ruby-value">:last_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Assigned'</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- peer_auditor-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- peer_auditor-method -->
+
+    
+      <div id="method-i-peer_auditor_assigned-3F" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            peer_auditor_assigned?() &rarr; boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Determine if the design check has a peer auditor.</p>
+
+<p>Returns TRUE if the design check has a peer auditor assigned. Otherwise
+FALSE is returned.</p>
+          
+
+          
+          <div class="method-source-code" id="peer_auditor_assigned-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_check.rb, line 93</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">peer_auditor_assigned?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">auditor_id</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- peer_auditor_assigned-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- peer_auditor_assigned-3F-method -->
+
+    
+      <div id="method-i-peer_auditor_checked-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">peer_auditor_checked?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignCheck.html#method-i-peer_auditor_checked-3F">#peer_auditor_checked?</a></p>
+
+<p>Description: Indicates if the peer audit design check is complete</p>
+
+<p>Return value: TRUE if the peer auditor has completed the design check,
+FALSE  otherwise.</p>
+          
+
+          
+          <div class="method-source-code" id="peer_auditor_checked-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_check.rb, line 164</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">peer_auditor_checked?</span>
+  <span class="ruby-operator">!</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">auditor_result</span> <span class="ruby-operator">==</span> <span class="ruby-string">'None'</span> <span class="ruby-operator">||</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">auditor_result</span> <span class="ruby-operator">==</span> <span class="ruby-string">'Comment'</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- peer_auditor_checked-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- peer_auditor_checked-3F-method -->
+
+    
+      <div id="method-i-peer_auditor_issue-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">peer_auditor_issue?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Indicate if the peer auditor has raised an issue that needs to be addressed</p>
+
+<p>:call-seq“</p>
+
+<pre>peer_auditor_issue?() -&gt; boolean</pre>
+
+<p>TRUE if there is an issue, otherwise FALSE.</p>
+          
+
+          
+          <div class="method-source-code" id="peer_auditor_issue-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_check.rb, line 278</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">peer_auditor_issue?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">auditor_result</span> <span class="ruby-operator">==</span> <span class="ruby-string">'Comment'</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- peer_auditor_issue-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- peer_auditor_issue-3F-method -->
+
+    
+      <div id="method-i-self_auditor" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">self_auditor</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignCheck.html#method-i-self_auditor">#self_auditor</a></p>
+
+<p>Description: Provides a user record for the self auditor</p>
+
+<p>Return value: A user record</p>
+          
+
+          
+          <div class="method-source-code" id="self_auditor-source">
+            <pre><span class="ruby-comment"># File app/models/design_check.rb, line 110</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">self_auditor</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_id</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_id</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:first_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Not'</span>, <span class="ruby-value">:last_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Assigned'</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span>
+  <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:first_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Not'</span>, <span class="ruby-value">:last_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Assigned'</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- self_auditor-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- self_auditor-method -->
+
+    
+      <div id="method-i-self_auditor_assigned-3F" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            self_auditor_assigned?() &rarr; boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Determine if the design check has a self auditor.</p>
+
+<p>Returns TRUE if the design check has a self auditor assigned. Otherwise
+FALSE is returned.</p>
+          
+
+          
+          <div class="method-source-code" id="self_auditor_assigned-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_check.rb, line 128</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">self_auditor_assigned?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_id</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- self_auditor_assigned-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- self_auditor_assigned-3F-method -->
+
+    
+      <div id="method-i-self_auditor_checked-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">self_auditor_checked?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignCheck.html#method-i-self_auditor_checked-3F">#self_auditor_checked?</a></p>
+
+<p>Description: Indicates if the self audit design check is complete</p>
+
+<p>Return value: TRUE if the self auditor has completed the design check,
+FALSE  otherwise.</p>
+          
+
+          
+          <div class="method-source-code" id="self_auditor_checked-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_check.rb, line 146</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">self_auditor_checked?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_result</span> <span class="ruby-operator">!=</span> <span class="ruby-string">'None'</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- self_auditor_checked-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- self_auditor_checked-3F-method -->
+
+    
+      <div id="method-i-update_auditor_result" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_auditor_result</span><span
+            class="method-args">(result, user)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignCheck.html#method-i-update_auditor_result">#update_auditor_result</a></p>
+
+<p>Description: Updates the design check with the auditor’s peer audit
+results.</p>
+
+<p>Parameters: result - the result entered by the peer auditor user   - the
+auditor’s user record</p>
+
+<p>Return value: None</p>
+          
+
+          
+          <div class="method-source-code" id="update_auditor_result-source">
+            <pre><span class="ruby-comment"># File app/models/design_check.rb, line 240</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_auditor_result</span>(<span class="ruby-identifier">result</span>, <span class="ruby-identifier">user</span>)
+
+  <span class="ruby-identifier">incr</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">auditor_verified?</span>
+    <span class="ruby-identifier">incr</span> = <span class="ruby-value">-1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span> <span class="ruby-operator">==</span> <span class="ruby-string">'Comment'</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">incr</span> = <span class="ruby-value">1</span>  <span class="ruby-keyword">if</span> <span class="ruby-constant">AUDITOR_COMPLETE_RESULTS</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">result</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">auditor_result</span>     = <span class="ruby-identifier">result</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">auditor_checked_on</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">auditor_id</span>         = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+
+  <span class="ruby-identifier">incr</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update_auditor_result-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update_auditor_result-method -->
+
+    
+      <div id="method-i-update_designer_result" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_designer_result</span><span
+            class="method-args">(result, user)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignCheck.html#method-i-update_designer_result">#update_designer_result</a></p>
+
+<p>Description: Updates the design check with the designer’s self audit
+results.</p>
+
+<p>Parameters: result - the result entered by the designer user   - the
+designer’s user record</p>
+
+<p>Return value: None</p>
+          
+
+          
+          <div class="method-source-code" id="update_designer_result-source">
+            <pre><span class="ruby-comment"># File app/models/design_check.rb, line 217</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_designer_result</span>(<span class="ruby-identifier">result</span>, <span class="ruby-identifier">user</span>)
+   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">update_attributes</span>(<span class="ruby-value">:designer_result</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">result</span>,
+                          <span class="ruby-value">:designer_checked_on</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>,
+                          <span class="ruby-value">:designer_id</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>)
+ <span class="ruby-keyword">end</span></pre>
+          </div><!-- update_designer_result-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update_designer_result-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

@@ -11,13 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class SectionTest < Test::Unit::TestCase
-  fixtures :audits,
-           :design_checks,
-           :sections,
-           :subsections
+class SectionsTest < ActiveSupport::TestCase
 
 
   def setup

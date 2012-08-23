@@ -5,21 +5,23 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% if !@f.error_messages.blank? %>
+<% if !@change_item.errors.any? %>
   <table width="60%" align="center" bgcolor="yellow">
-    <tr><td><%= @f.error_messages %></td></tr>
+    <% @change_item.errors.each do |msg| -%>
+      <tr><td><%= msg %></td></tr>
+    <%end -%>
   </table>
 <% end %>
 
 <table align="center">
   <tr>
-     <th class="teraheader" width="100" align="right"><%= @f.label :name %>:&nbsp;</th>
-    <td align="left"><%= @f.text_field :name %></td>
+     <th class="teraheader" width="100" align="right"><%= f.label :name %>:&nbsp;</th>
+    <td align="left"><%= f.text_field :name %></td>
   </tr>
 
   <% if @change_details.size > 0 %>
     <tr>
-      <th class="teraheader" align="right"><%= @f.label :position %>:&nbsp;</th>
+      <th class="teraheader" align="right"><%= f.label :position %>:&nbsp;</th>
       <td align="left">
         <%= select(:change_detail, :position, Array.new(@positions){|i|i+1}) %>
       </td>
@@ -27,12 +29,12 @@
   <% end %>
     
   <tr>
-    <th class="teraheader" align="right"><%= @f.label :active %>:&nbsp;</th>
-    <td align="left"><%= @f.check_box :active %></td>
+    <th class="teraheader" align="right"><%= f.label :active %>:&nbsp;</th>
+    <td align="left"><%= f.check_box :active %></td>
   </tr>
   
   <tr valign="top">
-    <th class="teraheader" align="right"><%= @f.label :definition %>:&nbsp;</th>
-    <td align="left"><%= @f.text_area(:definition, { :rows => '5', :cols => '60' }) %></td>
+    <th class="teraheader" align="right"><%= f.label :definition %>:&nbsp;</th>
+    <td align="left"><%= f.text_area(:definition, { :rows => '5', :cols => '60' }) %></td>
   </tr>
 </table>

@@ -1,0 +1,33 @@
+<!-- View:    location                                          -->
+<!-- Purpose: Displays a location for modification.             -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Location" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'update') do %>
+
+  <%= hidden_field "location", "id" %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="location_name">Location:</label>
+        <%= text_field "location", "name", "size" => 30, "maxlength" => 30 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: 
+        <%= check_box "location", "active" %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Location" />
+  <input type="button" value="Return to Location List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<% end %>

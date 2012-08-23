@@ -1,0 +1,31 @@
+<!-- View:    project                                           -->
+<!-- Purpose: Displays a form to add a project.                 -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Create a new project" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'create') do %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="project_name">Project:</label>
+        <%= text_field "new_project", "name", "size" => 30, "maxlength" => 30 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: 
+        <%= check_box "new_project", "active", { 'checked' => 'checked' } %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Create new project" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<% end %>

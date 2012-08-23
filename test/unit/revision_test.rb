@@ -11,10 +11,10 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class RevisionTest < Test::Unit::TestCase
-  fixtures :revisions
+class RevisionsTest < ActiveSupport::TestCase
+
 
   def setup
     @revisions = [ revisions(:rev_a),   revisions(:rev_b),

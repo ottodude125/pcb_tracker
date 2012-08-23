@@ -1,7 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class BoardDesignEntryUsersTest < Test::Unit::TestCase
-  fixtures :board_design_entry_users
+class BoardDesignEntryUsersTest < ActiveSupport::TestCase
 
   # Replace this with your real tests.
   def test_truth

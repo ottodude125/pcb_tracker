@@ -11,12 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
 class ChangeClassTest < ActiveSupport::TestCase
-  
-  fixtures :change_classes
-  
   
   def setup
     @change_class_1 = change_classes(:change_class_1)
@@ -33,19 +30,19 @@ class ChangeClassTest < ActiveSupport::TestCase
                                     :definition => 'Testing empty name')
     change_class.save
     assert_equal(1, change_class.errors.count)
-    assert_equal(expected_error_message, change_class.errors.on(:name))
+    assert_equal(expected_error_message, change_class.errors[:name][0])
     
     # Retry with blanks
     change_class.name = '  '
     change_class.save
     assert_equal(1, change_class.errors.count)
-    assert_equal(expected_error_message, change_class.errors.on(:name))
+    assert_equal(expected_error_message, change_class.errors[:name][0])
     
     # Retry with tabs
     change_class.name = "\t\t"
     change_class.save
     assert_equal(1, change_class.errors.count)
-    assert_equal(expected_error_message, change_class.errors.on(:name))
+    assert_equal(expected_error_message, change_class.errors[:name][0])
   end
   
   
@@ -56,19 +53,19 @@ class ChangeClassTest < ActiveSupport::TestCase
     change_class.name = ''
     change_class.save
     assert_equal(1, change_class.errors.count)
-    assert_equal(expected_error_message, change_class.errors.on(:name))
+    assert_equal(expected_error_message, change_class.errors[:name][0])
     
     # Retry with blanks
     change_class.name = '  '
     change_class.save
     assert_equal(1, change_class.errors.count)
-    assert_equal(expected_error_message, change_class.errors.on(:name))
+    assert_equal(expected_error_message, change_class.errors[:name][0])
     
     # Retry with tabs
     change_class.name = "\t\t"
     change_class.save
     assert_equal(1, change_class.errors.count)
-    assert_equal(expected_error_message, change_class.errors.on(:name))
+    assert_equal(expected_error_message, change_class.errors[:name][0])
   end
   
   

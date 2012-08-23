@@ -20,7 +20,7 @@ class DesignCenter < ActiveRecord::Base
 
   validates_uniqueness_of :name
 
-
+  require "net/http"
   ##############################################################################
   #
   # Class Methods
@@ -47,7 +47,7 @@ class DesignCenter < ActiveRecord::Base
   ######################################################################
   #
   def self.get_all_active(sort = 'name ASC')
-    self.find_all_by_active(1, sort)
+    self.find_all_by_active(1, :order => sort )
   end
 
 

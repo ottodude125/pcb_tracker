@@ -357,11 +357,13 @@ class DesignChange < ActiveRecord::Base
 
   
 private
-  
-  def validate
+ 
+  validate :do_validate
+
+    def do_validate
 
     if !self.change_class_set?
-      errors.add(:change_class_id, 'Change Class selection is required')
+      errors.add :change_class_id, 'Change Class selection is required'
     end
     
     if self.change_type_required? && !self.change_type_set?

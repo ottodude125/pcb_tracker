@@ -1,0 +1,323 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+# one:
+#   column: value
+#
+# two:
+#   column: value
+
+id3:
+  id:  3
+  prefix: "252"
+  number: "234"
+  dash:   "a0"
+  revision: "g"
+  use:      pcb
+  board_design_entry_id: 5
+  design_id: 1
+id4:
+  id:  4
+  prefix: "259"
+  number: "234"
+  dash:   "00"
+  revision: "h"
+  use:      pcba
+  board_design_entry_id: 5
+  design_id: 1
+id5:
+  id:  5
+  prefix: "942"
+  number: "453"
+  dash:   "b0"
+  revision: "i"
+  use:      pcb
+  board_design_entry_id: 6
+  design_id: 2
+id6:
+  id:  6
+  prefix: "949"
+  number: "453"
+  dash:   "00"
+  revision: "j"
+  use:      pcba
+  board_design_entry_id: 6
+  design_id: 2
+id7:
+  id:  7
+  prefix: "942"
+  number: "453"
+  dash:   "a1"
+  revision: "c"
+  use:      pcb
+  board_design_entry_id: NULL
+  design_id: 4
+id8:
+  id:  8
+  prefix: "949"
+  number: "453"
+  dash:   "00"
+  revision: "d"
+  use:      pcba
+  board_design_entry_id: NULL
+  design_id: 4
+id9:
+  id:  9
+  prefix: "942"
+  number: "453"
+  dash:   "a2"
+  revision: "y"
+  use:      pcb
+  board_design_entry_id: NULL
+  design_id: 5
+id10:
+  id:  10
+  prefix: "949"
+  number: "453"
+  dash:   "00"
+  revision: "w"
+  use:      pcba
+  board_design_entry_id: NULL
+  design_id: 5
+id11:
+  id:  11
+  prefix: "252"
+  number: "234"
+  dash:   "b0"
+  revision: "m"
+  use:      pcb
+  board_design_entry_id: NULL
+  design_id: 7
+id12:
+  id:  12
+  prefix: "259"
+  number: "234"
+  dash:   "00"
+  revision: "n"
+  use:      pcba
+  board_design_entry_id: NULL
+  design_id: 7
+id13:
+  id:  13
+  prefix: "942"
+  number: "454"
+  dash:   "c3"
+  revision: "s"
+  use:      pcb
+  board_design_entry_id: NULL
+  design_id: 8
+id14:
+  id:  14
+  prefix: "949"
+  number: "454"
+  dash:   "00"
+  revision: "t"
+  use:      pcba
+  board_design_entry_id: NULL
+  design_id: 8
+id15:
+  id:  15
+  prefix: "252"
+  number: "234"
+  dash:   "c0"
+  revision: "q"
+  use:      pcb
+  board_design_entry_id: NULL
+  design_id: 9
+id16:
+  id:  16
+  prefix: "259"
+  number: "234"
+  dash:   "00"
+  revision: "r"
+  use:      pcba
+  board_design_entry_id: NULL
+  design_id: 9
+id17:
+  id:  17
+  prefix: "942"
+  number: "455"
+  dash:   "b0"
+  revision: "w"
+  use:      pcb
+  board_design_entry_id: NULL
+  design_id: 10
+id18:
+  id:  18
+  prefix: "949"
+  number: "455"
+  dash:   "00"
+  revision: "x"
+  use:      pcba
+  board_design_entry_id: NULL
+  design_id: 10
+id19:
+  id:  19
+  prefix: "252"
+  number: "600"
+  dash:   "a0"
+  revision: "o"
+  use:      pcb
+  board_design_entry_id: NULL
+  design_id: 11
+id20:
+  id:  20
+  prefix: "259"
+  number: "600"
+  dash:   "00"
+  revision: "p"
+  use:      pcba
+  board_design_entry_id: NULL
+  design_id: 11
+id21:
+  id:  21
+  prefix: "252"
+  number: "700"
+  dash:   "b0"
+  revision: "a"
+  use:      pcb
+  board_design_entry_id: NULL
+  design_id: 12
+id22:
+  id:  22
+  prefix: "259"
+  number: "700"
+  dash:   "00"
+  revision: "b"
+  use:      pcba
+  board_design_entry_id: NULL
+  design_id: 12
+id23:
+  id:  23
+  prefix: "252"
+  number: "999"
+  dash:   "a0"
+  revision: "k"
+  use:      pcb
+  board_design_entry_id: NULL
+  design_id: 13
+id24:
+  id:  24
+  prefix: "259"
+  number: "999"
+  dash:   "00"
+  revision: "l"
+  use:      pcba
+  board_design_entry_id: NULL
+  design_id: 13
+id25:
+  id:  25
+  prefix: "252"
+  number: "999"
+  dash:   "b0"
+  revision: "u"
+  use:      pcb
+  board_design_entry_id: NULL
+  design_id: 14
+id26:
+  id:  26
+  prefix: "259"
+  number: "999"
+  dash:   "00"
+  revision: "v"
+  use:      pcba
+  board_design_entry_id: NULL
+  design_id: 14
+id27:
+  id:  27
+  prefix: "252"
+  number: "999"
+  dash:   "c0"
+  revision: "a"
+  use:      pcb
+  board_design_entry_id: NULL
+  design_id: 15
+id28:
+  id:  28
+  prefix: "259"
+  number: "999"
+  dash:   "00"
+  revision: ""
+  use:      pcba
+  board_design_entry_id: NULL
+  design_id: 15
+id29:
+  id:  29
+  prefix: "252"
+  number: "232"
+  dash:   "b0"
+  revision: "e"
+  use:      pcb
+  board_design_entry_id: NULL
+  design_id: 116
+id30:
+  id:  30
+  prefix: "259"
+  number: "232"
+  dash:   "00"
+  revision: "f"
+  use:      pcba
+  board_design_entry_id: NULL
+  design_id: 116
+id31:
+  id:  31
+  prefix: "942"
+  number: "021"
+  dash:   "00"
+  revision: ""
+  use:      pcb
+  board_design_entry_id: 2
+  design_id: NULL
+id32:
+  id:  32
+  prefix: "959"
+  number: "714"
+  dash:   "b0"
+  revision: "l"
+  use:      pcb
+  board_design_entry_id: 1
+  design_id: NULL
+id33:
+  id:  33
+  prefix: "956"
+  number: "714"
+  dash:   "00"
+  revision: "k"
+  use:      pcba
+  board_design_entry_id: 1
+  design_id: NULL
+id34:
+  id:  34
+  prefix: "252"
+  number: "008"
+  dash:   "b4"
+  revision: "p"
+  use:      pcb
+  board_design_entry_id: 3
+  design_id: NULL
+id35:
+  id:  35
+  prefix: "259"
+  number: "008"
+  dash:   "00"
+  revision: "o"
+  use:      pcba
+  board_design_entry_id: 3
+  design_id: NULL
+id36:
+  id:  36
+  prefix: "252"
+  number: "008"
+  dash:   "b4"
+  revision: "n"
+  use:      pcb
+  board_design_entry_id: 4
+  design_id: NULL
+id37:
+  id:  37
+  prefix: "259"
+  number: "008"
+  dash:   "00"
+  revision: "m"
+  use:      pcba
+  board_design_entry_id: 4
+  design_id: NULL

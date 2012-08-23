@@ -1,0 +1,92 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays the rows for the managers tracker view.  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% design_review = DesignReview.find(basic_user_home_list_stripes.id,
+                                     :include => [:review_type,
+                                                  :priority,
+                                                  :review_status])%>
+<% design        = Design.find(design_review.design_id,
+                              :include => [:revision,
+                                           :audit]) %>
+<% design.board  = Board.find(design.board_id,
+                              :include => :prefix) %>
+
+<tr class="<%= basic_user_home_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
+  <td>
+    <%= link_to(design.directory_name,
+                :controller => 'design_review',
+                :action     => 'view',
+                :id         => design_review.id)%>
+  </td>
+  <td align="left" class="th1">
+      <%= design_review.priority.name %>
+  </td>
+  <td>
+    <%= design_review.designer.name %>
+  </td>
+  <td>
+    <%= design.peer.name %>
+  </td>
+  <td>
+    <%= design_review.review_name %>
+  </td>
+  <td>
+    <%= design_review.review_status.name %>
+  </td>
+  <td>
+    <% if design_review.review_status.name != 'Not Started' %>
+      <%= raw design_review.display_age_in_days %>
+    <% else %>
+      &nbsp;
+    <% end %>
+  </td>
+  <td align="center">
+    <%= basic_user_home_list_stripes[:approvals] %> of
+    <%= basic_user_home_list_stripes[:reviewers] %>&nbsp;
+  </td>
+</tr>
+
+<tr class="<%= basic_user_home_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>" valign="top">
+  <td colspan="8">
+  
+    <div id="board_design_details-<%= design_review.id %>">
+
+    <table width="100%" align="right" border="0">
+      <tr>
+        <td width="70%" align="left">
+          <% if !design.audit.skip? %>
+            <table border="0">
+              <tr>
+                <td width="70">
+                  <%= link_to('Audit',
+                              :controller => 'audit',
+                              :action     => 'print',
+                              :id         => design.audit.id)%>
+                </td>
+                <% stats = design.audit.completion_stats %>
+                <th width="50" align="right" class="th1">Self: </th>
+                <td width="140"> <%= sprintf("%3.f", stats[:self]) %>&#37; Complete</td>
+                <th width="50" align="right" class="th1">Peer: </th>
+                <td width="140"> <%= sprintf("%3.f", stats[:peer]) %>&#37; Complete</td>
+              </tr>
+            </table>
+          <% else %>
+            No Audit
+          <% end %>
+        </td>
+        <td align="left" class="th1">FTP: </td><td><%= design.ftp_notification.created_at.format_dd_mon_yy('timestamp') if design.ftp_notification && design.ftp_notification.created_at%> </td>
+        <td align="right">
+          <div id="details"><button type ="button" class="small_font_button">Show Details</button>
+
+            <%= render(:partial => 'review_result_details',
+                       :locals  => { :review_results => design_review.unprocessed_results }) %>
+          </div>
+        </td>
+      </tr>
+    </table>
+    </div>
+  </td>
+</tr>

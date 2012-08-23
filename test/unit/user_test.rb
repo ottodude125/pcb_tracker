@@ -11,20 +11,13 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
 # Set salt to 'change-me' because thats what the fixtures assume. 
 User.salt = 'change-me'
 
-class UserTest < Test::Unit::TestCase
-  
-  fixtures :divisions,
-           :eco_comments, 
-           :eco_documents,
-           :locations,
-           :roles,
-           :users
-  
+class UsersTest < ActiveSupport::TestCase
+    
   
   def setup
     
@@ -99,6 +92,7 @@ class UserTest < Test::Unit::TestCase
     assert(!new_user.is_tracker_admin?)
     
     # is_pcb_admin?
+    @patrice_m.roles << @pcb_admin
     assert(@patrice_m.is_pcb_admin?)
     assert(!@scott_g.is_pcb_admin?)
     assert(!new_user.is_pcb_admin?)
@@ -124,15 +118,15 @@ class UserTest < Test::Unit::TestCase
 
     u.password = u.password_confirmation = "tiny"
     assert !u.save     
-    assert u.errors.invalid?('password')
+    assert u.invalid?('password')
 
     u.password = u.password_confirmation = "hugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehugehuge"
     assert !u.save     
-    assert u.errors.invalid?('password')
+    assert u.invalid?('password')
         
     u.password = u.password_confirmation = ""
     assert !u.save    
-    assert u.errors.invalid?('password')
+    assert u.invalid?('password')
         
     u.password = u.password_confirmation = "bobs_secure_password"
     assert u.save     
@@ -145,21 +139,21 @@ class UserTest < Test::Unit::TestCase
     u = User.new  
     u.password = u.password_confirmation = "bobs_secure_password"
 
-    u.login = "x"
-    assert !u.save     
-    assert u.errors.invalid?('login')
+    u.login = ""
+    assert !u.save
+    assert_equal("is too short (minimum is 3 characters)", u.errors[:login][0])
+
+     u.login = "x"
+    assert !u.save
+    assert_equal("is too short (minimum is 3 characters)", u.errors[:login][0])
     
     u.login = "hugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhugebobhug"
     assert !u.save     
-    assert u.errors.invalid?('login')
+    assert_equal("is too long (maximum is 40 characters)", u.errors[:login][0])
 
-    u.login = ""
-    assert !u.save
-    assert u.errors.invalid?('login')
-
-    u.login = "okbob"
+   u.login = "okbob"
     assert u.save  
-    assert u.errors.empty?
+    assert_nil(u.errors[:login][0])
       
   end
 
@@ -208,7 +202,7 @@ class UserTest < Test::Unit::TestCase
     assert(u.password.empty?)
     assert(!u.save)
     assert(!u.errors.empty?)
-    assert(u.errors.invalid?('password'))
+    assert(u.invalid?('password'))
     assert_equal(["Password confirmation can't be blank",
                   "Password is too short (minimum is 5 characters)",
                   "Password can't be blank"].sort,

@@ -1,0 +1,99 @@
+<!-- View:    tracker                                          -->
+<!-- Purpose: Displays a form to prompt for an email message.  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+<%  content_for :header do %>
+jQuery(function($) {
+   $("#all_users").change(function() {
+      if ( $(this).is(":checked") ) {
+        $(".role_checks").attr("checked", "checked");
+      } else {
+        $(".role_checks").removeAttr("checked");
+      }
+    });
+ });
+<% end %>
+
+<% @heading = "PCB Design Track - Message Broadcast" %>
+
+<%= form_tag(:action => 'deliver_broadcast_message') do %>
+
+<table border='0' align="center" width="800">
+  <tr>
+    <td align="left">
+      <input type="button" value="Admin Portal" 
+        onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index') %>'" />
+    </td>
+    <td align="center">
+      <input type="button" value="Home" 
+        onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index') %>'" />
+    </td>
+    <td align="right">
+      <input type="submit" value="Send Message" />
+    </td>
+  </tr>
+</table>
+
+<hr class="div" width="820" />
+
+<table border='0' align="center" width="800">
+  <tr valign="top">
+    <td class='th1'>Subject:</td>
+    <td>
+      <%= text_field("mail", "subject", :size => 80, :value => @subject) %>
+    </td>
+  </tr>
+  <tr valign="top">
+    <td class='th1'>Message:</td>
+    <td>
+      <%# text_area("mail", "message", :cols => 80, :rows => 10, :value => @message) %>
+      <textarea cols="80" rows="10" id="mail_message" name="mail[message]"><%= @message %></textarea>
+    </td>
+  </tr>
+</table>
+
+<hr class="div" width="820" />
+
+<table border='0' align="center" width="800">
+  <tr valign="top">
+    <td class='th1' width="120">All Tracker Users:</td>
+    <td>
+      <%= check_box_tag("all_users", 1 , true, :id => "all_users" ) %>
+    </td>
+  </tr>
+</table>
+
+<table border='0' align="center" width="750">
+
+  <% start_row_i = 0 %>
+  <% end_row_i   = 2 %>
+  <% @active_roles.each_with_index do |role, i| %>
+
+    <% if i == start_row_i %>
+      <tr valign="top">
+      <% start_row_i += 3 %>
+    <% end %>
+
+    <td class='th1' width="120" align="right">
+      <%= role.display_name %>:
+    </td>
+    <td width="30">
+      <% if @roles.include?("#{role.id}") %>
+        <%= check_box_tag("roles[]", role.id , true, :class => "role_checks" ) %>
+      <% else %>
+        <%= check_box_tag("roles[]", role.id , false, :class => "role_checks") %>
+      <% end %>
+    </td>
+
+    <% if i == end_row_i %>
+      </tr>
+      <% end_row_i += 3 %>
+    <% end %>
+
+  <% end %>
+
+</table>
+<% end %>
+
+<hr class="div" width="820" />

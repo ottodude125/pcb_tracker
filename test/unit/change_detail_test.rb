@@ -11,15 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class ChangeDetailTest < ActiveSupport::TestCase
-  
-  fixtures :change_classes,
-           :change_details,
-           :change_items,
-           :change_types
-  
+class ChangeDetailsTest < ActiveSupport::TestCase
   
   def setup
     #@change_type_2_2       = change_types(:change_type_2_2)
@@ -40,19 +34,19 @@ class ChangeDetailTest < ActiveSupport::TestCase
                                       :definition => 'Testing empty name')
     change_detail.save
     assert_equal(1, change_detail.errors.count)
-    assert_equal(expected_error_message, change_detail.errors.on(:name))
+    assert_equal(expected_error_message, change_detail.errors[:name][0])
     
     # Retry with blanks
     change_detail.name = '  '
     change_detail.save
     assert_equal(1, change_detail.errors.count)
-    assert_equal(expected_error_message, change_detail.errors.on(:name))
+    assert_equal(expected_error_message, change_detail.errors[:name][0])
     
     # Retry with tabs
     change_detail.name = "\t\t"
     change_detail.save
     assert_equal(1, change_detail.errors.count)
-    assert_equal(expected_error_message, change_detail.errors.on(:name))
+    assert_equal(expected_error_message, change_detail.errors[:name][0])
   end
   
   
@@ -63,19 +57,19 @@ class ChangeDetailTest < ActiveSupport::TestCase
     change_detail.name = ''
     change_detail.save
     assert_equal(1, change_detail.errors.count)
-    assert_equal(expected_error_message, change_detail.errors.on(:name))
+    assert_equal(expected_error_message, change_detail.errors[:name][0])
     
     # Retry with blanks
     change_detail.name = '  '
     change_detail.save
     assert_equal(1, change_detail.errors.count)
-    assert_equal(expected_error_message, change_detail.errors.on(:name))
+    assert_equal(expected_error_message, change_detail.errors[:name][0])
     
     # Retry with tabs
     change_detail.name = "\t\t"
     change_detail.save
     assert_equal(1, change_detail.errors.count)
-    assert_equal(expected_error_message, change_detail.errors.on(:name))
+    assert_equal(expected_error_message, change_detail.errors[:name][0])
   end
   
   

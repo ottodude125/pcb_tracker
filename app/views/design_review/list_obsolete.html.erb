@@ -1,0 +1,61 @@
+<!-- View:    list_obsolete                                     -->
+<!-- Purpose: Displays a list of obsolete documents.            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@design_review.design.directory_name} - Obsolete #{@document_type_name} Documents" %>
+
+<% if params[:return_to] == 'initial_attachments'
+     action = { :controller => 'design',
+                :action     => 'initial_attachments',
+                :design_id  => @design_review.design_id }
+   else
+     action = { :action        => 'review_attachments',
+                :design_review_id => @design_review.id }
+   end %>
+<%= form_tag(action) do %>
+                   
+<%= hidden_field "design_review", "id" %>
+
+  <table width="100%">
+    <tr>
+      <td align="left">
+        <input type="submit" value="Return" />
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <table border="0"
+         width="100%">
+    <tr>
+      <th align="left">Filename</th>
+      <th align="left">Attached By</th>
+      <th align="left">Date</th>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+
+    <%# List each of the design review documents. %>
+    <% for drd in @docs %>
+      <tr>
+	      <td>
+	        <%= link_to(drd.document.name,
+	                    :action => "get_attachment",
+		                  :id     => drd.document.id) %>
+        </td>
+        <td><%= User.find(drd.document.created_by).name %></td>
+        <td><%= drd.document.created_on.format_dd_mon_yy('timestamp') %></td>
+      </tr>
+    <% end %>
+    
+  </table>
+
+  <hr class="div" />
+
+  <% end %>
+
+<%# debug params %>
+

@@ -11,10 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class OiAssignmentReportTest < Test::Unit::TestCase
-  fixtures :oi_assignment_reports
+class OiAssignmentReportsTest < ActiveSupport::TestCase
 
   ######################################################################
   def test_report_card_scoring

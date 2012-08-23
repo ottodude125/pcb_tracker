@@ -1,0 +1,13 @@
+<!-- View: login                                                -->
+<!-- Purpose: Displays the message that the login was incorrect.-->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+    <h1>Username or Password Incorrect!</h1>
+    
+    <h2>Perhaps you need to use your TER account login and password</h2>
+
+	<%= link_to(raw("<h2>Show Login Information</h2>"),
+                      {:controller => 'user',
+                       :action     => 'show_users'}) %>

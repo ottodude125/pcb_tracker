@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: OiInstructionController</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/controllers/oi_instruction_controller.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link"><a href="ApplicationController.html">ApplicationController</a>
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-assignment_details">#assignment_details</a>
+    
+    <li><a href="#method-i-assignment_update">#assignment_update</a>
+    
+    <li><a href="#method-i-assignment_view">#assignment_view</a>
+    
+    <li><a href="#method-i-category_details">#category_details</a>
+    
+    <li><a href="#method-i-create_assignment_report">#create_assignment_report</a>
+    
+    <li><a href="#method-i-create_report">#create_report</a>
+    
+    <li><a href="#method-i-oi_category_selection">#oi_category_selection</a>
+    
+    <li><a href="#method-i-process_assignment_details">#process_assignment_details</a>
+    
+    <li><a href="#method-i-process_assignments">#process_assignments</a>
+    
+    <li><a href="#method-i-report_card_list">#report_card_list</a>
+    
+    <li><a href="#method-i-section_selection">#section_selection</a>
+    
+    <li><a href="#method-i-static_view">#static_view</a>
+    
+    <li><a href="#method-i-update_report">#update_report</a>
+    
+    <li><a href="#method-i-view_assignment_report">#view_assignment_report</a>
+    
+    <li><a href="#method-i-view_assignments">#view_assignments</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class OiInstructionController</h1>
+
+  <div id="description" class="description">
+    
+<p>Copyright 2005, by Teradyne, Inc., Boston MA</p>
+
+<p>File: oi_instruction_controller.rb</p>
+
+<p>This contains the logic to create and modify oi_instruction  information.</p>
+
+<p>$Id: oi_instruction_controller.rb,v 1.12.2.1 2011/12/16 14:34:53 dallas Exp
+$</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-assignment_details" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">assignment_details</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-assignment_details">#assignment_details</a></p>
+
+<p>Description: This method retrieves the data needed for an assignment
+details view.</p>
+
+<p>Parameters from params</p>
+
+<pre>id        - the id of the category record
+design_id - the id of the associated design</pre>
+          
+
+          
+          <div class="method-source-code" id="assignment_details-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 328</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">assignment_details</span>
+
+  <span class="ruby-ivar">@category</span> = <span class="ruby-constant">OiCategory</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@design</span>   = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:design_id</span>])
+  
+  <span class="ruby-identifier">my_assignments</span> = <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">my_assignments</span>(<span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">delete_if</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> 
+    <span class="ruby-identifier">a</span>.<span class="ruby-identifier">oi_instruction</span>.<span class="ruby-identifier">oi_category_section</span>.<span class="ruby-identifier">oi_category_id</span> <span class="ruby-operator">!=</span> <span class="ruby-ivar">@category</span>.<span class="ruby-identifier">id</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-ivar">@section_list</span> = { <span class="ruby-value">:category</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">nil</span>, <span class="ruby-value">:assignment_list</span> =<span class="ruby-operator">&gt;</span> [] }
+  <span class="ruby-identifier">my_assignments</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">category</span> = <span class="ruby-identifier">a</span>.<span class="ruby-identifier">oi_instruction</span>.<span class="ruby-identifier">oi_category_section</span>.<span class="ruby-identifier">oi_category</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@section_list</span>[<span class="ruby-value">:category</span>]
+      <span class="ruby-ivar">@section_list</span>[<span class="ruby-value">:category</span>] = <span class="ruby-identifier">category</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-ivar">@section_list</span>[<span class="ruby-value">:category</span>] <span class="ruby-operator">!=</span> <span class="ruby-identifier">category</span>
+      <span class="ruby-identifier">raise</span>(<span class="ruby-constant">RuntimeError</span>, <span class="ruby-string">'Multiple categories when a single category was expected'</span>)
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-ivar">@section_list</span>[<span class="ruby-value">:assignment_list</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">a</span>
+  <span class="ruby-keyword">end</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- assignment_details-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- assignment_details-method -->
+
+    
+      <div id="method-i-assignment_update" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">assignment_update</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-assignment_update">#assignment_update</a></p>
+
+<p>Description: This method records the user inputs for the assignment.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>assignment][id
+<dd><ul><li>
+<p>the id of the assignment</p>
+</li></ul>
+</dd><dt>assignment][complete
+<dd><ul><li>
+<p>the value of the complete check box.</p>
+</li></ul>
+</dd><dt>post_comment][comment
+<dd><ul><li>
+<p>the comment entered by the user</p>
+</li></ul>
+</dd></dl>
+          
+
+          
+          <div class="method-source-code" id="assignment_update-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 389</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">assignment_update</span>
+
+  <span class="ruby-identifier">assignment</span> = <span class="ruby-constant">OiAssignment</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:id</span>])
+  <span class="ruby-identifier">completed</span>  = <span class="ruby-operator">!</span><span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">complete?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:complete</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'1'</span>
+  <span class="ruby-identifier">reset</span>      = <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">complete?</span>  <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:complete</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'0'</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">completed</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">reset</span>
+    <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">complete</span>     = <span class="ruby-identifier">completed</span> <span class="ruby-operator">?</span> <span class="ruby-value">1</span> <span class="ruby-operator">:</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">completed_on</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">completed</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">cc_hw_engineer</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:cc_hw_engineer</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'1'</span>
+  <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">save</span>
+  
+  <span class="ruby-identifier">post_comment</span> = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-identifier">post_comment</span> = <span class="ruby-string">&quot;-- TASK COMPLETE --\n&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">completed</span>
+  <span class="ruby-identifier">post_comment</span> = <span class="ruby-string">&quot;-- TASK REOPENED --\n&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">reset</span>
+  <span class="ruby-identifier">post_comment</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:post_comment</span>][<span class="ruby-value">:comment</span>]
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">post_comment</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+  
+    <span class="ruby-constant">OiAssignmentComment</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:comment</span>          =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">post_comment</span>,
+                            <span class="ruby-value">:user_id</span>          =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">id</span>,
+                            <span class="ruby-value">:oi_assignment_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">save</span>
+
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'The work assignment has been updated - mail sent'</span>
+    <span class="ruby-constant">OiInstructionMailer</span>.<span class="ruby-identifier">oi_task_update</span>(<span class="ruby-identifier">assignment</span>, <span class="ruby-ivar">@logged_in_user</span>, 
+        <span class="ruby-identifier">completed</span>, <span class="ruby-identifier">reset</span>).<span class="ruby-identifier">deliver</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'No updates included with post - the work assignment has not been updated'</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'assignment_view'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">id</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- assignment_update-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- assignment_update-method -->
+
+    
+      <div id="method-i-assignment_view" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">assignment_view</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-assignment_view">#assignment_view</a></p>
+
+<p>Description: This method retrieves the data needed for an assignment view.</p>
+
+<p>Parameters from params</p>
+
+<pre>id - the id of the assignment</pre>
+          
+
+          
+          <div class="method-source-code" id="assignment_view-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 363</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">assignment_view</span>
+
+  <span class="ruby-ivar">@assignment</span> = <span class="ruby-constant">OiAssignment</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@design</span>     = <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">oi_instruction</span>.<span class="ruby-identifier">design</span>
+  <span class="ruby-ivar">@category</span>   = <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">oi_instruction</span>.<span class="ruby-identifier">oi_category_section</span>.<span class="ruby-identifier">oi_category</span>
+  <span class="ruby-ivar">@comments</span>   = <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">oi_assignment_comments</span>
+
+  <span class="ruby-ivar">@post_comment</span> = <span class="ruby-constant">OiAssignmentComment</span>.<span class="ruby-identifier">new</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- assignment_view-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- assignment_view-method -->
+
+    
+      <div id="method-i-category_details" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">category_details</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-category_details">#category_details</a></p>
+
+<p>Description: This method retrieves the data needed for the category details
+view.</p>
+
+<p>Parameters from params</p>
+
+<pre>id        - the id of the design record</pre>
+          
+
+          
+          <div class="method-source-code" id="category_details-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 298</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">category_details</span>
+
+  <span class="ruby-ivar">@design</span> = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-identifier">my_assignments</span> = <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">my_assignments</span>(<span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">sort_by</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+                     <span class="ruby-identifier">i</span>.<span class="ruby-identifier">oi_instruction</span>.<span class="ruby-identifier">oi_category_section</span>.<span class="ruby-identifier">oi_category</span>.<span class="ruby-identifier">id</span>
+  <span class="ruby-keyword">end</span>
+                    
+  <span class="ruby-ivar">@category_list</span> = {}
+  <span class="ruby-identifier">my_assignments</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">category</span> = <span class="ruby-identifier">a</span>.<span class="ruby-identifier">oi_instruction</span>.<span class="ruby-identifier">oi_category_section</span>.<span class="ruby-identifier">oi_category</span>
+    <span class="ruby-ivar">@category_list</span>[<span class="ruby-identifier">category</span>] = [] <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@category_list</span>[<span class="ruby-identifier">category</span>]
+    <span class="ruby-ivar">@category_list</span>[<span class="ruby-identifier">category</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">a</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- category_details-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- category_details-method -->
+
+    
+      <div id="method-i-create_assignment_report" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_assignment_report</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-create_assignment_report">#create_assignment_report</a></p>
+
+<p>Description: This action retrieves the data for the create assignment
+report  view</p>
+
+<p>Parameters from params</p>
+
+<pre>id - the oi_assignment record identifier</pre>
+          
+
+          
+          <div class="method-source-code" id="create_assignment_report-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 507</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_assignment_report</span>
+
+  <span class="ruby-ivar">@assignment</span>    = <span class="ruby-constant">OiAssignment</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@complexity_id</span> = <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">complexity_id</span>
+  <span class="ruby-ivar">@report</span>        = <span class="ruby-constant">OiAssignmentReport</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:score</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">OiAssignmentReport</span><span class="ruby-operator">::</span><span class="ruby-constant">NOT_SCORED</span>)
+  <span class="ruby-ivar">@comments</span>      = <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">oi_assignment_comments</span>
+  <span class="ruby-ivar">@scoring_table</span> = <span class="ruby-constant">OiAssignmentReport</span>.<span class="ruby-identifier">report_card_scoring</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_assignment_report-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_assignment_report-method -->
+
+    
+      <div id="method-i-create_report" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_report</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-create_report">#create_report</a></p>
+
+<p>Description: This action processes the information entered on the create 
+assignment report view</p>
+
+<p>Parameters from params</p>
+
+<pre>report          - the oi_assignment record that will be 
+                  stored in the database
+assignment[:id] - the oi_assignment record identifier</pre>
+          
+
+          
+          <div class="method-source-code" id="create_report-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 533</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_report</span>
+
+  <span class="ruby-ivar">@report</span>     = <span class="ruby-constant">OiAssignmentReport</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:report</span>])
+  <span class="ruby-ivar">@assignment</span> = <span class="ruby-constant">OiAssignment</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:id</span>])
+  
+  <span class="ruby-ivar">@report</span>.<span class="ruby-identifier">user_id</span>          = <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">id</span>
+  <span class="ruby-ivar">@report</span>.<span class="ruby-identifier">oi_assignment_id</span> = <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">id</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@report</span>.<span class="ruby-identifier">score</span> <span class="ruby-operator">!=</span> <span class="ruby-constant">OiAssignmentReport</span><span class="ruby-operator">::</span><span class="ruby-constant">NOT_SCORED</span>
+  
+    <span class="ruby-ivar">@report</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;Your feedback has been recorded&quot;</span>
+    
+    <span class="ruby-comment"># If the user updated the complexity of the task then record the update.</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">complexity_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:complexity</span>][<span class="ruby-value">:id</span>].<span class="ruby-identifier">to_i</span>
+      <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">update_attribute</span>(<span class="ruby-value">:complexity_id</span>, <span class="ruby-identifier">params</span>[<span class="ruby-value">:complexity</span>][<span class="ruby-value">:id</span>].<span class="ruby-identifier">to_i</span>)
+    <span class="ruby-keyword">end</span>
+  
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'oi_category_selection'</span>,
+                <span class="ruby-value">:design_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">oi_instruction</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">id</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;Please select the grade - the report card was not created&quot;</span>
+    <span class="ruby-ivar">@comments</span>      = <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">oi_assignment_comments</span>
+    <span class="ruby-ivar">@scoring_table</span> = <span class="ruby-constant">OiAssignmentReport</span>.<span class="ruby-identifier">report_card_scoring</span>
+    <span class="ruby-ivar">@complexity_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:complexity</span>][<span class="ruby-value">:id</span>].<span class="ruby-identifier">to_i</span>
+    <span class="ruby-identifier">render</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'create_assignment_report'</span>)
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_report-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_report-method -->
+
+    
+      <div id="method-i-oi_category_selection" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">oi_category_selection</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-oi_category_selection">#oi_category_selection</a></p>
+
+<p>Description: This method retrieves the design and the oi categories for
+display.</p>
+
+<p>Parameters from params design_id - the id of the design.</p>
+          
+
+          
+          <div class="method-source-code" id="oi_category_selection-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 32</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">oi_category_selection</span>
+
+  <span class="ruby-ivar">@design</span>           = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:design_id</span>])
+  <span class="ruby-ivar">@oi_category_list</span> = <span class="ruby-constant">OiCategory</span>.<span class="ruby-identifier">list</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- oi_category_selection-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- oi_category_selection-method -->
+
+    
+      <div id="method-i-process_assignment_details" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">process_assignment_details</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-process_assignment_details">#process_assignment_details</a></p>
+
+<p>Description: This method first validates that the user entered the correct
+information.  If not the the previous view, <a
+href="OiInstructionController.html#method-i-process_assignments">#process_assignments</a>,
+is displayed.  If the required information was provided then the data for
+the <a
+href="OiInstructionController.html#method-i-process_assignments">#process_assignments</a>
+view is processed.</p>
+
+<p>Parameters from params id        - the id oi_category design_id - the id of
+the design.</p>
+
+<p>Information flash (for returns from <a
+href="OiInstructionController.html#method-i-process_assignments">#process_assignments</a>)
+section - the selected section user    - the record for the user</p>
+          
+
+          
+          <div class="method-source-code" id="process_assignment_details-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 192</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">process_assignment_details</span>
+
+  <span class="ruby-identifier">oi_assignments</span> = {}
+
+  <span class="ruby-identifier">instruction</span>     = <span class="ruby-constant">OiInstruction</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:instruction</span>])
+ 
+  <span class="ruby-identifier">missing_allegro_board_symbol</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">category_section</span> = <span class="ruby-constant">OiCategorySection</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">instruction</span>.<span class="ruby-identifier">oi_category_section_id</span>)
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">category_section</span>.<span class="ruby-identifier">allegro_board_symbol?</span> <span class="ruby-operator">&amp;&amp;</span>
+      <span class="ruby-identifier">instruction</span>.<span class="ruby-identifier">allegro_board_symbol</span> <span class="ruby-operator">==</span> <span class="ruby-string">''</span>)
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Please identify the Allegro Board Symbol'</span>
+    <span class="ruby-identifier">missing_allegro_board_symbol</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">team_members</span> = []
+  <span class="ruby-identifier">params</span>[<span class="ruby-value">:team_member</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">user_id</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">team_members</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">user_id</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">==</span> <span class="ruby-string">'1'</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">team_members_selected</span> = <span class="ruby-identifier">team_members</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">team_members_selected</span>
+    <span class="ruby-identifier">member_message</span> = <span class="ruby-string">'Please select a team member or members'</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>]
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] <span class="ruby-operator">+=</span> <span class="ruby-string">'&lt;br /&gt;'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">member_message</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-identifier">member_message</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">missing_allegro_board_symbol</span> <span class="ruby-operator">||</span> <span class="ruby-operator">!</span><span class="ruby-identifier">team_members_selected</span>
+  
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>] = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>]
+
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:instruction</span>]       = <span class="ruby-identifier">instruction</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:member_selections</span>] = <span class="ruby-identifier">params</span>[<span class="ruby-value">:team_member</span>]
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:comment</span>]           = <span class="ruby-constant">OiAssignmentComment</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:comment</span>])
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:assignment</span>]        = <span class="ruby-constant">OiAssignment</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:assignment</span>])
+
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'process_assignments'</span>,
+                <span class="ruby-value">:category_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:category</span>][<span class="ruby-value">:id</span>],
+                <span class="ruby-value">:design_id</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:design</span>][<span class="ruby-value">:id</span>])
+      
+  <span class="ruby-keyword">else</span> <span class="ruby-comment"># Process the information that the user passed in.</span>
+
+    <span class="ruby-comment"># Fill out the Outsource Instruction record and save it.</span>
+    <span class="ruby-identifier">instruction</span>.<span class="ruby-identifier">design_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:design</span>][<span class="ruby-value">:id</span>]
+    <span class="ruby-identifier">instruction</span>.<span class="ruby-identifier">user_id</span>   = <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">id</span>
+    <span class="ruby-identifier">instruction</span>.<span class="ruby-identifier">save</span>
+    
+    <span class="ruby-comment"># Create an assignment record and optional assignment comment for each of the </span>
+    <span class="ruby-comment"># selected team members.</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">instruction</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">empty?</span>
+    
+      
+      <span class="ruby-identifier">oi_assignments</span> = {}
+      <span class="ruby-identifier">team_members</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">user_id</span><span class="ruby-operator">|</span>
+      
+        <span class="ruby-identifier">assignment</span>                   = <span class="ruby-constant">OiAssignment</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:assignment</span>])
+        <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">oi_instruction_id</span> = <span class="ruby-identifier">instruction</span>.<span class="ruby-identifier">id</span>
+        <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">user_id</span>           = <span class="ruby-identifier">user_id</span>
+        <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">save</span>
+        
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">empty?</span>
+        
+          <span class="ruby-identifier">oi_assignments</span>[<span class="ruby-identifier">user_id</span>] = [] <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">oi_assignments</span>[<span class="ruby-identifier">user_id</span>]
+          <span class="ruby-identifier">oi_assignments</span>[<span class="ruby-identifier">user_id</span>].<span class="ruby-identifier">push</span>(<span class="ruby-identifier">assignment</span>)
+          
+          <span class="ruby-identifier">comment</span> = <span class="ruby-constant">OiAssignmentComment</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:comment</span>])
+          <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">comment</span>.<span class="ruby-identifier">lstrip</span> <span class="ruby-operator">!=</span> <span class="ruby-string">''</span>
+            <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">user_id</span>          = <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">id</span>
+            <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">oi_assignment_id</span> = <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">id</span>
+            <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">save</span>
+          <span class="ruby-keyword">end</span>
+
+          <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;The work assignments have been recorded - mail was sent&quot;</span>
+          
+        <span class="ruby-keyword">end</span>
+      
+      <span class="ruby-keyword">end</span> <span class="ruby-comment"># each team_member</span>
+    
+    <span class="ruby-keyword">end</span>
+    
+    <span class="ruby-comment"># Send notification email for each of the assignments.</span>
+    <span class="ruby-identifier">oi_assignments</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">member_id</span>, <span class="ruby-identifier">oi_assignment_list</span><span class="ruby-operator">|</span>
+      <span class="ruby-constant">OiInstructionMailer</span><span class="ruby-operator">::</span><span class="ruby-identifier">oi_assignment_notification</span>(<span class="ruby-identifier">oi_assignment_list</span>).<span class="ruby-identifier">deliver</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'oi_category_selection'</span>, 
+                <span class="ruby-value">:design_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:design</span>][<span class="ruby-value">:id</span>])
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- process_assignment_details-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- process_assignment_details-method -->
+
+    
+      <div id="method-i-process_assignments" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">process_assignments</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-process_assignments">#process_assignments</a></p>
+
+<p>Description: This method first validates that the user entered the correct
+information.  If not the the previous view, <a
+href="OiInstructionController.html#method-i-section_selection">#section_selection</a>,
+is displayed.  If the required information was provided then the data for
+the <a
+href="OiInstructionController.html#method-i-process_assignments">#process_assignments</a>
+view is gathered.</p>
+
+<p>Parameters from params id         - the id oi_category design_id  - the id
+of the design section_id - the outsource instruction category section
+identifier</p>
+
+<p>Information flash (for returns from <a
+href="OiInstructionController.html#method-i-process_assignments">#process_assignments</a>)
+section - the selected section user    - the record for the user</p>
+          
+
+          
+          <div class="method-source-code" id="process_assignments-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 97</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">process_assignments</span>
+
+  <span class="ruby-comment"># Verify that a section was selected before proceeding.</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:section_id</span>] <span class="ruby-operator">||</span> <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>])
+  
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Please select the step'</span>
+
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'section_selection'</span>,
+                <span class="ruby-value">:id</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:category</span>][<span class="ruby-value">:id</span>],
+                <span class="ruby-value">:design_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:design</span>][<span class="ruby-value">:id</span>])
+                
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>] = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>]
+    
+    <span class="ruby-keyword">return</span>
+    
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># If processing makes it this far then there are no errors.</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>]
+  
+    <span class="ruby-identifier">assignment</span> = {}
+    <span class="ruby-ivar">@design</span>       = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:design</span>]       <span class="ruby-operator">?</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:design</span>][<span class="ruby-value">:id</span>]   <span class="ruby-operator">:</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:design_id</span>])
+    <span class="ruby-ivar">@category</span>     = <span class="ruby-constant">OiCategory</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:category</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:category</span>][<span class="ruby-value">:id</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:category_id</span>])
+    <span class="ruby-ivar">@team_members</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">lcr_designers</span>
+    <span class="ruby-ivar">@selected_step</span> = <span class="ruby-ivar">@category</span>.<span class="ruby-identifier">oi_category_sections</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span> <span class="ruby-identifier">s</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:section_id</span>].<span class="ruby-identifier">to_i</span> }
+    <span class="ruby-ivar">@instruction</span>   = <span class="ruby-constant">OiInstruction</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:oi_category_section_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@selected_step</span>.<span class="ruby-identifier">id</span>,
+                                       <span class="ruby-value">:design_id</span>              =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">id</span>)
+    <span class="ruby-ivar">@assignment</span>    = <span class="ruby-constant">OiAssignment</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:due_date</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>.<span class="ruby-identifier">day</span>,
+                                      <span class="ruby-value">:complexity_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">OiAssignment</span>.<span class="ruby-identifier">complexity_id</span>(<span class="ruby-string">&quot;Low&quot;</span>))
+    <span class="ruby-ivar">@comment</span>       = <span class="ruby-constant">OiAssignmentComment</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-identifier">assignment</span>[<span class="ruby-value">:design</span>]        = <span class="ruby-ivar">@design</span>
+    <span class="ruby-identifier">assignment</span>[<span class="ruby-value">:category</span>]      = <span class="ruby-ivar">@category</span>
+    <span class="ruby-identifier">assignment</span>[<span class="ruby-value">:team_members</span>]  = <span class="ruby-ivar">@team_members</span>
+    <span class="ruby-identifier">assignment</span>[<span class="ruby-value">:selected_step</span>] = <span class="ruby-ivar">@selected_step</span>
+    <span class="ruby-identifier">assignment</span>[<span class="ruby-value">:instruction</span>]   = <span class="ruby-ivar">@instruction</span>
+    <span class="ruby-identifier">assignment</span>[<span class="ruby-value">:assignment</span>]    = <span class="ruby-ivar">@assignment</span>
+    <span class="ruby-identifier">assignment</span>[<span class="ruby-value">:comment</span>]       = <span class="ruby-ivar">@comment</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@selected_step</span>.<span class="ruby-identifier">outline_drawing_link?</span>
+      <span class="ruby-identifier">outline_drawing_document_type</span> = <span class="ruby-constant">DocumentType</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">&quot;Outline Drawing&quot;</span>)
+      <span class="ruby-ivar">@outline_drawing</span> = <span class="ruby-constant">DesignReviewDocument</span>.<span class="ruby-identifier">find</span>(
+                           <span class="ruby-value">:first</span>,
+                           <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;design_id=#{@design.id} AND &quot;</span> <span class="ruby-operator">+</span>
+                                          <span class="ruby-node">&quot;document_type_id=#{outline_drawing_document_type.id}&quot;</span>,
+                           <span class="ruby-value">:order</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;id DESC&quot;</span>)
+      <span class="ruby-identifier">assignment</span>[<span class="ruby-value">:outline_drawing</span>] = <span class="ruby-ivar">@outline_drawing</span>
+    <span class="ruby-keyword">end</span>
+    
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>] = <span class="ruby-identifier">assignment</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@design</span>          = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:design</span>]
+    <span class="ruby-ivar">@category</span>        = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:category</span>]
+    <span class="ruby-ivar">@team_members</span>    = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:team_members</span>]
+    <span class="ruby-ivar">@selected_step</span>   = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:selected_step</span>]
+    <span class="ruby-ivar">@instruction</span>     = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:instruction</span>]
+    <span class="ruby-ivar">@assignment</span>      = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:assignment</span>]
+    <span class="ruby-ivar">@comment</span>         = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:comment</span>]
+    <span class="ruby-ivar">@outline_drawing</span> = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:outline_drawing</span>]
+
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>] = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>]
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">hw_engineers</span> = <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">get_role_reviewers</span>(<span class="ruby-string">'HWENG'</span>).<span class="ruby-identifier">map</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">name</span> }
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">hw_engineers</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+    <span class="ruby-ivar">@hw_engineers</span> = <span class="ruby-identifier">hw_engineers</span>.<span class="ruby-identifier">last</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">count</span> = <span class="ruby-identifier">hw_engineers</span>.<span class="ruby-identifier">size</span>
+    <span class="ruby-ivar">@hw_engineers</span> = <span class="ruby-identifier">hw_engineers</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span>(<span class="ruby-identifier">count</span><span class="ruby-operator">-</span><span class="ruby-value">2</span>)].<span class="ruby-identifier">join</span>(<span class="ruby-string">', '</span>) <span class="ruby-operator">+</span> <span class="ruby-string">' and '</span> <span class="ruby-operator">+</span>
+                    <span class="ruby-identifier">hw_engineers</span>.<span class="ruby-identifier">last</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- process_assignments-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- process_assignments-method -->
+
+    
+      <div id="method-i-report_card_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">report_card_list</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-report_card_list">#report_card_list</a></p>
+
+<p>Description: This method retrievs the data for the view assigments view</p>
+
+<p>Parameters from params</p>
+
+<pre>id        - the id of the category record
+design_id - the id of the associated design</pre>
+          
+
+          
+          <div class="method-source-code" id="report_card_list-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 473</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">report_card_list</span>
+
+  <span class="ruby-ivar">@category</span> = <span class="ruby-constant">OiCategory</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@design</span>   = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:design_id</span>])
+
+  <span class="ruby-identifier">assignment_list</span> = {}
+  <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">all_assignments</span>(<span class="ruby-ivar">@category</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">section</span> = <span class="ruby-identifier">a</span>.<span class="ruby-identifier">oi_instruction</span>.<span class="ruby-identifier">oi_category_section</span>
+    <span class="ruby-identifier">assignment_list</span>[<span class="ruby-identifier">section</span>] = [] <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">assignment_list</span>[<span class="ruby-identifier">section</span>]
+    <span class="ruby-identifier">assignment_list</span>[<span class="ruby-identifier">section</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">a</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">complete?</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-ivar">@assignment_list</span> = <span class="ruby-identifier">assignment_list</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">category</span>, <span class="ruby-identifier">list</span><span class="ruby-operator">|</span> <span class="ruby-identifier">category</span>.<span class="ruby-identifier">id</span> }
+  
+  <span class="ruby-ivar">@assignment_list</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">section</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">section</span>[<span class="ruby-value">1</span>] = <span class="ruby-identifier">section</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">last_name</span> }
+  <span class="ruby-keyword">end</span>
+    
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- report_card_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- report_card_list-method -->
+
+    
+      <div id="method-i-section_selection" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">section_selection</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-section_selection">#section_selection</a></p>
+
+<p>Description: This method collects the data for display in the <a
+href="OiInstructionController.html#method-i-section_selection">#section_selection</a>
+view.</p>
+
+<p>Parameters from params id        - the id oi_category design_id - the id of
+the design.</p>
+
+<p>Information flash (for returns from <a
+href="OiInstructionController.html#method-i-process_assignments">#process_assignments</a>)
+section - the selected section user    - the record for the user</p>
+          
+
+          
+          <div class="method-source-code" id="section_selection-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 58</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">section_selection</span>
+
+  <span class="ruby-ivar">@category</span> = <span class="ruby-constant">OiCategory</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@design</span>   = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:design_id</span>])
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@category</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;Other&quot;</span>
+    <span class="ruby-ivar">@sections</span>   = <span class="ruby-ivar">@category</span>.<span class="ruby-identifier">oi_category_sections</span>
+    <span class="ruby-ivar">@section_id</span> = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">flash</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:selected_step</span>].<span class="ruby-identifier">id</span> <span class="ruby-operator">:</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:process_assignments</span>,
+                <span class="ruby-value">:category_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@category</span>.<span class="ruby-identifier">id</span>,
+                <span class="ruby-value">:design_id</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">id</span>,
+                <span class="ruby-value">:section_id</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">OiCategory</span>.<span class="ruby-identifier">other_category_section_id</span>)
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- section_selection-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- section_selection-method -->
+
+    
+      <div id="method-i-static_view" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">static_view</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-static_view">#static_view</a></p>
+
+<p>Description: This action retrieves the data for the static view</p>
+
+<p>Parameters from params</p>
+
+<pre>id - the oi_assignment record identifier</pre>
+          
+
+          
+          <div class="method-source-code" id="static_view-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 599</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">static_view</span> 
+
+  <span class="ruby-ivar">@assignment</span> = <span class="ruby-constant">OiAssignment</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@section</span>    = <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">oi_instruction</span>.<span class="ruby-identifier">oi_category_section</span>
+  <span class="ruby-ivar">@design</span>     = <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">oi_instruction</span>.<span class="ruby-identifier">design</span>
+  <span class="ruby-ivar">@comments</span>   = <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">oi_assignment_comments</span>
+  
+  <span class="ruby-identifier">render</span>(<span class="ruby-value">:layout</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">false</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- static_view-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- static_view-method -->
+
+    
+      <div id="method-i-update_report" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_report</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-update_report">#update_report</a></p>
+
+<p>Description: This action processes the information entered on the view 
+assignment report view</p>
+
+<p>Parameters from params</p>
+
+<pre>report          - the oi_assignment record that will be stored
+                  in the database
+assignment[:id] - the oi_assignment record identifier</pre>
+          
+
+          
+          <div class="method-source-code" id="update_report-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 626</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_report</span>
+
+  <span class="ruby-identifier">update</span>     = <span class="ruby-constant">OiAssignmentReport</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:report</span>])
+  <span class="ruby-identifier">assignment</span> = <span class="ruby-constant">OiAssignment</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:assignment</span>][<span class="ruby-value">:id</span>])
+  
+  <span class="ruby-identifier">score_update</span>      = <span class="ruby-identifier">update</span>.<span class="ruby-identifier">score</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">oi_assignment_report</span>.<span class="ruby-identifier">score</span>
+  <span class="ruby-identifier">complexity_update</span> = <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">complexity_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:complexity</span>][<span class="ruby-value">:id</span>].<span class="ruby-identifier">to_i</span>
+  <span class="ruby-identifier">comment_update</span>    = <span class="ruby-identifier">update</span>.<span class="ruby-identifier">comment</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+
+  <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">''</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">score_update</span>
+    <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">oi_assignment_report</span>.<span class="ruby-identifier">score</span> = <span class="ruby-identifier">update</span>.<span class="ruby-identifier">score</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Score modified'</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment_update</span>
+    <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">oi_assignment_report</span>.<span class="ruby-identifier">comment</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;&lt;br /&gt;&quot;</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">update</span>.<span class="ruby-identifier">comment</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] <span class="ruby-operator">+=</span> <span class="ruby-string">', '</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">''</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] <span class="ruby-operator">+=</span> <span class="ruby-string">'Comment updated'</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">complexity_update</span>
+    <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">complexity_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:complexity</span>][<span class="ruby-value">:id</span>].<span class="ruby-identifier">to_i</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] <span class="ruby-operator">+=</span> <span class="ruby-string">', '</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">''</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] <span class="ruby-operator">+=</span> <span class="ruby-string">'Task Complexity updated'</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">score_update</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">comment_update</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">complexity_update</span>
+    <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">oi_assignment_report</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] <span class="ruby-operator">+=</span> <span class="ruby-string">&quot; - Report update recorded&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;No Updates were recorded&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'oi_category_selection'</span>,
+              <span class="ruby-value">:design_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">assignment</span>.<span class="ruby-identifier">oi_instruction</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">id</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update_report-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update_report-method -->
+
+    
+      <div id="method-i-view_assignment_report" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">view_assignment_report</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-view_assignment_report">#view_assignment_report</a></p>
+
+<p>Description: This action retrieves the data for the view assignment report 
+view</p>
+
+<p>Parameters from params</p>
+
+<pre>id - the oi_assignment record identifier</pre>
+          
+
+          
+          <div class="method-source-code" id="view_assignment_report-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 577</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">view_assignment_report</span>
+
+  <span class="ruby-ivar">@assignment</span>    = <span class="ruby-constant">OiAssignment</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@comments</span>      = <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">oi_assignment_comments</span>
+  <span class="ruby-ivar">@scoring_table</span> = <span class="ruby-constant">OiAssignmentReport</span>.<span class="ruby-identifier">report_card_scoring</span>
+  <span class="ruby-ivar">@current_score</span> = <span class="ruby-ivar">@assignment</span>.<span class="ruby-identifier">oi_assignment_report</span>.<span class="ruby-identifier">score_value</span>
+ 
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- view_assignment_report-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- view_assignment_report-method -->
+
+    
+      <div id="method-i-view_assignments" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">view_assignments</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="OiInstructionController.html#method-i-view_assignments">#view_assignments</a></p>
+
+<p>Description: This method retrievs the data for the view assigments view</p>
+
+<p>Parameters from params</p>
+
+<pre>id        - the id of the category record
+design_id - the id of the associated design</pre>
+          
+
+          
+          <div class="method-source-code" id="view_assignments-source">
+            <pre><span class="ruby-comment"># File app/controllers/oi_instruction_controller.rb, line 439</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">view_assignments</span>
+
+  <span class="ruby-identifier">category</span>  = <span class="ruby-constant">OiCategory</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@design</span>   = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:design_id</span>])
+  
+  <span class="ruby-identifier">assignment_list</span> = {}
+  <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">all_assignments</span>(<span class="ruby-identifier">category</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">section</span> = <span class="ruby-identifier">a</span>.<span class="ruby-identifier">oi_instruction</span>.<span class="ruby-identifier">oi_category_section</span>
+    <span class="ruby-identifier">assignment_list</span>[<span class="ruby-identifier">section</span>] = [] <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">assignment_list</span>[<span class="ruby-identifier">section</span>]
+    <span class="ruby-identifier">assignment_list</span>[<span class="ruby-identifier">section</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">a</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-ivar">@assignment_list</span> = <span class="ruby-identifier">assignment_list</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">category_t</span>, <span class="ruby-identifier">list</span><span class="ruby-operator">|</span> <span class="ruby-identifier">category_t</span>.<span class="ruby-identifier">id</span> }
+  
+  <span class="ruby-ivar">@assignment_list</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">section</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">section</span>[<span class="ruby-value">1</span>] = <span class="ruby-identifier">section</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">last_name</span> }
+  <span class="ruby-keyword">end</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- view_assignments-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- view_assignments-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

@@ -1,9 +1,9 @@
 class AddLdapAccount < ActiveRecord::Migration
-  def self.up
+  def up
     add_column :users, :ldap_account, :string
   end
 
-  def self.down
+  def down
     remove_column :users, :ldap_account
   end
 end

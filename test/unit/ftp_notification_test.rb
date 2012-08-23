@@ -1,7 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class FtpNotificatonTest < Test::Unit::TestCase
-  fixtures :ftp_notifications
+class FtpNotificatonsTest < ActiveSupport::TestCase
 
   # Replace this with your real tests.
   def test_truth

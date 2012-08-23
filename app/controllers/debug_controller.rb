@@ -65,7 +65,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
       end
     end
     
-    design_checks = DesignCheck.find(:all, :conditions => "audit_id=#{@audit.id}")
+    design_checks = audit.design_checks
     
     @audit.checklist.each_check do |check|
      check.design_check = design_checks.detect { |dc| dc.check_id == check.id }      

@@ -1,178 +1,21 @@
 <!-- View:    eco  task                                         -->
 <!-- Purpose: Displays the new view to create an ECO Task.      -->
 <!-- ********************************************************** -->
-<!-- $Id$ -->
+<!-- $Id$   -->
 <!-- ********************************************************** -->
 
 <% @heading =  "New ECO CAD Task" %>
 
-<%# error_messages_for :eco_task %>
+<% eco_admin = @logged_in_user.is_a_role_member?('ECO Admin') %>
 
-<% form_for(@eco_task, :html => {:multipart => true} ) do |f| %>
-  
-  <table align="center" border="0">
+<%= form_for(@eco_task, :html => {:multipart => true} ) do |f| %>
 
-    <% if @eco_task.errors[:number] %>
-      <tr>
-        <td bgcolor="yellow">&nbsp;</td>
-        <td>
-          <font color="red"><b><%= @eco_task.errors[:number] %></b></font>
-        </td>
-      </tr>
-    <% end %>
-    
-    <tr>
-      <th class="teraheader" align="right" width="250">ECO Number:&nbsp;</th>
-      <td width="600"><%= f.text_field :number, :size => '10' %></td>
-    </tr>
 
-    <% if @eco_task.errors[:pcba_part_number] %>
-      <tr>
-        <td bgcolor="yellow">&nbsp;</td>
-        <td>
-          <font color="red"><b><%= @eco_task.errors[:pcba_part_number] %></b></font>
-        </td>
-      </tr>
-    <% end %>
-    
-    <tr>
-      <td colspan="2">
-        <table cellspacing="0" cellpadding="0" border="0">
-          <tr>
-            <th class="teraheader" align="right" width="250">PCBA Part Number:&nbsp;</th>
-            <td>&nbsp;<%= f.text_field :pcba_part_number, :size => '10' %>&nbsp;&nbsp;</td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-
-    <% if @eco_task.errors[:pcb_revision] %>
-      <tr>
-        <td bgcolor="yellow">&nbsp;</td>
-        <td>
-          <font color="red"><b><%= @eco_task.errors[:pcb_revision] %></b></font>
-        </td>
-      </tr>
-    <% end %>
-    
-    <tr>
-      <td colspan="2">
-        <table cellspacing="0" cellpadding="0" border="0">
-          <tr>
-            <th class="teraheader" align="right" width="250">PCB Revision:&nbsp;</th>
-            <td>&nbsp;<%= f.text_field :pcb_revision, :size => '2' %>&nbsp;&nbsp;</td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-
-  
-    <tr>
-      <th class="teraheader" align="right" valign="top">Date Screened:&nbsp;</th>
-      <td><%= date_select(:eco_task, :screened_at) %></td>
-    </tr>
-
-    <% if @eco_task.errors[:eco_types] %>
-      <tr>
-        <td bgcolor="yellow">&nbsp;</td>
-        <td>
-          <font color="red"><b><%= @eco_task.errors[:eco_types] %></b></font>
-        </td>
-      </tr>
-    <% end %>
-    <tr>
-      <th class="teraheader" align="right">ECO Type:&nbsp;</th>
-      <td>
-        <table border="0" width="100%" cellpadding="0" cellspacing="0"><tr>
-          <% EcoType.find(:all).each do |et| %>
-            <td width="33">
-              <table width="100%" cellpadding="0" cellspacing="0"><tr>
-                <td>
-                  <input type="checkbox" name="eco_task[eco_type_ids][]"
-                         value="<%= et.id %>"
-                         <% if @eco_task.eco_types.include?(et) %> checked="checked" <% end %> />
-                  <%= et.name %>
-                </td>
-              </tr></table>   
-            </td>
-          <% end %>
-        </tr></table>
-      </td>
-    </tr>
-
-    <tr>
-      <th class="teraheader" align="right" valign="top">Cuts &amp; Jumps:&nbsp;</th>
-      <td><%= check_box(:eco_task, :cuts_and_jumps) %></td>
-    </tr>
-
-    <tr>
-      <th class="teraheader" align="right" valign="top">ECO/Release Document:&nbsp;</th>
-      <td><%= file_field('eco_document', 'document') %></td>
-    </tr>
-
-    <tr>
-      <th class="teraheader" align="right" valign="top">ECO/Release Document Link:&nbsp;</th>
-      <td><%= text_field('eco_task', 'document_link', :size => '80') %></td>
-    </tr>
-
-    <tr>
-      <th class="teraheader" align="right" valign="top">Directory Name:&nbsp;</th>
-      <td><%= text_field('eco_task', 'directory_name', :size => '80') %></td>
-    </tr>
-
-    <tr>
-      <th class="teraheader" align="right" valign="top">Comment:&nbsp;</th>
-      <td><%= text_area("eco_comment", "comment", :cols=>"60", :rows=>"5") %></td>
-    </tr>
-    <tr>
-      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
-      <td><%= file_field('eco_attachment1', 'document') %></td>
-    </tr>
-    <tr>
-      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
-      <td><%= file_field('eco_attachment2', 'document') %></td>
-    </tr>
-    <tr>
-      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
-      <td><%= file_field('eco_attachment3', 'document') %></td>
-    </tr>
-    <tr>
-      <th class="teraheader" align="right" valign="top">CC List:&nbsp;</th>
-      <td>
-        <table width="100%" border="0">
-          <tr>
-            <td><font size="-2"><b>User Ctrl-Click to select multiple users.</b></font></td>
-          </tr>
-          <tr>
-            <td>
-              <%# collection_select(:eco_task,
-                                    'user_ids',
-                                    @eco_task.users_eligible_for_cc_list,
-                                    :id,
-                                    :last_name_first,
-                                    { :include_blank => false },
-                                    "class"   => 'name_select',
-                                    "size"    => '10', 
-                                    :multiple => 'multiple') %>
-              <%= collection_select(:eco_task_user,
-                                    'ids',
-                                    @eco_task.users_eligible_for_cc_list,
-                                    :id,
-                                    :last_name_first,
-                                    { :include_blank => false },
-                                    "class"   => 'name_select',
-                                    "size"    => '10', 
-                                    :multiple => 'multiple') %>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-
-  </table>
-
-  <table align="center" width="880" border="0">
-    <tr><td colspan="4"><hr class="div" /></td></tr>
+<%= render :partial => "view_task", 
+  :locals=> { :f => f, :eco_admin => eco_admin } %>
+<% #originally anyone could create an ECO task if they could find the URL %>
+ <table align="center" width="880" border="0">
+   <tr><td colspan="4"><hr class="div" /></td></tr>
     <tr>
       <td align="left"   width="440"><%= f.submit "Create" %></td>  
       <td align="right" width="440">

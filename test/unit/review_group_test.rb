@@ -1,7 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class ReviewGroupTest < Test::Unit::TestCase
-  fixtures :review_groups
+class ReviewGroupsTest < ActiveSupport::TestCase
 
   def setup
     @review_group = ReviewGroup.find(1)

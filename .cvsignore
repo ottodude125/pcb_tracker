@@ -1,6 +1,7 @@
-shared
-tmp
-log
-nbproject
-coverage
+Gemfile.lock
+.gitignore
 .project
+nbproject
+log
+tmp
+.settings

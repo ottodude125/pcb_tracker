@@ -11,17 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class DocumentTest < Test::Unit::TestCase
-
-  
-  fixtures :design_reviews,
-           :design_review_documents,
-           :documents,
-           :document_types,
-           :users
-
+class DocumentsTest < ActiveSupport::TestCase
 
   def setup
     @document = documents(:mx234a_stackup_document)
@@ -79,7 +71,7 @@ class DocumentTest < Test::Unit::TestCase
     assert_equal(document_count,               Document.count)
     assert_equal(design_review_document_count, DesignReviewDocument.count)
     assert_equal("Files must be smaller than #{Document::MAX_FILE_SIZE} characters",
-                 new_document.errors[:file_size])
+                 new_document.errors[:file_size][0])
 
   end
 

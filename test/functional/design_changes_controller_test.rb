@@ -11,7 +11,7 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 
 class DesignChangesControllerTest < ActionController::TestCase
 
@@ -216,7 +216,7 @@ class DesignChangesControllerTest < ActionController::TestCase
 
   def test_should_not_get_edit_not_logged_in
     get(:edit, { :id => @mx234a_design_change.id }, {})
-    assert_redirected_to(:controller => 'user')
+    assert_redirected_to(:controller => 'user', :action => 'login')
   end
 
 

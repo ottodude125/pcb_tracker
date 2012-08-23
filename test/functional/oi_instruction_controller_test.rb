@@ -10,13 +10,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'oi_instruction_controller'
 
 # Re-raise errors caught by the controller.
 class OiInstructionController; def rescue_action(e) raise e end; end
 
-class OiInstructionControllerTest < Test::Unit::TestCase
+class OiInstructionControllerTest < ActionController::TestCase
 
   def setup
     @controller = OiInstructionController.new
@@ -305,7 +305,13 @@ class OiInstructionControllerTest < Test::Unit::TestCase
                              "due_date(2i)"          => "5",
                              "due_date(3i)"          => "1" },
            :team_member => { "5004" => '1', "5005" => '1' } },
-         designer_session)
+         designer_session,
+         {:assignment => {:instruction       => "",
+                          :member_selections => "",
+                          :comment           => "",
+                          :assignment        => ""
+                          } }
+         )
     #assert_equal('Please identify the Allegro Board Symbol', flash['notice'])
     #assert_not_nil(flash[:assignment])
     assignment = flash[:assignment]
@@ -336,8 +342,8 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     assert_redirected_to(:action      => 'process_assignments',
                          :category_id => @board_prep.id,
                          :design_id   => @mx234a.id)
-                         
-    follow_redirect
+return  
+    follow_redirect!
     
     #Verify that the variable where loaded from the flash.
     #assert_equal(assignment[:design],        assigns(:design))    
@@ -350,7 +356,7 @@ class OiInstructionControllerTest < Test::Unit::TestCase
     #assert_not_nil(flash[:assignment])
     #assert_nil(assigns(:outline_drawing))
     
-return    
+  
     # Process Assignment Details - No team members identified.
     post(:process_assignment_details,
          :category    => { :id                     => @board_prep.id },

@@ -3,7 +3,7 @@
 <!-- ********************************************************** -->
 <!-- $Id$ -->
 <!-- ********************************************************** -->
-
+ 
 <% @heading = "PCB Engineering: #{@board_design_entry.pcb_number} - " %>
 <% @heading += params[:design_review_id] ? "Input Entry Checklist" : "Design Entry Requirements" %>
 
@@ -39,29 +39,7 @@
     <td colspan="4" width="100%">
       <table align="center" width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <% if processor && @board_design_entry.submitted? %>
-            <td width="90" align="left">
-              <div id = "design_details">
-                <% if @board_design_entry.details_complete? %>
-                  <%= check_box(:board_design_entry, 
-                                :details_complete, 
-                                { 'checked' => 'checked' }) %>
-                <% else %>
-                  <%= check_box(:board_design_entry, :details_complete) %>
-                <% end %>
-                <%= observe_field("board_design_entry_details_complete",
-                            :update => "design_details",
-                            :url => { :action => :toggle_processor_checks,
-                                      :id     => @board_design_entry.id,
-                                      :div    => 'design_details',
-                                      :field  => :details_complete }) %>
-              Checked
-              </div>
-            </td>
-          <% else %>
-            <td width="90" class="teraheader">&nbsp;</td>
-          <% end %>
-          <th class="teraheader">Design Details</th>
+         <th class="teraheader">Design Details</th>
           <% if ( @board_design_entry.modifiable? &&
                   ( !@board_design_entry.submitted? && !(processor || peer) ) ||
                   (  @board_design_entry.submitted? && processor  ) )  %>
@@ -97,7 +75,11 @@
 
     <th align="right" width="25%">Revision: </th>
     <td align="left">
-      <%= @board_design_entry.revision_name %>
+      <%= if @board_design_entry.revision_name.include?("<font color=")
+        raw(@board_design_entry.revision_name)
+      else
+        @board_design_entry.revision_name
+      end %>
     </td>
   </tr>
   
@@ -116,7 +98,11 @@
 
     <th align="right" width="25%">Location: </th>
     <td align="left">
-      <%= @board_design_entry.location %>
+      <%= if @board_design_entry.location.include?("<font color=")
+        raw(@board_design_entry.location)
+      else
+        @board_design_entry.location
+      end %>
     </td>
   </tr>
   
@@ -132,23 +118,23 @@
 
     <th align="right">Division: </th>
     <td align="left">
-      <%= @board_design_entry.division %></td>
+      <%= raw @board_design_entry.division %></td>
   </tr>
 
   <tr valign="top">
     <th align="right">Platform: </th>
-    <td align="left"><%= @board_design_entry.platform_name %></td>
+    <td align="left"><%= raw @board_design_entry.platform_name %></td>
 
     <th align="right">Project: </th>
-    <td align="left"><%= @board_design_entry.project_name %></td>
+    <td align="left"><%= raw @board_design_entry.project_name %></td>
   </tr>
 
   <tr valign="top">
     <th align="right">Board Description: </th>
-    <td align="left"><%= h @board_design_entry.description %></td>
+    <td align="left"><%= @board_design_entry.description %></td>
 
     <th align="right">Product Type: </th>
-    <td align="left"><%= @board_design_entry.product_type_name %></td>
+    <td align="left"><%= raw @board_design_entry.product_type_name %></td>
   </tr>
 
   <% if @board_design_entry.pre_production_release_number != '' %>
@@ -161,7 +147,7 @@
   <tr valign="top">
     <th align="right">Location of Review Documents: </th>
     <td colspan="3" align="left" valign="top">
-      <%= h(@board_design_entry.review_doc_location) %>
+      <%= @board_design_entry.review_doc_location %>
     </td>
   </tr>
   
@@ -174,7 +160,7 @@
     <% if @board_design_entry.make_from? %>  
       <th align="right">Original PCB Number: </th>
       <td align="left">
-        <%= h(@board_design_entry.original_pcb_number) %>
+        <%= @board_design_entry.original_pcb_number %>
       </td>
     <% end %>
   </tr>
@@ -182,7 +168,7 @@
   <tr valign="top">
     <th align="right">Outline Drawing Number: </th>
     <td colspan="3" align="left">
-      <%= h(@board_design_entry.outline_drawing_number) %>
+      <%= @board_design_entry.outline_drawing_number %>
     </td>
   </tr>
 
@@ -203,7 +189,7 @@
     <% if @board_design_entry.lead_free_devices? %>
       <th align="right">Lead Free Device Names: </th>
       <td align="left" valign="top">
-        <%= h(@board_design_entry.lead_free_device_names) %>
+        <%= @board_design_entry.lead_free_device_names %>
       </td>
     <% end %>
   </tr>
@@ -230,14 +216,28 @@
   </tr>
  <% end %>
   <tr valign="top">
+    <th align="right">Mechanical Enclosures: </th>
+    <td align="left">
+      <%= @board_design_entry.enclosure? ? 'Yes' : 'No' %>
+    </td>
+  </tr>
+  <tr valign="top">
     <th align="right">Design Directory Location: </th>
     <td align="left">
-      <%= @board_design_entry.design_directory_name %>
+      <%= if @board_design_entry.design_directory_name.include?("<font color=")
+        raw(@board_design_entry.design_directory_name)
+      else
+        @board_design_entry.design_directory_name
+      end %>
     </td>
 
     <th align="right">Incoming Directory Location: </th>
-    <td align="left">
-      <%= @board_design_entry.incoming_directory_name %>
+    <td align="left"
+      <%= if @board_design_entry.incoming_directory_name.include?("<font color=")
+        raw(@board_design_entry.incoming_directory_name)
+      else
+        @board_design_entry.incoming_directory_name
+      end %>
     </td>
   </tr>
   
@@ -269,28 +269,6 @@
     <td colspan="4" width="100%">
       <table align="center" width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <% if processor && @board_design_entry.submitted? %>
-            <td width="90" align="left">
-              <div id = "design_constraints">
-                <% if @board_design_entry.constraints_complete? %>
-                  <%= check_box(:board_design_entry, 
-                                :constraints_complete, 
-                                { 'checked' => 'checked' }) %>
-                <% else %>
-                  <%= check_box(:board_design_entry, :constraints_complete) %>
-                <% end %>
-                <%= observe_field("board_design_entry_constraints_complete",
-                            :update => "design_constraints",
-                            :url => { :action => :toggle_processor_checks,
-                                      :div    => 'design_constraints',
-                                      :id     => @board_design_entry.id,
-                                      :field  => :constraints_complete }) %>
-              Checked
-              </div>
-            </td>
-          <% else %>
-            <td width="90" class="teraheader">&nbsp;</td>
-          <% end %>
           <th class="teraheader">Design Constraints</th>
           <% if ( @board_design_entry.modifiable? &&
                   ( !@board_design_entry.submitted? && !(processor || peer) ) ||
@@ -349,28 +327,6 @@
     <td colspan="4" width="100%">
       <table align="center" width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <% if processor && @board_design_entry.submitted? %>
-            <td width="90" align="left">
-              <div id = "management_team">
-                <% if @board_design_entry.management_team_complete? %>
-                  <%= check_box(:board_design_entry, 
-                                :management_team_complete, 
-                                { 'checked' => 'checked' }) %>
-                <% else %>
-                  <%= check_box(:board_design_entry, :management_team_complete) %>
-                <% end %>
-                <%= observe_field("board_design_entry_management_team_complete",
-                            :update => "management_team",
-                            :url => { :action => :toggle_processor_checks,
-                                      :div    => 'management_team',
-                                      :id     => @board_design_entry.id,
-                                      :field  => :management_team_complete }) %>
-              Checked
-              </div>
-            </td>
-          <% else %>
-            <td width="90" class="teraheader">&nbsp;</td>
-          <% end %>
           <th class="teraheader">Management Team</th>
           <% if ( @board_design_entry.modifiable? &&
                   ( !@board_design_entry.submitted? && !(processor || peer) ) ||
@@ -392,39 +348,25 @@
 
   <% if !@board_design_entry.all_manager_reviewers_assigned? %>
     <tr bgcolor="red">
-      <td colspan="1">
+      <td colspan="4">
       	<b>EVERY MANAGER ROLE NEEDS TO BE ASSIGNED OR CHECKED OFF AS 'NOT REQUIRED'!</b>
       </td>
     </tr>
   <% end %>
 
-  <% rows        = (@managers.size + 1) / 2 %>
-  <% 1.upto(rows) { |i| %>
+   <% rows = (@managers.size + 1) / 2 %>
+   <% 0.upto(rows-1) { |i|
+    member = @managers[i] %>
     <tr valign="top">
-      <%# First column %>
-        <th align="right"><%= @managers[i-1].role.display_name %>: </th>
-        <% if !@managers[i-1].required? %>
-          <td align="left"><font color="red">Not Required</font></td>
-        <% elsif @managers[i-1].user_id == 0 %>
-          <td align="left"><font color="red"><b>Not Set</b></font></td>
-        <% else %>
-          <td align="left"><%=  @managers[i-1].user.name %></td>
-        <% end %>
+      <%=  render(:partial => "show_member", :locals => { :member => member } ) %>
 
-      <%# Second column %>
-      <% if @managers[i-1+rows] %>
-        <th align="right"><%= @managers[i-1+rows].role.display_name %>: </th>
-        <% if !@managers[i-1+rows].required? %>
-          <td align="left"><font color="red">Not Required</font></td>
-        <% elsif @managers[i-1+rows].user_id == 0 %>
-          <td align="left"><font color="red"><b>Not Set</b></font></td>
-        <% else %>
-          <td align="left"><%=  @managers[i-1+rows].user.name %></td>
-        <% end %>
-      <% end %>
+      <%= if @managers[i+rows]
+      member = @managers[i+rows]
+      render(:partial => "show_member", :locals => { :member => member } )
+      end %>
     </tr>
   <% } %>
-  
+
   
 <%# ************************************************************************************************* %>
 <%# Review Team %>
@@ -433,29 +375,7 @@
     <td colspan="4" width="100%">
       <table align="center" width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <% if processor && @board_design_entry.submitted? %>
-            <td width="90" align="left">
-              <div id = "review_team">
-                <% if @board_design_entry.review_team_complete? %>
-                  <%= check_box(:board_design_entry, 
-                                :review_team_complete, 
-                                { 'checked' => 'checked' }) %>
-                <% else %>
-                  <%= check_box(:board_design_entry, :review_team_complete) %>
-                <% end %>
-                <%= observe_field("board_design_entry_review_team_complete",
-                            :update => "review_team",
-                            :url => { :action => :toggle_processor_checks,
-                                      :div    => 'review_team',
-                                      :id     => @board_design_entry.id,
-                                      :field  => :review_team_complete }) %>
-              Checked
-              </div>
-            </td>
-          <% else %>
-            <td width="90" class="teraheader">&nbsp;</td>
-          <% end %>
-          <th class="teraheader">Review Team</th>
+           <th class="teraheader">Review Team</th>
           <% if ( @board_design_entry.modifiable? &&
                   ( !@board_design_entry.submitted? && !(processor || peer) ) ||
                   (  @board_design_entry.submitted? && processor  ) )  %>
@@ -474,47 +394,24 @@
     </td>
   </tr>
   
-    <%# To Do: Come up with a better way to specify default users. %>
-    <% default_assignments = { 'PCB Input Gate'      => 'Jan Kasting' ,
-                               'PCB Mechanical'      => 'Mary Tucker' } %>
-  
   <% if !@board_design_entry.all_reviewers_assigned? %>
     <tr bgcolor="red">
-      <td colspan="1">
+      <td colspan="4">
       	<b>EVERY REVIEWER ROLE NEEDS TO BE EITHER ASSIGNED TO A REVIEWER OR CHECKED OFF AS 'NOT REQUIRED'!</b>
       </td>
     </tr>
   <% end %>
 
   <% rows = (@reviewers.size + 1) / 2 %>
-  <% 1.upto(rows) { |i| %>
+  <% 0.upto(rows-1) { |i|
+    member = @reviewers[i] %>
     <tr valign="top">
-      <th align="right"><%= @reviewers[i-1].role.display_name %>: </th>
-      
-      <% if default_assignments[@reviewers[i-1].role.name] %>
-        <td align="left"><%= default_assignments[@reviewers[i-1].role.name] %></td>
-      <% elsif !@reviewers[i-1].required? %>
-        <td align="left"><font color="red">Not Required</font></td>
-      <% elsif @reviewers[i-1].user_id == 0 %>
-        <td align="left"><font color="red"><b>Not Set</b></font></td>
-      <% else %>
-        <td align="left"><%=  @reviewers[i-1].user.name %></td>
-      <% end %>
+      <%= render(:partial => "show_member", :locals => { :member => member } ) %>
 
-      <% if @reviewers[i-1+rows] %>
-        <th align="right"><%= @reviewers[i-1+rows].role.display_name %>: </th>
-        
-      <% if default_assignments[@reviewers[i-1+rows].role.name] %>
-        <td align="left"><%= default_assignments[@reviewers[i-1+rows].role.name] %></td>
-        <% elsif !@reviewers[i-1+rows].required? %>
-          <td align="left"><font color="red">Not Required</font></td>
-        <% elsif @reviewers[i-1+rows].user_id == 0 %>
-          <td align="left"><font color="red"><b>Not Set</b></font></td>
-        <% else %>
-          <td align="left"><%=  @reviewers[i-1+rows].user.name %></td>
-        <% end %>
-          
-      <% end %>
+      <%= if @reviewers[i+rows]
+        member = @reviewers[i+rows]
+        render(:partial => "show_member", :locals => { :member => member } )
+        end %>
     </tr>
   <% } %>
   
@@ -526,28 +423,6 @@
     <td colspan="4" width="100%">
       <table align="center" width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <% if processor && @board_design_entry.submitted? %>
-            <td width="90" align="left">
-              <div id = "attachments">
-                <% if @board_design_entry.attachments_complete? %>
-                  <%= check_box(:board_design_entry, 
-                                :attachments_complete, 
-                                { 'checked' => 'checked' }) %>
-                <% else %>
-                  <%= check_box(:board_design_entry, :attachments_complete) %>
-                <% end %>
-                <%= observe_field("board_design_entry_attachments_complete",
-                            :update => "attachments",
-                            :url => { :action => :toggle_processor_checks,
-                                      :div    => 'attachments',
-                                      :id     => @board_design_entry.id,
-                                      :field  => :attachments_complete }) %>
-              Checked
-              </div>
-            </td>
-          <% else %>
-            <td width="90" class="teraheader">&nbsp;</td>
-          <% end %>
           <th class="teraheader">Attachments</th>
           <% if ( @board_design_entry.modifiable? &&
                   ( !@board_design_entry.submitted? && !(processor || peer) ) ||
@@ -601,28 +476,6 @@
     <td colspan="4" width="100%">
       <table align="center" width="100%" cellpadding="0" cellspacing="0">
         <tr>
-          <% if processor && @board_design_entry.submitted? %>
-            <td width="90" align="left">
-              <div id = "comments">
-                <% if @board_design_entry.comments_complete? %>
-                  <%= check_box(:board_design_entry, 
-                                :comments_complete, 
-                                { 'checked' => 'checked' }) %>
-                <% else %>
-                  <%= check_box(:board_design_entry, :comments_complete) %>
-                <% end %>
-                <%= observe_field("board_design_entry_comments_complete",
-                            :update => "comments",
-                            :url => { :action => :toggle_processor_checks,
-                                      :div    => 'comments',
-                                      :id     => @board_design_entry.id,
-                                      :field  => :comments_complete }) %>
-              Checked
-              </div>
-            </td>
-          <% else %>
-            <td width="90" class="teraheader">&nbsp;</td>
-          <% end %>
           <th class="teraheader">Comments</th>
           <% if ( @board_design_entry.modifiable? &&
                   ( !@board_design_entry.submitted? && !(processor || peer) ) ||

@@ -1,0 +1,35 @@
+<!-- View:    design directory                                  -->
+<!-- Purpose: Displays a design directory for editing.          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Design Directory" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'update') do %>
+
+  <%= hidden_field "design_directory", "id" %>
+
+  <table border="0">
+    <tr>
+      <td><label for="design_directory_name">Design Directory:</label></td>
+      <td>
+        <%= text_field("design_directory", 
+                       "name", 
+                       "size" => 30, 
+                       "maxlength" => 30) %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: </td>
+      <td><%= check_box("design_directory", "active") %></td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Design Directory" />
+  <input type="button" value="Return to Design Directory List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<% end %>

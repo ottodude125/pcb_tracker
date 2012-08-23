@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: DesignReviewMailer</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/mailers/design_review_mailer.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">ActionMailer::Base
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-design_review_complete_notification">#design_review_complete_notification</a>
+    
+    <li><a href="#method-i-design_review_posting_notification">#design_review_posting_notification</a>
+    
+    <li><a href="#method-i-design_review_update">#design_review_update</a>
+    
+    <li><a href="#method-i-reassign_from_peer">#reassign_from_peer</a>
+    
+    <li><a href="#method-i-reassign_to_peer">#reassign_to_peer</a>
+    
+    <li><a href="#method-i-skipped">#skipped</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class DesignReviewMailer</h1>
+
+  <div id="description" class="description">
+    
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-design_review_complete_notification" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">design_review_complete_notification</span><span
+            class="method-args">(design_review)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReviewMailer.html#method-i-design_review_complete_notification">#design_review_complete_notification</a></p>
+
+<p>Description: This method generates the mail indicate that a design review
+has completed.</p>
+
+<p>Parameters:</p>
+
+<pre>design_review  - the design review that was completed</pre>
+
+<p>Additional information:</p>
+          
+
+          
+          <div class="method-source-code" id="design_review_complete_notification-source">
+            <pre><span class="ruby-comment"># File app/mailers/design_review_mailer.rb, line 134</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">design_review_complete_notification</span>(<span class="ruby-identifier">design_review</span>)
+
+   <span class="ruby-identifier">subject</span>    = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">subject_prefix</span>  <span class="ruby-operator">+</span>
+                <span class="ruby-string">'The '</span>                               <span class="ruby-operator">+</span>
+                <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_name</span>            <span class="ruby-operator">+</span>
+                <span class="ruby-string">' design review is complete'</span>
+
+  <span class="ruby-identifier">to_list</span> = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reviewer_list</span>
+
+  <span class="ruby-identifier">cc</span> = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">copy_to</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">board</span>.<span class="ruby-identifier">copy_to_on_milestone</span>
+
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;Release&quot;</span>
+    <span class="ruby-comment">#cc.push(&quot;STD_DC_ECO_Inbox@notes.teradyne.com&quot;) if Rails.env.production?</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;Final&quot;</span>
+    <span class="ruby-identifier">pcb_admin</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">&quot;PCB Admin&quot;</span>)
+    <span class="ruby-identifier">cc</span>       <span class="ruby-operator">+=</span> <span class="ruby-identifier">pcb_admin</span>.<span class="ruby-identifier">active_users</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">email</span> }
+  <span class="ruby-keyword">when</span> <span class="ruby-string">'Pre-Artwork'</span>
+    <span class="ruby-identifier">cc</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">input_gate</span>.<span class="ruby-identifier">email</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">cc_list</span> = (<span class="ruby-identifier">cc</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">to_list</span>).<span class="ruby-identifier">uniq</span>
+
+  <span class="ruby-ivar">@design_review_id</span> = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">id</span>
+  <span class="ruby-ivar">@message</span> = <span class="ruby-identifier">subject</span>
+  
+  <span class="ruby-identifier">mail</span>( <span class="ruby-value">:to</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">to_list</span>,
+        <span class="ruby-value">:subject</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">subject</span>,
+        <span class="ruby-value">:cc</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">cc_list</span>
+      )
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- design_review_complete_notification-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- design_review_complete_notification-method -->
+
+    
+      <div id="method-i-design_review_posting_notification" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">design_review_posting_notification</span><span
+            class="method-args">(design_review, comment, repost = false)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReviewMailer.html#method-i-design_review_posting_notification">#design_review_posting_notification</a></p>
+
+<p>Description: This method generates the mail to alert the reviewers that a
+design review has been posted or reposted.</p>
+
+<p>Parameters:</p>
+
+<pre>design_review  - the design review that was posted
+comment        - the comment entered by the designer when posting
+repost         - a flag that indicates that the design review is
+                 being reposted when true</pre>
+          
+
+          
+          <div class="method-source-code" id="design_review_posting_notification-source">
+            <pre><span class="ruby-comment"># File app/mailers/design_review_mailer.rb, line 22</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">design_review_posting_notification</span>(<span class="ruby-identifier">design_review</span>,
+                                       <span class="ruby-identifier">comment</span>,
+                                       <span class="ruby-identifier">repost</span>         = <span class="ruby-keyword">false</span>)
+
+  <span class="ruby-identifier">to_list</span>  = [ <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reviewer_list</span>]
+  <span class="ruby-identifier">cc_list</span>  = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">copy_to</span> <span class="ruby-operator">+</span>
+             <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">board</span>.<span class="ruby-identifier">copy_to_on_milestone</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;Pre-Artwork&quot;</span>
+    <span class="ruby-identifier">slm_notify</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">&quot;SLM-Vendor Notify&quot;</span>)
+    <span class="ruby-identifier">cc_list</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">slm_notify</span>.<span class="ruby-identifier">active_users</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">email</span> }
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;Final&quot;</span>
+    <span class="ruby-identifier">pcb_admin</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">&quot;PCB Admin&quot;</span>)
+    <span class="ruby-identifier">cc_list</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">pcb_admin</span>.<span class="ruby-identifier">active_users</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">email</span> }
+    <span class="ruby-identifier">slm_notify</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">&quot;SLM-Vendor Notify&quot;</span>)
+    <span class="ruby-identifier">cc_list</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">slm_notify</span>.<span class="ruby-identifier">active_users</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">email</span> }
+  <span class="ruby-keyword">end</span>
+ <span class="ruby-identifier">cc_list</span> = (<span class="ruby-identifier">cc_list</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">to_list</span>).<span class="ruby-identifier">uniq</span>
+
+  <span class="ruby-identifier">subject</span>  = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">subject_prefix</span> <span class="ruby-operator">+</span>
+              <span class="ruby-node">&quot;The #{design_review.review_name} design review has been &quot;</span>
+  <span class="ruby-identifier">subject</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">repost</span> <span class="ruby-operator">?</span> <span class="ruby-string">&quot;reposted&quot;</span> <span class="ruby-operator">:</span> <span class="ruby-string">&quot;posted&quot;</span>
+
+  <span class="ruby-ivar">@user</span>          = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">designer</span>
+  <span class="ruby-ivar">@comments</span>      = [<span class="ruby-identifier">comment</span>]
+  <span class="ruby-ivar">@design_review</span> = <span class="ruby-identifier">design_review</span>
+  <span class="ruby-ivar">@repost</span>        = <span class="ruby-identifier">repost</span>
+
+  <span class="ruby-identifier">mail</span>( <span class="ruby-value">:to</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">to_list</span>,
+        <span class="ruby-value">:subject</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">subject</span>,
+        <span class="ruby-value">:cc</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">cc_list</span>
+       )
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- design_review_posting_notification-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- design_review_posting_notification-method -->
+
+    
+      <div id="method-i-design_review_update" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">design_review_update</span><span
+            class="method-args">(user, design_review, comment_update, result_update = {})</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReviewMailer.html#method-i-design_review_update">#design_review_update</a></p>
+
+<p>Description: This method generates the mail indicate that an update has
+been made to a review.</p>
+
+<p>Parameters:</p>
+
+<pre>user           - the user making the update
+design_review  - the design review that was updated
+comment_update - a flag to indicate if new comments were added
+result_update  - a flag to indicate if a result was entered</pre>
+
+<p>Additional information:</p>
+          
+
+          
+          <div class="method-source-code" id="design_review_update-source">
+            <pre><span class="ruby-comment"># File app/mailers/design_review_mailer.rb, line 75</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">design_review_update</span>(<span class="ruby-identifier">user</span>,
+                         <span class="ruby-identifier">design_review</span>,
+                         <span class="ruby-identifier">comment_update</span>,
+                         <span class="ruby-identifier">result_update</span>   = {})
+
+  <span class="ruby-identifier">to_list</span>  = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reviewer_list</span>
+  <span class="ruby-identifier">cc_list</span>  = ( <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">copy_to</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">to_list</span> ).<span class="ruby-identifier">uniq</span>
+
+  <span class="ruby-identifier">review_results</span> = <span class="ruby-string">''</span>
+  <span class="ruby-identifier">prefix</span> = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">subject_prefix</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_name</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment_update</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">result_update</span> <span class="ruby-operator">==</span> {}
+    <span class="ruby-identifier">subject</span>    = <span class="ruby-node">&quot;#{prefix} - Comments added&quot;</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">result_update</span>
+
+    <span class="ruby-identifier">results</span> = <span class="ruby-constant">DesignReviewResult</span>.<span class="ruby-identifier">find</span>(
+                <span class="ruby-value">:all</span>,
+                <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;design_review_id=#{design_review.id} AND &quot;</span> <span class="ruby-operator">+</span>
+                               <span class="ruby-node">&quot;reviewer_id='#{user.id}'&quot;</span>)
+
+    <span class="ruby-value">0</span>.<span class="ruby-identifier">upto</span>(<span class="ruby-identifier">results</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">review_results</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;#{results[i].role.name} - #{results[i].result}&quot;</span>
+      <span class="ruby-identifier">review_results</span> <span class="ruby-operator">+=</span> <span class="ruby-string">', '</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">results</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">&lt;</span> (<span class="ruby-identifier">results</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>)
+      }
+
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment_update</span>
+        <span class="ruby-identifier">subject</span>    = <span class="ruby-node">&quot;#{prefix}  #{review_results} - See comments&quot;</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">subject</span>    = <span class="ruby-node">&quot;#{prefix}  #{review_results} - No comments&quot;</span>
+      <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@comments</span>  = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design_review_comments</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">3</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">comment_update</span>
+  <span class="ruby-ivar">@user</span>             = <span class="ruby-identifier">user</span>
+  <span class="ruby-ivar">@result_update</span>    = <span class="ruby-identifier">result_update</span>
+  <span class="ruby-ivar">@design_review_id</span> = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">id</span>
+
+  <span class="ruby-identifier">mail</span>( <span class="ruby-value">:to</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">to_list</span>,
+        <span class="ruby-value">:subject</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">subject</span>,
+        <span class="ruby-value">:cc</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">cc_list</span>
+      )
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- design_review_update-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- design_review_update-method -->
+
+    
+      <div id="method-i-reassign_from_peer" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">reassign_from_peer</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Subject can be set in your I18n file at config/locales/en.yml with the
+following lookup:</p>
+
+<pre>en.design_review_mail.reassign_from_peer.subject</pre>
+          
+
+          
+          <div class="method-source-code" id="reassign_from_peer-source">
+            <pre><span class="ruby-comment"># File app/mailers/design_review_mailer.rb, line 183</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reassign_from_peer</span>
+  <span class="ruby-ivar">@greeting</span> = <span class="ruby-string">&quot;Hi&quot;</span>
+
+  <span class="ruby-comment">#mail to: &quot;to@example.org&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- reassign_from_peer-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- reassign_from_peer-method -->
+
+    
+      <div id="method-i-reassign_to_peer" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">reassign_to_peer</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Subject can be set in your I18n file at config/locales/en.yml with the
+following lookup:</p>
+
+<pre>en.design_review_mail.reassign_to_peer.subject</pre>
+          
+
+          
+          <div class="method-source-code" id="reassign_to_peer-source">
+            <pre><span class="ruby-comment"># File app/mailers/design_review_mailer.rb, line 172</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reassign_to_peer</span>
+  <span class="ruby-ivar">@greeting</span> = <span class="ruby-string">&quot;Hi&quot;</span>
+
+  <span class="ruby-comment">#mail to: &quot;to@example.org&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- reassign_to_peer-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- reassign_to_peer-method -->
+
+    
+      <div id="method-i-skipped" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">skipped</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Subject can be set in your I18n file at config/locales/en.yml with the
+following lookup:</p>
+
+<pre>en.design_review_mail.skipped.subject</pre>
+          
+
+          
+          <div class="method-source-code" id="skipped-source">
+            <pre><span class="ruby-comment"># File app/mailers/design_review_mailer.rb, line 194</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">skipped</span>
+  <span class="ruby-ivar">@greeting</span> = <span class="ruby-string">&quot;Hi&quot;</span>
+
+  <span class="ruby-comment">#mail to: &quot;to@example.org&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- skipped-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- skipped-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

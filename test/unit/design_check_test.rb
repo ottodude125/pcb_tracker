@@ -11,14 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class DesignCheckTest < Test::Unit::TestCase
-
-  fixtures :audits,
-           :checks,
-           :design_checks,
-           :users
+class DesignChecksTest < ActiveSupport::TestCase
 
   def setup
     @design_check = design_checks(:first_design_check)
@@ -159,11 +154,11 @@ class DesignCheckTest < Test::Unit::TestCase
     assert_equal(4,     @design_check.check_id)
     assert_equal(5,     @design_check.auditor_id)
     assert_equal('N/A', @design_check.auditor_result)
-    assert_equal(Time.local(2005, 'jun', 10, 11, 33, 23),
+    assert_equal(Time.utc(2005, 'jun', 10, 11, 33, 23),
 		 @design_check.auditor_checked_on)
     assert_equal(554,   @design_check.designer_id)
     assert_equal('No',  @design_check.designer_result)
-    assert_equal(Time.local(2005, 'jun', 10, 11, 33, 23), 
+    assert_equal(Time.utc(2005, 'jun', 10, 11, 33, 23),
                  @design_check.designer_checked_on)
                
     

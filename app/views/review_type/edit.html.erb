@@ -1,0 +1,54 @@
+<!-- View:    review_type                                       -->
+<!-- Purpose: Displays a review type for editing.               -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Review Type" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'update') do %>
+
+  <%= hidden_field "review_type", "id" %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="review_type_name">Review Type:</label>
+      </td>
+      <td>
+        <%= text_field "review_type", "name", "size" => 16, "maxlength" => 16 %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="review_type_order">Order:</label>
+      </td>
+      <td>
+        <%= text_field "review_type", "sort_order", "size" => 3, "maxlength" => 3 %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="review_type_required">Required:</label>
+      </td>
+      <td>
+        <%= check_box "review_type", "required" %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="review_type_active">Active:</label>
+      </td>
+      <td>
+        <%= check_box "review_type", "active" %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Review Type" />
+  <input type="button" value="Return to Review Type List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<% end %>

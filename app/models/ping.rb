@@ -9,6 +9,7 @@
 # $Id$
 #
 ########################################################################
+require 'net/http'
 
 class Ping < ActiveRecord::Base
 
@@ -29,43 +30,38 @@ class Ping < ActiveRecord::Base
     active_reviews = DesignReview.find( :all,
                                         :conditions => "review_status_id=#{in_review.id}",
                                         :order      => "created_on" )
-                                      
-    # Remove design review that should not be pinged
-=begin
-    active_reviews.delete_if do |dr| 
-      ((dr.priority.name == 'Medium' && dr.age/1.day != 0) ||  # was 2
-        dr.priority.name == 'Low'    && dr.age/1.day != 0)    # was 3
-    end
-=end
+    review_list = Hash.new
     
-    
-    user_list = []
     active_reviews.each do |dr|
     
       # Remove the results if they have been addressed      
       dr.design_review_results.delete_if { |drr| drr.result != 'No Response' &&
                                                  drr.result != 'Commented'}
-      
+     
       dr.design_review_results.each do |drr|
         reviewer = drr.reviewer
-        user_list << reviewer if !user_list.include?(reviewer)
-        user = user_list.detect { |u| u.id == reviewer.id }
-        user[:results] = [] if !user[:results]
-        user[:results] << drr
-      end
-      
-    end
-    
-    user_list = user_list.sort_by { |u| u.last_name }
-    
-    user_list.each do |reviewer|
-      TrackerMailer::deliver_ping_reviewer(reviewer)
-      sleep(1)
-    end
-    
-    sleep(10)
+                
+        if !review_list.include?(reviewer.id)
+          review_list[reviewer.id] = {:user => reviewer, :results => []}
+        end
 
-    TrackerMailer::deliver_ping_summary(user_list, active_reviews)
+        review_list[reviewer.id][:results] << drr
+      end     
+    end
+    
+    
+    review_list = review_list.sort_by { |userid, result| result[:user].last_name }
+    
+    count = 0
+    
+    review_list.each do |userid, data|
+      PingMailer::ping_reviewer(data).deliver    
+      #sleep(1)
+    end
+    
+    #sleep(10)
+
+    PingMailer::ping_summary(review_list, active_reviews).deliver
 
   end
 
@@ -86,7 +82,7 @@ class Ping < ActiveRecord::Base
                                         :conditions => "review_status_id=#{in_review.id}",
                                         :order      => "created_on" )
 
-    user_list = []
+    review_list = Hash.new
     active_reviews.each do |dr|
     
       # Remove the results if they have been addressed
@@ -95,62 +91,47 @@ class Ping < ActiveRecord::Base
 
       dr.design_review_results.each do |drr|
         reviewer = drr.reviewer
-        user_list << reviewer if !user_list.include?(reviewer)
-        user = user_list.detect { |u| u.id == reviewer.id }
-        user[:results] = [] if ! user[:results]
-        user[:results] << drr
-      end
+                
+        if !review_list.include?(reviewer.id)
+          review_list[reviewer.id] = {:user => reviewer, :results => []}
+        end
 
+        review_list[reviewer.id][:results] << drr
+      end     
     end
 
-    user_list = user_list.sort_by { |u| u.last_name }
+    review_list = review_list.sort_by { |userid, result| result[:user].last_name }
     
-    TrackerMailer::deliver_ping_summary(user_list, active_reviews)
+    PingMailer::ping_summary(review_list, active_reviews).deliver
 
   end
 
   def self.check_design_centers
-
-    new_release = false
-    h = Net::HTTP::new("boarddev.teradyne.com") if !new_release
-
-    if Time.now.strftime("%A") == "Monday"  && "Fred" == "Barney"
-      designs = Design.find(:all)
-    else
-      designs = Design.find_all_active
-    end
+    designs = Design.find_all_active
 
     summary = { :link_good => [], :link_bad => [] }
+    
     designs.each do |design|
       next unless design.design_center
       next unless design.design_center.pcb_path
-      if new_release
-        if design.design_center.data_found?
-          summary[:link_good] << design
-        else
-          summary[:link_bad]  << design
-        end
+      code = ""
+      
+      Net::HTTP.start('boarddev.teradyne.com') do |http|
+        response = http.get("/surfboards/#{design.design_center.pcb_path}/#{design.directory_name}/")
+        code = response.code
+      end
+      
+      if code == "200" || code == "301"
+        summary[:link_good] << design
       else
-        #review = design.design_reviews.detect { |r| r.review_type.name == design.phase.name }
-        #if review
-          link = "/surfboards/#{design.design_center.pcb_path}/#{design.directory_name}/"
-        #else
-        #  link = '/no_good/'
-        #end
-        code = h.get(link).code
-        if code == "200" || code == "301"
-          summary[:link_good] << design
-        else
-          summary[:link_bad]  << design
-        end
+        summary[:link_bad]  << design
       end
     end
 
     summary[:link_good].sort_by { |d| d.directory_name }
     summary[:link_bad].sort_by  { |d| d.directory_name }
-    TrackerMailer::deliver_ping_design_center_summary(summary)
-
+    
+    PingMailer::ping_design_center_summary(summary).deliver
+  
   end
-
-
 end

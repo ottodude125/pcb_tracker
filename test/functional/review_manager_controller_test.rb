@@ -11,13 +11,13 @@
 ########################################################################
 #
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'review_manager_controller'
 
 # Re-raise errors caught by the controller.
 class ReviewManagerController; def rescue_action(e) raise e end; end
 
-class ReviewManagerControllerTest < Test::Unit::TestCase
+class ReviewManagerControllerTest < ActionController::TestCase
 
 
   def setup
@@ -44,6 +44,8 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
        :review_types => []},
       {:name         => 'Library',
        :review_types => ['Pre-Artwork']},
+      {:name => 'ECN',
+       :review_types => []},
       {:name         => 'HWENG',
        :review_types => ['Final', 'Placement', 'Pre-Artwork', 'Release', 'Routing']},
       {:name         => 'Mechanical',
@@ -238,6 +240,8 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
        :review_types => []},
       {:name => 'Library',
        :review_types => ['Final']},
+      {:name => 'ECN',
+       :review_types => []},
       {:name => 'HWENG',
        :review_types => ['Final', 'Pre-Artwork']},
       {:name => 'Mechanical',
@@ -260,6 +264,7 @@ class ReviewManagerControllerTest < Test::Unit::TestCase
        :review_types => ['Final', 'Pre-Artwork', 'Release', 'Routing']}
     ]
 
+    #assert_equal(expected_values, roles)
     assert_equal(expected_values.size, roles.size)
     assert_equal(5,                    review_types.size)
 

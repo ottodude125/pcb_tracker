@@ -115,4 +115,9 @@ steve_safety:
   required:              1
   user_id:               39001
   role_id:               24
-  
+patrice_ecn:
+  id:                    20
+  board_design_entry_id: 5
+  required:              1
+  user_id:               8000
+  role_id:               38

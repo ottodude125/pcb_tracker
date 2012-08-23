@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: Checklist</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/models/checklist.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">ActiveRecord::Base
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-latest_release">::latest_release</a>
+    
+    <li><a href="#method-i-compute_check_counts">#compute_check_counts</a>
+    
+    <li><a href="#method-i-each_check">#each_check</a>
+    
+    <li><a href="#method-i-full_review_peer_check_count">#full_review_peer_check_count</a>
+    
+    <li><a href="#method-i-full_review_self_check_count">#full_review_self_check_count</a>
+    
+    <li><a href="#method-i-increment_checklist_counters">#increment_checklist_counters</a>
+    
+    <li><a href="#method-i-issue_count">#issue_count</a>
+    
+    <li><a href="#method-i-locked-3F">#locked?</a>
+    
+    <li><a href="#method-i-partial_review_peer_check_count">#partial_review_peer_check_count</a>
+    
+    <li><a href="#method-i-partial_review_self_check_count">#partial_review_self_check_count</a>
+    
+    <li><a href="#method-i-release">#release</a>
+    
+    <li><a href="#method-i-remove">#remove</a>
+    
+    <li><a href="#method-i-revision">#revision</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class Checklist</h1>
+
+  <div id="description" class="description">
+    
+<p>Copyright 2005, by Teradyne, Inc., Boston MA</p>
+
+<p>File: checklist.rb</p>
+
+<p>This file maintains the state for checklists.</p>
+
+<p>$Id$</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-latest_release" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">latest_release</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="Checklist.html#method-c-latest_release">::latest_release</a></p>
+
+<p>Description: This method locates the most recently released checklist.</p>
+
+<p>Parameters: None</p>
+
+<p>Return: A checklist record.  If there are released checklists then the 
+latest released checklist is returned.  Otherwise a new checklist is
+returned.</p>
+          
+
+          
+          <div class="method-source-code" id="latest_release-source">
+            <pre><span class="ruby-comment"># File app/models/checklist.rb, line 36</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">latest_release</span>
+  
+  <span class="ruby-identifier">checklist</span> = <span class="ruby-constant">Checklist</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>,
+                             <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;released=1&quot;</span>,
+                             <span class="ruby-value">:order</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'major_rev_number DESC'</span>)
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">checklist</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">checklist</span> <span class="ruby-operator">:</span> <span class="ruby-constant">Checklist</span>.<span class="ruby-identifier">new</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- latest_release-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- latest_release-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-compute_check_counts" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            compute_check_counts() &rarr; boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Calculate the number of each of new design and bareboard design checks for 
+both the self and peer audits and store the results in the database.</p>
+
+<p>Go through the entire checklist to calculate the number of self audit and 
+peer audit checks for both new designs and bare board designs.  The results
+are stored in the database.</p>
+          
+
+          
+          <div class="method-source-code" id="compute_check_counts-source">
+            <pre><span class="ruby-comment"># File app/models/checklist.rb, line 323</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">compute_check_counts</span>
+  
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new_design_self_check_count</span>       = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new_design_peer_check_count</span>       = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">bareboard_design_self_check_count</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">bareboard_design_peer_check_count</span> = <span class="ruby-value">0</span>
+  
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">each_check</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">check</span><span class="ruby-operator">|</span>
+ 
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">new_design_check?</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new_design_self_check_count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">is_self_check?</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new_design_peer_check_count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">is_peer_check?</span>
+    <span class="ruby-keyword">end</span>
+    
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">bare_board_design_check?</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">bareboard_design_self_check_count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">is_self_check?</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">bareboard_design_peer_check_count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">is_peer_check?</span>
+    <span class="ruby-keyword">end</span>
+    
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- compute_check_counts-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- compute_check_counts-method -->
+
+    
+      <div id="method-i-each_check" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">each_check</span><span
+            class="method-args">() { |check| ... }</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="Checklist.html#method-i-each_check">#each_check</a></p>
+
+<p>Description: This method iterates over all of the checks associates with
+this checklist.</p>
+
+<p>Parameters: None</p>
+          
+
+          
+          <div class="method-source-code" id="each_check-source">
+            <pre><span class="ruby-comment"># File app/models/checklist.rb, line 115</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">each_check</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">sections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">section</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">section</span>.<span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">subsection</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">checks</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">check</span><span class="ruby-operator">|</span> <span class="ruby-keyword">yield</span> <span class="ruby-identifier">check</span> }
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- each_check-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- each_check-method -->
+
+    
+      <div id="method-i-full_review_peer_check_count" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">full_review_peer_check_count</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="Checklist.html#method-i-full_review_peer_check_count">#full_review_peer_check_count</a></p>
+
+<p>Description: Computes the number of peer audit checks in a full review.</p>
+
+<p>Parameters: None</p>
+
+<p>Return: The number of peer audit checks in a full review.</p>
+          
+
+          
+          <div class="method-source-code" id="full_review_peer_check_count-source">
+            <pre><span class="ruby-comment"># File app/models/checklist.rb, line 167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">full_review_peer_check_count</span>
+  <span class="ruby-identifier">check_count</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">sections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">s</span>.<span class="ruby-identifier">full_review?</span>
+    <span class="ruby-identifier">s</span>.<span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ss</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">ss</span>.<span class="ruby-identifier">full_review?</span>
+      <span class="ruby-identifier">ss</span>.<span class="ruby-identifier">checks</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">check_count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">new_design_check?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">is_peer_check?</span> }
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">check_count</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- full_review_peer_check_count-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- full_review_peer_check_count-method -->
+
+    
+      <div id="method-i-full_review_self_check_count" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">full_review_self_check_count</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="Checklist.html#method-i-full_review_self_check_count">#full_review_self_check_count</a></p>
+
+<p>Description: Computes the number of self audit checks in a full review.</p>
+
+<p>Parameters: None</p>
+
+<p>Return: The number of self audit checks in a full review.</p>
+          
+
+          
+          <div class="method-source-code" id="full_review_self_check_count-source">
+            <pre><span class="ruby-comment"># File app/models/checklist.rb, line 139</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">full_review_self_check_count</span>
+  <span class="ruby-identifier">check_count</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">sections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">s</span>.<span class="ruby-identifier">full_review?</span>
+    <span class="ruby-identifier">s</span>.<span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ss</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">ss</span>.<span class="ruby-identifier">full_review?</span>
+      <span class="ruby-identifier">ss</span>.<span class="ruby-identifier">checks</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">check_count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">new_design_check?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">is_self_check?</span> }
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">check_count</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- full_review_self_check_count-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- full_review_self_check_count-method -->
+
+    
+      <div id="method-i-increment_checklist_counters" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">increment_checklist_counters</span><span
+            class="method-args">(checklist, increment)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="Checklist.html#method-i-increment_checklist_counters">#increment_checklist_counters</a></p>
+
+<p>Description: This method is called to update the checklist counters when
+any changes are made to a check or when a check is added or destroyed.</p>
+
+<p>Parameters: checklist       - A list of checks that are being added or
+destroyed. increment_value - Either 1 or -1 depending on whether the
+check(s) are</p>
+
+<pre>being added or destroyed.</pre>
+          
+
+          
+          <div class="method-source-code" id="increment_checklist_counters-source">
+            <pre><span class="ruby-comment"># File app/models/checklist.rb, line 62</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">increment_checklist_counters</span>(<span class="ruby-identifier">checklist</span>, <span class="ruby-identifier">increment</span>)
+
+  <span class="ruby-identifier">checklist</span> = [<span class="ruby-identifier">checklist</span>] <span class="ruby-keyword">if</span> <span class="ruby-identifier">checklist</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Check</span>
+
+  <span class="ruby-identifier">checklist</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">check</span><span class="ruby-operator">|</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">designer_auditor?</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_auditor_count</span>    <span class="ruby-operator">+=</span> <span class="ruby-identifier">increment</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">full_review?</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">dc_designer_auditor_count</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">increment</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">date_code_check?</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">dr_designer_auditor_count</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">increment</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">dot_rev_check?</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_only_count</span>       <span class="ruby-operator">+=</span> <span class="ruby-identifier">increment</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">full_review?</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">dc_designer_only_count</span>    <span class="ruby-operator">+=</span>       <span class="ruby-identifier">increment</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">date_code_check?</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">dr_designer_only_count</span>    <span class="ruby-operator">+=</span> <span class="ruby-identifier">increment</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">dot_rev_check?</span>
+    <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- increment_checklist_counters-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- increment_checklist_counters-method -->
+
+    
+      <div id="method-i-issue_count" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            issue_count() &rarr; integer
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Report on the number of issues raised by the peer auditor in the checklist</p>
+
+<p>The number of issues raised by the peer auditor in the checklist.</p>
+          
+
+          
+          <div class="method-source-code" id="issue_count-source">
+            <pre><span class="ruby-comment"># File app/models/checklist.rb, line 355</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">issue_count</span>
+  <span class="ruby-identifier">issue_count</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">sections</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span> <span class="ruby-identifier">section</span><span class="ruby-operator">|</span> <span class="ruby-identifier">issue_count</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">section</span>.<span class="ruby-identifier">issue_count</span> }
+  <span class="ruby-identifier">issue_count</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- issue_count-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- issue_count-method -->
+
+    
+      <div id="method-i-locked-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">locked?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="Checklist.html#method-i-locked-3F">#locked?</a></p>
+
+<p>Description: Reports whether or not the object is available for
+modification and deletion.</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: TRUE if the object can not be deleted or modified, otherwise
+FALSE.</p>
+          
+
+          
+          <div class="method-source-code" id="locked-3F-source">
+            <pre><span class="ruby-comment"># File app/models/checklist.rb, line 290</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">locked?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">released?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- locked-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- locked-3F-method -->
+
+    
+      <div id="method-i-partial_review_peer_check_count" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">partial_review_peer_check_count</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="Checklist.html#method-i-partial_review_peer_check_count">#partial_review_peer_check_count</a></p>
+
+<p>Description: Computes the number of peer audit checks in a partial review.</p>
+
+<p>Parameters: None</p>
+
+<p>Return: The number of peer audit checks in a partial review.</p>
+          
+
+          
+          <div class="method-source-code" id="partial_review_peer_check_count-source">
+            <pre><span class="ruby-comment"># File app/models/checklist.rb, line 223</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">partial_review_peer_check_count</span>
+  <span class="ruby-identifier">check_count</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">sections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">s</span>.<span class="ruby-identifier">dot_rev_check?</span>
+    <span class="ruby-identifier">s</span>.<span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ss</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">ss</span>.<span class="ruby-identifier">dot_rev_check?</span>
+      <span class="ruby-identifier">ss</span>.<span class="ruby-identifier">checks</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">check_count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">bare_board_design_check?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">is_peer_check?</span> }
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">check_count</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- partial_review_peer_check_count-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- partial_review_peer_check_count-method -->
+
+    
+      <div id="method-i-partial_review_self_check_count" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">partial_review_self_check_count</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="Checklist.html#method-i-partial_review_self_check_count">#partial_review_self_check_count</a></p>
+
+<p>Description: Computes the number of self audit checks in a partial review.</p>
+
+<p>Parameters: None</p>
+
+<p>Return: The number of self audit checks in a partial review.</p>
+          
+
+          
+          <div class="method-source-code" id="partial_review_self_check_count-source">
+            <pre><span class="ruby-comment"># File app/models/checklist.rb, line 195</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">partial_review_self_check_count</span>
+  <span class="ruby-identifier">check_count</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">sections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">s</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">s</span>.<span class="ruby-identifier">dot_rev_check?</span>
+    <span class="ruby-identifier">s</span>.<span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ss</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">ss</span>.<span class="ruby-identifier">dot_rev_check?</span>
+      <span class="ruby-identifier">ss</span>.<span class="ruby-identifier">checks</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">c</span><span class="ruby-operator">|</span> <span class="ruby-identifier">check_count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">bare_board_design_check?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">is_self_check?</span> }
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">check_count</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- partial_review_self_check_count-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- partial_review_self_check_count-method -->
+
+    
+      <div id="method-i-release" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">release</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="Checklist.html#method-i-release">#release</a></p>
+
+<p>Description: This method sets the <a
+href="Checklist.html#method-i-release">#release</a> field to indicate that
+the checklist has been released.</p>
+
+<p>Parameters: None</p>
+
+<p>Return: A message indicating the result of the update.</p>
+          
+
+          
+          <div class="method-source-code" id="release-source">
+            <pre><span class="ruby-comment"># File app/models/checklist.rb, line 252</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">release</span>
+  
+  <span class="ruby-identifier">latest_release</span> = <span class="ruby-constant">Checklist</span>.<span class="ruby-identifier">latest_release</span>
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">minor_rev_number</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">major_rev_number</span> = <span class="ruby-identifier">latest_release</span>.<span class="ruby-identifier">major_rev_number</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">released</span>         = <span class="ruby-value">1</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">released_on</span>      = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new_design_self_check_count</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">full_review_self_check_count</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">new_design_peer_check_count</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">full_review_peer_check_count</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">bareboard_design_self_check_count</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">partial_review_self_check_count</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">bareboard_design_peer_check_count</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">partial_review_peer_check_count</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-string">'Checklist successfully released'</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-string">'Checklist release failed - Contact DTG.'</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- release-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- release-method -->
+
+    
+      <div id="method-i-remove" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            remove() &rarr; boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Remove the checklist and its associated sections, subsections, and checks.</p>
+
+<p>Go through the entire checklist to <a
+href="Checklist.html#method-i-remove">#remove</a> the sections, the <a
+href="Checklist.html#method-i-remove">#remove</a> self.</p>
+          
+
+          
+          <div class="method-source-code" id="remove-source">
+            <pre><span class="ruby-comment"># File app/models/checklist.rb, line 301</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove</span>
+
+ <span class="ruby-identifier">removed</span> = <span class="ruby-keyword">true</span>
+ <span class="ruby-keyword">self</span>.<span class="ruby-identifier">sections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">section</span><span class="ruby-operator">|</span>
+   <span class="ruby-identifier">removed</span> = <span class="ruby-identifier">section</span>.<span class="ruby-identifier">remove</span>
+   <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">removed</span>
+ <span class="ruby-keyword">end</span>
+
+ <span class="ruby-keyword">return</span> <span class="ruby-identifier">removed</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">destroy</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- remove-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- remove-method -->
+
+    
+      <div id="method-i-revision" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">revision</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="Checklist.html#method-i-revision">#revision</a></p>
+
+<p>Description: This method returns the <a
+href="Checklist.html#method-i-revision">#revision</a> of the checklist.</p>
+
+<p>Parameters: None</p>
+          
+
+          
+          <div class="method-source-code" id="revision-source">
+            <pre><span class="ruby-comment"># File app/models/checklist.rb, line 97</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">revision</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">major_rev_number</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">+</span> <span class="ruby-string">'.'</span> <span class="ruby-operator">+</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">minor_rev_number</span>.<span class="ruby-identifier">to_s</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- revision-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- revision-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

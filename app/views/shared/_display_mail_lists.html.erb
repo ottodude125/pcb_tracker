@@ -1,0 +1,212 @@
+<!-- View:    shared                                            -->
+<!-- Purpose: Displays the mailing lists                        -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+<%  content_for :header do %>
+$(document).ready(function() {
+  $("#selections").on("click", "[jQtype]", function(event) { updateLists(this ) } );
+});
+
+
+function updateLists(elem) {
+    id  = $(elem).attr("value");  /* user id */
+    url = "<%= url %>" ;
+    mode= $(elem).attr('jqtype');
+
+    //alert("value = " + id + " mode=" + mode + " url=" + url) ;
+    if( id == <%=@logged_in_user.id-%> && mode == "remove_name" ) {
+       show_me = true ;
+    }
+    else { show_me = false ; }
+    $.post(url, { user_id: id, mode: mode
+            <% if defined?(design_id) %>, design_id: <%=design_id%> <%end%>
+            <% if defined?(design_review_id)%> ,design_review_id: <%=design_review_id%> <%end%>
+            <% if defined?(eco_task_id)%> ,eco_task_id: <%=eco_task_id%> <%end%>
+            <% if defined?(ipd_post_id)%> ,ipd_post_id: <%=ipd_post_id%> <%end%>
+            } ,
+       function(data) {
+          var $response = $(data);
+           //update the two select lists data
+           var content = $response.find("#remove_name").html();
+           $("#remove_name").empty().append(content);
+           var content = $response.find("#add_name").html();
+           $("#add_name").empty().append(content);
+           var content = $response.find("#cc_list").html();
+           $("#cc_list").empty().append(content);
+         }
+    );
+    if ( elem.id == "add_me" ) {
+       $(".add_me").hide();
+       $("input[id=add_me]").attr('checked',false);
+       $(".remove_me").show();
+    }
+    if ( elem.id == "remove_me" || show_me == true ) {
+       $(".remove_me").hide();
+       $("input[id=remove_me]").attr('checked',false);
+       $(".add_me").show();
+    }
+  };
+<% end %>
+
+
+  <div id="selections">
+    <table border="0" width="100%" >
+      <tr>
+<% if @reviewers.size > 0 %>
+         <td valign="top" align="center" >
+           <table border="0" id="reviewer_list" width="100%" >
+             <tr>
+               <th colspan="2" class="teraheader" >
+                 <font size="+1">Reviewers</font>
+               </th>
+             </tr>
+             <tr>
+               <td colspan="2" align="center">
+                 <font size="-1">Mail is addressed to all reviewers.</font>
+               </td>
+             </tr>
+             <tr>
+               <th class="teraheader" width="50%" ><font size="-1">Reviewer</font></th>
+               <th class="teraheader" width="50%" ><font size="-1">Role</font></th>
+             </tr>
+   <% for reviewer in @reviewers %>
+             <tr valign="top" >
+               <td align="left" style="padding-left: 25px;"><%= raw reviewer[:name] %></td>
+               <td align="left" style="padding-left: 25px;"><%= reviewer[:group] %></td>
+             </tr>
+   <% end %>
+             <tr>
+               <td colspan="2" bgcolor="#dfdfdf" align="center">
+                 <font size="-1">
+                 <b>Note:</b> The above list may contain duplication.<br/>
+                    The mail will go out without duplicates.
+                 </font>
+               </td>
+             </tr>
+           </table>
+         </td>
+         <td valign="top" align="center">
+<% else %>
+         <td valign="top" align="center" colspan="2">
+<%  end %>
+           <table id="cc_list" width="100%" >
+             <tr>
+               <th  colspan="3"class="teraheader">
+                   <font size="+1">CC List</font>
+               </th>
+             </tr>
+<% if @users_copied.size > 0
+   rows  = (@users_copied.size/3.0).ceil
+   for i in 0..rows-1
+     user1 = @users_copied[i]
+     user2 = @users_copied[i+rows]
+     user3 = @users_copied[i+rows*2]
+%>
+             <tr>
+    <% if defined?(user1) && ! user1.blank? %>
+               <td value="<%=user1.id-%>"  >
+                      <%= user1.name %>
+               </td>
+   <% else %>
+               <td>&nbsp;</td>
+   <% end %>
+   <% if defined?(user2) && ! user2.blank? %>
+               <td value="<%=user2.id-%>"  >
+                      <%= user2.name %>
+               </td>
+   <% else %>
+               <td>&nbsp;</td>
+   <% end %>
+   <% if defined?(user3) && ! user3.blank? %>
+               <td value="<%=user3.id-%>"  >
+                      <%= user3.name %>
+               </td>
+   <% else %>
+               <td>&nbsp;</td>
+   <% end %>
+             </tr>
+  <% end %>
+<% else %>
+             <tr><td><b>No users on CC List</b></td></tr>
+<% end %>
+           </table>
+         </td>
+       </tr>
+<% if permitted_to_add_self_to_cc_list(@reviewers) %>
+       <tr class="add_me">
+         <td colspan="2"><hr class="div"  /></td>
+       </tr>
+       <tr class="add_me">
+         <td align="left">
+            <b>Add me to the CC List:</b>
+            <%= check_box("add","me", { "jQtype" =>"add_name" },
+                @logged_in_user.id ) %>
+         </td>
+       </tr>
+<% end %>
+<% if permitted_to_update_cc_list %>
+       <tr>
+         <td colspan="2"><hr class="div"  /></td>
+       </tr>
+       <tr>
+<% attributes = {"class" => 'name_select', "size" => '10'} %>
+         <td valign="top" align="center">
+           <table>
+             <tr>
+               <th colspan="2" class="teraheader" >
+                  <font size="+1">Remove from CC List</font>
+               </th>
+             </tr>
+             <tr>
+                <td colspan="2" align="center">
+                  <font size="-2">
+                    To remove from the CC list, click on the person's name.
+                  </font>
+                </td>
+             </tr>
+            <tr>
+               <td align="center">
+                  <%= collection_select(:remove,
+                                        :name,
+                                        @users_copied,
+                                        :id,
+                                        :last_name_first,
+                                       {:include_blank => false},
+                              attributes.merge({ "jQtype" =>"remove_name" }) )%>
+               </td>
+            </tr>
+          </table>
+       </td>
+         <td valign="top" align="center">
+           <table>
+             <tr>
+               <th colspan="2" class="teraheader" >
+                  <font size="+1">Add to CC List</font>
+               </th>
+             </tr>
+             <tr>
+                <td colspan="2" align="center">
+                  <font size="-2">
+                    To add to the CC list, click on the person's name.
+                  </font>
+                </td>
+             </tr>
+            <tr>
+               <td align="center">
+                  <%= collection_select(:add,
+                                        :name,
+                                        @users_not_copied,
+                                        :id,
+                                        :last_name_first,
+                                       {:include_blank => false},
+                              attributes.merge({ "jQtype" =>"add_name" }) )%>
+               </td>
+            </tr>
+          </table>
+       </td>
+     </tr>
+<% end %>
+   </table>
+  </div>
+

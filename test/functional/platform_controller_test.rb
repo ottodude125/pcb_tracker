@@ -10,13 +10,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'platform_controller'
 
 # Re-raise errors caught by the controller.
 class PlatformController; def rescue_action(e) raise e end; end
 
-class PlatformControllerTest < Test::Unit::TestCase
+class PlatformControllerTest < ActionController::TestCase
   
   
   def setup

@@ -26,7 +26,7 @@
   <!-- ****************************************************************** -->
   <!-- Hours -->
   <!-- ****************************************************************** -->
-  <% if @design_change.errors[:hours] %>
+  <% if !@design_change.errors[:hours].empty? %>
     <tr bgcolor="yellow">
       <td class="design_change_table_header">&nbsp;</td>
       <td colspan="2" class="design_change_table_warning">
@@ -73,7 +73,7 @@
   <!-- ****************************************************************** -->
   <!-- Submitter's Comments -->
   <!-- ****************************************************************** -->
-  <% if @design_change.errors[:designer_comment] %>
+  <% if !@design_change.errors[:designer_comment].empty? %>
     <tr bgcolor="yellow">
       <td class="design_change_table_header">&nbsp;</td>
       <td colspan="2" class="design_change_table_warning">

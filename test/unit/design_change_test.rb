@@ -11,18 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class DesignChangeTest < ActiveSupport::TestCase
-  
-  fixtures :change_classes,
-           :change_details,
-           :change_items,
-           :change_types,
-           :designs,
-           :design_changes,
-           :users
-  
+class DesignChangesTest < ActiveSupport::TestCase
   
   def setup
     @expected_pending_changes  = [ design_changes(:mx234a_design_change),
@@ -405,12 +396,13 @@ class DesignChangeTest < ActiveSupport::TestCase
 
     design_change.change_class_id = nil
     design_change.save
-    assert_equal("Change Class selection is required",
-                 design_change.errors[:change_class_id])
+    assert_equal("Change Class selection is required", design_change.errors[:change_class_id][0])
     design_change.change_class_id = 0
     design_change.save
-    assert_equal("Change Class selection is required",
-                 design_change.errors[:change_class_id])
+    assert_equal("Change Class selection is required", design_change.errors[:change_class_id][0])
+    design_change.change_class_id = 1  #should be OK
+    design_change.save
+    assert_nil(design_change.errors[:change_class_id][0])
   end
 
 
@@ -419,12 +411,15 @@ class DesignChangeTest < ActiveSupport::TestCase
     @mx234a_design_change.change_class_id = nil
     @mx234a_design_change.save
     assert_equal("Change Class selection is required",
-                 @mx234a_design_change.errors[:change_class_id])
+                 @mx234a_design_change.errors[:change_class_id][0])
     @mx234a_design_change.change_class_id = 0
     @mx234a_design_change.save
     assert_equal("Change Class selection is required",
-                 @mx234a_design_change.errors[:change_class_id])
-  end
+                 @mx234a_design_change.errors[:change_class_id][0])
+    @mx234a_design_change.change_class_id = 1
+    @mx234a_design_change.save
+    assert_nil(@mx234a_design_change.errors[:change_class_id][0])
+ end
 
 
   ######################################################################
@@ -435,24 +430,31 @@ class DesignChangeTest < ActiveSupport::TestCase
     design_change.change_type_id  = nil
     design_change.save
     assert_equal("Change Type selection is required",
-                 design_change.errors[:change_type_id])
+                 design_change.errors[:change_type_id][0])
     design_change.change_type_id = 0
     design_change.save
     assert_equal("Change Type selection is required",
-                 design_change.errors[:change_type_id])
-  end
+                 design_change.errors[:change_type_id][0])
+    design_change.change_type_id = 11
+    design_change.save
+    assert_nil(design_change.errors[:change_type_id][0])
+ end
 
 
   ######################################################################
   def test_update_invalid_change_type_not_set
+
     @mx234a_design_change.change_type_id = nil
     @mx234a_design_change.save
     assert_equal("Change Type selection is required",
-                 @mx234a_design_change.errors[:change_type_id])
+                 @mx234a_design_change.errors[:change_type_id][0])
     @mx234a_design_change.change_type_id = 0
     @mx234a_design_change.save
     assert_equal("Change Type selection is required",
-                 @mx234a_design_change.errors[:change_type_id])
+                 @mx234a_design_change.errors[:change_type_id][0])
+    @mx234a_design_change.change_type_id = 11
+    @mx234a_design_change.save
+    assert_nil(@mx234a_design_change.errors[:change_type_id][0])
   end
 
 
@@ -465,12 +467,15 @@ class DesignChangeTest < ActiveSupport::TestCase
     design_change.change_item_id  = nil
     design_change.save
     assert_equal("Change Item selection is required",
-                 design_change.errors[:change_item_id])
+                 design_change.errors[:change_item_id][0])
     design_change.change_item_id = 0
     design_change.save
     assert_equal("Change Item selection is required",
-                 design_change.errors[:change_item_id])
-  end
+                 design_change.errors[:change_item_id][0])
+    design_change.change_item_id = 113
+    design_change.save
+    assert_nil(design_change.errors[:change_item_id][0])
+ end
 
 
   ######################################################################
@@ -478,11 +483,14 @@ class DesignChangeTest < ActiveSupport::TestCase
     @mx234a_design_change.change_item_id = nil
     @mx234a_design_change.save
     assert_equal("Change Item selection is required",
-                 @mx234a_design_change.errors[:change_item_id])
+                 @mx234a_design_change.errors[:change_item_id][0])
     @mx234a_design_change.change_item_id = 0
     @mx234a_design_change.save
     assert_equal("Change Item selection is required",
-                 @mx234a_design_change.errors[:change_item_id])
+                 @mx234a_design_change.errors[:change_item_id][0])
+    @mx234a_design_change.change_item_id = 113
+    @mx234a_design_change.save
+    assert_nil(@mx234a_design_change.errors[:change_item_id][0])
   end
 
 
@@ -496,11 +504,14 @@ class DesignChangeTest < ActiveSupport::TestCase
     design_change.change_detail_id = nil
     design_change.save
     assert_equal("Change Detail selection is required",
-                 design_change.errors[:change_detail_id])
+                 design_change.errors[:change_detail_id][0])
     design_change.change_detail_id = 0
     design_change.save
     assert_equal("Change Detail selection is required",
-                 design_change.errors[:change_detail_id])
+                 design_change.errors[:change_detail_id][0])
+    design_change.change_detail_id = 1131
+    design_change.save
+    assert_nil(design_change.errors[:change_detail_id][0])
   end
 
 
@@ -509,11 +520,14 @@ class DesignChangeTest < ActiveSupport::TestCase
     @mx234a_design_change.change_detail_id = nil
     @mx234a_design_change.save
     assert_equal("Change Detail selection is required",
-                 @mx234a_design_change.errors[:change_detail_id])
+                 @mx234a_design_change.errors[:change_detail_id][0])
     @mx234a_design_change.change_detail_id = 0
     @mx234a_design_change.save
     assert_equal("Change Detail selection is required",
-                 @mx234a_design_change.errors[:change_detail_id])
+                 @mx234a_design_change.errors[:change_detail_id][0])
+    @mx234a_design_change.change_detail_id = 1131
+    @mx234a_design_change.save
+    assert_nil(@mx234a_design_change.errors[:change_detail_id][0])
   end
 
 
@@ -523,7 +537,7 @@ class DesignChangeTest < ActiveSupport::TestCase
     @mx234a_design_change.hours  = 40.0
     @mx234a_design_change.save
     assert_equal("If there is no schedule impact, the hours need to be set to '0.0'",
-                 @mx234a_design_change.errors[:hours])
+                 @mx234a_design_change.errors[:hours][0])
   end
 
   

@@ -10,68 +10,92 @@
 #
 ########################################################################
 #
-ActionController::Routing::Routes.draw do |map|
-  map.resources :part_nums
+PcbTracker::Application.routes.draw do
+  resources :part_nums
 
-  map.resources :change_classes do |change_classes|
-    change_classes.resources :change_types, :name_prefix => "change_class_"
+  resources :change_classes do
+    resources :change_types, :name_prefix => "change_class_"
   end
   
-  map.resources :change_types do |change_types|
-    change_types.resources :change_items, :name_prefix => "change_type_"
+  resources :change_types do
+    resources :change_items, :name_prefix => "change_type_"
   end
   
-  map.resources :change_items do |change_items|
-    change_items.resources :change_details, :name_prefix => "change_item_"
+  resources :change_items do
+    resources :change_details, :name_prefix => "change_item_"
   end
    
-  #map.resources :change_details
-  #map.resources :change_items
-  #map.resources :change_class, :has_many => :change_types
+  resources :design_changes do
+    collection do
+      get 'pending_list'
+    end
+  end
 
-#  map.resources :review_attachments
-  map.resources :design_changes, :collection => { :pending_list => :get }
-  map.resources :eco_tasks
-  map.resources :eco_task_reports
-  map.resources :eco_documents
+  resources :eco_tasks do
+    collection do
+      post 'change_cc_list'
+    end
+  end
+  resources :eco_task_reports
+  resources :eco_documents
 
+  resources :design do
+    member do
+      post 'change_cc_list'
+      post  'get_role_users'
+      get   'view'
+    end
+    collection do
+      get  'initial_cc_list'
+      get 'initial_attachments'
+    end
+  end
   
-  
-  # The priority is based upon order of creation: first created -> highest priority.
+  resources :design_review do
+    member do
+      post 'display_peer_auditor_select'
+      post 'display_designer_select'
+      get 'post_results'
+      get  'review_mail_list'
+      get  'review_attachments'
+    end
+    collection do
+      get  'change_design_dir'
+      get  'update_documents'
+      get  'get_attachment'
+      get  'delete_document'
+      get  'change_design_center'
+      get  'repost_review'
+      get  'post_review'
+      get  'post_results'
+      get  'skip_review'
+   end
+  end
 
-  # Sample of regular route:
-  #   map.connect 'products/:id', :controller => 'catalog', :action => 'view'
-  # Keep in mind you can assign values other than :controller and :action
+  resources :board_design_entry do
+    collection do
+      get  'originator_list'
+      get  'processor_list'
+    end
+    member do
+      post 'update_yes_no'
+      get  'delete_entry'
+    end
+  end
 
-  # Sample of named route:
-  #   map.purchase 'products/:id/purchase', :controller => 'catalog', :action => 'purchase'
-  # This route can be invoked with purchase_url(:id => product.id)
-
-# Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   map.resources :products
-
-# Sample resource route with options:
-  #   map.resources :products, :member => { :short => :get, :toggle => :post }, :collection => { :sold => :get }
-
-  # Sample resource route with sub-resources:
-  #   map.resources :products, :has_many => [ :comments, :sales ], :has_one => :seller
-
-  # Sample resource route within a namespace:
-  #   map.namespace :admin do |admin|
-  #     # Directs /admin/products/* to Admin::ProductsController (app/controllers/admin/products_controller.rb)
-  #     admin.resources :products
-  #   end
-
+ 
   # In the event that only the root is provided in the URL,
   # display the tracker home page (index).
-  map.root :controller => 'tracker', :action => 'index'
+  root :to => 'tracker#index'
+
+  match "_vti_bin/owssvr.dll" => 'tracker#index'
+  match "MSOffice/cltreq.asp" => 'tracker#index'
   
-  map.connect "_vti_bin/owssvr.dll", :controller => 'tracker', :action => 'index'
-  map.connect "MSOffice/cltreq.asp", :controller => 'tracker', :action => 'index'
+  match "/documentation" => "documentation#index"
 
   # See how all your routes lay out with "rake routes"
   
   # Install the default routes as the lowest priority.
-  map.connect ':controller/:action/:id'
-  map.connect ':controller/:action/:id.:format'
+  match ':controller(/:action(/:id(.:format)))'
+
 end

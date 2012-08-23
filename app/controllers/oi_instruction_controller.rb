@@ -95,9 +95,22 @@ class OiInstructionController < ApplicationController
   ######################################################################
   #
   def process_assignments
-
+ 
+    design_id     = params[:design_id].blank?    ? params[:design][:id]   : params[:design_id]
+    category_id   = params[:category_id].blank?  ? params[:category][:id] : params[:category_id]
+    section_id    = params[:section_id].blank?   ? params[:instruction][:oi_category_section_id] :
+                                                   params[:section_id]
+    allegro_board_symbol = params[:instruction].blank? ? "" :
+                               params[:instruction][:allegro_board_symbol]
+    @assignment    = params[:assignment].blank? ?
+      OiAssignment.new(:due_date      => Time.now+1.day,
+                       :complexity_id => OiAssignment.complexity_id("Low")) :
+      OiAssignment.new(params[:assignment])
+     
+    @team_members_selected = params[:team_members]
+    
     # Verify that a section was selected before proceeding.
-    if !(params[:section_id] || flash[:assignment])
+    if section_id.blank?
     
       flash['notice'] = 'Please select the step'
 
@@ -105,55 +118,30 @@ class OiInstructionController < ApplicationController
                   :id        => params[:category][:id],
                   :design_id => params[:design][:id])
                   
-      flash[:assignment] = flash[:assignment]
-      
-      return
+       return
       
     end
 
     # If processing makes it this far then there are no errors.
-    if !flash[:assignment]
-    
-      assignment = {}
-      @design       = Design.find(params[:design]       ? params[:design][:id]   : params[:design_id])
-      @category     = OiCategory.find(params[:category] ? params[:category][:id] : params[:category_id])
-      @team_members = Role.lcr_designers
-      @selected_step = @category.oi_category_sections.detect { |s| s.id == params[:section_id].to_i }
-      @instruction   = OiInstruction.new(:oi_category_section_id => @selected_step.id,
-                                         :design_id              => @design.id)
-      @assignment    = OiAssignment.new(:due_date      => Time.now+1.day,
-                                        :complexity_id => OiAssignment.complexity_id("Low"))
-      @comment       = OiAssignmentComment.new
-      assignment[:design]        = @design
-      assignment[:category]      = @category
-      assignment[:team_members]  = @team_members
-      assignment[:selected_step] = @selected_step
-      assignment[:instruction]   = @instruction
-      assignment[:assignment]    = @assignment
-      assignment[:comment]       = @comment
+    @design       = Design.find(design_id)
+    @category     = OiCategory.find(category_id)
+    @team_members = Role.lcr_designers
+    @selected_step = @category.oi_category_sections.detect { |s| s.id == section_id.to_i }
 
-      if @selected_step.outline_drawing_link?
+    @instruction   = OiInstruction.new(:oi_category_section_id => @selected_step.id,
+                                       :design_id              => @design.id,
+                                       :allegro_board_symbol   => allegro_board_symbol )
+
+
+    @comment       = OiAssignmentComment.new(params[:comment])
+ 
+    if @selected_step.outline_drawing_link?
         outline_drawing_document_type = DocumentType.find_by_name("Outline Drawing")
-        @outline_drawing = DesignReviewDocument.find(
-                             :first,
-                             :conditions => "design_id=#{@design.id} AND " +
-                                            "document_type_id=#{outline_drawing_document_type.id}",
-                             :order      => "id DESC")
-        assignment[:outline_drawing] = @outline_drawing
-      end
-      
-      flash[:assignment] = assignment
-    else
-      @design          = flash[:assignment][:design]
-      @category        = flash[:assignment][:category]
-      @team_members    = flash[:assignment][:team_members]
-      @selected_step   = flash[:assignment][:selected_step]
-      @instruction     = flash[:assignment][:instruction]
-      @assignment      = flash[:assignment][:assignment]
-      @comment         = flash[:assignment][:comment]
-      @outline_drawing = flash[:assignment][:outline_drawing]
-
-      flash[:assignment] = flash[:assignment]
+    @outline_drawing = DesignReviewDocument.find(
+                         :first,
+                         :conditions => "design_id=#{@design.id} AND " +
+                                        "document_type_id=#{outline_drawing_document_type.id}",
+                         :order      => "id DESC")
     end
 
     hw_engineers = @design.get_role_reviewers('HWENG').map { |u| u.name }
@@ -190,7 +178,7 @@ class OiInstructionController < ApplicationController
   ######################################################################
   #
   def process_assignment_details
-
+    
     oi_assignments = {}
 
     instruction     = OiInstruction.new(params[:instruction])
@@ -219,18 +207,13 @@ class OiInstructionController < ApplicationController
     end
     
     if missing_allegro_board_symbol || !team_members_selected
-    
-      flash[:assignment] = flash[:assignment]
-
-      flash[:assignment][:instruction]       = instruction
-      flash[:assignment][:member_selections] = params[:team_member]
-      flash[:assignment][:comment]           = OiAssignmentComment.new(params[:comment])
-      flash[:assignment][:assignment]        = OiAssignment.new(params[:assignment])
-
-      redirect_to(:action      => 'process_assignments',
-                  :category_id => params[:category][:id],
-                  :design_id   => params[:design][:id])
-        
+        redirect_to(:action      => 'process_assignments',
+                  :category      => params[:category],
+                  :design        => params[:design],
+                  :instruction   => params[:instruction],
+                  :comment       => params[:comment],
+                  :team_members  => params[:team_member],
+                  :assignment    => params[:assignment] )
     else # Process the information that the user passed in.
 
       # Fill out the Outsource Instruction record and save it.
@@ -273,7 +256,7 @@ class OiInstructionController < ApplicationController
       
       # Send notification email for each of the assignments.
       oi_assignments.each do |member_id, oi_assignment_list|
-        TrackerMailer::deliver_oi_assignment_notification(oi_assignment_list)
+        OiInstructionMailer::oi_assignment_notification(oi_assignment_list).deliver
       end
 
       redirect_to(:action    => 'oi_category_selection', 
@@ -412,7 +395,8 @@ class OiInstructionController < ApplicationController
                               :oi_assignment_id => assignment.id).save
 
       flash['notice'] = 'The work assignment has been updated - mail sent'
-      TrackerMailer.deliver_oi_task_update(assignment, @logged_in_user, completed, reset)
+      OiInstructionMailer.oi_task_update(assignment, @logged_in_user, 
+          completed, reset).deliver
     else
       flash['notice'] = 'No updates included with post - the work assignment has not been updated'
     end
@@ -447,7 +431,7 @@ class OiInstructionController < ApplicationController
       assignment_list[section] << a
     end
     
-    @assignment_list = assignment_list.sort_by { |category, list| category.id }
+    @assignment_list = assignment_list.sort_by { |category_t, list| category_t.id }
     
     @assignment_list.each do |section|
       section[1] = section[1].sort_by { |a| a.user.last_name }

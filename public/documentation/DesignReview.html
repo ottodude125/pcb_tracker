@@ -1,0 +1,3156 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: DesignReview</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/models/design_review.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">ActiveRecord::Base
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-active_design_reviews">::active_design_reviews</a>
+    
+    <li><a href="#method-c-http_object">::http_object</a>
+    
+    <li><a href="#method-c-in_process_design_reviews">::in_process_design_reviews</a>
+    
+    <li><a href="#method-c-my_processed_reviews">::my_processed_reviews</a>
+    
+    <li><a href="#method-c-my_unprocessed_reviews">::my_unprocessed_reviews</a>
+    
+    <li><a href="#method-c-reviews_assigned_to_peers">::reviews_assigned_to_peers</a>
+    
+    <li><a href="#method-c-summary_data">::summary_data</a>
+    
+    <li><a href="#method-i-active-3F">#active?</a>
+    
+    <li><a href="#method-i-active_reviewers">#active_reviewers</a>
+    
+    <li><a href="#method-i-add_reviewers">#add_reviewers</a>
+    
+    <li><a href="#method-i-age">#age</a>
+    
+    <li><a href="#method-i-age_in_days">#age_in_days</a>
+    
+    <li><a href="#method-i-age_in_seconds">#age_in_seconds</a>
+    
+    <li><a href="#method-i-comments">#comments</a>
+    
+    <li><a href="#method-i-comments_by_role">#comments_by_role</a>
+    
+    <li><a href="#method-i-copy_to">#copy_to</a>
+    
+    <li><a href="#method-i-data_found-3F">#data_found?</a>
+    
+    <li><a href="#method-i-designer">#designer</a>
+    
+    <li><a href="#method-i-display_age_in_days">#display_age_in_days</a>
+    
+    <li><a href="#method-i-display_header">#display_header</a>
+    
+    <li><a href="#method-i-generate_reviewer_selection_list">#generate_reviewer_selection_list</a>
+    
+    <li><a href="#method-i-get_review_result">#get_review_result</a>
+    
+    <li><a href="#method-i-in_review-3F">#in_review?</a>
+    
+    <li><a href="#method-i-inactive_reviewers">#inactive_reviewers</a>
+    
+    <li><a href="#method-i-inactive_reviewers-3F">#inactive_reviewers?</a>
+    
+    <li><a href="#method-i-is_reviewer-3F">#is_reviewer?</a>
+    
+    <li><a href="#method-i-mail_lists">#mail_lists</a>
+    
+    <li><a href="#method-i-my_assigned_roles">#my_assigned_roles</a>
+    
+    <li><a href="#method-i-my_peer_results">#my_peer_results</a>
+    
+    <li><a href="#method-i-my_results">#my_results</a>
+    
+    <li><a href="#method-i-my_roles">#my_roles</a>
+    
+    <li><a href="#method-i-on_hold-3F">#on_hold?</a>
+    
+    <li><a href="#method-i-pending_repost-3F">#pending_repost?</a>
+    
+    <li><a href="#method-i-place_on_hold">#place_on_hold</a>
+    
+    <li><a href="#method-i-post_review-3F">#post_review?</a>
+    
+    <li><a href="#method-i-record_update">#record_update</a>
+    
+    <li><a href="#method-i-remove_from_hold">#remove_from_hold</a>
+    
+    <li><a href="#method-i-results_with_inactive_users">#results_with_inactive_users</a>
+    
+    <li><a href="#method-i-review_complete-3F">#review_complete?</a>
+    
+    <li><a href="#method-i-review_locked-3F">#review_locked?</a>
+    
+    <li><a href="#method-i-review_name">#review_name</a>
+    
+    <li><a href="#method-i-review_results_by_role_name">#review_results_by_role_name</a>
+    
+    <li><a href="#method-i-reviewer_is_complete-3F">#reviewer_is_complete?</a>
+    
+    <li><a href="#method-i-reviewer_list">#reviewer_list</a>
+    
+    <li><a href="#method-i-reviewer_locked_in-3F">#reviewer_locked_in?</a>
+    
+    <li><a href="#method-i-reviewers">#reviewers</a>
+    
+    <li><a href="#method-i-role_reviewer">#role_reviewer</a>
+    
+    <li><a href="#method-i-set_posting_timestamp">#set_posting_timestamp</a>
+    
+    <li><a href="#method-i-set_reviewer">#set_reviewer</a>
+    
+    <li><a href="#method-i-surfboards_path">#surfboards_path</a>
+    
+    <li><a href="#method-i-time_on_hold">#time_on_hold</a>
+    
+    <li><a href="#method-i-time_on_hold_total">#time_on_hold_total</a>
+    
+    <li><a href="#method-i-unprocessed_results">#unprocessed_results</a>
+    
+    <li><a href="#method-i-update_criticality">#update_criticality</a>
+    
+    <li><a href="#method-i-update_pcb_input_gate">#update_pcb_input_gate</a>
+    
+    <li><a href="#method-i-update_release_review_poster">#update_release_review_poster</a>
+    
+    <li><a href="#method-i-update_review_status">#update_review_status</a>
+    
+    <li><a href="#method-i-update_reviews_designer_poster">#update_reviews_designer_poster</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class DesignReview</h1>
+
+  <div id="description" class="description">
+    
+<p>Copyright 2005, by Teradyne, Inc., Boston MA</p>
+
+<p>File: design_review.rb</p>
+
+<p>This file maintains the state for design reviews.</p>
+
+<p>$Id$</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+    <!-- Constants -->
+    <section id="constants-list" class="section">
+      <h3 class="section-header">Constants</h3>
+      <dl>
+      
+        <dt id="SATURDAY">SATURDAY
+        
+        <dd class="description">
+        
+      
+        <dt id="SUNDAY">SUNDAY
+        
+        <dd class="description">
+        
+      
+      </dl>
+    </section>
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-active_design_reviews" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            active_design_reviews(user) &rarr; [design_reviews]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve a list of all active design reviews</p>
+
+<pre>Returns a list of design reviews.</pre>
+          
+
+          
+          <div class="method-source-code" id="active_design_reviews-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 44</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">active_design_reviews</span>
+  <span class="ruby-identifier">status_in_review</span>      = <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'In Review'</span>)
+  <span class="ruby-identifier">status_pending_repost</span> = <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'Pending Repost'</span>)
+  <span class="ruby-identifier">status_on_hold</span>        = <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'Review On-Hold'</span>)
+
+  <span class="ruby-ivar">@active_design_reviews</span> = <span class="ruby-constant">DesignReview</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>,
+                                             <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;review_status_id='#{status_in_review.id}'      OR &quot;</span> <span class="ruby-operator">+</span>
+                                                            <span class="ruby-node">&quot;review_status_id='#{status_pending_repost.id}' OR &quot;</span> <span class="ruby-operator">+</span>
+                                                            <span class="ruby-node">&quot;review_status_id='#{status_on_hold.id}'&quot;</span>)
+  <span class="ruby-ivar">@active_design_reviews</span> = <span class="ruby-ivar">@active_design_reviews</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> [<span class="ruby-identifier">dr</span>.<span class="ruby-identifier">priority</span>.<span class="ruby-identifier">value</span>, <span class="ruby-operator">-</span><span class="ruby-identifier">dr</span>.<span class="ruby-identifier">age</span>] }
+  <span class="ruby-ivar">@active_design_reviews</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- active_design_reviews-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- active_design_reviews-method -->
+
+    
+      <div id="method-c-http_object" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">http_object</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="http_object-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 31</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">http_object</span>
+  <span class="ruby-identifier">@@h</span> = <span class="ruby-identifier">@@h</span> <span class="ruby-operator">||=</span> <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span><span class="ruby-operator">::</span><span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;boarddev.teradyne.com&quot;</span>)
+  <span class="ruby-identifier">@@h</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- http_object-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- http_object-method -->
+
+    
+      <div id="method-c-in_process_design_reviews" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            in_process_design_reviews() &rarr; [design_reviews]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve a list of design reviews that are active.</p>
+
+<pre>Returns a list of design reviewx that are active</pre>
+          
+
+          
+          <div class="method-source-code" id="in_process_design_reviews-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 137</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">in_process_design_reviews</span>
+  <span class="ruby-identifier">status_in_review</span> = <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;name='In Review'&quot;</span>)
+  <span class="ruby-identifier">status_waived</span>    = <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;name='Review Waived'&quot;</span>)
+  <span class="ruby-constant">DesignReview</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>,
+                    <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;review_status_id='#{status_in_review.id}' OR &quot;</span> <span class="ruby-operator">+</span>
+                                   <span class="ruby-node">&quot;review_status_id='#{status_waived.id}'&quot;</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- in_process_design_reviews-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- in_process_design_reviews-method -->
+
+    
+      <div id="method-c-my_processed_reviews" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            my_processed_reviews(user) &rarr; [design_reviews]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve a list of all active processed reviews for which the user is
+assigned to perform at least one of the role reviews</p>
+
+<pre>Returns a list of design reviews.</pre>
+          
+
+          
+          <div class="method-source-code" id="my_processed_reviews-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 66</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">my_processed_reviews</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-constant">DesignReview</span>.<span class="ruby-identifier">active_design_reviews</span> <span class="ruby-comment">#unless @active_design_reviews</span>
+  <span class="ruby-identifier">my_processed_reviews</span> = <span class="ruby-ivar">@active_design_reviews</span>.<span class="ruby-identifier">to_ary</span>.<span class="ruby-identifier">find_all</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">is_reviewer?</span>(<span class="ruby-identifier">user</span>) }
+  <span class="ruby-identifier">my_processed_reviews</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">dr</span>.<span class="ruby-identifier">reviewer_is_complete?</span>(<span class="ruby-identifier">user</span>) }
+  <span class="ruby-identifier">my_processed_reviews</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- my_processed_reviews-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- my_processed_reviews-method -->
+
+    
+      <div id="method-c-my_unprocessed_reviews" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            my_unprocessed_reviews(user) &rarr; [design_reviews]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve a list of all active unprocessed reviews for which the user is
+assigned to perform at least one of the role reviews</p>
+
+<pre>Returns a list of design reviews.</pre>
+          
+
+          
+          <div class="method-source-code" id="my_unprocessed_reviews-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 82</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">my_unprocessed_reviews</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-constant">DesignReview</span>.<span class="ruby-identifier">active_design_reviews</span> <span class="ruby-comment">#unless @active_design_reviews</span>
+  <span class="ruby-identifier">my_unprocessed_reviews</span> = <span class="ruby-ivar">@active_design_reviews</span>.<span class="ruby-identifier">to_ary</span>.<span class="ruby-identifier">find_all</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">is_reviewer?</span>(<span class="ruby-identifier">user</span>) }
+  <span class="ruby-identifier">my_unprocessed_reviews</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">reviewer_is_complete?</span>(<span class="ruby-identifier">user</span>) }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- my_unprocessed_reviews-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- my_unprocessed_reviews-method -->
+
+    
+      <div id="method-c-reviews_assigned_to_peers" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            reviews_assigned_to_peers(user) &rarr; [design_reviews]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve a list of all active reviews for which the user is not assigned to
+perform any of the role reviews</p>
+
+<pre>Returns a list of design reviews.</pre>
+          
+
+          
+          <div class="method-source-code" id="reviews_assigned_to_peers-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 97</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">reviews_assigned_to_peers</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-constant">DesignReview</span>.<span class="ruby-identifier">active_design_reviews</span> <span class="ruby-comment">#unless @active_design_reviews</span>
+  <span class="ruby-ivar">@active_design_reviews</span>.<span class="ruby-identifier">to_ary</span>.<span class="ruby-identifier">find_all</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">dr</span>.<span class="ruby-identifier">is_reviewer?</span>(<span class="ruby-identifier">user</span>) <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">my_roles</span>(<span class="ruby-identifier">user</span>) <span class="ruby-operator">!=</span> [] }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- reviews_assigned_to_peers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- reviews_assigned_to_peers-method -->
+
+    
+      <div id="method-c-summary_data" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            summary_data() &rarr; {design_reviews}
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve all design reviews that have been posted at least once.</p>
+
+<pre>Returns a hash of design reviewx accessed by the year and quarter.</pre>
+          
+
+          
+          <div class="method-source-code" id="summary_data-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 110</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">summary_data</span>
+  
+  <span class="ruby-identifier">design_reviews</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find</span>( <span class="ruby-value">:all</span>,
+                              <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;posting_count &gt; 0&quot;</span> )
+  
+  <span class="ruby-identifier">sorted_by_quarter</span> = {}
+  
+  <span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design_review</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">quarter</span> = <span class="ruby-string">'Q'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_on</span>.<span class="ruby-identifier">current_quarter</span>.<span class="ruby-identifier">to_s</span>
+    <span class="ruby-identifier">year</span>    = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_on</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%Y&quot;</span>)
+    <span class="ruby-identifier">key</span>     = <span class="ruby-identifier">year</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">quarter</span>
+    <span class="ruby-identifier">sorted_by_quarter</span>[<span class="ruby-identifier">key</span>] = [] <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">sorted_by_quarter</span>[<span class="ruby-identifier">key</span>]
+    <span class="ruby-identifier">sorted_by_quarter</span>[<span class="ruby-identifier">key</span>] <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">design_review</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">sorted_by_quarter</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- summary_data-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- summary_data-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-active-3F" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            active?() &rarr; boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Indicate if the design review is active based the value in the review
+status field</p>
+
+<p>The flag is set to true if the review status indicates that the design
+review is active.</p>
+          
+
+          
+          <div class="method-source-code" id="active-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 236</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">active?</span>
+  <span class="ruby-identifier">name</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'In Review'</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'Pending Repost'</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'Review On-Hold'</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- active-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- active-3F-method -->
+
+    
+      <div id="method-i-active_reviewers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">active_reviewers</span><span
+            class="method-args">(sorted = false)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-active_reviewers">#active_reviewers</a></p>
+
+<p>Description: This method takes the list returned from <a
+href="DesignReview.html#method-i-reviewers">#reviewers</a> and removes the
+users who are no longer active and returns the results to the  caller.</p>
+
+<p>Parameters: sorted        - A flag that indicates whether or not to sort
+the</p>
+
+<pre>reviewer_list by the last names</pre>
+
+<p>Return value: A list of active <a
+href="DesignReview.html#method-i-reviewers">#reviewers</a> (user records)
+for the design review</p>
+          
+
+          
+          <div class="method-source-code" id="active_reviewers-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 690</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">active_reviewers</span>(<span class="ruby-identifier">sorted</span> = <span class="ruby-keyword">false</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">reviewers</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">r</span>.<span class="ruby-identifier">active?</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- active_reviewers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- active_reviewers-method -->
+
+    
+      <div id="method-i-add_reviewers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_reviewers</span><span
+            class="method-args">(board_team_list)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-add_reviewers">#add_reviewers</a></p>
+
+<p>Description: This method adds <a
+href="DesignReview.html#method-i-reviewers">#reviewers</a> to a design
+review.</p>
+
+<p>Parameters: board_team_list - a collection of users that are on the board
+team</p>
+
+<p>Return value: None</p>
+          
+
+          
+          <div class="method-source-code" id="add_reviewers-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 428</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_reviewers</span>(<span class="ruby-identifier">board_team_list</span>)
+
+  <span class="ruby-identifier">pcb_input_gate_role</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>,
+                                  <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;name='PCB Input Gate'&quot;</span>)
+  
+    <span class="ruby-identifier">board_team_list</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reviewer</span><span class="ruby-operator">|</span>
+ 
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">role</span>.<span class="ruby-identifier">reviewer?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">required?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">user_id?</span>)
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">role</span>.<span class="ruby-identifier">included_in_design_review?</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>)
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">role</span>.<span class="ruby-identifier">review_types</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_type</span>)
+      
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">role_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">pcb_input_gate_role</span>.<span class="ruby-identifier">id</span> 
+        <span class="ruby-identifier">reviewer_id</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">created_by</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">reviewer_id</span> = <span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">user_id</span>
+      <span class="ruby-keyword">end</span>
+        
+      <span class="ruby-identifier">drr</span> = <span class="ruby-constant">DesignReviewResult</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:reviewer_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">reviewer_id</span>, <span class="ruby-value">:role_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">role_id</span>)
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">drr</span>
+
+      <span class="ruby-comment"># If the role (group) is set to have the peers CC'ed then update the </span>
+      <span class="ruby-comment"># design review.</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">role</span>.<span class="ruby-identifier">cc_peers?</span>
+        <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">role</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">peer</span><span class="ruby-operator">|</span>
+          <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> (<span class="ruby-identifier">peer</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">reviewer_id</span> <span class="ruby-operator">||</span>
+                   <span class="ruby-operator">!</span><span class="ruby-identifier">peer</span>.<span class="ruby-identifier">active?</span>              <span class="ruby-operator">||</span>
+                   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">board</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">peer</span>))
+          <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">board</span>.<span class="ruby-identifier">users</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">peer</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- add_reviewers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- add_reviewers-method -->
+
+    
+      <div id="method-i-age" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">age</span><span
+            class="method-args">(end_time = Time.now)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-age">#age</a></p>
+
+<p>Description: This method returns the number of work days since the design
+review was originally posted.</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: The number of workdays in seconds since the design review was
+posted.</p>
+          
+
+          
+          <div class="method-source-code" id="age-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 608</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">age</span>(<span class="ruby-identifier">end_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>)
+  <span class="ruby-identifier">age_in_seconds</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">created_on</span>, <span class="ruby-identifier">end_time</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- age-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- age-method -->
+
+    
+      <div id="method-i-age_in_days" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">age_in_days</span><span
+            class="method-args">(current_time = Time.now)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-age_in_days">#age_in_days</a></p>
+
+<p>Description: This method returns the <a
+href="DesignReview.html#method-i-age">#age</a> of a design_review in work
+days</p>
+
+<p>Parameters: current_time - the time stamp for the current time</p>
+
+<p>Return value: A string representing the number of days between the time the
+design review was post and the current time.</p>
+          
+
+          
+          <div class="method-source-code" id="age_in_days-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 853</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">age_in_days</span>(<span class="ruby-identifier">current_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>)
+  <span class="ruby-identifier">delta</span> = <span class="ruby-identifier">current_time</span>.<span class="ruby-identifier">age_in_days</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">created_on</span>)
+  <span class="ruby-identifier">sprintf</span>(<span class="ruby-string">&quot;%4.1f&quot;</span>, <span class="ruby-identifier">delta</span>)  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- age_in_days-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- age_in_days-method -->
+
+    
+      <div id="method-i-comments" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            comments(user) &rarr; [design_review_comment]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve the <a href="DesignReview.html#method-i-comments">#comments</a>
+entered by the user</p>
+
+<p>A list of design_review_comments entered by the user</p>
+          
+
+          
+          <div class="method-source-code" id="comments-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 249</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">comments</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_comments</span>.<span class="ruby-identifier">to_ary</span>.<span class="ruby-identifier">find_all</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">comment</span><span class="ruby-operator">|</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">user</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">user</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- comments-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- comments-method -->
+
+    
+      <div id="method-i-comments_by_role" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">comments_by_role</span><span
+            class="method-args">(role_list)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-comments_by_role">#comments_by_role</a></p>
+
+<p>Description: This method retrieves the design review <a
+href="DesignReview.html#method-i-comments">#comments</a> for the roles 
+identified in the role_list parameter.</p>
+
+<p>Parameters: role_list - a list of role names</p>
+
+<p>Return value: A list of design review <a
+href="DesignReview.html#method-i-comments">#comments</a> associated with
+the design review  and the roles identified in the role_list.</p>
+          
+
+          
+          <div class="method-source-code" id="comments_by_role-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1002</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">comments_by_role</span>(<span class="ruby-identifier">role_list</span>)
+
+  <span class="ruby-identifier">role_names</span> = (<span class="ruby-identifier">role_list</span>.<span class="ruby-identifier">class</span> <span class="ruby-operator">==</span> <span class="ruby-constant">String</span>) <span class="ruby-operator">?</span> [<span class="ruby-identifier">role_list</span>] <span class="ruby-operator">:</span> <span class="ruby-identifier">role_list</span>
+  
+  <span class="ruby-identifier">role_users</span> = []
+  <span class="ruby-identifier">role_names</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">name</span><span class="ruby-operator">|</span> <span class="ruby-identifier">role_users</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-identifier">name</span>).<span class="ruby-identifier">users</span> }
+  <span class="ruby-identifier">role_users</span>.<span class="ruby-identifier">uniq!</span>
+
+  <span class="ruby-identifier">comment_list</span> = []
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_comments</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">comment</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">comment_list</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">comment</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">role_users</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ru</span><span class="ruby-operator">|</span> <span class="ruby-identifier">ru</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">comment</span>.<span class="ruby-identifier">user_id</span> }
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">comment_list</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- comments_by_role-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- comments_by_role-method -->
+
+    
+      <div id="method-i-copy_to" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">copy_to</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-copy_to">#copy_to</a></p>
+
+<p>Description: Given a design review this method will return a list of the
+people who should be CC’ed on all mails</p>
+
+<p>Parameters:</p>
+
+<pre>design_review - the design review to get the CC list for.</pre>
+          
+
+          
+          <div class="method-source-code" id="copy_to-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1336</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">copy_to</span>
+
+  <span class="ruby-identifier">cc_list</span> = [<span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer</span>.<span class="ruby-identifier">email</span>]
+  <span class="ruby-identifier">cc_list</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">designer</span>.<span class="ruby-identifier">email</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">designer_id</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">board</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">cc</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">cc_list</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">cc</span>.<span class="ruby-identifier">email</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">cc</span>.<span class="ruby-identifier">active?</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">cc_list</span> <span class="ruby-operator">+=</span> <span class="ruby-constant">Role</span>.<span class="ruby-identifier">add_role_members</span>([<span class="ruby-string">'Manager'</span>, <span class="ruby-string">'PCB Input Gate'</span>])
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">cc_list</span>.<span class="ruby-identifier">uniq</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- copy_to-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- copy_to-method -->
+
+    
+      <div id="method-i-data_found-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">data_found?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="data_found-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1290</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">data_found?</span>
+  <span class="ruby-comment">#puts &quot;\t\t\t\t\t\t\tCHECKING #{self.design_center.name} (#{self.surfboards_path})&quot;</span>
+  <span class="ruby-constant">DesignReview</span>.<span class="ruby-identifier">http_object</span>.<span class="ruby-identifier">get</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">surfboards_path</span>).<span class="ruby-identifier">code</span> <span class="ruby-operator">==</span> <span class="ruby-string">'200'</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- data_found-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- data_found-3F-method -->
+
+    
+      <div id="method-i-designer" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">designer</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-designer">#designer</a></p>
+
+<p>Description: This method returns the user record for the <a
+href="DesignReview.html#method-i-designer">#designer</a> who is  listed for
+the design.  If there is no listed <a
+href="DesignReview.html#method-i-designer">#designer</a>, a user record is
+created and the name is set to ‘Not Assigned’.</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: A <a href="User.html">User</a> record for the <a
+href="DesignReview.html#method-i-designer">#designer</a>.</p>
+          
+
+          
+          <div class="method-source-code" id="designer-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 735</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">designer</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_id</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_id</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:first_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Not'</span>, <span class="ruby-value">:last_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Assigned'</span>)
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- designer-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- designer-method -->
+
+    
+      <div id="method-i-display_age_in_days" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">display_age_in_days</span><span
+            class="method-args">(current_time = Time.now)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReview.html#method-i-display_age_in_days">#display_age_in_days</a></p>
+
+<p>Description: This method returns a formatted string of the <a
+href="DesignReview.html#method-i-age">#age</a> of a design_review  in work
+days.</p>
+
+<p>Parameters: current_time - the time stamp for the current time</p>
+
+<p>Return value: A string representing the number of days between the time the
+design review was post and the current time.  If the <a
+href="DesignReview.html#method-i-age">#age</a> is greater  than the
+threshold then the font is formatted to be bold and red.</p>
+          
+
+          
+          <div class="method-source-code" id="display_age_in_days-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 877</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">display_age_in_days</span>(<span class="ruby-identifier">current_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>)
+  <span class="ruby-identifier">delta</span> = <span class="ruby-identifier">current_time</span>.<span class="ruby-identifier">age_in_days</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">created_on</span>)
+  <span class="ruby-identifier">age</span>   = <span class="ruby-identifier">sprintf</span>(<span class="ruby-string">&quot;%4.1f&quot;</span>, <span class="ruby-identifier">delta</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">delta</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">3</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-identifier">age</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-string">'&lt;font color=&quot;red&quot;&gt;&lt;b&gt;'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">age</span> <span class="ruby-operator">+</span> <span class="ruby-string">'&lt;/b&gt;&lt;/font&gt;'</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- display_age_in_days-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- display_age_in_days-method -->
+
+    
+      <div id="method-i-display_header" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            display_header() &rarr; string
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Generate an informational display header string for the design review.</p>
+
+<p>Returns the informational display header in the following form.</p>
+
+<pre>pcb###_###_##_x - platform_name / project_name</pre>
+          
+
+          
+          <div class="method-source-code" id="display_header-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1274</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">display_header</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">directory_name</span> <span class="ruby-operator">+</span> <span class="ruby-string">' - '</span> <span class="ruby-operator">+</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">board</span>.<span class="ruby-identifier">platform</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">+</span> <span class="ruby-string">' / '</span> <span class="ruby-operator">+</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">board</span>.<span class="ruby-identifier">project</span>.<span class="ruby-identifier">name</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- display_header-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- display_header-method -->
+
+    
+      <div id="method-i-generate_reviewer_selection_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">generate_reviewer_selection_list</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReview.html#method-i-generate_reviewer_selection_list">#generate_reviewer_selection_list</a></p>
+
+<p>Description: This method returns a list review groups for the design
+review. See “Return value” for the details.</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: A list of review groups containing the role display name and
+id, the assigned reviewer’s id, and a list of the <a
+href="DesignReview.html#method-i-reviewers">#reviewers</a> for the  role.</p>
+          
+
+          
+          <div class="method-source-code" id="generate_reviewer_selection_list-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 713</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">generate_reviewer_selection_list</span>()
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">rr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">rr</span>.<span class="ruby-identifier">role</span>.<span class="ruby-identifier">display_name</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- generate_reviewer_selection_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- generate_reviewer_selection_list-method -->
+
+    
+      <div id="method-i-get_review_result" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_review_result</span><span
+            class="method-args">(name)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReview.html#method-i-get_review_result">#get_review_result</a></p>
+
+<p>Description: This method returns the design review result for the role
+identified by name.</p>
+
+<p>Parameters: name - the role name</p>
+
+<p>Return value: The design review result record for the desired role.</p>
+          
+
+          
+          <div class="method-source-code" id="get_review_result-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 394</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_review_result</span>(<span class="ruby-identifier">name</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">drr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">role</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">name</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_review_result-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_review_result-method -->
+
+    
+      <div id="method-i-in_review-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">in_review?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-in_review-3F">#in_review?</a></p>
+
+<p>Description: This method checks to see if the design review is in the  ‘in
+review’ state</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: A boolean value that indicates that design review is in
+review when TRUE</p>
+          
+
+          
+          <div class="method-source-code" id="in_review-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 808</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">in_review?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status_id</span> <span class="ruby-operator">==</span> <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>,
+                                             <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;name='In Review'&quot;</span>).<span class="ruby-identifier">id</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- in_review-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- in_review-3F-method -->
+
+    
+      <div id="method-i-inactive_reviewers" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            inactive_reviewers() &rarr; [user]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Provide a list of inactive <a
+href="DesignReview.html#method-i-reviewers">#reviewers</a> assigned to
+active design reviews</p>
+
+<p>An array of user records.  One for each of the inactive <a
+href="DesignReview.html#method-i-reviewers">#reviewers</a> assigned to the
+review</p>
+          
+
+          
+          <div class="method-source-code" id="inactive_reviewers-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 353</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">inactive_reviewers</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@results_with_inactive_users</span>
+    <span class="ruby-ivar">@results_with_inactive_users</span> =
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">select</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">drr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">reviewer</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">drr</span>.<span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">active?</span> }
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@results_with_inactive_users</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">drr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">reviewer</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- inactive_reviewers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- inactive_reviewers-method -->
+
+    
+      <div id="method-i-inactive_reviewers-3F" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            inactive_reviewers?() &rarr; boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Indicate if there are inactive <a
+href="DesignReview.html#method-i-reviewers">#reviewers</a> assigned to
+active design reviews</p>
+
+<p>The flag is set to true if there are any inactive <a
+href="DesignReview.html#method-i-reviewers">#reviewers</a> assigned to
+active reviews</p>
+          
+
+          
+          <div class="method-source-code" id="inactive_reviewers-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 270</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">inactive_reviewers?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">inactive_reviewers</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@results_with_inactive_users</span>
+  <span class="ruby-ivar">@results_with_inactive_users</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- inactive_reviewers-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- inactive_reviewers-3F-method -->
+
+    
+      <div id="method-i-is_reviewer-3F" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            is_reviewer?(user) &rarr; boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Determine if the user record passed is one of the <a
+href="DesignReview.html#method-i-reviewers">#reviewers</a>.</p>
+
+<p>Returns the TRUE if the user record passed in represents one  of the <a
+href="DesignReview.html#method-i-reviewers">#reviewers</a>.</p>
+          
+
+          
+          <div class="method-source-code" id="is_reviewer-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 407</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">is_reviewer?</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-identifier">review_result</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">drr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">reviewer</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">user</span> }
+  <span class="ruby-identifier">review_result</span> <span class="ruby-operator">!=</span> <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- is_reviewer-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- is_reviewer-3F-method -->
+
+    
+      <div id="method-i-mail_lists" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            results_with_inactive_users() &rarr; [design_review_result]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Provide a list with users on the cc_list and those eligible for the list</p>
+
+<p>An hash of containing 3 arrays of users</p>
+
+<pre class="ruby">:<span class="ruby-identifier">reviewers</span>  =<span class="ruby-operator">&gt;</span> {:<span class="ruby-identifier">name</span>, :<span class="ruby-identifier">group</span>, :<span class="ruby-identifier">last_name</span>, :<span class="ruby-identifier">id</span> }
+:<span class="ruby-identifier">copied</span>     =<span class="ruby-operator">&gt;</span> [<span class="ruby-identifier">users</span>]
+:<span class="ruby-identifier">not_copied</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-identifier">users</span>]
+</pre>
+          
+
+          
+          <div class="method-source-code" id="mail_lists-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 300</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">mail_lists</span>
+
+  <span class="ruby-identifier">design</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>
+  <span class="ruby-comment"># get the reviewer names, their functions and sort the list by the</span>
+  <span class="ruby-comment"># reviewer's last name.</span>
+  <span class="ruby-identifier">reviewers_data</span> = []
+  <span class="ruby-identifier">reviewers</span> = []
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">review_result</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">reviewers_data</span>.<span class="ruby-identifier">push</span>({ <span class="ruby-value">:name</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">review_result</span>.<span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">name</span>,
+                     <span class="ruby-value">:group</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">review_result</span>.<span class="ruby-identifier">role</span>.<span class="ruby-identifier">name</span>,
+                     <span class="ruby-value">:last_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">review_result</span>.<span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">last_name</span>,
+                     <span class="ruby-value">:id</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">review_result</span>.<span class="ruby-identifier">reviewer_id</span> })
+    <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">review_result</span>.<span class="ruby-identifier">reviewer_id</span>)
+    <span class="ruby-identifier">reviewers</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">user</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">reviewers</span>.<span class="ruby-identifier">uniq</span>
+
+  <span class="ruby-comment">#create the cc and not on cc lists</span>
+  <span class="ruby-identifier">users_on_cc_list</span> = []
+  <span class="ruby-comment">#  start with all design users</span>
+  <span class="ruby-identifier">design</span>.<span class="ruby-identifier">board</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span> <span class="ruby-identifier">users_on_cc_list</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">user</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">reviewers</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">user</span>) }
+
+  <span class="ruby-comment"># Get all of the users, remove the reviewer names, and add the full name.</span>
+  <span class="ruby-identifier">users</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>,
+    <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'active=1'</span>)
+
+  <span class="ruby-identifier">users_copied</span>     = []
+  <span class="ruby-identifier">users_not_copied</span> = []
+  <span class="ruby-comment"># see if each user is associated with the design</span>
+  <span class="ruby-comment"># if so, they are on the cc list</span>
+  <span class="ruby-comment"># otherwise, they are on the not_copied list</span>
+  <span class="ruby-identifier">users</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">designer_id</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">users_on_cc_list</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">user</span>)
+      <span class="ruby-identifier">users_copied</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">user</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">users_not_copied</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">user</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  { <span class="ruby-value">:reviewers</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">reviewers_data</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>[<span class="ruby-value">:last_name</span>] },
+    <span class="ruby-value">:copied</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">users_on_cc_list</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">last_name</span> },
+    <span class="ruby-value">:not_copied</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">users_not_copied</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">last_name</span> }
+  }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- mail_lists-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- mail_lists-method -->
+
+    
+      <div id="method-i-my_assigned_roles" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            my_assigned_roles(user) &rarr; [role]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve the roles that the user is assigned to for the review</p>
+
+<p>Returns a list of role records</p>
+          
+
+          
+          <div class="method-source-code" id="my_assigned_roles-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 165</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">my_assigned_roles</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-identifier">roles</span> = []
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">my_roles</span>(<span class="ruby-identifier">user</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">role</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">design_review_result</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">drr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">role</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">role</span> }
+    <span class="ruby-identifier">roles</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">role</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review_result</span>.<span class="ruby-identifier">reviewer</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">user</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">roles</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- my_assigned_roles-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- my_assigned_roles-method -->
+
+    
+      <div id="method-i-my_peer_results" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            my_peer_results(user) &rarr; [design_review_result]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve the results for the peers of the user for the review</p>
+
+<p>Returns a list of design_review_result records</p>
+          
+
+          
+          <div class="method-source-code" id="my_peer_results-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 194</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">my_peer_results</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-identifier">results</span> = []
+  (<span class="ruby-keyword">self</span>.<span class="ruby-identifier">my_roles</span>(<span class="ruby-identifier">user</span>) <span class="ruby-operator">-</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">my_assigned_roles</span>(<span class="ruby-identifier">user</span>)).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">role</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">results</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">drr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">role</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">role</span> }
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">results</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- my_peer_results-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- my_peer_results-method -->
+
+    
+      <div id="method-i-my_results" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            my_results(user) &rarr; [design_review_result]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve the results for the roles that the user is assigned to for the
+review</p>
+
+<p>Returns a list of design_review_result records</p>
+          
+
+          
+          <div class="method-source-code" id="my_results-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 182</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">my_results</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">to_ary</span>.<span class="ruby-identifier">find_all</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">drr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">reviewer</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">user</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- my_results-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- my_results-method -->
+
+    
+      <div id="method-i-my_roles" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            my_roles(user) &rarr; [role]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve the roles that the user is a member of for the the review.</p>
+
+<p>Returns a list of role records</p>
+          
+
+          
+          <div class="method-source-code" id="my_roles-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 153</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">my_roles</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-identifier">user</span>.<span class="ruby-identifier">roles</span> &amp; <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">drr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">role</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- my_roles-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- my_roles-method -->
+
+    
+      <div id="method-i-on_hold-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">on_hold?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-on_hold-3F">#on_hold?</a></p>
+
+<p>Description: This method checks to see if the design review is on hold</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: A boolean value that indicates that design review is on hold
+when TRUE</p>
+          
+
+          
+          <div class="method-source-code" id="on_hold-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 762</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">on_hold?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status_id</span> <span class="ruby-operator">==</span> <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>,
+                                             <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;name='Review On-Hold'&quot;</span>).<span class="ruby-identifier">id</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- on_hold-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- on_hold-3F-method -->
+
+    
+      <div id="method-i-pending_repost-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">pending_repost?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-pending_repost-3F">#pending_repost?</a></p>
+
+<p>Description: This method checks to see if the design review is in the 
+‘pending repost’ state</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: A boolean value that indicates that design review is pending
+repost when TRUE</p>
+          
+
+          
+          <div class="method-source-code" id="pending_repost-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 785</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">pending_repost?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status_id</span> <span class="ruby-operator">==</span> <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>,
+                                             <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;name='Pending Repost'&quot;</span>).<span class="ruby-identifier">id</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- pending_repost-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- pending_repost-3F-method -->
+
+    
+      <div id="method-i-place_on_hold" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">place_on_hold</span><span
+            class="method-args">(current_time = Time.now)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-place_on_hold">#place_on_hold</a></p>
+
+<p>Description: This method sets the design_review status to on-hold sets the 
+placed_on_hold_on field to the current time</p>
+
+<p>Parameters: current_time - the current time</p>
+
+<p>Return value: None</p>
+          
+
+          
+          <div class="method-source-code" id="place_on_hold-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 554</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">place_on_hold</span>(<span class="ruby-identifier">current_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>     = <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>, 
+                                             <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;name='Review On-Hold'&quot;</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">placed_on_hold_on</span> = <span class="ruby-identifier">current_time</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- place_on_hold-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- place_on_hold-method -->
+
+    
+      <div id="method-i-post_review-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">post_review?</span><span
+            class="method-args">(next_review, user)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-post_review-3F">#post_review?</a></p>
+
+<p>Description: This method reports whether or not the design review can be 
+posted.</p>
+
+<p>Parameters: next_review - the next design review in the cycle user        -
+the current user</p>
+
+<p>Return value: A boolean value that indicates that the user can post the
+review  when TRUE.</p>
+          
+
+          
+          <div class="method-source-code" id="post_review-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 906</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">post_review?</span>(<span class="ruby-identifier">next_review</span>, <span class="ruby-identifier">user</span>)
+
+  (<span class="ruby-identifier">next_review</span>                        <span class="ruby-operator">&amp;&amp;</span> 
+   <span class="ruby-operator">!</span><span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_locked?</span>               <span class="ruby-operator">&amp;&amp;</span> 
+   <span class="ruby-identifier">next_review</span>.<span class="ruby-identifier">designer_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">&amp;&amp;</span>
+   <span class="ruby-identifier">next_review</span>.<span class="ruby-identifier">review_type_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">next_review</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">phase_id</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- post_review-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- post_review-3F-method -->
+
+    
+      <div id="method-i-record_update" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">record_update</span><span
+            class="method-args">(what, old_value, new_value, user)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-record_update">#record_update</a></p>
+
+<p>Description: This method stores the design review update</p>
+
+<p>Parameters: what      - the attribute that is being updated  user      -
+the user that made the update old_value - the value of the attribute before
+the update new_value - the value of the attribute afer the update</p>
+
+<p>Return value: None</p>
+          
+
+          
+          <div class="method-source-code" id="record_update-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1257</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">record_update</span>(<span class="ruby-identifier">what</span>, <span class="ruby-identifier">old_value</span>, <span class="ruby-identifier">new_value</span>, <span class="ruby-identifier">user</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_updates</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">DesignUpdate</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:what</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">what</span>,
+                                          <span class="ruby-value">:user_id</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>,
+                                          <span class="ruby-value">:old_value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">old_value</span>,
+                                          <span class="ruby-value">:new_value</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">new_value</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- record_update-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- record_update-method -->
+
+    
+      <div id="method-i-remove_from_hold" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">remove_from_hold</span><span
+            class="method-args">(review_status_id, current_time = Time.now)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-remove_from_hold">#remove_from_hold</a></p>
+
+<p>Description: This method sets the design_review status to the value
+specified by the review_status_id parameter and it updates the field that
+keeps track the running total of time on hold for the design review</p>
+
+<p>Parameters: review_status_id - the new status for the design review
+current_time     - the current time</p>
+
+<p>Return value: None</p>
+          
+
+          
+          <div class="method-source-code" id="remove_from_hold-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 580</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">remove_from_hold</span>(<span class="ruby-identifier">review_status_id</span>, <span class="ruby-identifier">current_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'Review On-Hold'</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>       = <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">review_status_id</span>)
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">total_time_on_hold</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">current_time</span>.<span class="ruby-identifier">age_in_seconds</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">placed_on_hold_on</span>)
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">reload</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- remove_from_hold-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- remove_from_hold-method -->
+
+    
+      <div id="method-i-results_with_inactive_users" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            results_with_inactive_users() &rarr; [design_review_result]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Provide a list of reviewer results with inactive <a
+href="DesignReview.html#method-i-reviewers">#reviewers</a> that are
+assigned to active design reviews</p>
+
+<p>An array of design review result records.  One for each of the inactive <a
+href="DesignReview.html#method-i-reviewers">#reviewers</a> assigned to the
+review</p>
+          
+
+          
+          <div class="method-source-code" id="results_with_inactive_users-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 285</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">results_with_inactive_users</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">inactive_reviewers</span> <span class="ruby-keyword">unless</span> <span class="ruby-ivar">@results_with_inactive_users</span>
+  <span class="ruby-ivar">@results_with_inactive_users</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- results_with_inactive_users-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- results_with_inactive_users-method -->
+
+    
+      <div id="method-i-review_complete-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">review_complete?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReview.html#method-i-review_complete-3F">#review_complete?</a></p>
+
+<p>Description: This method checks to see if the design review is in the 
+‘review completed’ state</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: A boolean value that indicates that design review is
+completed when TRUE</p>
+          
+
+          
+          <div class="method-source-code" id="review_complete-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 831</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">review_complete?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status_id</span> <span class="ruby-operator">==</span> <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>,
+                                             <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;name='Review Completed'&quot;</span>).<span class="ruby-identifier">id</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- review_complete-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- review_complete-3F-method -->
+
+    
+      <div id="method-i-review_locked-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">review_locked?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-review_locked-3F">#review_locked?</a></p>
+
+<p>Description: This method determines whether or not the design review can be
+posted for review.</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: A boolean value that indicates that the design review is
+locked when TRUE.</p>
+          
+
+          
+          <div class="method-source-code" id="review_locked-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 933</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">review_locked?</span>
+
+  (<span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;Final&quot;</span> <span class="ruby-operator">&amp;&amp;</span> 
+   (<span class="ruby-operator">!</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">audit</span>.<span class="ruby-identifier">skip?</span> <span class="ruby-operator">||</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">audit</span>.<span class="ruby-identifier">auditor_complete?</span>) <span class="ruby-operator">||</span>
+    <span class="ruby-operator">!</span><span class="ruby-keyword">self</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">work_assignments_complete?</span>))
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- review_locked-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- review_locked-3F-method -->
+
+    
+      <div id="method-i-review_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">review_name</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-review_name">#review_name</a></p>
+
+<p>Description: This method returns the review (type) name for the object.</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: The review (type) name</p>
+          
+
+          
+          <div class="method-source-code" id="review_name-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 479</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">review_name</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_type_id_2</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">+</span> <span class="ruby-string">'/'</span> <span class="ruby-operator">+</span> <span class="ruby-constant">ReviewType</span>.<span class="ruby-identifier">find</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_type_id_2</span>).<span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- review_name-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- review_name-method -->
+
+    
+      <div id="method-i-review_results_by_role_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">review_results_by_role_name</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReview.html#method-i-review_results_by_role_name">#review_results_by_role_name</a></p>
+
+<p>Description: This method returns the review results sorted by the review
+role for the design review object.</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: A list of design_review_result objects for the design review.</p>
+          
+
+          
+          <div class="method-source-code" id="review_results_by_role_name-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 629</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">review_results_by_role_name</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">rr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">rr</span>.<span class="ruby-identifier">role</span>.<span class="ruby-identifier">display_name</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- review_results_by_role_name-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- review_results_by_role_name-method -->
+
+    
+      <div id="method-i-reviewer_is_complete-3F" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            reviewer_is_complete?(user) &rarr; boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Indicate if the reviewer has completed the review for all of the assigned
+roles</p>
+
+<p>Returns a flag that indicate whether or not the user has completed the
+review.</p>
+          
+
+          
+          <div class="method-source-code" id="reviewer_is_complete-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 212</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reviewer_is_complete?</span>(<span class="ruby-identifier">user</span>)
+
+  <span class="ruby-identifier">complete</span> = <span class="ruby-keyword">true</span>
+
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">my_assigned_roles</span>(<span class="ruby-identifier">user</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">my_role</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">my_review_result</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">drr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">role</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">my_role</span> }
+    <span class="ruby-identifier">complete</span> = <span class="ruby-identifier">my_review_result</span>.<span class="ruby-identifier">positive_response?</span>
+    <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">complete</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">complete</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- reviewer_is_complete-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- reviewer_is_complete-3F-method -->
+
+    
+      <div id="method-i-reviewer_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">reviewer_list</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-reviewer_list">#reviewer_list</a></p>
+
+<p>Description: Given a design review this method will return a list of the
+reviewer emails</p>
+
+<p>Parameters:</p>
+
+<pre>design_review - the design review to get the reviewers for.</pre>
+          
+
+          
+          <div class="method-source-code" id="reviewer_list-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1308</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reviewer_list</span>
+
+  <span class="ruby-identifier">reviewers</span> = []
+  <span class="ruby-identifier">design_review_results</span> =
+    <span class="ruby-constant">DesignReviewResult</span>.<span class="ruby-identifier">find_all_by_design_review_id</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>)
+
+  <span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">dr_result</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">reviewer</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">dr_result</span>.<span class="ruby-identifier">reviewer_id</span>)
+    <span class="ruby-identifier">reviewers</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">email</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">active?</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">reviewers</span>.<span class="ruby-identifier">uniq</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- reviewer_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- reviewer_list-method -->
+
+    
+      <div id="method-i-reviewer_locked_in-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">reviewer_locked_in?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReview.html#method-i-reviewer_locked_in-3F">#reviewer_locked_in?</a></p>
+
+<p>Description: This method checks the design review status and indicates
+whether or not the reviewer is locked</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: TRUE if the design review is closed, otherwise FALSE.</p>
+          
+
+          
+          <div class="method-source-code" id="reviewer_locked_in-3F-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1036</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reviewer_locked_in?</span>
+  <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">closed_reviews</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- reviewer_locked_in-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- reviewer_locked_in-3F-method -->
+
+    
+      <div id="method-i-reviewers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">reviewers</span><span
+            class="method-args">(reviewer_list = [], sorted = true)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-reviewers">#reviewers</a></p>
+
+<p>Description: This method returns a list of user records.  The list is uniq
+and if the sorted flag is set to TRUE it is sorted by the user’s last name.</p>
+
+<p>Parameters: <a
+href="DesignReview.html#method-i-reviewer_list">#reviewer_list</a> - A list
+of user records.  The default value is an</p>
+
+<pre>empty array</pre>
+
+<p>sorted        - A flag that indicates whether or not to sort the</p>
+
+<pre>reviewer_list by the last names</pre>
+
+<p>Return value: A list of <a
+href="DesignReview.html#method-i-reviewers">#reviewers</a> (user records)
+for the design review</p>
+          
+
+          
+          <div class="method-source-code" id="reviewers-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 653</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reviewers</span>(<span class="ruby-identifier">reviewer_list</span> = [], <span class="ruby-identifier">sorted</span> = <span class="ruby-keyword">true</span>)
+
+  <span class="ruby-identifier">reviewers</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">drr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">reviewer</span> }
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">reviewer_list</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">new_reviewers</span>  = <span class="ruby-identifier">reviewers</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">reviewer_list</span>
+    <span class="ruby-identifier">reviewer_list</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">new_reviewers</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">reviewer_list</span> = <span class="ruby-identifier">reviewers</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">sorted</span>
+    <span class="ruby-identifier">reviewer_list</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">reviewer</span><span class="ruby-operator">|</span> <span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">last_name</span> }
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">reviewer_list</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- reviewers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- reviewers-method -->
+
+    
+      <div id="method-i-role_reviewer" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">role_reviewer</span><span
+            class="method-args">(role)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-role_reviewer">#role_reviewer</a></p>
+
+<p>Description: This method retrieves the reviewer for the role that is passed
+in</p>
+
+<p>Parameters: role - the role record</p>
+
+<p>Return value: A user record for the role reviewer.  If the design review
+does not have a reviewer for the identified role then nil is returned.</p>
+          
+
+          
+          <div class="method-source-code" id="role_reviewer-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 959</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">role_reviewer</span>(<span class="ruby-identifier">role</span>)
+  <span class="ruby-identifier">result</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>.<span class="ruby-identifier">role_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">role</span>.<span class="ruby-identifier">id</span> }
+  <span class="ruby-keyword">return</span> <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">result</span>.<span class="ruby-identifier">reviewer_id</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- role_reviewer-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- role_reviewer-method -->
+
+    
+      <div id="method-i-set_posting_timestamp" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_posting_timestamp</span><span
+            class="method-args">(timestamp = Time.now)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="set_posting_timestamp-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1280</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_posting_timestamp</span>(<span class="ruby-identifier">timestamp</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">posting_timestamps</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">PostingTimestamp</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:posted_at</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">timestamp</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- set_posting_timestamp-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- set_posting_timestamp-method -->
+
+    
+      <div id="method-i-set_reviewer" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            set_reviewer(role, user) &rarr; nil
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Set the reviewer for the design review/role</p>
+
+<pre>Locates the review result for the role and updates the reviewer.  If no
+review result is found for the role, no action is taken.</pre>
+
+<p>Exception</p>
+
+<pre>ArgumentError - indicates that the user is not a member of the group (role).</pre>
+          
+
+          
+          <div class="method-source-code" id="set_reviewer-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 975</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_reviewer</span>(<span class="ruby-identifier">role</span>, <span class="ruby-identifier">user</span>)
+  <span class="ruby-identifier">review_result</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">drr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">role_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">role</span>.<span class="ruby-identifier">id</span> }
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">review_result</span>  <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">review_result</span>.<span class="ruby-identifier">complete?</span>
+    <span class="ruby-identifier">review_result</span>.<span class="ruby-identifier">set_reviewer</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">rescue</span>
+  <span class="ruby-identifier">raise</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- set_reviewer-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- set_reviewer-method -->
+
+    
+      <div id="method-i-surfboards_path" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">surfboards_path</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="surfboards_path-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1285</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">surfboards_path</span>
+  <span class="ruby-node">&quot;/surfboards/#{self.design_center.pcb_path}/#{self.design.directory_name}/&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- surfboards_path-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- surfboards_path-method -->
+
+    
+      <div id="method-i-time_on_hold" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">time_on_hold</span><span
+            class="method-args">(current_time = Time.now)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-time_on_hold">#time_on_hold</a></p>
+
+<p>Description: This method returns the number of seconds that a design has
+been on hold</p>
+
+<p>Parameters: current_time - the current time</p>
+
+<p>Return value: If the design_review is on hold then the number of second the
+design has been on hold is return.  Otherwise, a 0 is returned</p>
+          
+
+          
+          <div class="method-source-code" id="time_on_hold-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 505</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">time_on_hold</span>(<span class="ruby-identifier">current_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>)
+
+  <span class="ruby-identifier">on_hold</span> = <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>,
+                              <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;name='Review On-Hold'&quot;</span>)
+
+  <span class="ruby-keyword">return</span> <span class="ruby-value">0</span> <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">on_hold</span>.<span class="ruby-identifier">id</span>
+  <span class="ruby-identifier">current_time</span>.<span class="ruby-identifier">age_in_seconds</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">placed_on_hold_on</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- time_on_hold-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- time_on_hold-method -->
+
+    
+      <div id="method-i-time_on_hold_total" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">time_on_hold_total</span><span
+            class="method-args">(current_time = Time.now)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReview.html#method-i-time_on_hold_total">#time_on_hold_total</a></p>
+
+<p>Description: This method returns the running total of the number of seconds
+that  a design has been on hold</p>
+
+<p>Parameters: current_time - the current time</p>
+
+<p>Return value: The running total for the number of seconds that have elapsed
+while the design review is on hold</p>
+          
+
+          
+          <div class="method-source-code" id="time_on_hold_total-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 533</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">time_on_hold_total</span>(<span class="ruby-identifier">current_time</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>)
+  (<span class="ruby-keyword">self</span>.<span class="ruby-identifier">total_time_on_hold</span> <span class="ruby-operator">+</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">time_on_hold</span>(<span class="ruby-identifier">current_time</span>))
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- time_on_hold_total-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- time_on_hold_total-method -->
+
+    
+      <div id="method-i-unprocessed_results" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            unprocessed_results() &rarr; [design_review_result]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Provide a list of review results that have not been processed</p>
+
+<p>An array of design review result records</p>
+          
+
+          
+          <div class="method-source-code" id="unprocessed_results-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 369</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">unprocessed_results</span>
+  <span class="ruby-identifier">unprocessed_results</span> = []
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">design_review_results</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">drr</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">unprocessed_results</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">drr</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">drr</span>.<span class="ruby-identifier">complete?</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">unprocessed_results</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">result</span><span class="ruby-operator">|</span> <span class="ruby-identifier">result</span>.<span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">last_name</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- unprocessed_results-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- unprocessed_results-method -->
+
+    
+      <div id="method-i-update_criticality" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_criticality</span><span
+            class="method-args">(criticality, user)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReview.html#method-i-update_criticality">#update_criticality</a></p>
+
+<p>Description: This method updates the criticality (priority) attribute and 
+records the  update.</p>
+
+<p>Parameters: criticality - the new value for the criticality attribute user 
+- the use who made the update</p>
+
+<p>Return value: TRUE if the attribute was updated, otherwise FALSE.</p>
+          
+
+          
+          <div class="method-source-code" id="update_criticality-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1058</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_criticality</span>(<span class="ruby-identifier">criticality</span>, <span class="ruby-identifier">user</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">criticality</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">priority_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">criticality</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">&amp;&amp;</span>
+     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;Review Completed&quot;</span>
+     
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">record_update</span>(<span class="ruby-string">'Criticality'</span>, 
+                       <span class="ruby-keyword">self</span>.<span class="ruby-identifier">priority</span>.<span class="ruby-identifier">name</span>, 
+                       <span class="ruby-identifier">criticality</span>.<span class="ruby-identifier">name</span>,
+                       <span class="ruby-identifier">user</span>)
+
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">priority</span> = <span class="ruby-identifier">criticality</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+    
+    <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">end</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update_criticality-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update_criticality-method -->
+
+    
+      <div id="method-i-update_pcb_input_gate" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_pcb_input_gate</span><span
+            class="method-args">(pcb_input_gate, user)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReview.html#method-i-update_pcb_input_gate">#update_pcb_input_gate</a></p>
+
+<p>Description: This method updates the <a
+href="DesignReview.html#method-i-designer">#designer</a> attribute of a
+Pre-Artwork review and records the update.</p>
+
+<p>Parameters: pcb_input_gate - the new value for the <a
+href="DesignReview.html#method-i-designer">#designer</a> (pcb_input_gate)</p>
+
+<pre>attribute</pre>
+
+<p>user           - the use who made the update</p>
+
+<p>Return value: TRUE if the attribute was updated, otherwise FALSE.</p>
+          
+
+          
+          <div class="method-source-code" id="update_pcb_input_gate-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1140</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_pcb_input_gate</span>(<span class="ruby-identifier">pcb_input_gate</span>, <span class="ruby-identifier">user</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;Pre-Artwork&quot;</span> <span class="ruby-operator">&amp;&amp;</span> 
+     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;Review Completed&quot;</span> <span class="ruby-operator">&amp;&amp;</span>
+     <span class="ruby-identifier">pcb_input_gate</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">pcb_input_gate</span>.<span class="ruby-identifier">id</span>
+
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">record_update</span>(<span class="ruby-string">'Pre-Artwork Poster'</span>, 
+                        <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer</span>.<span class="ruby-identifier">name</span>, 
+                        <span class="ruby-identifier">pcb_input_gate</span>.<span class="ruby-identifier">name</span>,
+                        <span class="ruby-identifier">user</span>)
+
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_id</span> = <span class="ruby-identifier">pcb_input_gate</span>.<span class="ruby-identifier">id</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+      
+    <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update_pcb_input_gate-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update_pcb_input_gate-method -->
+
+    
+      <div id="method-i-update_release_review_poster" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_release_review_poster</span><span
+            class="method-args">(release_reviewer, user)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReview.html#method-i-update_release_review_poster">#update_release_review_poster</a></p>
+
+<p>Description: This method updates the <a
+href="DesignReview.html#method-i-designer">#designer</a> attribute of a
+Release review and records the update.</p>
+
+<p>Parameters: release_reviewer - the new value for the <a
+href="DesignReview.html#method-i-designer">#designer</a> (release poster)</p>
+
+<pre>attribute</pre>
+
+<p>user             - the use who made the update</p>
+
+<p>Return value: TRUE if the attribute was updated, otherwise FALSE.</p>
+          
+
+          
+          <div class="method-source-code" id="update_release_review_poster-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1179</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_release_review_poster</span>(<span class="ruby-identifier">release_reviewer</span>, <span class="ruby-identifier">user</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;Release&quot;</span> <span class="ruby-operator">&amp;&amp;</span>
+     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;Review Completed&quot;</span> <span class="ruby-operator">&amp;&amp;</span>
+     <span class="ruby-identifier">release_reviewer</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">release_reviewer</span>.<span class="ruby-identifier">id</span>
+
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">record_update</span>(<span class="ruby-string">'Release Poster'</span>, 
+                       <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer</span>.<span class="ruby-identifier">name</span>, 
+                       <span class="ruby-identifier">release_reviewer</span>.<span class="ruby-identifier">name</span>,
+                       <span class="ruby-identifier">user</span>)
+
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_id</span> = <span class="ruby-identifier">release_reviewer</span>.<span class="ruby-identifier">id</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+    
+    <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update_release_review_poster-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update_release_review_poster-method -->
+
+    
+      <div id="method-i-update_review_status" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_review_status</span><span
+            class="method-args">(status, user)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReview.html#method-i-update_review_status">#update_review_status</a></p>
+
+<p>Description: This method updates the review status attribute and records
+the update.</p>
+
+<p>Parameters: status - the new value for the review status attribute user   -
+the use who made the update</p>
+
+<p>Return value: TRUE if the attribute was updated, otherwise FALSE.</p>
+          
+
+          
+          <div class="method-source-code" id="update_review_status-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1096</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_review_status</span>(<span class="ruby-identifier">status</span>, <span class="ruby-identifier">user</span>)
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">status</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">status</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">!=</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status_id</span> <span class="ruby-operator">&amp;&amp;</span>
+       (<span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'Review On-Hold'</span> <span class="ruby-operator">||</span>
+        <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'In Review'</span>)
+
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">record_update</span>(<span class="ruby-string">'Review Status'</span>, 
+                         <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span>, 
+                         <span class="ruby-identifier">status</span>.<span class="ruby-identifier">name</span>,
+                         <span class="ruby-identifier">user</span>)
+
+      <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'Review On-Hold'</span>
+        <span class="ruby-keyword">self</span>.<span class="ruby-identifier">remove_from_hold</span>(<span class="ruby-identifier">status</span>.<span class="ruby-identifier">id</span>)
+      <span class="ruby-keyword">elsif</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">'In Review'</span>
+        <span class="ruby-keyword">self</span>.<span class="ruby-identifier">place_on_hold</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+      
+      <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">end</span> 
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update_review_status-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update_review_status-method -->
+
+    
+      <div id="method-i-update_reviews_designer_poster" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_reviews_designer_poster</span><span
+            class="method-args">(designer, user)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignReview.html#method-i-update_reviews_designer_poster">#update_reviews_designer_poster</a></p>
+
+<p>Description: This method updates the <a
+href="DesignReview.html#method-i-designer">#designer</a> attribute of a
+design review.</p>
+
+<p>Parameters: release_reviewer - the new value for the <a
+href="DesignReview.html#method-i-designer">#designer</a> attribute user    
+- the use who made the update</p>
+
+<p>Return value: TRUE if the attribute was updated, otherwise FALSE.</p>
+          
+
+          
+          <div class="method-source-code" id="update_reviews_designer_poster-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1217</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_reviews_designer_poster</span>(<span class="ruby-identifier">designer</span>, <span class="ruby-identifier">user</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;Pre-Artwork&quot;</span> <span class="ruby-operator">&amp;&amp;</span> 
+     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;Release&quot;</span>     <span class="ruby-operator">&amp;&amp;</span>
+     <span class="ruby-keyword">self</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;Review Completed&quot;</span> <span class="ruby-operator">&amp;&amp;</span>
+     <span class="ruby-identifier">designer</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">designer</span>.<span class="ruby-identifier">id</span>
+
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">record_update</span>(<span class="ruby-string">'Designer'</span>, 
+                       <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer</span>.<span class="ruby-identifier">name</span>, 
+                       <span class="ruby-identifier">designer</span>.<span class="ruby-identifier">name</span>,
+                       <span class="ruby-identifier">user</span>)
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">designer_id</span> = <span class="ruby-identifier">designer</span>.<span class="ruby-identifier">id</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+
+    <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update_reviews_designer_poster-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update_reviews_designer_poster-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+     <section id="private-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Private Instance Methods</h3>
+
+    
+      <div id="method-i-age_in_seconds" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">age_in_seconds</span><span
+            class="method-args">(start_time, end_time)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignReview.html#method-i-age_in_seconds">#age_in_seconds</a></p>
+
+<p>Description: This method computes the number of seconds between the
+start_time  and the end_time.</p>
+
+<p>Parameters: start_time - the beginning of the time interval end_time   -
+the end of the time interval</p>
+
+<p>Return value: The number of seconds (representing work days) between the 
+start_time and the end_time.</p>
+          
+
+          
+          <div class="method-source-code" id="age_in_seconds-source">
+            <pre><span class="ruby-comment"># File app/models/design_review.rb, line 1405</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">age_in_seconds</span>(<span class="ruby-identifier">start_time</span>, <span class="ruby-identifier">end_time</span>)
+
+  <span class="ruby-keyword">return</span> <span class="ruby-value">0</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">start_time</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">end_time</span>
+  
+  <span class="ruby-comment"># If the start time is a weekend, initialize the delta to </span>
+  <span class="ruby-comment"># zero.  Otherwise, initialize delta to the number of seconds</span>
+  <span class="ruby-comment"># between the start time and midnight of the next day.</span>
+  <span class="ruby-identifier">day</span> = <span class="ruby-identifier">start_time</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%w&quot;</span>).<span class="ruby-identifier">to_i</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">day</span> <span class="ruby-operator">==</span> <span class="ruby-constant">SUNDAY</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">day</span> <span class="ruby-operator">==</span> <span class="ruby-constant">SATURDAY</span>
+    <span class="ruby-identifier">delta</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-comment">#delta = start_time.midnight.tomorrow - start_time</span>
+    <span class="ruby-identifier">midnight_tomorrow</span> = <span class="ruby-identifier">start_time</span>.<span class="ruby-identifier">tomorrow</span>.<span class="ruby-identifier">midnight</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">end_time</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">midnight_tomorrow</span>
+      <span class="ruby-identifier">delta</span> = <span class="ruby-identifier">midnight_tomorrow</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">start_time</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">delta</span> = <span class="ruby-identifier">end_time</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">start_time</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Advance start time to midnight.</span>
+  <span class="ruby-identifier">start_time</span> = <span class="ruby-identifier">start_time</span>.<span class="ruby-identifier">tomorrow</span>.<span class="ruby-identifier">midnight</span>
+  
+  <span class="ruby-keyword">while</span> (<span class="ruby-identifier">end_time</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">start_time</span>) <span class="ruby-operator">&gt;=</span> <span class="ruby-value">1</span>.<span class="ruby-identifier">day</span>
+    <span class="ruby-identifier">day</span>         = <span class="ruby-identifier">start_time</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%w&quot;</span>).<span class="ruby-identifier">to_i</span>
+    <span class="ruby-comment"># Only increment for a weekday</span>
+    <span class="ruby-identifier">delta</span>      <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>.<span class="ruby-identifier">day</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">SUNDAY</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">day</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">day</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">SATURDAY</span> 
+    <span class="ruby-identifier">start_time</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>.<span class="ruby-identifier">day</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">end_time</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">start_time</span>
+    <span class="ruby-comment"># Pick up the remaining time</span>
+    <span class="ruby-identifier">day</span>    = <span class="ruby-identifier">start_time</span>.<span class="ruby-identifier">strftime</span>(<span class="ruby-string">&quot;%w&quot;</span>).<span class="ruby-identifier">to_i</span>
+    <span class="ruby-identifier">delta</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">end_time</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">start_time</span> <span class="ruby-keyword">if</span> <span class="ruby-constant">SUNDAY</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">day</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">day</span> <span class="ruby-operator">&lt;</span> <span class="ruby-constant">SATURDAY</span> 
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">delta</span>.<span class="ruby-identifier">to_i</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- age_in_seconds-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- age_in_seconds-method -->
+
+    
+    </section><!-- private-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

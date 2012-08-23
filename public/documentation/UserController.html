@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: UserController</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/controllers/user_controller.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link"><a href="ApplicationController.html">ApplicationController</a>
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-change_password">#change_password</a>
+    
+    <li><a href="#method-i-create">#create</a>
+    
+    <li><a href="#method-i-edit">#edit</a>
+    
+    <li><a href="#method-i-list">#list</a>
+    
+    <li><a href="#method-i-login">#login</a>
+    
+    <li><a href="#method-i-login_information">#login_information</a>
+    
+    <li><a href="#method-i-logout">#logout</a>
+    
+    <li><a href="#method-i-reset_password">#reset_password</a>
+    
+    <li><a href="#method-i-send_password">#send_password</a>
+    
+    <li><a href="#method-i-set_role">#set_role</a>
+    
+    <li><a href="#method-i-signup">#signup</a>
+    
+    <li><a href="#method-i-update">#update</a>
+    
+    <li><a href="#method-i-user_store_password">#user_store_password</a>
+    
+    <li><a href="#method-i-welcome">#welcome</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class UserController</h1>
+
+  <div id="description" class="description">
+    
+<p>Copyright 2005, by Teradyne, Inc., Boston MA</p>
+
+<p>File: user_controller.rb</p>
+
+<p>This contains the logic to <a
+href="UserController.html#method-i-create">#create</a> and modify use
+information.</p>
+
+<p>$Id$</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-change_password" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">change_password</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="UserController.html#method-i-change_password">#change_password</a></p>
+
+<p>Description: This method retrieves a user record from the database for the
+person identified in the ‘id’ parameter for display on the change password
+form.</p>
+
+<p>Parameters from params id - the id of the user</p>
+          
+
+          
+          <div class="method-source-code" id="change_password-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 181</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">change_password</span>
+  <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- change_password-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- change_password-method -->
+
+    
+      <div id="method-i-create" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="UserController.html#method-i-create">#create</a></p>
+
+<p>Description: Creates a new user in the database</p>
+
+<p>Parameters from params user - information passed back from the view - goes
+into the</p>
+
+<pre>database.</pre>
+          
+
+          
+          <div class="method-source-code" id="create-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 414</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create</span>
+
+  <span class="ruby-ivar">@user</span>        = <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:new_user</span>])
+  <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">passwd</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">password</span>
+
+  <span class="ruby-comment"># If the user left the login, email or design_center_id fields blank, set</span>
+  <span class="ruby-comment"># to the default</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">login</span> <span class="ruby-operator">==</span> <span class="ruby-string">''</span>
+    <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">login</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">first_name</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">0</span>].<span class="ruby-identifier">downcase</span> <span class="ruby-operator">+</span>
+      <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">last_name</span>.<span class="ruby-identifier">downcase</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">email</span> <span class="ruby-operator">==</span> <span class="ruby-string">''</span>
+    <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">email</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">first_name</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">+</span>
+      <span class="ruby-string">'_'</span> <span class="ruby-operator">+</span>
+      <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">last_name</span>.<span class="ruby-identifier">downcase</span> <span class="ruby-operator">+</span>
+      <span class="ruby-string">'@notes.teradyne.com'</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">post?</span> <span class="ruby-keyword">and</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">save</span>
+
+    <span class="ruby-identifier">role_count</span> = <span class="ruby-value">0</span>
+    <span class="ruby-identifier">params</span>[<span class="ruby-value">:role</span>].<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span> <span class="ruby-identifier">role_id</span>, <span class="ruby-identifier">value</span> <span class="ruby-operator">|</span>
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">==</span> <span class="ruby-string">'0'</span>
+      <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">roles</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">role_id</span>)
+      <span class="ruby-identifier">role_count</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+    }
+
+    <span class="ruby-keyword">for</span> <span class="ruby-identifier">user_role</span> <span class="ruby-keyword">in</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">roles</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">user_role</span>.<span class="ruby-identifier">reviewer?</span>
+        <span class="ruby-constant">UserMailer</span><span class="ruby-operator">::</span><span class="ruby-identifier">tracker_invite</span>(<span class="ruby-ivar">@user</span>).<span class="ruby-identifier">deliver</span>
+        <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">invited</span>  = <span class="ruby-value">1</span>
+        <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">password</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">passwd</span>
+        <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">save</span>
+        <span class="ruby-keyword">break</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">roles</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">&quot;Basic User&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">role_count</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>]  = <span class="ruby-node">&quot;Account created for #{@user.name}&quot;</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;list&quot;</span>,
+                <span class="ruby-value">:alpha</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">last_name</span>[<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">0</span>])
+  <span class="ruby-keyword">else</span>
+
+    <span class="ruby-ivar">@roles</span>    = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_all_by_active</span>(<span class="ruby-string">'1'</span>, <span class="ruby-string">'display_name ASC'</span>)
+    <span class="ruby-ivar">@new_user</span> = <span class="ruby-ivar">@user</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-constant">User</span>.<span class="ruby-identifier">find_by_login</span>(<span class="ruby-ivar">@user</span>.<span class="ruby-identifier">login</span>)
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-node">&quot;#{@user.login} duplicates an existing login - please change&quot;</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>]  = <span class="ruby-node">&quot;Unable to create an account for #{@user.name}&quot;</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">render</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;signup&quot;</span>)
+
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create-method -->
+
+    
+      <div id="method-i-edit" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">edit</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="UserController.html#method-i-edit">#edit</a></p>
+
+<p>Description: This method retrieves information from the database for for
+the <a href="UserController.html#method-i-edit">#edit</a> form.</p>
+
+<p>Parameters from params id - the id of the user information that will be
+edited.</p>
+          
+
+          
+          <div class="method-source-code" id="edit-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 153</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">edit</span>
+
+  <span class="ruby-ivar">@roles</span>     = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_all_active</span>
+  <span class="ruby-ivar">@user</span>      = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-identifier">user_roles</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">roles</span>
+
+  <span class="ruby-ivar">@uroles</span> = {}
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">u_role</span> <span class="ruby-keyword">in</span> <span class="ruby-identifier">user_roles</span>
+    <span class="ruby-ivar">@uroles</span>[<span class="ruby-identifier">u_role</span>.<span class="ruby-identifier">name</span>] = <span class="ruby-identifier">u_role</span>.<span class="ruby-identifier">id</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- edit-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- edit-method -->
+
+    
+      <div id="method-i-list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">list</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="UserController.html#method-i-list">#list</a></p>
+
+<p>Description: This method retrieves a <a
+href="UserController.html#method-i-list">#list</a> of users from the
+database for display.  If the ‘alpha’ param is passed in the value is used
+to determine which uses to display, otherwise users whose name begins with
+‘A’ are displayed by default.</p>
+          
+
+          
+          <div class="method-source-code" id="list-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 41</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">list</span>
+
+  <span class="ruby-identifier">alpha</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:alpha</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:alpha</span>] <span class="ruby-operator">:</span> <span class="ruby-string">'A'</span>
+
+  <span class="ruby-identifier">users</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'last_name ASC'</span>)
+
+  <span class="ruby-ivar">@alpha_list</span> = {}
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">user</span> <span class="ruby-keyword">in</span> <span class="ruby-identifier">users</span>
+    <span class="ruby-identifier">index</span> = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">last_name</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">0</span>).<span class="ruby-identifier">upcase</span>
+    <span class="ruby-ivar">@alpha_list</span>[<span class="ruby-identifier">index</span>] = <span class="ruby-value">0</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@alpha_list</span>[<span class="ruby-identifier">index</span>]
+    <span class="ruby-ivar">@alpha_list</span>[<span class="ruby-identifier">index</span>] <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@users</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>,
+                     <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;LOWER(last_name) LIKE '#{alpha.downcase}%'&quot;</span>,
+                     <span class="ruby-value">:order</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'last_name ASC'</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- list-method -->
+
+    
+      <div id="method-i-login" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">login</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="UserController.html#method-i-login">#login</a></p>
+
+<p>Description: Validate the user name and password.</p>
+
+<p>Parameters from params user_login    - the user’s name user_password - the
+user’s password</p>
+          
+
+          
+          <div class="method-source-code" id="login-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 352</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">login</span>
+  <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;Method must be POST&quot;</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">request</span>.<span class="ruby-identifier">method</span>
+    <span class="ruby-keyword">when</span> <span class="ruby-string">&quot;POST&quot;</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">authenticate</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:user_login</span>], <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_password</span>])
+
+      <span class="ruby-comment"># TODO: Remove the dependence on these variables.</span>
+      <span class="ruby-identifier">session</span>[<span class="ruby-value">:user_id</span>]  = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>
+
+      <span class="ruby-identifier">admin</span>    = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'Admin'</span>)
+      <span class="ruby-identifier">manager</span>  = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'Manager'</span>)
+      <span class="ruby-identifier">designer</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'Designer'</span>)
+
+      <span class="ruby-keyword">case</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">roles</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">admin</span>)    <span class="ruby-keyword">then</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">active_role</span> = <span class="ruby-identifier">admin</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">roles</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">manager</span>)  <span class="ruby-keyword">then</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">active_role</span> = <span class="ruby-identifier">manager</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">roles</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">designer</span>) <span class="ruby-keyword">then</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">active_role</span> = <span class="ruby-identifier">designer</span>
+      <span class="ruby-keyword">else</span>                                    <span class="ruby-identifier">user</span>.<span class="ruby-identifier">active_role</span> = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">roles</span>.<span class="ruby-identifier">first</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>]  = <span class="ruby-string">&quot;Login successful&quot;</span>
+      <span class="ruby-identifier">redirect_back_or_default</span>(<span class="ruby-value">:controller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'tracker'</span>, <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'index'</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>.<span class="ruby-identifier">now</span>[<span class="ruby-string">'notice'</span>]  = <span class="ruby-string">&quot;Login unsuccessful&quot;</span>
+
+      <span class="ruby-ivar">@login</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_login</span>]
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- login-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- login-method -->
+
+    
+      <div id="method-i-login_information" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">login_information</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="UserController.html#method-i-login_information">#login_information</a></p>
+
+<p>Description: This method is called under two conditions.</p>
+
+<p>1) the user has clicked the “Login Help” button to retrieve user
+information based on the last name provided by the user. All user records
+with that match the last name are displayed along with a button to request
+the password be emailed to the user.</p>
+
+<p>2) the user has requested the password via email.  The user’s record will
+be displayed along with a message indicating that the password has been
+emailed.</p>
+          
+
+          
+          <div class="method-source-code" id="login_information-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 101</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">login_information</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_id</span>]
+    <span class="ruby-ivar">@user_list</span> = [<span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:user_id</span>])]
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Your password has been sent to the email address listed below'</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">last_name</span>  = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>][<span class="ruby-value">:last_name</span>]
+    <span class="ruby-ivar">@user_list</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find_all_by_last_name</span>(<span class="ruby-identifier">last_name</span>)
+  <span class="ruby-keyword">end</span>
+
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user_list</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">last_name</span> <span class="ruby-operator">==</span> <span class="ruby-string">''</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;Please provide a last name&quot;</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'show_users'</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-node">&quot;#{last_name} was not found&quot;</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'show_users'</span>)
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- login_information-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- login_information-method -->
+
+    
+      <div id="method-i-logout" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">logout</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="UserController.html#method-i-logout">#logout</a></p>
+
+<p>Description: Ends the user’s session</p>
+          
+
+          
+          <div class="method-source-code" id="logout-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 482</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">logout</span>
+  <span class="ruby-identifier">session</span>[<span class="ruby-value">:user_id</span>]     = <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:controller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'tracker'</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- logout-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- logout-method -->
+
+    
+      <div id="method-i-reset_password" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">reset_password</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="UserController.html#method-i-reset_password">#reset_password</a></p>
+
+<p>Description: This method is called in response to the user submitting the
+form from the Change Password form.  The password and the confirmation are
+compared, if they are the same then the user’s record is updated with the
+new password.</p>
+
+<p>Parameters from params new_password - the new password for the user.
+new_password_confirmation - used to verify that the user did not typo <a
+href="http://'id'">user</a> - the id number of the user record to be
+updated.</p>
+          
+
+          
+          <div class="method-source-code" id="reset_password-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 203</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">reset_password</span>
+
+  <span class="ruby-identifier">updated</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:new_password</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:new_password_confirmation</span>]
+    <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>][<span class="ruby-value">:id</span>])
+    <span class="ruby-identifier">user</span>.<span class="ruby-identifier">password</span>              = <span class="ruby-identifier">params</span>[<span class="ruby-value">:new_password</span>]
+    <span class="ruby-identifier">user</span>.<span class="ruby-identifier">password_confirmation</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:new_password</span>]
+    <span class="ruby-identifier">user</span>.<span class="ruby-identifier">passwd</span>                = <span class="ruby-identifier">params</span>[<span class="ruby-value">:new_password</span>]
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">save</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-node">&quot;The password for #{user.name} was updated&quot;</span>
+      <span class="ruby-identifier">updated</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-node">&quot;The password for #{user.name} was not updated&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'No Update - the new password and the confirmation do not match'</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">updated</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:list</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:change_password</span>,
+                <span class="ruby-value">:id</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>][<span class="ruby-value">:id</span>])
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- reset_password-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- reset_password-method -->
+
+    
+      <div id="method-i-send_password" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">send_password</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="UserController.html#method-i-send_password">#send_password</a></p>
+
+<p>Description: This method is called in response the the users clicking the
+“Send Password” button.  The user’s record is retrieve and the password is
+emailed to the user.</p>
+          
+
+          
+          <div class="method-source-code" id="send_password-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 72</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">send_password</span>
+
+  <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-constant">UserMailer</span>.<span class="ruby-identifier">user_password</span>(<span class="ruby-identifier">user</span>).<span class="ruby-identifier">deliver</span>
+
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'login_information'</span>,
+              <span class="ruby-value">:user_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- send_password-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- send_password-method -->
+
+    
+      <div id="method-i-set_role" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_role</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="UserController.html#method-i-set_role">#set_role</a></p>
+
+<p>Description: Sets the session role to the role that the user selected.</p>
+
+<p>Parameters from params id - identifies the role that the use selected</p>
+          
+
+          
+          <div class="method-source-code" id="set_role-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 395</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_role</span>
+  <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">active_role</span> = <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">roles</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">role</span><span class="ruby-operator">|</span> <span class="ruby-identifier">role</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>].<span class="ruby-identifier">to_i</span> }
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:controller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;tracker&quot;</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- set_role-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- set_role-method -->
+
+    
+      <div id="method-i-signup" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">signup</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="UserController.html#method-i-signup">#signup</a></p>
+
+<p>Description: This method retrieves a <a
+href="UserController.html#method-i-list">#list</a> of roles from the
+database for for the <a
+href="UserController.html#method-i-signup">#signup</a> form.</p>
+          
+
+          
+          <div class="method-source-code" id="signup-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 134</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">signup</span>
+  <span class="ruby-ivar">@roles</span>    = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_all_active</span>
+  <span class="ruby-ivar">@new_user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:employee</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'1'</span>, <span class="ruby-value">:active</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'1'</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- signup-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- signup-method -->
+
+    
+      <div id="method-i-update" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="UserController.html#method-i-update">#update</a></p>
+
+<p>Description: This method updates the user information in the database with
+the data passed back from the <a
+href="UserController.html#method-i-edit">#edit</a> form</p>
+
+<p>Parameters from params user - the user data from the <a
+href="UserController.html#method-i-edit">#edit</a> form</p>
+          
+
+          
+          <div class="method-source-code" id="update-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 287</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
+
+  <span class="ruby-identifier">user_form</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>]
+  <span class="ruby-ivar">@user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">user_form</span>[<span class="ruby-string">'id'</span>])
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">user_form</span>[<span class="ruby-string">'email'</span>] <span class="ruby-operator">==</span> <span class="ruby-string">''</span>
+    <span class="ruby-identifier">user_form</span>[<span class="ruby-string">'email'</span>] = <span class="ruby-identifier">user_form</span>[<span class="ruby-string">'first_name'</span>].<span class="ruby-identifier">downcase</span> <span class="ruby-operator">+</span> <span class="ruby-string">'_'</span> <span class="ruby-operator">+</span>
+      <span class="ruby-identifier">user_form</span>[<span class="ruby-string">'last_name'</span>].<span class="ruby-identifier">downcase</span> <span class="ruby-operator">+</span> <span class="ruby-string">'@notes.teradyne.com'</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Go through the data on the form and update any attribute that was</span>
+  <span class="ruby-comment"># modified</span>
+  <span class="ruby-identifier">update_good</span> = <span class="ruby-keyword">true</span>
+  <span class="ruby-identifier">user_form</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span> <span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span> <span class="ruby-operator">|</span>
+
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">key</span> <span class="ruby-operator">==</span> <span class="ruby-string">'id'</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">key</span> <span class="ruby-operator">==</span> <span class="ruby-string">'password'</span>
+    <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">password</span> = <span class="ruby-string">''</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>[<span class="ruby-identifier">key</span>] <span class="ruby-operator">!=</span> <span class="ruby-identifier">user_form</span>[<span class="ruby-identifier">key</span>]
+      <span class="ruby-identifier">update_good</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">update_attribute</span>(<span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span>)
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">update_good</span>
+  }
+
+  <span class="ruby-comment"># If no errors so far, update the roles for the user.</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">update_good</span>
+
+    <span class="ruby-identifier">params</span>[<span class="ruby-value">:role</span>].<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span> <span class="ruby-identifier">role_id</span>, <span class="ruby-identifier">value</span> <span class="ruby-operator">|</span>
+      <span class="ruby-identifier">role</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">role_id</span>)
+      <span class="ruby-keyword">if</span> <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">roles</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">role</span>)
+            <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">roles</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">role</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">==</span> <span class="ruby-string">'0'</span>
+          <span class="ruby-keyword">else</span>
+            <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">roles</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">role</span>      <span class="ruby-keyword">if</span> <span class="ruby-identifier">value</span> <span class="ruby-operator">==</span> <span class="ruby-string">'1'</span>
+          <span class="ruby-keyword">end</span>
+    }
+
+    <span class="ruby-identifier">role_count</span> = <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">roles</span>.<span class="ruby-identifier">size</span>
+    <span class="ruby-ivar">@user</span>.<span class="ruby-identifier">roles</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">&quot;Basic User&quot;</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">role_count</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">update_good</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-node">&quot;The user information for #{@user.name} was updated&quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'The user information was not updated'</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;edit&quot;</span>,
+              <span class="ruby-value">:id</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@user</span>[<span class="ruby-value">:id</span>])
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update-method -->
+
+    
+      <div id="method-i-user_store_password" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">user_store_password</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="UserController.html#method-i-user_store_password">#user_store_password</a></p>
+
+<p>Description: This method updates the user’s password.</p>
+          
+
+          
+          <div class="method-source-code" id="user_store_password-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 241</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">user_store_password</span>
+
+  <span class="ruby-identifier">updated</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:new_password</span>].<span class="ruby-identifier">size</span> <span class="ruby-operator">&lt;</span> <span class="ruby-value">5</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'No Update - the password must be at least 5 characters'</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:new_password</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:new_password_confirmation</span>]
+    <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">password</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:new_password</span>]
+    <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">passwd</span>   = <span class="ruby-identifier">params</span>[<span class="ruby-value">:new_password</span>] <span class="ruby-keyword">if</span> <span class="ruby-keyword">not</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:new_password</span>].<span class="ruby-identifier">empty?</span>
+    <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">password_confirmation</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:new_password_confirmation</span>]
+
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">save</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-keyword">not</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:new_password</span>].<span class="ruby-identifier">empty?</span>
+        <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-node">&quot;The password for #{@logged_in_user.name} was updated&quot;</span>
+        <span class="ruby-identifier">updated</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'No Update - no password was entered'</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-node">&quot;The password for #{@logged_in_user.name} was not updated&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'No Update - the new password and the confirmation do not match'</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">updated</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:controller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'tracker'</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:user_set_password</span>)
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- user_store_password-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- user_store_password-method -->
+
+    
+      <div id="method-i-welcome" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">welcome</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="UserController.html#method-i-welcome">#welcome</a></p>
+
+<p>Description: A default redirect used on the user library.</p>
+          
+
+          
+          <div class="method-source-code" id="welcome-source">
+            <pre><span class="ruby-comment"># File app/controllers/user_controller.rb, line 499</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">welcome</span>
+  <span class="ruby-identifier">redirect_back_or_default</span>(<span class="ruby-value">:controller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;tracker&quot;</span>,
+                           <span class="ruby-value">:action</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;index&quot;</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- welcome-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- welcome-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

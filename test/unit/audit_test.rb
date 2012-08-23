@@ -11,31 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class AuditTest < Test::Unit::TestCase
-
-  fixtures :audits,
-           :audit_teammates,
-           :boards,
-           :checklists,
-           :checks,
-           :designs,
-           :design_checks,
-           :design_reviews,
-           :design_review_results,
-           :part_numbers,
-           :platforms,
-           :prefixes,
-           :priorities,
-           :projects,
-           :review_types,
-           :revisions,
-           :roles,
-           :roles_users,
-           :sections,
-           :subsections,
-           :users
+class AuditsTest < ActiveSupport::TestCase
 
   def setup
   
@@ -236,7 +214,7 @@ class AuditTest < Test::Unit::TestCase
 
     
     audit.design.design_type = 'Dot Rev'
-    audit.design.update
+    audit.design.save
     audit.update_checklist_type
 
     audit.reload
@@ -266,7 +244,7 @@ class AuditTest < Test::Unit::TestCase
     assert_equal(design_check_count + expected_partial_design_check_count, DesignCheck.count)
     
     audit.design.design_type = 'New'
-    audit.design.update
+    audit.design.save
     audit.update_checklist_type
     
     audit.reload
@@ -295,7 +273,7 @@ class AuditTest < Test::Unit::TestCase
  
     
     audit.design.design_type = 'Dot Rev'
-    audit.design.update
+    audit.design.save
     audit.update_checklist_type
     
     audit.reload
@@ -310,7 +288,7 @@ class AuditTest < Test::Unit::TestCase
     
     
     audit.design.design_type = 'New'
-    audit.design.update
+    audit.design.save
     audit.update_checklist_type
     
     audit.reload
@@ -714,14 +692,14 @@ class AuditTest < Test::Unit::TestCase
     jims_audits = Audit.active_audits(users(:jim_l))
     assert(jims_audits.size == 0)
     
-    bobs_expected_audits = [audits(:audit_mx700b), 
-                            audits(:audit_la453a1), 
-                            audits(:audit_109)]
-    bobs_audits = Audit.active_audits(@bob_g)
+    bobs_expected_audits = [audits(:audit_la453a1),
+                            audits(:audit_mx700b), 
+                            audits(:audit_109)].sort_by { |a| a.id }
+    bobs_audits = Audit.active_audits(@bob_g).sort_by { |a| a.id }
     assert_equal(bobs_expected_audits.size, bobs_audits.size)
 
     bobs_expected_audits.each_with_index do |a,i| 
-      assert_equal(a.design.name, bobs_audits[i].design.name) 
+      assert_equal(a.design.name, bobs_audits[i].design.name)
     end
   
     scotts_expected_audits = [audits(:audit_mx234a), 
@@ -859,7 +837,7 @@ class AuditTest < Test::Unit::TestCase
     assert_equal(@bob_g.id, design_check_1.auditor_id)
     assert(start_time.to_i <= design_check_1.auditor_checked_on.to_i)
     assert(Time.now.to_i   >= design_check_1.auditor_checked_on.to_i)
-    assert(completed_peer_checks, @audit_mx234b.auditor_completed_checks)
+    assert_equal(completed_peer_checks, @audit_mx234b.auditor_completed_checks)
 
     start_time = Time.now
 
@@ -871,7 +849,7 @@ class AuditTest < Test::Unit::TestCase
     assert_equal(@bob_g.id, design_check_1.auditor_id)
     assert(start_time.to_i <= design_check_1.auditor_checked_on.to_i)
     assert(Time.now.to_i   >= design_check_1.auditor_checked_on.to_i)
-    assert(completed_peer_checks, @audit_mx234b.auditor_completed_checks)
+    assert_equal(completed_peer_checks, @audit_mx234b.auditor_completed_checks)
     
     
     audit_mx234b_other = Audit.find(@audit_mx234b.id)
@@ -974,7 +952,7 @@ class AuditTest < Test::Unit::TestCase
     audit_teammate = @audit_109.audit_teammates.first
     assert_equal(@siva_e.name, audit_teammate.user.name)
     assert(audit_teammate.self?)
-    assert(!@audit_109.message?)
+    assert_nil(@audit_109[:message])
 
     #--------------- TESTING - ASSIGNING ROUTE PLANES BACK TO THE LEAD DESIGNER
     self_auditors[336] = scott
@@ -1002,7 +980,6 @@ class AuditTest < Test::Unit::TestCase
     audit_teammate = @audit_109.audit_teammates.first
     assert_equal(@siva_e.name, audit_teammate.user.name)
     assert(!audit_teammate.self?)
-    assert(@audit_109.message?)
     assert_equal(update_message, @audit_109.message)
     
     
@@ -1014,7 +991,7 @@ class AuditTest < Test::Unit::TestCase
     audit_teammate = @audit_109.audit_teammates.first
     assert_equal(@siva_e.name, audit_teammate.user.name)
     assert(!audit_teammate.self?)
-    assert(!@audit_109.message?)
+    assert_nil(@audit_109[:message])
 
     #--------------- TESTING - ASSIGNING ROUTE PLANES BACK TO THE LEAD PEER
     peer_auditors[336] = bob
@@ -1038,7 +1015,7 @@ class AuditTest < Test::Unit::TestCase
     assert_equal(0, @audit_109.audit_teammates.size)
     assert(@audit_109.message?)
     sect = Section.find(336)
-    assert_equal('WARNING: Assignments not made <br />' + '         ' + 
+    assert_equal('         ' + 
                  @siva_e.name + ' can not be both ' +
                  'self and peer auditor for ' + sect.name + '<br />',
                  @audit_109.message)
@@ -1066,7 +1043,7 @@ class AuditTest < Test::Unit::TestCase
     
     assert(@audit_109.message?)
     sect = Section.find(336)
-    assert_equal('WARNING: Assignments not made <br />' + '         ' + 
+    assert_equal( '         ' + 
                  @siva_e.name + ' can not be both ' +
                  'self and peer auditor for ' + sect.name + '<br />' +
                  update_message,
@@ -1327,25 +1304,7 @@ class AuditTest < Test::Unit::TestCase
   end
   
   
-  ######################################################################
-  def test_get_design_checks
-    
-    @audit_109.trim_checklist_for_design_type
-    
-    # There should be no design checks associated at this point.
-    @audit_109.checklist.each_check { |check| assert_nil(check.design_check) }
-    
-    # Create the associations.
-    @audit_109.get_design_checks
-    
-    # Verify that the associated design checks are correct
-    @audit_109.checklist.each_check do |check|
-      assert_equal(@audit_109.id, check.design_check.audit_id)
-      assert_equal(check.id,      check.design_check.check_id)
-    end
-    
-  end
-  
+
   
   ######################################################################
   def test_teammate_functions 

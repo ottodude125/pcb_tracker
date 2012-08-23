@@ -11,28 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class DesignReviewTest < Test::Unit::TestCase
-
-  fixtures(:boards,
-           :designs,
-           :design_centers,
-           :design_reviews,
-           :design_review_comments,
-           :design_review_results,
-           :design_updates,
-           :part_numbers,
-           :posting_timestamps,
-           :prefixes,
-           :priorities,
-           :review_statuses,
-           :review_types,
-           :revisions,
-           :roles,
-           :roles_users,
-           :users)
-
+class DesignReviewsTest < ActiveSupport::TestCase
 
   ######################################################################
   def setup
@@ -355,41 +336,41 @@ class DesignReviewTest < Test::Unit::TestCase
     #
     #                                         year   mon   day hour minute second
     assert_equal(0, 
-                 design_review.age(Time.local(2006, "jan",   3,  0,   0,     0)))
+                 design_review.age(Time.utc(2006, "jan",   3,  0,   0,     0)))
     assert_equal(' 0.0',
-                 design_review.age_in_days(Time.local(2006, "jan", 3,  0,   0,     0)))
+                 design_review.age_in_days(Time.utc(2006, "jan", 3,  0,   0,     0)))
     assert_equal(10.hours,
-                 design_review.age(Time.local(2006, "jan",  3, 10,   0,     0)))
+                 design_review.age(Time.utc(2006, "jan",  3, 10,   0,     0)))
     assert_equal(11.hours + 59.minutes + 59, 
-                 design_review.age(Time.local(2006, "jan",  3, 11,  59,    59)))
+                 design_review.age(Time.utc(2006, "jan",  3, 11,  59,    59)))
     
     #                                         year   mon   day hour minute second
     assert_equal(12.hours, 
-                 design_review.age(Time.local(2006, "jan",  3, 12,   0,     0)))
+                 design_review.age(Time.utc(2006, "jan",  3, 12,   0,     0)))
     assert_equal(' 0.5',
-                 design_review.age_in_days(Time.local(2006, "jan", 3, 12,   0,     0)))
+                 design_review.age_in_days(Time.utc(2006, "jan", 3, 12,   0,     0)))
     assert_equal(12.hours + 1, 
-                 design_review.age(Time.local(2006, "jan",  3, 12,   0,     1)))
+                 design_review.age(Time.utc(2006, "jan",  3, 12,   0,     1)))
     assert_equal(1.day,
-                 design_review.age(Time.local(2006, "jan",  4,  0,   0,     0)))
+                 design_review.age(Time.utc(2006, "jan",  4,  0,   0,     0)))
     assert_equal(1.day + 11.hours + 59.minutes + 59, 
-                 design_review.age(Time.local(2006, "jan",  4, 11,  59,    59)))
+                 design_review.age(Time.utc(2006, "jan",  4, 11,  59,    59)))
     assert_equal(1.day + 12.hours + 1, 
-                 design_review.age(Time.local(2006, "jan",  4, 12,   0,     1)))
+                 design_review.age(Time.utc(2006, "jan",  4, 12,   0,     1)))
     assert_equal(2.days, 
-                 design_review.age(Time.local(2006, "jan",  5,  0,   0,     0)))
+                 design_review.age(Time.utc(2006, "jan",  5,  0,   0,     0)))
     assert_equal(2.days + 12.hours + 1, 
-                 design_review.age(Time.local(2006, "jan",  5, 12,   0,     1)))
+                 design_review.age(Time.utc(2006, "jan",  5, 12,   0,     1)))
     assert_equal(3.days + 12.hours + 1, 
-                 design_review.age(Time.local(2006, "jan",  6, 12,   0,     1)))
+                 design_review.age(Time.utc(2006, "jan",  6, 12,   0,     1)))
     assert_equal(4.days, 
-                 design_review.age(Time.local(2006, "jan",  7, 12,   0,     1)))
+                 design_review.age(Time.utc(2006, "jan",  7, 12,   0,     1)))
     assert_equal(4.days, 
-                 design_review.age(Time.local(2006, "jan",  8, 12,   0,     1)))
+                 design_review.age(Time.utc(2006, "jan",  8, 12,   0,     1)))
     assert_equal(4.days + 12.hours + 1, 
-                 design_review.age(Time.local(2006, "jan",  9, 12,   0,     1)))
+                 design_review.age(Time.utc(2006, "jan",  9, 12,   0,     1)))
     assert_equal(5.days + 12.hours + 1, 
-                 design_review.age(Time.local(2006, "jan", 10, 12,   0,     1)))
+                 design_review.age(Time.utc(2006, "jan", 10, 12,   0,     1)))
 
   end
 
@@ -404,7 +385,7 @@ class DesignReviewTest < Test::Unit::TestCase
     assert_equal(0, design_review.time_on_hold)
     assert_equal(0, design_review.time_on_hold_total)
 
-    sat_jan_6_noon     = Time.local(2007, "jan", 6, 12, 0, 0)
+    sat_jan_6_noon     = Time.utc(2007, "jan", 6, 12, 0, 0)
     sun_jan_7_noon     = sat_jan_6_noon + 1.day
     mon_jan_8_noon     = sun_jan_7_noon + 1.day
     mon_jan_8_8_am     = mon_jan_8_noon - 4.hours
@@ -647,7 +628,7 @@ class DesignReviewTest < Test::Unit::TestCase
     #   current user is designer, 
     #   next review same as design phase
     design_review.design.audit.auditor_complete = 0
-    design_review.design.audit.update
+    design_review.design.audit.save
     design_review.reload
 
     assert_equal(scott_glover,           User.find(next_review.designer_id).name)
@@ -796,7 +777,7 @@ class DesignReviewTest < Test::Unit::TestCase
   def test_update_methods
   
     oregon = design_centers(:oregon)
-    boston = design_centers(:boston_harrison)
+    boston = design_centers(:nr)
 
     reviews = { 
       :pre_artwork => { :review  => @mx234a_pre_art_review,

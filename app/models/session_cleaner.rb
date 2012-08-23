@@ -23,7 +23,7 @@ class SessionCleaner
   #       * 15 * * * ruby <full path>/script/runner -e production "SessionCleaner.remove_stale_sessions(8)"
   #
   def self.remove_stale_sessions(number_of_hours)
-    CGI::Session::ActiveRecordStore::Session.destroy_all(['updated_at < ?', number_of_hours.hours.ago])
+    ActiveRecord::SessionStore::Session.destroy_all(['updated_at < ?', number_of_hours.hours.ago])
   end
   
 end

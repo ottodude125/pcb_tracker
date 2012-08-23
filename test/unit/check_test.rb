@@ -11,16 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class CheckTest < Test::Unit::TestCase
-  fixtures :audits,
-           :checks,
-           :checklists,
-           :designs,
-           :design_checks,
-           :sections,
-           :subsections
+class ChecksTest < ActiveSupport::TestCase
 
   def setup
     @check = Check.find(checks(:check_18).id)

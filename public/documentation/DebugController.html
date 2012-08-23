@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: DebugController</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/controllers/debug_controller.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link"><a href="ApplicationController.html">ApplicationController</a>
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-active_users">#active_users</a>
+    
+    <li><a href="#method-i-audits">#audits</a>
+    
+    <li><a href="#method-i-board_design_entries">#board_design_entries</a>
+    
+    <li><a href="#method-i-boards">#boards</a>
+    
+    <li><a href="#method-i-checklist">#checklist</a>
+    
+    <li><a href="#method-i-checklists">#checklists</a>
+    
+    <li><a href="#method-i-cycle_time">#cycle_time</a>
+    
+    <li><a href="#method-i-delete_part_number">#delete_part_number</a>
+    
+    <li><a href="#method-i-design">#design</a>
+    
+    <li><a href="#method-i-design_reviews">#design_reviews</a>
+    
+    <li><a href="#method-i-designs">#designs</a>
+    
+    <li><a href="#method-i-inactive_users">#inactive_users</a>
+    
+    <li><a href="#method-i-orphaned_audits">#orphaned_audits</a>
+    
+    <li><a href="#method-i-orphaned_checks">#orphaned_checks</a>
+    
+    <li><a href="#method-i-part_numbers">#part_numbers</a>
+    
+    <li><a href="#method-i-select_reviewers">#select_reviewers</a>
+    
+    <li><a href="#method-i-users">#users</a>
+    
+    <li><a href="#method-i-view_change">#view_change</a>
+    
+    <li><a href="#method-i-view_checklist_details">#view_checklist_details</a>
+    
+    <li><a href="#method-i-view_new_design_dangling_checks">#view_new_design_dangling_checks</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class DebugController</h1>
+
+  <div id="description" class="description">
+    
+<p>Copyright 2005, by Teradyne, Inc., Boston MA</p>
+
+<p>File: debug_controller.rb</p>
+
+<p>This contains the logic that handles events from the outside world (user
+input), to generate the debug screens.</p>
+
+<p>$Id$</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-active_users" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">active_users</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="active_users-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 324</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">active_users</span>
+ <span class="ruby-ivar">@users</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'active=true'</span>, <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'last_name'</span>)
+ <span class="ruby-ivar">@title</span> = <span class="ruby-string">'Active Users'</span>
+ <span class="ruby-identifier">render</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'users'</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- active_users-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- active_users-method -->
+
+    
+      <div id="method-i-audits" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">audits</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="audits-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 20</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">audits</span>
+  <span class="ruby-ivar">@audits</span> = <span class="ruby-constant">Audit</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- audits-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- audits-method -->
+
+    
+      <div id="method-i-board_design_entries" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">board_design_entries</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="board_design_entries-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 319</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">board_design_entries</span>
+  <span class="ruby-ivar">@bde_list</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- board_design_entries-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- board_design_entries-method -->
+
+    
+      <div id="method-i-boards" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">boards</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DebugController.html#method-i-boards">#boards</a></p>
+
+<p>Description: Displays a list of <a
+href="DebugController.html#method-i-boards">#boards</a> in the system with
+links to the  individual <a
+href="DebugController.html#method-i-boards">#boards</a>.</p>
+          
+
+          
+          <div class="method-source-code" id="boards-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 87</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">boards</span>
+  <span class="ruby-ivar">@boards</span> = <span class="ruby-constant">Board</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- boards-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- boards-method -->
+
+    
+      <div id="method-i-checklist" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">checklist</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DebugController.html#method-i-checklist">#checklist</a></p>
+
+<p>Description: Provides the details for an individual <a
+href="DebugController.html#method-i-checklist">#checklist</a>.</p>
+          
+
+          
+          <div class="method-source-code" id="checklist-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 206</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">checklist</span>
+  <span class="ruby-ivar">@checklist</span> = <span class="ruby-constant">Checklist</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@subsection_count</span> = <span class="ruby-value">0</span>
+  <span class="ruby-ivar">@check_count</span>      = <span class="ruby-value">0</span>
+  <span class="ruby-ivar">@checklist</span>.<span class="ruby-identifier">sections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">section</span><span class="ruby-operator">|</span>
+    <span class="ruby-ivar">@subsection_count</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">section</span>.<span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">size</span>
+
+    <span class="ruby-identifier">section</span>.<span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">subsection</span><span class="ruby-operator">|</span>
+      <span class="ruby-ivar">@check_count</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">checks</span>.<span class="ruby-identifier">size</span>
+    <span class="ruby-keyword">end</span>
+    
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">section_count</span>       = <span class="ruby-ivar">@checklist</span>.<span class="ruby-identifier">sections</span>.<span class="ruby-identifier">size</span>
+  <span class="ruby-identifier">expected_section_so</span> = <span class="ruby-value">1</span>
+  <span class="ruby-ivar">@messages</span> = []
+
+  <span class="ruby-identifier">urls</span> = {}
+  <span class="ruby-comment">#sections = @checklist.sections.sort_by { |s| s.position }</span>
+  <span class="ruby-ivar">@checklist</span>.<span class="ruby-identifier">sections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">section</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">section</span>.<span class="ruby-identifier">position</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">expected_section_so</span>
+      <span class="ruby-ivar">@messages</span>.<span class="ruby-identifier">push</span>   <span class="ruby-node">&quot;Section #{section.id}: Expected sort order &quot;</span> <span class="ruby-operator">+</span>
+                       <span class="ruby-node">&quot;#{expected_section_so}  &quot;</span> <span class="ruby-operator">+</span>
+                       <span class="ruby-node">&quot;actual: #{section.position}&quot;</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">section</span>.<span class="ruby-identifier">position</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">section_count</span>
+      <span class="ruby-ivar">@messages</span>.<span class="ruby-identifier">push</span>   <span class="ruby-node">&quot;Section #{section.id}: sort order &quot;</span> <span class="ruby-operator">+</span>
+                       <span class="ruby-node">&quot;#{section.position}  &quot;</span> <span class="ruby-operator">+</span>
+                       <span class="ruby-node">&quot;is greater than the number of sections: #{section_count}&quot;</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">expected_section_so</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+
+    <span class="ruby-identifier">subsection_count</span>       = <span class="ruby-identifier">section</span>.<span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">size</span>
+    <span class="ruby-identifier">expected_subsection_so</span> = <span class="ruby-value">1</span>
+    
+    <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#############################################&quot;</span>
+    <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&quot;                   SECTION&quot;</span>
+    <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;  URL: #{section.url}&quot;</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">section</span>.<span class="ruby-identifier">url</span> <span class="ruby-operator">!=</span> <span class="ruby-string">''</span>
+      <span class="ruby-identifier">url</span> = <span class="ruby-identifier">section</span>.<span class="ruby-identifier">url</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">'/'</span>)
+      <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot; BASE: #{url[0]}&quot;</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">urls</span>[<span class="ruby-identifier">section</span>.<span class="ruby-identifier">url</span>]
+        <span class="ruby-identifier">h</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span><span class="ruby-operator">::</span><span class="ruby-identifier">new</span>(<span class="ruby-identifier">url</span>.<span class="ruby-identifier">shift</span>)
+        <span class="ruby-identifier">urls</span>[<span class="ruby-identifier">section</span>.<span class="ruby-identifier">url</span>] = <span class="ruby-identifier">h</span>.<span class="ruby-identifier">get</span>(<span class="ruby-string">'/'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">url</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">'/'</span>))
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">section</span>[<span class="ruby-value">:resp</span>] = { <span class="ruby-value">:message</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">urls</span>[<span class="ruby-identifier">section</span>.<span class="ruby-identifier">url</span>].<span class="ruby-identifier">message</span>,
+                         <span class="ruby-value">:code</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">urls</span>[<span class="ruby-identifier">section</span>.<span class="ruby-identifier">url</span>].<span class="ruby-identifier">code</span> }
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#############################################&quot;</span>
+
+    <span class="ruby-comment">#subsections = section.subsections.sort_by { |s| s.position }</span>
+    <span class="ruby-identifier">section</span>.<span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">subsection</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">position</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">expected_subsection_so</span>
+        <span class="ruby-ivar">@messages</span>.<span class="ruby-identifier">push</span>   <span class="ruby-node">&quot;Subsection #{subsection.id}: Expected sort order &quot;</span> <span class="ruby-operator">+</span>
+                       <span class="ruby-node">&quot;#{expected_subsection_so}  &quot;</span> <span class="ruby-operator">+</span>
+                       <span class="ruby-node">&quot;actual: #{subsection.position}&quot;</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">position</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">subsection_count</span>
+        <span class="ruby-ivar">@messages</span>.<span class="ruby-identifier">push</span>   <span class="ruby-node">&quot;Subsection #{subsection.id}: Sort order &quot;</span> <span class="ruby-operator">+</span>
+                         <span class="ruby-node">&quot;#{subsection.position}  &quot;</span> <span class="ruby-operator">+</span>
+                         <span class="ruby-node">&quot;is greater than the number of sections: #{subsection_count}&quot;</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">expected_subsection_so</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+
+      <span class="ruby-identifier">check_count</span>       = <span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">checks</span>.<span class="ruby-identifier">size</span>
+      <span class="ruby-identifier">expected_check_so</span> = <span class="ruby-value">1</span>
+      
+      <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#############################################&quot;</span>
+      <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-string">&quot;                SUBSECTION&quot;</span>
+      <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;  URL: #{subsection.url}&quot;</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">url</span> <span class="ruby-operator">!=</span> <span class="ruby-string">''</span>
+        <span class="ruby-identifier">url</span> = <span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">url</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">'/'</span>)
+        <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot; BASE: #{url[0]}&quot;</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">urls</span>[<span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">url</span>]
+          <span class="ruby-identifier">h</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span><span class="ruby-operator">::</span><span class="ruby-identifier">new</span>(<span class="ruby-identifier">url</span>.<span class="ruby-identifier">shift</span>)
+          <span class="ruby-identifier">urls</span>[<span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">url</span>], <span class="ruby-identifier">data</span> = <span class="ruby-identifier">h</span>.<span class="ruby-identifier">get</span>(<span class="ruby-string">'/'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">url</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">'/'</span>))
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">subsection</span>[<span class="ruby-value">:resp</span>] = { <span class="ruby-value">:message</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">urls</span>[<span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">url</span>].<span class="ruby-identifier">message</span>,
+                              <span class="ruby-value">:code</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">urls</span>[<span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">url</span>].<span class="ruby-identifier">code</span> }
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">logger</span>.<span class="ruby-identifier">info</span> <span class="ruby-node">&quot;#############################################&quot;</span>
+
+      <span class="ruby-comment">#checks = subsection.checks.sort_by { |c| c.position }</span>
+      <span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">checks</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">check</span><span class="ruby-operator">|</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">position</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">expected_check_so</span>
+          <span class="ruby-ivar">@messages</span>.<span class="ruby-identifier">push</span>   <span class="ruby-node">&quot;Check #{check.id}: Expected sort order &quot;</span> <span class="ruby-operator">+</span>
+                           <span class="ruby-node">&quot;#{expected_check_so}  &quot;</span> <span class="ruby-operator">+</span>
+                           <span class="ruby-node">&quot;actual: #{check.position}&quot;</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">position</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">check_count</span>
+          <span class="ruby-ivar">@messages</span>.<span class="ruby-identifier">push</span>   <span class="ruby-node">&quot;Check #{check.id}: Sort order &quot;</span> <span class="ruby-operator">+</span>
+                           <span class="ruby-node">&quot;#{check.position}  &quot;</span> <span class="ruby-operator">+</span>
+                           <span class="ruby-node">&quot;is greater than the number of sections: #{check_count}&quot;</span>
+        <span class="ruby-keyword">end</span>
+        <span class="ruby-identifier">expected_check_so</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+        
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">url</span> <span class="ruby-operator">!=</span> <span class="ruby-string">''</span>
+          <span class="ruby-identifier">url</span> = <span class="ruby-identifier">check</span>.<span class="ruby-identifier">url</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">'/'</span>)
+          <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">urls</span>[<span class="ruby-identifier">check</span>.<span class="ruby-identifier">url</span>]
+            <span class="ruby-identifier">h</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span><span class="ruby-operator">::</span><span class="ruby-identifier">new</span>(<span class="ruby-identifier">url</span>.<span class="ruby-identifier">shift</span>)
+            <span class="ruby-identifier">urls</span>[<span class="ruby-identifier">check</span>.<span class="ruby-identifier">url</span>], <span class="ruby-identifier">data</span> = <span class="ruby-identifier">h</span>.<span class="ruby-identifier">get</span>(<span class="ruby-string">'/'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">url</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">'/'</span>))
+          <span class="ruby-keyword">end</span>
+          <span class="ruby-identifier">check</span>[<span class="ruby-value">:resp</span>] = { <span class="ruby-value">:message</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">urls</span>[<span class="ruby-identifier">check</span>.<span class="ruby-identifier">url</span>].<span class="ruby-identifier">message</span>,
+                           <span class="ruby-value">:code</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">urls</span>[<span class="ruby-identifier">check</span>.<span class="ruby-identifier">url</span>].<span class="ruby-identifier">code</span> }
+        <span class="ruby-keyword">end</span>
+
+      <span class="ruby-keyword">end</span>
+      
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- checklist-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- checklist-method -->
+
+    
+      <div id="method-i-checklists" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">checklists</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>check_lists</p>
+
+<p>Description: Displays a list of <a
+href="DebugController.html#method-i-checklists">#checklists</a> with links
+to the individual <a
+href="DebugController.html#method-i-checklists">#checklists</a>.</p>
+          
+
+          
+          <div class="method-source-code" id="checklists-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 192</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">checklists</span>
+  <span class="ruby-ivar">@checklists</span> = <span class="ruby-constant">Checklist</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'created_on'</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- checklists-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- checklists-method -->
+
+    
+      <div id="method-i-cycle_time" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">cycle_time</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="cycle_time-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 353</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">cycle_time</span>
+  
+  <span class="ruby-ivar">@cycle_times</span>  = []
+  <span class="ruby-ivar">@review_types</span> = []
+  <span class="ruby-ivar">@roles</span>        = []
+  <span class="ruby-identifier">params</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">param</span><span class="ruby-operator">|</span>
+  
+    <span class="ruby-identifier">p</span> = <span class="ruby-identifier">param</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">split</span>(<span class="ruby-string">'_'</span>)
+    
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">p</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'role'</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">2</span>
+        <span class="ruby-identifier">role</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">p</span>[<span class="ruby-value">1</span>])
+        <span class="ruby-ivar">@roles</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">role</span>
+        <span class="ruby-identifier">role</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">user</span><span class="ruby-operator">|</span>
+          <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@cycle_times</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ct</span><span class="ruby-operator">|</span> <span class="ruby-identifier">ct</span>[<span class="ruby-value">:user</span>].<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span> }
+            <span class="ruby-ivar">@cycle_times</span> <span class="ruby-operator">&lt;&lt;</span> { <span class="ruby-value">:user</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">user</span>, <span class="ruby-value">:design_reviews</span> =<span class="ruby-operator">&gt;</span> [] }
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">p</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'rt'</span>
+      <span class="ruby-ivar">@review_types</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">ReviewType</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">p</span>[<span class="ruby-value">1</span>])
+    <span class="ruby-keyword">end</span>
+    
+    <span class="ruby-ivar">@cycle_times</span> = <span class="ruby-ivar">@cycle_times</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ct</span><span class="ruby-operator">|</span> <span class="ruby-identifier">ct</span>[<span class="ruby-value">:user</span>].<span class="ruby-identifier">last_name</span> }
+  
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@roles</span> = <span class="ruby-ivar">@roles</span>.<span class="ruby-identifier">uniq</span>
+  
+  <span class="ruby-ivar">@cycle_times</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ct</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">review_results</span> = <span class="ruby-constant">DesignReviewResult</span>.<span class="ruby-identifier">find_all_by_reviewer_id</span>(<span class="ruby-identifier">ct</span>[<span class="ruby-value">:user</span>].<span class="ruby-identifier">id</span>)
+    <span class="ruby-identifier">review_results</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">rr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">rr</span>.<span class="ruby-identifier">result</span> <span class="ruby-operator">==</span> <span class="ruby-string">'No Response'</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">rr</span>.<span class="ruby-identifier">result</span> <span class="ruby-operator">==</span> <span class="ruby-string">'NONE'</span> }
+    <span class="ruby-identifier">review_results</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">rr</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@review_types</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">rr</span>.<span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_type</span>) }
+    <span class="ruby-identifier">review_results</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">rr</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-ivar">@roles</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">rr</span>.<span class="ruby-identifier">role</span>)}
+    <span class="ruby-identifier">ct</span>[<span class="ruby-value">:design_reviews</span>] = <span class="ruby-identifier">review_results</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-ivar">@cycle_times</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ct</span><span class="ruby-operator">|</span> <span class="ruby-identifier">ct</span>[<span class="ruby-value">:design_reviews</span>].<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span> }
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@cycle_times</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'select_reviewers'</span>)
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;No Records Returned&quot;</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- cycle_time-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- cycle_time-method -->
+
+    
+      <div id="method-i-delete_part_number" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">delete_part_number</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="delete_part_number-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 405</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">delete_part_number</span>
+  
+  <span class="ruby-identifier">part_number</span> = <span class="ruby-constant">PartNumber</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'PCB Part Number '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">part_number</span>.<span class="ruby-identifier">pcb_display_name</span> <span class="ruby-operator">+</span> 
+                    <span class="ruby-string">' has been removed from the database.'</span>
+  
+  <span class="ruby-identifier">part_number</span>.<span class="ruby-identifier">destroy</span>
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'part_numbers'</span>)
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- delete_part_number-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- delete_part_number-method -->
+
+    
+      <div id="method-i-design" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">design</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DebugController.html#method-i-design">#design</a></p>
+
+<p>Description: Displays a list of <a
+href="DebugController.html#method-i-designs">#designs</a> for a particular
+board with links to the  individual <a
+href="DebugController.html#method-i-designs">#designs</a></p>
+          
+
+          
+          <div class="method-source-code" id="design-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 102</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">design</span>
+  <span class="ruby-ivar">@board</span>   = <span class="ruby-constant">Board</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@designs</span> = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find_all_by_board_id</span>(<span class="ruby-ivar">@board</span>.<span class="ruby-identifier">id</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- design-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- design-method -->
+
+    
+      <div id="method-i-design_reviews" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">design_reviews</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DebugController.html#method-i-design_reviews">#design_reviews</a></p>
+
+<p>Description: Displays a list of <a
+href="DebugController.html#method-i-design">#design</a> reviewss for a
+particular <a href="DebugController.html#method-i-design">#design</a> with
+links to the individual <a
+href="DebugController.html#method-i-design">#design</a> reviews.</p>
+          
+
+          
+          <div class="method-source-code" id="design_reviews-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 118</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">design_reviews</span>
+  <span class="ruby-ivar">@design</span> = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@board</span>  = <span class="ruby-constant">Board</span>.<span class="ruby-identifier">find</span>(<span class="ruby-ivar">@design</span>.<span class="ruby-identifier">board_id</span>)
+
+  <span class="ruby-ivar">@design_reviews</span> = <span class="ruby-constant">DesignReview</span>.<span class="ruby-identifier">find_all_by_design_id</span>(<span class="ruby-ivar">@design</span>.<span class="ruby-identifier">id</span>).<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">sort_order</span>
+  }
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- design_reviews-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- design_reviews-method -->
+
+    
+      <div id="method-i-designs" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">designs</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="designs-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 400</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">designs</span>
+  <span class="ruby-ivar">@designs</span> = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- designs-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- designs-method -->
+
+    
+      <div id="method-i-inactive_users" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">inactive_users</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="inactive_users-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 337</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">inactive_users</span>
+ <span class="ruby-ivar">@users</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'active=false'</span>, <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'last_name'</span>)
+ <span class="ruby-ivar">@title</span> = <span class="ruby-string">'Inactive Users'</span>
+ <span class="ruby-identifier">render</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'users'</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- inactive_users-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- inactive_users-method -->
+
+    
+      <div id="method-i-orphaned_audits" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">orphaned_audits</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DebugController.html#method-i-orphaned_audits">#orphaned_audits</a></p>
+
+<p>Description: Displays a list of <a
+href="DebugController.html#method-i-audits">#audits</a> that have no parent
+<a href="DebugController.html#method-i-design">#design</a>.</p>
+          
+
+          
+          <div class="method-source-code" id="orphaned_audits-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 138</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">orphaned_audits</span>
+
+  <span class="ruby-ivar">@audit_list</span> = {}
+  <span class="ruby-constant">Audit</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">audit</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-ivar">@audit_list</span>[<span class="ruby-identifier">audit</span>.<span class="ruby-identifier">id</span>] = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">audit</span>.<span class="ruby-identifier">design_id</span>).<span class="ruby-identifier">name</span>
+    <span class="ruby-keyword">rescue</span>
+      <span class="ruby-ivar">@audit_list</span>[<span class="ruby-identifier">audit</span>.<span class="ruby-identifier">id</span>] = <span class="ruby-string">&quot;ORPHAN&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- orphaned_audits-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- orphaned_audits-method -->
+
+    
+      <div id="method-i-orphaned_checks" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">orphaned_checks</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DebugController.html#method-i-orphaned_checks">#orphaned_checks</a></p>
+
+<p>Description: Displays a list of checks that have no parent section or
+subsection.</p>
+          
+
+          
+          <div class="method-source-code" id="orphaned_checks-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 161</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">orphaned_checks</span>
+
+  <span class="ruby-ivar">@section_list</span>    = {}
+  <span class="ruby-ivar">@subsection_list</span> = {}
+  <span class="ruby-constant">Check</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">check</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-constant">Section</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">check</span>.<span class="ruby-identifier">section_id</span>)
+    <span class="ruby-keyword">rescue</span>
+      <span class="ruby-ivar">@section_list</span>[<span class="ruby-identifier">check</span>.<span class="ruby-identifier">id</span>] = <span class="ruby-identifier">check</span>.<span class="ruby-identifier">section_id</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">begin</span>
+      <span class="ruby-constant">Subsection</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">check</span>.<span class="ruby-identifier">subsection_id</span>)
+    <span class="ruby-keyword">rescue</span>
+      <span class="ruby-ivar">@subsection_list</span>[<span class="ruby-identifier">check</span>.<span class="ruby-identifier">id</span>] = <span class="ruby-identifier">check</span>.<span class="ruby-identifier">subsection_id</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- orphaned_checks-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- orphaned_checks-method -->
+
+    
+      <div id="method-i-part_numbers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">part_numbers</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="part_numbers-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 417</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">part_numbers</span>
+  <span class="ruby-ivar">@part_numbers</span> = <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>)
+  <span class="ruby-identifier">designs</span>       = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>)
+  <span class="ruby-identifier">bde_list</span>      = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>)
+  
+  <span class="ruby-ivar">@part_numbers</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pn</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">pn_designs</span> = []
+    <span class="ruby-identifier">pn_bdes</span>    = []
+    
+    <span class="ruby-identifier">designs</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pn_designs</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">d</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">d</span>.<span class="ruby-identifier">pcba_number</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">pn</span>.<span class="ruby-identifier">name_string</span> }
+    <span class="ruby-identifier">pn</span>[<span class="ruby-value">:design_count</span>] = <span class="ruby-identifier">pn_designs</span>.<span class="ruby-identifier">size</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">pn_designs</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">pn</span>[<span class="ruby-value">:design_id</span>] = <span class="ruby-string">'-'</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">pn_designs</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+      <span class="ruby-identifier">pn</span>[<span class="ruby-value">:design_id</span>] = <span class="ruby-identifier">pn_designs</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">id</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">pn</span>[<span class="ruby-value">:design_id</span>] = <span class="ruby-string">'ERR'</span>
+    <span class="ruby-keyword">end</span>
+    
+    <span class="ruby-identifier">bde_list</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">bde</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pn_bdes</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">bde</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">bde</span>.<span class="ruby-identifier">part_number_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">pn</span>.<span class="ruby-identifier">id</span> }
+    <span class="ruby-identifier">pn</span>[<span class="ruby-value">:bde_count</span>] = <span class="ruby-identifier">pn_bdes</span>.<span class="ruby-identifier">size</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">pn_bdes</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">pn</span>[<span class="ruby-value">:bde_id</span>] = <span class="ruby-string">'-'</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">pn_bdes</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+      <span class="ruby-identifier">pn</span>[<span class="ruby-value">:bde_id</span>] = <span class="ruby-identifier">pn_bdes</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">id</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">pn</span>[<span class="ruby-value">:bde_id</span>] = <span class="ruby-string">'ERR'</span>
+    <span class="ruby-keyword">end</span>
+    
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- part_numbers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- part_numbers-method -->
+
+    
+      <div id="method-i-select_reviewers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">select_reviewers</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="select_reviewers-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 344</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">select_reviewers</span>
+  
+  <span class="ruby-ivar">@review_types</span> = <span class="ruby-constant">ReviewType</span>.<span class="ruby-identifier">get_review_types</span>
+  <span class="ruby-ivar">@review_roles</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">get_review_roles</span>
+  <span class="ruby-ivar">@users</span>        = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>)
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- select_reviewers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- select_reviewers-method -->
+
+    
+      <div id="method-i-users" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">users</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="users-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 331</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">users</span>
+ <span class="ruby-ivar">@users</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'last_name'</span>)
+ <span class="ruby-ivar">@title</span> = <span class="ruby-string">'All Users'</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- users-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- users-method -->
+
+    
+      <div id="method-i-view_change" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">view_change</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DebugController.html#method-i-view_change">#view_change</a></p>
+          
+
+          
+          <div class="method-source-code" id="view_change-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 31</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">view_change</span>
+  <span class="ruby-ivar">@change_classes</span> = <span class="ruby-constant">ChangeClass</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:position</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- view_change-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- view_change-method -->
+
+    
+      <div id="method-i-view_checklist_details" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">view_checklist_details</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DebugController.html#method-i-view_checklist_details">#view_checklist_details</a></p>
+          
+
+          
+          <div class="method-source-code" id="view_checklist_details-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 42</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">view_checklist_details</span>
+  <span class="ruby-ivar">@audit</span>              = <span class="ruby-constant">Audit</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@filtered_audit</span>     = <span class="ruby-constant">Audit</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@trimmed_self_audit</span> = <span class="ruby-constant">Audit</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@trimmed_self_audit</span>.<span class="ruby-identifier">trim_checklist_for_self_audit</span>
+  <span class="ruby-ivar">@trimmed_peer_audit</span> = <span class="ruby-constant">Audit</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@trimmed_peer_audit</span>.<span class="ruby-identifier">trim_checklist_for_peer_audit</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- view_checklist_details-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- view_checklist_details-method -->
+
+    
+      <div id="method-i-view_new_design_dangling_checks" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">view_new_design_dangling_checks</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DebugController.html#method-i-view_new_design_dangling_checks">#view_new_design_dangling_checks</a></p>
+          
+
+          
+          <div class="method-source-code" id="view_new_design_dangling_checks-source">
+            <pre><span class="ruby-comment"># File app/controllers/debug_controller.rb, line 58</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">view_new_design_dangling_checks</span>
+  
+  <span class="ruby-ivar">@audit</span> = <span class="ruby-constant">Audit</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  
+  <span class="ruby-ivar">@audit</span>.<span class="ruby-identifier">checklist</span>.<span class="ruby-identifier">sections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">section</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">section</span>.<span class="ruby-identifier">subsections</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">subsection</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">checks</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">check</span><span class="ruby-operator">|</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">full_review?</span>}
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">design_checks</span> = <span class="ruby-constant">DesignCheck</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;audit_id=#{@audit.id}&quot;</span>)
+  
+  <span class="ruby-ivar">@audit</span>.<span class="ruby-identifier">checklist</span>.<span class="ruby-identifier">each_check</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">check</span><span class="ruby-operator">|</span>
+   <span class="ruby-identifier">check</span>.<span class="ruby-identifier">design_check</span> = <span class="ruby-identifier">design_checks</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dc</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dc</span>.<span class="ruby-identifier">check_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">id</span> }      
+  <span class="ruby-keyword">end</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- view_new_design_dangling_checks-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- view_new_design_dangling_checks-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

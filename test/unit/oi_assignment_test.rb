@@ -12,16 +12,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class OiAssignmentTest < Test::Unit::TestCase
-  fixtures(:designs,
-           :oi_assignments,
-           :oi_category_sections,
-           :oi_categories,
-           :oi_instructions,
-           :users)
-
+class OiAssignmentsTest < ActiveSupport::TestCase
 
   def setup
     @first_assignment = oi_assignments(:first)
@@ -80,7 +73,7 @@ class OiAssignmentTest < Test::Unit::TestCase
   ######################################################################
   def test_task_email_update_header
   
-    date_assigned = Time.local(2007, 'feb', 15, 13, 16).format_dd_mon_yy('timestamp')
+    date_assigned = Time.utc(2007, 'feb', 15, 13, 16).format_dd_mon_yy('timestamp')
     assert_equal("------------------------------------------------------------------------\n" +
                  "         Design : pcb252_234_a0_g\n"                                        +
                  "       Category : Placement\n"                                              +
@@ -92,8 +85,8 @@ class OiAssignmentTest < Test::Unit::TestCase
                  "------------------------------------------------------------------------\n",
                  @first_assignment.email_update_header)
  
-    date_assigned  = Time.local(2007, 'feb', 16, 11, 20).format_dd_mon_yy('timestamp')
-    date_completed = Time.local(2007, 'mar',  9, 16, 45).format_dd_mon_yy('timestamp')
+    date_assigned  = Time.utc(2007, 'feb', 16, 11, 20).format_dd_mon_yy('timestamp')
+    date_completed = Time.utc(2007, 'mar',  9, 16, 45).format_dd_mon_yy('timestamp')
     assert_equal("------------------------------------------------------------------------\n" +
                  "         Design : pcb252_234_a0_g\n"                                        +
                  "       Category : Placement\n"                                              +

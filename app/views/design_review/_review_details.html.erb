@@ -1,0 +1,130 @@
+<!-- View:    design_review                                     -->
+<!-- Purpose: Displays the details for a design review.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<table border="0" width="100%">
+  <tr>
+    <td class="th1">PCB Part Number:</td>
+    <td> <%= @design_review.design.pcb_number %></td>
+    <td class="th1">Revision:</td>
+    <td> <%= @design_review.design.pcb_rev %></td>
+  </tr>
+    <tr>
+      <td class="th1">PCBA Part Number(s):</td>
+      <td><%= @design_review.design.pcbas_string %></td>
+      <td class="th1">ECN Number:</td>
+      <td> <% if @design_review.design.eco_number != '' %>
+          <%=@design_review.design.eco_number%>
+        <%else%>
+        <b><font color="red">Not Set</font></b>
+        <% end %>
+       </td>
+     </tr>
+  <tr>
+    <td class="th1">Description:</td>
+    <td colspan="3">
+      <%= @design_review.design.board.platform.name %> /
+      <%= @design_review.design.board.project.name %> /
+      <%= h @design_review.design.board.description %>
+    </td>
+  </tr>
+  <tr>
+    <%  if @design_review.review_type.name == "Pre-Artwork" %>
+       <td class="th1">Poster:</td>
+       <td><%= @design_review.design.input_gate.name %>
+    <% else %>
+      <td class="th1">Designer:</td>
+      <td><%= @design_review.designer.name %>
+    <%  end %>
+    <td class="th1">PCB Design Data:</td>
+    <td>
+      <% if @design_review.design.design_center %>
+        <%= link_to(@design_review.design.design_center.name,
+          design_center_path(@design_review),
+          :popup => true) %>
+      <% else %>
+        <b>Not Set</b>
+      <% end %>
+      (<b>Eng Dir: </b>
+      <% if @brd_dsn_entry && @brd_dsn_entry.design_directory %>
+        <%=  @brd_dsn_entry.design_directory.name %>
+      <% else %>
+        XXX
+      <% end %>
+      )
+    </td>
+  </tr>
+  <tr>
+    <td class="th1">Criticality:</td>
+    <td><%= @design_review.priority.name %></td>
+    <td class="th1">Review Type:</td>
+    <td><%= @design_review.review_name %></td>
+  </tr>
+  <tr>
+    <td class="th1">Status:</td>
+    <td><%= @design_review.review_status.name %></td>
+    <td class="th1">Total Days On Hold:</td>
+    <td><%= sprintf("%4.1f", @design_review.time_on_hold_total.to_f / 1.day) %></td>
+  </tr>
+
+  <% if @design_review.on_hold? %>
+    <tr>
+      <td class="th1">Placed On Hold:</td>
+      <td><%= @design_review.placed_on_hold_on.format_dd_mon_yy('timestamp') %></td>
+      <td class="th1">Days On Hold:</td>
+      <td><%= sprintf("%4.1f", @design_review.time_on_hold.to_f / 1.day) %></td>
+    </tr>
+  <% end %>
+
+  <tr>
+    <td class="th1">Posting Number:</td>
+    <td><%= @design_review.posting_count %></td>
+    <% if @design_review.posting_count > 0 %>
+      <td class="th1">Originally Posted:</td>
+      <td>
+        <%= @design_review.created_on.format_dd_mon_yy('timestamp') %>
+      </td>
+    <% end %>
+  </tr>
+  <tr valign="top">
+    <% if @design_review.design.fab_houses.size == 0 %>
+      <td class="th1" colspan="2">No Fab House Selected</td>
+    <% else %>
+      <% if @design_review.design.fab_houses.size == 1 %>
+        <td class="th1">Fab House:</td>
+      <% else %>
+        <td class="th1">Fab Houses:</td>
+      <% end %>
+      <td>
+          <%= raw @design_review.design.fab_houses.map { |f|  h f.name}.join('<br />') %>
+      </td>
+    <% end %>
+
+    <% if @design_review.posting_count > 0 %>
+      <td class="th1">Last Posted:</td>
+      <td>
+        <%= @design_review.reposted_on.format_dd_mon_yy('timestamp') %>
+      </td>
+    <% end %>
+  </tr>
+  <tr valign="top">
+    <% unless ( @design_review.design.ftp_notification.blank? ||
+       @design_review.design.ftp_notification.created_at.blank? ) %>
+      <td class="th1">FTP Date:</td>
+      <td>
+        <%= @design_review.design.ftp_notification.created_at.format_dd_mon_yy('timestamp') %>
+      </td>
+    <%  else %>
+      <td>&nbsp;</td><td>&nbsp;</td>
+    <% end %>
+    <% if ( ! @design_review.completed_on.blank?) %>
+      <td class="th1">Completion Date:</td>
+      <td><%= @design_review.completed_on.format_dd_mon_yy('timestamp') %>
+    <% else %>
+      <td>&nbsp;</td><td>&nbsp;</td>
+    <% end %>
+  </tr>
+  </table>
+

@@ -11,13 +11,13 @@
 ########################################################################
 #
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'tracker_controller'
 
 # Re-raise errors caught by the controller.
 class TrackerController; def rescue_action(e) raise e end; end
 
-class TrackerControllerTest < Test::Unit::TestCase
+class TrackerControllerTest < ActionController::TestCase
 
 
   def setup
@@ -87,9 +87,9 @@ class TrackerControllerTest < Test::Unit::TestCase
     assert_equal(expected_inactive_design_reviews,      inactive_reviews)
     
 
-    manager_session['flash'] = 'ASC'
+    #manager_session['flash'] = 'ASC'
     post('manager_list_by_priority', { :order => 'DESC' }, manager_session)
-    
+
     expected_active_design_reviews = expected_active_design_reviews.sort_by { |dr| [dr.priority.value, dr.age] }.reverse
     expected_inactive_design_reviews.reverse!
     assert_equal('ASC',                            assigns(:sort_order)[:priority])

@@ -93,18 +93,72 @@ REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
   # :call-seq:
   #   OiAssignmentReport.report_card_rollup(designer_id,
   #                                         start_date,
-  #                                         end_date,
-  #                                         rework_filename,
-  #                                         rework_title,
-  #                                         report_count_filename,
-  #                                         report_count_title
-  #                                         download)
+  #                                         end_date)
   #
-  # Retrieves the report cards for the date range provided.  If the download
-  # flag indicates 'none' then the reports are returned.  Otherwise the graph
-  # specified by download is returned.
+  # Retrieves the report cards for the date range provided.
+  #
+  # Returns a structure like
+  # { :percents => percent, :counts => count ] 
+  # where percent and count are like
+  # [ [complexity1 data] [complexity2 data] [complexity3 data] ... ]  
   #
   def self.report_card_rollup(designer_id, 
+                              start_date, 
+                              end_date)
+  
+    query_end_date = (end_date.to_time + 1.day).to_date
+    conditions = "created_on >= '#{start_date}' and created_on < '#{query_end_date}'"
+
+    # Gather all of the report cards that were created in the quarter and toss 
+    # out the assignments that are not complete.
+    report_cards = OiAssignmentReport.find(:all,
+                                           :conditions => conditions,
+                                           :order      => 'created_on')
+    report_cards.delete_if { |rc| !rc.oi_assignment.complete? }
+
+    # If the report is for a specific designer, toss out the assignments 
+    # that do not apply for the designer.
+    if designer_id > 0
+      report_cards.delete_if { |rc| rc.oi_assignment.user_id != designer_id }
+    end
+    
+    category_count = OiCategory.count
+    
+    score_summary = { 'High'   => { :count => Array.new(category_count, 0), 
+                                    :total => Array.new(category_count, 0) },
+                      'Medium' => { :count => Array.new(category_count, 0), 
+                                    :total => Array.new(category_count, 0) },
+                      'Low'    => { :count => Array.new(category_count, 0), 
+                                    :total => Array.new(category_count, 0) } }
+
+    total_score = 0
+    report_cards.each do |report_card|
+      total_score += report_card.score
+      
+      i = report_card.oi_assignment.oi_instruction.oi_category_section.oi_category.id - 1
+      
+      summary = score_summary[report_card.oi_assignment.complexity_name]
+      summary[:count][i] += 1
+      summary[:total][i] += report_card.score
+    end
+    
+    percent = []
+    count   = []
+    score_summary.each do |key,comp|
+      p_data = []
+      c_data = []
+      comp[:count].each_with_index do |value , i| 
+          total = comp[:total][i]
+          pct   = ( total == 0 ) ? 0 : 100*value/total
+          p_data.push(pct)
+        end
+      percent.push(p_data)
+      count.push(comp[:count])
+    end
+    {:report_cards => report_cards, :percents => percent,:counts => count}
+  end
+  
+  def self.report_card_rollup_orig(designer_id, 
                               start_date, 
                               end_date,
                               rework_filename,
@@ -130,6 +184,7 @@ REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
     end
     
     category_count = OiCategory.count
+    
     score_summary = { 'High'   => { :count => Array.new(category_count, 0), 
                                     :total => Array.new(category_count, 0) },
                       'Medium' => { :count => Array.new(category_count, 0), 
@@ -146,13 +201,12 @@ REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
       summary = score_summary[report_card.oi_assignment.complexity_name]
       summary[:count][i] += 1
       summary[:total][i] += report_card.score
-
     end
-    
+
     # Create the graphs.
     start_date = start_date.to_s
     end_date   = end_date.to_s
-    
+if false    
     if download == 'none' || download == 'rework'
       rework_graph = create_rework_graph(score_summary, 
                                          rework_filename,
@@ -163,7 +217,7 @@ REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
                                                    report_count_filename,
                                                    report_count_title)
     end
-
+end 
     # Return the report cards to the caller.
     if download == 'none'
       return report_cards
@@ -174,8 +228,7 @@ REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
     end
     
   end
-  
-  
+ 
   ##############################################################################
   #
   # Instance Methods
@@ -263,7 +316,7 @@ private
       graph.maximum_value -= 5
     end
     
-    graph.write("public/images/graphs/#{graph_filename}")
+    graph.write("assets/images/graphs/#{graph_filename}")
 
     return graph
   
@@ -324,7 +377,7 @@ private
       graph.maximum_value += 10
     end 
 
-    graph.write("public/images/graphs/#{graph_filename}")
+    graph.write("assets/images/graphs/#{graph_filename}")
 
     return graph
   

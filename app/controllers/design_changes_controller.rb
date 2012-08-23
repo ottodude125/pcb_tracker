@@ -168,7 +168,8 @@ class DesignChangesController < ApplicationController
     end
     
     @change_classes = ChangeClass.find_all_active_classes_for_user(@logged_in_user)
-
+  
+    render :partial => 'design_change_form_dynamic'
   end
   
   

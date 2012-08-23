@@ -10,13 +10,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'priority_controller'
 
 # Re-raise errors caught by the controller.
 class PriorityController; def rescue_action(e) raise e end; end
 
-class PriorityControllerTest < Test::Unit::TestCase
+class PriorityControllerTest < ActionController::TestCase
   
   def setup
     @controller = PriorityController.new

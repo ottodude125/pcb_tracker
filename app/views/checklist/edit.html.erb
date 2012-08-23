@@ -1,0 +1,308 @@
+<!-- View:    checklist                                         -->
+<!-- Purpose: Displays a list of section and subsections for    --> 
+<!--          the Peer Audit checklist.  Alos provides a link   -->
+<!--          to the checks.                                    -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "EDIT: Peer Audit Review Checklist - Revision #{@checklist.revision}" %>
+
+<% explain = 0%>
+
+<%= form_tag(:action => 'list') do %>
+
+  <hr class="div" />
+
+
+  <table border="0">
+    <tr>
+      <th>&nbsp;</th>
+      <th colspan="2">&nbsp;</th>
+      <th colspan="3"><font size="-1">Include<br>in</font></th>
+    <tr>
+      <th>&nbsp;</th>
+      <th colspan="2">&nbsp;</th>
+      <th><font size="-1">Full</font></th>
+      <th><font size="-1">Date<br>Code</font></th>
+      <th><font size="-1">Dot<br>Rev</font></th>
+      <% if not @checklist.released? %>
+        <th colspan="3">&nbsp;</th>
+        <th colspan="2"><font size="-1">Add</font></th>
+        <th>&nbsp;</th>
+        <th colspan="2"><font size="-1">Reorder</font></th>
+      <% end %>
+    </tr>
+
+    <% for displaySection in @displaySections %>
+      <% color = '#'+ displaySection[0].background_color %>
+      <tr>
+        <td width="10" bgcolor=<%= color %>>&nbsp;</td>
+        <td colspan="2"> <b><font size="+1"><%=h displaySection[0].name %></font></b></td>
+        <td align="center">
+          <% if displaySection[0].full_review? %>
+            <b>&#xFF38;</b>
+          <% else %>
+            &nbsp;
+          <% end %>
+        </td>
+        <td align="center">
+          <% if displaySection[0].date_code_check? %>
+            <b>&#xFF38;</b>
+          <% else %>
+            &nbsp;
+          <% end %>
+        </td>
+        <td align="center">
+          <% if displaySection[0].dot_rev_check? %>
+            <b>&#xFF38;</b>
+          <% else %>
+            &nbsp;
+          <% end %>
+        </td>
+
+        <% if not @checklist.released? %>
+          <td>&nbsp;</td>
+
+          <td>
+            <%= link_to(image_tag('edit.png'),
+                        { :controller => 'section',
+                          :action     => 'edit',
+                          :id         => displaySection[0].id }) %>
+          </td>
+          <td>&nbsp;</td>
+          <td>
+            <%= link_to(image_tag('insert.png'),
+                        { :controller => 'section',
+                          :action     => 'insert',
+                          :id         => displaySection[0].id }) %>
+          </td>
+          <td>
+            <%= link_to(image_tag('append.png'),
+                        { :controller => 'section',
+                          :action     => 'append',
+                          :id         => displaySection[0].id }) %>
+          </td>
+	      <td>&nbsp;</td>
+          <% if displaySection[0].position > 1 %>
+            <td>
+              <%= link_to(image_tag('arrow_up.png'), 
+                          { :controller => 'section',
+                            :action     => 'move_up',
+                            :id         => displaySection[0].id }) %>
+            </td>
+          <% else %>
+            <td>&nbsp;</td>
+          <% end %>
+
+          <% if displaySection[0].position < @displaySections.size %>
+            <td>
+              <%= link_to(image_tag('arrow_down.png'), 
+                          { :controller => 'section',
+                            :action     => 'move_down',
+                            :id => displaySection[0].id }) %>
+            </td>
+          <% else %>
+            <td>&nbsp;</td>
+          <% end %>
+	      <td>&nbsp;</td>
+          <% confirm_str = "Are you sure you want to delete this section and all of its subsections and checks? - #{displaySection[0].name} " %>
+	      <td>
+            <%= link_to(image_tag('delete.png'), 
+                        { :controller => 'section',
+                          :action     => 'destroy',
+                          :id         => displaySection[0].id },
+                        :confirm => confirm_str) %>
+          </td>
+        <% end %>
+
+        <td width="10" bgcolor=<%= color %>>&nbsp;</td>
+      </tr>
+
+      <% if displaySection[1].size == 0 %>
+      <tr>
+        <td bgcolor=<%= color %>>&nbsp;</td>
+        <td align="right"><i><b>subsection:</b></i></td> 
+        <td colspan="7">&nbsp;</td>
+        <td>
+          <%= link_to(image_tag('edit.png'), 
+                      { :controller => 'subsection',
+                        :action     => 'create_first',
+                        :id => displaySection[0].id }) %>
+        </td>
+        <td colspan="6">&nbsp;</td>
+        <td width="10" bgcolor=<%= color %>>&nbsp;</td>
+      </tr>
+      <% end %>
+
+      <% for subsections in displaySection[1] %>
+
+          <tr>
+            <td bgcolor=<%= color %>>&nbsp;</td>
+            <td width="80"><i><b>subsection: </b></i></td>
+            <td>
+              <%=h subsections[0].name %>
+            </td>
+
+            <td align="center">
+              <% if subsections[0].full_review? %>
+                <% if displaySection[0].full_review? %>
+                  <b>&#xFF38;</b>
+                <% else %>
+                  <% explain = 1 %>
+                  <font color="red"><b>&iquest;</b></font>
+                <% end %>
+              <% else %>
+                &nbsp;
+              <% end %>
+            </td>
+
+            <td align="center">
+              <% if subsections[0].date_code_check? %>
+                <% if displaySection[0].date_code_check? %>
+                  <b>&#xFF38;</b>
+                <% else %>
+                  <% explain = 1 %>
+                  <font color="red"><b>&iquest;</b></font>
+                <% end %>
+              <% else %>
+                &nbsp;
+              <% end %>
+            </td>
+
+            <td align="center">
+              <% if subsections[0].dot_rev_check? %>
+                <% if displaySection[0].dot_rev_check? %>
+                  <b>&#xFF38;</b>
+                <% else %>
+                  <% explain = 1 %>
+                  <font color="red"><b>&iquest;</b></font>
+                <% end %>
+              <% else %>
+                &nbsp;
+              <% end %>
+            </td>
+
+            <% if not @checklist.released? %>
+              <td>&nbsp;</td>
+
+              <td>
+                <%= link_to(image_tag('edit.png'),
+                            { :controller => 'subsection',
+                              :action     => 'edit', 
+                              :id         => subsections[0].id }) %>
+              </td>
+              <td>&nbsp;</td>
+              <td>
+                <%= link_to(image_tag('insert.png'),
+                            { :controller => 'subsection',
+                              :action     => 'insert',
+                              :id         => subsections[0].id }) %>
+              </td>
+              <td>
+                <%= link_to(image_tag('append.png'),
+                            { :controller => 'subsection',
+                              :action     => 'append',
+                              :id         => subsections[0].id }) %>
+              </td>
+              <td>&nbsp;</td>
+              <% if subsections[0].position > 1 %>
+                <td>
+                  <%= link_to(image_tag('arrow_up.png'), 
+                              { :controller => 'subsection',
+                                :action     => 'move_up',
+                                :id         => subsections[0].id }) %>
+                </td>
+              <% else %>
+                <td colspan="1">&nbsp;</td>
+              <% end %>
+
+              <% if subsections[0].position < displaySection[1].size %>
+                <td>
+                  <%= link_to(image_tag('arrow_down.png'), 
+                              { :controller => 'subsection',
+                                :action     => 'move_down', 
+                                :id         => subsections[0].id }) %>
+                </td>
+              <% else %>
+                <td>&nbsp;</td>
+              <% end %>
+
+              <td>&nbsp;</td>
+              <% confirm_str = "Are you sure you want to delete this subsection and all of its checks? - #{subsections[0].name}" %>
+              <td>
+                <%= link_to(image_tag('delete.png'), 
+                            { :controller => 'subsection',
+                              :action     => 'destroy', 
+                              :id         => subsections[0].id },
+                            :confirm => confirm_str) %>
+              </td>
+            <% end %>
+            <td bgcolor=<%= color %>>&nbsp;</td>
+          </tr>
+
+          <% if subsections[0].note != '' %>
+            <tr>
+              <td bgcolor=<%= color %>>&nbsp;</td>
+              <td align="right"><i><b>note: </b></i></td>
+              <td> <i><%=h subsections[0].note %></i> </td>
+              <td colspan="13">&nbsp;</td>
+              <td bgcolor=<%= color %>>&nbsp;</td>
+            </tr>
+          <% end %>
+
+          <tr>
+            <td align="right" bgcolor=<%= color %>>&nbsp;</td>
+            <td align="right"><i><b>checks: </b></i></td>
+            <td> <%= subsections[1] %> </td>
+
+            <% if not @checklist.released? %>
+              <td colspan="4">&nbsp;</td>
+              <td>
+                <%= link_to(image_tag('edit.png'),
+                            { :controller => 'check',
+                              :action     => 'modify_checks',
+                              :id         => subsections[0].id }) %>
+              </td>
+
+              <td colspan="7">&nbsp;</td>
+              <% if subsections[1] > 0 %>
+                <% confirm_str = "Are you sure you want to delete all of the checks? - SUBSECTION: #{subsections[0].name}" %>
+                <td>
+                  <%= link_to(image_tag('delete.png'), 
+                              { :controller => 'check',
+                                :action => 'destroy_list', 
+                                :id => subsections[0].id }, 
+                              :confirm => confirm_str) %>
+                </td>
+              <% else %>
+                <td>&nbsp;</td>
+              <% end %>
+            <% end %>
+            <td align="right" bgcolor=<%= color %>>&nbsp;</td>
+          </tr>
+
+      <% end %>
+
+    <% end %>
+  </table>
+
+  <hr class="div" />
+
+  <input type="button" value="Return to checklists view" onClick="parent.location='<%= url_for( :action => 'list' ) %>'">
+
+<% end %>
+
+<% if explain == 1 %>
+  <hr class="div" />
+  <table border="0" width="95%" align="center">
+    <tr>
+      <td><font color="red"><b>&iquest;</b></font> - </td>
+      <td>
+        indicates the value is set in the subsection, but overriden by 
+        the section value.
+      </td>
+    </tr>
+  </table>
+  <hr class="div" />
+<% end %>

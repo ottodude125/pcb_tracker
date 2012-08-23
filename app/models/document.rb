@@ -81,7 +81,7 @@ class Document < ActiveRecord::Base
           else
             subject = "Created #{document_type.name} document - #{self.name}"
           end
-          TrackerMailer::deliver_attachment_update(drd_doc, user, subject)
+          DocumentMailer::attachment_update(drd_doc, user, subject).deliver
         else
           errors.add(:design_review_document, "Failed to create the design review document")
           # TODO: THIS CALLS FOR LOGGING

@@ -352,4 +352,47 @@ eco_admin:
   bare_board_only_review_role: 0
   display_name:                ECO CAD Task Admin
   default_reviewer_id:         0
+eco_admin:
+  id:                          33
+  name:                        ECO Admin
+  display_name:                ECO CAD Task Admin
+  active:                      1
+  reviewer:                    0
+  manager:                     0
+  cc_peers:                    0
+  new_design_type:             0
+  date_code_design_type:       0
+  dot_rev_design_type:         0
+  new_design_review_role:      1
+  bare_board_only_review_role: 1
+  default_reviewer_id:         0
+ecn_manager:
+  id:                          38
+  name:                        ECN
+  display_name:                ECN Manager
+  active:                      1
+  reviewer:                    1
+  manager:                     0
+  cc_peers:                    0
+  new_design_type:             1
+  date_code_design_type:       1
+  dot_rev_design_type:         1
+  new_design_review_role:      1
+  bare_board_only_review_role: 1
+  default_reviewer_id:         8000
+slm_vendor_notify:
+  id:                          39
+  name:                        SLM-Vendor Notify
+  active:                      1
+  reviewer:                    0
+  manager:                     0
+  cc_peers:                    0
+  new_design_type:             1
+  date_code_design_type:       0
+  dot_rev_design_type:         0
+  new_design_review_role:      0
+  bare_board_only_review_role: 1
+  display_name:                SLM Vendor Notify
+  default_reviewer_id:         0
  
+  

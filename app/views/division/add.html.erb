@@ -1,0 +1,31 @@
+<!-- View:    division                                          -->
+<!-- Purpose: Displays a form to add a division.                 -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Create a New Division" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'create') do %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="division_name">Division:</label>
+        <%= text_field "new_division", "name", "size" => 30, "maxlength" => 30 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: 
+        <%= check_box "new_division", "active", { 'checked' => 'checked' } %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Create New Division" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<% end %>

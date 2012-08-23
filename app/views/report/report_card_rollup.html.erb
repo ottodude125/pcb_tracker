@@ -1,0 +1,304 @@
+<!-- View:    report                                            -->
+<!-- Purpose: Displays form to select the parameters for a      -->
+<!--          report card rollup.                               -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+<% content_for :rawheader do %>
+<!--[if lt IE 9]><%= javascript_include_tag "excanvas.min.js"%><![endif]-->
+<%= javascript_include_tag "jquery.jqplot.min.js" %>
+<%= javascript_include_tag "jqplot.barRenderer.min.js" %>
+<%= javascript_include_tag "jqplot.categoryAxisRenderer.min.js" %>
+<%= javascript_include_tag "jqplot.pointLabels.min.js" %>
+<%= stylesheet_link_tag    "jquery.jqplot.min.css" %>
+<% end %>
+
+<% content_for :header do %>
+$(document).ready(function(){
+	<%= @pct_series_vars%>
+	<%= @cnt_series_vars%>
+	colors = ['#FFFF66','#00CCFF','#3CB371']
+	//colors = ['#FDD84E','#6886B4','#72AE6E']
+    // Can specify a custom tick Array.
+    // Ticks should match up one for each y value (category) in the series.
+
+    var ticks = '<%=@ticks%>'.split("|"); //test
+     
+    var plot1 = $.jqplot('rework_chart', [<%= @pct_series_list.join(",")%>], {
+        // The "seriesDefaults" option is an options object that will
+        // be applied to all series in the chart.
+        seriesDefaults:{
+            renderer:$.jqplot.BarRenderer,
+            rendererOptions: {fillToZero: true},
+            pointLabels:{ show:true}
+        },
+        seriesColors: colors,
+        // Custom labels for the series are specified with the "label"
+        // option on the series option.  Here a series option object
+        // is specified for each series.
+        series:[ <%=@labels%> ],
+        // Show the legend and put it outside the grid, but inside the
+        // plot container, shrinking the grid to accomodate the legend.
+        // A value of "outside" would not shrink the grid and allow
+        // the legend to overflow the container.
+        legend: {
+            show: true,
+            placement: 'outsideGrid'
+        },
+        grid: {
+        	backgroundColor: "#555555"
+        },
+        axes: {
+            // Use a category axis on the x axis and use our custom ticks.
+            xaxis: {
+               renderer: $.jqplot.CategoryAxisRenderer,
+               ticks: ticks,
+               tickOptions: {textColor: 'black', showGridline: false },
+               label:  "Categories",
+               showLabel: true             
+             },
+            // Pad the y axis just a little so bars can get close to, but
+            // not touch, the grid boundaries.  1.2 is the default padding.
+            yaxis: {
+            	padMax: 1.05,
+                padMin: 1.0,
+                tickOptions: {formatString: '%d\%', textColor: 'black'},
+                label:  "Percentage of Rework",
+                showLabel: true                          
+           }
+        },
+        title: {
+        	text: ' <%=@range%> LCR Percent Rework - <%=@designer%>',
+        	show: true,
+            textColor: 'black'
+        }
+    });
+    var plot2 = $.jqplot('count_chart', [<%= @cnt_series_list.join(",")%>], {
+        // The "seriesDefaults" option is an options object that will
+        // be applied to all series in the chart.
+        seriesDefaults:{
+            renderer:$.jqplot.BarRenderer,
+            rendererOptions: {fillToZero: true},
+            pointLabels: {show: true, ypadding:0},
+        },
+        seriesColors: colors,
+        // Custom labels for the series are specified with the "label"
+        // option on the series option.  Here a series option object
+        // is specified for each series.
+        series:[ <%=@labels%> ],
+        // Show the legend and put it outside the grid, but inside the
+        // plot container, shrinking the grid to accomodate the legend.
+        // A value of "outside" would not shrink the grid and allow
+        // the legend to overflow the container.
+        legend: {
+            show: true,
+            placement: 'outsideGrid'
+        },
+        grid: {
+        	backgroundColor: "#555555"
+        },
+        axes: {
+            // Use a category axis on the x axis and use our custom ticks.
+            xaxis: {
+                renderer: $.jqplot.CategoryAxisRenderer,
+                ticks: ticks,
+                tickOptions: {textColor: 'black', showGridline: false },
+                label:  "Categories",
+                showLabel: true
+            },
+            // Pad the y axis just a little so bars can get close to, but
+            // not touch, the grid boundaries.  1.2 is the default padding.
+            yaxis: {
+             	padMax: 1.05,
+                padMin: 1.0,
+                tickOptions: {textColor: 'black'},
+                label:  "Completed Report Cards",
+                showLabel: true                          
+            }
+        },
+        title: {
+        	text: '<%=@range%> Completed Report Cards - <%=@designer%> ',
+        	show: true,
+            textColor: 'black'             
+        }
+
+    });
+    $('.jqplot-series-0').css('color', colors[0]);
+    $('.jqplot-series-1').css('color', colors[1]);
+    $('.jqplot-series-2').css('color', colors[2]);
+    
+});
+<% end %>
+
+<% @heading = "Out Source Designer Report Card Rollup - Query" %>
+
+<%= form_tag(:action => 'report_card_rollup') do -%>
+
+<table width="800" align="center" border="0">
+  <tr>
+    <td align="left">
+      <input type="button" value="Home"
+             onClick="parent.location='<%= url_for(:controller => 'tracker', 
+                                                   :action     => 'index') %>'" />
+    
+  </tr>
+</table>
+
+<hr class="div" width="820" />
+
+<table border="0" align="center">
+
+  <tr>
+
+    <th align="right" class="teraheader" width="150">
+      Designer:
+    </th>
+    <td>
+      <select id="team_member" name="team_member[id]" class="name_select">
+        <option value="0">All Designers</option>
+        <%= options_from_collection_for_select(@lcr_designers,
+                                               "id",
+                                               "last_name_first",
+                                               @team_member_id) %>
+      </select>
+    </td>
+    <td rowspan="4" valign="middle" align="center"  width="200">
+      <input title="Click here to update the report card rollup report." 
+             class="tera_submit" type="submit" value="Update Report" />
+    </td>
+
+  </tr>
+  
+  <tr>
+    <th align="right" class="teraheader">Start Date:</th>
+    <td align="left">
+      <%= select_date(date = @start_date, :prefix => "start_date") %>
+    </td>
+  </tr>
+  
+  <tr>
+    <th align="right" class="teraheader">End Date:</th>
+    <td align="left">
+      <%= select_date(date = @end_date, :prefix => "end_date") %>
+    </td>
+  </tr>
+
+  <tr>
+    <td>&nbsp;</td>
+    <td><b>Dates are inclusive</b></td>
+  </tr>
+
+</table>
+
+<hr class="div" width="820" />
+
+<% end %>
+
+<p align="center"><b>Number of Report Cards: <%= @total_report_cards %></b></p>
+
+<%#= debug @data_display %>
+<table align="center" width="800">
+  <tr>
+    <td>
+ <% if @total_report_cards > 0 %>
+  <div id='rework_chart' style='height:400px;width:800px;'></div>
+  <hr class="div" width="820" />
+
+  <div id='count_chart' style='height:400px;width:800px;'></div>
+
+  <hr class="div" width="820" />
+<% else %>
+  <font color="red"><b><%= @no_reports_msg %></b></font></td>
+  <hr class="div" width="820" />
+<%end%>    
+  </tr>
+</table>
+
+<% if @total_report_cards > 0 %>
+<h2> Details </h2>
+
+
+<% if @high_report_cards.size  > 0 %>
+  <table border="5" align="center" cellspacing="0">
+    <tr class="teraheader">
+      <th colspan='6'>High Complexity Assignments</th>
+    </tr>
+    <tr class="teraheader" valign="top">
+      <th width="150">Design</th>
+      <th width="100">% Rework</th>
+      <th width="200">Section</th>
+      <th width="200">Lead Designer</th>
+      <th width="200">Team Member</th>
+      <th width="100">Duration<br />(Days)</th>
+    </tr>
+  
+    <%= render( :partial    => "report_card_list_stripes", 
+                :collection => @high_report_cards) %>
+  
+  </table>
+<% end %>
+
+<% if @med_report_cards.size > 0 %>
+  <br />
+  <table border="5" align="center" cellspacing="0">
+    <tr class="teraheader">
+      <th colspan='6'>Medium Complexity Assignments</th>
+    </tr>
+    <tr class="teraheader" valign="top">
+      <th width="150">Design</th>
+      <th width="100">% Rework</th>
+      <th width="200">Section</th>
+      <th width="200">Lead Designer</th>
+      <th width="200">Team Member</th>
+      <th width="100">Duration<br />(Days)</th>
+    </tr>
+  
+    <%= render( :partial    => "report_card_list_stripes", 
+                :collection => @med_report_cards) %>
+  
+  </table>
+<% end %>
+
+<% if @low_report_cards.size > 0 %>
+  <br />
+  <table border="5" align="center" cellspacing="0">
+    <tr class="teraheader">
+      <th colspan='6'>Low Complexity Assignments</th>
+    </tr>
+    <tr class="teraheader" valign="top">
+      <th width="150">Design</th>
+      <th width="100">% Rework</th>
+      <th width="200">Section</th>
+      <th width="200">Lead Designer</th>
+      <th width="200">Team Member</th>
+      <th width="100">Duration<br />(Days)</th>
+    </tr>
+  
+    <%= render( :partial    => "report_card_list_stripes",
+                :collection => @low_report_cards) %>
+  
+  </table>
+<% end %>
+
+<hr class="div" width="820" />
+<% end %>
+
+<table width="800" align="center" border="0">
+  <tr>
+    <td align="left">
+      <input type="button" value="Home"
+             onClick="parent.location='<%= url_for(:controller => 'tracker', 
+                                                   :action     => 'index') %>'" />
+    <td>&nbsp;</td>
+  </tr>
+</table>
+
+<%# debug @lcr_designers %>
+<%# debug @total_report_cards.class %>
+<%# debug @high_report_cards %>
+<%# debug @med_report_cards %>
+<%# debug @low_report_cards %>
+<%# debug "Start Date: " + @start_date.to_s %>
+<%# debug "End Date: "   + @end_date.to_s %>
+<%# debug "Rework Graph Filename: " + @rework_graph_filename %>
+<%# debug "Report Count Graph Filename: " + @report_count_graph_filename %>

@@ -1,8 +1,7 @@
 class AddEcoTaskIdIndex < ActiveRecord::Migration
-  def self.up
-    add_index :eco_documents, :eco_task_id
+  def change
+    add_index :eco_documents, :eco_task_id, :name => 'eco_task_id'
+    add_index :eco_comments,  :eco_task_id, :name => 'eco_task_id'
   end
 
-  def self.down
-  end
 end

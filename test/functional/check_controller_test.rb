@@ -16,13 +16,13 @@
 # 1) Verify you can not modify a check that is part of a 
 #    released checklist.
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'check_controller'
 
 # Re-raise errors caught by the controller.
 class CheckController; def rescue_action(e) raise e end; end
 
-class CheckControllerTest < Test::Unit::TestCase
+class CheckControllerTest < ActionController::TestCase
   
   def setup
     @controller = CheckController.new
@@ -851,7 +851,7 @@ class CheckControllerTest < Test::Unit::TestCase
     assert_equal(3, subsection_01_1_1.checks.size)
 
     check = Check.find(checks(:check_01).id)
-    assert(checks(:check_01).id, check.id)
+    assert_equal(checks(:check_01).id, check.id)
 
     check.check_type = 'designer_only'
     
@@ -939,7 +939,7 @@ class CheckControllerTest < Test::Unit::TestCase
     assert_equal(3, subsection_01_1_1.checks.size)
 
     check = Check.find(checks(:check_14).id)
-    assert(checks(:check_14).id, check.id)
+    assert_equal(checks(:check_14).id, check.id)
 
     check.check_type = 'designer_only'
     get(:update, { :check  => check.attributes }, admin_session)

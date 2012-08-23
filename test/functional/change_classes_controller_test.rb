@@ -10,7 +10,7 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) +'/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 
 class ChangeClassesControllerTest < ActionController::TestCase
   
@@ -88,7 +88,7 @@ class ChangeClassesControllerTest < ActionController::TestCase
   ######################################################################
   def test_should_get_redirect_instead_of_edit
     get(:edit, { :id => change_classes(:change_class_1).id }, {})
-    assert_redirected_to(:controller => 'user')
+    assert_redirected_to(:controller => 'user', :action => 'login')
     assert_equal('Please log in', flash[:notice])
   end
 

@@ -11,16 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class EcoTaskTest < ActiveSupport::TestCase
-
-
-  fixtures :eco_documents,
-           :eco_tasks,
-           :eco_types,
-           :users
-         
+class EcoTasksTest < ActiveSupport::TestCase
 
   def setup
     @task_one   = eco_tasks(:task_one)    # complete
@@ -228,7 +221,7 @@ end
     
     assert(@new_eco_task.errors.size == 1)
     assert_equal('The ECO Number field can not be blank',
-                 @new_eco_task.errors[:number])
+                 @new_eco_task.errors[:number][0])
     
     @new_eco_task.number       = 'p714'
     @new_eco_task.pcb_revision = 'T'
@@ -244,7 +237,7 @@ end
     
     assert(@new_eco_task.errors.size == 1)
     assert_equal('You must provide a PCB Revision.',
-                 @new_eco_task.errors[:pcb_revision])
+                 @new_eco_task.errors[:pcb_revision][0])
     
     @new_eco_task.pcb_revision     = 'T'
     @new_eco_task.pcba_part_number = '987-765-33'
@@ -262,7 +255,7 @@ end
     
     assert(@new_eco_task.errors.size == 1)
     assert_equal('You must provide a PCBA Part Number.',
-                 @new_eco_task.errors[:pcba_part_number])
+                 @new_eco_task.errors[:pcba_part_number][0])
     
     
   end
@@ -276,9 +269,9 @@ end
     assert_equal(@task_count, EcoTask.count)
     assert_equal(2,           @new_eco_task.errors.size)
     assert_equal('You must provide a PCB Revision.',
-                 @new_eco_task.errors[:pcb_revision])
+                 @new_eco_task.errors[:pcb_revision][0])
     assert_equal('You must provide a PCBA Part Number.',
-                 @new_eco_task.errors[:pcba_part_number])
+                 @new_eco_task.errors[:pcba_part_number][0])
     assert_equal(0, @emails.size)
     
   end
@@ -296,9 +289,9 @@ end
     
     assert_equal(2, @new_eco_task.errors.size)
     assert_equal('You must provide a PCB Revision.',
-                 @new_eco_task.errors[:pcb_revision])
+                 @new_eco_task.errors[:pcb_revision][0])
     assert_equal('You must provide a PCBA Part Number.',
-                 @new_eco_task.errors[:pcba_part_number])
+                 @new_eco_task.errors[:pcba_part_number][0])
     assert_equal(0, @emails.size)
   end
   
@@ -308,8 +301,8 @@ end
     @new_eco_task.number = ''
     @new_eco_task.save
     assert_equal(@task_count, EcoTask.count)
-    assert_equal(1,           @new_eco_task.errors.size)
-    assert(@new_eco_task.errors[:number])
+    assert_equal("The ECO Number field can not be blank",
+      @new_eco_task.errors[:number][0])
     assert_equal(0, @emails.size)
     
  end
@@ -323,8 +316,8 @@ end
     
     @new_eco_task.number = ''
     @new_eco_task.save
-    assert_equal(1, @new_eco_task.errors.size)
-    assert(@new_eco_task.errors[:number])
+    assert_equal("The ECO Number field can not be blank",
+      @new_eco_task.errors[:number][0])
     assert_equal(0, @emails.size)
       end
   
@@ -334,8 +327,7 @@ end
     @new_eco_task.eco_types.pop
     @new_eco_task.save
     assert_equal(@task_count, EcoTask.count)
-    assert_equal(1,           @new_eco_task.errors.size)
-    assert(@new_eco_task.errors[:eco_types])
+    assert_equal("You must select at least one ECO Type.",@new_eco_task.errors[:eco_types][0])
     assert_equal(0, @emails.size)
   end
 
@@ -348,8 +340,8 @@ end
     
     @new_eco_task.eco_types.pop
     @new_eco_task.save
-    assert_equal(1, @new_eco_task.errors.size)
-    assert(@new_eco_task.errors[:eco_types])
+    assert_equal("You must select at least one ECO Type.",
+      @new_eco_task.errors[:eco_types][0])
     assert_equal(0, @emails.size)
   end
   
@@ -672,7 +664,7 @@ end
 
     assert_equal(0,           @dup_eco_number.errors.size)
     
-    assert_nil(@dup_eco_number.errors[:number])
+    assert_nil(@dup_eco_number.errors[:number][0])
     assert_equal(eco_task_count+2, EcoTask.count)
 
   end

@@ -1,0 +1,267 @@
+<!-- View:    check                                             -->
+<!-- Purpose: Displays a list of checks.                        -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "EDIT: Peer Audit Checks" %>
+
+<% explain = 0 %>
+
+<%= form_tag(:action => "modify_checks") do %>
+
+  <hr class="div" />
+
+  <table border="0" cellpadding="1" width="80%">
+    <tr>
+      <td colspan="3">&nbsp;</td>
+      <th>Include in: </th>
+    </tr>
+    <tr>
+      <td align="right"><b>Section:</b></td>
+      <td><%= @subsection.section.name %></td>
+      <th align="left">Full Audits:</th>
+
+      <td align="center">
+        <% if @subsection.section.full_review? %>
+          Yes
+        <% else %>
+          No
+        <% end %>
+      </td>
+
+    </tr>
+    <tr>
+      <td colspan="2">&nbsp;</td>
+      <th align="left">Date Code Audits:</th>
+
+      <td align="center">
+        <% if @subsection.section.date_code_check? %>
+          Yes
+        <% else %>
+          No
+        <% end %>
+      </td>
+
+    </tr>
+    <tr>
+      <td colspan="2">&nbsp;</td>
+      <th align="left">Dot Rev Audits:</th>
+
+      <td align="center">
+        <% if @subsection.section.dot_rev_check? %>
+          Yes
+        <% else %>
+          No
+        <% end %>
+      </td>
+
+    </tr>
+    <tr>
+      <td align="right"><b>Subsection:</b></td>
+      <td><%=h @subsection.name %></td>
+
+      <th align="left">Full Audits:</th>
+
+      <td align="center">
+        <% if @subsection.full_review? %>
+          Yes
+        <% else %>
+          No
+        <% end %>        
+      </td>
+
+     </tr>
+
+    <tr>
+      <td colspan="2">&nbsp;</td>
+
+      <th align="left">Date Code Audits:</th>
+
+      <td align="center">
+        <% if @subsection.date_code_check? %>
+          Yes
+        <% else %>
+          No
+        <% end %>        
+      </td>
+
+     </tr>
+
+     <tr>
+      <td colspan="2">&nbsp;</td>
+      <th align="left">Dot Rev Audits:</th>
+
+      <td align="center">
+        <% if @subsection.dot_rev_check? %>
+          Yes
+        <% else %>
+          No
+        <% end %>        
+      </td>
+
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+    <table border="0" width="98%" align="center" rules="all">
+      <tr>
+        <td>&nbsp;</td>
+        <th><font size="-1">Type</font></th>
+        <th colspan="3"><font size="-1">Include<br>in</font></th>
+        <% if not @checklist.released? %>
+          <th colspan="3">&nbsp;</th>
+	  <th colspan="2"><font size="-1">New<br>Checks</font></th>
+          <th>&nbsp;</th>
+	  <th colspan="2"><font size="-1">Reorder</font></th>
+        <% end %>
+      </tr>
+      <tr>
+        <th width="65%"><font size="+2">Check</font></th>
+        <th>&nbsp;</th>
+        <th valign="top"><font size="-1">Full</font></th>
+        <th><font size="-1">Date<br>Code</font></th>
+        <th><font size="-1">Dot<br>Rev</font></th>
+        <td colspan="3">&nbsp;</td>
+        <% if not @checklist.released? %>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+          <td>&nbsp;</td>
+        <% end %>
+      </tr>
+
+      <% for check in @checks %>
+        <tr valign="top">
+          <td width="80%">
+            <% if check.title.size > 0 %>
+              <b> <%=h check.title %> </b>
+            <% end %>
+            <%=h check.check %>
+          </td>
+
+          <td align="center">
+            <% if check.yes_no? %>
+              Y/N
+            <% elsif check.designer_auditor? %>
+              D/A
+            <% elsif check.designer_only? %>
+              D/O
+            <% end %>
+          </td>
+
+          <td align="center">
+          <% if check.full_review? %>
+            <% if @subsection.section.full_review? and @subsection.full_review? %>
+              <b>&#xFF38;</b>
+            <% else %>
+              <font color="red"><b>&iquest;</b></font>
+              <% explain = 1 %>
+            <% end %>
+          <% else %>
+            &nbsp;
+          <% end %>
+          </td>
+
+          <td align="center">
+          <% if check.date_code_check? %>
+            <% if @subsection.section.date_code_check? and @subsection.date_code_check? %>
+              <b>&#xFF38;</b>
+            <% else %>
+              <font color="red"><b>&iquest;</b></font>
+              <% explain = 1 %>
+            <% end %>
+          <% else %>
+            &nbsp;
+          <% end %>
+          </td>
+
+          <td align="center">
+          <% if check.dot_rev_check? %>
+            <% if @subsection.section.dot_rev_check? and @subsection.dot_rev_check? %>
+              <b>&#xFF38;</b>
+            <% else %>
+              <font color="red"><b>&iquest;</b></font>
+              <% explain = 1 %>
+            <% end %>
+          <% else %>
+            &nbsp;
+          <% end %>
+          </td>
+
+          <% if not @checklist.released? %>
+            <td>&nbsp;</td>
+
+            <td>
+              <%= link_to(image_tag('edit.png'), 
+                          { :action => 'edit',
+                            :id     => check.id }) %>
+            </td>
+            <td>&nbsp;</td>
+            <td>
+              <%= link_to(image_tag('insert.png'),
+                          { :action => 'insert',
+                            :id     => check.id }) %>
+            </td>
+            <td>
+              <%= link_to(image_tag('append.png'),
+                          { :action => 'append',
+                            :id     => check.id }) %>
+            </td>
+          
+            <td>&nbsp;</td>
+            <% if check.position > 1 %>
+              <td>
+                <%= link_to(image_tag('arrow_up.png'),
+                            { :action => 'move_up',
+                              :id     => check.id }) %>
+              </td>
+            <% else %>
+              <td>&nbsp;</td>
+            <% end %>
+            <% if check.position < @checks.size %>
+              <td>
+                <%= link_to(image_tag('arrow_down.png'),
+                            { :action => 'move_down',
+                              :id     => check.id }) %>
+              </td>
+            <% else %>
+              <td>&nbsp;</td>
+            <% end %>
+            <td>&nbsp;</td>
+            <td>
+              <%= link_to(image_tag('delete.png'), 
+                          { :action => 'destroy',
+                            :id     => check.id },
+                          :confirm => 'Are you sure you want to delete this check?') %>
+            </td>
+          <% end %>
+
+        </tr>
+      <% end %>
+
+    </table>
+
+  <hr class="div" />
+
+  <input type="button" value="Return to subsection view" onClick="parent.location='<%= url_for( :controller => 'checklist', :action => 'edit', :id => @subsection.checklist.id ) %>'">
+
+<% end %>
+
+<% if explain == 1 %>
+  <hr class="div" />
+  <table border="0" width="95%" align="center">
+    <tr>
+      <td><font color="red"><b>&iquest;</b></font> - </td>
+      <td>
+        - indicates the value is set in the check, but overriden by 
+        the section and/or subsection values.
+      </td>
+    </tr>
+  </table>
+  <hr class="div" />
+<% end %>

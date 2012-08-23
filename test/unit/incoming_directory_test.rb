@@ -1,7 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class IncomingDirectoryTest < Test::Unit::TestCase
-  fixtures :incoming_directories
+class IncomingDirectorysTest < ActiveSupport::TestCase
 
   def setup
     @incoming_directory = IncomingDirectory.find(incoming_directories(:board_ah_incoming).id)

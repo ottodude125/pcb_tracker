@@ -1,0 +1,1438 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: EcoTask</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/models/eco_task.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">ActiveRecord::Base
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-eco_task_summary">::eco_task_summary</a>
+    
+    <li><a href="#method-c-find_closed">::find_closed</a>
+    
+    <li><a href="#method-c-find_open">::find_open</a>
+    
+    <li><a href="#method-i-add_comment">#add_comment</a>
+    
+    <li><a href="#method-i-add_users_to_cc_list">#add_users_to_cc_list</a>
+    
+    <li><a href="#method-i-assembly_drawing-3F">#assembly_drawing?</a>
+    
+    <li><a href="#method-i-attach_document">#attach_document</a>
+    
+    <li><a href="#method-i-attachments">#attachments</a>
+    
+    <li><a href="#method-i-attachments-3F">#attachments?</a>
+    
+    <li><a href="#method-i-check_for_admin_update">#check_for_admin_update</a>
+    
+    <li><a href="#method-i-check_for_new_specification">#check_for_new_specification</a>
+    
+    <li><a href="#method-i-check_for_processor_update">#check_for_processor_update</a>
+    
+    <li><a href="#method-i-destroy_specification">#destroy_specification</a>
+    
+    <li><a href="#method-i-do_validate">#do_validate</a>
+    
+    <li><a href="#method-i-fabrication_drawing-3F">#fabrication_drawing?</a>
+    
+    <li><a href="#method-i-get_user">#get_user</a>
+    
+    <li><a href="#method-i-schematic-3F">#schematic?</a>
+    
+    <li><a href="#method-i-set_user">#set_user</a>
+    
+    <li><a href="#method-i-specification">#specification</a>
+    
+    <li><a href="#method-i-specification_attached-3F">#specification_attached?</a>
+    
+    <li><a href="#method-i-specification_identified-3F">#specification_identified?</a>
+    
+    <li><a href="#method-i-state">#state</a>
+    
+    <li><a href="#method-i-users_eligible_for_cc_list">#users_eligible_for_cc_list</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class EcoTask</h1>
+
+  <div id="description" class="description">
+    
+<p>Copyright 2008, by Teradyne, Inc., North Reading MA</p>
+
+<p>File: eco_task.rb</p>
+
+<p>This file maintains the <a href="EcoTask.html#method-i-state">#state</a>
+for eco tasks.</p>
+
+<p>$Id$</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-eco_task_summary" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            eco_task_summary() &rarr;  {}}
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Provide a summary of the closed ECO Tasks within the specified range.</p>
+
+<p>Returns a hash with the summary totals.</p>
+          
+
+          
+          <div class="method-source-code" id="eco_task_summary-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 93</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">eco_task_summary</span>(<span class="ruby-identifier">start_date</span>, <span class="ruby-identifier">end_date</span>)
+  <span class="ruby-identifier">summary</span> = { <span class="ruby-value">:schematic</span>           =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>,
+              <span class="ruby-value">:assembly_drawing</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>,
+              <span class="ruby-value">:fabrication_drawing</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>,
+              <span class="ruby-value">:cuts_and_jumps</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> }
+            
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_closed</span>(<span class="ruby-identifier">start_date</span>, <span class="ruby-identifier">end_date</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">task</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">summary</span>[<span class="ruby-value">:schematic</span>]           <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">task</span>.<span class="ruby-identifier">schematic?</span>
+    <span class="ruby-identifier">summary</span>[<span class="ruby-value">:assembly_drawing</span>]    <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">task</span>.<span class="ruby-identifier">assembly_drawing?</span> 
+    <span class="ruby-identifier">summary</span>[<span class="ruby-value">:fabrication_drawing</span>] <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">task</span>.<span class="ruby-identifier">fabrication_drawing?</span>
+    <span class="ruby-identifier">summary</span>[<span class="ruby-value">:cuts_and_jumps</span>]      <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">task</span>.<span class="ruby-identifier">cuts_and_jumps?</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">summary</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- eco_task_summary-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- eco_task_summary-method -->
+
+    
+      <div id="method-c-find_closed" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            find_closed() &rarr;  []
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retreive a list of all closed ECO Tasks</p>
+
+<p>Returns a list of closed ECO tasks.</p>
+          
+
+          
+          <div class="method-source-code" id="find_closed-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 78</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_closed</span>(<span class="ruby-identifier">start_date</span>, <span class="ruby-identifier">end_date</span>, <span class="ruby-identifier">order</span>=<span class="ruby-string">'created_at'</span>)
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find</span>( <span class="ruby-value">:all</span>,
+             <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">&quot;closed=? AND created_at BETWEEN ? AND ?&quot;</span>,
+                             <span class="ruby-keyword">true</span>, <span class="ruby-identifier">start_date</span>, <span class="ruby-identifier">end_date</span><span class="ruby-operator">+</span><span class="ruby-value">1</span>.<span class="ruby-identifier">day</span>], 
+             <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;#{order}&quot;</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- find_closed-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- find_closed-method -->
+
+    
+      <div id="method-c-find_open" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            find_active() &rarr;  []
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retreive a list of all open ECO Tasks</p>
+
+<p>Returns a list of open ECO tasks.</p>
+          
+
+          
+          <div class="method-source-code" id="find_open-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 66</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find_open</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">find</span>( <span class="ruby-value">:all</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> [<span class="ruby-string">'closed=?'</span>, <span class="ruby-keyword">false</span>], <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'created_at'</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- find_open-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- find_open-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-add_comment" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            add_comment() &rarr; eco_task_comment
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Insert a comment for the task.</p>
+
+<p>Creates an ECO Task comment if the comment is not blank.</p>
+          
+
+          
+          <div class="method-source-code" id="add_comment-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 287</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_comment</span>(<span class="ruby-identifier">eco_task_comment</span>, <span class="ruby-identifier">user</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">eco_task_comment</span>.<span class="ruby-identifier">comment</span>.<span class="ruby-identifier">blank?</span>
+    <span class="ruby-identifier">eco_task_comment</span>.<span class="ruby-identifier">user_id</span> = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">eco_comments</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">eco_task_comment</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">eco_task_comment</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- add_comment-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- add_comment-method -->
+
+    
+      <div id="method-i-add_users_to_cc_list" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            add_users_to_cc_list() &rarr; self.save result
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Insert user(s) into the task’s CC list</p>
+
+<p>Updates the ECO Task’s CC list.</p>
+          
+
+          
+          <div class="method-source-code" id="add_users_to_cc_list-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 303</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_users_to_cc_list</span>(<span class="ruby-identifier">user_ids</span>)
+  <span class="ruby-identifier">user_ids</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">id</span><span class="ruby-operator">|</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">users</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">id</span>) }
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- add_users_to_cc_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- add_users_to_cc_list-method -->
+
+    
+      <div id="method-i-assembly_drawing-3F" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            assembly_drawing?() &rarr;  boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Determine if the eco task is for an assembly drawing</p>
+
+<p>Returns a boolean value that is true when a assembly drawing eco type is
+attached to the eco task.</p>
+          
+
+          
+          <div class="method-source-code" id="assembly_drawing-3F-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 180</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">assembly_drawing?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">eco_types</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">et</span><span class="ruby-operator">|</span> <span class="ruby-identifier">et</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;Assembly Drawing&quot;</span> } <span class="ruby-operator">!=</span> <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- assembly_drawing-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- assembly_drawing-3F-method -->
+
+    
+      <div id="method-i-attach_document" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            attach_document() &rarr; eco_document
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Attach a document to the ECO Task</p>
+
+<p>Updates the ECO Task’s document list.</p>
+          
+
+          
+          <div class="method-source-code" id="attach_document-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 316</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">attach_document</span>(<span class="ruby-identifier">document</span>, 
+                    <span class="ruby-identifier">user</span>,
+                    <span class="ruby-identifier">specification</span> = <span class="ruby-keyword">false</span>)
+  <span class="ruby-identifier">document</span>.<span class="ruby-identifier">user_id</span>       = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>
+  <span class="ruby-identifier">document</span>.<span class="ruby-identifier">specification</span> = <span class="ruby-identifier">specification</span>
+  <span class="ruby-identifier">document</span>.<span class="ruby-identifier">eco_task_id</span>   = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>
+  <span class="ruby-identifier">document</span>.<span class="ruby-identifier">save_attachment</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">specification</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">document_link</span>.<span class="ruby-identifier">blank?</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">started_at</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">save</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">document</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- attach_document-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- attach_document-method -->
+
+    
+      <div id="method-i-attachments" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            attachments() &rarr; []
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve a list of documents related to the task excluding the task’s <a
+href="EcoTask.html#method-i-specification">#specification</a> document.</p>
+
+<p>Returns a list of ECO Task Documents.</p>
+          
+
+          
+          <div class="method-source-code" id="attachments-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 274</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">attachments</span>
+  <span class="ruby-identifier">eco_documents</span> = <span class="ruby-keyword">self</span>.<span class="ruby-identifier">eco_documents</span>.<span class="ruby-identifier">reverse</span>
+  <span class="ruby-identifier">eco_documents</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">d</span>.<span class="ruby-identifier">specification?</span> }.<span class="ruby-identifier">reverse</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- attachments-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- attachments-method -->
+
+    
+      <div id="method-i-attachments-3F" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            attachments?() &rarr;  boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Determine if there are any documents attached that at not task
+specifications</p>
+
+<p>Returns a boolean value that is true when the task has at least on  non-<a
+href="EcoTask.html#method-i-specification">#specification</a> document
+attached.</p>
+          
+
+          
+          <div class="method-source-code" id="attachments-3F-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 261</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">attachments?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">attachments</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- attachments-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- attachments-3F-method -->
+
+    
+      <div id="method-i-check_for_admin_update" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            check_for_admin_update() &rarr; boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Determine if any admin updates have been make to the task.</p>
+
+<p>A flag that indicates if an admin update was made to the task.</p>
+          
+
+          
+          <div class="method-source-code" id="check_for_admin_update-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 355</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">check_for_admin_update</span>(<span class="ruby-identifier">updated_task</span>)
+  (<span class="ruby-keyword">self</span>.<span class="ruby-identifier">number</span>           <span class="ruby-operator">!=</span> <span class="ruby-identifier">updated_task</span>.<span class="ruby-identifier">number</span>           <span class="ruby-operator">||</span>
+   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">pcb_revision</span>     <span class="ruby-operator">!=</span> <span class="ruby-identifier">updated_task</span>.<span class="ruby-identifier">pcb_revision</span>     <span class="ruby-operator">||</span>
+   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">pcba_part_number</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">updated_task</span>.<span class="ruby-identifier">pcba_part_number</span> <span class="ruby-operator">||</span>
+   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">cuts_and_jumps</span>   <span class="ruby-operator">!=</span> <span class="ruby-identifier">updated_task</span>.<span class="ruby-identifier">cuts_and_jumps</span>   <span class="ruby-operator">||</span>
+   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">screened_at</span>      <span class="ruby-operator">!=</span> <span class="ruby-identifier">updated_task</span>.<span class="ruby-identifier">screened_at</span>      <span class="ruby-operator">||</span>
+   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">document_link</span>    <span class="ruby-operator">!=</span> <span class="ruby-identifier">updated_task</span>.<span class="ruby-identifier">document_link</span>    <span class="ruby-operator">||</span>
+   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">directory_name</span>   <span class="ruby-operator">!=</span> <span class="ruby-identifier">updated_task</span>.<span class="ruby-identifier">directory_name</span>   <span class="ruby-operator">||</span>
+   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">completed</span>        <span class="ruby-operator">!=</span> <span class="ruby-identifier">updated_task</span>.<span class="ruby-identifier">completed</span>        <span class="ruby-operator">||</span>
+   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">closed</span>           <span class="ruby-operator">!=</span> <span class="ruby-identifier">updated_task</span>.<span class="ruby-identifier">closed</span>           <span class="ruby-operator">||</span> 
+   <span class="ruby-keyword">self</span>.<span class="ruby-identifier">eco_types</span>        <span class="ruby-operator">!=</span> <span class="ruby-identifier">updated_task</span>.<span class="ruby-identifier">eco_types</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- check_for_admin_update-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- check_for_admin_update-method -->
+
+    
+      <div id="method-i-check_for_processor_update" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            check_for_processor_update() &rarr; boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Determine if any processor updates have been make to the task.</p>
+
+<p>A flag that indicates if a processor update was made to the task.</p>
+          
+
+          
+          <div class="method-source-code" id="check_for_processor_update-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 376</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">check_for_processor_update</span>(<span class="ruby-identifier">updated_task</span>)
+  (<span class="ruby-keyword">self</span>.<span class="ruby-identifier">completed</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">updated_task</span>.<span class="ruby-identifier">completed</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- check_for_processor_update-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- check_for_processor_update-method -->
+
+    
+      <div id="method-i-destroy_specification" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            destroy_specification() &rarr;   boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Remove the ECO Task <a
+href="EcoTask.html#method-i-specification">#specification</a> from the
+database.</p>
+
+<p>The ECO task <a
+href="EcoTask.html#method-i-specification">#specification</a> document is
+removed from the database.</p>
+          
+
+          
+          <div class="method-source-code" id="destroy_specification-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 231</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy_specification</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-keyword">self</span>.<span class="ruby-identifier">specification</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">specification</span>.<span class="ruby-identifier">destroy</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">reload</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- destroy_specification-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- destroy_specification-method -->
+
+    
+      <div id="method-i-do_validate" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">do_validate</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="do_validate-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 36</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">do_validate</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">number</span>.<span class="ruby-identifier">blank?</span>
+    <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:number</span>, <span class="ruby-string">'The ECO Number field can not be blank'</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">pcba_part_number</span>.<span class="ruby-identifier">blank?</span>
+    <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:pcba_part_number</span>, <span class="ruby-string">&quot;You must provide a PCBA Part Number.&quot;</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">pcb_revision</span>.<span class="ruby-identifier">blank?</span>
+    <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:pcb_revision</span>, <span class="ruby-string">&quot;You must provide a PCB Revision.&quot;</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">eco_types</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">errors</span>.<span class="ruby-identifier">add</span>(<span class="ruby-value">:eco_types</span>, <span class="ruby-string">&quot;You must select at least one ECO Type.&quot;</span>)
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- do_validate-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- do_validate-method -->
+
+    
+      <div id="method-i-fabrication_drawing-3F" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            fabrication_drawing?() &rarr;  boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Determine if the eco task is for an fabrication drawing</p>
+
+<p>Returns a boolean value that is true when a fabrication drawing eco type is
+attached to the eco task.</p>
+          
+
+          
+          <div class="method-source-code" id="fabrication_drawing-3F-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 193</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">fabrication_drawing?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">eco_types</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">et</span><span class="ruby-operator">|</span> <span class="ruby-identifier">et</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;Fabrication Drawing&quot;</span> } <span class="ruby-operator">!=</span> <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- fabrication_drawing-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- fabrication_drawing-3F-method -->
+
+    
+      <div id="method-i-get_user" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            get_user() &rarr;  string
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Get the value in the user instance variable</p>
+
+<p>Retrieves the value stored in the user instance variable.</p>
+          
+
+          
+          <div class="method-source-code" id="get_user-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 136</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_user</span>
+  <span class="ruby-ivar">@user</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_user-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_user-method -->
+
+    
+      <div id="method-i-schematic-3F" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            schematic?() &rarr;  boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Determine if the eco task is for a schematic</p>
+
+<p>Returns a boolean value that is true when a schematic eco type is attached
+to the eco task.</p>
+          
+
+          
+          <div class="method-source-code" id="schematic-3F-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">schematic?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">eco_types</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">et</span><span class="ruby-operator">|</span> <span class="ruby-identifier">et</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;Schematic&quot;</span> } <span class="ruby-operator">!=</span> <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- schematic-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- schematic-3F-method -->
+
+    
+      <div id="method-i-set_user" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            set_user() &rarr;  string
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Set the user instance variable</p>
+
+<p>Loads the value in the user record into the user instance variable.</p>
+          
+
+          
+          <div class="method-source-code" id="set_user-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 124</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_user</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-ivar">@user</span> = <span class="ruby-identifier">user</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- set_user-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- set_user-method -->
+
+    
+      <div id="method-i-specification" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            specification() &rarr;   eco_document
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Provide the ECO Task’s <a
+href="EcoTask.html#method-i-specification">#specification</a> document.</p>
+
+<p>Returns the ECO Task <a
+href="EcoTask.html#method-i-specification">#specification</a> document if
+one exists, otherwise nil is returned</p>
+          
+
+          
+          <div class="method-source-code" id="specification-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 219</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">specification</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">eco_documents</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">d</span>.<span class="ruby-identifier">specification?</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- specification-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- specification-method -->
+
+    
+      <div id="method-i-specification_attached-3F" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            specification_attached?() &rarr;  boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Determine if the ECO Task <a
+href="EcoTask.html#method-i-specification">#specification</a> document is
+attached</p>
+
+<p>Returns a boolean value that is true when the <a
+href="EcoTask.html#method-i-specification">#specification</a> document is
+attached.</p>
+          
+
+          
+          <div class="method-source-code" id="specification_attached-3F-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 206</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">specification_attached?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">eco_documents</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">d</span>.<span class="ruby-identifier">specification?</span> } <span class="ruby-operator">!=</span> <span class="ruby-keyword">nil</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- specification_attached-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- specification_attached-3F-method -->
+
+    
+      <div id="method-i-specification_identified-3F" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            specification_identified?() &rarr;  boolean
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Determine if the ECO Task <a
+href="EcoTask.html#method-i-specification">#specification</a> has been
+identified</p>
+
+<p>Returns a boolean value that is true when either a <a
+href="EcoTask.html#method-i-specification">#specification</a> document is
+attached or the document link is not blank.</p>
+          
+
+          
+          <div class="method-source-code" id="specification_identified-3F-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 247</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">specification_identified?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">specification_attached?</span> <span class="ruby-operator">||</span> <span class="ruby-operator">!</span><span class="ruby-keyword">self</span>.<span class="ruby-identifier">document_link</span>.<span class="ruby-identifier">blank?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- specification_identified-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- specification_identified-3F-method -->
+
+    
+      <div id="method-i-state" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            state() &rarr;  string
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Determine the <a href="EcoTask.html#method-i-state">#state</a> of the eco
+task</p>
+
+<p>Returns a string indicating the <a
+href="EcoTask.html#method-i-state">#state</a> of the ECO Task.</p>
+          
+
+          
+          <div class="method-source-code" id="state-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 148</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">state</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-keyword">self</span>.<span class="ruby-identifier">completed?</span>
+    <span class="ruby-string">'Incomplete'</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">completed?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword">self</span>.<span class="ruby-identifier">closed?</span>
+    <span class="ruby-string">'Complete'</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-string">'Closed'</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- state-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- state-method -->
+
+    
+      <div id="method-i-users_eligible_for_cc_list" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            users_eligible_for_cc_list() &rarr; [user]
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve a list of users that can be added to the task’s CC list</p>
+
+<p>A list of users that is not already being included in the task’s email.</p>
+          
+
+          
+          <div class="method-source-code" id="users_eligible_for_cc_list-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 338</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">users_eligible_for_cc_list</span>
+  <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'active=1'</span>,<span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'last_name'</span>) <span class="ruby-operator">-</span>
+    <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'HCL Manager'</span>).<span class="ruby-identifier">active_users</span>                  <span class="ruby-operator">-</span>
+    <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'Manager'</span>).<span class="ruby-identifier">active_users</span>                      <span class="ruby-operator">-</span>
+    <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'ECO Admin'</span>).<span class="ruby-identifier">active_users</span>                    <span class="ruby-operator">-</span>
+    <span class="ruby-constant">Role</span>.<span class="ruby-identifier">lcr_designers</span>                                             <span class="ruby-operator">-</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">users</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- users_eligible_for_cc_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- users_eligible_for_cc_list-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+     <section id="private-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Private Instance Methods</h3>
+
+    
+      <div id="method-i-check_for_new_specification" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">check_for_new_specification</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>before_save call back method</p>
+
+<p>When the document link is included and it differs from the existing value
+then updated the created_at field.</p>
+          
+
+          
+          <div class="method-source-code" id="check_for_new_specification-source">
+            <pre><span class="ruby-comment"># File app/models/eco_task.rb, line 389</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">check_for_new_specification</span>
+
+  <span class="ruby-identifier">stored_task</span> = <span class="ruby-constant">EcoTask</span>.<span class="ruby-identifier">find</span>(<span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>) <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>
+  <span class="ruby-identifier">changed</span>     = <span class="ruby-keyword">self</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">stored_task</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">stored_task</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">specification_identified?</span>
+    
+    <span class="ruby-keyword">if</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">id</span>
+      <span class="ruby-comment"># Set the creation time if a new document link as provided</span>
+      <span class="ruby-keyword">if</span> (<span class="ruby-operator">!</span><span class="ruby-keyword">self</span>.<span class="ruby-identifier">document_link</span>.<span class="ruby-identifier">blank?</span> <span class="ruby-operator">&amp;&amp;</span>
+          (<span class="ruby-keyword">self</span>.<span class="ruby-identifier">document_link</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">stored_task</span>.<span class="ruby-identifier">document_link</span>) <span class="ruby-operator">||</span>
+          <span class="ruby-keyword">self</span>.<span class="ruby-identifier">started_at</span> <span class="ruby-operator">==</span> <span class="ruby-keyword">nil</span> )
+        <span class="ruby-keyword">self</span>.<span class="ruby-identifier">started_at</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">started_at</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">stored_task</span> 
+    <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">stored_task</span>.<span class="ruby-identifier">completed?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">completed?</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">completed_at</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+      <span class="ruby-identifier">state_change</span>      = <span class="ruby-string">'Task Completed'</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-operator">!</span><span class="ruby-identifier">stored_task</span>.<span class="ruby-identifier">closed?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">closed?</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">closed_at</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span>
+      <span class="ruby-identifier">state_change</span>   = <span class="ruby-string">'Task Closed'</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">stored_task</span>.<span class="ruby-identifier">closed?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword">self</span>.<span class="ruby-identifier">closed?</span>
+      <span class="ruby-identifier">state_change</span> = <span class="ruby-string">'Task Reopened'</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">stored_task</span>.<span class="ruby-identifier">completed?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-keyword">self</span>.<span class="ruby-identifier">completed?</span>
+      <span class="ruby-identifier">state_change</span> = <span class="ruby-string">'Task Incomplete - Needs more work/input'</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">state_change</span>
+      <span class="ruby-keyword">self</span>.<span class="ruby-identifier">eco_comments</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">EcoComment</span>.<span class="ruby-identifier">new</span>( <span class="ruby-value">:user_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_user</span>.<span class="ruby-identifier">id</span>, 
+                                           <span class="ruby-value">:comment</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'STATUS CHANGE: '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">state_change</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- check_for_new_specification-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- check_for_new_specification-method -->
+
+    
+    </section><!-- private-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

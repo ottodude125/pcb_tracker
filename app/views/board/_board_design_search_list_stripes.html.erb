@@ -1,0 +1,20 @@
+<!-- View:    tracker                                           -->
+<!-- Purpose: Displays the rows for the managers tracker view.  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<tr class="dk_gray" valign="top">
+  <td align="center">
+    <%= link_to(board_design_search_list_stripes[:design].directory_name,
+                :controller => 'design',
+                :action     => 'view',
+                :id         => board_design_search_list_stripes[:design].id)%>
+  </td>
+  <td> <%= board_design_search_list_stripes[:design].phase.name %> </td>
+  <td> <%= board_design_search_list_stripes[:platform_name] %> /
+       <%= board_design_search_list_stripes[:project_name] %>  /
+       <%= board_design_search_list_stripes[:design].board.description %> </td>
+  <td> <%= board_design_search_list_stripes[:designer_name] %>     </td>
+</tr>
+

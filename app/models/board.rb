@@ -154,5 +154,59 @@ class Board < ActiveRecord::Base
     documents.collect { |d| d if d.document_type_id == doc_type_other.id }.compact
   end
   
-  
+     ######################################################################
+  #
+  # copy_to_on_milestone
+  #
+  # Description:
+  # Given a board this method will return a list of the
+  # people who should be CC'ed on all milestone mails
+  #
+  # Parameters:
+  #   board - the board to get the milestone CC list for.
+  #
+  ######################################################################
+  #
+  def copy_to_on_milestone
+    self.add_board_reviewer(
+                       ['Program Manager',
+                        'Hardware Engineering Manager'])
+  end
+
+
+  ######################################################################
+  #
+  # add_board_reviewer
+  #
+  # Description:
+  # Given a board and a list of roles this function will load the
+  # CC list with users associated with the role for that board.
+  #
+  # Parameters:
+  #   board - the board record.
+  #   roles - a list of roles.  The associated user's email will be
+  #           added to the CC list.
+  #
+  ######################################################################
+  #
+  def add_board_reviewer(roles)
+
+    cc_list   = []
+    role_list = Role.find(:all)
+
+    roles.each do |role|
+
+      reviewer_role  = role_list.detect { |r| r.name == role }
+      board_reviewer = self.board_reviewers.detect { |br| br.role_id == reviewer_role.id }
+
+      if board_reviewer && board_reviewer.reviewer_id?
+        cc_list << User.find(board_reviewer.reviewer_id).email
+      end
+
+    end
+
+    return cc_list
+
+  end
+
 end

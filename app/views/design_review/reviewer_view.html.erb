@@ -1,0 +1,329 @@
+<!-- View:    designer_review                                   -->
+<!-- Purpose: Displays a design review for a designer.          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = @design_review.design.display_summary %>
+
+<%= form_tag(:action => 'reviewer_results') do %>
+<% submit_button = "Submit Comments" %>
+
+  <%= render :partial => "design_review_nav" %>
+  <hr class="div" />
+
+  <%= hidden_field "design_review", "id" %>
+
+  <table width="100%">
+    <tr>
+      <td width="70" rowspan="5" valign="top">
+        <%= render :partial => "nav" %>
+      </td>
+      <td colspan="2">
+        <%= render :partial => "review_details" %>
+        
+        <hr class="div" />
+      </td>
+    </tr>
+    <tr>
+      <td width=530>
+        <table class="actiontable" rules="rows">
+          <% if display_approval_options(@design_review.review_status_id) %>
+            <tr>
+              <td>
+                <% if @design_review.in_review? %>
+                  <% submit_button = "Submit Comments and/or Review Results" %>
+                  
+                  <table width="100%"
+                         rules="all">
+                    <tr class="th1">
+                      <th width="20%">Role</th>
+                      <th>APPROVE</th>
+                      <th>WAIVE</th>
+                      <th>REJECT</th>
+                      <th>COMMENT ONLY</th>
+                    </tr>
+                    <% for review_result in @my_review_results %>
+                      <% if display_role(review_result) %>
+                        <tr>
+                          <th class="th1"><%= review_result.role.display_name %></th>
+                          <td align="center">
+                            <%= radio_button("role_id_#{review_result.role.id}",
+                                             "#{review_result.id}",
+                                             "APPROVED") %>
+                          </td>
+                          <td align="center">
+                            <%= radio_button("role_id_#{review_result.role.id}",
+                                             "#{review_result.id}",
+                                             "WAIVED") %>
+                          </td>
+                          <td align="center">
+                            <%= radio_button("role_id_#{review_result.role.id}",
+                                             "#{review_result.id}",
+                                             "REJECTED") %>
+                          </td>
+                          <td align="center">
+                            <%= radio_button("role_id_#{review_result.role.id}",
+                                             "#{review_result.id}",
+                                             "COMMENT") %>
+                          </td>
+                        </tr>
+                      <% end %>
+                    <% end %>
+                  </table>
+                <% elsif @design_review.on_hold? %>
+                  <b>
+                    Not accepting results while the review is on hold.<br />
+                    Please submit comments to provide any additional 
+                    feedback.
+                  </b>
+                <% elsif @design_review.pending_repost? %>
+                  <b>
+                    Not accepting results until the designer reposts.<br />
+                    Please submit comments to provide any additional 
+                    feedback.
+                  </b>
+                <% end %>
+              </td>
+            </tr>
+            
+            <% if pre_art_pcb(@design_review, @my_review_results) %>
+              <% design_info = get_design_info(@design_review.design) %>
+              <tr>
+                <td>
+                  <table border="0">
+                    <tr>
+                      <th align="left"> Verify Criticality:</th>
+                      <td align="left">
+                        <select id="priority" name="priority[id]">
+                        <%= options_from_collection_for_select(@priorities,
+                                                               :id, 
+                                                               :name,
+                                                               design_info[:priority_id]) %>
+                        </select>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th align="right">Designer:</th>
+                      <td align="left">
+                        <select id="designer" 
+                                name="designer[id]" 
+                                class="name_select">
+                        <option value="">Please select</option>
+                        <%= options_from_collection_for_select(@designers,
+                                                               :id, 
+                                                               :last_name_first,
+                                                               @design_review.design.designer_id) %>
+                        </select>
+                      </td>
+                    </tr>
+                    <% if !@design_review.design.audit.skip? %>
+                      <tr>
+                        <th align="right">Peer:</th>
+                        <td align="left">
+                          <select id="peer" name="peer[id]" class="name_select">
+                          <option value="">Please select</option>
+                          <%= options_from_collection_for_select(@designers,
+                                                                 "id", 
+                                                                 "last_name_first",
+                                                                 @design_review.design.peer_id) %>
+                          </select>
+                        </td>
+                      </tr>
+                    <% end %>
+                  </table>
+                </td>
+              </tr>
+            <% end %>
+          <% elsif @design_review.posting_count == 0 %>
+            <tr>
+              <td>
+                <b>This design review has not been posted for review yet.</b>
+              </td>
+            </tr>
+          <% end %>
+          
+          <% if (@my_review_results.find { |rr| rr.role.name == "SLM-Vendor"}) %>
+            <% design_info = get_design_info(@design_review.design) %>
+            <tr>
+              <td>
+                <table border="0" width="100%">
+                  <tr>
+                    <th colspan="3">Fab Houses</th>
+                  </tr>
+                  <tr>
+                    <% ranges = split_into_cols(@fab_houses, 3) %>
+                    <td>
+                      <table align="center">
+                        <% for fab_house in @fab_houses[ranges[1][:start]..ranges[1][:stop]] %>
+                          <tr>
+                            <td align="left" valign="top">
+                              <% if fab_house[:selected] %>
+                                <%= check_box "fab_house", fab_house.id, {'checked' => 'checked'} %>
+                              <% else %>
+                                <%= check_box "fab_house", fab_house.id %>
+                              <% end %>
+                            </td>
+                            <td align="left">
+                              <label for="fab_house_name"><%= fab_house.name -%></label>
+                            </td>
+                          </tr>
+                        <% end %>
+                      </table>
+                    </td>
+                    <td>
+                      <table align="center">
+                        <% for fab_house in @fab_houses[ranges[2][:start]..ranges[2][:stop]] %>
+                          <tr>
+                            <td align="left" valign="top">
+                              <% if fab_house[:selected] %>
+                                <%= check_box "fab_house", fab_house.id, {'checked' => 'checked'} %>
+                              <% else %>
+                                <%= check_box "fab_house", fab_house.id %>
+                              <% end %>
+                            </td>
+                            <td align="left">
+                              <label for="fab_house_name"><%= fab_house.name -%></label>
+                            </td>
+                          </tr>
+                        <% end %>
+                      </table>
+                    </td>
+                    <td>
+                      <table align="center">
+                        <% for fab_house in @fab_houses[ranges[3][:start]..ranges[3][:stop]] %>
+                          <tr>
+                            <td align="left" valign="top">
+                              <% if fab_house[:selected] %>
+                                <%= check_box "fab_house", fab_house.id, {'checked' => 'checked'} %>
+                              <% else %>
+                                <%= check_box "fab_house", fab_house.id %>
+                              <% end %>
+                            </td>
+                            <td align="left">
+                              <label for="fab_house_name"><%= fab_house.name -%></label>
+                            </td>
+                          </tr>
+                        <% end %>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          <% end %>
+          <tr>
+            <td>
+              <label for="comment" ><b>Comments:</b></label>
+              <%= text_area("post_comment",
+                            "comment",
+                            :cols => 60,
+                            :rows => 5) %>
+            </td>
+          </tr>
+
+          <tr>
+            <td align="center">
+              <input type="submit" class="buttonPost" value="<%= submit_button %>" />
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td valign="top"
+          align="left">
+        <table>
+          <tr><th align="center">Other Actions</th></tr>
+          <tr>
+            <td>
+             <input type="button"
+                    value="Attachments"
+                    title="Add or view attachments"
+                    onClick="parent.location='<%= url_for(:controller       => 'design_review', 
+                                                          :action           => 'review_attachments',
+                                                          :design_review_id => @design_review.id) %>'"
+                    class="small_font_wide_button" />
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+             <input type="button"
+                    value="Email"
+                    title="Use to review the list of people on the mail list as well as to modify the CC list"
+                    onClick="parent.location='<%= url_for(:controller       => 'design_review', 
+                                                          :action           => 'review_mail_list',
+                                                          :design_review_id => @design_review.id) %>'"
+                    class="small_font_wide_button" />
+            </td>
+          </tr>
+
+          <% if design_review_reassignable(@design_review) %>
+            <tr>
+              <td>
+             <input type="button"
+                    value="Reassign"
+                    title="Either take the review from another reviewer or reassign this to another reviewer"
+                    onClick="parent.location='<%= url_for(:controller       => 'design_review', 
+                                                          :action           => 'reassign_reviewer',
+                                                          :design_review_id => @design_review.id) %>'"
+                    class="small_font_wide_button" />
+              </td>
+            </tr>
+          <% end %>
+          <% if is_manager || is_admin %>
+            <tr>
+              <td>
+             <input type="button"
+                    value="Update Assignments"
+                    title="Use to update Pre-Artwork, Designer, Peer, Design Center, and Criticality"
+                    onClick="parent.location='<%= url_for(:controller => 'design_review', 
+                                                          :action     => 'admin_update',
+                                                          :id         => @design_review.id) %>'"
+                    class="small_font_wide_button" />
+              </td>
+            </tr>
+          <% end %>
+          
+         </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        &nbsp;
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><hr class="div" /></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <%= render :partial => "reviewer_list_stripes" %>
+      </td>
+    </tr>
+  </table>
+
+  <br />
+  <div id="comments">
+
+  <% if @design_review.design_review_comments.size > 0 %>
+    <table border="0" cellspacing="0" width="100%" align="center">
+      <tr>
+        <th class="teraheader" colspan="2">Comments</th>
+      </tr>
+      <%= render_collection_of_partials("comment_list",
+                                        @design_review.design_review_comments) %>
+    </table>
+  <% end %>
+
+  </div>
+
+  <% end %>
+
+<%# debug session %>
+<%# debug @design_review %>
+<%# debug @my_review_results %>
+<%# debug @designers %>
+<%# debug @priorities %>
+<%# debug @fab_houses %>
+<%# debug session[:roles] %>
+<%# debug @designer %>

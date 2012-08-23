@@ -1,7 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class DesignReviewCommentTest < Test::Unit::TestCase
-  fixtures :design_review_comments
+class DesignReviewCommentsTest < ActiveSupport::TestCase
 
   def setup
     @design_review_comment = DesignReviewComment.find(1)

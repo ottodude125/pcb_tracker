@@ -16,27 +16,19 @@ class Pcbtr < ActiveRecord::Base
     :admin_only => 'Administrators only!  Check your role.'
   }
 
-  def self.development_environment?
-    ENV['RAILS_ENV']  == 'development'
-  end
-  
-  def self.production_environment?
-    ENV['RAILS_ENV'] == 'production'
-  end
-
   def self.hostname
     $hostname ||= Socket.gethostname
   end
 
 
-  if Pcbtr.production_environment?
+  if Rails.env.production?
     PCBTR_BASE_URL = 'http://boarddev.teradyne.com/pcbtr/'
     TRACKER_ROOT   = 'http://boarddev.teradyne.com/pcbtr'
-    SENDER         = 'PCB_Tracker'
+    SENDER         = 'PCB_Tracker <dtg@teradyne.com>'
   else
     PCBTR_BASE_URL = 'http://boarddev-beta.teradyne.com/pcbtr/'
     TRACKER_ROOT   = 'http://boarddev-beta.teradyne.com/pcbtr/'
-    SENDER         = 'DEVEL_PCB_Tracker'
+    SENDER         = 'DEVEL_PCB_Tracker <dtg@teradyne.com>'
   end
   EAVESDROP      = 'ron_dallas@notes.teradyne.com'
 

@@ -158,8 +158,9 @@ module ApplicationHelper
   ######################################################################
   #
   def design_center_path(design_review)
-    'http://boarddev.teradyne.com' + design_review.design.surfboards_path + '/public'
-    
+    #('http://boarddev.teradyne.com' + design_review.design.surfboards_path + '/public').gsub("//","/")
+    (design_review.design.surfboards_path + '/public/').gsub("//","/")
+
   end
 
 
@@ -272,17 +273,18 @@ module ApplicationHelper
   end
   
   
-  def audit_radio_button(check, 
+  def audit_radio_button(check,
+                         design_check, 
                          audit,
                          tag_value,
                          disabled)
                          
     if audit.is_self_audit?
       attribute = 'designer_result'
-      checked = check[:design_check][:designer_result] == tag_value ? true : nil
+      checked = design_check.designer_result == tag_value ? true : nil
     else
       attribute = 'auditor_result'
-      checked = check[:design_check][:auditor_result] == tag_value ? true : nil
+      checked = design_check.auditor_result == tag_value ? true : nil
     end
     
     radio_button("check_#{check.id}",

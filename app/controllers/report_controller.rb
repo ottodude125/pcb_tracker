@@ -11,7 +11,7 @@
 ########################################################################
 
 
-require 'gruff'
+#require 'gruff'
 
 
 class ReportController < ApplicationController
@@ -93,39 +93,38 @@ class ReportController < ApplicationController
 
     team_member                  = team_member(@team_member_id)
     team_member_file_name        = team_member_file_name(team_member)
-    common_filename_part         = common_part(@start_date, @end_date, team_member_file_name)
-    @rework_graph_filename       = rework_graph_filename(common_filename_part)
-    @report_count_graph_filename = report_count_graph_filename(common_filename_part)
+    
+    @ticks  = OiCategory.find(:all, :select => :label).map { |l| l.label }.join("|")
+    @labels = OiAssignment.complexity_list.map { |c| "{label:\'#{c[0]}\'}" }.join(",")
     
     if @end_date >= @start_date
       
-      range = @start_date.to_s + ' - ' + @end_date.to_s
-      name  = team_member ? team_member.name : "All Designers" 
+      @range = @start_date.to_s + ' - ' + @end_date.to_s
+      @designer  = team_member ? team_member.name : "All Designers" 
       
-      if !params[:rework_graph_title]
-        @rework_graph_title = range + ' ' +
-                             'LCR Process Step Evaluation: Percent Rework Roll Up -' +
-                             ' ' + name
-      else
-        @rework_graph_title = params[:rework_graph_title]
+      data = OiAssignmentReport.report_card_rollup(@team_member_id, 
+                                                   @start_date,
+                                                   @end_date)
+                                                           
+      report_cards = data[:report_cards]
+      percents = data[:percents]
+      @pct_series_vars = ""
+      @pct_series_list = []
+      percents.each_with_index do | pcts, i |
+      #create javascript code for the series
+        @pct_series_vars += "var pct#{i} = [" + pcts.join(",") + "];\n"
+        @pct_series_list.push("pct#{i}")
+      end
+      counts   = data[:counts]
+      @cnt_series_vars = ""
+      @cnt_series_list = []
+      counts.each_with_index do | cnts, i |
+      #create javascript code for the series
+        @cnt_series_vars += "var cnt#{i} = [" + cnts.join(",") + "];\n"
+        @cnt_series_list.push("cnt#{i}")
       end
       
-      if !params[:report_count_graph_title]
-        @report_count_graph_title = range + ' ' +
-                                    'LCR Process Step Evaluation: Report Count Roll Up -' +
-                                    ' ' + name                                  
-      else
-        @report_count_graph_title = params[:report_count_graph_title]
-      end
-  
-      report_cards = OiAssignmentReport.report_card_rollup(@team_member_id, 
-                                                           @start_date,
-                                                           @end_date,
-                                                           @rework_graph_filename,
-                                                           @rework_graph_title,
-                                                           @report_count_graph_filename,
-                                                           @report_count_graph_title)
-
+      
       @total_report_cards = report_cards.size
       if @total_report_cards > 0
         @high_report_cards = report_cards.collect { |rc| rc if rc.oi_assignment.complexity_name == 'High' }

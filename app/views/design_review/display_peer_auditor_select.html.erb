@@ -1,0 +1,8 @@
+<select id="peer_sel" name="peer[id]" class="name_select">
+  <option value="">Please select</option>
+  <%= options_from_collection_for_select(@peer_list,
+                                         "id",
+                                         "last_name_first",
+                                         @peer_id) %>
+</select>
+

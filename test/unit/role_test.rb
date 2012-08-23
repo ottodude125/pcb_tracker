@@ -11,17 +11,10 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
 
-class RoleTest < Test::Unit::TestCase
-
-
-  fixtures(:review_types_roles,
-           :roles,
-           :roles_users,
-           :users)
-
+class RolesTest < ActiveSupport::TestCase
 
   def setup
     @role          = roles(:admin)
@@ -157,9 +150,9 @@ class RoleTest < Test::Unit::TestCase
                               roles(:planning), roles(:pcb_input_gate),
                               roles(:library),  roles(:pcb_mechanical),
                               roles(:slm_bom),  roles(:slm_vendor),
-                              roles(:compliance_safety)].sort_by { |r| r.display_name }
+                              roles(:compliance_safety), roles(:ecn_manager)].sort_by { |r| r.display_name }
 
-    review_roles = Role.get_review_roles
+    review_roles = Role.get_review_roles.sort_by { |r| r.display_name }
     assert_equal(expected_review_roles.size, review_roles.size)
     review_roles.each_with_index do |role, i|
       assert_equal(expected_review_roles[i], role)
@@ -172,7 +165,8 @@ class RoleTest < Test::Unit::TestCase
                                         roles(:pcb_mechanical),
                                         roles(:compliance_safety),  
                                         roles(:slm_vendor),
-                                        roles(:slm_bom) ].sort_by { |r| r.display_name }
+                                        roles(:slm_bom),
+                                        roles(:ecn_manager)].sort_by { |r| r.display_name }
 
     defaulted_review_roles = Role.get_defaulted_reviewer_roles
     assert_equal(expected_defaulted_review_roles.size,
@@ -187,10 +181,20 @@ class RoleTest < Test::Unit::TestCase
                                    roles(:tde),
                                    roles(:planning) ].sort_by { |r| r.display_name }
 
-    open_review_roles = Role.get_open_reviewer_roles
-    assert_equal(expected_open_review_roles.size, open_review_roles.size)
-    open_review_roles.each_with_index do |role, i|
-      assert_equal(expected_open_review_roles[i], role)
+    # get_open_reviewer_roles was modified to be the same as get_review_roles
+    # the original test is comment out with "## "
+    # the test from get_review_roles is repeated here but on the results of 
+    #     get_open_reviewer_roles
+    open_review_roles = Role.get_open_reviewer_roles.sort_by { |r| r.display_name }
+
+    ## assert_equal(expected_open_review_roles.size, open_review_roles.size)
+    ## open_review_roles.each_with_index do |role, i|
+    ##   assert_equal(expected_open_review_roles[i], role)
+    ## end
+    assert_equal(expected_review_roles.size,
+                 open_review_roles.size)
+    expected_review_roles.each_with_index do |role, i|
+      assert_equal(expected_review_roles[i], role)
     end
     
     expected_manager_review_roles = [ roles(:hweng_manager),

@@ -1,0 +1,36 @@
+The following reviewers with incomplete reviews have been pinged.
+
+<% @active_reviews.each do |dr| %>
+<%= sprintf("Design: %-20s   Criticality: %-8s  Age: %-4s  Phase: %s",
+                    dr.design.directory_name,
+                    dr.priority.name,
+                    dr.age/1.day,
+                    dr.review_name ) %>
+<%= sprintf("Project: %-20s  Platform: %s", 
+                    dr.design.board.project.name,
+                    dr.design.board.platform.name) %>
+<%= sprintf("Description: %s",
+                    dr.design.board.description) %>
+<% dr.design_review_results.each do |drr| %>
+  <%= sprintf("  %-25s%-25s",
+                    drr.reviewer.name,
+                    drr.role.display_name) %>
+<% end %>
+--------------------------------------------------------------------------------
+<% end %>
+
+
+================================================================================
+
+
+<% @reviews.each do |userid, data| %>
+<%= data[:user].name %>
+
+Design               Criticality     Age   Role                      Phase
+<% data[:results].each do |entry| dr = entry.design_review -%>
+<%= sprintf("%-20s %-15s %-5s %-25s %s", dr.design.directory_name, dr.priority.name, dr.age/1.day, entry.role.display_name, dr.design.phase.name) %>
+<%end%>
+
+--------------------------------------------------------------------------------
+<% end %>
+

@@ -1,0 +1,131 @@
+<% @heading = "Reviewer Update" %>
+
+<table border='0' align="center">
+  <tr>
+    <td class="th1" align="right">Design:</td>
+    <td><%= @design.detailed_name %></td>
+  </tr>
+  <tr>
+    <td class="th1" align="right">Phase:</td>
+    <td><%= @design.phase.name %></td>
+  </tr>
+</table>
+
+<% inactive_warning = false %>
+
+<%= form_tag(:action => 'process_reviewer_modifications',
+            :id     => @design.id ) do %>
+
+<table width="100%">
+  <tr>
+    <td align="left">
+      <input class="form_return" type="button" value="Return"
+             onClick="parent.location='<%= url_for( session[:return_to] ) %>'" />
+    </td>
+    <td align="right">
+      <input class="form_submit" type="submit" value="Update Reviewer Assignments" />
+    </td>
+  </tr>
+</table>
+
+<table cellspacing="0" border="2">
+  <tr class="teraheader">
+    <th id="teraheader"  width="200">Review Roles</th>
+    <% @design_reviews.each do |design_review| %>
+      <th width='150'>
+        <%= design_review.review_name %>
+      </th>
+    <% end %>
+    <th>Reviewer Selection</th>
+  </tr>
+  
+  <tr>
+    <td class="teraheader">&nbsp;</td>
+    <% @design_reviews.each_with_index do |design_review, i| %>
+      <td bgcolor="<%= design_review.reviewer_locked_in? ? '#FFDFE6' : '#AFFFC1' %>" align="center">
+        <%= design_review.review_status.name %>
+      </td>
+    <% end %>
+    <td class="teraheader">&nbsp;</td>
+  </tr>
+  <% @review_roles.each_with_index do |role, j| %>
+  
+    <% inactive_reviewer = false %>
+    <%  if ( @logged_in_user.active_role.reviewer == 0 ) || ( @logged_in_user.is_reviewer? && @logged_in_user.is_a_role_member?(role.name) )%>
+    <tr valign='top'>
+
+      <td class="teraheader"><%= role.display_name %></td>
+      <% @design_reviews.each_with_index do |design_review, i| %>
+        <td bgcolor="<%= design_review.reviewer_locked_in? ? '#FFDFE6' : '#AFFFC1' %>" align="center">
+          <% review_result = design_review.design_review_results.detect { |drr| drr.role_id == role.id } %>
+          <% if review_result %>
+            <% if review_result.reviewer.active? || 
+                  design_review.reviewer_locked_in? || 
+                  review_result.positive_response? %>
+              <table>
+                <tr><td align="center"><%= review_result.reviewer.name %></td></tr>
+                <tr>
+                  <td align="center">
+                    <font size="-1"><b><%= review_result.result %></b></font>
+                  </td>
+                </tr>
+              </table>
+            <% else %>
+              <table>
+                <tr>
+                  <td align="center">
+                    <b><font color="red"><%= review_result.reviewer.name %></font></b>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center">
+                    <font size="-1" color="red"><b><%= review_result.result %></b></font>
+                  </td>
+                </tr>
+              </table>
+              <% inactive_warning  = true %>
+              <% inactive_reviewer = true %>
+            <% end %>
+          <% else %>
+          &nbsp;
+          <% end %>
+        </td>
+      <% end %>
+      
+      <% if !@review_roles_locked[j] %>
+        <% if !inactive_reviewer %>
+          <td class="teraheader">
+        <% else %>
+          <td bgcolor="red">
+        <% end %>
+          <select id="role_id_<%= role.id %>" name="role_id_<%= role.id %>"
+           class="name_select">
+            <option value="0">Please Select</option>
+            <%= options_from_collection_for_select(role.active_users,
+                                                   "id",
+                                                   :last_name_first,
+                                                   @design.get_role_reviewer(role).id) %>
+          </select>
+        </td>
+      <% else %>
+        <td class="teraheader">&nbsp;</td>
+      <% end %>
+
+    </tr>
+    <% end %>
+  <% end %>
+</table>
+
+<% end %>
+
+<%= form_tag(:action => 'add_review_role',
+            :id     => @design.id ) do %>
+ 
+<input class="form_submit" type="submit" value="Add Review Role" />
+
+<% end %>
+
+<% if inactive_warning %>
+  <p><b>Note:</b> Names in red indicate that the user is not active in the tracker.</p>
+<% end %>
+

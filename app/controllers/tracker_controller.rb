@@ -56,6 +56,11 @@ class TrackerController < ApplicationController
     
     session[:return_to] = {:controller => 'tracker', :action => 'index'}
     flash['notice'] = flash['notice']
+    # see if we have a database
+    if ! DbCheck.exist?
+      render( :action => 'not_configured')
+      return
+    end
     
     if @logged_in_user && @logged_in_user.active_role
       case @logged_in_user.active_role.name
@@ -197,8 +202,8 @@ class TrackerController < ApplicationController
     flash[:sort_order]     = @sort_order
 
     design_reviews = get_active_reviews
-    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.priority.value, dr.age] }
-    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.priority.value, dr.age] }
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr[:review].priority.value, dr[:review].age] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr[:review].priority.value, dr[:review].age] }
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
 
@@ -231,8 +236,8 @@ class TrackerController < ApplicationController
     flash[:sort_order]   = @sort_order
     
     design_reviews = get_active_reviews
-    @active_reviews   = design_reviews[:active].sort_by   { |dr| dr.design.pcb_display }
-    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| dr.design.pcb_display }
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| dr[:review].design.pcb_display }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| dr[:review].design.pcb_display }
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
@@ -266,8 +271,8 @@ class TrackerController < ApplicationController
     flash[:sort_order] = @sort_order
     
     design_reviews = get_active_reviews
-    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.review_type.sort_order, dr.age] }
-    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.review_type.sort_order, dr.age] }
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr[:review].review_type.sort_order, dr[:review].age] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr[:review].review_type.sort_order, dr[:review].age] }
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
@@ -300,8 +305,8 @@ class TrackerController < ApplicationController
     flash[:sort_order]     = @sort_order
     
     design_reviews = get_active_reviews
-    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.designer.last_name, dr.age] }
-    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.designer.last_name, dr.age] }
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr[:review].designer.last_name, dr[:review].age] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr[:review].designer.last_name, dr[:review].age] }
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
@@ -334,8 +339,8 @@ class TrackerController < ApplicationController
     flash[:sort_order] = @sort_order
     
     design_reviews = get_active_reviews
-    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.design.peer.last_name, dr.age] }
-    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.design.peer.last_name, dr.age] }
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr[:review].design.peer.last_name, dr[:review].age] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr[:review].design.peer.last_name, dr[:review].age] }
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
@@ -368,8 +373,8 @@ class TrackerController < ApplicationController
     flash[:sort_order] = @sort_order
     
     design_reviews = get_active_reviews
-    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.age, dr.priority.value] }
-    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.age, dr.priority.value] }
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr[:review].age, dr[:review].priority.value] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr[:review].age, dr[:review].priority.value] }
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
@@ -403,8 +408,8 @@ class TrackerController < ApplicationController
     flash[:sort_order]   = @sort_order
     
     design_reviews = get_active_reviews
-    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.review_status.name, dr.age] }
-    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.review_status.name, dr.age] }
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr[:review].review_status.name, dr[:review].age] }
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr[:review].review_status.name, dr[:review].age] }
     @active_reviews.reverse!   if params[:order] == 'DESC'
     @inactive_reviews.reverse! if params[:order] == 'DESC'
     
@@ -425,19 +430,28 @@ class TrackerController < ApplicationController
   # This method manages the ordering of the list by the design review
   # status.
   #
+  # It is called both form the admin index (with no params)
+  # and from deliver_broadcast_message with params if there is an error.
+  #
   # Parameters from params
   # None
   #
   ######################################################################
   #
   def message_broadcast
-  
+
     @subject      = params[:subject] ? params[:subject] : 'IMPORTANT - Please Read'
     @message      = params[:message] ? params[:message] : ''
-    @active_roles = Role.find_all_active if params[:show_roles]
-    
-  end
-  
+    @active_roles = Role.find_all_active
+    # present the previously selected roles if any
+    all_role_ids = []
+    @active_roles.each do |role|
+      all_role_ids << "#{role.id}"
+    end
+    @roles        = params[:roles] ? params[:roles] : all_role_ids
+ 
+    end
+
   
   ######################################################################
   #
@@ -495,46 +509,40 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def deliver_broadcast_message
-  
     message = params[:mail][:message].strip
+    recipients = []
 
-    if message.size == 0
-      flash[:roles] = params[:roles]
-      
+    if message.size == 0     
       flash['notice'] = 'The mail message was not sent - there was no message'
       redirect_to(:action     => 'message_broadcast', 
                   :subject    => params[:mail][:subject],
-                  :show_roles => params[:mail_to][:all_users] == '0')
+                  :roles      => params[:roles])
     else
     
-      if params[:mail_to][:all_users] == '1'
-        recipients = User.find_all_by_active(1)
+      if params[:all_users] == '1'
+
+        recipients = User.find_all_by_active(1).collect { |u| u.email}
+
       else
-        recipients = []
         params[:roles].each do |role|
-          entry = role.to_a
-          
-          if entry[1] == '1'
-            recipients += Role.find(entry[0]).active_users.collect { |u| u.email }
-          end
-          
+            recipients += Role.find(role).active_users.collect { |u| u.email }          
         end
       end
       
       if recipients.size > 0
         message += "\n\n" + recipients.join("\n")
-        TrackerMailer::deliver_broadcast_message(params[:mail][:subject],
-                                                 message,
-                                                 recipients)
+        TrackerMailer::broadcast_message(params[:mail][:subject],
+                                         message,
+                                         recipients).deliver
 
-        flash['notice'] = 'The message has been sent'
+        flash['notice'] = "The message has been sent#{params[:mail][:to]}"
         redirect_to(:controller => 'tracker', :action => 'index')
       else
         flash['notice'] = 'The mail message was not sent - no recipient roles were selected'
         redirect_to(:action  => 'message_broadcast', 
                     :subject    => params[:mail][:subject],
                     :message    => params[:mail][:message],
-                    :show_roles => true)
+                    :roles      => params[:roles])
       end
     end
   
@@ -550,8 +558,7 @@ class TrackerController < ApplicationController
   #
   # Description:
   # This method attempts to retrieve the sort order from the session flash.
-  # If it does not exist then a new hash is created and the default order 
-  # is set to ascending
+  # If it does not exist then a new empty hash is created
   #
   # Parameters
   # None
@@ -562,10 +569,10 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def get_sort_order
-    if session['flash'][:sort_order]
-      return session['flash'][:sort_order]
+    if flash[:sort_order]
+      return flash[:sort_order]
     else
-      return Hash.new('ASC')
+      return Hash.new()
     end
   end
   
@@ -667,26 +674,34 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def designer_home_setup
-
-    @designs = Design.get_active_designs_owned_by(@logged_in_user)       
-    @designs.each do |design|
-      current_phase           = ReviewType.find(design.phase_id)
-      design[:next_review]    = design.design_reviews.detect{ |dr| dr.review_type_id == design.phase_id}
+    @designs = []
+    mydesigns = Design.get_active_designs_owned_by(@logged_in_user) 
+    mydesigns.each do | design |
+      dsn = {}
+      dsn[:design] = design
+      current_phase          = ReviewType.find(design.phase_id)
+      dsn[:next_review]      = design.design_reviews.detect{ |dr| dr.review_type_id == design.phase_id}
       design.design_reviews.delete_if do |dr| 
         (dr.review_status.name == "Not Started" || 
          dr.review_type.sort_order > current_phase.sort_order)
       end
-      design[:design_reviews] = design.design_reviews.sort_by{ |dr| dr.review_type.sort_order }
+      
+      reviews = design.design_reviews.sort_by{ |dr| dr.review_type.sort_order }
 
       # Go through the reviews until the first review that has not been
-      # started is found.
-      design.design_reviews.each do |design_review|
+      # started is found.\
+      drs = []
+      reviews.each do |design_review|
+        dr = {}
+        dr[:review] = design_review
         review_results            = design_review.design_review_results
-        design_review[:reviewers] = review_results.size
-        review_results.delete_if { |dr| dr.result != 'APPROVED' && dr.result != 'WAIVED' }
-        design_review[:approvals] = review_results.size
+        dr[:reviewers] = review_results.size
+        review_results.delete_if { |dr1| dr1.result != 'APPROVED' && dr1.result != 'WAIVED' }
+        dr[:approvals] = review_results.size
+        drs << dr
       end
-
+      dsn[:reviews] = drs
+      @designs << dsn
     end
 
     audits = {}
@@ -699,8 +714,8 @@ class TrackerController < ApplicationController
       audit = audit_team.audit
       next if audit.is_peer_audit? & audit_team.self?
  
-      audit[:self] = audit_team.self?
-      audits[audit.id] = audit
+      audits[audit.id] = { :audit => audit, 'self' => audit_team.self? , 
+                           'priority' => audit.design.priority.value  }
       
     end
     
@@ -716,14 +731,14 @@ class TrackerController < ApplicationController
     peer_designs.each do |peer_design|
       audit = peer_design.audit
       next if ((audit.is_self_audit? && audits[audit.id]) || audit.is_complete?)
-      audit[:self] = false
-      audits[audit.id] = audit
+      audits[audit.id] = { :audit => audit, 'self' => false , 
+                           'priority' => audit.design.priority.value }
     end
     
     audit_list = []
     audits.each_value { |a| audit_list << a }
     
-    @audits = audit_list.sort_by { |a| a.design.priority.value }
+    @audits = audit_list.sort_by { |a| a[:priority] }
     ##
     #TODO: After reversing the values of priority so that the call to reverse is not
     #      needed make this a multi-level sort.
@@ -740,8 +755,9 @@ class TrackerController < ApplicationController
     end
     
     @my_assignments = @my_assignments.to_a.sort_by { |a| a[0]}
-    
+
   end
+
   
   
   ######################################################################
@@ -761,6 +777,7 @@ class TrackerController < ApplicationController
 
     @my_processed_reviews      = DesignReview.my_processed_reviews(@logged_in_user)
     @my_unprocessed_reviews    = DesignReview.my_unprocessed_reviews(@logged_in_user)
+    @reviews_assigned_to_peers = DesignReview.reviews_assigned_to_peers(@logged_in_user)
 
   end
   
@@ -787,8 +804,8 @@ class TrackerController < ApplicationController
     design_reviews = get_active_reviews
 
     # TODO: These sorts are expensive.  Make this faster.
-    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr.age] }.reverse
-    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr.priority.value, dr.age] }
+    @active_reviews   = design_reviews[:active].sort_by   { |dr| [dr[:review].age] }.reverse
+    @inactive_reviews = design_reviews[:inactive].sort_by { |dr| [dr[:review].priority.value, dr[:review].age] }
 
     @submissions = BoardDesignEntry.submission_count
     session[:return_to] = {:controller => 'tracker', :action => 'index'}
@@ -818,31 +835,27 @@ class TrackerController < ApplicationController
       next if design.phase_id == 0
       design_review = design.design_reviews.detect { |dr| dr.review_type_id == design.phase_id }
 
-#      design_review = DesignReview.find(design_review.id,
-#                                        :include => [:priority, 
-#                                                   #  :design,
-#                                                   # :design_review_results,
-#                                                     :review_status])
 
       begin
-        design_review[:priority_name] = design_review.priority.name
+        priority_name = design_review.priority.name
       rescue
-        design_review[:priority_name] = 'Unset'
+        priority_name = 'Unset'
       end
       
       results = design_review.design_review_results.collect { |r| r.result }
-      design_review[:reviewers] = results.size
-      design_review[:approvals] = results.find_all { |r| 
-                                    (r == DesignReviewResult::APPROVED ||
-                                     r == DesignReviewResult::WAIVED) }.size
-          
-      design_reviews << design_review
+      reviewers = results.size
+      approvals = results.find_all { |r| 
+                                   (r == DesignReviewResult::APPROVED ||
+                                    r == DesignReviewResult::WAIVED) }.size
+                                    
+      design_reviews << { :review => design_review, :priority_name => priority_name, 
+                          :reviewers => reviewers, :approvals => approvals } 
     
     end
     
     lists = { :active => [], :inactive => [] }
     design_reviews.each do |design_review|
-      if design_review.review_status.name != 'Not Started'
+      if design_review[:review].review_status.name != 'Not Started'
         lists[:active] << design_review
       else
         lists[:inactive] << design_review

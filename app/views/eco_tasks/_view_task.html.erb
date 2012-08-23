@@ -1,0 +1,299 @@
+<!-- View:    view eco  task                                    -->
+<!-- Purpose: Displays the ECO task                             -->
+<!-- ********************************************************** -->
+<!-- $Id$   -->
+<!-- ********************************************************** -->
+
+
+  <table align="center" border="0">
+
+    <% unless @eco_task.errors[:number].blank? %>
+      <tr>
+        <td bgcolor="yellow">&nbsp;</td>
+        <td>
+          <font color="red"><b><%= @eco_task.errors[:number] %></b></font>
+        </td>
+      </tr>
+   <% end  %>
+
+    <tr>
+      <th class="teraheader" align="right" width="250">ECO Number:&nbsp;</th>
+      <td width="600">
+        <% if eco_admin %>
+          <%= f.text_field :number, :size => '10' %>
+        <% else %>
+          <%=h @eco_task.number %>
+        <% end %>
+      </td>
+    </tr>
+
+    <% unless @eco_task.errors[:pcba_part_number].blank? %>
+      <tr>
+        <td bgcolor="yellow">&nbsp;</td>
+        <td>
+          <font color="red"><b><%= @eco_task.errors[:pcba_part_number] %></b></font>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <td colspan="2">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <th class="teraheader" align="right" width="250">PCBA Part Number:&nbsp;</th>
+            <% if eco_admin %>
+              <td>&nbsp;<%= f.text_field :pcba_part_number, :size => '10' %>&nbsp;&nbsp;</td>
+            <% else %>
+              <td>&nbsp;<%=h @eco_task.pcba_part_number %>&nbsp;&nbsp;</td>
+            <% end %>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <% unless @eco_task.errors[:pcb_revision].blank? %>
+      <tr>
+        <td bgcolor="yellow">&nbsp;</td>
+        <td>
+          <font color="red"><b><%= @eco_task.errors[:pcb_revision] %></b></font>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <td colspan="2">
+        <table cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <th class="teraheader" align="right" width="250">PCB Revision:&nbsp;</th>
+            <% if eco_admin %>
+              <td>&nbsp;<%= f.text_field :pcb_revision, :size => '2' %>&nbsp;&nbsp;</td>
+            <% else %>
+              <td>&nbsp;<%=h @eco_task.pcb_revision %>&nbsp;&nbsp;</td>
+            <% end %>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+
+    <tr>
+      <th class="teraheader" align="right" valign="top">Date Screened:&nbsp;</th>
+      <td>
+        <% if eco_admin %>
+          <%= date_select(:eco_task, :screened_at) %>
+        <% else %>
+          <%= @eco_task.screened_at.format_dd_mon_yy('timestamp') %>
+        <% end %>
+      </td>
+    </tr>
+
+    <% unless @eco_task.errors[:eco_types].blank? %>
+      <tr>
+        <td bgcolor="yellow">&nbsp;</td>
+        <td>
+          <font color="red"><b><%= @eco_task.errors[:eco_types] %></b></font>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <th class="teraheader" align="right">ECO Type:&nbsp;</th>
+      <td>
+        <% if eco_admin %>
+          <table border="0" width="100%" cellpadding="0" cellspacing="0"><tr>
+            <% EcoType.find(:all).each do |et| %>
+              <td width="33">
+                <table width="100%" cellpadding="0" cellspacing="0"><tr>
+                  <td>
+                    <input type="checkbox" name="eco_task[eco_type_ids][]"
+                           value="<%= et.id %>"
+                           <% if @eco_task.eco_types.include?(et) %> checked="checked" <% end %> />
+                    <%= et.name %>
+                  </td>
+                </tr></table>
+              </td>
+            <% end %>
+          </tr></table>
+        <% else %>
+          <%= @eco_task.eco_types.collect { |et| et.name }.join(', ') %>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <th class="teraheader" align="right" valign="top">Cuts &amp; Jumps:&nbsp;</th>
+      <td>
+        <% if eco_admin %>
+          <%= check_box(:eco_task, :cuts_and_jumps) %>
+        <% else %>
+          <%= @eco_task.cuts_and_jumps ? 'Yes' : 'No' %>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <th class="teraheader" align="right">ECO/Release Document:&nbsp;</th>
+      <td>
+        <% if @eco_task.specification_attached? %>
+          <%= link_to(@eco_task.specification.name,
+	              :action => "get_attachment",
+                      :id     => @eco_task.specification.id) %>
+        <% else %>
+          <% if eco_admin %>
+            <%= file_field('eco_document', 'document' ) %>
+          <% else %>
+            <b>No document is attached.</b>
+          <% end %>
+        <% end %>
+      </td>
+    </tr>
+
+    <% if eco_admin && @eco_task.specification_attached? %>
+      <tr>
+        <th class="teraheader" align="right">Delete ECO/Release Document:&nbsp;</th>
+        <td>
+          <input type="checkbox" name="document[delete]" />
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <th class="teraheader" align="right">ECO/Release Document Link:&nbsp;</th>
+      <td>
+        <% if eco_admin %>
+          <%= text_field('eco_task', 'document_link', :size => '80') %>
+        <% elsif !@eco_task.document_link.blank? %>
+          <%= auto_link(simple_format(h(@eco_task.document_link))) %>
+        <% else %>
+          <b>No document is linked.</b>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <th class="teraheader" align="right" valign="top">Directory Name:&nbsp;</th>
+      <td>
+        <% if eco_admin %>
+          <%= text_field('eco_task', 'directory_name', :size => '80') %>
+        <% else %>
+          <%=h @eco_task.directory_name %>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <th class="teraheader" align="right">Started:&nbsp;</th>
+      <td>
+        <% if @eco_task.specification_identified? %>
+          <%= @eco_task.started_at.format_dd_mon_yy('timestamp') %>
+        <% else %>
+          <b>Not Started</b>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <th class="teraheader" align="right">Completed:&nbsp;</th>
+      <td>
+        <table width="100%">
+          <tr>
+            <% if ((eco_admin || @logged_in_user.is_an_lcr_designer?) &&
+                   !@eco_task.closed?) %>
+              <td width="30">
+                <%= check_box("eco_task", "completed")%>
+              </td>
+            <% elsif @eco_task.closed? %>
+              <td width="30">&nbsp;</td>
+            <% end %>
+            <td>
+              <% if @eco_task.completed? %>
+                <table width="100%">
+                  <tr>
+                    <th width="120" class="teraheader" align="right">Complete At:&nbsp;</th>
+                    <td>
+                      <%= @eco_task.completed_at.format_dd_mon_yy('timestamp') %>
+                    </td>
+                  </tr>
+                </table>
+              <% else %>
+                <% if eco_admin || @logged_in_user.is_an_lcr_designer? %>
+                  <b>Mark Task Complete</b>
+                <% else %>
+                  <b>No</b>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <% if @eco_task.completed? %>
+      <tr>
+        <th class="teraheader" align="right">Closed:&nbsp;</th>
+        <td>
+          <table width="100%">
+            <tr>
+              <% if eco_admin %>
+                <td width="30">
+                  <%= check_box("eco_task", "closed")%>
+                </td>
+              <% else %>
+                <td width="30">&nbsp;</td>
+              <% end %>
+              <td align="left">
+                <% if @eco_task.closed? %>
+                  <table width="100%">
+                    <tr>
+                      <th width="120" class="teraheader" align="right">Closed At:&nbsp;</th>
+                      <td>
+                        <%= @eco_task.closed_at.format_dd_mon_yy('timestamp') %>
+                      </td>
+                    </tr>
+                  </table>
+                <% else %>
+                  <% if eco_admin %>
+                    <b>Mark Task Closed</b>
+                  <% else %>
+                    <b>No</b>
+                  <% end %>
+                <% end %>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <th class="teraheader" align="right" valign="top">Comment:&nbsp;</th>
+      <td><%= text_area("eco_comment", "comment", :cols=>"60", :rows=>"5") %></td>
+    </tr>
+
+    <tr>
+      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
+      <td><%= file_field('eco_attachment1', 'document') %></td>
+    </tr>
+    <tr>
+      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
+      <td><%= file_field('eco_attachment2', 'document') %></td>
+    </tr>
+    <tr>
+      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
+      <td><%= file_field('eco_attachment3', 'document') %></td>
+    </tr>
+  </table>
+
+<% unless @eco_task.id.blank? %>
+  <table align="center" width="880" border="0">
+    <tr><td colspan="4"><hr class="div" /></td></tr>
+    <tr>
+           <td align="left" width="220">
+           <%= render( :partial => "shared/display_mail_lists",
+                       :locals  => { :eco_task_id  => @eco_task.id,
+                                     :url => url_for(:action => "change_cc_list",
+                                                    :controller => "eco_tasks"  )
+                       }) %>
+      </td>
+    </tr>
+    <tr><td colspan="4"><hr class="div" /></td></tr>
+  </table>
+<% end %>

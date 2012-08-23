@@ -11,13 +11,13 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'subsection_controller'
 
 # Re-raise errors caught by the controller.
 class SubsectionController; def rescue_action(e) raise e end; end
 
-class SubsectionControllerTest < Test::Unit::TestCase
+class SubsectionControllerTest < ActionController::TestCase
   
   def setup
     
@@ -478,7 +478,7 @@ class SubsectionControllerTest < Test::Unit::TestCase
 
     get(:move_down, { :id => subsections(:subsection_01_2_1).id }, cathy_admin_session)
     assert('Subsections were re-ordered', flash['notice'])
-    assert_redirected_to(:action => 'edit',
+    assert_redirected_to(:action => 'edit', :controller => 'checklist',
                          :id     => subsections(:subsection_01_2_2).checklist.id)
     
     subsects.reload
@@ -526,7 +526,7 @@ class SubsectionControllerTest < Test::Unit::TestCase
 
     get(:move_up, { :id => subsections(:subsection_01_2_2).id }, cathy_admin_session)
     assert('Subsections were re-ordered', flash['notice'])
-    assert_redirected_to(:action => 'edit',
+    assert_redirected_to(:action => 'edit', :controller => 'checklist',
 			                   :id     => subsections(:subsection_01_2_2).checklist.id)
     
     subsects.reload

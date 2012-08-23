@@ -28,7 +28,7 @@
                       
 <% end %>
 
-<% form_tag(action) do %>
+<%= form_tag(action) do %>
 
 
 <hr class="div" />
@@ -197,7 +197,7 @@
       <table><tr>
       <td class="label" width="200"
         title="Identify the original PCB">
-      Original PCB Number 1:
+      Original PCB Number:
       </td>
       <td class="data">
       <%= text_field("board_design_entry",
@@ -310,6 +310,35 @@
         drawing and will be transferred to the fabrication drawing as a
         "COPPER KEEPOUT AREA" label. Copper keepout areas required for signal
         integrity must be communicated to PCB Design by the Hardware Engineer.
+      </td>
+   </tr>
+<!-- ********************************************************** -->
+<tr>
+    <td class="label" valign="top">Mech. Enclosures:<br />(Typically RF)</td>
+    <td class="data" colspan="2" valign="top">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="label" width="140">Yes: </td>
+          <td class="data" align="left">
+            <%= radio_button_tag('board_design_entry[enclosure]', '1',
+              !!@board_design_entry.enclosure) %>
+          </td>
+        </tr>
+        <tr>
+          <td class="label">No: </td>
+          <td class="data" align="left">
+            <%= radio_button_tag('board_design_entry[enclosure]', '0',
+              !@board_design_entry.enclosure) %>
+          </td>
+        </tr>
+      </table>
+    </td>
+      <td class="data" colspan="4" valign="top">
+        If a mechanical enclosure is used around a specific circuit, 
+        please add a comment in this form that defines the circuit requiring 
+        an enclosure. It would be helpful to add a notation in the schematic 
+        also. Once the circuit has been placed the copper area/mounting for 
+        the enclosure on the PCB can be fed back to the outline drawing. 
       </td>
    </tr>
 

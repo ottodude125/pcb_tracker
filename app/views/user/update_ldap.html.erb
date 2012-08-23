@@ -1,0 +1,39 @@
+<% @heading = "Use Windows login for #{@user.name}?"%>
+
+
+<p>The Tracker now supports the use of your Windows account for login.
+	When you specify your Windows login information, future logins can
+	be done with your Windows login and password. The password will 
+	track changes to your Windows password automatically. We do NOT 
+	save the password.</p>
+	  
+<p>Only users in the TER domain can use their Windows login for authentication. If,
+	for example, you use the ICD domain, you can opt out.</p>
+<p>Please submit the form to update your login information or to opt out.</p>
+<form action='<%= url_for( :controller => 'user',
+                           :action     => 'update_ldap') %>'
+ method="post">
+ 
+ <input type="hidden" name="id" value="<%=@user.id%>"/>
+ <table>
+ 	<tr>
+  		<td align="right"><b>Windows user login name:</b></td>
+  		<td><input type="text" name="ldap_name" size="30"/></td>
+  		<td> [Only the TER Domain is supported]</td>
+    </tr>
+    <tr>
+        <td align="right"><b>Windoes user password:</b></td>
+        <td><input type="password" name="ldap_password" size="30"/></td>
+        <td>[Used only to validate the account. It is not saved.]</td>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr>
+    	<td colspan=2><b>Opt Out of using your Windows login for authentication.</b>
+    	<input type="checkbox" name="optout"></td>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr>
+    	<td colspan="2" align="center"><input type="submit" value="Update Login" /></td>
+    </tr>
+</table>
+    

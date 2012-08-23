@@ -11,11 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class FabHouseTest < Test::Unit::TestCase
-  fixtures :fab_houses
-
+class FabHousesTest < ActiveSupport::TestCase
 
   ######################################################################
   #

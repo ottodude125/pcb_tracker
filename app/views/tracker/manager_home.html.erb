@@ -3,6 +3,20 @@
 <!-- ********************************************************** -->
 <!-- $Id$ -->
 <!-- ********************************************************** -->
+<% content_for :header do %>
+    /* manage display of review details */
+    jQuery( function($) {
+      $('#details> button').click(function(){
+        if( $(this).text() == "Show Details") {
+           $(this).text("Hide Details")
+        }
+        else {
+           $(this).text("Show Details")
+        }
+        $(this).next("#results_table").toggle();
+      });
+    });
+<% end %>
 
 <% @title = "PCB Design Board/Data Tracker" %>
 <%# debug session %>
@@ -83,7 +97,7 @@
           <tr>
             <td align="center">
               <%= link_to "#{DesignChange.pending_count} Changes Pending Approval", 
-                          pending_list_design_changes_url %>
+                          {:action => 'pending_list', :controller => 'design_changes' } %>
             </td>
         </tr>
 

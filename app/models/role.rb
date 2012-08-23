@@ -227,6 +227,31 @@ class Role < ActiveRecord::Base
     self.find(:all, :conditions => 'active=1', :order => 'display_name' )
   end
 
+  ######################################################################
+  #
+  # add_role_members
+  #
+  # Description:
+  # Given a list of roles this method will return the email for
+  # all of the members of that group.
+  #
+  # Parameters:
+  #   role_list - a list of role names
+  #
+  ######################################################################
+  #
+  def self.add_role_members(role_list)
+
+    user_list = []
+    role_list.each do |role_name|
+      user_list += Role.find_by_name(role_name).active_users
+    end
+
+    user_list.uniq!
+    user_list.sort_by{ |u| u.last_name }.map(&:email)
+
+  end
+
 
   ##############################################################################
   #

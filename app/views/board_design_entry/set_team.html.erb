@@ -1,0 +1,134 @@
+<%  content_for :header do %>
+
+jQuery(function($) { //SELECT List
+  $("select").change( function () {
+    role_id = this.name.replace(/^.*_/,"");
+    user_id = this.value;  /* user id */
+    bde_id  = $(this).parents("table").attr('bde_id')
+    req     = 1;
+    url     = $(this).parents("table").attr('url');
+
+    /* alert("user_id=" + user_id + ", role_id=" + role_id + ", bde_id=" + bde_id +
+          ", req=" + req + "url=" + url ) ;
+    */
+    $.post(url, { user_id: user_id, role_id: role_id, bde_id: bde_id,
+                  req: req } ); //no return dwata
+
+    /* update the assigned user text and color */
+    var cur_id = "#current_"+role_id;
+    var text   = $(this).find('option:selected').text();
+    $(cur_id).text(text);
+    $(cur_id).css("color","");
+    $(cur_id).css("font-weight","");
+
+    /* uncheck the "Not Required" box */
+    var req_id = "#required_"+role_id;
+    $(req_id).attr('checked',false);
+  });
+});
+jQuery(function($) { //NOT REQUIRED Check Box
+  $("input").change( function () {
+    role_id = this.name.replace(/^.*_/,"");
+    user_id = this.value;  /* user id */
+    req     = 0;
+    bde_id  = $(this).parents("table").attr('bde_id')
+    url     = $(this).parents("table").attr('url');
+
+    /* alert("user_id=" + user_id + ", role_id=" + role_id + ", bde_id=" + bde_id +
+          ", req =" + req + "url=" + url ) ;
+    */
+    $.post(url, { user_id: user_id, role_id: role_id, bde_id: bde_id,
+                  req: req} ); //no return data
+
+    /* change the assigned user to "Not Required" in red */
+    var cur_id = "#current_"+role_id;
+    $(cur_id).text("Not Required");
+    $(cur_id).css("color","darkorange");
+    $(cur_id).css("font-weight","bold");
+
+    /* uncheck the "Not Required" box */
+    // var req_id = "#required_"+role_id;
+    // $(req_id).attr('checked',false);
+
+    /* reset the selection list to the first item */
+    var select_id = "#role_id_"+role_id;
+    $(select_id).val("");
+    
+  });
+});
+<% end %>
+ 
+<% @heading = 'PCB Engineering - ' +
+               @board_design_entry.pcb_number +
+              ' - ' + @title %>
+
+<%= render(:partial => 'nav_bar',
+           :locals  => { :back_action => @back_action,
+                         :next_action => @next_action }) %>
+
+
+<hr class="div" />
+
+
+  <table class="design_team" align="center" cellspacing="0" border="0"
+  url="<%=  url_for(:action => 'set_team_member')%>"
+  bde_id="<%=@board_design_entry.id%>">
+  <tr>
+    <th class="teraheader">Role</th>
+    <th align="center" class="teraheader">Current Value</th>
+
+    <th colspan="2" align="center" class="teraheader">Change To</th>
+  </tr>
+<% for member in @members %>
+
+    <tr valign="top">
+      <th class="design_team_name" align="left"><%= member[:role].display_name %></th>
+      <% if member[:required]
+        if member[:member_id] > 0
+          text  = User.find(member[:member_id]).name
+          style = "font-weight bold"
+        else
+          text  = "Not Set"
+          style = "color: red; font-weight: bold"
+        end
+      else
+        text  = "Not Required"
+        style = "color: darkorange; font-weight: bold"
+      end
+      %>
+
+      <td class="design_team_data" align="center" id="current_<%=member[:role].id%>"
+        style="<%=raw(style)-%>">
+        <%=text-%>
+      </td>
+      <td class="design_team_data" align="center">
+        <select id="role_id_<%= member[:role].id %>"
+                name="role_id_<%= member[:role].id %>"
+                class="name_select">
+           <option value="">Select a Name</option>
+           <%= options_from_collection_for_select(member[:member_list],
+                                                 "id",
+                                                 "last_name_first",
+                                                 member[:member_id]) %>
+        </select>
+      </td>
+      <td align="center" class="design_team_required">
+          <%= check_box_tag("required_#{member[:role].id}",  #name, id
+                        1,                                   #value
+                        false                                # not checked
+                        ) %>
+        Not Required
+      </td>
+    </tr>
+ <% end %>
+ </table>
+
+
+
+<hr class="div" />
+
+<%# debug @user_action %>
+<%# debug "MANAGERS ----------------------------------" %>
+<%# debug @managers %>
+<%# debug "BOARD DESIGN ENTRY ------------------------" %>
+<%# debug @board_design_entry %>

@@ -21,7 +21,7 @@ class PartNum < ActiveRecord::Base
   ######################################################################
 
   def part_num_exists?
-    get_part_number(self)?true:false
+    self.get_part_number ? true : false
   end
 
   ######################################################################
@@ -104,14 +104,21 @@ class PartNum < ActiveRecord::Base
     PartNum.find(:first, :conditions => conditions )
   end
 
-def get_part_number(pn)
-    conditions = "prefix='#{pn.prefix}'    AND " +
-      "number='#{pn.number}'    AND " +
-      "dash='#{pn.dash}' AND " +
-      "revision='#{pn.revision}'"
+def get_part_number
+    conditions = "prefix='#{self.prefix}'    AND " +
+      "number='#{self.number}'    AND " +
+      "dash='#{self.dash}' AND " +
+      "revision='#{self.revision}'"
     PartNum.find(:first, :conditions => conditions )
   end
 
+  ###################
+  # The various get_xxx_part_number functions test for a nil id
+  # in case the function is called that way. This only happens in
+  # tests. If it didn't check, the functions return entries from the
+  # database that have NULL set for board_design_entry_id or for design_id
+  # ##################
+  
   ######################################################################
   #
   # get_bde_pcba_part_numbers(board design entry id)
@@ -130,9 +137,13 @@ def get_part_number(pn)
   ######################################################################
 
   def self.get_bde_pcba_part_numbers(id)
-    pcbas = PartNum.find(:all, :conditions => {
+    if id
+      pcbas = PartNum.find(:all, :conditions => {
         :board_design_entry_id => id,
         :use => "pcba" })
+    else
+      pcbas = []
+    end
     pcbas
   end
 
@@ -154,9 +165,13 @@ def get_part_number(pn)
   ######################################################################
 
   def self.get_bde_pcb_part_number(id)
-    pcb = PartNum.find(:first, :conditions => {
+    if id
+      pcb = PartNum.find(:first, :conditions => {
         :board_design_entry_id => id,
         :use => "pcb" })
+    else
+      pcb = nil
+    end
     pcb
   end
 
@@ -178,9 +193,13 @@ def get_part_number(pn)
   ######################################################################
 
   def self.get_design_pcba_part_numbers(id)
-    pcbas = PartNum.find(:all, :conditions => {
+    if id
+      pcbas = PartNum.find(:all, :conditions => {
         :design_id => id,
         :use => "pcba" })
+    else
+      pcbas = []
+    end
     pcbas
   end
 
@@ -202,8 +221,12 @@ def get_part_number(pn)
   ######################################################################
 
   def self.get_design_pcb_part_number(id)
-    pcb = PartNum.find(:first, :conditions => {
+    if id
+      pcb = PartNum.find(:first, :conditions => {
         :design_id => id, :use => "pcb" } )
+    else
+      pcb = ""
+    end
     pcb
   end
 

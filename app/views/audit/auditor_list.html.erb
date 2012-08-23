@@ -6,7 +6,7 @@
 
 <% @heading = "#{@audit.design.directory_name} Self/Peer Auditor Selection" %>
 
-<% form_tag(:controller => 'audit', :action => 'update_auditor_list') do %>
+<%= form_tag(:controller => 'audit', :action => 'update_auditor_list') do %>
 
   <%= hidden_field("audit", "id") %>
 

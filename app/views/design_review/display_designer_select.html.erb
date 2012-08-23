@@ -1,0 +1,8 @@
+<select id="designer_sel" name="designer[id]" class="name_select">
+  <option value="">Please select</option>
+  <%= options_from_collection_for_select(@designers,
+                                         "id",
+                                         "last_name_first",
+                                         @designer_id) %>
+</select>
+

@@ -90,17 +90,16 @@ PEER_AUDIT       = 2
     now = Time.now
 
     self.trim_checklist_for_design_type
-    self.get_design_checks
-    self.checklist.each_check do |check|
-      if check.is_peer_check?
-        check.design_check.auditor_result     = 'Verified'
-        check.design_check.auditor_checked_on = now
+    self.design_checks each do | design_check |
+      if design_check.check.is_peer_check?
+        design_check.auditor_result     = 'Verified'
+        design_check.auditor_checked_on = now
       end
-      if check.is_self_check?
-        check.design_check.designer_result     = 'Verified'
-        check.design_check.designer_checked_on = now
+      if design_check.check.is_self_check?
+        design_check.designer_result     = 'Verified'
+        design_check.designer_checked_on = now
       end
-      check.design_check.save
+      design_check.save
     end
 
     completed_checks = self.completed_check_count
@@ -123,11 +122,11 @@ PEER_AUDIT       = 2
   def clear_all_checks
     
     self.trim_checklist_for_design_type
-    self.get_design_checks
-    self.checklist.each_check do |check|
-      check.design_check.auditor_result  = 'None' if check.is_peer_check?
-      check.design_check.designer_result = 'None' if check.is_self_check?
-      check.design_check.save
+
+    self.design_checks.each_check do | design_check |
+      design_check.auditor_result  = 'None' if design_check.check.is_peer_check?
+      design_check.designer_result = 'None' if design_check.check.is_self_check?
+      design_check.save
     end
     
     self.auditor_completed_checks  = 0
@@ -139,7 +138,7 @@ PEER_AUDIT       = 2
   end
   
   
-  # Report the statu of the audit.
+  # Report the status of the audit.
   #
   # :call-seq:
   #   audit_state() -> integer
@@ -779,8 +778,8 @@ PEER_AUDIT       = 2
       self.update_self_check_count
  
       if self.designer_complete?
-        TrackerMailer.deliver_self_audit_complete(self)
-        TrackerMailer.deliver_final_review_warning(self.design)
+        AuditMailer.self_audit_complete(self).deliver
+        AuditMailer.final_review_warning(self.design).deliver
       end
       
       self.reload
@@ -824,13 +823,13 @@ PEER_AUDIT       = 2
 
     if incr != 0
       self.update_peer_check_count(incr)
-      TrackerMailer.deliver_peer_audit_complete(self) if self.auditor_complete?
+      AuditMailer.peer_audit_complete(self).deliver if self.auditor_complete?
     end
 
-    TrackerMailer::deliver_audit_update(design_check,
+    AuditMailer::audit_update(design_check,
                                         comment,
                                         self.design.designer,
-                                        user) if result_update == 'Comment'
+                                        user).deliver if result_update == 'Comment'
    end
 
 
@@ -967,9 +966,9 @@ PEER_AUDIT       = 2
                        'append')
     
       self.reload
-      TrackerMailer::deliver_audit_team_updates(user,
-                                                self,
-                                                teammate_list_updates)
+      AuditMailer::audit_team_updates(user,
+                                        self,
+                                        teammate_list_updates).deliver
     end
 
    end
@@ -1081,8 +1080,9 @@ PEER_AUDIT       = 2
   ######################################################################
   #
    def message?
-     errors.on(:message) != nil
-   end
+     #errors.on(:message) != nil
+     errors[:message] != nil
+  end
    
    
   ######################################################################
@@ -1124,7 +1124,7 @@ PEER_AUDIT       = 2
   ######################################################################
   #
    def message
-     message = errors.on(:message)
+     message = errors[:message]
      if message.class == String
        message
      elsif message.class == Array
@@ -1528,7 +1528,7 @@ PEER_AUDIT       = 2
   # design checks.
   def get_design_checks
 
-    design_checks = DesignCheck.find(:all, :conditions => "audit_id=#{self.id}")
+    design_checks = self.design_checks # DesignCheck.find(:all, :conditions => "audit_id=#{self.id}")
     
     self.checklist.each_check do |check|
       design_check       = design_checks.detect { |dc| dc.check_id == check.id }
@@ -1769,7 +1769,7 @@ PEER_AUDIT       = 2
     
   end
     
-  
+
   ##############################################################################
   #
   # Private Methods

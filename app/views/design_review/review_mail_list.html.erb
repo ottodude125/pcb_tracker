@@ -1,0 +1,33 @@
+<!-- View:    review_mail_list                                  -->
+<!-- Purpose: Displays a the e-mail list for a review           -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = @design_review.review_type.name + ' Review::' +
+  @design_review.display_header %>
+
+
+<%= form_tag(:action => 'change_cc_list') do %>
+
+  <table width="100%">
+    <tr>
+      <td align="left">
+        <input type="button" value="Return" onClick="parent.location='<%= url_for( :controller => 'design_review', :action => 'view', :id => @design_review.id ) %>'" />
+      </td>
+      <td align="right">
+        <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+      </td>
+    </tr>
+  </table>
+  <hr class="div" />
+  <%= render( :partial => "shared/display_mail_lists",
+              :locals  => { :design_id        => @design_review.design.id,
+                            :design_review_id => @design_review.id,
+                            :url => url_for(:action => "change_cc_list",
+                                            :controller => "design"  )
+                          }) %>
+  <hr class="div" />
+<% end %>
+
+

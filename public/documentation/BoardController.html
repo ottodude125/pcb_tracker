@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: BoardController</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/controllers/board_controller.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link"><a href="ApplicationController.html">ApplicationController</a>
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-board_design_search">#board_design_search</a>
+    
+    <li><a href="#method-i-design_information">#design_information</a>
+    
+    <li><a href="#method-i-search_options">#search_options</a>
+    
+    <li><a href="#method-i-show_boards">#show_boards</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class BoardController</h1>
+
+  <div id="description" class="description">
+    
+<p>Copyright 2005, by Teradyne, Inc., Boston MA</p>
+
+<p>File: board_controller.rb</p>
+
+<p>This contains the logic that handles events from the outside world (user
+input), interacts with the board model, and displays the  appropriate view
+to the user.</p>
+
+<p>$Id$</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-board_design_search" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">board_design_search</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardController.html#method-i-board_design_search">#board_design_search</a></p>
+
+<p>Description: This method responds to the <a
+href="BoardController.html#method-i-search_options">#search_options</a>
+view/form.  It uses the selections made by the user to execute a search on
+boards.  The  search is used to populate the <a
+href="BoardController.html#method-i-board_design_search">#board_design_search</a>
+view.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>:platform][:id
+<dd><ul><li>
+<p>if not an empty string then use the id  provided in the database query.</p>
+</li></ul>
+</dd><dt>:project][:id
+<dd><ul><li>
+<p>if not an empty string then use the id provided in the database query.</p>
+</li></ul>
+</dd><dt>:user][:id
+<dd><ul><li>
+<p>if not an empty string then use the id provided in the database query.</p>
+</li></ul>
+</dd><dt>:review_type][:phase
+<dd><ul><li>
+<p>if ‘All’ then display all designs. Otherwise, display only the designs that
+have completed the phase identified by the parameter.</p>
+</li></ul>
+</dd></dl>
+          
+
+          
+          <div class="method-source-code" id="board_design_search-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_controller.rb, line 152</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">board_design_search</span>
+
+  <span class="ruby-ivar">@project</span>  = <span class="ruby-string">'All Projects'</span>
+  <span class="ruby-ivar">@platform</span> = <span class="ruby-string">'All Platforms'</span>
+  <span class="ruby-ivar">@designer</span> = <span class="ruby-string">'All Designers'</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:platform</span>][<span class="ruby-value">:id</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">''</span>
+    <span class="ruby-identifier">platform</span>  = <span class="ruby-constant">Platform</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:platform</span>][<span class="ruby-value">:id</span>])
+    <span class="ruby-ivar">@platform</span> = <span class="ruby-identifier">platform</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:project</span>][<span class="ruby-value">:id</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">''</span>
+    <span class="ruby-identifier">project</span>  = <span class="ruby-constant">Project</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:project</span>][<span class="ruby-value">:id</span>])
+    <span class="ruby-ivar">@project</span> = <span class="ruby-identifier">project</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">condition</span> = []
+  <span class="ruby-identifier">condition</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;platform_id=#{platform.id}&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">platform</span>
+  <span class="ruby-identifier">condition</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-node">&quot;project_id=#{project.id}&quot;</span>   <span class="ruby-keyword">if</span> <span class="ruby-identifier">project</span>
+  <span class="ruby-identifier">conditions</span> = <span class="ruby-identifier">condition</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">' AND '</span>)
+  <span class="ruby-identifier">board_list</span> = <span class="ruby-constant">Board</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">conditions</span>)
+  
+  <span class="ruby-identifier">release_rt</span> = <span class="ruby-constant">ReviewType</span>.<span class="ruby-identifier">get_release</span>
+  <span class="ruby-identifier">final_rt</span>   = <span class="ruby-constant">ReviewType</span>.<span class="ruby-identifier">get_final</span>
+  <span class="ruby-identifier">board_list</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">board</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">board</span>.<span class="ruby-identifier">designs</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">design</span>.<span class="ruby-identifier">complete?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">in_phase?</span>(<span class="ruby-identifier">release_rt</span>))
+        <span class="ruby-identifier">design</span>[<span class="ruby-value">:designer_name</span>] = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">designer</span>.<span class="ruby-identifier">name</span>
+        <span class="ruby-identifier">design</span>[<span class="ruby-value">:designer_id</span>]   = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">designer</span>.<span class="ruby-identifier">id</span>
+      <span class="ruby-keyword">else</span> 
+        <span class="ruby-identifier">final_review</span> = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> 
+                         <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">review_type_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">final_rt</span>.<span class="ruby-identifier">id</span> }
+        <span class="ruby-identifier">design</span>[<span class="ruby-value">:designer_name</span>] = <span class="ruby-identifier">final_review</span>.<span class="ruby-identifier">designer</span>.<span class="ruby-identifier">name</span>
+        <span class="ruby-identifier">design</span>[<span class="ruby-value">:designer_id</span>]   = <span class="ruby-identifier">final_review</span>.<span class="ruby-identifier">designer</span>.<span class="ruby-identifier">id</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># If the designer was specified  then filter the list.</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>][<span class="ruby-value">:id</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">''</span>
+    <span class="ruby-ivar">@designer</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>][<span class="ruby-value">:id</span>]).<span class="ruby-identifier">name</span>
+    <span class="ruby-identifier">board_list</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">board</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">board</span>.<span class="ruby-identifier">designs</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">d</span>[<span class="ruby-value">:designer_id</span>] <span class="ruby-operator">!=</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:user</span>][<span class="ruby-value">:id</span>].<span class="ruby-identifier">to_i</span>}
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># If a phase of &quot;Final&quot; or &quot;Release&quot; was specified then filter the list.</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:review_type</span>][<span class="ruby-value">:phase</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">'All'</span>
+    <span class="ruby-identifier">review_types</span>          = <span class="ruby-constant">ReviewType</span>.<span class="ruby-identifier">get_review_types</span>
+    <span class="ruby-identifier">completed_review_type</span> = <span class="ruby-identifier">review_types</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">rt</span><span class="ruby-operator">|</span> 
+                              <span class="ruby-identifier">rt</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:review_type</span>][<span class="ruby-value">:phase</span>] }
+    <span class="ruby-identifier">review_types</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">rt</span><span class="ruby-operator">|</span> <span class="ruby-identifier">rt</span>.<span class="ruby-identifier">sort_order</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">completed_review_type</span>.<span class="ruby-identifier">sort_order</span> }
+
+    <span class="ruby-identifier">board_list</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">board</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">board</span>.<span class="ruby-identifier">designs</span>.<span class="ruby-identifier">delete_if</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design</span><span class="ruby-operator">|</span> 
+        (<span class="ruby-operator">!</span><span class="ruby-identifier">design</span>.<span class="ruby-identifier">complete?</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">review_types</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">rt</span><span class="ruby-operator">|</span> <span class="ruby-identifier">rt</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">phase_id</span> })
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment">#@board_list = board_list.sort_by { |b| [b.directory_name, b.id] }</span>
+  <span class="ruby-ivar">@board_list</span> = <span class="ruby-identifier">board_list</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- board_design_search-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- board_design_search-method -->
+
+    
+      <div id="method-i-design_information" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">design_information</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardController.html#method-i-design_information">#design_information</a></p>
+
+<p>Description: Handles the processing when a user clicks on a part number on
+the  show boards page.</p>
+
+<p>Parameters from params None</p>
+          
+
+          
+          <div class="method-source-code" id="design_information-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_controller.rb, line 84</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">design_information</span>
+
+  <span class="ruby-comment">#Get the board information</span>
+  <span class="ruby-ivar">@type</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:type</span>] <span class="ruby-operator">||</span> <span class="ruby-string">'pcb'</span>
+  <span class="ruby-ivar">@designs</span> = <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">get_designs</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:part_number</span>],<span class="ruby-ivar">@type</span>)
+  
+  <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Number of designs - '</span> <span class="ruby-operator">+</span> <span class="ruby-ivar">@designs</span>.<span class="ruby-identifier">size</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@designs</span>.<span class="ruby-identifier">size</span>.<span class="ruby-identifier">to_s</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'show_boards'</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-comment"># First sort the designs by name, then sort the reviews by review order.</span>
+    <span class="ruby-ivar">@designs</span> = <span class="ruby-ivar">@designs</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">design</span><span class="ruby-operator">|</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">id</span> }
+    <span class="ruby-ivar">@detailed_name</span> = <span class="ruby-ivar">@designs</span>[<span class="ruby-value">0</span>].<span class="ruby-identifier">detailed_name</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- design_information-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- design_information-method -->
+
+    
+      <div id="method-i-search_options" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">search_options</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="BoardController.html#method-i-search_options">#search_options</a></p>
+
+<p>Description: This method provides the lists of options available for
+searching.</p>
+
+<p>Parameters from params None</p>
+          
+
+          
+          <div class="method-source-code" id="search_options-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_controller.rb, line 113</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">search_options</span>
+
+  <span class="ruby-identifier">designer_role</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'Designer'</span>)
+  <span class="ruby-ivar">@designers</span> = <span class="ruby-identifier">designer_role</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">last_name</span> }
+  <span class="ruby-ivar">@platforms</span> = <span class="ruby-constant">Platform</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:name</span>)
+  <span class="ruby-ivar">@projects</span>  = <span class="ruby-constant">Project</span>.<span class="ruby-identifier">get_projects</span>
+  
+  <span class="ruby-keyword">if</span> (<span class="ruby-ivar">@logged_in_user</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">is_designer?</span>)
+    <span class="ruby-ivar">@designer</span> = <span class="ruby-ivar">@logged_in_user</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@designer</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- search_options-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- search_options-method -->
+
+    
+      <div id="method-i-show_boards" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">show_boards</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="BoardController.html#method-i-show_boards">#show_boards</a></p>
+
+<p>Description: Collects the data to display the show boards page.</p>
+
+<p>Parameters from params type (pcb vs pcba)</p>
+          
+
+          
+          <div class="method-source-code" id="show_boards-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_controller.rb, line 36</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">show_boards</span>
+
+  <span class="ruby-ivar">@type</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:type</span>] <span class="ruby-operator">||</span> <span class="ruby-string">'pcb'</span>
+  <span class="ruby-ivar">@type2</span> = <span class="ruby-ivar">@type</span><span class="ruby-operator">==</span><span class="ruby-string">&quot;pcb&quot;</span><span class="ruby-operator">?</span><span class="ruby-string">&quot;pcba&quot;</span><span class="ruby-operator">:</span><span class="ruby-string">&quot;pcb&quot;</span>
+  
+  <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">''</span>
+  <span class="ruby-identifier">unique_part_numbers</span> = <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">get_unique_part_numbers</span>(<span class="ruby-ivar">@type</span>)
+
+  <span class="ruby-ivar">@columns</span> = <span class="ruby-value">8</span>
+  <span class="ruby-ivar">@rows</span>    = (<span class="ruby-identifier">unique_part_numbers</span>.<span class="ruby-identifier">size</span>) <span class="ruby-operator">/</span> <span class="ruby-ivar">@columns</span>
+  <span class="ruby-ivar">@rows</span>   <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">unique_part_numbers</span>.<span class="ruby-identifier">size</span>.<span class="ruby-identifier">remainder</span>(<span class="ruby-ivar">@columns</span>) <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+
+  <span class="ruby-ivar">@part_numbers</span> = []
+  <span class="ruby-value">0</span>.<span class="ruby-identifier">upto</span>(<span class="ruby-ivar">@rows</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">row</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@part_numbers</span>[<span class="ruby-identifier">row</span>] = [] }
+
+  <span class="ruby-comment"># Convert the information into a structure that can easily be displayed</span>
+  <span class="ruby-comment"># in a table.</span>
+  <span class="ruby-identifier">col</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">row</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">unique_part_numbers</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">element</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+
+    <span class="ruby-ivar">@part_numbers</span>[<span class="ruby-identifier">row</span>][<span class="ruby-identifier">col</span>] = <span class="ruby-identifier">element</span>.<span class="ruby-identifier">number</span>
+
+    <span class="ruby-identifier">row</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">row</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@rows</span>
+      <span class="ruby-identifier">row</span>  = <span class="ruby-value">0</span>
+      <span class="ruby-identifier">col</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">end</span>
+    
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- show_boards-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- show_boards-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

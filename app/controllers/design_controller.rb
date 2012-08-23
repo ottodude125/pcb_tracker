@@ -20,7 +20,7 @@ class DesignController < ApplicationController
                             :process_reviewer_modifications,
                             :view])
 
-  auto_complete_for :design, :name
+  #auto_complete_for :design, :name
 
 
   ######################################################################
@@ -36,6 +36,15 @@ class DesignController < ApplicationController
   ######################################################################
   #
   def initial_cc_list
+    @design = Design.find(params[:design_id])
+
+    results = @design.get_mail_lists() #get from all reviews (no param)
+    @reviewers        = results[:reviewers]
+    @users_copied     = results[:copied]
+    @users_not_copied = results[:not_copied]
+  end
+
+  def xinitial_cc_list
 
     @design = Design.find(params[:design_id])
 
@@ -93,6 +102,45 @@ class DesignController < ApplicationController
                        :not_copied => @users_not_copied}
   end
 
+def change_cc_list
+  design           = Design.find(params[:design_id])
+  design_review_id = params[:design_review_id] || nil #may be undefined
+  mode             = params[:mode]
+  user             = User.find(params[:user_id])
+
+  # update the data base
+  if ( mode == "add_name")
+    design.board.users << user
+    flash[:ack]     = "Added #{user[:name]} to the CC list"
+    action = "Added"
+  end
+  if ( mode == "remove_name")
+    design.board.users.delete(user)
+    flash[:ack]     = "Removed #{user[:name]} from the CC list"
+    action = "Removed"
+  end
+  # Update the history
+  if 1 == 2 #there is no use of CcListHistory
+    cc_list_history = CcListHistory.new
+    cc_list_history.design_review_id = design_review_id
+    cc_list_history.user_id          = @logged_in_user.id
+    cc_list_history.addressee_id     = user.id
+    cc_list_history.action           = action
+    cc_list_history.save
+  end
+
+  results = design.get_mail_lists(design_review_id)
+  @reviewers = results[:reviewers]
+  @users_copied = results[:copied]
+  @users_not_copied = results[:not_copied]
+
+  render(:partial => "shared/display_mail_lists",
+              :locals  => { :design_id => design.id,
+                            :design_review_id => design_review_id,
+                            :url => url_for(:action => "change_cc_list",
+                                            :controller => "design" )
+                          })
+end
 
   ######################################################################
   #
@@ -109,7 +157,7 @@ class DesignController < ApplicationController
   #
   ######################################################################
   #
-  def add_to_initial_cc_list
+  def xadd_to_initial_cc_list
 
     details    = flash[:details]
     @reviewers = details[:reviewers]
@@ -161,7 +209,7 @@ class DesignController < ApplicationController
   #
   ######################################################################
   #
-  def remove_from_initial_cc_list
+  def xremove_from_initial_cc_list
 
     details = flash[:details]
     @reviewers = details[:reviewers]
@@ -214,6 +262,7 @@ class DesignController < ApplicationController
     @design_review = @design.design_reviews.detect { |dr| dr.review_type_id == @pre_art.id }
     
     @documents = []
+    others = []
     DocumentType.get_document_types.each do |doc_type|
 
       docs = DesignReviewDocument.find(:all,
@@ -222,20 +271,16 @@ class DesignController < ApplicationController
       next if docs.size == 0
 
       if doc_type.name != "Other"
-        display_doc = docs.pop
-      
-        # Check against zero because document has been popped off
-        display_doc[:multiple_docs] = (docs.size > 0)
-        @documents.push(display_doc)
+        @documents.push( [docs[0], docs.size > 1 ] )
       else
         docs.sort_by { |drd| drd.document.name }
-        docs.reverse!
+        #docs.reverse!
         for display_doc in docs
-          display_doc[:multiple_docs] = false
-          @documents.push(display_doc)
+          others.push( [display_doc, false] )
         end
       end
     end
+    @documents += others
   end
   
   
@@ -341,16 +386,18 @@ class DesignController < ApplicationController
           next if !role.included_in_design_review?(dr.design)
           next if !role.review_types.include?(dr.review_type)
           drr = DesignReviewResult.new(:reviewer_id => reviewer.id,  :role_id => role_id )
-          drr.result='No Response' if dr.active?
           dr.design_review_results << drr
         end
       end
-      TrackerMailer::deliver_review_role_creation_notification(@design,
-        role, reviewer)
+      DesignMailer::review_role_creation_notification(@design,
+        role, reviewer).deliver
       flash["notice"]  = "The #{role.display_name} role has been added"
       flash["notice"] += "<br />Mail has been sent to #{reviewer.name}"
       redirect_to :action => 'design_review_reviewers', :id => params[:id]
     else
+      @url = get_role_users_design_path
+
+      
       #display the form to fill in the data
     end
   end
@@ -446,13 +493,12 @@ class DesignController < ApplicationController
     # Get all of the designs that are not complete.
     active_designs = Design.find_all_active
     
-    # Detect if any designs do not have a part number every design in the 
-    # list that does not have a part number
-    no_part_number = active_designs.detect { |d| d.pcb_number == nil }
+    # Detect if any designs do not have a part number 
+    no_pn_ids = active_designs.find_all { |d| d.pcb_number == "" }.collect {|d| d.id}.join(",")
     
-    if no_part_number
-      active_designs.delete_if { |d| d.pcb_number == nil }
-      flash['notice'] = "Designs exist that have no associated part number"
+    if no_pn_ids.length > 0
+      active_designs.delete_if { |d| d.pcb_number == "" }
+     flash['notice'] = "Active designs exist that have no associated part number - #{no_pn_ids}"
     end
     
     @active_designs = active_designs.sort_by { |d| d.directory_name }  

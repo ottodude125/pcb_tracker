@@ -10,13 +10,13 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'admin_controller'
 
 # Re-raise errors caught by the controller.
 class AdminController; def rescue_action(e) raise e end; end
 
-class AdminControllerTest < Test::Unit::TestCase
+class AdminControllerTest < ActionController::TestCase
   def setup
     @controller = AdminController.new
     @request    = ActionController::TestRequest.new
@@ -35,6 +35,6 @@ class AdminControllerTest < Test::Unit::TestCase
   ######################################################################
   #
   def test_index
-    assert_response 0
+    assert_response 200
   end
 end

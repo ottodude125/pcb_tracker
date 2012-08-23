@@ -11,17 +11,10 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class ChecklistTest < Test::Unit::TestCase
-  fixtures :audits,
-           :checks,
-           :checklists,
-           :design_checks,
-           :sections,
-           :subsections
+class ChecklistsTest < ActiveSupport::TestCase
 
-  
   ######################################################################
   def setup
     @checklist = checklists(:checklist_0_1)
@@ -54,7 +47,7 @@ class ChecklistTest < Test::Unit::TestCase
     assert_equal(1, @checklist.minor_rev_number)
     assert_equal(0, @checklist.released)
     assert_equal(0, @checklist.used)
-    assert_equal(Time.local(2005, "may", 23, 0, 0, 0).to_i,
+    assert_equal(Time.utc(2005, "may", 23, 0, 0, 0).to_i,
                  @checklist.released_on.to_i)
     assert_equal(3, @checklist.released_by)
     assert_equal(4, @checklist.created_by)

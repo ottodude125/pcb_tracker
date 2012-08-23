@@ -11,14 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class ChangeItemTest < ActiveSupport::TestCase
-  
-  fixtures :change_classes,
-           :change_items,
-           :change_types
-  
+class ChangeItemsTest < ActiveSupport::TestCase
   
   def setup
     @change_type_2_2   = change_types(:change_type_2_2)
@@ -38,19 +33,19 @@ class ChangeItemTest < ActiveSupport::TestCase
                                   :definition => 'Testing empty name')
     change_item.save
     assert_equal(1, change_item.errors.count)
-    assert_equal(expected_error_message, change_item.errors.on(:name))
+    assert_equal(expected_error_message, change_item.errors[:name][0])
     
     # Retry with blanks
     change_item.name = '  '
     change_item.save
     assert_equal(1, change_item.errors.count)
-    assert_equal(expected_error_message, change_item.errors.on(:name))
+    assert_equal(expected_error_message, change_item.errors[:name][0])
     
     # Retry with tabs
     change_item.name = "\t\t"
     change_item.save
     assert_equal(1, change_item.errors.count)
-    assert_equal(expected_error_message, change_item.errors.on(:name))
+    assert_equal(expected_error_message, change_item.errors[:name][0])
   end
   
   
@@ -61,19 +56,19 @@ class ChangeItemTest < ActiveSupport::TestCase
     change_item.name = ''
     change_item.save
     assert_equal(1, change_item.errors.count)
-    assert_equal(expected_error_message, change_item.errors.on(:name))
+    assert_equal(expected_error_message, change_item.errors[:name][0])
     
     # Retry with blanks
     change_item.name = '  '
     change_item.save
     assert_equal(1, change_item.errors.count)
-    assert_equal(expected_error_message, change_item.errors.on(:name))
+    assert_equal(expected_error_message, change_item.errors[:name][0])
     
     # Retry with tabs
     change_item.name = "\t\t"
     change_item.save
     assert_equal(1, change_item.errors.count)
-    assert_equal(expected_error_message, change_item.errors.on(:name))
+    assert_equal(expected_error_message, change_item.errors[:name][0])
   end
   
   

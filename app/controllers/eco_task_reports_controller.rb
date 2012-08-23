@@ -15,14 +15,14 @@
 class EcoTaskReportsController < ApplicationController
 
   
-  auto_complete_for :eco_task, :number
-  auto_complete_for :eco_task, :pcba_part_number
+  #auto_complete_for :eco_task, :number
+  #auto_complete_for :eco_task, :pcba_part_number
   
 
   # GET /eco_tasks
   def index
     
-    @start_date   = Time.now.start_of_month
+    @start_date   = Time.now.beginning_of_month
     @end_date     = Date.today
     @eco_tasks    = EcoTask.find_closed(@start_date, @end_date)
     @task_summary = EcoTask.eco_task_summary(@start_date, @end_date)

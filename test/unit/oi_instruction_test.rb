@@ -1,7 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class OiInstructionTest < Test::Unit::TestCase
-  fixtures :oi_instructions
+class OiInstructionsTest < ActiveSupport::TestCase
 
   # Replace this with your real tests.
   def test_truth

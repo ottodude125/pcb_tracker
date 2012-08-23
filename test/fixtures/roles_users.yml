@@ -145,5 +145,8 @@ bala_hcl_manager:
   role_id: 25
   user_id: 5006
 patrice_m_eco_admin:
-  role_id: 26
+  role_id: 33
+  user_id: 8000
+patrice_m_slm_vendor_notify:
+  role_id: 39
   user_id: 8000

@@ -1,0 +1,26 @@
+<!-- View:    show_member                            -->
+<!-- Purpose: Displays an entry on the view board design entry pages           -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+      <th align="right"><%= member[:role].display_name %>: </th>
+      <% if member[:required]
+          if member[:member_id] > 0
+            text  = User.find(member[:member_id]).name
+            style = "font-weight bold"
+          else
+            text  = "Not Set"
+            style = "color: red; font-weight: bold"
+          end
+        else
+          text  = "Not Required"
+          style = "color: darkorange; font-weight: bold"
+        end
+      %>
+
+      <td class="design_team_data" align="center" id="current_<%=member[:role].id%>"
+        style="<%=raw(style)-%>">
+        <%=text-%>
+      </td>
+

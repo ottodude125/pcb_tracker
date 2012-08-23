@@ -10,11 +10,9 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class DesignCenterTest < Test::Unit::TestCase
-  fixtures :design_centers
-
+class DesignCentersTest < ActiveSupport::TestCase
 
   def setup
     @design_center = DesignCenter.find(1)
@@ -36,10 +34,16 @@ class DesignCenterTest < Test::Unit::TestCase
     name = ''
     all_active.each do |dc|
       assert(dc.active?)
-      assert(name <= dc.name)
+      assert(name <= dc.name) # check default sorting
       name = dc.name
     end
-    
+
+    name = "ZZZZ"
+    all_active_desc = DesignCenter.get_all_active("name DESC")
+    all_active_desc.each do |dc|
+      assert(name >= dc.name) # check descending sorting
+      name = dc.name
+    end
   end
   
   

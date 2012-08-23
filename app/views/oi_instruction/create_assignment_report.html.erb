@@ -1,0 +1,120 @@
+<!-- View:    oi_instruction                                    -->
+<!-- Purpose: Displays form to enter a work assignment report   -->
+<!--          card.                                             -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@assignment.oi_instruction.design.directory_name}: Create #{@assignment.oi_instruction.oi_category_section.oi_category.name} Work Assignment Report Card" %>
+
+<hr class="div" width="820" />
+
+<%= render :partial => "header_table" %>
+
+<hr class="div" width="820" />
+
+<%= form_tag(:action => 'create_report') do -%>
+
+<%= hidden_field("assignment", "id") %>
+
+<table width="800" border="0" align="center">
+
+  <tr valign="top">
+    <td class="teraheader" width="20%">
+      <table width="100%" cellpadding="2" cellspacing="0">
+        <tr valign="top">
+          <th width="15%" class="teraheader">1.</th>
+          <th align="left" class="teraheader">Select the grade</th>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <select id='report_score' name='report[score]'>
+        <option value="<%= OiAssignmentReport::NOT_SCORED %>">Please Select a Range</option>
+        <% @scoring_table.each do |score| %>
+          <option value="<%= score[0] %>"><%= score[1] %></option>
+        <% end %>
+        </select>
+    </td>
+  </tr>
+  
+  <tr valign="top">
+    <td class="teraheader" width="20%">
+      <table width="100%" cellpadding="2" cellspacing="0">
+        <tr valign="top">
+          <th width="15%" class="teraheader">2.</th>
+          <th align="left" class="teraheader">Modify Task Complexity (optional)</th>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <select id='complexity_id' name='complexity[id]'>
+        <% OiAssignment.complexity_list().reverse.each do |complexity| %>
+          <% if @complexity_id == complexity[1] %>
+            <option selected="selected" value="<%= complexity[1] %>"><%= complexity[0] %></option>
+          <% else %>
+            <option value="<%= complexity[1] %>"><%= complexity[0] %></option>
+          <% end %>
+        <% end %>
+      </select>
+    </td>
+  </tr>
+  
+  <tr valign="top">
+    <td rowspan="2" class="teraheader" width="20%">
+      <table width="100%" cellpadding="2" cellspacing="0">
+        <tr valign="top">
+          <th width="15%" class="teraheader">3.</th>
+          <th align="left" class="teraheader">Enter a comment (optional)</th>
+        </tr>
+      </table>
+    </td>
+    <td><%= text_area("report", "comment", :cols => 80, :rows => 10) %></td>
+  </tr>
+  <tr><td><b>Note:</b> This comment will only be visible to Teradyne employees</tr>
+  
+  <tr valign="top">
+    <td class="teraheader" width="20%">
+      <table width="100%" cellpadding="2" cellspacing="0">
+        <tr valign="top">
+          <th width="15%" class="teraheader">4.</th>
+          <th align="left" class="teraheader">Record the Grade</th>
+        </tr>
+      </table>
+    </td>
+    <td valign="bottom">
+      <input title="Click here to record the grade." 
+             class="tera_submit" type="submit" value="Submit" />
+    </td>
+  </tr>
+
+</table>
+
+<% end %>
+
+<hr class="div" width="820" />
+
+<table width="800" align="center" border="0">
+  <tr>
+    <td align="left">
+      <input type="button" value="Return"
+             onClick="parent.location='<%= url_for(:action    => 'report_card_list',
+                                                   :id        => @assignment.oi_instruction.oi_category_section.oi_category_id,
+                                                   :design_id => @assignment.oi_instruction.design.id) %>'" />
+    </td>
+    <td align="right">
+      <input type="button" value="Home"
+             onClick="parent.location='<%= url_for(:controller => 'tracker', 
+                                                   :action     => 'index') %>'" />
+    </td>
+  </tr>
+</table>
+
+<hr class="div" width="820" />
+<h1>Comments (For Reference)</h1>
+<table class="comment_table">
+  <%= render( :partial => "comment_list", :collection => @comments) %>
+</table>
+<hr class="div" width="820" />
+
+<%# debug @scoring_table.class %>

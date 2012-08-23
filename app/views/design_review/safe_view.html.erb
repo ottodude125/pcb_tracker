@@ -1,0 +1,69 @@
+<!-- View:    designer_review                                   -->
+<!-- Purpose: Displays a design review for a designer.          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = @design_review.design.display_summary %>
+
+<%= form_tag(:action => 'add_comment') do %>
+
+  <%= render :partial => "design_review_nav" %>
+  <hr class="div" />
+
+  <%= hidden_field "design_review", "id" %>
+
+  <table border="0" width="100%">
+    <tr>
+      <td width="70" rowspan="5" valign="top">
+        <%= render :partial => "nav" %>
+      </td>
+      <td colspan="2">
+        <%= render :partial => "review_details" %>
+        
+        <hr class="div" />
+      </td>
+    </tr>
+    <tr>
+      <td align="left">
+        <input type="button"
+               value="Attachments"
+               title="Add or view attachments"
+               onClick="parent.location='<%= url_for(:controller => 'design_review', 
+                                                     :action => 'review_attachments',
+                                                     :design_review_id => @design_review.id) %>'"
+               class="small_font_wide_button" />
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2"><hr class="div" /></td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <%= render :partial => "reviewer_list_stripes" %>
+      </td>
+    </tr>
+  </table>
+
+  <br />
+  <div id="comments">
+  
+  <% if @design_review.design_review_comments.size > 0 %>
+    <table border="0" cellspacing="0" width="100%" align="center">
+      <tr>
+        <th class="teraheader" colspan="2">Comments</th>
+      </tr>
+      <%= render_collection_of_partials("comment_list",
+                                        @design_review.design_review_comments) %>
+    </table>
+  <% end %>
+
+  </div>
+
+  <hr class="div" />
+
+  <% end %>
+
+<%# debug @design_review %>
+<%# debug session %>
+<%# debug @design %>

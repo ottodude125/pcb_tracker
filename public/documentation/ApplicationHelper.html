@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Module: ApplicationHelper</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="module">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/helpers/application_helper.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-audit_radio_button">#audit_radio_button</a>
+    
+    <li><a href="#method-i-auditor_name">#auditor_name</a>
+    
+    <li><a href="#method-i-design_center_path">#design_center_path</a>
+    
+    <li><a href="#method-i-is_admin">#is_admin</a>
+    
+    <li><a href="#method-i-is_manager">#is_manager</a>
+    
+    <li><a href="#method-i-poster_name">#poster_name</a>
+    
+    <li><a href="#method-i-pre_artwork_complete">#pre_artwork_complete</a>
+    
+    <li><a href="#method-i-role_links">#role_links</a>
+    
+    <li><a href="#method-i-split_into_cols">#split_into_cols</a>
+    
+    <li><a href="#method-i-url_for_stored">#url_for_stored</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="module">module ApplicationHelper</h1>
+
+  <div id="description" class="description">
+    
+<p>Copyright 2005, by Teradyne, Inc., Boston MA</p>
+
+<p>File: application_helper.rb</p>
+
+<p>The methods added to this helper will be available to all  templates in the
+application.</p>
+
+<p>$Id$</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-audit_radio_button" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">audit_radio_button</span><span
+            class="method-args">(check, audit, tag_value, disabled)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="audit_radio_button-source">
+            <pre><span class="ruby-comment"># File app/helpers/application_helper.rb, line 275</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">audit_radio_button</span>(<span class="ruby-identifier">check</span>, 
+                       <span class="ruby-identifier">audit</span>,
+                       <span class="ruby-identifier">tag_value</span>,
+                       <span class="ruby-identifier">disabled</span>)
+                       
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">audit</span>.<span class="ruby-identifier">is_self_audit?</span>
+    <span class="ruby-identifier">attribute</span> = <span class="ruby-string">'designer_result'</span>
+    <span class="ruby-identifier">checked</span> = <span class="ruby-identifier">check</span>[<span class="ruby-value">:design_check</span>][<span class="ruby-value">:designer_result</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">tag_value</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">attribute</span> = <span class="ruby-string">'auditor_result'</span>
+    <span class="ruby-identifier">checked</span> = <span class="ruby-identifier">check</span>[<span class="ruby-value">:design_check</span>][<span class="ruby-value">:auditor_result</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">tag_value</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">radio_button</span>(<span class="ruby-node">&quot;check_#{check.id}&quot;</span>,
+               <span class="ruby-identifier">attribute</span>,
+               <span class="ruby-identifier">tag_value</span>,
+               {<span class="ruby-value">:checked</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">checked</span>,
+                <span class="ruby-value">:disabled</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">disabled</span>})
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- audit_radio_button-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- audit_radio_button-method -->
+
+    
+      <div id="method-i-auditor_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">auditor_name</span><span
+            class="method-args">(section_id, teammate_list, lead)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="ApplicationHelper.html#method-i-auditor_name">#auditor_name</a></p>
+
+<p>Description: Returns the name of the auditor assigned to perform the  audit
+for the section.</p>
+
+<p>Parameters: section_id    - the section record identifier teammate_list -
+an array of user records who are audit teammates lead          - the user
+record for the audit lead.</p>
+
+<p>Returns: A string containing auditor’s name.</p>
+
+<p>TODO: This should be obsolete.  VERIFY</p>
+          
+
+          
+          <div class="method-source-code" id="auditor_name-source">
+            <pre><span class="ruby-comment"># File app/helpers/application_helper.rb, line 213</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">auditor_name</span>(<span class="ruby-identifier">section_id</span>, <span class="ruby-identifier">teammate_list</span>, <span class="ruby-identifier">lead</span>)
+  <span class="ruby-identifier">teammate</span> = <span class="ruby-identifier">teammate_list</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">tmate</span><span class="ruby-operator">|</span> <span class="ruby-identifier">tmate</span>.<span class="ruby-identifier">section_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">section_id</span> }
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">teammate</span>
+    <span class="ruby-identifier">teammate</span>.<span class="ruby-identifier">user</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">lead</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- auditor_name-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- auditor_name-method -->
+
+    
+      <div id="method-i-design_center_path" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">design_center_path</span><span
+            class="method-args">(design_review)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="ApplicationHelper.html#method-i-design_center_path">#design_center_path</a></p>
+
+<p>Description: Given a design review, creates the url to access the design.</p>
+
+<p>Parameters: design_review - provides access to the design to create the
+url.</p>
+
+<p>Returns: The url to get to the design data.</p>
+          
+
+          
+          <div class="method-source-code" id="design_center_path-source">
+            <pre><span class="ruby-comment"># File app/helpers/application_helper.rb, line 160</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">design_center_path</span>(<span class="ruby-identifier">design_review</span>)
+  <span class="ruby-string">'http://boarddev.teradyne.com'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">surfboards_path</span> <span class="ruby-operator">+</span> <span class="ruby-string">'/public'</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- design_center_path-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- design_center_path-method -->
+
+    
+      <div id="method-i-is_admin" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_admin</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="ApplicationHelper.html#method-i-is_admin">#is_admin</a></p>
+
+<p>Description: This method determines if the user is a tracker admin.  The
+information stored in the session data is used to make the determination.</p>
+
+<p>Parameters: None</p>
+
+<p>Returns: True if the user is a tracker admin, false otherwise.</p>
+          
+
+          
+          <div class="method-source-code" id="is_admin-source">
+            <pre><span class="ruby-comment"># File app/helpers/application_helper.rb, line 110</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">is_admin</span>
+  <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">roles</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">&quot;Admin&quot;</span>))
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- is_admin-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- is_admin-method -->
+
+    
+      <div id="method-i-is_manager" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">is_manager</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="ApplicationHelper.html#method-i-is_manager">#is_manager</a></p>
+
+<p>Description: This method determines if the user is a manager.  The
+information stored in the session data is used to make the determination.</p>
+
+<p>Parameters: None</p>
+
+<p>Returns: True if the user is a manager, false otherwise.</p>
+          
+
+          
+          <div class="method-source-code" id="is_manager-source">
+            <pre><span class="ruby-comment"># File app/helpers/application_helper.rb, line 89</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">is_manager</span>
+  <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">roles</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">&quot;Manager&quot;</span>))
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- is_manager-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- is_manager-method -->
+
+    
+      <div id="method-i-poster_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">poster_name</span><span
+            class="method-args">(design_review)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="ApplicationHelper.html#method-i-poster_name">#poster_name</a></p>
+
+<p>Description: Returns the name that should be displayed in the “Poster”
+field.  If the review is a Pre-Artwork review then the name of the person
+who created the  design should be displayed.  Otherwise the name of the
+designer assigned to the review should be displayed.</p>
+
+<p>Parameters: design_review - provides access to the design review.</p>
+
+<p>Returns: The name of the poster</p>
+          
+
+          
+          <div class="method-source-code" id="poster_name-source">
+            <pre><span class="ruby-comment"># File app/helpers/application_helper.rb, line 184</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">poster_name</span>(<span class="ruby-identifier">design_review</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;Pre-Artwork&quot;</span>
+    <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design</span>.<span class="ruby-identifier">input_gate</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">designer</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- poster_name-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- poster_name-method -->
+
+    
+      <div id="method-i-pre_artwork_complete" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">pre_artwork_complete</span><span
+            class="method-args">(design)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="ApplicationHelper.html#method-i-pre_artwork_complete">#pre_artwork_complete</a></p>
+
+<p>Description: This method determines if a design’s pre-artwork design review
+is complete.</p>
+
+<p>Parameters: design - provides access to the pre-artwork design review that
+the</p>
+
+<pre>caller is interested in.</pre>
+
+<p>Returns: True if the pre-artwork design review is complete, false
+otherwise.</p>
+          
+
+          
+          <div class="method-source-code" id="pre_artwork_complete-source">
+            <pre><span class="ruby-comment"># File app/helpers/application_helper.rb, line 132</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">pre_artwork_complete</span>(<span class="ruby-identifier">design</span>)
+
+  <span class="ruby-identifier">pre_art_review_type</span> = <span class="ruby-constant">ReviewType</span>.<span class="ruby-identifier">get_pre_artwork</span>
+  <span class="ruby-identifier">pre_art_design_review</span> = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> 
+    <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">review_type_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">pre_art_review_type</span>.<span class="ruby-identifier">id</span>
+  }
+
+  <span class="ruby-identifier">done</span> = <span class="ruby-constant">ReviewStatus</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'Review Completed'</span>)
+  <span class="ruby-identifier">done</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">pre_art_design_review</span>.<span class="ruby-identifier">review_status_id</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- pre_artwork_complete-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- pre_artwork_complete-method -->
+
+    
+      <div id="method-i-role_links" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">role_links</span><span
+            class="method-args">(generate_links=false)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="ApplicationHelper.html#method-i-role_links">#role_links</a></p>
+
+<p>Description: Generate the links to the action that changes the user’s role.</p>
+
+<p>Parameters: generate_links - A flag that indicates that the links should be</p>
+
+<pre>created for the view when True.</pre>
+
+<p>Returns: A string containing links to change the user’s role.  The links
+are encapsulated in table data elements.</p>
+          
+
+          
+          <div class="method-source-code" id="role_links-source">
+            <pre><span class="ruby-comment"># File app/helpers/application_helper.rb, line 240</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">role_links</span>(<span class="ruby-identifier">generate_links</span>=<span class="ruby-keyword">false</span>)
+  
+  <span class="ruby-identifier">roles</span> = [ { <span class="ruby-value">:message</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:designer_role</span>,       <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Designer'</span> },
+            { <span class="ruby-value">:message</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:reviewer_role</span>,       <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Reviewer'</span> },
+            { <span class="ruby-value">:message</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:pcb_management_role</span>, <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'PCB Management'</span> },
+            { <span class="ruby-value">:message</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:pcb_admin_role</span>,      <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'PCB Admin'</span>},
+            { <span class="ruby-value">:message</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:tracker_admin_role</span>,  <span class="ruby-value">:name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Tracker Admin'</span> } ]
+          
+  <span class="ruby-identifier">links</span> = []
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">links</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">generate_links</span>
+  
+  <span class="ruby-identifier">roles</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">role</span><span class="ruby-operator">|</span>
+    
+    <span class="ruby-comment"># Go through the roles list and determine if the user is registered</span>
+    <span class="ruby-comment"># for the role.  If yes, then create the link to change to that role.</span>
+    <span class="ruby-identifier">new_role</span> = <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">role</span>[<span class="ruby-value">:message</span>])
+    <span class="ruby-keyword">if</span> (<span class="ruby-identifier">new_role</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-ivar">@logged_in_user</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">active_role</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">new_role</span>.<span class="ruby-identifier">id</span>))
+      <span class="ruby-identifier">links</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">'&lt;td width=&quot;110&quot; align=&quot;center&quot;&gt;'</span> <span class="ruby-operator">+</span> 
+        <span class="ruby-identifier">link_to</span>(<span class="ruby-identifier">role</span>[<span class="ruby-value">:name</span>], { <span class="ruby-value">:controller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:user</span>,
+                               <span class="ruby-value">:action</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-value">:set_role</span>,
+                               <span class="ruby-value">:id</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">new_role</span>.<span class="ruby-identifier">id</span> }) <span class="ruby-operator">+</span> 
+        <span class="ruby-string">'&lt;/td&gt;'</span>
+    <span class="ruby-keyword">end</span>
+    
+    <span class="ruby-comment"># Nil out the entries that do not have a link.</span>
+    <span class="ruby-comment">#links = roles.collect { |role| role[:link_to] }</span>
+    <span class="ruby-comment">#links.compact!</span>
+    
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">links</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- role_links-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- role_links-method -->
+
+    
+      <div id="method-i-split_into_cols" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">split_into_cols</span><span
+            class="method-args">(list, columns)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="ApplicationHelper.html#method-i-split_into_cols">#split_into_cols</a></p>
+
+<p>Description: This method uses the list and column number passed in to
+compute  the slices of the list that will be displayed into each column.</p>
+
+<p>Parameters: list    - the list that will be divided into columns columns -
+the number of columns to split the list into for display</p>
+
+<p>Returns: An array of slices that define the range of the list that are to
+be displayed in each column.</p>
+          
+
+          
+          <div class="method-source-code" id="split_into_cols-source">
+            <pre><span class="ruby-comment"># File app/helpers/application_helper.rb, line 35</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">split_into_cols</span>(<span class="ruby-identifier">list</span>, <span class="ruby-identifier">columns</span>)
+
+  <span class="ruby-identifier">cols</span> = [{<span class="ruby-value">:empty</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span>}]
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">list</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">columns</span>
+    <span class="ruby-identifier">columns</span>.<span class="ruby-identifier">downto</span>(<span class="ruby-value">1</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">list</span>.<span class="ruby-identifier">size</span>
+        <span class="ruby-identifier">cols</span>[<span class="ruby-identifier">i</span>] = {<span class="ruby-value">:empty</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span>}
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">cols</span>[<span class="ruby-identifier">i</span>] = {<span class="ruby-value">:empty</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">false</span>, <span class="ruby-value">:start</span> =<span class="ruby-operator">&gt;</span> (<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>), <span class="ruby-value">:stop</span> =<span class="ruby-operator">&gt;</span> (<span class="ruby-identifier">i</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>)}
+      <span class="ruby-keyword">end</span>
+    }
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">items_remaining</span> = <span class="ruby-identifier">list</span>.<span class="ruby-identifier">size</span>
+    <span class="ruby-identifier">items_per_col</span> = <span class="ruby-identifier">items_remaining</span><span class="ruby-operator">/</span><span class="ruby-identifier">columns</span>
+
+    <span class="ruby-identifier">start</span> = <span class="ruby-value">0</span>
+    <span class="ruby-value">1</span>.<span class="ruby-identifier">upto</span>(<span class="ruby-identifier">columns</span>) { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+
+      <span class="ruby-identifier">items_per_col</span> = <span class="ruby-identifier">items_remaining</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">columns</span>
+      
+      <span class="ruby-identifier">stop</span> = <span class="ruby-identifier">start</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">items_per_col</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">&lt;</span> (<span class="ruby-identifier">columns</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>)
+        <span class="ruby-identifier">stop</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">list</span>.<span class="ruby-identifier">size</span>.<span class="ruby-identifier">remainder</span>(<span class="ruby-identifier">columns</span>) <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-identifier">cols</span>[<span class="ruby-identifier">i</span>] = {<span class="ruby-value">:empty</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">false</span>, <span class="ruby-value">:start</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">start</span>, <span class="ruby-value">:stop</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">stop</span>}
+      <span class="ruby-identifier">start</span> = <span class="ruby-identifier">stop</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+      <span class="ruby-identifier">items_remaining</span> <span class="ruby-operator">-=</span> <span class="ruby-identifier">items_per_col</span>
+    }
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">cols</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- split_into_cols-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- split_into_cols-method -->
+
+    
+      <div id="method-i-url_for_stored" class="method-detail ">
+        
+        
+        <div class="method-heading">
+          <span class="method-callseq">
+            url_for_stored() &rarr; string
+          </span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+        
+
+        <div class="method-description">
+          
+          <p>Retrieve the stored return target</p>
+
+<pre>If a return target url was stored provide that url, otherwise send the
+tracker back to the home page</pre>
+          
+
+          
+          <div class="method-source-code" id="url_for_stored-source">
+            <pre><span class="ruby-comment"># File app/helpers/application_helper.rb, line 303</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">url_for_stored</span>
+  <span class="ruby-identifier">session</span>[<span class="ruby-value">:return_to</span>] <span class="ruby-operator">?</span> <span class="ruby-identifier">url_for</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:return_to</span>]) <span class="ruby-operator">:</span> <span class="ruby-identifier">url_for</span>( <span class="ruby-value">:controller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'tracker'</span> )
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- url_for_stored-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- url_for_stored-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

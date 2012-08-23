@@ -1,7 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class ProductTypeTest < Test::Unit::TestCase
-  fixtures :product_types
+class ProductTypesTest < ActiveSupport::TestCase
 
   def setup
     @product_type = ProductType.find(product_types(:p1_eng).id)

@@ -1,0 +1,194 @@
+<!-- View:    application                                       -->
+<!-- Purpose: General purpose, for use in all views.            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Language" content="en-us" />
+    <meta http-equiv="expires" content="Sat, 1 Jan 2000 08:00:00 GMT" />
+    <%= csrf_meta_tag %>
+    <%= javascript_include_tag "application" %>
+
+  <title><%=h @heading||@title %></title>
+  <%= stylesheet_link_tag 'tracker' %>
+  <%= yield :rawheader %>
+  <script type="text/javascript">
+<!-- Begin
+
+function setFocus() {
+  if (document.forms.length > 0) {
+    var field = document.forms[0];
+    for (i = 0; i < field.length; i++) {
+      if ((field.elements[i].type == "text") ||
+          (field.elements[i].type == "textarea") ||
+          (field.elements[i].type.toString().charAt(0) == "s")) {
+        document.forms[0].elements[i].focus();
+        break;
+      }
+    }
+  }
+}
+
+<%= yield :header %>
+
+// End -->
+</script>
+<% if Rails.env.development? %>
+  <style type="text/css">
+    body { background-image:url('http://boarddev.teradyne.com/Pics/development.png');}
+  </style>
+<% end %>
+<script type="text/javascript">
+    function ShowTime()
+    {
+       var dt = new Date();
+        $('#current_time').text(dt.toLocaleDateString() + " " + dt.toLocaleTimeString());
+        window.setTimeout("ShowTime()", 1000);
+    };
+</script>
+</head>
+
+  <body OnLoad="setFocus()">
+
+  <table cellpadding="1" width="100%" class="bottomnav" border='0'>
+    <tr class="teraheader">
+      <td colspan="2">
+        <table width="70%" border="0">
+          <tr>
+            <td>
+              <%= image_tag 'tera_logo.gif', {'border' => '0'} %>
+            </td>
+            <td align="right">
+              <table width="100%">
+                <tr>
+                  <td align="right">
+                    <% if Rails.env.production? %>
+                      <font size="4" color="white">
+                        <b>PCB Design Tracker V3</b>
+                      </font>
+                    <% else %>
+                      <font size="4" color="red">
+                        <b>DEVELOPMENT PCB Design Tracker V3</b> BETA
+                      </font>
+                    <% end %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td width="46">
+         <%= link_to(image_tag('question.gif'),
+            "http://boarddev.teradyne.com/DSR_Track/bug.php?op=add",:target => '_blank',
+            :title => "Submit DSR") %>
+      </td>
+      <td width="46">
+        <%= link_to(image_tag('home_house.png'), 
+                    { :controller => :tracker },
+                    :title => "Navigate to your PCB Design Tracker Home Page") %>
+      </td>
+      <td width="46" bgcolor="white" valign="middle">
+        <%= image_tag 'dtgLogo.gif', {'border' => '0' } %>
+      </td>
+    </tr>
+    <tr>
+      <% if ! DbCheck.master? %>
+        <td>No Login - Running as replicated slave on <%=Pcbtr.hostname%></td>
+      <% elsif ! DbCheck.exist?  %>
+        <td>No Login - Running without a database on <%=Pcbtr.hostname%></td>      
+      <% elsif !@logged_in_user %>
+        <td>
+          <%= form_tag(:controller => "user", :action => "login") do %>
+            Login: <input id="user_login" name="user_login" size="20" type="text" value="" />
+            Password: <input id="user_password" name="user_password" size="20" type="password" value="" />
+            <input type="submit" value="Login" />
+          <% end %>
+        </td>
+      <% else %>
+        
+        <% role_links = role_links(@generate_role_links) %>
+        <% width = role_links.size > 0 ? '100%' : '50%' %>
+
+        <td width="66%">
+          <table align="left" width="<%= width %>" class="bottomnav" border="1" cellspacing="0">
+            <tr bgcolor="white">
+              <td align="left">
+                <font color="#023a94">
+                  &nbsp;&nbsp;<%= @logged_in_user.name %>
+                  -
+                  <% if @logged_in_user %>
+                    <%= @logged_in_user.active_role.generalized_name %>
+                  <% else %>
+                    &nbsp;
+                  <% end %>
+                </font>              </td>
+              <% if role_links.size > 0 %>
+                <% role_links.each do |rl| %>
+                  <%= raw rl %>
+                <% end %>                  
+              <% end %>
+	    </tr>
+          </table>
+        </td>
+      <% end %>
+        <td align="center">
+            <div id="current_time">&nbsp;</div>
+            <script type="text/javascript">
+                ShowTime();
+            </script>         
+        </td>
+        <td colspan="3"><%=request.env['SERVER_NAME'].sub(/\..*/, "")%></td>
+    </tr>
+    <% if !@logged_in_user %>
+    <tr>
+        <td colspan="4" align="left" bgcolor="#f6f792">
+          <%= link_to('Login Help',
+                      {:controller => 'user',
+                       :action     => 'show_users'}) %>
+        </td>
+    </tr>
+    <% end %>
+    
+    <%- flash.each do |key, msg| -%>
+      <%- if key == :notice || key == :error || key == :ack || key == 'notice'  -%>
+        <tr bgcolor="#f6f792">
+          <td colspan="4">
+            <span class="notice">
+                <p><%= raw msg %></p>
+            </span>
+          </td>
+        </tr>
+      <%- end -%>
+    <%- end -%>
+    
+    <% if @logged_in_user %>
+      <tr bgcolor="#ffffff">
+        <td colspan="1">
+          <%= link_to("Logout #{@logged_in_user.name}",
+                      { :controller => "user",
+                        :action     => "logout" }) %>
+        </td>
+        <td colspan="1" align = 'right'>
+          <%= link_to("Change Password", 
+          			  { :controller => "user",
+          			    :action     => "user_set_password",
+          			    :id         => @logged_in_user.id }) %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+
+  <% if @heading %>
+    <h1><%=h @heading %></h1>
+  <% end %>
+
+  <%= yield %>
+
+</body>
+</html>

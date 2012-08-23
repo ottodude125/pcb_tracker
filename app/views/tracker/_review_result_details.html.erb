@@ -1,0 +1,35 @@
+<!-- View:    design_review                                     -->
+<!-- Purpose: Display the details for the reviewers who have    -->
+<!--          signed off of the review.                         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<div id="results_table" style="display: none;">
+
+    <table width="500" align="right" border="2" cellpadding="2" cellspacing="2">
+
+        <tr class="th1">
+          <th>Reviewer</th>
+          <th>Group</th>
+          <th>Result</th>
+        </tr>
+
+        <% review_results.each do |review_result| %>
+          <tr>
+    
+            <td>
+              <%= review_result.reviewer.name %>
+            </td>
+            <td>
+              <%= review_result.role.name %>
+            </td>
+            <td>
+              <%= review_result.result %>
+            </td>
+    
+          </tr>
+        <% end %>
+
+      </table>
+</div>

@@ -2,21 +2,21 @@
 # $Id$
 #
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
-boston_harrison:
+nr:
   id:       1
-  name:     Boston (Harrison)
-  pcb_path: /hwnet/board_bos
-  hw_path:  /hwnet/hw_bos
+  name:     North Reading
+  pcb_path: board_nr
+  hw_path:  hw_nr
   active:   1
 fridley:
   id:       2
   name:     Fridley
-  pcb_path: /hwnet/board_minn
-  hw_path:  /hwnet/hw_minn
+  pcb_path: board_minn
+  hw_path:  hw_minn
   active:   1
 oregon:
   id:       3
   name:     Oregon
-  pcb_path: /hwnet/board_odc
-  hw_path:  /hwnet/hw_odc
+  pcb_path: board_odc
+  hw_path:  hw_odc
   active:   0

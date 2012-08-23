@@ -11,21 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class BoardTest < Test::Unit::TestCase
-
-
-  fixtures(:boards,
-           :design_review_documents,
-           :documents,
-           :document_types,
-           :platforms,
-           :prefixes,
-           :projects,
-           :roles,
-           :users)
-
+class BoardsTest < ActiveSupport::TestCase
 
   def setup
     @board = Board.find(boards(:mx234).id)

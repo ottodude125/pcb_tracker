@@ -10,12 +10,9 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class ReviewStatusTest < Test::Unit::TestCase
-
-  
-  fixtures :review_statuses
+class ReviewStatusesTest < ActiveSupport::TestCase
 
 
   ######################################################################

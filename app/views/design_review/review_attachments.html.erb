@@ -1,0 +1,108 @@
+<!-- View:    review_attachments                                -->
+<!-- Purpose: Displays a design review for a designer.          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = @design_review.display_header + ' Attachments' %>
+
+<%= form_tag(:action => 'add_attachment', 
+            :id     => @design_review.design.board_id ) do %>
+                   
+<%= hidden_field "design_review", "id" %>
+
+  <table width="100%">
+    <tr>
+      <td align="left">
+        <input type="button" value="Return" onClick="parent.location='<%= url_for( :controller => 'design_review', :action => 'view', :id => @design_review.id ) %>'" />
+      </td>
+      <td align="right">
+        <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+
+  <table border="0"
+         width="100%">
+    <tr>
+      <th align="left">Filename</th>
+      <th align="left">Type</th>
+      <th align="left">Attached By</th>
+      <th align="left">Date</th>
+      <td>&nbsp;</td>
+      <td>&nbsp;</td>
+    </tr>
+    
+    <% if @design_review.design.board_design_entry %>
+      <tr>
+        <td>
+          <%= link_to('Input Checklist',
+                      :controller       => "board_design_entry",
+                      :action           => "view_entry",
+                      :id               => @design_review.design.board_design_entry.id,
+                      :design_review_id => @design_review.id) %>
+        </td>
+        <td>PCB Input Form</td>
+        <td><%= @design_review.design.board_design_entry.originator %></td>
+        <td>
+          <%= @design_review.design.board_design_entry.submitted_on.format_dd_mon_yy('timestamp') %>
+        </td>
+      </tr>
+    <% end %>
+
+    <%# Loop through the design review documents and display. %>
+    <% @design_review.design.board.current_document_list.each do |drd| %>
+      <tr>
+	    <td>
+	      <%= link_to(drd.document.name, :action => "get_attachment", :id => drd.document.id) %>
+        </td>
+        <td><%= drd.document_type.name %></td>
+        <td><%= drd.document.user.name %></td>
+        <td><%= drd.document.created_on.format_dd_mon_yy('timestamp') %></td>
+        <td>
+          <% if drd.document_type.name != "Other" && @logged_in_user %>
+            <%= link_to("Update",
+                        {:action           => 'update_documents',
+                         :design_review_id => @design_review.id,
+                         :document_id      => drd.id,
+                         :return_to        => 'review_attachments'},
+                         :confirm =>   "Do you want to replace the file " +
+                                       "#{drd.document.name} with a new file?") %>
+          <% else %>
+            <%= link_to("Delete",
+                        {:action           => 'delete_document',
+                         :drd_id           => drd.id,
+                         :design_review_id => @design_review.id,
+                         :return_to        => 'review_attachments'},
+                         :confirm =>   "Do you want to delete the file " +
+                                       "#{drd.document.name}?" ) %>
+
+          <% end %>
+        </td>
+	      <td>
+          <% if @design_review.design.board.multiple_documents?(drd.document_type) %>
+            <%= link_to("Obsolete Documents",
+                        {:action           => 'list_obsolete',
+                         :id               => @design_review.id,
+                         :document_type_id => drd.document_type_id}) %>
+	        <% else %>
+	          &nbsp;
+          <% end %>
+	      </td>
+      </tr>
+    <% end %>
+    
+  </table>
+
+  <hr class="div" />
+
+  <% if @logged_in_user %>
+    <input type="submit" value="New Attachment" />
+  <% end %>
+
+  <% end %>
+
+<%# debug params %>
+

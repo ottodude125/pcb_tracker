@@ -7,24 +7,6 @@
 # The filters added to this controller will be run for all controllers in the application.
 # Likewise will all the methods added be available for all controllers.
 #
-# TODO: THIS FILE IS IN TRANSITION.  IT IS BEING USED TO WEAN THE TRACKER OFF 
-#       OF THE USE OF SESSION[:USER], SESSION[:ACTIVE_ROLE], AND SESSION[:ROLES].
-#       THE SESSION ENTRIES ARE BEING REPLACED BY SESSION[:USER_ID] WHICH IS SET 
-#       IN THE USER_CONTROLLER.  THE SET_INSTANCE_VARIABLES METHOD, DECLARED AS A
-#       BEFORE FILTER BELOW USES SESSION[:USER_ID] TO SET @logged_in_user.  THIS BEFORE FILTER 
-#       IS CALLED UNCONDITIONALLY.  THE @logged_in_user VARIABLE PROVIEDS ACCESS TO THE USER'S 
-#       ACTIVE_ROLE AS WELL AS THE ROLES.
-#       
-#       THE LOGGING NEEDS TO BE REMOVED FROM THE FOLLOWING METHODS
-#       
-#               verify_admin_role()
-#               verify_logged_in()
-#               verify_manager_admin_privs()
-#               verify_pcb_group()
-#               
-#        THE set_instance_variables() method is documented to indicate the 
-#        lines that need to be removed.
-# 
 # $Id$
 #
 ########################################################################
@@ -43,11 +25,6 @@ class ApplicationController < ActionController::Base
 #  model :user
   helper :time
 
-
-  # Pick a unique cookie name to distinguish our session data from others'
-  session :session_key => '_feb_pcbtr_session_id'
-
-
   # Do not allow any of the following listed actions unless the user is logged
   # in.  The login_required method is located in lib/login_system.rb
   before_filter :login_required, :only => [:append,
@@ -62,6 +39,27 @@ class ApplicationController < ActionController::Base
 
   before_filter :set_instance_variables
 
+######################################################################
+#
+# change_cc_list
+#
+# Description:
+# This method updates the CC list depending on the user to be
+# added or removed.
+#
+# Parameters from params
+# [:id] - Identifies the user to be added/removed to the CC list.
+# [:mode] - Indicates "add_name" or "remove_name"
+#
+# Displays a partial containing the two selection lists.
+#
+# Return value:
+# None
+#
+# Additional information:
+#
+######################################################################
+#
 
   protected
   
@@ -77,7 +75,7 @@ class ApplicationController < ActionController::Base
   #
   def log_error(exception)
     begin
-      TrackerMailer.deliver_snapshot(exception,
+      ApplicationMailer.snapshot(exception,
                                      clean_backtrace(exception),
                                      session.instance_variable_get("@data"),
                                      params,
@@ -107,10 +105,6 @@ class ApplicationController < ActionController::Base
   ######################################################################
   #
   def verify_admin_role
-    # logger.info '################# verify_admin_role #################'
-    # logger.info '## USER: ' + @logged_in_user.name  if @logged_in_user
-    # logger.info '>> @logged_in_user IS NOT DEFINED' if !@logged_in_user
-    # logger.info '-----------------------------------------------------'
     unless @logged_in_user && @logged_in_user.is_a_role_member?('Admin')
       flash['notice'] = Pcbtr::MESSAGES[:admin_only]
       redirect_to(:controller => 'tracker', :action => "index")
@@ -133,10 +127,6 @@ class ApplicationController < ActionController::Base
   ######################################################################
   #
   def verify_logged_in
-    # logger.info '################# verify_logged_in #################'
-    # logger.info '## USER: ' + @logged_in_user.name  if @logged_in_user
-    # logger.info '>> @logged_in_user IS NOT DEFINED' if !@logged_in_user
-    # logger.info '----------------------------------------------------'
     unless @logged_in_user
       flash['notice'] = Pcbtr::PCBTR_BASE_URL +
                         params["controller"] + '/' +
@@ -163,10 +153,6 @@ class ApplicationController < ActionController::Base
   ######################################################################
   #
   def verify_manager_admin_privs
-    # logger.info '################# verify_manager_admin_privs #################'
-    # logger.info '## USER: ' + @logged_in_user.name  if @logged_in_user
-    # logger.info '>> @logged_in_user IS NOT DEFINED' if !@logged_in_user
-    # logger.info '--------------------------------------------------------------'
 
     begin
       unless @logged_in_user.is_manager? || @logged_in_user.is_a_role_member?('Admin')
@@ -206,10 +192,6 @@ class ApplicationController < ActionController::Base
   #
   def verify_pcb_group
 
-    # logger.info '################# verify_pcb_group #################'
-    # logger.info '## USER: ' + @logged_in_user.name  if @logged_in_user
-    # logger.info '>> @logged_in_user IS NOT DEFINED' if !@logged_in_user
-    # logger.info '----------------------------------------------------'
     valid_user = false
 
     if @logged_in_user
@@ -248,7 +230,7 @@ class ApplicationController < ActionController::Base
   #
   #  Sets the "return_to" field in the session variable.
   def set_stored
-    session[:return_to] = request.request_uri
+    session[:return_to] = request.fullpath
   end
   
   
@@ -276,36 +258,9 @@ class ApplicationController < ActionController::Base
   #
   #  Sets instance variables used by several actions/views.
   def set_instance_variables
-    @logged_in_user = session[:user_id] ? User.find(session[:user_id]) : session[:user]
-    
-    
-    # THE CODE BELOW THIS LINE IN THIS METHOD WILL BE REMOVED WHEN THE TRANSITION
-    # IS COMPLETE
-    remove_obsolete_session_variables = true
-    
-    if remove_obsolete_session_variables
-      session[:user]        = nil
-      session[:roles]       = nil
-      session[:active_role] = nil
-    elsif @logged_in_user
-      session[:user]        = @logged_in_user
-      session[:roles]       = @logged_in_user.roles
-      session[:active_role] = @logged_in_user.active_role
+    if session[:user_id]
+      @logged_in_user = User.find(session[:user_id])
     end
-    
-    # logger.info '################# set_instance_variables #################'
-    # logger.info '## USER:                  ' + @logged_in_user.name             if @logged_in_user
-    # logger.info '## ACTIVE_ROLE:           ' + @logged_in_user.active_role.name if @logged_in_user
-    # logger.info '## NUMBER OF ROLES:       ' + @logged_in_user.roles.size.to_s  if @logged_in_user
-    # logger.info '## session[:user]:        ' + session[:user].name        if session[:user]
-    # logger.info '## session[:active_role]: ' + session[:active_role].name if session[:active_role]
-    # logger.info '## session[:roles].size:  ' + session[:roles].size.to_s  if session[:roles]
-    # logger.info '>> @logged_in_user       IS NOT DEFINED' if !@logged_in_user
-    # logger.info '>> session[:user]        IS NOT DEFINED' if !session[:user]
-    # logger.info '>> session[:active_role] IS NOT DEFINED' if !session[:active_role]
-    # logger.info '>> session[:roles]       IS NOT DEFINED' if !session[:roles]
-    # logger.info '---------------------------------------------------------'
   end
 
-  
 end

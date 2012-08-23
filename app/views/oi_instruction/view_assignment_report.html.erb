@@ -1,0 +1,126 @@
+<!-- View:    oi_instruction                                    -->
+<!-- Purpose: Displays form to enter a work assignment report   -->
+<!--          card.                                             -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@assignment.oi_instruction.design.pcb_number}: View #{@assignment.oi_instruction.oi_category_section.oi_category.name} Work Assignment Report Card" %>
+
+<hr class="div" width="820" />
+
+<%= render :partial => "header_table" %>
+
+<hr class="div" width="820" />
+
+<%= form_tag(:action => 'update_report') do -%>
+
+<%= hidden_field("assignment", "id") %>
+
+<table width="800" border="0" align="center">
+
+  <tr valign="top">
+    <th class="teraheader" width="30%" align="left">
+      Grade
+    </th>
+    <td width="20%">
+      <b><%= @current_score %></b>
+    </td>
+    <th class="teraheader" width="30%" align="left">
+      Update
+    </th>
+    <td width="20%">
+      <select id='report_score' name='report[score]'>
+        <% @scoring_table.each do |score| %>
+          <% if score[0] == @assignment.oi_assignment_report.score %>
+            <option value="<%= score[0] %>" selected="selected"><%= score[1] %></option>
+          <% else %>
+            <option value="<%= score[0] %>"><%= score[1] %></option>
+          <% end %>
+        <% end %>
+        </select>
+    </td>
+  </tr>
+  
+  <tr valign="top">
+    <th class="teraheader" align="left">
+      Task Complexity
+    </th>
+    <td>
+      <b><%= OiAssignment.complexity_name(@assignment.complexity_id) %></b>
+    </td>
+    <th class="teraheader" align="left">
+      Update
+    </th>
+    <td>
+      <select id='complexity_id' name='complexity[id]'>
+        <% OiAssignment.complexity_list().reverse.each do |complexity| %>
+          <% if @assignment.complexity_id == complexity[1] %>
+            <option selected="selected" value="<%= complexity[1] %>"><%= complexity[0] %></option>
+          <% else %>
+            <option value="<%= complexity[1] %>"><%= complexity[0] %></option>
+          <% end %>
+        <% end %>
+      </select>
+    </td>
+  </tr>
+  
+  <tr valign="top">
+    <th class="teraheader" align="left">
+      Existing Comments
+    </th>
+    <td colspan="3"><b><%= @assignment.oi_assignment_report.comment %></b></td>
+  </tr>
+  
+  <tr valign="top">
+    <th class="teraheader" align="left" rowspan="2">
+      Comment Update
+    </th>
+    <td colspan="3"><%= text_area("report", "comment", :cols => 70, :rows => 10) %></td>
+  </tr>
+  
+  <tr>
+    <td colspan="3">
+      <b>Note:</b> This comment will only be visible to Teradyne employees
+    </td>
+  </tr>
+  
+  <tr valign="top">
+    <td class="teraheader">
+      &nbsp;
+    </td>
+    <td colspan="3" align="center">
+      <input title="Click here to update the grade." 
+             class="tera_submit" type="submit" value="Submit Update" />
+    </td>
+  </tr>
+
+</table>  
+
+<% end %>
+
+<hr class="div" width="820" />
+
+<table width="800" align="center" border="0">
+  <tr>
+    <td align="left">
+      <input type="button" value="Return"
+             onClick="parent.location='<%= url_for(:action    => 'report_card_list',
+                                                   :id        => @assignment.oi_instruction.oi_category_section.oi_category_id,
+                                                   :design_id => @assignment.oi_instruction.design.id) %>'" />
+    </td>
+    <td align="right">
+      <input type="button" value="Home"
+             onClick="parent.location='<%= url_for(:controller => 'tracker', 
+                                                   :action     => 'index') %>'" />
+    </td>
+  </tr>
+</table>
+
+<hr class="div" width="820" />
+<h1>Comments (For Reference)</h1>
+<table class="comment_table">
+<%= render( :partial => "comment_list", :collection => @comments) %>
+</table>
+<hr class="div" width="820" />
+<%# debug @assignment.oi_assignment_report %>

@@ -10,13 +10,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'fab_house_controller'
 
 # Re-raise errors caught by the controller.
 class FabHouseController; def rescue_action(e) raise e end; end
 
-class FabHouseControllerTest < Test::Unit::TestCase
+class FabHouseControllerTest < ActionController::TestCase
   
   def setup
     @controller = FabHouseController.new

@@ -10,13 +10,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'division_controller'
 
 # Re-raise errors caught by the controller.
 class DivisionController; def rescue_action(e) raise e end; end
 
-class DivisionControllerTest < Test::Unit::TestCase
+class DivisionControllerTest < ActionController::TestCase
   
   def setup
     @controller = DivisionController.new

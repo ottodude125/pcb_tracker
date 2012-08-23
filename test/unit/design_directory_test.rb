@@ -11,10 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class DesignDirectoryTest < Test::Unit::TestCase
-  fixtures :design_directories
+class DesignDirectorysTest < ActiveSupport::TestCase
 
   def setup
     @design_directory = DesignDirectory.find(design_directories(:hw_design_bos).id)

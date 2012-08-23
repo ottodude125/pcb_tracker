@@ -1,0 +1,33 @@
+<!-- View:    design                                            -->
+<!-- Purpose: Displays the initial CC list when entering a      -->
+<!--          design.                                           -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = 'Review::' + @design.pcb_display + ' - ' +
+              @design.board.platform.name + ' / ' + @design.board.project.name +
+              ' / ' + @design.board.description %>
+
+<%= form_tag(:action => 'change_cc_list') do %>
+
+
+<input type="button" value="Next -> Design Attachments" 
+     onClick="parent.location='<%= url_for( :controller => 'design', 
+                                            :action => 'initial_attachments', 
+                                            :design_id => @design.id ) %>'" />
+
+  <hr class="div" />
+
+  <hr class="div" />
+  <%= render( :partial => "shared/display_mail_lists",
+              :locals  => { :design_id => @design.id,
+                            :url => url_for(:action => "change_cc_list",
+                                            :controller => "design"  )
+                          }) %>
+  <hr class="div" />
+  <% end %>
+
+<%# debug session %>
+<%# debug @users_copied %>
+<%# debug @users_not_copied %>

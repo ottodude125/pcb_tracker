@@ -1,6 +1,6 @@
 class CreateChangeClasses < ActiveRecord::Migration
   
-  def self.up
+  def change
     
     create_table :change_classes do |t|
       t.string :name
@@ -44,10 +44,4 @@ class CreateChangeClasses < ActiveRecord::Migration
 
   end
 
-  def self.down
-    drop_table :change_classes
-    drop_table :change_types
-    drop_table :change_items
-    drop_table :change_details
-  end
 end

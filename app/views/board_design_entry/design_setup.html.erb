@@ -1,0 +1,131 @@
+<% @heading = 'PCB Engineering - ' +
+              @board_design_entry.pcb_number +
+              ' Design Entry - Setup' %>
+
+<%= form_tag({ :action        => 'create_tracker_entry', 
+              :id            => params[:id] }) do %>
+
+<table border="0" align="center">
+  <tr>
+    <th width="100">Entry Type: </th>
+	<td><%= @board_design_entry.entry_type_name %></td>
+  </tr>
+</table>
+
+<hr class="div" />
+
+<table border="0" width="50%" align="center">
+  <tr>
+    <td valign="top" width="50%" align="center">
+      <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+          <td valign="top"><h2>Design Reviews</h2></td>
+        </tr>
+        <tr>
+          <td align="center">
+            <font size="-2" color="green">(Uncheck to skip review)</font>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table border="0" align="center" width="100%">
+        <% for review in @review_types %>
+          <tr>
+            <td width="50%" align="right">
+              <% if @board_design_entry.entry_type == 'new' || 
+                    (@board_design_entry.entry_type != 'new' &&
+                     !(review.name == 'Placement' || review.name == 'Routing')) %>
+                <%= check_box('review_type',
+                              review.name,
+                              { 'checked' => 'checked' }) %>
+              <% else %>
+                <%= check_box('review_type', review.name) %>
+              <% end %>
+            </td>
+            <th align="left"><%= review.name %></th>
+          </tr>
+        <% end %>
+      </table>
+      
+    </td>
+  </tr>
+</table> 
+
+<hr class="div" />
+
+<table border="0" width="50%" align="center">
+  <tr>
+    <td valign="top" width="50%" align="center">
+      <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+          <td valign="top"><h2>Design Audit</h2></td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table border="0" align="center" width="100%">
+
+        <tr>
+          <td width="50%" align="right">
+              <%= check_box("audit", "skip") %>
+            </td>
+            <th align="left">Skip Audit?</th>
+          </tr>
+
+      </table>
+      
+    </td>
+  </tr>
+</table>
+
+<hr class="div" />
+
+<table border="0" width="50%" align="center">
+  <tr>
+    <td valign="top" width="50%" align="center">
+      <table cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+          <td valign="top"><h2>Criticality</h2></td>
+        </tr>
+      </table>
+    </td>
+    <td>
+      <table border="0" align="center" width="100%">
+
+        <tr>
+          <td>&nbsp;</td>
+          <td width="50%" align="left">
+            <%= collection_select(:priority, 
+                                  :id, 
+                                  @priorities,
+                                  "id", 
+                                  :name) %>
+            </td>
+          </tr>
+
+      </table>
+      
+    </td>
+  </tr>
+</table>
+
+<hr class="div" />
+
+<table width="80%" align="center">
+  <tr>
+    <td align="left">
+      <input type="button" class="form_return" 
+             value="Cancel / Return to Processor List"
+             onClick="parent.location='<%= url_for( :action => 'processor_list') %>'" />
+    </td>
+    
+    <td align="right">
+      <input type="submit" class="form_submit" value="Add the design to the Tracker" />
+    </td>
+  </tr>
+</table>
+
+<% end %>
+
+<%# debug @board_design_entry %>

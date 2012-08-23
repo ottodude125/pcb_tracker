@@ -37,7 +37,7 @@ class ReviewManagerController < ApplicationController
     # Get all of the reviewer roles.
     @roles        = Role.get_manager_review_roles + Role.get_review_roles
     @review_types = ReviewType.get_active_review_types
-
+    @role_types = {}
     @roles.each do |role|
 
       rtypes = {}
@@ -45,7 +45,7 @@ class ReviewManagerController < ApplicationController
         rtypes[rtype.name] = rtype.id
       end
 
-      role[:review_types] = rtypes
+      @role_types[role.id] = rtypes
     end
 
   end

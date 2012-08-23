@@ -11,10 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class OiCategoryTest < Test::Unit::TestCase
-  fixtures :oi_categories
+class OiCategorysTest < ActiveSupport::TestCase
 
   ######################################################################
   #

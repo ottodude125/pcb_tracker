@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: DesignController</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/controllers/design_controller.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link"><a href="ApplicationController.html">ApplicationController</a>
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-add_review_role">#add_review_role</a>
+    
+    <li><a href="#method-i-change_cc_list">#change_cc_list</a>
+    
+    <li><a href="#method-i-convert_checklist_type">#convert_checklist_type</a>
+    
+    <li><a href="#method-i-design_review_reviewers">#design_review_reviewers</a>
+    
+    <li><a href="#method-i-get_role_users">#get_role_users</a>
+    
+    <li><a href="#method-i-initial_attachments">#initial_attachments</a>
+    
+    <li><a href="#method-i-initial_cc_list">#initial_cc_list</a>
+    
+    <li><a href="#method-i-list">#list</a>
+    
+    <li><a href="#method-i-pcb_mechanical_comments">#pcb_mechanical_comments</a>
+    
+    <li><a href="#method-i-process_reviewer_modifications">#process_reviewer_modifications</a>
+    
+    <li><a href="#method-i-show">#show</a>
+    
+    <li><a href="#method-i-view">#view</a>
+    
+    <li><a href="#method-i-xadd_to_initial_cc_list">#xadd_to_initial_cc_list</a>
+    
+    <li><a href="#method-i-xinitial_cc_list">#xinitial_cc_list</a>
+    
+    <li><a href="#method-i-xremove_from_initial_cc_list">#xremove_from_initial_cc_list</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class DesignController</h1>
+
+  <div id="description" class="description">
+    
+<p>Copyright 2005, by Teradyne, Inc., Boston MA</p>
+
+<p>File: design_controller.rb</p>
+
+<p>This contains the logic that handles events from the outside world (user
+input), interacts with the design model, and displays the  appropriate <a
+href="DesignController.html#method-i-view">#view</a> to the user.</p>
+
+<p>$Id$</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-add_review_role" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_review_role</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignController.html#method-i-add_review_role">#add_review_role</a></p>
+
+<p>Description: Adds a review role, that was initially not required, to an
+existing design.</p>
+
+<p>Parameters from params id - identifies the design role_id - the role
+user_id - the user</p>
+          
+
+          
+          <div class="method-source-code" id="add_review_role-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 376</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_review_role</span>
+  <span class="ruby-ivar">@design</span>  = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@review_roles</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">get_review_roles</span> <span class="ruby-operator">+</span> <span class="ruby-constant">Role</span>.<span class="ruby-identifier">get_manager_review_roles</span>
+  <span class="ruby-ivar">@review_roles</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">role_open_review_count</span>(<span class="ruby-identifier">r</span>) <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span> }
+  <span class="ruby-keyword">if</span> ( <span class="ruby-identifier">params</span>[<span class="ruby-value">:role_id</span>])  <span class="ruby-comment">#update the design</span>
+    <span class="ruby-identifier">role_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:role_id</span>]
+    <span class="ruby-identifier">reviewer</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:add</span>][<span class="ruby-value">:name_id</span>])
+    <span class="ruby-comment">#add the role to each design review results</span>
+    <span class="ruby-identifier">design_reviews</span> = <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">sort_order</span> }
+    <span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">review_complete?</span> }
+    <span class="ruby-identifier">role</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">role_id</span>)
+    <span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">role_reviewer</span>(<span class="ruby-identifier">role</span>) <span class="ruby-comment"># don't reassign</span>
+        <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">role</span>.<span class="ruby-identifier">included_in_design_review?</span>(<span class="ruby-identifier">dr</span>.<span class="ruby-identifier">design</span>)
+        <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">role</span>.<span class="ruby-identifier">review_types</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">dr</span>.<span class="ruby-identifier">review_type</span>)
+        <span class="ruby-identifier">drr</span> = <span class="ruby-constant">DesignReviewResult</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:reviewer_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">id</span>,  <span class="ruby-value">:role_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">role_id</span> )
+        <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">design_review_results</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">drr</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-constant">TrackerMailer</span><span class="ruby-operator">::</span><span class="ruby-identifier">review_role_creation_notification</span>(<span class="ruby-ivar">@design</span>,
+      <span class="ruby-identifier">role</span>, <span class="ruby-identifier">reviewer</span>).<span class="ruby-identifier">deliver</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">&quot;notice&quot;</span>]  = <span class="ruby-node">&quot;The #{role.display_name} role has been added&quot;</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">&quot;notice&quot;</span>] <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;&lt;br /&gt;Mail has been sent to #{reviewer.name}&quot;</span>
+    <span class="ruby-identifier">redirect_to</span> <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'design_review_reviewers'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>]
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@url</span> = <span class="ruby-identifier">get_role_users_design_path</span>
+
+    
+    <span class="ruby-comment">#display the form to fill in the data</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- add_review_role-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- add_review_role-method -->
+
+    
+      <div id="method-i-change_cc_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">change_cc_list</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="change_cc_list-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 105</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">change_cc_list</span>
+  <span class="ruby-identifier">design</span>           = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:design_id</span>])
+  <span class="ruby-identifier">design_review_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:design_review_id</span>] <span class="ruby-operator">||</span> <span class="ruby-keyword">nil</span> <span class="ruby-comment">#may be undefined</span>
+  <span class="ruby-identifier">mode</span>             = <span class="ruby-identifier">params</span>[<span class="ruby-value">:mode</span>]
+  <span class="ruby-identifier">user</span>             = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:user_id</span>])
+
+  <span class="ruby-comment"># update the data base</span>
+  <span class="ruby-keyword">if</span> ( <span class="ruby-identifier">mode</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;add_name&quot;</span>)
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">board</span>.<span class="ruby-identifier">users</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">user</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:ack</span>]     = <span class="ruby-node">&quot;Added #{user[:name]} to the CC list&quot;</span>
+    <span class="ruby-identifier">action</span> = <span class="ruby-string">&quot;Added&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">if</span> ( <span class="ruby-identifier">mode</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;remove_name&quot;</span>)
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">board</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">user</span>)
+    <span class="ruby-identifier">flash</span>[<span class="ruby-value">:ack</span>]     = <span class="ruby-node">&quot;Removed #{user[:name]} from the CC list&quot;</span>
+    <span class="ruby-identifier">action</span> = <span class="ruby-string">&quot;Removed&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-comment"># Update the history</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-value">1</span> <span class="ruby-operator">==</span> <span class="ruby-value">2</span> <span class="ruby-comment">#there is no use of CcListHistory</span>
+    <span class="ruby-identifier">cc_list_history</span> = <span class="ruby-constant">CcListHistory</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-identifier">cc_list_history</span>.<span class="ruby-identifier">design_review_id</span> = <span class="ruby-identifier">design_review_id</span>
+    <span class="ruby-identifier">cc_list_history</span>.<span class="ruby-identifier">user_id</span>          = <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">id</span>
+    <span class="ruby-identifier">cc_list_history</span>.<span class="ruby-identifier">addressee_id</span>     = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>
+    <span class="ruby-identifier">cc_list_history</span>.<span class="ruby-identifier">action</span>           = <span class="ruby-identifier">action</span>
+    <span class="ruby-identifier">cc_list_history</span>.<span class="ruby-identifier">save</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">results</span> = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">get_mail_lists</span>(<span class="ruby-identifier">design_review_id</span>)
+  <span class="ruby-ivar">@reviewers</span> = <span class="ruby-identifier">results</span>[<span class="ruby-value">:reviewers</span>]
+  <span class="ruby-ivar">@users_copied</span> = <span class="ruby-identifier">results</span>[<span class="ruby-value">:copied</span>]
+  <span class="ruby-ivar">@users_not_copied</span> = <span class="ruby-identifier">results</span>[<span class="ruby-value">:not_copied</span>]
+
+  <span class="ruby-identifier">render</span>(<span class="ruby-value">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;shared/display_mail_lists&quot;</span>,
+              <span class="ruby-value">:locals</span>  =<span class="ruby-operator">&gt;</span> { <span class="ruby-value">:design_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">id</span>,
+                            <span class="ruby-value">:design_review_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">design_review_id</span>,
+                            <span class="ruby-value">:url</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">url_for</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;change_cc_list&quot;</span>,
+                                            <span class="ruby-value">:controller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;design&quot;</span> )
+                          })
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- change_cc_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- change_cc_list-method -->
+
+    
+      <div id="method-i-convert_checklist_type" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">convert_checklist_type</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignController.html#method-i-convert_checklist_type">#convert_checklist_type</a></p>
+
+<p>Description: Called when a user clicks a button on the <a
+href="DesignController.html#method-i-show">#show</a> screen indicating that
+the user wants to convert the audit (from full or partial or partial to
+full).  Once the work is done the <a
+href="DesignController.html#method-i-show">#show</a> screen is 
+redisplayed.</p>
+
+<p>Parameters from params None</p>
+          
+
+          
+          <div class="method-source-code" id="convert_checklist_type-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 544</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">convert_checklist_type</span>
+
+  <span class="ruby-identifier">design</span> = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-identifier">design</span>.<span class="ruby-identifier">flip_design_type</span>
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;show&quot;</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">id</span>)
+  
+  <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'The audit has been converted to a '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">audit_type</span> <span class="ruby-operator">+</span>
+                    <span class="ruby-string">' audit'</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- convert_checklist_type-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- convert_checklist_type-method -->
+
+    
+      <div id="method-i-design_review_reviewers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">design_review_reviewers</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignController.html#method-i-design_review_reviewers">#design_review_reviewers</a></p>
+
+<p>Description: Gathers the data to provide the user with a <a
+href="DesignController.html#method-i-view">#view</a> to change the
+reviewers for a design’s reviews.</p>
+
+<p>Parameters from params id - identifies the design</p>
+          
+
+          
+          <div class="method-source-code" id="design_review_reviewers-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 345</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">design_review_reviewers</span>
+
+  <span class="ruby-ivar">@design</span>         = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@design_reviews</span> = <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">sort_order</span> } 
+  <span class="ruby-ivar">@review_roles</span>   = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">get_review_roles</span> <span class="ruby-operator">+</span> <span class="ruby-constant">Role</span>.<span class="ruby-identifier">get_manager_review_roles</span>
+  
+  <span class="ruby-comment"># Do not display a review role that is not set up to review the</span>
+  <span class="ruby-comment"># design.</span>
+  <span class="ruby-ivar">@review_roles</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">role_review_count</span>(<span class="ruby-identifier">r</span>) <span class="ruby-operator">==</span> <span class="ruby-value">0</span> }
+  
+  <span class="ruby-ivar">@review_roles_locked</span>    = []
+  <span class="ruby-ivar">@review_roles</span>.<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+    <span class="ruby-ivar">@review_roles_locked</span>[<span class="ruby-identifier">i</span>] = <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">role_open_review_count</span>(<span class="ruby-identifier">r</span>) <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+  <span class="ruby-keyword">end</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- design_review_reviewers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- design_review_reviewers-method -->
+
+    
+      <div id="method-i-get_role_users" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_role_users</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignController.html#method-i-get_role_users">#get_role_users</a></p>
+
+<p>Description: An AJAX function to return the users for a specified role</p>
+
+<p>Parameters from params id - the role id</p>
+
+<p>Creates a select <a href="DesignController.html#method-i-list">#list</a> of
+users for the role</p>
+          
+
+          
+          <div class="method-source-code" id="get_role_users-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 422</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_role_users</span>
+  <span class="ruby-identifier">role</span>=<span class="ruby-constant">Role</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:role_id</span>])
+  <span class="ruby-ivar">@users</span> = <span class="ruby-identifier">role</span>.<span class="ruby-identifier">active_users</span>
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:partial</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'role_users'</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_role_users-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_role_users-method -->
+
+    
+      <div id="method-i-initial_attachments" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">initial_attachments</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignController.html#method-i-initial_attachments">#initial_attachments</a></p>
+
+<p>Description: Provides the data for the <a
+href="DesignController.html#method-i-initial_attachments">#initial_attachments</a>
+<a href="DesignController.html#method-i-view">#view</a>.</p>
+
+<p>Parameters from params design_id - identifies the design</p>
+          
+
+          
+          <div class="method-source-code" id="initial_attachments-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 257</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initial_attachments</span>
+
+  <span class="ruby-comment"># TODO: See review_attachments() in the design review controller.</span>
+  <span class="ruby-ivar">@design</span>        = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:design_id</span>])
+  <span class="ruby-ivar">@pre_art</span>       = <span class="ruby-constant">ReviewType</span>.<span class="ruby-identifier">get_pre_artwork</span>
+  <span class="ruby-ivar">@design_review</span> = <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">review_type_id</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@pre_art</span>.<span class="ruby-identifier">id</span> }
+  
+  <span class="ruby-ivar">@documents</span> = []
+  <span class="ruby-constant">DocumentType</span>.<span class="ruby-identifier">get_document_types</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">doc_type</span><span class="ruby-operator">|</span>
+
+    <span class="ruby-identifier">docs</span> = <span class="ruby-constant">DesignReviewDocument</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>,
+                                     <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;board_id='#{@design.board.id}' AND &quot;</span> <span class="ruby-operator">+</span>
+                                                    <span class="ruby-node">&quot;document_type_id='#{doc_type.id}'&quot;</span>)
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">docs</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">doc_type</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;Other&quot;</span>
+      <span class="ruby-identifier">display_doc</span> = <span class="ruby-identifier">docs</span>.<span class="ruby-identifier">pop</span>
+    
+      <span class="ruby-comment"># Check against zero because document has been popped off</span>
+      <span class="ruby-identifier">display_doc</span>[<span class="ruby-value">:multiple_docs</span>] = (<span class="ruby-identifier">docs</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>)
+      <span class="ruby-ivar">@documents</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">display_doc</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">docs</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">drd</span><span class="ruby-operator">|</span> <span class="ruby-identifier">drd</span>.<span class="ruby-identifier">document</span>.<span class="ruby-identifier">name</span> }
+      <span class="ruby-identifier">docs</span>.<span class="ruby-identifier">reverse!</span>
+      <span class="ruby-keyword">for</span> <span class="ruby-identifier">display_doc</span> <span class="ruby-keyword">in</span> <span class="ruby-identifier">docs</span>
+        <span class="ruby-identifier">display_doc</span>[<span class="ruby-value">:multiple_docs</span>] = <span class="ruby-keyword">false</span>
+        <span class="ruby-ivar">@documents</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">display_doc</span>)
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- initial_attachments-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- initial_attachments-method -->
+
+    
+      <div id="method-i-initial_cc_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">initial_cc_list</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignController.html#method-i-initial_cc_list">#initial_cc_list</a></p>
+
+<p>Description: Provides the data for the <a
+href="DesignController.html#method-i-initial_cc_list">#initial_cc_list</a>
+<a href="DesignController.html#method-i-view">#view</a>.</p>
+
+<p>Parameters from params design_id - identifies the design</p>
+          
+
+          
+          <div class="method-source-code" id="initial_cc_list-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 38</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">initial_cc_list</span>
+  <span class="ruby-ivar">@design</span> = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:design_id</span>])
+
+  <span class="ruby-identifier">results</span> = <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">get_mail_lists</span>() <span class="ruby-comment">#get from all reviews (no param)</span>
+  <span class="ruby-ivar">@reviewers</span>        = <span class="ruby-identifier">results</span>[<span class="ruby-value">:reviewers</span>]
+  <span class="ruby-ivar">@users_copied</span>     = <span class="ruby-identifier">results</span>[<span class="ruby-value">:copied</span>]
+  <span class="ruby-ivar">@users_not_copied</span> = <span class="ruby-identifier">results</span>[<span class="ruby-value">:not_copied</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- initial_cc_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- initial_cc_list-method -->
+
+    
+      <div id="method-i-list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">list</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignController.html#method-i-list">#list</a></p>
+
+<p>Description: Provides a <a
+href="DesignController.html#method-i-list">#list</a> active designs sorted
+by the part number</p>
+
+<p>Parameters from params None</p>
+          
+
+          
+          <div class="method-source-code" id="list-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 494</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">list</span>
+  
+  <span class="ruby-comment"># Get all of the designs that are not complete.</span>
+  <span class="ruby-identifier">active_designs</span> = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find_all_active</span>
+  
+  <span class="ruby-comment"># Detect if any designs do not have a part number </span>
+  <span class="ruby-identifier">no_pn_ids</span> = <span class="ruby-identifier">active_designs</span>.<span class="ruby-identifier">find_all</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">d</span>.<span class="ruby-identifier">pcb_number</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&quot;</span> }.<span class="ruby-identifier">collect</span> {<span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">d</span>.<span class="ruby-identifier">id</span>}.<span class="ruby-identifier">join</span>(<span class="ruby-string">&quot;,&quot;</span>)
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">no_pn_ids</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">active_designs</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">d</span>.<span class="ruby-identifier">pcb_number</span> <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&quot;</span> }
+   <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-node">&quot;Active designs exist that have no associated part number - #{no_pn_ids}&quot;</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-ivar">@active_designs</span> = <span class="ruby-identifier">active_designs</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">d</span>.<span class="ruby-identifier">directory_name</span> }  
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- list-method -->
+
+    
+      <div id="method-i-pcb_mechanical_comments" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">pcb_mechanical_comments</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignController.html#method-i-pcb_mechanical_comments">#pcb_mechanical_comments</a></p>
+
+<p>Description: Provides the data for the design <a
+href="DesignController.html#method-i-pcb_mechanical_comments">#pcb_mechanical_comments</a>.</p>
+
+<p>Parameters from params id - identifies the design</p>
+          
+
+          
+          <div class="method-source-code" id="pcb_mechanical_comments-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 322</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">pcb_mechanical_comments</span>
+
+  <span class="ruby-ivar">@design</span>    = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@comments</span>  = <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">comments_by_role</span>(<span class="ruby-string">&quot;PCB Mechanical&quot;</span>)
+
+  <span class="ruby-identifier">render</span>(<span class="ruby-value">:layout</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">false</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- pcb_mechanical_comments-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- pcb_mechanical_comments-method -->
+
+    
+      <div id="method-i-process_reviewer_modifications" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">process_reviewer_modifications</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="DesignController.html#method-i-process_reviewer_modifications">#process_reviewer_modifications</a></p>
+
+<p>Description: Processes any changes that the user made on the  <a
+href="DesignController.html#method-i-design_review_reviewers">#design_review_reviewers</a>
+screen.</p>
+
+<p>Parameters from params id        - identifies the design role_id_# - the
+role ids that are paired with user ids that</p>
+
+<pre>identify the role reviewer.</pre>
+          
+
+          
+          <div class="method-source-code" id="process_reviewer_modifications-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 443</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">process_reviewer_modifications</span>
+
+  <span class="ruby-identifier">design</span> = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  
+  <span class="ruby-identifier">updated_reviewers</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">review_in_review</span>  = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">params</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">key</span>, <span class="ruby-identifier">value</span><span class="ruby-operator">|</span>
+
+    <span class="ruby-comment"># Pass over any parameter keys not addressing the role id</span>
+    <span class="ruby-comment"># or the user if the reviewer's user id is set to 0.</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span>(<span class="ruby-identifier">key</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^role_id/</span>) <span class="ruby-operator">||</span> (<span class="ruby-identifier">value</span> <span class="ruby-operator">==</span> <span class="ruby-string">'0'</span>)
+    
+    <span class="ruby-identifier">new_reviewer</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">value</span>)
+    <span class="ruby-identifier">role</span>         = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">key</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">'_'</span>)[<span class="ruby-value">2</span>])
+
+    <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">design</span>.<span class="ruby-identifier">is_role_reviewer?</span>(<span class="ruby-identifier">role</span>, <span class="ruby-identifier">new_reviewer</span>)
+      <span class="ruby-identifier">review_in_review</span> = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">set_role_reviewer</span>(<span class="ruby-identifier">role</span>, <span class="ruby-identifier">new_reviewer</span>, <span class="ruby-ivar">@logged_in_user</span>)
+      <span class="ruby-identifier">updated_reviewers</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">end</span>
+    
+
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">flash</span>[<span class="ruby-string">&quot;notice&quot;</span>] = <span class="ruby-string">''</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">updated_reviewers</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">&quot;notice&quot;</span>]  = <span class="ruby-string">&quot;The reviewer list has been modified&quot;</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">&quot;notice&quot;</span>] <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;&lt;br /&gt;Mail has been sent to the #{review_in_review} reviewers impacted&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">review_in_review</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">inactive_reviewers?</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">&quot;notice&quot;</span>] <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;&lt;br /&gt;The names in red indicate that the user is inactive.&quot;</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;design_review_reviewers&quot;</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">id</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-identifier">session</span>[<span class="ruby-value">:return_to</span>])
+  <span class="ruby-keyword">end</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- process_reviewer_modifications-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- process_reviewer_modifications-method -->
+
+    
+      <div id="method-i-show" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">show</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignController.html#method-i-show">#show</a></p>
+
+<p>Description: Retrieves a design for display</p>
+
+<p>Parameters from params None</p>
+          
+
+          
+          <div class="method-source-code" id="show-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 524</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">show</span>
+  <span class="ruby-ivar">@design</span> = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- show-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- show-method -->
+
+    
+      <div id="method-i-view" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">view</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="DesignController.html#method-i-view">#view</a></p>
+
+<p>Description: Provides the data for the design <a
+href="DesignController.html#method-i-view">#view</a> <a
+href="DesignController.html#method-i-view">#view</a>.</p>
+
+<p>Parameters from params id - identifies the design</p>
+          
+
+          
+          <div class="method-source-code" id="view-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 302</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">view</span>
+
+  <span class="ruby-ivar">@design</span>         = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@design_reviews</span> = <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">sort_order</span>}
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- view-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- view-method -->
+
+    
+      <div id="method-i-xadd_to_initial_cc_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">xadd_to_initial_cc_list</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>add_to_initial_cc_list</p>
+
+<p>Description: This method responds when the users clicks on a name in the <a
+href="DesignController.html#method-i-list">#list</a> of names to be added
+to the CC <a href="DesignController.html#method-i-list">#list</a>.  The
+database is updated to add the user to the CC <a
+href="DesignController.html#method-i-list">#list</a> and the <a
+href="DesignController.html#method-i-view">#view</a> is refreshed to
+indicate that the  change was made.</p>
+
+<p>Parameters from params id - identifies the user to add to the CC <a
+href="DesignController.html#method-i-list">#list</a>.</p>
+          
+
+          
+          <div class="method-source-code" id="xadd_to_initial_cc_list-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 160</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">xadd_to_initial_cc_list</span>
+
+  <span class="ruby-identifier">details</span>    = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:details</span>]
+  <span class="ruby-ivar">@reviewers</span> = <span class="ruby-identifier">details</span>[<span class="ruby-value">:reviewers</span>]
+  <span class="ruby-identifier">user</span>       = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+
+  <span class="ruby-identifier">details</span>[<span class="ruby-value">:design</span>].<span class="ruby-identifier">board</span>.<span class="ruby-identifier">users</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">user</span>
+
+  <span class="ruby-comment"># Update the history</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-value">1</span> <span class="ruby-operator">==</span> <span class="ruby-value">2</span>
+  <span class="ruby-identifier">cc_list_history</span> = <span class="ruby-constant">CcListHistory</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">cc_list_history</span>.<span class="ruby-identifier">design_review_id</span> = <span class="ruby-identifier">details</span>[<span class="ruby-value">:design_review</span>].<span class="ruby-identifier">id</span>
+  <span class="ruby-identifier">cc_list_history</span>.<span class="ruby-identifier">user_id</span>          = <span class="ruby-identifier">details</span>[<span class="ruby-value">:user</span>].<span class="ruby-identifier">id</span>
+  <span class="ruby-identifier">cc_list_history</span>.<span class="ruby-identifier">addressee_id</span>     = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>
+  <span class="ruby-identifier">cc_list_history</span>.<span class="ruby-identifier">action</span>           = <span class="ruby-string">'Added'</span>
+  <span class="ruby-identifier">cc_list_history</span>.<span class="ruby-identifier">save</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Update the display lists</span>
+  <span class="ruby-identifier">details</span>[<span class="ruby-value">:not_copied</span>].<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span> }
+
+  <span class="ruby-identifier">copied</span> = <span class="ruby-identifier">details</span>[<span class="ruby-value">:copied</span>]
+  <span class="ruby-identifier">user</span>[<span class="ruby-value">:name</span>] = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-identifier">copied</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-identifier">details</span>[<span class="ruby-value">:copied</span>] = <span class="ruby-identifier">copied</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">last_name</span> }
+
+  <span class="ruby-ivar">@users_copied</span>     = <span class="ruby-identifier">details</span>[<span class="ruby-value">:copied</span>]
+  <span class="ruby-ivar">@users_not_copied</span> = <span class="ruby-identifier">details</span>[<span class="ruby-value">:not_copied</span>]
+
+  <span class="ruby-identifier">flash</span>[<span class="ruby-value">:details</span>] = <span class="ruby-identifier">details</span>
+  <span class="ruby-identifier">flash</span>[<span class="ruby-value">:ack</span>]     = <span class="ruby-node">&quot;Added #{user.name} to the CC list&quot;</span>
+
+  <span class="ruby-identifier">render</span>(<span class="ruby-value">:layout=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword">false</span>)
+   
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- xadd_to_initial_cc_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- xadd_to_initial_cc_list-method -->
+
+    
+      <div id="method-i-xinitial_cc_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">xinitial_cc_list</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="xinitial_cc_list-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 47</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">xinitial_cc_list</span>
+
+  <span class="ruby-ivar">@design</span> = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:design_id</span>])
+
+  <span class="ruby-comment"># Get the list of all of the reviewers from all of the reviews</span>
+  <span class="ruby-identifier">design_reviews</span> = <span class="ruby-constant">DesignReview</span>.<span class="ruby-identifier">find_all_by_design_id</span>(<span class="ruby-ivar">@design</span>.<span class="ruby-identifier">id</span>)
+
+  <span class="ruby-identifier">reviewers</span> = []
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">design_review</span> <span class="ruby-keyword">in</span> <span class="ruby-identifier">design_reviews</span>
+    <span class="ruby-identifier">review_results</span> = <span class="ruby-constant">DesignReviewResult</span>.<span class="ruby-identifier">find_all_by_design_review_id</span>(
+                       <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">id</span>)
+
+    <span class="ruby-keyword">for</span> <span class="ruby-identifier">review_result</span> <span class="ruby-keyword">in</span> <span class="ruby-identifier">review_results</span>
+
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">reviewers</span>.<span class="ruby-identifier">find</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>[<span class="ruby-value">:group</span>] <span class="ruby-operator">==</span> <span class="ruby-identifier">review_result</span>.<span class="ruby-identifier">role</span>.<span class="ruby-identifier">name</span> }
+      
+      <span class="ruby-identifier">reviewer</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">review_result</span>.<span class="ruby-identifier">reviewer_id</span>)
+      <span class="ruby-identifier">reviewer</span> = {
+        <span class="ruby-value">:name</span>       =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">name</span>,
+        <span class="ruby-value">:group</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">review_result</span>.<span class="ruby-identifier">role</span>.<span class="ruby-identifier">name</span>,
+        <span class="ruby-value">:group_name</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">review_result</span>.<span class="ruby-identifier">role</span>.<span class="ruby-identifier">display_name</span>,
+        <span class="ruby-value">:last_name</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">last_name</span>,
+        <span class="ruby-value">:id</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">reviewer</span>.<span class="ruby-identifier">id</span>
+      }
+
+      <span class="ruby-identifier">reviewers</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">reviewer</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-ivar">@reviewers</span> = <span class="ruby-identifier">reviewers</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span> <span class="ruby-identifier">r</span>[<span class="ruby-value">:last_name</span>] }
+    
+  <span class="ruby-comment"># Get all of the users who are on the CC list for the board</span>
+  <span class="ruby-identifier">users_on_cc_list</span> = []
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">user</span> <span class="ruby-keyword">in</span> <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">board</span>.<span class="ruby-identifier">users</span>
+    <span class="ruby-identifier">users_on_cc_list</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span>)
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Get all of the active users.</span>
+  <span class="ruby-identifier">users</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:conditions=</span><span class="ruby-operator">&gt;</span><span class="ruby-string">'active=1'</span>, <span class="ruby-value">:order=</span><span class="ruby-operator">&gt;</span><span class="ruby-string">'last_name'</span>)
+  <span class="ruby-ivar">@reviewers</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">rvr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">users</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">rvr</span>[<span class="ruby-value">:id</span>] } }
+
+  <span class="ruby-ivar">@users_copied</span>     = []
+  <span class="ruby-ivar">@users_not_copied</span> = []
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">u</span> <span class="ruby-keyword">in</span> <span class="ruby-identifier">users</span>
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-ivar">@design</span>.<span class="ruby-identifier">designer_id</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">users_on_cc_list</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">u</span>.<span class="ruby-identifier">id</span>)
+      <span class="ruby-ivar">@users_copied</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">u</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-ivar">@users_not_copied</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">u</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">flash</span>[<span class="ruby-value">:details</span>] = {<span class="ruby-value">:design</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@design</span>,
+                     <span class="ruby-value">:reviewers</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@reviewers</span>,
+                     <span class="ruby-value">:copied</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@users_copied</span>,
+                     <span class="ruby-value">:not_copied</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@users_not_copied</span>}
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- xinitial_cc_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- xinitial_cc_list-method -->
+
+    
+      <div id="method-i-xremove_from_initial_cc_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">xremove_from_initial_cc_list</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>remove_from_initial_cc_list</p>
+
+<p>Description: This method responds when the users clicks on a name in the <a
+href="DesignController.html#method-i-list">#list</a> of names to be removed
+from the CC <a href="DesignController.html#method-i-list">#list</a>.  The
+database is updated to  removea the user from the CC <a
+href="DesignController.html#method-i-list">#list</a> and the <a
+href="DesignController.html#method-i-view">#view</a> is refreshed to 
+indicate that the change was made.</p>
+
+<p>Parameters from params id - identifies the user to remove from the CC <a
+href="DesignController.html#method-i-list">#list</a>.</p>
+          
+
+          
+          <div class="method-source-code" id="xremove_from_initial_cc_list-source">
+            <pre><span class="ruby-comment"># File app/controllers/design_controller.rb, line 212</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">xremove_from_initial_cc_list</span>
+
+  <span class="ruby-identifier">details</span> = <span class="ruby-identifier">flash</span>[<span class="ruby-value">:details</span>]
+  <span class="ruby-ivar">@reviewers</span> = <span class="ruby-identifier">details</span>[<span class="ruby-value">:reviewers</span>]
+  <span class="ruby-identifier">user</span> = <span class="ruby-constant">User</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+
+  <span class="ruby-comment"># Update the database</span>
+  <span class="ruby-identifier">details</span>[<span class="ruby-value">:design</span>].<span class="ruby-identifier">board</span>.<span class="ruby-identifier">users</span>.<span class="ruby-identifier">delete</span>(<span class="ruby-identifier">user</span>)
+
+  <span class="ruby-comment"># Update the history</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-value">1</span> <span class="ruby-operator">==</span> <span class="ruby-value">2</span>
+    <span class="ruby-comment"># Deal with the cc_list_history</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment"># Update the display lists</span>
+  <span class="ruby-identifier">details</span>[<span class="ruby-value">:copied</span>].<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">user</span>.<span class="ruby-identifier">id</span> }
+
+  <span class="ruby-identifier">not_copied</span>  = <span class="ruby-identifier">details</span>[<span class="ruby-value">:not_copied</span>]
+  <span class="ruby-identifier">user</span>[<span class="ruby-value">:name</span>] = <span class="ruby-identifier">user</span>.<span class="ruby-identifier">name</span>
+  <span class="ruby-identifier">not_copied</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">user</span>)
+  <span class="ruby-identifier">details</span>[<span class="ruby-value">:not_copied</span>] = <span class="ruby-identifier">not_copied</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">u</span><span class="ruby-operator">|</span> <span class="ruby-identifier">u</span>.<span class="ruby-identifier">last_name</span> }
+
+  <span class="ruby-ivar">@users_copied</span>     = <span class="ruby-identifier">details</span>[<span class="ruby-value">:copied</span>]
+  <span class="ruby-ivar">@users_not_copied</span> = <span class="ruby-identifier">details</span>[<span class="ruby-value">:not_copied</span>]
+
+  <span class="ruby-identifier">flash</span>[<span class="ruby-value">:details</span>] = <span class="ruby-identifier">details</span>
+  <span class="ruby-identifier">flash</span>[<span class="ruby-value">:ack</span>]     = <span class="ruby-node">&quot;Removed #{user.name} from the CC list&quot;</span>
+
+  <span class="ruby-identifier">render</span>(<span class="ruby-value">:layout=</span><span class="ruby-operator">&gt;</span><span class="ruby-keyword">false</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- xremove_from_initial_cc_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- xremove_from_initial_cc_list-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

@@ -287,6 +287,60 @@ class DesignReview < ActiveRecord::Base
     @results_with_inactive_users
   end
 
+  # Provide a list with users on the cc_list and those eligible for the list
+  #
+  # :call-seq:
+  #   results_with_inactive_users() -> [design_review_result]
+  #
+  # An hash of containing 3 arrays of users
+  #   :reviewers  => {:name, :group, :last_name, :id }
+  #   :copied     => [users]
+  #   :not_copied => [users]
+  #
+  def mail_lists
+
+    design = self.design
+    # get the reviewer names, their functions and sort the list by the
+    # reviewer's last name.
+    reviewers_data = []
+    reviewers = []
+    self.design_review_results.each do |review_result|
+      reviewers_data.push({ :name      => review_result.reviewer.name,
+                       :group     => review_result.role.name,
+                       :last_name => review_result.reviewer.last_name,
+                       :id        => review_result.reviewer_id })
+      user = User.find(review_result.reviewer_id)
+      reviewers << user
+    end
+    reviewers.uniq
+
+    #create the cc and not on cc lists
+    users_on_cc_list = []
+    #  start with all design users
+    design.board.users.uniq.each { |user| users_on_cc_list << user unless reviewers.include?(user) }
+
+    # Get all of the users, remove the reviewer names, and add the full name.
+    users = User.find(:all,
+      :conditions => 'active=1')
+
+    users_copied     = []
+    users_not_copied = []
+    # see if each user is associated with the design
+    # if so, they are on the cc list
+    # otherwise, they are on the not_copied list
+    users.each do |user|
+      next if user.id == design.designer_id
+      if users_on_cc_list.include?(user)
+        users_copied.push(user)
+      else
+        users_not_copied.push(user)
+      end
+    end
+    { :reviewers  => reviewers_data.sort_by { |r| r[:last_name] },
+      :copied     => users_on_cc_list.sort_by { |u| u.last_name },
+      :not_copied => users_not_copied.sort_by { |u| u.last_name }
+    }
+  end
 
   # Provide a list of inactive reviewers assigned to active design reviews
   #
@@ -1238,8 +1292,92 @@ class DesignReview < ActiveRecord::Base
     DesignReview.http_object.get(self.surfboards_path).code == '200'
   end
 
+  ######################################################################
+  #
+  # reviewer_list
+  #
+  # Description:
+  # Given a design review this method will return a list of the
+  # reviewer emails
+  #
+  # Parameters:
+  #   design_review - the design review to get the reviewers for.
+  #
+  ######################################################################
+  #
+  def reviewer_list
+
+    reviewers = []
+    design_review_results =
+      DesignReviewResult.find_all_by_design_review_id(self.id)
+
+    design_review_results.each do |dr_result|
+      reviewer = User.find(dr_result.reviewer_id)
+      reviewers << reviewer.email if reviewer.active?
+    end
+    
+    return reviewers.uniq
+
+  end
 
   ######################################################################
+  #
+  # copy_to
+  #
+  # Description:
+  # Given a design review this method will return a list of the
+  # people who should be CC'ed on all mails
+  #
+  # Parameters:
+  #   design_review - the design review to get the CC list for.
+  #
+  ######################################################################
+  #
+  def copy_to
+
+    cc_list = [self.designer.email]
+    cc_list << self.design.designer.email if self.design.designer_id > 0
+
+    self.design.board.users.each do |cc|
+      cc_list << cc.email if cc.active?
+    end
+
+    cc_list += Role.add_role_members(['Manager', 'PCB Input Gate'])
+    return cc_list.uniq
+
+  end
+
+  ######################################################################
+  #
+  # reviewer_list
+  #
+  # Description:
+  # Given a design review this method will return a list of the
+  # reviewer emails
+  #
+  # Parameters:
+  #   design_review - the design review to get the reviewers for.
+  #
+  ######################################################################
+  #
+  def reviewer_list
+
+    reviewers = []
+    design_review_results =
+      DesignReviewResult.find_all_by_design_review_id(self.id)
+
+    design_review_results.each do |dr_result|
+      reviewer = User.find(dr_result.reviewer_id)
+      reviewers << reviewer.email if reviewer.active?
+    end
+
+    return reviewers.uniq
+
+  end
+
+
+
+######################################################################
 ######################################################################
 private
 ######################################################################

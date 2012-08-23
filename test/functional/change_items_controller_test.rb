@@ -10,7 +10,7 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) +'/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 
 class ChangeItemsControllerTest < ActionController::TestCase
   
@@ -105,7 +105,7 @@ class ChangeItemsControllerTest < ActionController::TestCase
         { :id             => @change_item_1_1_1.id, 
           :change_type_id => @change_type_1_1.id },
         {})
-    assert_redirected_to(:controller => 'user')
+    assert_redirected_to(:controller => 'user', :action => 'login')
     assert_equal('Please log in', flash[:notice])
   end
 

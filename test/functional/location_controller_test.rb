@@ -10,13 +10,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'location_controller'
 
 # Re-raise errors caught by the controller.
 class LocationController; def rescue_action(e) raise e end; end
 
-class LocationControllerTest < Test::Unit::TestCase
+class LocationControllerTest < ActionController::TestCase
   
   def setup
     @controller = LocationController.new

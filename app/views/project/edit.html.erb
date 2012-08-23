@@ -1,0 +1,33 @@
+<!-- View:    project                                           -->
+<!-- Purpose: Displays a project for modification.              -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Project" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'update') do %>
+
+  <%= hidden_field "project", "id" %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="project_name">Project:</label>
+        <%= text_field "project", "name", "size" => 30, "maxlength" => 30 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: 
+        <%= check_box "project", "active" %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Project" />
+  <input type="button" value="Return to Project List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<% end %>

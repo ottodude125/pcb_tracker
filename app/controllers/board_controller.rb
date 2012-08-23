@@ -173,25 +173,32 @@ before_filter(:verify_admin_role,
     
     release_rt = ReviewType.get_release
     final_rt   = ReviewType.get_final
+    
+    @design_list = [] #list of designs with designer info
     board_list.each do |board|
       board.designs.each do |design|
         if !(design.complete? || design.in_phase?(release_rt))
-          design[:designer_name] = design.designer.name
-          design[:designer_id]   = design.designer.id
+          designer_name = design.designer.name
+          designer_id   = design.designer.id
         else 
           final_review = design.design_reviews.detect { |dr| 
                            dr.review_type_id == final_rt.id }
-          design[:designer_name] = final_review.designer.name
-          design[:designer_id]   = final_review.designer.id
+          designer_name = final_review.designer.name
+          designer_id   = final_review.designer.id
         end
+        @design_list << { :design => design, 
+                        :designer_name => designer_name,
+                        :designer_id   => designer_id,
+                        :platform_name => board.platform.name,
+                        :project_name  => board.project.name }
       end
     end
 
     # If the designer was specified  then filter the list.
     if params[:user][:id] != ''
-      @designer = User.find(params[:user][:id]).name
-      board_list.each do |board|
-        board.designs.delete_if { |d| d[:designer_id] != params[:user][:id].to_i}
+      designer = User.find(params[:user][:id]).name
+      @design_list.each do | dl |
+        dl.delete_if { |d| d[:designer_id] != params[:user][:id].to_i}
       end
     end
 
@@ -202,16 +209,14 @@ before_filter(:verify_admin_role,
                                 rt.name == params[:review_type][:phase] }
       review_types.delete_if { |rt| rt.sort_order <= completed_review_type.sort_order }
 
-      board_list.each do |board|
-        board.designs.delete_if do |design| 
-          (!design.complete? && !review_types.detect { |rt| rt.id == design.phase_id })
+      @design_list.each do |dl|
+        dl.delete_if do |design| 
+          (!dl[:design].complete? && !review_types.detect { |rt| 
+            rt.id == dl[:design].phase_id })
         end
       end
     
     end
-
-    #@board_list = board_list.sort_by { |b| [b.directory_name, b.id] }
-    @board_list = board_list
     
   end
   

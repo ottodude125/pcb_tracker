@@ -10,13 +10,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'review_status_controller'
 
 # Re-raise errors caught by the controller.
 class ReviewStatusController; def rescue_action(e) raise e end; end
 
-class ReviewStatusControllerTest < Test::Unit::TestCase
+class ReviewStatusControllerTest < ActionController::TestCase
   
   def setup
     @controller = ReviewStatusController.new
@@ -27,8 +27,8 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
   fixtures(:review_statuses,
            :users)
 
-  self.use_transactional_fixtures = false
-  self.use_instantiated_fixtures  = true
+  #self.use_transactional_fixtures = false
+  #self.use_instantiated_fixtures  = true
   
   ######################################################################
   #
@@ -57,7 +57,7 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
     # Try listing from an Admin account
     # VERIFY: The project list data is retrieved
     get(:list, { :page => 1 }, cathy_admin_session)
-    assert_equal(ReviewStatus.count, @review_statuses.size)
+    assert_equal(ReviewStatus.count, assigns(:review_statuses).count )
   end
 
 
@@ -78,9 +78,9 @@ class ReviewStatusControllerTest < Test::Unit::TestCase
   ######################################################################
   #
   def test_edit
-
-    get(:edit, { :id => @review_complete.id }, cathy_admin_session)
-    assert_equal(@review_complete.name, assigns(:review_status).name)
+    review_complete = review_statuses(:review_complete)
+    get(:edit, { :id => review_complete.id }, cathy_admin_session)
+    assert_equal(review_complete.name, assigns(:review_status).name)
     
   end
 

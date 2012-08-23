@@ -1,0 +1,33 @@
+<!-- View:    platform                                          -->
+<!-- Purpose: Displays a platform for editing.                  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Platform" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'update') do %>
+
+  <%= hidden_field "platform", "id" %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="platform_name">Platform:</label>
+        <%= text_field "platform", "name", "size" => 30, "maxlength" => 30 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: 
+        <%= check_box "platform", "active" %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Platform" />
+  <input type="button" value="Return to Platform List" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<% end %>

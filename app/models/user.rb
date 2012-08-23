@@ -11,6 +11,7 @@
 ########################################################################
 
 require 'digest/sha1'
+require 'ldap_auth'
 
 # this model expects a certain database layout and its based on the name/login pattern. 
 class User < ActiveRecord::Base
@@ -43,6 +44,8 @@ class User < ActiveRecord::Base
   @@salt = 'GO_PIRATES!!!'
   cattr_accessor :salt
 
+  validates :email, :format => { :with => %r/<dtg_ror_devel@lists.teradyne.com>|^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i}
+  
   # Authenticate a user. 
   #
   # Example:
@@ -53,7 +56,26 @@ class User < ActiveRecord::Base
     #logger.info "    Login:            #{login}"
     #logger.info "    Password:         #{pass}"
     #logger.info "    Password(salted): #{sha1(pass)}"
-    find_by_login_and_password(login, sha1(pass))
+    
+    devel_env = Rails.env.development?
+    # devel_env = false  ## for DEBUG
+    
+    if user = find_by_ldap_account(login.upcase)
+      if devel_env == true #ignore password
+         return user
+      elsif ldap_authenticated?(login,pass)
+         return user
+      end
+    end
+    # flow into verify by old scheme if not authenticated yet
+    if user = find_by_login(login)
+      if devel_env == true #ignore password
+         return user
+      else     
+         return (find_by_login_and_password(login, sha1(pass)) ? user : nil )
+      end
+    end
+    return nil
   end
   
   
@@ -385,6 +407,25 @@ class User < ActiveRecord::Base
     self.last_name[0..0].downcase
   end
   
+    ######################################################################
+  #
+  # has_access?
+  #
+  # Description:
+  # returns the user e-mail address, modified if in development
+  # 
+  # Return value:
+  # The user email value if not in development mode
+  # otherwise a string like "first last <dtg@teradyne.com"
+  ######################################################################
+  #
+  def email
+    if Rails.env.development?
+      self.first_name + " " + self.last_name + " <dtg_ror_devel@lists.teradyne.com>"
+    else
+      read_attribute(:email)
+    end
+  end
   
   ######################################################################
   #
@@ -432,11 +473,15 @@ class User < ActiveRecord::Base
   # If its empty we assume that the user didn't want to change his
   # password and just reset it to the old value.
   def crypt_unless_empty
+    
+    #logger.info "********** CRYPT UNLESS EMPTY ************"
+    #logger.info "    Password:         #{password}"
+  
     if password.empty?   
       user = self.class.find(self.id)
       self.password = user.password
     else
-      write_attribute "password", self.class.sha1(password)
+      write_attribute "password", self.class.sha1(passwd)
     end        
   end  
   
@@ -447,3 +492,4 @@ class User < ActiveRecord::Base
   validates_length_of :password, :within => 5..40
   validates_presence_of :login, :password, :password_confirmation
 end
+

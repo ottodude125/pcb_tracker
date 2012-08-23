@@ -32,7 +32,9 @@ class EcoTasksController < ApplicationController
 
   # GET /eco_tasks/1
   def show
-    @eco_task = EcoTask.find(params[:id])
+    #@eco_task = EcoTask.find(params[:id])
+    redirect_to :action => :edit
+
   end
 
   # GET /eco_tasks/new
@@ -41,11 +43,20 @@ class EcoTasksController < ApplicationController
     @eco_document = EcoDocument.new
     @eco_comment  = EcoComment.new
     @eco_types    = EcoType.find_active
+    #variables for display of CC list with shared/_display_mail_lists
+    @reviewers        = [];
+    @users_copied     = [];
+    @users_not_copied = @eco_task.users_eligible_for_cc_list
   end
 
   # GET /eco_tasks/1/edit
   def edit
     @eco_task = EcoTask.find(params[:id])
+        #variables for display of CC list with shared/_display_mail_lists
+    @reviewers        = []
+    @users_copied     = @eco_task.users.uniq
+    @users_not_copied = @eco_task.users_eligible_for_cc_list
+
   end
 
   # POST /eco_tasks
@@ -53,7 +64,7 @@ class EcoTasksController < ApplicationController
 
     @eco_task     = EcoTask.new(params[:eco_task])
  
-    if params[:eco_document][:document] != ''
+    if params[:eco_document] != ''
       @eco_document = EcoDocument.new(params[:eco_document])
     end
     
@@ -124,7 +135,7 @@ class EcoTasksController < ApplicationController
       end
     end
        
-      TrackerMailer::deliver_eco_task_message(@eco_task, 'Task Created')
+      EcoTaskMailer::eco_task_message(@eco_task, 'Task Created').deliver
         
       redirect_to(eco_tasks_url)
     else
@@ -139,9 +150,9 @@ class EcoTasksController < ApplicationController
 
     @eco_task       = EcoTask.find(params[:id])
     eco_task_update = EcoTask.new(params[:eco_task])
-
-    flash['notice']=''
     
+    flash['notice'] = ''
+
     # Save any comments that were entered.
     comment = @eco_task.add_comment(EcoComment.new(params[:eco_comment]), @logged_in_user)
     task_updated = !comment.comment.blank?
@@ -218,10 +229,10 @@ class EcoTasksController < ApplicationController
       end
       
       if !eco_task_update.closed?
-        TrackerMailer::deliver_eco_task_message(@eco_task,
-                                                "[#{@eco_task.state}] - Task Updated")
+        EcoTaskMailer::eco_task_message(@eco_task,
+                              "[#{@eco_task.state}] - Task Updated").deliver
       else
-        TrackerMailer::deliver_eco_task_closed_notification(@eco_task)
+        EcoTaskMailer::eco_task_closed_notification(@eco_task).deliver
       end
       
     else 
@@ -250,7 +261,52 @@ class EcoTasksController < ApplicationController
     @users_eligible_for_cc_list = @eco_task.users_eligible_for_cc_list
   end
   
-  
+  ######################################################################
+  #
+  # change_cc_list
+  #
+  # Description:
+  # This method updates the CC list with the user that was selected
+  #
+  # Parameters from params
+  # [:user_id] - Identifies the user to be added to the CC list.
+  # [:eco_task_id]
+  # [;mode]    - add or remove
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  #
+  ######################################################################
+  #
+  def change_cc_list
+    eco_task = EcoTask.find(params[:eco_task_id])
+    mode             = params[:mode]
+    user             = User.find(params[:user_id])
+
+    # update the data base
+    if ( mode == "add_name")
+      eco_task.users << user
+      flash[:ack]     = "Added #{user[:name]} to the CC list"
+    end
+
+    if ( mode == "remove_name")
+      eco_task.users.delete(user)
+      flash[:ack]     = "Removed #{user[:name]} from the CC list"
+    end
+
+    @reviewers        = []
+    @users_copied     = eco_task.users.uniq.sort_by { |et| et.last_name}
+    @users_not_copied = eco_task.users_eligible_for_cc_list
+
+    render( :partial => "shared/display_mail_lists",
+      :locals  => { :eco_task_id  => eco_task.id,
+                    :url => url_for(:action => "change_cc_list",
+                                    :controller => "eco_tasks"  )
+      })
+
+  end
   ######################################################################
   #
   # add_to_cc_list
@@ -345,7 +401,7 @@ class EcoTasksController < ApplicationController
   #
   def get_attachment
     @document = EcoDocument.find(params[:id])
-    send_data(@document.data.to_a,
+    send_data(@document.data,
               :filename    => @document.name,
               :type        => @document.content_type,
               :disposition => "inline")

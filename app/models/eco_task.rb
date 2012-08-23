@@ -31,8 +31,9 @@ class EcoTask < ActiveRecord::Base
   # creation time and notify the appropriate people.
   before_save :check_for_new_specification
     
+  validate :do_validate
   
-  def validate
+  def do_validate
     if number.blank?
       errors.add(:number, 'The ECO Number field can not be blank')
     end
@@ -203,8 +204,7 @@ class EcoTask < ActiveRecord::Base
   # document is attached.
   #
   def specification_attached?
-    #self.eco_documents.detect { |d| d.specification? } != nil
-    self.eco_documents.count( :conditions => "specification != 0" ) > 0
+    self.eco_documents.detect { |d| d.specification? } != nil
   end
   
   
@@ -220,11 +220,6 @@ class EcoTask < ActiveRecord::Base
     return self.eco_documents.detect { |d| d.specification? }
   end
   
-  def spec_id_name
-    sql = "SELECT id, name FROM eco_documents 
-           WHERE eco_task_id = ? AND specification = 1",self.id
-    return EcoDocument.find_by_sql(sql)[0]
-  end
   
   # Remove the ECO Task specification from the database.
   #

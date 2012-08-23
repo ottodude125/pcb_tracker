@@ -1,0 +1,285 @@
+<!-- View:    design_review                                     -->
+<!-- Purpose: Displays a form for selection the criticality,    -->
+<!--          designer, peer, and design center.                -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<% @heading = 'Update ' + @design_review.display_header %>
+
+<%= form_tag(:action => 'process_admin_update',
+            :id => @design_review.id) do %>
+  
+  <table class="nav_table">
+    <tr>
+      <td align="left">
+        <% if session[:return_to] %>
+          <input class="form_return" type="button" value="Return - No Changes" 
+                 onClick="parent.location='<%= url_for(session[:return_to]) %>'" />
+        <% else %>
+          <input class="form_return" type="button" value="Return - No Changes" 
+                 onClick="parent.location='<%= url_for( :action => 'index', :controller => 'tracker' ) %>'" />
+        <% end %>
+      </td>
+      <td align="right">
+        <input class="form_submit" type="submit" value="Update" />
+      </td>
+    </tr>
+  </table>
+
+  <hr class='div' />
+  
+  <h2>Assignments</h2>
+
+  <table align="center" border="0">
+    <tr>
+      <td width="150">&nbsp;</td>
+      <th align="left" width="200">Current Value</th>
+      <th align="left">New Value</th>
+    </tr>
+    
+    
+    <tr>
+      <th align="left">Pre-Artwork:</th>
+      <td align="left">
+        <%= @design_review.design.input_gate.name %>
+      </td>
+      <% if !pre_artwork_complete(@design_review.design) %>
+        <td>
+          <select id="pcb_input_gate"
+                  name="pcb_input_gate[id]"
+                  class="name_select">
+          <%= options_from_collection_for_select(@pcb_input_gate_list,
+                                                 "id",
+                                                 "last_name_first",
+                                                 @design_review.design.pcb_input_id) %>
+          </select>
+        </td>
+      <% else %>
+        <td>Pre-Artwork Design Review is complete</td>
+      <% end %>
+    </tr>
+    
+    <tr>
+      <th align="left">Release:</th>
+      <td align="left">
+        <%= @release_poster.name %>
+      </td>
+        <td>
+          <% if !@design_review.design.complete? %>
+            <select id="release_poster" name="release_poster[id]" class="name_select">
+              <%= options_from_collection_for_select(@designers,
+                                                     "id",
+                                                     "last_name_first",
+                                                     @release_poster.id) %>
+              </select>
+            <% else %>
+              This design has been released
+            <% end %>
+        </td>
+    </tr>
+    
+    <tr>
+      <th align="left" width="140">Designer:</th>
+      <td align="left">
+        <%= @design_review.design.designer.name %>
+      </td>
+      <td>
+        <% if !@design_review.design.complete? %>
+          <div id="designers">
+            <select id="designer_sel" name="designer[id]" class="name_select">
+            <option value="">Please select</option>
+            <%= options_from_collection_for_select(@designer_list,
+                                                   "id",
+                                                   "last_name_first",
+                                                   @design_review.design.designer_id) %>
+            </select>
+          </div>
+        <% else %>
+          This design has been released
+        <% end %>
+      </td>
+    </tr>
+    <% if !(@design_review.design.audit.skip? || @design_review.design.audit.is_complete?) %>
+      <tr>
+        <th align="left">Peer Reviewer:</th>
+        <td align="left">
+          <%= @design_review.design.peer.name %>
+        </td>
+        <td>
+          <div id="peer_auditors">
+            <select id="peer_sel" name="peer[id]" class="name_select">
+            <option value="">Please select</option>
+            <%= options_from_collection_for_select(@peer_list,
+                                                   "id",
+                                                   "last_name_first",
+                                                   @design_review.design.peer_id) %>
+            </select>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+
+    <% if @design_review.design.audit.skip? %>
+      <tr>
+        <td align="center" colspan="3">
+          <b>Note:</b> The audit has been skipped.
+        </td>
+      </tr>
+    <% elsif @design_review.design.audit.is_complete? %>
+      <tr>
+        <td align="center" colspan="3">
+          <b>Note:</b> The audit is complete.
+        </td>
+      </tr>
+    <% end %>
+    
+  </table>
+  <hr class='div' />
+
+    <% if @review_statuses.size > 0 %>
+    <h2>Design Review Updates</h2>
+    <table align="center" border="0">
+    <tr>
+      <td width="150">&nbsp;</td>
+      <th align="left" width="200">Current Value</th>
+      <th align="left">New Value</th>
+    </tr>
+
+       <tr>
+        <th align="left">Status:</th>
+        <td align="left"><%= @design_review.review_status.name %></td>
+        <td>
+          <select id="review_status"
+                  name="review_status[id]"
+                  class="name_select">
+            <%= options_from_collection_for_select(@review_statuses,
+              "id",
+              "name",
+              @design_review.review_status_id) %>
+          </select>
+        </td>
+      </tr>
+    </table>
+    <hr class='div' />
+  <% end %>
+
+  <h2>Design Updates</h2>
+
+  <table align="center" border="0">
+    <tr>
+      <td width="150">&nbsp;</td>
+      <th align="left" width="200">Current Value</th>
+      <th align="left">New Value</th>
+    </tr>
+
+    <tr>
+      <th align="left">Design Center:</th>
+      <td align="left">
+        <% if @design_review.design.design_center_id %>
+          <%= @design_review.design.design_center.name %>
+        <% else %>
+          <b>Not Set</b>
+        <% end %>
+      </td>
+      <td>
+        <select id="design_center"
+                name="design_center[id]"
+                class="name_select">
+        <%= options_from_collection_for_select(@design_centers,
+                                               "id",
+                                               "name",
+                                               @design_review.design.design_center_id) %>
+        </select>
+      </td>
+    </tr>
+    
+    <tr>
+      <th align="left">Criticality:</th>
+      <td align="left"><%= @design_review.design.priority_name %></td>
+      <td>
+        <% if !@design_review.design.complete? %>
+          <select id="priority" name="priority[id]" class="name_select">
+            <%= options_from_collection_for_select(@priorities,
+                                                   "id",
+                                                   "name",
+                                                   @design_review.design.priority_id) %>
+          </select>
+        <% else %>
+          This design has been released
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <th align="left">ECN Number:</th>
+      <td align="left">
+        <% if @design_review.design.eco_number != '' %>
+          <%=@design_review.design.eco_number%>
+        <%else%>
+        <b><font color="red">Not Set</font></b>
+        <% end %>
+      </td>
+      <td>
+        <input type="text" name="eco_number" class="name_select" value="<%=@design_review.design.eco_number%>"/>
+        </td>
+    </tr>
+
+    <% if @design_review.design.audit.skip? %>
+      <tr>
+        <td align="center" colspan="3">
+          <b>Note:</b> The audit has been skipped.
+        </td>
+      </tr>
+    <% end %>
+    
+  </table>
+
+  
+  <hr class='div' />
+  <h2>Optional Comment</h2>
+  
+  <p class="note">
+    NOTE: Post a comment to indicate the reason for the change.
+  </p>
+  
+  <p align="center">
+    <%= text_area("post_comment", "comment", :cols => 70, :rows => 5) %>
+  </p>
+  
+  <hr class='div' />
+  
+
+<% end %>
+
+<%  content_for :header do %>
+  jQuery(function($) {
+    $("#designer_sel").change( function() {
+      id  = this.value;
+      url = "/pcbtr/design_review/display_peer_auditor_select/"+id;
+      $.post(url, { } ,function(data) {
+         $("#peer_sel").html(data);
+      });
+    });
+  });
+
+  jQuery(function($) {
+    $("#peer_sel").change( function() {
+      id = this.value;
+      url = "/pcbtr/design_review/display_designer_select/"+id;
+      $.post(url, { } ,function(data) {
+          $("#designer_sel").html(data);
+      });
+    });
+  });
+<% end %>
+
+<%# debug @review_statuses %>
+<%# debug @matching_roles %>
+<%# debug @design_review %>
+<%# debug @design_centers %>
+<%# debug request.parameters %>
+<%# debug request.session %>
+<%# debug request %>
+<%# debug session %>

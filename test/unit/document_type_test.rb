@@ -1,7 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class DocumentTypeTest < Test::Unit::TestCase
-  fixtures :document_types
+class DocumentTypesTest < ActiveSupport::TestCase
 
   def setup
     @doc_one         = document_types(:doc_one)

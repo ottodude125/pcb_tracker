@@ -16,9 +16,9 @@
 
 <hr class="div" align="center" width="80%" />
 
-<% form_for([@change_item, @change_detail]) do |@f| %>
+<% form_for([@change_item, @change_detail]) do |f| %>
 
-  <%= render( :partial => 'form_table') %>
+  <%= render( :partial => 'form_table', :locals => { :f => f } ) %>
 
   <hr class="div" align="center" width="80%" />
 
@@ -28,7 +28,7 @@
         <%= link_to 'Return to list', change_item_change_details_path(@change_item) %>
       </td>
       <td align="center">
-         <%= @f.submit "Update Change Detail" %>
+         <%= f.submit "Update Change Detail" %>
       </td>
       <td align="right" width="33%">
         <%= link_to 'Return to Admin Portal', { :controller => :admin } %>

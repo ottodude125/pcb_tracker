@@ -11,11 +11,10 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class ReviewTypeTest < Test::Unit::TestCase
+class ReviewTypesTest < ActiveSupport::TestCase
 
-  fixtures :review_types
 
   def setup
     @pre_artwork = review_types(:pre_artwork)

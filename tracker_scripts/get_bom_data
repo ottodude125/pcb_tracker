@@ -19,7 +19,7 @@ if [ X$rooted = X ]; then
     outfile=$PWD/$outfile
 fi
 
-cd /hwnet/dtg_devel/web/boarddev/apps/pcbtr_production_branch/pcb_tracker
+cd /hwnet/dtg_devel/web/boarddev/applications/pcb_tracker
 
-/usr/local/bin/ruby script/runner -e production 'Design.bom_upload_data' > \
+/usr/local/bin/ruby script/rails runner -e production 'Design.bom_upload_data' > \
     $outfile

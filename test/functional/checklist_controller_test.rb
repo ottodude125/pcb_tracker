@@ -11,13 +11,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'checklist_controller'
 
 # Re-raise errors caught by the controller.
 class ChecklistController; def rescue_action(e) raise e end; end
 
-class ChecklistControllerTest < Test::Unit::TestCase
+class ChecklistControllerTest < ActionController::TestCase
 
 
   def setup

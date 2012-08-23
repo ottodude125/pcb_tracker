@@ -3,7 +3,20 @@
 <!-- ********************************************************** -->
 <!-- $Id$ -->
 <!-- ********************************************************** -->
-
+<% content_for :header do %>
+    /* manage display of review details */
+    jQuery( function($) {
+      $('#details> button').click(function(){
+        if( $(this).text() == "Show Details") {
+           $(this).text("Hide Details")
+        }
+        else {
+           $(this).text("Show Details")
+        }
+        $(this).next("#results_table").toggle();
+      });
+    });
+<% end %>
 <% @title = "PCB Design Board/Data Tracker" %>
 <%# debug session %>
 

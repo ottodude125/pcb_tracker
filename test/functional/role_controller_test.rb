@@ -10,13 +10,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'role_controller'
 
 # Re-raise errors caught by the controller.
 class RoleController; def rescue_action(e) raise e end; end
 
-class RoleControllerTest < Test::Unit::TestCase
+class RoleControllerTest < ActionController::TestCase
   def setup
     @controller = RoleController.new
     @request    = ActionController::TestRequest.new

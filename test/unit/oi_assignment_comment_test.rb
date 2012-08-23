@@ -1,7 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class OiAssignmentCommentTest < Test::Unit::TestCase
-  fixtures :oi_assignment_comments
+class OiAssignmentCommentsTest < ActiveSupport::TestCase
 
   # Replace this with your real tests.
   def test_truth

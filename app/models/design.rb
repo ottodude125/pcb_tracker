@@ -85,9 +85,12 @@ class Design < ActiveRecord::Base
       brd_dsn_entry = BoardDesignEntry.find( :first,
         :conditions => "design_id='#{design.id}'")
 
-      eng_path = # '/hwnet/' + # /hwnet is in the database name
+      eng_path = "Not Set"
+      if brd_dsn_entry
+        eng_path = # '/hwnet/' +
           brd_dsn_entry.design_directory_name + '/' +
           design.directory_name + '/'
+      end
 
       PartNum.get_design_pcba_part_numbers(design.id).each do |pcba|
         puts(pcba.name_string                             + '|' +
@@ -111,6 +114,7 @@ class Design < ActiveRecord::Base
   #
   # Description:
   # This method provides a list of sorted, unique PCB part numbers.
+  # Used for test
   #
   # Parameters:
   # None
@@ -125,7 +129,10 @@ class Design < ActiveRecord::Base
     designs =Design.find(:all)
     designs.delete_if { |d| d.pcb_number == nil }
     #designs.collect { |design| design.part_number.pcb_unique_number }.uniq.sort
-    designs.collect { |design| PartNum.get_design_pcb_part_number(design.id).uniq_name }.uniq.sort
+    designs.collect { |design|
+      pnum = PartNum.get_design_pcb_part_number(design.id)
+      pnum.uniq_name if pnum #handle nil
+    }.compact.uniq.sort
   end
   
   
@@ -213,13 +220,6 @@ class Design < ActiveRecord::Base
   def surfboards_path
     "/surfboards/#{self.design_center.pcb_path}/#{self.directory_name}/"
   end
-
-
-  def data_location_correct?
-    self.design_center_id != 0 &&
-    Design.http_object.get(self.surfboards_path).code == '200'
-  end
-  
    
   # Provide the number of approved hours of adjustment that have been
   # applied to the schedule.
@@ -515,7 +515,74 @@ class Design < ActiveRecord::Base
     
   end
   
-  
+  # Provide lists of users for mailing list display
+  #
+  # :call-seq:
+  #   mail_lists([design_review_id) -> {return hash}
+  #
+  # An hash of containing 3 arrays of users
+  #   :reviewers  => {:name, :group, :last_name, :id }
+  #   :copied     => [users]
+  #   :not_copied => [users]
+  #
+  def get_mail_lists(design_review_id="")
+
+    if  design_review_id.blank?
+     # Get a list of all design reviews
+      design_reviews = DesignReview.find_all_by_design_id(self.id)
+    else
+      # Get the specified design review
+      design_reviews = [ DesignReview.find(design_review_id) ]
+    end
+
+    # get the reviewer names, their functions and sort the list by the
+    # reviewer's last name.
+    reviewers_data = []
+    reviewers = []
+
+    design_reviews.each do |dr|
+      dr.design_review_results.each do |review_result|
+         reviewers_data.push({ :name      => review_result.reviewer.name,
+                               :group     => review_result.role.name,
+                               :last_name => review_result.reviewer.last_name,
+                               :id        => review_result.reviewer_id
+                             })
+         user = User.find(review_result.reviewer_id)
+         reviewers << user
+      end
+    end
+    reviewers.uniq
+
+    #create the cc and not on cc lists
+    users_on_cc_list = []
+    #  start with all design users
+    self.board.users.uniq.each do |user|
+      users_on_cc_list << user unless reviewers.include?(user)
+    end
+
+    # Get all of the users, remove the reviewer names, and add the full name.
+    users = User.find(:all,
+      :conditions => 'active=1')
+
+    users_copied     = []
+    users_not_copied = []
+    # see if each user is associated with the design
+    # if so, they are on the cc list
+    # otherwise, they are on the not_copied list
+    users.each do |user|
+      next if user.id == self.designer_id
+      if users_on_cc_list.include?(user)
+        users_copied.push(user)
+      else
+        users_not_copied.push(user) unless reviewers.include?(user)
+      end
+    end
+    { :reviewers  => reviewers_data.uniq.sort_by   { |r| r[:last_name] },
+      :copied     => users_on_cc_list.sort_by { |u| u.last_name },
+      :not_copied => users_not_copied.sort_by { |u| u.last_name }
+    }
+  end
+
   ######################################################################
   #
   # have_assignments
@@ -782,11 +849,11 @@ class Design < ActiveRecord::Base
   ######################################################################
   #
   def name
-    logger.info("#################################")
-    logger.info("#################################")
-    logger.info("Design.name called")
-    logger.info("#################################")
-    logger.info("#################################")
+    #logger.info("#################################")
+    #logger.info("#################################")
+    #logger.info("Design.name called")
+    #logger.info("#################################")
+    #logger.info("#################################")
     self.pcb_display
   end
   
@@ -1267,7 +1334,7 @@ class Design < ActiveRecord::Base
           " " + pcba.name_string +
           " " + old_pcb_path +
           " " + new_pcb_path
-        system(cmd)
+        system(cmd) unless Rails.env == "test"
       }
     end
 
@@ -1328,11 +1395,11 @@ class Design < ActiveRecord::Base
       self.save
       self.reload
 
-      TrackerMailer::deliver_design_modification(
+      DesignMailer::design_modification(
         user,
         self,
         modification_comment(comment, changes), 
-        cc_list)
+        cc_list).deliver
 
       self.pcb_number +
       ' has been updated - the updates were recorded and mail was sent'
@@ -1541,16 +1608,16 @@ class Design < ActiveRecord::Base
         review_result.save
 
         dr.record_update(role.display_name + ' Reviewer', 
-                         old_reviewer.name, 
-                         new_reviewer.name, 
+                         old_reviewer.name,
+                         new_reviewer.name,
                          user)
 
         if dr.review_status.name == 'In Review'
-          TrackerMailer::deliver_reviewer_modification_notification(dr, 
-                                                                    role,
-                                                                    old_reviewer,
-                                                                    new_reviewer,
-                                                                    user)
+          DesignMailer::reviewer_modification_notification(dr, 
+            role,
+            old_reviewer,
+            new_reviewer,
+            user).deliver
         end
         in_review = dr.review_type.name
       end
@@ -1852,9 +1919,12 @@ class Design < ActiveRecord::Base
   end
 
   def pcb_display
-    PartNum.get_design_pcb_part_number(self.id).name_string +
-      ' ' +
-      PartNum.get_design_pcb_part_number(self.id).rev_string
+    part_num = PartNum.get_design_pcb_part_number(self.id)
+    if part_num
+      part_num.name_string + ' ' + part_num.rev_string
+    else
+      "(no part number)"
+    end
   end
 
 
@@ -1881,6 +1951,24 @@ class Design < ActiveRecord::Base
     pcbas
   end
 
+ ######################################################################
+  #
+  # subject_prefix
+  #
+  # Description:
+  # Provides a common prefix for subjects
+  #
+  # Parameters:
+  #   None
+  #
+  ######################################################################
+  #
+  def subject_prefix
+    self.board.platform.name + '/' +
+    self.board.project.name  + '/' +
+    self.board.description   + '(' +
+    self.directory_name      +  '): '
+  end
 
 ########################################################################
 ########################################################################

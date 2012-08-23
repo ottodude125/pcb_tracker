@@ -1,0 +1,130 @@
+<!-- View:    user                                              -->
+<!-- Purpose: Displays a form for modifying a user.             -->
+<!--                                                            -->
+<!-- $Id$ -->
+<!--                                                            -->
+
+<% @heading = "ADMIN: Edit User Information" %>
+
+<hr class="div" />
+<% @user['password'] = '' %>
+
+<form action='<%= url_for( :controller => 'user',
+                           :action     => 'update') %>'
+ method="post">
+
+  <%= hidden_field "user", "id" %>
+
+  <table align="center" width="95%" border="0" rules="cols">
+    <tr>
+      <td valign="top" width="40%">
+        <table border="0" cellspacing="5">
+          <tr>
+            <td><%= check_box "user", "active" %> Active</td>
+          </tr>
+          <tr>
+            <td><%= check_box "user", "employee" %> Teradyne Employee</td>
+          </tr>
+          <tr>
+            <td align="left">Login: <%= @user.login %> </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="user_first_name">First name:</label><br />
+              <%= text_field "user", "first_name", "size" => 20 %> 
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <label for="user_last_name">Last name:</label><br />
+              <%= text_field "user", "last_name", "size" => 30 %> 
+            </td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <label for="user_email">Email:</label><br />
+              <%= email_field "user", "email", "size" => 30 %> 
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td valign="top">
+        <% ranges = split_into_cols(@roles, 2) %>
+        <table width="100%" border="1" rules="rows">
+          <tr> <th colspan="4">Roles</th> </tr>
+          <tr> 
+            <td valign="top">
+              <table align="center"
+                      border="0">
+                <% for role in @roles[ranges[1][:start]..ranges[1][:stop]] %>
+                  <tr>
+                    <td align="left" valign="top">
+                      <% if @uroles[role['name']] %>
+                        <%= check_box "role", role.id, {'checked'=>'checked'} %> 
+                      <% else %>
+                        <%= check_box "role", role.id %> 
+                      <% end %>
+                    </td>
+                    <td align="left">
+                      <label for="role_name"><%= role.display_name %></label>
+                      <% if role.reviewer? %>
+                        Reviewer
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </table>
+            </td>
+            <td valign="top">
+              <table align="center"
+                      border="0">
+                <% for r in @roles[ranges[2][:start]..ranges[2][:stop]] %>
+                  <tr>
+                    <td align="left" valign="top">
+                      <% if @uroles[r['name']] %>
+                        <%= check_box "role", r.id, {'checked'=>'checked'} %> 
+                      <% else %>
+                        <%= check_box "role", r.id %> 
+                      <% end %>
+                    </td>
+                    <td align="left">
+                      <label for="role_name"><%= r.display_name %></label>
+                      <% if r.reviewer? %>
+                        Reviewer
+                      <% end %>
+                    </td>
+                  </tr>
+                <% end %>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+  </table>
+
+  <hr class="div" />
+
+  <input type="submit" value="Update User" />
+
+  <input type="button" value="Return to list of users" 
+         onClick="parent.location='<%= url_for( :action => 'list', 
+                                                :alpha  => @user.alpha_char )%>'" />
+
+</form>
+
+<br />
+<table border="1" rules="all">
+  <tr>
+    <td valign="top"><font size="-1"><b>Note:</b></font></td>
+    <td>
+      <ol>
+        <li>
+	  Leave email blank for default
+	  (i.e. Firstname.Lastname@teradyne.com)
+	</li>
+      </ol>
+    </td>
+  </tr>
+</table>

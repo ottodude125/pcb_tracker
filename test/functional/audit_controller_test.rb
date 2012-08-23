@@ -10,13 +10,13 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'audit_controller'
 
 # Re-raise errors caught by the controller.
 class AuditController; def rescue_action(e) raise e end; end
 
-class AuditControllerTest < Test::Unit::TestCase
+class AuditControllerTest < ActionController::TestCase
 
 
   def setup

@@ -135,7 +135,7 @@ class BoardDesignEntryController < ApplicationController
   #
   ######################################################################
   #
-  def destroy
+  def delete_entry
     board_design_entry = BoardDesignEntry.find(:first, :conditions => { :id => params[:id] })
     pcb_number = board_design_entry.pcb_number
     if board_design_entry
@@ -151,10 +151,9 @@ class BoardDesignEntryController < ApplicationController
 
       if board_design_entry.destroy
 
-        flash['notice'] = 'The entry has been deleted from the database'
-        TrackerMailer::deliver_originator_board_design_entry_deletion(
-          pcb_number,
-          @logged_in_user)
+        flash['notice'] = 'The entry for ' + pcb_number + ' has been deleted from the database'
+        BoardDesignEntryMailer::originator_board_design_entry_deletion(
+          pcb_number,@logged_in_user).deliver
 
       else
         flash['notice'] = 'The request to delete the entry failed - Contact DTG'
@@ -162,7 +161,7 @@ class BoardDesignEntryController < ApplicationController
     else
       flash['notice'] = 'The entry could not be found'
     end
-    redirect_to(:action => params[:return])
+    redirect_to( url_for( :action => params[:return] ))
 
   end
 
@@ -206,9 +205,8 @@ class BoardDesignEntryController < ApplicationController
     board_design_entry.originated
     board_design_entry.update_attribute('input_gate_comments', 
                                         params[:board_design_entry][:input_gate_comments])
-    TrackerMailer::deliver_board_design_entry_return_to_originator(
-      board_design_entry,
-      @logged_in_user)
+    BoardDesignEntryMailer::board_design_entry_return_to_originator(
+      board_design_entry, @logged_in_user).deliver
 
     redirect_to(:action => 'processor_list')
   
@@ -261,8 +259,8 @@ class BoardDesignEntryController < ApplicationController
   def change_part_numbers
 
     @board_design_entry   = BoardDesignEntry.find(params[:id])
-    if flash['rows']
-      @rows = flash['rows']
+    if ! params['pnums'].blank?
+      @rows = params['pnums']
     else
       @rows = PartNum.find(:all,
       :conditions => { :board_design_entry_id => @board_design_entry.id},
@@ -304,9 +302,9 @@ class BoardDesignEntryController < ApplicationController
     pcb  = pnums.detect { |pnum| pnum.use == 'pcb' }
     unless pcb.valid_pcb_part_number?
       flash['notice'] = "A valid PCB part number like '123-456-78' must be specified"
-      flash['rows'] = pnums
       redirect_to( :action => 'change_part_numbers',
-        :id => board_design_entry_id ) and return
+        :id => board_design_entry_id,
+        :pnums => pnums ) and return
     end
 
     #a valid PCB part number was specified
@@ -322,9 +320,9 @@ class BoardDesignEntryController < ApplicationController
       end
     end
     if fail == 1
-      flash['rows'] = pnums
       redirect_to( :action => 'change_part_numbers',
-        :id => board_design_entry_id ) and return
+        :id => board_design_entry_id,
+        :pnums => pnums ) and return
     end
 
     old_pcb_num = board_design_entry.pcb_number
@@ -340,7 +338,7 @@ class BoardDesignEntryController < ApplicationController
       unless pnum[:prefix] == ""
         pnum.board_design_entry_id = board_design_entry_id
         if ! pnum.save
-          flash['notify'] += "Couldn't create part number #{pnum.name_string}"
+          flash['notice'] += "Couldn't create part number #{pnum.name_string}"
           fail = 1
         end
       end
@@ -352,9 +350,9 @@ class BoardDesignEntryController < ApplicationController
 
 
     if fail == 1
-      flash['rows'] = pnums
       redirect_to( :action => 'change_part_numbers',
-        :id => board_design_entry_id ) and return
+        :id => board_design_entry_id,
+        :pnums => pnums ) and return
     else
       change = 0
       if old_pcb_num != new_pcb_num || old_pcba_nums != new_pcba_nums
@@ -416,8 +414,8 @@ class BoardDesignEntryController < ApplicationController
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @return             = params[:return]
     @originator         = @board_design_entry.user
-    @managers           = @board_design_entry.managers
-    @reviewers          = @board_design_entry.reviewers
+    @managers           = @board_design_entry.manager_roles
+    @reviewers          = @board_design_entry.reviewer_roles
 
   end
 
@@ -653,27 +651,7 @@ class BoardDesignEntryController < ApplicationController
     render(:layout => false)
   end
 
-
-  ######################################################################
-  #
-  # process_lead_free
-  #
-  # Description:
-  # This action updates the make from div when the user selects a lead 
-  # free radio button in an edit entry view.  
-  # 
-  # Parameters from params
-  # None
-  #
-  ######################################################################
-  #
-  def process_lead_free
-    @board_design_entry = BoardDesignEntry.find(params[:id])
-    @board_design_entry.lead_free_devices = params[:value] == "yes" ? 1 : 0
-    render(:layout => false)
-  end
-
-
+  
   ######################################################################
   #
   # entry_input_checklist
@@ -708,16 +686,19 @@ class BoardDesignEntryController < ApplicationController
   
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @user_action        = params[:user_action]
-        
-    @reviewers = []
+    @title = "Review Team"
+    @members  = []
     Role.get_open_reviewer_roles.each do |role|
       entry_user = @board_design_entry.board_design_entry_users.detect{ |eu| eu.role_id == role.id }
-      @reviewers << { :role          => role,
-                      :reviewer_list => role.active_users,
-                      :reviewer_id   => entry_user ? entry_user.user_id : 0,
-                      :required      => !entry_user || (entry_user && entry_user.required?) }
+      @members << {  :role         => role,
+                     :member_list  => role.active_users,
+                     :member_id    => entry_user ? entry_user.user_id : 0,
+                     :required     => !entry_user || (entry_user && entry_user.required?) }
     end
+    @back_action = 'set_management_team',
+    @next_action = 'view_attachments'
 
+    render(:action => "set_team")
   end
   
   
@@ -738,15 +719,20 @@ class BoardDesignEntryController < ApplicationController
   
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @user_action        = params[:user_action]
-
-    @managers = []
+    @title = "Management Team"
+    @members = []
     Role.get_open_manager_reviewer_roles.each do |role|
       entry_user = @board_design_entry.board_design_entry_users.detect{ |eu| eu.role_id == role.id }
-      @managers << { :role         => role,
-                     :manager_list => role.active_users,
-                     :manager_id   => entry_user ? entry_user.user_id : 0,
-                     :required      => !entry_user || (entry_user && entry_user.required?) }
+      @members << { :role         => role,
+                     :member_list => role.active_users,
+                     :member_id   => entry_user ? entry_user.user_id : 0,
+                     :required    => !entry_user || (entry_user && entry_user.required?) }
     end
+
+    @back_action = 'design_constraints'
+    @next_action = 'set_review_team'
+
+    render(:action => "set_team")
 
   end
   
@@ -758,114 +744,44 @@ class BoardDesignEntryController < ApplicationController
   # Description:
   # This action is called in response to a user update to a team member 
   # role in the select menu of member names.  The member name is updated 
-  # in the database and the row in the view is refreshed.  It is used 
-  # for both managers and reviewers.  
+  # in the database.  It is used for both managers and reviewers.  
   # 
   # Parameters from params
-  # bde_id            - the board_design_entry id
-  # id                - the member's user id
-  # required_checkbox - a boolean used to determine if the 'required' 
-  #                     checkbox should be displayed in the view.
+  # bde_id     - the board_design_entry id
+  # user_id    - the member's user id
+  # role_id    - the role id
+  # req        - a boolean set to 0 if the 'not-required' checkbox was checked
   #
   ######################################################################
   #
   def set_team_member
   
-    @board_design_entry = BoardDesignEntry.find(params[:bde_id])
-    @role               = Role.find(params[:role_id])
-    @member_id          = params[:id].to_i
-    @member_list        = @role.active_users
-    @required_checkbox  = params[:required_checkbox]
-    
-    @entry_user = @board_design_entry.board_design_entry_users.detect { |eu| eu.role_id == @role.id }
+    board_design_entry = BoardDesignEntry.find(params[:bde_id])
+    role               = Role.find(params[:role_id])
+    member_id          = params[:user_id].to_i
+    required           = params[:req].to_i
+    entry_user = board_design_entry.board_design_entry_users.detect {
+      |eu| eu.role_id == role.id }
 
-    if @entry_user
-      @entry_user.user_id = @member_id
-      @entry_user.save
+    if entry_user
+      # change assignment
+      entry_user.user_id = member_id
+      entry_user.required = required
+      entry_user.save
     else
-      @entry_user = BoardDesignEntryUser.new
-      @entry_user.role_id               = @role.id
-      @entry_user.user_id               = @member_id
-      @entry_user.board_design_entry_id = @board_design_entry.id
-      @entry_user.save
+      # create assignment
+      entry_user = BoardDesignEntryUser.new
+      entry_user.role_id               = role.id
+      entry_user.user_id               = member_id
+      entry_user.required              = required
+      entry_user.board_design_entry_id = board_design_entry.id
+      entry_user.save
     end
   
-    render(:layout => false)
+    render(:nothing => true)
   
   end
   
-  
-  ######################################################################
-  #
-  # set_role_required
-  #
-  # Description:
-  # This action is called in response to a user checking the 
-  # 'not required' checkbox for a reviewer role.  If the checkbox is 
-  # checked the selection menu of reviewer names is removed and the name
-  # column is filled with 'Not Required'.  If the checkbox is unchecked,
-  # the selection menu of member names is displayed and the name of the 
-  # current member is displayed in the name column.  
-  # 
-  # Parameters from params
-  # bde_id            - the board_design_entry id
-  # role_id           - the role id
-  # required_checkbox - a boolean used to determine if the 'required' 
-  #                     checkbox should be displayed in the view.
-  #
-  ######################################################################
-  #
-  def set_role_required
-
-    @board_design_entry = BoardDesignEntry.find(params[:bde_id])
-    @role               = Role.find(params[:role_id])
-    @required_checkbox  = params[:required_checkbox]
-  
-    @entry_user = @board_design_entry.board_design_entry_users.detect { |eu| eu.role_id == @role.id }
-
-    if @entry_user
-      @entry_user.required = params[:required] == 'not_required' ? 0 : 1
-      @entry_user.save
-    else
-      @entry_user = BoardDesignEntryUser.new
-      @entry_user.role_id               = @role.id
-      @entry_user.required              = params[:required] == 'required' ? 1 : 0
-      @entry_user.board_design_entry_id = @board_design_entry.id
-      @entry_user.save
-    end
-
-    render(:layout => false)
-    
-  end
-  
-  
-  ######################################################################
-  #
-  # toggle_processor_checks
-  #
-  # Description:
-  # This action is called in response to a processor updating the 
-  # 'checked' checkbox in the entry view.  The database is updated and 
-  # the up to date checkbox is redisplayed.  
-  # 
-  # Parameters from params
-  # id    - the board_design_entry id
-  # field - identifies the field that has benn checked
-  #
-  ######################################################################
-  #
-  def toggle_processor_checks
-
-    @board_design_entry = BoardDesignEntry.find(params[:id])
-    @field              = params[:field]
-    
-    @board_design_entry.update_attribute(
-      @field, 
-      (@board_design_entry[@field] == 0 ? 1 : 0))
-
-    render(:layout => false)
-    
-  end
   
   
   ######################################################################
@@ -1034,7 +950,7 @@ class BoardDesignEntryController < ApplicationController
     board_design_entry = BoardDesignEntry.find(params[:id])
     board_design_entry.submitted
     
-    TrackerMailer::deliver_board_design_entry_submission(board_design_entry)
+    BoardDesignEntryMailer::board_design_entry_submission(board_design_entry).deliver
     
     redirect_to(:action => 'originator_list')
   
@@ -1062,37 +978,10 @@ class BoardDesignEntryController < ApplicationController
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @field              = params[:field]
     
-    @board_design_entry.update_attribute(@field, params[:value] == "Yes" ? 1 : 0)
+    @board_design_entry.update_attribute(@field, params[:value] )
     @board_design_entry.reload
-
-    @new_value     = @board_design_entry.send(@field+'?') ? 'No'  : 'Yes'
-    @current_value = @board_design_entry.send(@field+'?') ? 'Yes' : 'No'
-     
-    case @field
-    
-    when 'differential_pairs'
-      @label         = 'Differential Pairs:'
-      @checkbox_var  = :diff_pair
-      @div_id        = :diff_pairs
-    when 'controlled_impedance'
-      @label         = 'Controlled Impedance:'
-      @checkbox_var  = :controlled_imp
-      @div_id        = :controlled_impedance
-    when 'scheduled_nets'
-      @label         = 'Scheduled Nets:'
-      @checkbox_var  = :sched_nets
-      @div_id        = :scheduled_nets
-    when 'propagation_delay'
-      @label         = 'Propagation Delay:'
-      @checkbox_var  = :prop_delay
-      @div_id        = :prop_delay
-    when 'matched_propagation_delay'
-      @label         = 'Matched Propagation Delay:'
-      @checkbox_var  = :matched_prop_delay
-      @div_id        = :matched_prop_delay
-    end
-
-    render(:layout => false)
+   
+    render(:nothing => true)
   
   end
   
@@ -1190,7 +1079,7 @@ class BoardDesignEntryController < ApplicationController
   
    document = Document.find(params[:id])
    
-   send_data(document.data.to_a,
+   send_data(document.data,
              :filename    => document.name,
              :type        => document.content_type,
              :disposition => "inline")

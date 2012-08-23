@@ -1,0 +1,92 @@
+########################################################################
+#
+# Copyright 2005, by Teradyne, Inc., Boston MA
+#
+# File: design_controller_test.rb
+#
+# This file contains the functional tests for the part_nums controller
+#
+# $Id$
+#
+########################################################################
+#
+require File.dirname(__FILE__) + '/../test_helper'
+require 'part_nums_controller'
+
+# Re-raise errors caught by the controller.
+class PartNums; def rescue_action(e) raise e end; end
+
+class PartNumsControllerTest < ActionController::TestCase
+
+@rows=["1"=>{"prefix"=>"123",
+ "number"=>"456",
+ "revision"=>"a",
+ "use"=>"pcb",
+ "dash"=>"99"},
+ "2"=>{"prefix"=>"",
+ "number"=>"",
+ "revision"=>"a",
+ "use"=>"pcba",
+ "dash"=>""},
+ "3"=>{"prefix"=>"",
+ "number"=>"",
+ "revision"=>"a",
+ "use"=>"pcba",
+ "dash"=>""},
+ "4"=>{"prefix"=>"",
+ "number"=>"",
+ "revision"=>"a",
+ "use"=>"pcba",
+ "dash"=>""},
+ "5"=>{"prefix"=>"",
+ "number"=>"",
+ "revision"=>"a",
+ "use"=>"pcba",
+ "dash"=>""}]
+
+  def test_should_get_index
+    get :index
+    assert_response :success
+    assert_not_nil assigns(:part_nums)
+  end
+
+  def test_should_get_new
+    get :new
+    assert_response :success
+  end
+
+  def test_should_create_part_num
+     assert_difference('PartNum.count') do
+        post :create, :rows => ["1"=>{"prefix"=>"123",
+        "number"=>"456",
+        "revision"=>"a",
+        "use"=>"pcb",
+        "dash"=>"99"} ] 
+      end
+
+    assert_redirected_to part_num_path(assigns(:part_num))
+  end
+
+  def test_should_show_part_num
+    get :show, :id => part_nums(:one).id
+    assert_response :success
+  end
+
+  def test_should_get_edit
+    get :edit, :id => part_nums(:one).id
+    assert_response :success
+  end
+
+  def test_should_update_part_num
+    put :update, :id => part_nums(:one).id, :part_num => { }
+    assert_redirected_to part_num_path(assigns(:part_num))
+  end
+
+  def test_should_destroy_part_num
+    assert_difference('PartNum.count', -1) do
+      delete :destroy, :id => part_nums(:one).id
+    end
+
+    assert_redirected_to part_nums_path
+  end
+end

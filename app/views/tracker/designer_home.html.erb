@@ -73,7 +73,8 @@
                   </tr>
                 <% end %>
                 
-                <% @designs.each do |design| %>
+                <% @designs.each do |dsn| 
+                   design = dsn[:design] %>
                   <tr>
                     <td align="center"
                         valign="top">
@@ -92,7 +93,7 @@
                     <td>&nbsp;</td>
                     <td>
                       <table width="95%" align="right" border="0">
-                        <% if design.design_reviews.size > 0 %>
+                        <% if dsn[:reviews].size > 0 %>
                           <tr>
                             <td bgcolor="#ffffff">&nbsp;</td>
                             <td><font size="-2"><b>Posted</b></font></td>
@@ -103,7 +104,8 @@
                           </tr>
                         <% end %>
 
-                        <% design[:design_reviews].each do |review| %>
+                        <% dsn[:reviews].each do |rvw| 
+                           review = rvw[:review]%>
                           <tr>
                             <td>
                               <%= link_to(review.review_name,
@@ -118,13 +120,13 @@
                               <%= review.review_status.name %>
                             </td>
                             <td class="th1">
-                              <%= review[:reviewers] %>
+                              <%= rvw[:reviewers] %>
                             </td>
                             <td class="th1">
-                              <%= review[:approvals] %>
+                              <%= rvw[:approvals] %>
                             </td>
                             <td class="th1">
-                              <% if review[:approvals] == review[:reviewers] &&
+                              <% if rvw[:approvals] == rvw[:reviewers] &&
                                  ! review.completed_on.blank? %>
                                 <%= review.completed_on.format_dd_mon_yy %>
                               <% else %>
@@ -174,14 +176,14 @@
                                 <tr>
                                   <td align="left">
                                     <%= link_to('POST ' +
-                                                design[:next_review].review_type.name +
+                                                dsn[:next_review].review_type.name +
                                                 ' Review',
                                                 { :controller     => 'design_review',
                                                   :action         => 'post_review',
                                                   :design_id      => design.id,
-                                                  :review_type_id => design[:next_review].review_type.id }) %>
+                                                  :review_type_id => dsn[:next_review].review_type.id }) %>
                                   </td>
-                                  <% if design[:next_review].review_type.name == "Placement" -%>
+                                  <% if dsn[:next_review].review_type.name == "Placement" -%>
                                   <td align="center">
                                     <%= link_to('POST ' +
                                                 'Combined Placement and Route' +
@@ -189,21 +191,21 @@
                                                 { :controller     => 'design_review',
                                                   :action         => 'post_review',
                                                   :design_id      => design.id,
-                                                  :review_type_id => design[:next_review].review_type.id,
+                                                  :review_type_id => dsn[:next_review].review_type.id,
                                                   :combine_placement_routing => 1 }
                                                   ) %>
                                   </td>
                                   <% end -%>
                                   <td align="right">
                                     <%= link_to('SKIP ' +
-                                                design[:next_review].review_type.name +
+                                                dsn[:next_review].review_type.name +
                                                 ' Review',
                                                 { :controller     => 'design_review',
                                                   :action         => 'skip_review',
                                                   :design_id      => design.id,
-                                                  :review_type_id => design[:next_review].review_type.id },
+                                                  :review_type_id => dsn[:next_review].review_type.id },
                                                 { :confirm => "This will cause the " +
-                                                              design[:next_review].review_type.name +
+                                                              dsn[:next_review].review_type.name +
                                                               " to be skipped and the next review in the " +
                                                               "review cycle will be available for posting.  " +
                                                               "Are you sure you want to do this?"}) %>
@@ -268,9 +270,10 @@
                               </tr>
 
                               <% if design.audit.is_peer_audit? %>
-                                
-                                <% design.audit.get_design_checks %>
-                                <% issue_count = design.audit.checklist.issue_count%>
+                               <% issue_count = 0
+                                  design.audit.design_checks.each do |dc| issue_count += 1 if dc.peer_auditor_issue? end %>
+                                <%# design.audit.get_design_checks %>
+                                <%# issue_count = 99 #design.audit.checklist.issue_count %>
                                 <tr>
                                 <% if issue_count == 0 %>
                                   <td colspan="4">
@@ -291,14 +294,6 @@
                               <td colspan="4" align="left">
                                 <table border="0" width="100%">
                                   <tr>
-                                    <td width="25%" align="left">
-                                      <input type="button" value='<%= "In-Process Dialogue" %>'
-                                             title="Initiate and discuss all in-process changes."
-                                             onClick="parent.location='<%= url_for(:controller => 'ipd_post',
-                                                                                   :action     => 'list',
-                                                                                   :design_id  => design.id) %>'"
-                                             class="small_font_wide_button" />
-                                    </td>
                                     <td width="25%" align="center">
                                     <% if @logged_in_user.is_designer? && @logged_in_user.employee? %>
 
@@ -419,7 +414,8 @@
                   </tr>
                 <% end %>
 
-                <% @audits.each do |audit| %>
+                <% @audits.each do |a|
+                	audit = a[:audit] %>
 
                   <tr>
                     <td align="center"
@@ -451,7 +447,7 @@
                         </tr>
                         <tr>
                           <td>
-                            <% audit_type = (audit.is_self_audit? && audit[:self]) ? 'Self Audit' : 'Peer Audit' %>
+                            <% audit_type = (audit.is_self_audit? && a[:self]) ? 'Self Audit' : 'Peer Audit' %>
                             <% if audit_locked_for_peer(audit) || audit.auditor_complete?%>
                               <%= link_to(audit_type,
                                           { :controller => 'audit',

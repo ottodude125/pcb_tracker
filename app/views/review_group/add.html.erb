@@ -1,0 +1,45 @@
+<!-- View:    review group                                      -->
+<!-- Purpose: Displays a form to add a new review group.        -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<% @heading = "Create a new review group" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'create') do %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="review_group_name">Review Group:</label>
+      </td>
+      <td>
+        <%= text_field "new_review_group", "name", "size" => 16, "maxlength" => 16 %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="review_group_cc_peers">CC Peers:</label>
+      </td>
+      <td>
+        <%= check_box "new_review_group", "cc_peers", { 'checked' => 'checked' } %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="review_group_active">Active:</label>
+      </td>
+      <td>
+        <%= check_box "new_review_group", "active", { 'checked' => 'checked' } %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Create a new review group" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<% end %>

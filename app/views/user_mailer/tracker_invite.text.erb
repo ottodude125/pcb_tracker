@@ -1,0 +1,34 @@
+Greetings,
+
+STD PCB Design uses the PCB Design Review Tracker to manage design reviews.
+
+You will need the following information to log in.
+
+	Username:	<%= @reviewer.login %>
+	Password:	<%= @reviewer.passwd %>
+	
+When you first login with these credentials, you will be asked to change your
+login information to your Teradyne Windows login so we can authenticate you 
+against your Windows account information. While we ask for your password, this
+is only to verify that the information you entered is correct. We do not store 
+your Windows password. Using your Windows login means you have one less password
+to remember. When your Windows password changes, you will need to use the new
+password to log into the tracker. 
+
+When a design is posted for review, you will receive an email from the tracker
+indicating that a review has been posted.  The mail will have a link for you
+to follow.
+
+When you log in, the tracker will display a list of the boards that you are
+responsible for reviewing.  When you click on the board number it will take
+you to the review page.  From there you can follow links to see the design
+data, attachments, and email list.  On the review page you can approve, waive,
+reject, and add comments to record your review results.
+
+Our intent was to create an intuitive tool.  Please provide feedback, positive
+or negative.  If you encounter any problems with the tracker, please file a
+Design Support Request using Design Support Request tool DSR Track
+(http://boarddev.teradyne.com/dsr_track/bug.php?op=add&project=243). 
+
+
+The tracker is located at <%= Pcbtr::PCBTR_BASE_URL %>tracker

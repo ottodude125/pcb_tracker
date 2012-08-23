@@ -10,13 +10,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'review_group_controller'
 
 # Re-raise errors caught by the controller.
 class ReviewGroupController; def rescue_action(e) raise e end; end
 
-class ReviewGroupControllerTest < Test::Unit::TestCase
+class ReviewGroupControllerTest < ActionController::TestCase
   
   def setup
     @controller = ReviewGroupController.new

@@ -11,11 +11,9 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class DivisionTest < Test::Unit::TestCase
-  fixtures :divisions
-
+class DivisionsTest < ActiveSupport::TestCase
 
   ######################################################################
   #

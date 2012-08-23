@@ -1,0 +1,4 @@
+HeaderName HEADER.html
+ReadmeName FOOTER.html
+IndexIgnore * .*
+IndexOptions SuppressRules SuppressLastModified SuppressSize SuppressDescription

@@ -10,13 +10,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'project_controller'
 
 # Re-raise errors caught by the controller.
 class ProjectController; def rescue_action(e) raise e end; end
 
-class ProjectControllerTest < Test::Unit::TestCase
+class ProjectControllerTest < ActionController::TestCase
 
 
   def setup

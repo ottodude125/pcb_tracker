@@ -6,7 +6,7 @@
 
 <% @heading =  "ECO CAD Tasks" %>
 
-<% form_tag('', { :id => 'eco_task_report_form' }) do %>
+<%= form_tag('', { :id => 'eco_task_report_form' }) do %>
 
   <table align="center"       border="0" 
          cellspacing="0"      cellpadding="0"
@@ -82,18 +82,31 @@
     <tr><td colspan="6"><hr class="div" /></td></tr>
   </table>
 
-  <%= observe_form( :eco_task_report_form,
+  <%#= observe_form( :eco_task_report_form,
                     :update    => 'eco_tasks',
                     :on => 'onClick',
                     :url       => { :action => 'reindex' },
                     :submit    => 'eco_task_report_form') %>
+                    
+<script type="text/javascript">
+	jQuery(function($) {
+		$('#eco_task_report_form').change( function() {
+			alert("gotcha")
+			url = '<%= url_for( :action => 'reindex') %>';			
+			$.post(url, $('#eco_task_report_form').serialize() ,
+			function(data) {
+				$('#eco_tasks').empty().append(data);
+			});
+		});
+	});
+</script>	                      
 
 <% end %>
 
 
 <div id="eco_tasks">
-  <%= render_partial('eco_tasks_list') %>
-</div>
+  <%= render(:partial => 'eco_tasks_list') %>
+</div
 
 
 <br />

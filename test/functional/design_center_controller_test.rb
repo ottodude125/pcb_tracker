@@ -10,13 +10,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'design_center_controller'
 
 # Re-raise errors caught by the controller.
 class DesignCenterController; def rescue_action(e) raise e end; end
 
-class DesignCenterControllerTest < Test::Unit::TestCase
+class DesignCenterControllerTest < ActionController::TestCase
   
   def setup
     @controller = DesignCenterController.new

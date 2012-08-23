@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: CheckController</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/controllers/check_controller.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link"><a href="ApplicationController.html">ApplicationController</a>
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-add_first">#add_first</a>
+    
+    <li><a href="#method-i-append">#append</a>
+    
+    <li><a href="#method-i-append_check">#append_check</a>
+    
+    <li><a href="#method-i-destroy">#destroy</a>
+    
+    <li><a href="#method-i-destroy_list">#destroy_list</a>
+    
+    <li><a href="#method-i-edit">#edit</a>
+    
+    <li><a href="#method-i-insert">#insert</a>
+    
+    <li><a href="#method-i-insert_check">#insert_check</a>
+    
+    <li><a href="#method-i-insert_first">#insert_first</a>
+    
+    <li><a href="#method-i-modify_checks">#modify_checks</a>
+    
+    <li><a href="#method-i-move_down">#move_down</a>
+    
+    <li><a href="#method-i-move_up">#move_up</a>
+    
+    <li><a href="#method-i-update">#update</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class CheckController</h1>
+
+  <div id="description" class="description">
+    
+<p>Copyright 2005, by Teradyne, Inc., Boston MA</p>
+
+<p>File: check_controller.rb</p>
+
+<p>This contains the logic to create, modify, and delete checks.</p>
+
+<p>$Id$</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-add_first" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_first</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="CheckController.html#method-i-add_first">#add_first</a></p>
+
+<p>Description: This method creates a new check, preloads data from the
+subsection, and displays the <a
+href="CheckController.html#method-i-add_first">#add_first</a> screen.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>‘id’
+<dd><ul><li>
+<p>Identifies the subsection.</p>
+</li></ul>
+</dd></dl>
+
+<p>Return value: None</p>
+
+<p>Additional information:</p>
+          
+
+          
+          <div class="method-source-code" id="add_first-source">
+            <pre><span class="ruby-comment"># File app/controllers/check_controller.rb, line 245</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_first</span>
+
+  <span class="ruby-ivar">@subsection</span> = <span class="ruby-constant">Subsection</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@section</span>    = <span class="ruby-ivar">@subsection</span>.<span class="ruby-identifier">section</span>
+
+  <span class="ruby-ivar">@new_check</span> = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:title</span>           =<span class="ruby-operator">&gt;</span> <span class="ruby-string">''</span>,
+                         <span class="ruby-value">:check</span>           =<span class="ruby-operator">&gt;</span> <span class="ruby-string">''</span>,
+                         <span class="ruby-value">:dot_rev_check</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@subsection</span>.<span class="ruby-identifier">dot_rev_check</span>,
+                         <span class="ruby-value">:date_code_check</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@subsection</span>.<span class="ruby-identifier">date_code_check</span>,
+                         <span class="ruby-value">:subsection_id</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@subsection</span>.<span class="ruby-identifier">id</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- add_first-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- add_first-method -->
+
+    
+      <div id="method-i-append" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">append</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="CheckController.html#method-i-append">#append</a></p>
+
+<p>Description: This method retrieves the check that the user has identified
+to  preceed the new check in the list of checks.  The new check is created
+and loaded with initial values and the <a
+href="CheckController.html#method-i-append">#append</a> screen is
+displayed.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>‘id’
+<dd><ul><li>
+<p>Used to identify the check existing check; the new check will be inserted
+into the list after this check.</p>
+</li></ul>
+</dd></dl>
+
+<p>Return value: None</p>
+
+<p>Additional information:</p>
+          
+
+          
+          <div class="method-source-code" id="append-source">
+            <pre><span class="ruby-comment"># File app/controllers/check_controller.rb, line 184</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">append</span>
+
+  <span class="ruby-ivar">@check</span>   = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@section</span> = <span class="ruby-ivar">@check</span>.<span class="ruby-identifier">section</span>
+
+  <span class="ruby-ivar">@new_check</span> = <span class="ruby-ivar">@check</span>.<span class="ruby-identifier">dup</span>
+  <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">title</span> = <span class="ruby-string">''</span>
+  <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">check</span> = <span class="ruby-string">''</span>
+  <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">url</span>   = <span class="ruby-string">''</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- append-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- append-method -->
+
+    
+      <div id="method-i-append_check" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">append_check</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="CheckController.html#method-i-append_check">#append_check</a></p>
+
+<p>Description: This method takes the new check from the browser, adjusts the
+position for all the checks the follow the new check, and inserts the check
+in  the database.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>‘check’][‘id’
+<dd><ul><li>
+<p>Identifies the existing check.  The new check will be inserted in front of
+this check.</p>
+</li></ul>
+</dd><dt>‘new_check’
+<dd><ul><li>
+<p>Contains the information to be stored with the new check.</p>
+</li></ul>
+</dd></dl>
+
+<p>Return value: None</p>
+
+<p>Additional information: None</p>
+          
+
+          
+          <div class="method-source-code" id="append_check-source">
+            <pre><span class="ruby-comment"># File app/controllers/check_controller.rb, line 141</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">append_check</span>
+
+  <span class="ruby-ivar">@new_check</span>      = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:new_check</span>])
+  <span class="ruby-ivar">@existing_check</span> = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:check</span>][<span class="ruby-value">:id</span>])
+  
+  <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-ivar">@existing_check</span>.<span class="ruby-identifier">subsection_id</span>, <span class="ruby-ivar">@existing_check</span>.<span class="ruby-identifier">position</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Appended check successfully.'</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'modify_checks'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">subsection_id</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">errors</span>[<span class="ruby-value">:base</span>]
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">errors</span>[<span class="ruby-value">:base</span>]
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-comment">#TODO - mail the contents of @new_ch.errors to DTG</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Append check failed - contact DTG'</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'append'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:check</span>][<span class="ruby-value">:id</span>])
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- append_check-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- append_check-method -->
+
+    
+      <div id="method-i-destroy" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">destroy</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="CheckController.html#method-i-destroy">#destroy</a></p>
+
+<p>Description: This method is called when the user clicks the “delete” icon
+on the modify checks screen.  The position for the checks that  following
+the deleted check are updated to fill in the hole created  by the deleted
+check.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>‘id’
+<dd><ul><li>
+<p>Identifies the check that moved up.</p>
+</li></ul>
+</dd></dl>
+
+<p>Return value: None</p>
+
+<p>Additional information:</p>
+          
+
+          
+          <div class="method-source-code" id="destroy-source">
+            <pre><span class="ruby-comment"># File app/controllers/check_controller.rb, line 390</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy</span>
+
+  <span class="ruby-identifier">check</span> = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">remove</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Check deletion successful.'</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Check deletion failed - Contact DTG'</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'modify_checks'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">subsection_id</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- destroy-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- destroy-method -->
+
+    
+      <div id="method-i-destroy_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">destroy_list</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <pre>############################################################</pre>
+
+<p><a href="CheckController.html#method-i-destroy_list">#destroy_list</a></p>
+
+<p>Description: This method is called when the user clicks the “delete” icon
+for an entire list of checks on the checklist <a
+href="CheckController.html#method-i-edit">#edit</a> screen.  All of the
+checks in the subsection are removed.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>‘id’
+<dd><ul><li>
+<p>Identifies the subsection whose checks are being removed.</p>
+</li></ul>
+</dd></dl>
+
+<p>Return value: None</p>
+
+<p>Additional information:</p>
+          
+
+          
+          <div class="method-source-code" id="destroy_list-source">
+            <pre><span class="ruby-comment"># File app/controllers/check_controller.rb, line 423</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">destroy_list</span>
+  
+  <span class="ruby-identifier">subsection</span> = <span class="ruby-constant">Subsection</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">locked?</span>
+
+    <span class="ruby-identifier">removed</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">checks</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">check</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">removed</span> = <span class="ruby-identifier">check</span>.<span class="ruby-identifier">remove</span>
+      <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">removed</span>
+    <span class="ruby-keyword">end</span>
+      
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">removed</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'All checks deleted successfully'</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Failure while deleting all checks - contact DTG'</span>
+    <span class="ruby-keyword">end</span>
+      
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'This is a released checklist.  No checks were deleted.'</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:controller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'checklist'</span>,
+              <span class="ruby-value">:action</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'edit'</span>,
+              <span class="ruby-value">:id</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">checklist</span>.<span class="ruby-identifier">id</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- destroy_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- destroy_list-method -->
+
+    
+      <div id="method-i-edit" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">edit</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="CheckController.html#method-i-edit">#edit</a></p>
+
+<p>Description: This method retrieves the check from the database for display.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>‘id’
+<dd><ul><li>
+<p>Used to identify the check to be retrieved.</p>
+</li></ul>
+</dd></dl>
+
+<p>Return value: None</p>
+
+<p>Additional information:</p>
+          
+
+          
+          <div class="method-source-code" id="edit-source">
+            <pre><span class="ruby-comment"># File app/controllers/check_controller.rb, line 35</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">edit</span>
+  <span class="ruby-ivar">@check</span> = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@section</span> = <span class="ruby-ivar">@check</span>.<span class="ruby-identifier">section</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- edit-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- edit-method -->
+
+    
+      <div id="method-i-insert" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">insert</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="CheckController.html#method-i-insert">#insert</a></p>
+
+<p>Description: This method retrieves the check that the user has identified
+to  follow the new check in the list of check.  The new check is created
+and loaded with initial values and the <a
+href="CheckController.html#method-i-insert">#insert</a> screen is
+displayed.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>‘id’
+<dd><ul><li>
+<p>Used to identify the check existing check; the new check will be inserted
+into the list before this check.</p>
+</li></ul>
+</dd></dl>
+
+<p>Return value: None</p>
+
+<p>Additional information:</p>
+          
+
+          
+          <div class="method-source-code" id="insert-source">
+            <pre><span class="ruby-comment"># File app/controllers/check_controller.rb, line 105</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">insert</span>
+
+  <span class="ruby-ivar">@check</span>   = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@section</span> = <span class="ruby-ivar">@check</span>.<span class="ruby-identifier">section</span>
+    
+  <span class="ruby-ivar">@new_check</span> = <span class="ruby-ivar">@check</span>.<span class="ruby-identifier">dup</span>
+  <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">title</span> = <span class="ruby-string">''</span>
+  <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">check</span> = <span class="ruby-string">''</span>
+  <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">url</span>   = <span class="ruby-string">''</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- insert-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- insert-method -->
+
+    
+      <div id="method-i-insert_check" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">insert_check</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="CheckController.html#method-i-insert_check">#insert_check</a></p>
+
+<p>Description: This method takes the new check from the browser, adjusts the
+position for all the checks the follow the new check, and inserts the check
+in  the database.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>‘check’][‘id’
+<dd><ul><li>
+<p>Identifies the existing check.  The new check will be inserted in front of
+this check.</p>
+</li></ul>
+</dd><dt>‘new_check’
+<dd><ul><li>
+<p>Contains the information to be stored with the new check.</p>
+</li></ul>
+</dd></dl>
+
+<p>Return value: None</p>
+
+<p>Additional information: None</p>
+          
+
+          
+          <div class="method-source-code" id="insert_check-source">
+            <pre><span class="ruby-comment"># File app/controllers/check_controller.rb, line 64</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">insert_check</span>
+
+  <span class="ruby-ivar">@new_check</span>      = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:new_check</span>])
+  <span class="ruby-ivar">@existing_check</span> = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:check</span>][<span class="ruby-value">:id</span>])
+
+  <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-ivar">@existing_check</span>.<span class="ruby-identifier">subsection_id</span>, <span class="ruby-ivar">@existing_check</span>.<span class="ruby-identifier">position</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Inserted check successfully.'</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'modify_checks'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">subsection_id</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">errors</span>[<span class="ruby-value">:base</span>]
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-ivar">@new_check</span>.<span class="ruby-identifier">errors</span>[<span class="ruby-value">:base</span>]
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Insert check failed - contact DTG'</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'insert'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:check</span>][<span class="ruby-value">:id</span>])
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- insert_check-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- insert_check-method -->
+
+    
+      <div id="method-i-insert_first" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">insert_first</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="CheckController.html#method-i-insert_first">#insert_first</a></p>
+
+<p>Description: This method creates a new check, preloads data from the
+subsection, and displays the <a
+href="CheckController.html#method-i-add_first">#add_first</a> screen.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>‘new_check’
+<dd><ul><li>
+<p>Contains the data the user filled in for the new check.</p>
+</li></ul>
+</dd><dt>‘section’
+<dd><ul><li>
+<p>Contains data used in the new check.</p>
+</li></ul>
+</dd><dt>‘subsection’
+<dd><ul><li>
+<p>Contains data used in the new check.</p>
+</li></ul>
+</dd></dl>
+
+<p>Return value: None</p>
+
+<p>Additional information: None</p>
+          
+
+          
+          <div class="method-source-code" id="insert_first-source">
+            <pre><span class="ruby-comment"># File app/controllers/check_controller.rb, line 280</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">insert_first</span>
+
+  <span class="ruby-identifier">new_check</span> = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:new_check</span>])
+  <span class="ruby-identifier">new_check</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:subsection</span>][<span class="ruby-value">:id</span>], <span class="ruby-value">1</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">new_check</span>.<span class="ruby-identifier">errors</span>.<span class="ruby-identifier">empty?</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Added first check successfully.'</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:controller</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'checklist'</span>, 
+                <span class="ruby-value">:action</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'edit'</span>, 
+                <span class="ruby-value">:id</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:section</span>][<span class="ruby-value">:checklist_id</span>])
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Add first check failed - contact DTG'</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'add_first'</span>, 
+                <span class="ruby-value">:id</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:subsection</span>][<span class="ruby-value">:id</span>])
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- insert_first-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- insert_first-method -->
+
+    
+      <div id="method-i-modify_checks" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">modify_checks</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="CheckController.html#method-i-modify_checks">#modify_checks</a></p>
+
+<p>Description: This method determines if the subsection contains any checks. 
+If  there is at least one check, the modify checks screen is displayed.
+Otherwise the add first check screen is displayed.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>‘id’
+<dd><ul><li>
+<p>Identifies the subsection.</p>
+</li></ul>
+</dd></dl>
+
+<p>Return value: None</p>
+
+<p>Additional information:</p>
+          
+
+          
+          <div class="method-source-code" id="modify_checks-source">
+            <pre><span class="ruby-comment"># File app/controllers/check_controller.rb, line 216</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">modify_checks</span>
+
+  <span class="ruby-ivar">@subsection</span> = <span class="ruby-constant">Subsection</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@checks</span>     = <span class="ruby-ivar">@subsection</span>.<span class="ruby-identifier">checks</span>
+  <span class="ruby-ivar">@checklist</span>  = <span class="ruby-ivar">@subsection</span>.<span class="ruby-identifier">section</span>.<span class="ruby-identifier">checklist</span>
+
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span><span class="ruby-string">'add_first'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@subsection</span>.<span class="ruby-identifier">id</span>) <span class="ruby-keyword">if</span> <span class="ruby-ivar">@checks</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- modify_checks-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- modify_checks-method -->
+
+    
+      <div id="method-i-move_down" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">move_down</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="CheckController.html#method-i-move_down">#move_down</a></p>
+
+<p>Description: This method is called when the user clicks the “move down”
+icon on the modify checks screen.  The check’s position is swapped with 
+the next check.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>‘id’
+<dd><ul><li>
+<p>Identifies the check that moved down.</p>
+</li></ul>
+</dd></dl>
+
+<p>Return value: None</p>
+
+<p>Additional information: None</p>
+          
+
+          
+          <div class="method-source-code" id="move_down-source">
+            <pre><span class="ruby-comment"># File app/controllers/check_controller.rb, line 318</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">move_down</span>
+
+  <span class="ruby-identifier">check</span> = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+
+  <span class="ruby-identifier">index</span> = <span class="ruby-identifier">check</span>.<span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">checks</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">check</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">checks</span>[<span class="ruby-identifier">index</span>].<span class="ruby-identifier">move_lower</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Checks were re-ordered'</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Check re-order failed'</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'modify_checks'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">subsection_id</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- move_down-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- move_down-method -->
+
+    
+      <div id="method-i-move_up" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">move_up</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="CheckController.html#method-i-move_up">#move_up</a></p>
+
+<p>Description: This method is called when the user clicks the “move up” icon
+on the modify checks screen.  The check’s position is swapped with  the
+preceeding check.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>‘id’
+<dd><ul><li>
+<p>Identifies the check that moved up.</p>
+</li></ul>
+</dd></dl>
+
+<p>Return value: None</p>
+
+<p>Additional information: None</p>
+          
+
+          
+          <div class="method-source-code" id="move_up-source">
+            <pre><span class="ruby-comment"># File app/controllers/check_controller.rb, line 354</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">move_up</span>
+
+  <span class="ruby-identifier">check</span> = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+
+  <span class="ruby-identifier">index</span> = <span class="ruby-identifier">check</span>.<span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">checks</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">check</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">subsection</span>.<span class="ruby-identifier">checks</span>[<span class="ruby-identifier">index</span>].<span class="ruby-identifier">move_higher</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Checks were re-ordered'</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Check re-order failed'</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'modify_checks'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">check</span>.<span class="ruby-identifier">subsection_id</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- move_up-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- move_up-method -->
+
+    
+      <div id="method-i-update" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="CheckController.html#method-i-update">#update</a></p>
+
+<p>Description: This method is called when the user submits from the <a
+href="CheckController.html#method-i-edit">#edit</a> check screen.  The
+database is updated with the changes made by the user.</p>
+
+<p>Parameters from params</p>
+<dl class="rdoc-list label-list"><dt>‘check’
+<dd><ul><li>
+<p>Contains the udpated check data.</p>
+</li></ul>
+</dd></dl>
+
+<p>Return value: None</p>
+
+<p>Additional information: None</p>
+          
+
+          
+          <div class="method-source-code" id="update-source">
+            <pre><span class="ruby-comment"># File app/controllers/check_controller.rb, line 470</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update</span>
+
+  <span class="ruby-ivar">@check</span> = <span class="ruby-constant">Check</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:check</span>][<span class="ruby-value">:id</span>])
+  <span class="ruby-identifier">params</span>[<span class="ruby-value">:check</span>][<span class="ruby-value">:url</span>] = <span class="ruby-identifier">params</span>[<span class="ruby-value">:check</span>][<span class="ruby-value">:url</span>].<span class="ruby-identifier">sub</span>(<span class="ruby-regexp">/http:\/\//</span>, <span class="ruby-string">''</span>)
+
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span> <span class="ruby-ivar">@check</span>.<span class="ruby-identifier">checklist</span>.<span class="ruby-identifier">released?</span>
+    <span class="ruby-ivar">@check</span>.<span class="ruby-identifier">checklist</span>.<span class="ruby-identifier">increment_checklist_counters</span>(<span class="ruby-ivar">@check</span>, <span class="ruby-value">-1</span>)
+
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@check</span>.<span class="ruby-identifier">update_attributes</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:check</span>])
+      <span class="ruby-ivar">@check</span>.<span class="ruby-identifier">checklist</span>.<span class="ruby-identifier">increment_checklist_counters</span>(<span class="ruby-ivar">@check</span>, <span class="ruby-value">1</span>)
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Check was successfully updated.'</span>
+      <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'modify_checks'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@check</span>.<span class="ruby-identifier">subsection_id</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Check was not updated.'</span>
+      <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'edit'</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'Check is locked.  The parent checklist is released.'</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'modify_checks'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@check</span>.<span class="ruby-identifier">subsection_id</span>)
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

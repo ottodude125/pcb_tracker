@@ -6,7 +6,7 @@
 
 <% @heading = "PCB Engineering Entry List"%>
 
-<% form_tag(:action => 'get_part_number') do %>
+<%= form_tag(:action => 'get_part_number') do %>
 
 <hr class="div" />
 
@@ -53,11 +53,11 @@
         <td align="center">
           <% if !entry.submitted? %>
             <%= link_to('Delete Entry', 
-                        {:action => 'destroy',
+                        {:action => 'delete_entry',
                          :id     => entry.id,
                          :return => params[:action]},
-                        :title  => "Used to delete the PDB Engineering Entry",
-                        :confirm => 'Do you really want to delete the ' +
+                         :title  => "Used to delete the PDB Engineering Entry",
+                         :confirm => 'Do you really want to delete the ' +
                                       entry.pcb_number + " design.\n Click " +
                                     "'OK' to remove the entry, otherwise click 'Cancel'.") %>
           <% else %>

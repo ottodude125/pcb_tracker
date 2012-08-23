@@ -1,32 +1,32 @@
-<table class="design_change_table">
+	<table class="design_change_table">
   
   <tr>
     <th class="teraheader" colspan="3">Enter Design Schedule Impact</th>  
   </tr>
   
   
-  <% if @design_change.errors[:change_class_id] %>
+  <% if !@design_change.errors[:change_class_id].empty? %>
     <tr bgcolor="yellow">
       <td class="design_change_table_header">&nbsp;</td>
       <td colspan="2" class="design_change_table_warning">
         <%=h @design_change.errors[:change_class_id] %>
       </td>
     </tr>
-  <% elsif @design_change.errors[:change_type_id] %>
+  <% elsif !@design_change.errors[:change_type_id].empty? %>
     <tr bgcolor="yellow">
       <td class="design_change_table_header">&nbsp;</td>
       <td colspan="2" class="design_change_table_warning">
         <%=h @design_change.errors[:change_type_id] %>
       </td>
     </tr>
-  <% elsif @design_change.errors[:change_item_id] %>
+  <% elsif !@design_change.errors[:change_item_id].empty? %>
     <tr bgcolor="yellow">
       <td class="design_change_table_header">&nbsp;</td>
       <td colspan="2" class="design_change_table_warning">
         <%=h @design_change.errors[:change_item_id] %>
       </td>
     </tr>
-  <% elsif @design_change.errors[:change_detail_id] %>
+  <% elsif !@design_change.errors[:change_detail_id].empty? %>
     <tr bgcolor="yellow">
       <td class="design_change_table_header">&nbsp;</td>
       <td colspan="2" class="design_change_table_warning">
@@ -43,12 +43,31 @@
     <td class="design_change_table_col_2">
       <%= collection_select(:design_change, :change_class_id, @change_classes, :id, :name,
                             { :include_blank => 'Please Select' }, "class"=> 'name_select') %>
-      <%= observe_field('design_change_change_class_id', 
-                        :update => 'design_change_form_details',
-                        :url    => {:action => 'display_design_change_form'},
-                        :with   => "'change_class_id=' + escape(value)") %>
+      
+      <%#= observe_field('design_change_change_class_id', 
+                        #:update => 'design_change_form_details',
+                        #:url    => {:action => 'display_design_change_form'},
+                        #:with   => "'change_class_id=' + escape(value)") %>
+	 
+		<script type="text/javascript">
+	 		jQuery(function($) {
+				$('#design_change_change_class_id').change( function() {
+								
+					change_class_id = this.value;
+					url = '<%= url_for( :action => 'display_design_change_form') %>';
+					//alert("class_id=" + change_class_id + " url=" + url);
+					
+					$.post(url, { change_class_id: change_class_id},
+					function(data) {
+						$('#design_change_form_details').empty().append(data);
+					});
+				});
+			});
+		</script>	                      
     </td>
 
+
+	
     <% if @design_change.change_class_set? %>
       <td rowspan="<%=  definition_rows(@design_change)%>" 
                         valign="top"  class="design_change_table_col_3" bgcolor="#cfcfcf">
@@ -82,10 +101,27 @@
                               :id, 
                               :name,
                               { :include_blank => 'Please Select' }, "class"=> 'name_select') %>
-        <%= observe_field('design_change_change_type_id', 
-                          :update => 'design_change_form_details',
-                          :url    => {:action => 'display_design_change_form'},
-                          :with   => "'change_type_id=' + escape(value)") %>
+
+        <%#= observe_field('design_change_change_type_id', 
+                          #:update => 'design_change_form_details',
+                          #:url    => {:action => 'display_design_change_form'},
+                          #:with   => "'change_type_id=' + escape(value)") %>
+
+		<script type="text/javascript">
+	 		jQuery(function($) {
+				$('#design_change_change_type_id').change( function() {
+								
+					change_type_id = this.value;
+					url = '<%= url_for( :action => 'display_design_change_form') %>';
+					//alert("change_type_id=" + change_type_id + " url=" + url);
+					
+					$.post(url, { change_type_id: change_type_id},
+					function(data) {
+						$('#design_change_form_details').empty().append(data);
+					});
+				});
+			});
+		</script>
       </td>
     </tr>
     
@@ -99,10 +135,27 @@
                                 :id, 
                                 :name,
                                 { :include_blank => 'Please Select' }, "class"=> 'name_select') %>
-          <%= observe_field('design_change_change_item_id', 
-                            :update => 'design_change_form_details',
-                            :url    => {:action => 'display_design_change_form'},
-                            :with   => "'change_item_id=' + escape(value)") %>
+
+          <%#= observe_field('design_change_change_item_id', 
+                            #:update => 'design_change_form_details',
+                            #:url    => {:action => 'display_design_change_form'},
+                            #:with   => "'change_item_id=' + escape(value)") %>
+                            
+			<script type="text/javascript">
+		 		jQuery(function($) {
+					$('#design_change_change_item_id').change( function() {
+									
+						change_item_id = this.value;
+						url = '<%= url_for( :action => 'display_design_change_form') %>';
+						//alert("change_item_id=" + change_item_id + " url=" + url);
+						
+						$.post(url, { change_item_id: change_item_id},
+						function(data) {
+							$('#design_change_form_details').empty().append(data);
+						});
+					});
+				});
+			</script>
         </td>
       </tr>
       
@@ -116,10 +169,27 @@
                                   :id, 
                                   :name,
                                   { :include_blank => 'Please Select' }, "class"=> 'name_select') %>
-            <%= observe_field('design_change_change_detail_id', 
-                              :update => 'design_change_form_details',
-                              :url    => {:action => 'display_design_change_form'},
-                              :with   => "'change_detail_id=' + escape(value)") %>
+
+            <%#= observe_field('design_change_change_detail_id', 
+                              #:update => 'design_change_form_details',
+                              #:url    => {:action => 'display_design_change_form'},
+                              #:with   => "'change_detail_id=' + escape(value)") %>
+
+			<script type="text/javascript">
+		 		jQuery(function($) {
+					$('#design_change_change_detail_id').change( function() {
+									
+						change_detail_id = this.value;
+						url = '<%= url_for( :action => 'display_design_change_form') %>';
+						//alert("change_detail_id=" + change_detail_id + " url=" + url);
+						
+						$.post(url, { change_detail_id: change_detail_id},
+						function(data) {
+							$('#design_change_form_details').empty().append(data);
+						});
+					});
+				});
+			</script>
           </td>
         </tr>
         

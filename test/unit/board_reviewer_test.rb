@@ -1,7 +1,6 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ ) 
 
-class BoardReviewersTest < Test::Unit::TestCase
-  fixtures :board_reviewers
+class BoardReviewersTest < ActiveSupport::TestCase
 
   def setup
     @board_reviewers = BoardReviewer.find(1)

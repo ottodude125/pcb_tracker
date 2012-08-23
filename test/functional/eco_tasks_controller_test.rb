@@ -11,7 +11,7 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 
 class EcoTasksControllerTest < ActionController::TestCase
 
@@ -83,13 +83,13 @@ class EcoTasksControllerTest < ActionController::TestCase
   
   def test_should_show_eco_task_not_signed_in
     get :show, { :id => eco_tasks(:task_one).id }, {}
-    assert_response :success
+    assert_response :redirect
   end
 
 
   def test_should_show_eco_task
     get :show, { :id => eco_tasks(:task_one).id }, @patrice_session
-    assert_response :success
+    assert_response :redirect
   end
 
 

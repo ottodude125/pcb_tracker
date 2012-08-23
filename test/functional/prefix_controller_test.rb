@@ -11,13 +11,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'prefix_controller'
 
 # Re-raise errors caught by the controller.
 class PrefixController; def rescue_action(e) raise e end; end
 
-class PrefixControllerTest < Test::Unit::TestCase
+class PrefixControllerTest < ActionController::TestCase
   
   def setup
     @controller = PrefixController.new

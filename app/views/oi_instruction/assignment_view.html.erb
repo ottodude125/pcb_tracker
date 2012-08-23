@@ -1,0 +1,76 @@
+<!-- View:    oi_instruction                                    -->
+<!-- Purpose: Displays an assignment                            -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@design.directory_name}: #{@category.name} Work Assignment" %>
+
+<hr class="div" width="820" />
+
+<%= render :partial => "header_table" %>
+
+<hr class="div" width="820" />
+
+<%= form_tag(:action => 'assignment_update') do %>
+
+<%= hidden_field "assignment", "id" %>
+
+<table width="800" align="center" border="0">
+
+  <tr valign="top">
+    <th class="teraheader" align="right" width="30%">Comments:</th>
+    <td>
+      <%= text_area("post_comment",
+                     "comment",
+                     :cols => 60,
+                     :rows => 5) %>
+    </td>
+  </tr>
+  
+  <tr valign="top">
+    <th class="teraheader" align="right">CC Hardware Engineer(s):</th>
+    <th align="left">
+      <% if @logged_in_user.is_an_lcr_designer? %>
+        <%= check_box("assignment", "cc_hw_engineer", { :disabled => true }) %>
+      <% else %>
+       <%= check_box("assignment", "cc_hw_engineer") %>
+      <% end %>
+    </th>
+  </tr>
+
+    <tr valign="top">
+    <th class="teraheader" align="right">Complete:</th>
+    <th align="left">
+      <%= check_box("assignment", "complete") %>
+    </th>
+  </tr>
+
+</table>
+
+<hr class="div" width="820" />
+
+<table width="800" align="center" border="0">
+  <tr>
+    <td align="left">
+      <input class="tera_submit" type="submit" value="Update" />
+    </td>
+    <td align="right">
+      <input type="button" value="Home"
+             onClick="parent.location='<%= url_for(:controller => 'tracker', 
+                                                   :action     => 'index') %>'" />
+    </td>
+  </tr>
+</table>
+
+<% end %>
+
+<hr class="div" width="820" />
+
+<h1>Comments</h1>
+
+  <table class="comment_table">
+    <%= render( :partial => "comment_list", :collection => @comments) %>
+  </table>
+
+<%# debug params %>

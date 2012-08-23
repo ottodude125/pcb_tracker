@@ -582,7 +582,11 @@ class BoardDesignEntry < ActiveRecord::Base
   end
 
   def pcb_rev
-    PartNum.get_bde_pcb_part_number(self.id).rev_string
+    if PartNum.get_bde_pcb_part_number(self.id)
+      PartNum.get_bde_pcb_part_number(self.id).rev_string
+    else
+      "??"
+    end
   end
 
   def pcb_display
@@ -940,6 +944,47 @@ class BoardDesignEntry < ActiveRecord::Base
     reviewers.delete_if { |bde_user| !bde_user.role.reviewer? || bde_user.role.manager? }
     return reviewers.sort_by { |m| m.role.display_name }
   
+  end
+
+  ######################################################################
+  # reviewer_roles
+  #
+  # Description
+  # This method returns an array of hashes for each reviewer role.
+  #
+  #######################################################################
+
+  def reviewer_roles
+
+    members = []
+    Role.get_open_reviewer_roles.each do |role|
+      entry_user = self.board_design_entry_users.detect{ |eu| eu.role_id == role.id }
+      members << {  :role         => role,
+        :member_list  => role.active_users,
+        :member_id    => entry_user ? entry_user.user_id : 0,
+        :required     => !entry_user || (entry_user && entry_user.required?) }
+    end
+    members
+  end
+  ######################################################################
+  # manager_roles
+  #
+  # Description
+  # This method returns an array of hashes for each manager role.
+  #
+  #######################################################################
+
+  def manager_roles
+
+    members = []
+    Role.get_open_manager_reviewer_roles.each do |role|
+      entry_user = self.board_design_entry_users.detect{ |eu| eu.role_id == role.id }
+      members << {  :role         => role,
+        :member_list  => role.active_users,
+        :member_id    => entry_user ? entry_user.user_id : 0,
+        :required     => !entry_user || (entry_user && entry_user.required?) }
+    end
+    members
   end
 
 

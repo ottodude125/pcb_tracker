@@ -18,4 +18,20 @@ class DesignReviewDocument < ActiveRecord::Base
   
   has_many :document_types
   
+  # Remove this instance of the design review document from the database and its
+  # related document record.
+  #
+  # :call-seq:
+  #   drd.remove -> nil
+  #
+  # The design review document is removed from the database, as well as its document
+  
+  def remove
+    
+    
+    Document.destroy(self.document_id)
+    self.destroy
+ 
+  end
+  
 end

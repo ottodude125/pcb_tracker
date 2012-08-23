@@ -1,0 +1,113 @@
+<!-- ********************************************************** -->
+<!-- View:    section_selection                                 -->
+<!-- Purpose: Displays a list of sections for the selected      -->
+<!--          outsource instruction category                    -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "#{@design.directory_name} - #{@category.name}" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'process_assignments') do %>
+
+<%= hidden_field("design",      "id") %>
+<%= hidden_field("category",    "id") %>
+
+<table width="100%" border="0" cellspacing="0">
+  <tr valign="top">
+    <td width="90">
+      <b><i>Instructions:</i></b>
+    </td>
+    <td>
+      <ol>
+        <li>
+          <i>
+            Click the checkbox next to step(s) that you want to assign to a 
+            single team member
+          </i>
+        </li>
+        <li>
+          <i>
+            Click the next button
+          </i>
+        </li>
+      </ol>
+    </td>
+  </tr>
+</table>
+
+
+<table width="100%" border="4">
+
+  <tr>
+    <td colspan="3" align="center" class="teraheader"><%= @category.name %> Steps</td>
+  </tr>
+  
+  <% @sections.each do |section| %>
+    <tr valign="top">
+      <td width="45">&nbsp;</td>
+      <td>
+        <table width="100%" cellspacing="0" border="3">
+          <tr bgcolor='gray'>
+            <td width="25">
+              <%= radio_button_tag :section_id, section.id, @section_id==section.id %>
+            </td>
+              <td class="th1">Select Task</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr valign="top">
+      <td class="th1">Task:</td>
+      <td>
+        <table>
+          <tr><td><%= section.name %></td></tr>
+          
+          <tr><td>
+            <% section_urls = section.urls %>
+            <% if section_urls.size > 0 %>
+              <table width="100%" border='0'>
+                <% section_urls.each do |url| %>
+                  <tr>
+                    <td width="10">&nbsp;</td>
+                    <td>
+                      <a href="<%= url[:url] %>" target="_blank">
+                        <%= url[:text] %>
+                      </a>
+                    </td>
+                  </tr>
+                <% end %>
+              </table>
+            <% end %>
+          </td></tr>
+        </table>
+      </td>
+    </tr>
+    
+    <tr><td colspan="2"><hr class="div" /></td></tr>
+    
+  <% end %>
+
+</table>
+
+<table width="100%">
+  <tr>
+    <td align="left">
+      <%# button_to('Return', session[:return_to], :class=>'form_return') %>
+      <input type="button" value="Home" class="form_return"
+             onClick="parent.location='<%= url_for( :controller => 'tracker' ) %>'" />
+    </td>
+    <td align="right">
+      <input type="submit" value="Next -->" class="form_submit" />
+    </td>
+  </tr>
+</table>
+
+<% end %>
+
+<%# debug @team_members %>
+<%# debug @team_member_id %>
+<%# debug params %>
+

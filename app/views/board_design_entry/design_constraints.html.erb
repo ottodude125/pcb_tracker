@@ -1,0 +1,64 @@
+<% @heading = 'PCB Engineering - ' +
+              @board_design_entry.pcb_number +
+              ' - Design Constraints' %>
+
+<%= render(:partial => 'nav_bar',
+           :locals  => { :back_action => 'edit_entry',
+                         :next_action => 'set_management_team' }) %>
+
+<%  content_for :header do %>
+
+jQuery(function($) {
+  $(":checkbox").change( function () {
+    field = this.name;
+    value = $(this).attr("checked")?1:0;  /* user id */
+    url   = $(this).parents("table").attr('url');
+
+    //alert("entered value = " + value + " field = " + field + " url=" + url) ;
+    $.post(url, { field: field, value: value} ); //no return data
+  });
+});
+
+<% end %>
+
+<hr class="div" />
+
+<table class="design_constraints" align="center" cellspacing="0"
+  url="<%= url_for(:action =>"update_yes_no")%>">
+  <tr>
+    <th class="descr_col">Differential Pairs:</th>
+    <td >
+      <%= check_box_tag("differential_pairs",  #name, id
+                        1,                     #value
+                        @board_design_entry.differential_pairs? #checked
+                        ) %>
+    </td>
+  </tr>
+  <tr>
+    <th class="descr_col">Controlled Impedance:</th>
+    <td >
+      <%= check_box_tag("controlled_impedance", 1, @board_design_entry.controlled_impedance? ) %>
+    </td>
+  </tr>
+  <tr>
+    <th class="descr_col">Scheduled Nets:</th>
+    <td>
+      <%= check_box_tag("scheduled_nets", 1, @board_design_entry.scheduled_nets? ) %>
+    </td>
+  </tr>
+  <tr>
+    <th class="descr_col">Propagation Delay:</th>
+    <td>
+      <%= check_box_tag("propagation_delay",1,@board_design_entry.propagation_delay? ) %>
+    </td>
+  </tr>
+  <tr>
+    <th class="descr_col">Matched Propagation Delay:</th>
+    <td>
+      <%= check_box_tag("matched_propagation_delay",1,@board_design_entry.matched_propagation_delay? ) %>
+    </td>
+  </tr>
+</table>
+
+<hr class="div" width="100%" />
+

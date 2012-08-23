@@ -1,0 +1,45 @@
+<!-- View:    document type                                     -->
+<!-- Purpose: Displays a form to add a new document type.       -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<% @heading = "Create a new document type" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'create') do %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="document_type_name">Document Type:</label>
+      </td>
+      <td>
+        <%= text_field "new_document_type", "name", "size" => 16, "maxlength" => 16 %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="document_type_required">Required:</label>
+      </td>
+      <td>
+        <%= check_box "new_document_type", "required" %>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label for="document_type_active">Active:</label>
+      </td>
+      <td>
+        <%= check_box "new_document_type", "active", { 'checked' => 'checked' } %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Create a new document type" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'list' ) %>'" />
+
+<% end %>

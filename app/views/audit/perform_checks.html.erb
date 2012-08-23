@@ -54,7 +54,7 @@
   </tr>
 </table>
 
-<% form_tag(:action => "update_design_checks") do %> 
+<%= form_tag(:action => "update_design_checks") do %> 
 
   <%= hidden_field "audit", "id" %>
   <%= hidden_field "subsection", "id" %>
@@ -99,43 +99,44 @@
     </tr>
   </table>
 
-  <% @subsection.checks.each do |check| %>
-
-    <% if flash[check.design_check.id] %>
+  <% @subsection.checks.each do |check| 
+     i = check.id 
+     design_check = @design_checks.detect do |dc| dc.check_id == check.id end
+  %>
+    <% if flash[design_check.id] %>
       <p>
         <font color="red">
-          <b><%= flash[check.design_check.id] %></b>
+          <b><%= flash[design_check.id] %></b>
         </font>
       </p>
     <% end %>
     
-    <% i = check.id %>
     <table border="5" cellpadding="5" align="center" width="100%" >
       <tr>
-        <% if flash[check.design_check.id] %>
+        <% if flash[design_check.id] %>
           <td width="100" bgcolor="red" rowspan="2">
         <% else %>
           <td width="100" rowspan="2">
 	    <% end %>
-
+<%#=check.id.to_s + ": " + design_check.id.to_s%>
         <% if check.yes_no? %>
           <% if @audit[:designer_completed_checks] < @total_checks[:designer] %>
             <table border="0" width="100%" bgcolor="white">
               <tr>
                 <td>
-                  <%= audit_radio_button(check, @audit, 'Yes', !@able_to_check) %>
+                  <%= audit_radio_button(check,design_check, @audit, 'Yes', !@able_to_check) %>
                 </td>
                 <td><label for='yes'>Yes</label></td>
               </tr>
               <tr>
                 <td>
-                  <%= audit_radio_button(check, @audit, 'No', !@able_to_check) %>
+                  <%= audit_radio_button(check,design_check, @audit, 'No', !@able_to_check) %>
                 </td>
                 <td><label for='no'>No</label></td>
               </tr>
               <tr>
                 <td>
-                  <%= audit_radio_button(check, @audit, 'N/A', !@able_to_check) %>
+                  <%= audit_radio_button(check,design_check, @audit, 'N/A', !@able_to_check) %>
                 </td>
                 <td><label for='not_applicable'>N/A</label></td>
               </tr>
@@ -147,19 +148,19 @@
           <table border="0" width="100%" bgcolor="white">
             <tr>
               <td>
-                <%= audit_radio_button(check, @audit, 'Verified', !@able_to_check) %>
+                <%= audit_radio_button(check,design_check, @audit, 'Verified', !@able_to_check) %>
               </td>
               <td><label for='verified'>Verified</label></td>
             </tr>
             <tr>
               <td>
-                <%= audit_radio_button(check, @audit, 'N/A', !@able_to_check) %>
+                <%= audit_radio_button(check,design_check, @audit, 'N/A', !@able_to_check) %>
               </td>
               <td><label for='not_applicable'>N/A</label></td>
             </tr>
             <tr>
               <td>
-                <%= audit_radio_button(check, @audit, 'Waived', !@able_to_check) %>
+                <%= audit_radio_button(check,design_check, @audit, 'Waived', !@able_to_check) %>
               </td>
               <td><label for='waived'>Waived</label></td>
             </tr>
@@ -167,7 +168,7 @@
             <% if @audit.is_peer_audit? && @audit.is_peer_auditor?(@logged_in_user) %>
               <tr>
                 <td>
-                  <%= audit_radio_button(check, @audit, 'Comment', !@able_to_check) %>
+                  <%= audit_radio_button(check,design_check, @audit, 'Comment', !@able_to_check) %>
                 </td>
                 <td><label for='comment'>Comment</label></td>
               </tr>
@@ -188,7 +189,7 @@
         </td>
       </tr>
       <tr>
-        <% if flash[check.design_check.id] %>
+        <% if flash[design_check.id] %>
           <td valign="top" bgcolor="red">
         <% else %>
           <td valign="top" bgcolor=#<%= @subsection.section.background_color %> >
@@ -201,11 +202,11 @@
 
     <div id="check_<%=i%>">
 
-    <input id="check_<%=i%>_design_id" name="check_<%=i%>[design_check_id]" type="hidden" value=<%=check.design_check.id%> />
+    <input id="check_<%=i%>_design_id" name="check_<%=i%>[design_check_id]" type="hidden" value=<%=design_check.id%> />
 
     <table border="0" width="100%">
       <tr>
-        <% if check.design_check.designer_result == 'None' %>          
+        <% if design_check.designer_result == 'None' %>          
           <td width="4" bgcolor="red">&nbsp;</td>
         <% else %>
           <td width="4" bgcolor="green">&nbsp;</td>
@@ -213,52 +214,52 @@
 
         <th align="left" width="100">Self Auditor:</th>
         <td align="left" width="200">
-          <% if check.design_check.designer_id? %>
-            <%= User.find(check.design_check.designer_id).name %>
+          <% if design_check.designer_id? %>
+            <%= User.find(design_check.designer_id).name %>
           <% else %>
             &nbsp;
           <% end %>
         </td>
         <th align="left">Result:</th>
-        <% if check.design_check.designer_result != 'None' %>
+        <% if design_check.designer_result != 'None' %>
           <td align="left">
-            <%= check.design_check.designer_result %>
+            <%= design_check.designer_result %>
             @
-            <%= check.design_check.designer_checked_on.format_dd_mm_yy_at_timestamp %>
+            <%= design_check.designer_checked_on.format_dd_mm_yy_at_timestamp %>
           </td>
         <% end %>
       </tr>
 
-      <% if check.design_check.auditor_result != 'Comment' %>
+      <% if design_check.auditor_result != 'Comment' %>
         <tr>
       <% else %>
         <tr bgcolor='yellow'>
       <% end %>
-        <% if check.design_check.auditor_result == 'None' or check.design_check.auditor_result == 'Comment' %>
+        <% if design_check.auditor_result == 'None' or design_check.auditor_result == 'Comment' %>
           <td width="4" bgcolor="red">&nbsp;</td>
         <% else %>
           <td width="4" bgcolor="green">&nbsp;</td>
         <% end %>
           <th align="left" width="100">Peer Auditor:</th>
           <td align="left">
-          <% if check.design_check.auditor_id? %>
-            <%= User.find(check.design_check.auditor_id).name %>
+          <% if design_check.auditor_id? %>
+            <%= User.find(design_check.auditor_id).name %>
           <% else %>
             &nbsp;
           <% end %>
         </td>
         <th align="left">Result:</th>
-        <% if check.design_check.auditor_result != 'None' %>
+        <% if design_check.auditor_result != 'None' %>
           <td align="left">
-            <%= check.design_check.auditor_result %>
+            <%= design_check.auditor_result %>
             @
-            <%= check.design_check.auditor_checked_on.format_dd_mm_yy_at_timestamp %>
+            <%= design_check.auditor_checked_on.format_dd_mm_yy_at_timestamp %>
           </td>
         <% end %>
       </tr>
     </table>
 
-    <% if check.design_check.audit_comments.size > 0 %>
+    <% if design_check.audit_comments.size > 0 %>
       <table border="0" width="100%">
         <tr>
 	  <th bgcolor="#d3d3d3" align="left">COMMENTS:</th>
@@ -266,7 +267,7 @@
         <tr>
           <td>
             <table width="95%" align="right" rules="all">
-              <% check.design_check.audit_comments.each do |comment| %>
+              <% design_check.audit_comments.each do |comment| %>
                 <tr>
                   <td width="250" valign="top">
                     <table>

@@ -1,0 +1,47 @@
+<!-- View:    design_review                                     -->
+<!-- Purpose: Displays the buttons common to the designer role. -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<tr>
+  <td>
+    <input type="button" value="Change Design Center"
+           title="Use to update Pre-Artwork, Designer, Peer, Design Center, and Criticality"
+           onClick="parent.location='<%= url_for(:controller       => 'design_review', 
+                                                 :action           => 'change_design_center',
+                                                 :design_review_id => @design_review.id) %>'"
+           class="small_font_wide_button" />
+  </td>
+</tr>
+
+<tr>
+  <td>
+    <input type="button" value="Outsource Instructions"
+           title="Create/View/Update Instructions to low cost regions"
+           onClick="parent.location='<%= url_for(:controller => 'oi_instruction',
+                                                 :action     => 'oi_category_selection',
+                                                 :design_id  => @design_review.design.id) %>'"
+           class="small_font_wide_button" />
+  </td>
+</tr>
+
+<% if ! @design_review.on_hold? &&
+	  @design_review.posting_count > 0 &&
+      @design_review.review_status.name != "Review Completed" &&
+      ((@logged_in_user.id == @design_review.design.designer_id || 
+       (@logged_in_user.id == @design_review.design.pcb_input_id &&
+        @design_review.review_type.name == 'Pre-Artwork'))) %>
+
+    <tr>
+    <td align="center">
+      <input type="button" value="REPOST Review"
+          title="Used when you want to provide updated design data for review - resets the design review"
+          onClick="if (confirm('Reposting will reset all review results.  Are you sure you want to repost the review?')) { 
+          	parent.location='<%= url_for( :action     => 'repost_review', :design_review_id  => @design_review.id) %>' } 
+          	else {void('') };"
+           class="small_font_wide_button" />
+    </td>
+  </tr>
+<% end %>
+

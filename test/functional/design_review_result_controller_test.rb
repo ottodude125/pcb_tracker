@@ -12,13 +12,13 @@
 ########################################################################
 #
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'design_review_result_controller'
 
 # Re-raise errors caught by the controller.
 class DesignReviewResultController; def rescue_action(e) raise e end; end
 
-class DesignReviewResultControllerTest < Test::Unit::TestCase
+class DesignReviewResultControllerTest < ActionController::TestCase
   def setup
     @controller = DesignReviewResultController.new
     @request    = ActionController::TestRequest.new

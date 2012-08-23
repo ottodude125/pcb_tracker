@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: TrackerFix</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/models/tracker_fix.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">ActiveRecord::Base
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-check_data_links_and_set_design">::check_data_links_and_set_design</a>
+    
+    <li><a href="#method-c-check_design_centers">::check_design_centers</a>
+    
+    <li><a href="#method-c-check_original_design_review_posting">::check_original_design_review_posting</a>
+    
+    <li><a href="#method-c-check_posting_timestamps">::check_posting_timestamps</a>
+    
+    <li><a href="#method-c-dump_design">::dump_design</a>
+    
+    <li><a href="#method-c-posting_timestamps">::posting_timestamps</a>
+    
+    <li><a href="#method-c-set_fields">::set_fields</a>
+    
+    <li><a href="#method-c-set_posting_timestamps">::set_posting_timestamps</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class TrackerFix</h1>
+
+  <div id="description" class="description">
+    
+<p>Copyright 2005, by Teradyne, Inc., Boston MA</p>
+
+<p>File: design_review.rb</p>
+
+<p>This file maintains the state for design reviews.</p>
+
+<p>$Id$</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-check_data_links_and_set_design" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">check_data_links_and_set_design</span><span
+            class="method-args">(active_only = false, skip_update = true, print_all = false)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="check_data_links_and_set_design-source">
+            <pre><span class="ruby-comment"># File app/models/tracker_fix.rb, line 261</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">check_data_links_and_set_design</span>(<span class="ruby-identifier">active_only</span> = <span class="ruby-keyword">false</span>, <span class="ruby-identifier">skip_update</span> = <span class="ruby-keyword">true</span>, <span class="ruby-identifier">print_all</span> = <span class="ruby-keyword">false</span>)
+
+  <span class="ruby-comment"># print_all - if false, only prints the designs that could not be found, otherwise all are printed</span>
+  <span class="ruby-comment"># skip_update - set to false to update the database</span>
+  <span class="ruby-comment"># active_only - set to true to update the designs that are active</span>
+  <span class="ruby-comment">#</span>
+  <span class="ruby-identifier">puts</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-string">'************************************************'</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-string">'* Checking the accuracy of the design centers. *'</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-string">'************************************************'</span>
+  <span class="ruby-identifier">puts</span>
+  
+  <span class="ruby-identifier">all_design_centers</span> = <span class="ruby-constant">DesignCenter</span>.<span class="ruby-identifier">get_all_active</span>
+  <span class="ruby-identifier">board_vault</span>        = <span class="ruby-constant">DesignCenter</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'Vault'</span>)
+  <span class="ruby-identifier">info</span>               = []
+  <span class="ruby-identifier">design_center</span>      = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">unknown_design_center</span> = <span class="ruby-constant">DesignCenter</span>.<span class="ruby-identifier">find_by_name</span> <span class="ruby-string">&quot;Unknown&quot;</span>
+
+  <span class="ruby-comment"># Output the header</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-string">'Design ID,Directory Name,Phase,Original Assigned Design Center,'</span> <span class="ruby-operator">+</span>
+       <span class="ruby-string">'Found, Design Center Count, Where Found, Location, Final Assigned Design Center'</span>
+  <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>).<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+
+    <span class="ruby-identifier">print_line</span> = <span class="ruby-identifier">print_all</span>
+
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">active_only</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">phase_id</span> <span class="ruby-operator">==</span> <span class="ruby-value">255</span>
+
+    <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">id</span>.<span class="ruby-identifier">to_s</span>
+    <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">directory_name</span>
+    <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">phase</span>.<span class="ruby-identifier">name</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_center_id</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_center</span>.<span class="ruby-identifier">name</span>
+      <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">data_location_correct?</span> <span class="ruby-operator">?</span> <span class="ruby-string">'YES'</span> <span class="ruby-operator">:</span> <span class="ruby-string">'NO'</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">'DESIGN SETTING EMPTY'</span>
+      <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">'NO'</span>
+    <span class="ruby-keyword">end</span>
+
+    
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">data_location_correct?</span>
+
+    <span class="ruby-identifier">link_good</span> = <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">location</span>  = <span class="ruby-keyword">nil</span>
+    <span class="ruby-identifier">link</span>      = <span class="ruby-string">''</span>
+
+    <span class="ruby-comment"># Get a list of the listed pcb paths</span>
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">dr</span>.<span class="ruby-identifier">design_center</span> }
+    <span class="ruby-identifier">design_centers</span> = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">design_center</span> }.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">uniq</span>
+
+    <span class="ruby-identifier">design_centers</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">board_vault</span>
+    <span class="ruby-identifier">unlisted_design_centers</span> = <span class="ruby-identifier">all_design_centers</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">design_centers</span>
+
+    <span class="ruby-comment"># First try the listed design centers</span>
+    <span class="ruby-identifier">checked</span> = <span class="ruby-string">&quot;LISTED DESIGN CENTER&quot;</span>
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">dr</span>.<span class="ruby-identifier">design_center</span> }.<span class="ruby-identifier">uniq!</span>
+    <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">design_centers</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">size</span>.<span class="ruby-identifier">to_s</span>
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">uniq</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">link_good</span> = <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">data_found?</span>
+      <span class="ruby-identifier">link</span>      = <span class="ruby-identifier">link_good</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">surfboards_path</span> <span class="ruby-operator">:</span> <span class="ruby-string">'NOT FOUND'</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">link_good</span>
+        <span class="ruby-identifier">design_center</span> = <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">design_center</span>
+        <span class="ruby-keyword">break</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">link_good</span>
+      <span class="ruby-comment"># Try the board vault ...</span>
+      <span class="ruby-identifier">checked</span>          = <span class="ruby-string">&quot;BOARD VAULT&quot;</span>
+      <span class="ruby-identifier">dr</span>               = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">first</span>
+      <span class="ruby-identifier">design_center</span>    = <span class="ruby-identifier">board_vault</span>
+      <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">design_center</span> = <span class="ruby-identifier">board_vault</span>
+      <span class="ruby-identifier">link_good</span> = <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">data_found?</span>
+      <span class="ruby-identifier">link</span>      = <span class="ruby-identifier">link_good</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">surfboards_path</span> <span class="ruby-operator">:</span> <span class="ruby-string">'NOT FOUND'</span>
+
+      <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">link_good</span>
+
+        <span class="ruby-comment"># Try the unlisted design centers.</span>
+        <span class="ruby-identifier">unlisted_design_centers</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">dc</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">checked</span> = <span class="ruby-string">&quot;UNLISTED DESIGN CENTERS&quot;</span>
+          <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">design_center</span> = <span class="ruby-identifier">dc</span>
+          <span class="ruby-identifier">link_good</span> = <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">data_found?</span>
+          <span class="ruby-identifier">link</span>      = <span class="ruby-identifier">link_good</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">surfboards_path</span> <span class="ruby-operator">:</span> <span class="ruby-string">'NOT FOUND'</span>
+          <span class="ruby-keyword">if</span> <span class="ruby-identifier">link_good</span>
+            <span class="ruby-identifier">design_center</span> = <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">design_center</span>
+            <span class="ruby-keyword">break</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">checked</span>
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_center</span> = <span class="ruby-identifier">design_center</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_center</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_center_id</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_center</span>.<span class="ruby-identifier">name</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">data_location_correct?</span>
+        <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">surfboards_path</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_center</span> = <span class="ruby-identifier">unknown_design_center</span>
+        <span class="ruby-identifier">print_line</span> = <span class="ruby-keyword">true</span>
+        <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">'DESIGN SETTING EMPTY'</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_center</span> = <span class="ruby-identifier">unknown_design_center</span>
+      <span class="ruby-identifier">print_line</span> = <span class="ruby-keyword">true</span>
+      <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">'DESIGN SETTING EMPTY'</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_center</span>.<span class="ruby-identifier">name</span>
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">save</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">skip_update</span>
+
+    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">info</span>.<span class="ruby-identifier">join</span>(<span class="ruby-string">', '</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">print_line</span>
+    <span class="ruby-identifier">info</span>.<span class="ruby-identifier">clear</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">nil</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- check_data_links_and_set_design-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- check_data_links_and_set_design-method -->
+
+    
+      <div id="method-c-check_design_centers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">check_design_centers</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="check_design_centers-source">
+            <pre><span class="ruby-comment"># File app/models/tracker_fix.rb, line 225</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">check_design_centers</span>
+
+  <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design</span><span class="ruby-operator">|</span>
+
+    <span class="ruby-identifier">design_centers_match</span> = <span class="ruby-keyword">true</span>
+    <span class="ruby-identifier">design_center</span>        = <span class="ruby-keyword">nil</span>
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design_review</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">design_center</span>        = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design_center</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">design_center</span>
+      <span class="ruby-identifier">design_centers_match</span> = <span class="ruby-identifier">design_center</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design_center</span>
+      <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">design_centers_match</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">design_centers_match</span>
+
+      <span class="ruby-identifier">puts</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-string">'------------------------------------------------------------------'</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-identifier">sprintf</span>(<span class="ruby-string">'%-20s'</span>, <span class="ruby-identifier">design</span>.<span class="ruby-identifier">directory_name</span>)
+
+      <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design_review</span><span class="ruby-operator">|</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-string">'  *** '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span>
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design_center</span>
+          <span class="ruby-identifier">puts</span> <span class="ruby-string">'    *** '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design_center</span>.<span class="ruby-identifier">name</span>
+        <span class="ruby-keyword">else</span>
+          <span class="ruby-identifier">puts</span> <span class="ruby-string">'    *** NO DESIGN CENTER'</span>
+        <span class="ruby-keyword">end</span>
+
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">nil</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- check_design_centers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- check_design_centers-method -->
+
+    
+      <div id="method-c-check_original_design_review_posting" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">check_original_design_review_posting</span><span
+            class="method-args">(show_all = false)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="check_original_design_review_posting-source">
+            <pre><span class="ruby-comment"># File app/models/tracker_fix.rb, line 17</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">check_original_design_review_posting</span>(<span class="ruby-identifier">show_all</span> = <span class="ruby-keyword">false</span>)
+
+  <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design</span><span class="ruby-operator">|</span>
+
+    <span class="ruby-identifier">suggested_design_created_at</span> = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">created_at</span>
+    <span class="ruby-identifier">design_date_bad</span>             = <span class="ruby-keyword">false</span>
+    <span class="ruby-identifier">puts</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">'------------------------------------------------------------------'</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">sprintf</span>(<span class="ruby-string">'%-20sCreated On: %-20s'</span>,
+                 <span class="ruby-identifier">design</span>.<span class="ruby-identifier">directory_name</span>,
+                 <span class="ruby-identifier">design</span>.<span class="ruby-identifier">created_at</span>.<span class="ruby-identifier">format_dd_mon_yy</span>(<span class="ruby-string">'stamp'</span>))
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">sort_by</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">sort_order</span> }.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design_review</span><span class="ruby-operator">|</span>
+
+      <span class="ruby-identifier">suggested_dr_created_at</span> = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_at</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reposted_at</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_at</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reposted_at</span>
+      <span class="ruby-identifier">suggested_design_created_at</span> = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_at</span>  <span class="ruby-keyword">if</span> <span class="ruby-identifier">suggested_design_created_at</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_at</span>
+      <span class="ruby-identifier">suggested_design_created_at</span> = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reposted_at</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">suggested_design_created_at</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reposted_at</span>
+
+      <span class="ruby-identifier">design_date_bad</span> = <span class="ruby-identifier">suggested_design_created_at</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">created_at</span>
+      <span class="ruby-identifier">dr_date_bad</span>     = <span class="ruby-identifier">suggested_dr_created_at</span>     <span class="ruby-operator">!=</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_at</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-identifier">sprintf</span>(<span class="ruby-string">'  %-15s%-20sPosting Count: %-3s Original Posting: %-20s Last Reposting: %-20s'</span>,
+                   <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span>,
+                   <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span>,
+                   <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_count</span>.<span class="ruby-identifier">to_s</span>,
+                   <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_at</span>.<span class="ruby-identifier">format_dd_mon_yy</span>(<span class="ruby-string">'stamp'</span>),
+                   <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reposted_at</span>.<span class="ruby-identifier">format_dd_mon_yy</span>(<span class="ruby-string">'stamp'</span>)) <span class="ruby-keyword">if</span> <span class="ruby-identifier">show_all</span> <span class="ruby-operator">&amp;&amp;</span> (<span class="ruby-identifier">design_date_bad</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">dr_date_bad</span>)
+
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">dr_date_bad</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-string">'    =================================&gt;'</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-string">'    New Suggested Design Review Creation Date: '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">suggested_dr_created_at</span>.<span class="ruby-identifier">format_dd_mon_yy</span>(<span class="ruby-string">'stamp'</span>)
+      <span class="ruby-identifier">puts</span> <span class="ruby-string">'    =================================&gt;'</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_date_bad</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-string">'---------------------------------&gt;'</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-string">'New Suggested Design Creation Date: '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">suggested_design_created_at</span>.<span class="ruby-identifier">format_dd_mon_yy</span>(<span class="ruby-string">'stamp'</span>)
+      <span class="ruby-identifier">puts</span> <span class="ruby-string">'---------------------------------&gt;'</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-constant">DesignReview</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design_review</span><span class="ruby-operator">|</span>
+    <span class="ruby-comment">#puts design_review.inspect</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design_id</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Design ID is 1 for design review #{design_review.id.to_s}&quot;</span>
+      <span class="ruby-keyword">next</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">nil</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- check_original_design_review_posting-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- check_original_design_review_posting-method -->
+
+    
+      <div id="method-c-check_posting_timestamps" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">check_posting_timestamps</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="check_posting_timestamps-source">
+            <pre><span class="ruby-comment"># File app/models/tracker_fix.rb, line 146</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">check_posting_timestamps</span>
+
+  <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design</span><span class="ruby-operator">|</span>
+
+    <span class="ruby-identifier">puts</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">'------------------------------------------------------------------'</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">sprintf</span>(<span class="ruby-string">'%-20sCreated On: %-20s'</span>,
+                 <span class="ruby-identifier">design</span>.<span class="ruby-identifier">directory_name</span>,
+                 <span class="ruby-identifier">design</span>.<span class="ruby-identifier">created_at</span>.<span class="ruby-identifier">simple_date_with_timestamp</span>)
+
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">sort_by</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">sort_order</span> }.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design_review</span><span class="ruby-operator">|</span>
+
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_count</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-identifier">sprintf</span>(<span class="ruby-string">'  %-15s%-20sPosting Count: %-3s Original Posting: %-20s Last Reposting: %-20s'</span>,
+                   <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span>,
+                   <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span>,
+                   <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_count</span>.<span class="ruby-identifier">to_s</span>,
+                   <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_at</span>.<span class="ruby-identifier">simple_date_with_timestamp</span>,
+                   <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reposted_at</span>.<span class="ruby-identifier">simple_date_with_timestamp</span>)
+
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_timestamps</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;  !!!!!! POSTING COUNT DOES NOT MATCH TIMESTAMP COUNT&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_timestamps</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_count</span>
+        <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_timestamps</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">ts</span><span class="ruby-operator">|</span> <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;  ------ #{ts.posted_on.simple_date_with_timestamp}&quot;</span>}
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">puts</span>(<span class="ruby-string">&quot;  ****** NO POSTING TIMESTAMPS&quot;</span>)
+      <span class="ruby-keyword">end</span>
+
+
+    <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">nil</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- check_posting_timestamps-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- check_posting_timestamps-method -->
+
+    
+      <div id="method-c-dump_design" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">dump_design</span><span
+            class="method-args">(design, tag)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>def self.set_data_links(active_only = false, skip_update = true)</p>
+
+<pre class="ruby"><span class="ruby-identifier">all_design_centers</span> = <span class="ruby-constant">DesignCenter</span>.<span class="ruby-identifier">get_all_active</span>
+<span class="ruby-identifier">board_vault</span>        = <span class="ruby-constant">DesignCenter</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'Vault'</span>)
+<span class="ruby-identifier">info</span>               = []
+
+<span class="ruby-identifier">h</span> = <span class="ruby-constant">Net</span><span class="ruby-operator">::</span><span class="ruby-constant">HTTP</span><span class="ruby-operator">::</span><span class="ruby-identifier">new</span>(<span class="ruby-string">&quot;boarddev.teradyne.com&quot;</span>)
+
+<span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(:<span class="ruby-identifier">all</span>).<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+
+  <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">active_only</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">phase_id</span> <span class="ruby-operator">==</span> <span class="ruby-value">255</span>
+
+  <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">id</span>.<span class="ruby-identifier">to_s</span>
+  <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">directory_name</span>
+
+  <span class="ruby-identifier">link_good</span> = <span class="ruby-keyword">false</span>
+  <span class="ruby-identifier">location</span>  = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">link</span>      = <span class="ruby-string">''</span>
+
+  <span class="ruby-comment"># Get a list of the listed pcb paths</span>
+  <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">dr</span>.<span class="ruby-identifier">design_center</span> }
+  <span class="ruby-identifier">design_centers</span> = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">design_center</span> }.<span class="ruby-identifier">compact</span>.<span class="ruby-identifier">uniq</span>
+
+  <span class="ruby-constant">TrackerFix</span>.<span class="ruby-identifier">dump_design</span>(<span class="ruby-identifier">design</span>, <span class="ruby-string">'Initial values: '</span>)
+  <span class="ruby-identifier">puts</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">directory_name</span> <span class="ruby-operator">+</span> <span class="ruby-string">' has multiple design centers **********************************'</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_centers</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+  <span class="ruby-identifier">design_centers</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">board_vault</span>
+  <span class="ruby-identifier">unlisted_design_centers</span> = <span class="ruby-identifier">all_design_centers</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">design_centers</span>
+
+  <span class="ruby-identifier">design_center</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">checked</span> = <span class="ruby-string">''</span>
+  (<span class="ruby-identifier">design_centers</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">unlisted_design_centers</span>).<span class="ruby-identifier">each_with_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design_center</span>, <span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">checked</span> = <span class="ruby-string">&quot;CHECKED LISTED DESIGN CENTERS&quot;</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">design_centers</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">-</span><span class="ruby-value">1</span>
+      <span class="ruby-identifier">checked</span> = <span class="ruby-string">&quot;CHECKED BOARD VAULT&quot;</span>
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">design_centers</span>.<span class="ruby-identifier">size</span>
+      <span class="ruby-identifier">checked</span> = <span class="ruby-string">&quot;CHECKED UNLISTED DESIGN CENTERS&quot;</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">pcb_path</span> = <span class="ruby-identifier">design_center</span>.<span class="ruby-identifier">pcb_path</span>
+    <span class="ruby-identifier">link</span>     = <span class="ruby-node">&quot;/surfboards/#{pcb_path}/#{design.directory_name}/&quot;</span>
+    <span class="ruby-identifier">response</span> = <span class="ruby-identifier">h</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">link</span>)
+
+    <span class="ruby-identifier">link_good</span> = <span class="ruby-identifier">response</span>.<span class="ruby-identifier">code</span> <span class="ruby-operator">==</span> <span class="ruby-string">'200'</span>
+    <span class="ruby-identifier">result</span> = <span class="ruby-identifier">link_good</span> <span class="ruby-operator">?</span> <span class="ruby-string">' ***  PASSED'</span> <span class="ruby-operator">:</span> <span class="ruby-string">' !!!  FAILED  !!!!!!!!!!!!!!!'</span>
+    <span class="ruby-comment"># puts '  ' + link + result</span>
+    <span class="ruby-keyword">break</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">link_good</span>
+
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">checked</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">link_good</span>
+    <span class="ruby-identifier">design_center</span>        = <span class="ruby-identifier">board_vault</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_center</span>.<span class="ruby-identifier">pcb_path</span> <span class="ruby-operator">==</span> <span class="ruby-string">'board_vault'</span>
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_center</span> = <span class="ruby-identifier">design_center</span>
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">save</span> <span class="ruby-keyword">unless</span> <span class="ruby-identifier">skip_update</span>
+    <span class="ruby-constant">TrackerFix</span>.<span class="ruby-identifier">dump_design</span>(<span class="ruby-identifier">design</span>, <span class="ruby-string">'Link Set:      '</span>)
+
+    <span class="ruby-identifier">pcb_path</span> = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_center</span>.<span class="ruby-identifier">pcb_path</span>
+    <span class="ruby-identifier">link</span>     = <span class="ruby-node">&quot;/surfboards/#{pcb_path}/#{design.directory_name}/&quot;</span>
+    <span class="ruby-identifier">response</span> = <span class="ruby-identifier">h</span>.<span class="ruby-identifier">get</span>(<span class="ruby-identifier">link</span>)
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">response</span>.<span class="ruby-identifier">code</span> <span class="ruby-operator">==</span> <span class="ruby-string">'200'</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;WARNING: LINK IS BAD&quot;</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">link</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">info</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-string">'!!!!! NOT FOUND'</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment">#puts info.join(',')</span>
+  <span class="ruby-identifier">info</span>.<span class="ruby-identifier">clear</span>
+<span class="ruby-keyword">end</span>
+</pre>
+
+<p>end</p>
+          
+
+          
+          <div class="method-source-code" id="dump_design-source">
+            <pre><span class="ruby-comment"># File app/models/tracker_fix.rb, line 462</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">dump_design</span>(<span class="ruby-identifier">design</span>, <span class="ruby-identifier">tag</span>)
+  <span class="ruby-identifier">design</span>.<span class="ruby-identifier">reload</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-string">'***  '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">tag</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot; ID: #{design.id}   Directory: #{design.directory_name}    Timestamp: #{design.created_on.format_dd_mm_yy_at_timestamp} &quot;</span>
+  <span class="ruby-identifier">puts</span> <span class="ruby-string">'---&gt; '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_center</span>.<span class="ruby-identifier">name</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_center</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- dump_design-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- dump_design-method -->
+
+    
+      <div id="method-c-posting_timestamps" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">posting_timestamps</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="posting_timestamps-source">
+            <pre><span class="ruby-comment"># File app/models/tracker_fix.rb, line 183</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">posting_timestamps</span>
+
+  <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design</span><span class="ruby-operator">|</span>
+
+    <span class="ruby-identifier">puts</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-string">'------------------------------------------------------------------'</span>
+    <span class="ruby-identifier">puts</span> <span class="ruby-identifier">sprintf</span>(<span class="ruby-string">'%-20sCreated On: %-20s'</span>,
+                 <span class="ruby-identifier">design</span>.<span class="ruby-identifier">directory_name</span>,
+                 <span class="ruby-identifier">design</span>.<span class="ruby-identifier">created_at</span>.<span class="ruby-identifier">simple_date_with_timestamp</span>)
+
+    <span class="ruby-identifier">timestamp_value</span> = <span class="ruby-constant">Time</span>.<span class="ruby-identifier">now</span> <span class="ruby-operator">-</span> <span class="ruby-value">10</span>.<span class="ruby-identifier">year</span>
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">sort_by</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">sort_order</span> }.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design_review</span><span class="ruby-operator">|</span>
+
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_count</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-identifier">sprintf</span>(<span class="ruby-string">'  %-15s%-20sPosting Count: %-3s'</span>,
+                   <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span>,
+                   <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span>,
+                   <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_count</span>.<span class="ruby-identifier">to_s</span>)
+
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_timestamps</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-string">&quot;  !!!!!! POSTING COUNT DOES NOT MATCH TIMESTAMP COUNT&quot;</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_timestamps</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_count</span>
+        <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_timestamps</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ts</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;  ------ #{ts.posted_on.simple_date_with_timestamp}&quot;</span>
+          <span class="ruby-keyword">if</span> <span class="ruby-identifier">ts</span>.<span class="ruby-identifier">posted_on</span>.<span class="ruby-identifier">to_i</span> <span class="ruby-operator">&lt;=</span> <span class="ruby-identifier">timestamp_value</span>.<span class="ruby-identifier">to_i</span>
+            <span class="ruby-identifier">puts</span> <span class="ruby-string">'TIMESTAMP ISSUE'</span>
+          <span class="ruby-keyword">end</span>
+          <span class="ruby-identifier">timestamp_value</span> = <span class="ruby-identifier">ts</span>.<span class="ruby-identifier">posted_on</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">puts</span>(<span class="ruby-string">&quot;  ****** NO POSTING TIMESTAMPS&quot;</span>)
+      <span class="ruby-keyword">end</span>
+
+
+    <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">nil</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- posting_timestamps-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- posting_timestamps-method -->
+
+    
+      <div id="method-c-set_fields" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_fields</span><span
+            class="method-args">(list, from_fields, to_fields)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="set_fields-source">
+            <pre><span class="ruby-comment"># File app/models/tracker_fix.rb, line 469</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">set_fields</span>(<span class="ruby-identifier">list</span>, <span class="ruby-identifier">from_fields</span>, <span class="ruby-identifier">to_fields</span>)
+
+  <span class="ruby-identifier">from_fields</span>.<span class="ruby-identifier">each_index</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span> <span class="ruby-identifier">puts</span>(<span class="ruby-node">&quot; ** Copying from #{from_fields[i].to_s} field to the #{to_fields[i].to_s} field&quot;</span>) }
+
+  <span class="ruby-identifier">original_values</span> = {}
+
+  <span class="ruby-identifier">list</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">r</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">from_fields</span>.<span class="ruby-identifier">each_index</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">line</span> = <span class="ruby-identifier">r</span>.<span class="ruby-identifier">id</span> <span class="ruby-operator">?</span> <span class="ruby-node">&quot;\tID: #{r.id.to_s}&quot;</span><span class="ruby-operator">:</span> <span class="ruby-string">''</span>
+      <span class="ruby-identifier">r</span>[<span class="ruby-identifier">to_fields</span>[<span class="ruby-identifier">i</span>]] = <span class="ruby-identifier">r</span>[<span class="ruby-identifier">from_fields</span>[<span class="ruby-identifier">i</span>]]
+      <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">r</span>[<span class="ruby-identifier">from_fields</span>[<span class="ruby-identifier">i</span>]]
+      <span class="ruby-identifier">line</span> <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;\t#{from_fields[i].to_s}: #{r[from_fields[i]].simple_date_with_timestamp}&quot;</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-identifier">line</span> <span class="ruby-operator">+</span> <span class="ruby-node">&quot;\t-&gt;\t#{to_fields[i].to_s}: #{r[to_fields[i]].simple_date_with_timestamp}&quot;</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">r</span>.<span class="ruby-identifier">save</span>
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- set_fields-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- set_fields-method -->
+
+    
+      <div id="method-c-set_posting_timestamps" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_posting_timestamps</span><span
+            class="method-args">(show_all = false)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="set_posting_timestamps-source">
+            <pre><span class="ruby-comment"># File app/models/tracker_fix.rb, line 70</span>
+  <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">set_posting_timestamps</span>(<span class="ruby-identifier">show_all</span> = <span class="ruby-keyword">false</span>)
+
+    <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design</span><span class="ruby-operator">|</span>
+
+      <span class="ruby-identifier">suggested_design_created_at</span> = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">created_at</span>
+      <span class="ruby-identifier">design_date_bad</span>             = <span class="ruby-keyword">false</span>
+
+      <span class="ruby-identifier">puts</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-string">'------------------------------------------------------------------'</span>
+      <span class="ruby-identifier">puts</span> <span class="ruby-identifier">sprintf</span>(<span class="ruby-string">'%-5s%-20sCreated On: %-20s'</span>,
+                   <span class="ruby-identifier">design_id</span>,
+                   <span class="ruby-identifier">design</span>.<span class="ruby-identifier">directory_name</span>,
+                   <span class="ruby-identifier">design</span>.<span class="ruby-identifier">created_at</span>.<span class="ruby-identifier">format_day_mon_dd_yyyy_at_timestamp</span>)
+<span class="ruby-identifier">exit</span>
+
+
+      <span class="ruby-identifier">design</span>.<span class="ruby-identifier">design_reviews</span>.<span class="ruby-identifier">sort_by</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">dr</span><span class="ruby-operator">|</span> <span class="ruby-identifier">dr</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">sort_order</span> }.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design_review</span><span class="ruby-operator">|</span>
+
+        <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_count</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+
+        <span class="ruby-identifier">suggested_dr_created_at</span> = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_at</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reposted_at</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_at</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reposted_at</span>
+        <span class="ruby-identifier">suggested_design_created_at</span> = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_at</span>  <span class="ruby-keyword">if</span> <span class="ruby-identifier">suggested_design_created_at</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_at</span>
+        <span class="ruby-identifier">suggested_design_created_at</span> = <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reposted_at</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">suggested_design_created_at</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reposted_at</span>
+
+        <span class="ruby-identifier">design_date_bad</span> = <span class="ruby-identifier">suggested_design_created_at</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">created_at</span>
+        <span class="ruby-identifier">dr_date_bad</span>     = <span class="ruby-identifier">suggested_dr_created_at</span>     <span class="ruby-operator">!=</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_at</span>
+
+        <span class="ruby-identifier">puts</span> <span class="ruby-identifier">sprintf</span>(<span class="ruby-string">'  %-15s%-20sPosting Count: %-3s Original Posting: %-20s Last Reposting: %-20s'</span>,
+                     <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span>,
+                     <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">review_status</span>.<span class="ruby-identifier">name</span>,
+                     <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_count</span>.<span class="ruby-identifier">to_s</span>,
+                     <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">created_at</span>.<span class="ruby-identifier">simple_date_with_timestamp</span>,
+                     <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reposted_at</span>.<span class="ruby-identifier">simple_date_with_timestamp</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">show_all</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">design_date_bad</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">dr_date_bad</span>
+
+        <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">set_posting_timestamp</span>(<span class="ruby-identifier">suggested_dr_created_at</span>)
+
+        <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_count</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span>
+          <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">set_posting_timestamp</span>(<span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reposted_at</span>)
+        <span class="ruby-keyword">end</span>
+
+        <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">reload</span>
+        <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">posting_timestamps</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">ts</span><span class="ruby-operator">|</span>
+          <span class="ruby-identifier">puts</span> <span class="ruby-identifier">ts</span>.<span class="ruby-identifier">inspect</span>
+          <span class="ruby-identifier">puts</span>(<span class="ruby-node">&quot;----******----&gt; #{ts.posted_on.simple_date_with_timestamp}&quot;</span>)
+        <span class="ruby-keyword">end</span>
+        
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_date_bad</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-string">'---------------------------------&gt;'</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-string">'New Suggested Design Creation Date: '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">suggested_design_created_at</span>.<span class="ruby-identifier">simple_date_with_timestamp</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-string">'---------------------------------&gt;'</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-constant">DesignReview</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">design_review</span><span class="ruby-operator">|</span>
+      <span class="ruby-comment">#puts design_review.inspect</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">design_review</span>.<span class="ruby-identifier">design_id</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+        <span class="ruby-identifier">puts</span> <span class="ruby-node">&quot;Design ID is 1 for design review #{design_review.id.to_s}&quot;</span>
+        <span class="ruby-keyword">next</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-comment">#puts('*** WARNING ***') if design_review.created_at &gt; design_review.reposted_at</span>
+      <span class="ruby-comment">#puts sprintf('%-20s%-15sPosting Count: %-3s Original Posting: %-20s Last Reposting: %-20s Design Creation: %-20s',</span>
+      <span class="ruby-comment">#             design_review.design.directory_name,</span>
+      <span class="ruby-comment">#             design_review.review_type.name,</span>
+      <span class="ruby-comment">#             design_review.posting_count.to_s,</span>
+      <span class="ruby-comment">#             design_review.created_at.simple_date_with_timestamp,</span>
+      <span class="ruby-comment">#             design_review.reposted_at.simple_date_with_timestamp,</span>
+      <span class="ruby-comment">#             design_review.design.created_at.simple_date_with_timestamp)</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-keyword">nil</span>
+
+  <span class="ruby-keyword">end</span></pre>
+          </div><!-- set_posting_timestamps-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- set_posting_timestamps-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

@@ -65,7 +65,7 @@ la021c:
   outline_drawing_document_id:               1
   pcb_attribute_form_document_id:            2
   teradyne_stackup_document_id:              3
-  
+  input_gate_comments:                       "a comment" 
 
 # mx008b4 - J750/POOL2/Third Board Entry - John Joyce
 mx008b4:

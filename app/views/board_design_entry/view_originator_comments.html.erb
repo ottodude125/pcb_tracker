@@ -1,0 +1,59 @@
+<% @heading = 'PCB Engineering - ' +
+               @board_design_entry.pcb_number +
+              ' - Originator Comments' %>
+
+<%= form_tag(:action      => 'submit_originator_comments', 
+            :id          => @board_design_entry.id,
+            :user_action => @user_action) do %>
+                   
+<hr class="div" />
+
+<table width="100%">
+  <tr>
+    <td align="center">
+      Please include any additional information for PCB Design.
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      If a reviewer or manager was not listed then please identify that person here.
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <%= text_area(:board_design_entry,
+                    "originator_comments", 
+                    :cols => 80, 
+                    :rows => 10) %>
+    </td>
+  </tr>
+</table>
+
+<hr class="div" />
+
+<table width="80%" align="center">
+  <tr>
+
+    <% if @user_action == 'adding' %>
+      <td align="center">
+        <input type="submit" class="form_submit" value="Return to PCB Engineering Entry List" />
+      </td>
+    <% elsif @user_action == 'updating' %>
+      <td align="left">
+        <input type="submit" class="form_submit" value="Update Comments" />
+      </td>
+      <td align="right">
+        <input type="button" class="form_return" 
+               value="Cancel / Return to PCB Engineering Entry View"
+               onClick="parent.location='<%= url_for( :action => 'view_entry', :id => @board_design_entry.id ) %>'" />
+      </td>
+    <% end %>
+
+  </tr>
+</table>
+
+<% end %>
+
+
+<%# debug @user_action %>
+

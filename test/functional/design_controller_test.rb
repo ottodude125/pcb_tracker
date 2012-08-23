@@ -10,13 +10,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'design_controller'
 
 # Re-raise errors caught by the controller.
 class DesignController; def rescue_action(e) raise e end; end
 
-class DesignControllerTest < Test::Unit::TestCase
+class DesignControllerTest < ActionController::TestCase
   
   def setup
     @controller = DesignController.new
@@ -36,6 +36,7 @@ class DesignControllerTest < Test::Unit::TestCase
            :design_review_results,
            :design_reviews,
            :fab_houses,
+           :part_nums,
            :review_statuses,
            :review_types,
            :review_types_roles,
@@ -119,7 +120,7 @@ class DesignControllerTest < Test::Unit::TestCase
   def test_list
     get(:list, {}, cathy_admin_session)
     assert_nil(flash['notice'])
-    #TODO: assert_equal([], assigns(:active_designs))
+    assert_equal(Design.find_all_active.sort_by{|d| d.id }, assigns(:active_designs).sort_by{|d| d.id} )
   end
 
   
@@ -130,7 +131,7 @@ class DesignControllerTest < Test::Unit::TestCase
 
     print "\n\ndump_designs\n"
     
-    designs = Design.find_all
+    designs = Design.find :all
     print "There are #{designs.size} designs\n"
     
     for design in designs
@@ -147,7 +148,7 @@ class DesignControllerTest < Test::Unit::TestCase
         print "#{dr.id} #{dr.review_type.name} - #{dr.review_status.name}"
         print "\n"
       end
-      design_review_list = design.design_reviews.sort_by { |dr| dr.review_type.sort_order }
+      #design_review_list = design.design_reviews.sort_by { |dr1| dr1.review_type.sort_order }
       print "\n"
     
     end

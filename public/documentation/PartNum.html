@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: PartNum</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/models/part_num.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link">ActiveRecord::Base
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-c-get_active_pcbas">::get_active_pcbas</a>
+    
+    <li><a href="#method-c-get_bde_pcb_part_number">::get_bde_pcb_part_number</a>
+    
+    <li><a href="#method-c-get_bde_pcba_part_numbers">::get_bde_pcba_part_numbers</a>
+    
+    <li><a href="#method-c-get_design_pcb_part_number">::get_design_pcb_part_number</a>
+    
+    <li><a href="#method-c-get_design_pcba_part_numbers">::get_design_pcba_part_numbers</a>
+    
+    <li><a href="#method-c-get_designs">::get_designs</a>
+    
+    <li><a href="#method-c-get_part_number">::get_part_number</a>
+    
+    <li><a href="#method-c-get_unique_part_numbers">::get_unique_part_numbers</a>
+    
+    <li><a href="#method-i-get_part_number">#get_part_number</a>
+    
+    <li><a href="#method-i-name_string">#name_string</a>
+    
+    <li><a href="#method-i-part_num_exists-3F">#part_num_exists?</a>
+    
+    <li><a href="#method-i-part_number_name">#part_number_name</a>
+    
+    <li><a href="#method-i-part_number_revision">#part_number_revision</a>
+    
+    <li><a href="#method-i-rev_string">#rev_string</a>
+    
+    <li><a href="#method-i-uniq_name">#uniq_name</a>
+    
+    <li><a href="#method-i-valid_pcb_part_number-3F">#valid_pcb_part_number?</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class PartNum</h1>
+
+  <div id="description" class="description">
+    
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-class-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Class Methods</h3>
+
+    
+      <div id="method-c-get_active_pcbas" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_active_pcbas</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="PartNum.html#method-c-get_active_pcbas">::get_active_pcbas</a></p>
+
+<p>Description: This method returns a collection of active PCBA part number
+objects</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: collection of part_nums</p>
+          
+
+          
+          <div class="method-source-code" id="get_active_pcbas-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 333</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_active_pcbas</span>
+  <span class="ruby-identifier">pcbas</span>   = []
+  <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-value">:use</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'pcba'</span> } ).<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pnum</span><span class="ruby-operator">|</span>
+   <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">pnum</span>.<span class="ruby-identifier">design_id</span>.<span class="ruby-identifier">blank?</span>
+     <span class="ruby-identifier">design</span> = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> {<span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">pnum</span>.<span class="ruby-identifier">design_id</span>})
+     <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">blank?</span>
+        <span class="ruby-identifier">pcbas</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">pnum</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">is_active?</span>
+     <span class="ruby-keyword">end</span>
+   <span class="ruby-keyword">end</span>
+  }
+  <span class="ruby-identifier">pcbas</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">name_string</span> }
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_active_pcbas-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_active_pcbas-method -->
+
+    
+      <div id="method-c-get_bde_pcb_part_number" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_bde_pcb_part_number</span><span
+            class="method-args">(id)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="PartNum.html#method-c-get_bde_pcb_part_number">::get_bde_pcb_part_number</a>(board
+design entry id)</p>
+
+<p>Description: This method looks up the pcb part number for a
+board_design_entry given the board design entry id</p>
+
+<p>Parameters: board design entry id</p>
+
+<p>Return values: The part number record if it exists in the database.  If the
+record is not found then nil is returned.</p>
+          
+
+          
+          <div class="method-source-code" id="get_bde_pcb_part_number-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 167</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_bde_pcb_part_number</span>(<span class="ruby-identifier">id</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">id</span>
+    <span class="ruby-identifier">pcb</span> = <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> {
+      <span class="ruby-value">:board_design_entry_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">id</span>,
+      <span class="ruby-value">:use</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;pcb&quot;</span> })
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">pcb</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">pcb</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_bde_pcb_part_number-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_bde_pcb_part_number-method -->
+
+    
+      <div id="method-c-get_bde_pcba_part_numbers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_bde_pcba_part_numbers</span><span
+            class="method-args">(id)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="PartNum.html#method-c-get_bde_pcba_part_numbers">::get_bde_pcba_part_numbers</a>(board
+design entry id)</p>
+
+<p>Description: This method looks up the pcba part numbers for a
+board_design_entry given the board design entry id</p>
+
+<p>Parameters: board design entry id</p>
+
+<p>Return values:</p>
+
+<p>A collection of pcba part number records if they exist</p>
+          
+
+          
+          <div class="method-source-code" id="get_bde_pcba_part_numbers-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 139</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_bde_pcba_part_numbers</span>(<span class="ruby-identifier">id</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">id</span>
+    <span class="ruby-identifier">pcbas</span> = <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> {
+      <span class="ruby-value">:board_design_entry_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">id</span>,
+      <span class="ruby-value">:use</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;pcba&quot;</span> })
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">pcbas</span> = []
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">pcbas</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_bde_pcba_part_numbers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_bde_pcba_part_numbers-method -->
+
+    
+      <div id="method-c-get_design_pcb_part_number" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_design_pcb_part_number</span><span
+            class="method-args">(id)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="PartNum.html#method-c-get_design_pcb_part_number">::get_design_pcb_part_number</a>(design
+id)</p>
+
+<p>Description: This method looks up the pcb part number for a design given
+the design id</p>
+
+<p>Parameters: design id</p>
+
+<p>Return values: The part number record if it exists in the database.  If the
+record is not found then nil is returned.</p>
+          
+
+          
+          <div class="method-source-code" id="get_design_pcb_part_number-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 223</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_design_pcb_part_number</span>(<span class="ruby-identifier">id</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">id</span>
+    <span class="ruby-identifier">pcb</span> = <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> {
+      <span class="ruby-value">:design_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">id</span>, <span class="ruby-value">:use</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;pcb&quot;</span> } )
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">pcb</span> = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">pcb</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_design_pcb_part_number-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_design_pcb_part_number-method -->
+
+    
+      <div id="method-c-get_design_pcba_part_numbers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_design_pcba_part_numbers</span><span
+            class="method-args">(id)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="PartNum.html#method-c-get_design_pcba_part_numbers">::get_design_pcba_part_numbers</a>(design
+id)</p>
+
+<p>Description: This method looks up the pcba part numbers for a design given
+the design id</p>
+
+<p>Parameters: design id</p>
+
+<p>Return values:</p>
+
+<p>A collection of pcba part number records if they exist</p>
+          
+
+          
+          <div class="method-source-code" id="get_design_pcba_part_numbers-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 195</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_design_pcba_part_numbers</span>(<span class="ruby-identifier">id</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">id</span>
+    <span class="ruby-identifier">pcbas</span> = <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> {
+      <span class="ruby-value">:design_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">id</span>,
+      <span class="ruby-value">:use</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;pcba&quot;</span> })
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">pcbas</span> = []
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">pcbas</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_design_pcba_part_numbers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_design_pcba_part_numbers-method -->
+
+    
+      <div id="method-c-get_designs" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_designs</span><span
+            class="method-args">(unique_part_number,type)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="PartNum.html#method-c-get_designs">::get_designs</a></p>
+
+<p>Description: Provides a list of designs given a unique PCB part number</p>
+
+<p>Parameters: unique_part_number - a string of the part number prefix and
+number type - string indication the type of part number. “pcb” or “pcba”</p>
+
+<p>Return value: A list of designs related to the unique Part Number.</p>
+          
+
+          
+          <div class="method-source-code" id="get_designs-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 43</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_designs</span>(<span class="ruby-identifier">unique_part_number</span>,<span class="ruby-identifier">type</span>)
+
+  <span class="ruby-identifier">components</span> = <span class="ruby-identifier">unique_part_number</span>.<span class="ruby-identifier">split</span>(<span class="ruby-string">'-'</span>)
+  <span class="ruby-identifier">part_numbers</span> = <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span>
+        <span class="ruby-node">&quot;prefix='#{components[0]}' &quot;</span> <span class="ruby-operator">+</span>
+        <span class="ruby-node">&quot;AND number='#{components[1]}' &quot;</span> <span class="ruby-operator">+</span>
+        <span class="ruby-node">&quot;AND `use`='#{type}' &quot;</span>  )
+
+
+  <span class="ruby-identifier">designs</span> = <span class="ruby-identifier">part_numbers</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pn</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pn</span>.<span class="ruby-identifier">design</span> }.<span class="ruby-identifier">reverse</span>.<span class="ruby-identifier">uniq</span>
+  <span class="ruby-identifier">designs</span>.<span class="ruby-identifier">delete_if</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-operator">!</span><span class="ruby-identifier">d</span> }
+  <span class="ruby-identifier">designs</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_designs-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_designs-method -->
+
+    
+      <div id="method-c-get_part_number" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_part_number</span><span
+            class="method-args">(pn)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="PartNum.html#method-c-get_part_number">::get_part_number</a></p>
+
+<p>Description: This method looks up the part number in the database given the
+components of the part number (prefix, number, and dash number)</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: The part number record that matches the components if it
+exists in the database.  If the record is not found then nil is returned.</p>
+          
+
+          
+          <div class="method-source-code" id="get_part_number-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 99</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_part_number</span>(<span class="ruby-identifier">pn</span>)
+  <span class="ruby-identifier">conditions</span> = <span class="ruby-node">&quot;prefix='#{pn.prefix}'    AND &quot;</span> <span class="ruby-operator">+</span>
+    <span class="ruby-node">&quot;number='#{pn.number}'    AND &quot;</span> <span class="ruby-operator">+</span>
+    <span class="ruby-node">&quot;dash='#{pn.dash}' AND &quot;</span> <span class="ruby-operator">+</span>
+    <span class="ruby-node">&quot;revision='#{pn.revision}'&quot;</span>
+  <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">conditions</span> )
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_part_number-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_part_number-method -->
+
+    
+      <div id="method-c-get_unique_part_numbers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_unique_part_numbers</span><span
+            class="method-args">(type)</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>get_uniq_part_numbers</p>
+
+<p>Description: Provides a list of unique part number of the specified type</p>
+
+<p>Parameters: type - string indication the type of part number. “pcb” or
+“pcba”</p>
+
+<p>Return value: list of unique_part_numbers and the design id - the part
+number prefix and number</p>
+          
+
+          
+          <div class="method-source-code" id="get_unique_part_numbers-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 73</span>
+<span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_unique_part_numbers</span>(<span class="ruby-identifier">type</span>)
+
+  <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>,
+    <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-node">&quot;`use` = '#{type}' AND `design_id` IS NOT NULL &quot;</span>,
+    <span class="ruby-value">:select</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;DISTINCT CONCAT(prefix,'-',number) AS number&quot;</span>,
+    <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'number'</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_unique_part_numbers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_unique_part_numbers-method -->
+
+    
+    </section><!-- public-class-method-details -->
+  
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-get_part_number" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_part_number</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="get_part_number-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 107</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_part_number</span>
+    <span class="ruby-identifier">conditions</span> = <span class="ruby-node">&quot;prefix='#{self.prefix}'    AND &quot;</span> <span class="ruby-operator">+</span>
+      <span class="ruby-node">&quot;number='#{self.number}'    AND &quot;</span> <span class="ruby-operator">+</span>
+      <span class="ruby-node">&quot;dash='#{self.dash}' AND &quot;</span> <span class="ruby-operator">+</span>
+      <span class="ruby-node">&quot;revision='#{self.revision}'&quot;</span>
+    <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">conditions</span> )
+  <span class="ruby-keyword">end</span></pre>
+          </div><!-- get_part_number-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_part_number-method -->
+
+    
+      <div id="method-i-name_string" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">name_string</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="PartNum.html#method-i-part_number_name">#part_number_name</a></p>
+
+<p>Description: Return the name for a part number</p>
+
+<p>Parameters: None</p>
+
+<p>Return values: The assembled name for the part number</p>
+          
+
+          
+          <div class="method-source-code" id="name_string-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 247</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">name_string</span>
+  <span class="ruby-node">&quot;#{self.prefix}-#{self.number}-#{self.dash}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- name_string-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- name_string-method -->
+
+    
+      <div id="method-i-part_num_exists-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">part_num_exists?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="PartNum.html#method-i-part_num_exists-3F">#part_num_exists?</a></p>
+
+<p>Description: This method indicates the part number exists in the database</p>
+
+<p>Parameters: none</p>
+
+<p>Return value: TRUE if the part number exists, FALSE otherwise.</p>
+          
+
+          
+          <div class="method-source-code" id="part_num_exists-3F-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 23</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">part_num_exists?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">get_part_number</span> <span class="ruby-operator">?</span> <span class="ruby-keyword">true</span> <span class="ruby-operator">:</span> <span class="ruby-keyword">false</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- part_num_exists-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- part_num_exists-3F-method -->
+
+    
+      <div id="method-i-part_number_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">part_number_name</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="part_number_name-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 251</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">part_number_name</span>
+  <span class="ruby-node">&quot;#{self.prefix}-#{self.number}-#{self.dash}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- part_number_name-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- part_number_name-method -->
+
+    
+      <div id="method-i-part_number_revision" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">part_number_revision</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+
+          
+          <div class="method-source-code" id="part_number_revision-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 273</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">part_number_revision</span>
+  <span class="ruby-node">&quot;#{self.revision}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- part_number_revision-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- part_number_revision-method -->
+
+    
+      <div id="method-i-rev_string" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">rev_string</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="PartNum.html#method-i-part_number_revision">#part_number_revision</a></p>
+
+<p>Description: Return the revision for a part number</p>
+
+<p>Parameters: None</p>
+
+<p>Return values: The assembled name for the part number</p>
+          
+
+          
+          <div class="method-source-code" id="rev_string-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 269</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">rev_string</span>
+  <span class="ruby-node">&quot;#{self.revision}&quot;</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- rev_string-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- rev_string-method -->
+
+    
+      <div id="method-i-uniq_name" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">uniq_name</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="PartNum.html#method-i-uniq_name">#uniq_name</a></p>
+
+<p>Description: This method returns the prefix and number of a pcb, ignoring
+dash number and revision</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: prefix-number</p>
+          
+
+          
+          <div class="method-source-code" id="uniq_name-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 314</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">uniq_name</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">prefix</span> <span class="ruby-operator">+</span> <span class="ruby-string">'-'</span> <span class="ruby-operator">+</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier">number</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- uniq_name-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- uniq_name-method -->
+
+    
+      <div id="method-i-valid_pcb_part_number-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">valid_pcb_part_number?</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="PartNum.html#method-i-valid_pcb_part_number-3F">#valid_pcb_part_number?</a></p>
+
+<p>Description: This method indicates that the PCB part number is valid.</p>
+
+<p>Parameters: None</p>
+
+<p>Return value: TRUE if the PCB part number is valid, FALSE otherwise.</p>
+          
+
+          
+          <div class="method-source-code" id="valid_pcb_part_number-3F-source">
+            <pre><span class="ruby-comment"># File app/models/part_num.rb, line 292</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">valid_pcb_part_number?</span>
+  <span class="ruby-keyword">self</span>.<span class="ruby-identifier">prefix</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\d\d\d$/</span> <span class="ruby-operator">&amp;&amp;</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">number</span> <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^\d\d\d$/</span> <span class="ruby-operator">&amp;&amp;</span>
+    <span class="ruby-keyword">self</span>.<span class="ruby-identifier">dash</span>   <span class="ruby-operator">=~</span> <span class="ruby-regexp">/^[A-Z,a-z,0-9][A-Z,a-z,0-9]$/</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- valid_pcb_part_number-3F-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- valid_pcb_part_number-3F-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

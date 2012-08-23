@@ -1,10 +1,10 @@
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'debug_controller'
 
 # Re-raise errors caught by the controller.
 class DebugController; def rescue_action(e) raise e end; end
 
-class DebugControllerTest < Test::Unit::TestCase
+class DebugControllerTest < ActionController::TestCase
   def setup
     @controller = DebugController.new
     @request    = ActionController::TestRequest.new

@@ -1,0 +1,2404 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+
+<title>Class: BoardDesignEntryController</title>
+
+<link type="text/css" media="screen" href="./rdoc.css" rel="stylesheet">
+
+<script type="text/javascript">
+  var rdoc_rel_prefix = "./";
+</script>
+
+<script type="text/javascript" charset="utf-8" src="./js/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/navigation.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search_index.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/search.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/searcher.js"></script>
+<script type="text/javascript" charset="utf-8" src="./js/darkfish.js"></script>
+
+
+<body id="top" class="class">
+<nav id="metadata">
+  <nav id="home-section" class="section">
+  <h3 class="section-header">
+    <a href="./index.html">Home</a>
+    <a href="./table_of_contents.html#classes">Classes</a>
+    <a href="./table_of_contents.html#methods">Methods</a>
+  </h3>
+</nav>
+
+
+  <nav id="search-section" class="section project-section" class="initially-hidden">
+  <form action="#" method="get" accept-charset="utf-8">
+    <h3 class="section-header">
+      <input type="text" name="search" placeholder="Search" id="search-field"
+             title="Type to search, Up and Down to navigate, Enter to load">
+    </h3>
+  </form>
+
+  <ul id="search-results" class="initially-hidden"></ul>
+</nav>
+
+
+  <div id="file-metadata">
+    <nav id="file-list-section" class="section">
+  <h3 class="section-header">Defined In</h3>
+  <ul>
+    <li>app/controllers/board_design_entry_controller.rb
+  </ul>
+</nav>
+
+    
+  </div>
+
+  <div id="class-metadata">
+    
+    <nav id="parent-class-section" class="section">
+  <h3 class="section-header">Parent</h3>
+  
+  <p class="link"><a href="ApplicationController.html">ApplicationController</a>
+  
+</nav>
+
+    
+    <!-- Method Quickref -->
+<nav id="method-list-section" class="section">
+  <h3 class="section-header">Methods</h3>
+
+  <ul class="link-list">
+    
+    <li><a href="#method-i-add_document">#add_document</a>
+    
+    <li><a href="#method-i-change_part_numbers">#change_part_numbers</a>
+    
+    <li><a href="#method-i-create_board_design_entry">#create_board_design_entry</a>
+    
+    <li><a href="#method-i-create_tracker_entry">#create_tracker_entry</a>
+    
+    <li><a href="#method-i-delete_document">#delete_document</a>
+    
+    <li><a href="#method-i-delete_entry">#delete_entry</a>
+    
+    <li><a href="#method-i-design_constraints">#design_constraints</a>
+    
+    <li><a href="#method-i-design_setup">#design_setup</a>
+    
+    <li><a href="#method-i-display_prompt">#display_prompt</a>
+    
+    <li><a href="#method-i-edit_entry">#edit_entry</a>
+    
+    <li><a href="#method-i-entry_input_checklist">#entry_input_checklist</a>
+    
+    <li><a href="#method-i-get_document">#get_document</a>
+    
+    <li><a href="#method-i-get_part_number">#get_part_number</a>
+    
+    <li><a href="#method-i-new_entry">#new_entry</a>
+    
+    <li><a href="#method-i-originator_list">#originator_list</a>
+    
+    <li><a href="#method-i-process_entry_type">#process_entry_type</a>
+    
+    <li><a href="#method-i-process_make_from">#process_make_from</a>
+    
+    <li><a href="#method-i-processor_list">#processor_list</a>
+    
+    <li><a href="#method-i-return_entry_to_originator">#return_entry_to_originator</a>
+    
+    <li><a href="#method-i-save_document">#save_document</a>
+    
+    <li><a href="#method-i-send_back">#send_back</a>
+    
+    <li><a href="#method-i-set_entry_type">#set_entry_type</a>
+    
+    <li><a href="#method-i-set_management_team">#set_management_team</a>
+    
+    <li><a href="#method-i-set_review_team">#set_review_team</a>
+    
+    <li><a href="#method-i-set_team_member">#set_team_member</a>
+    
+    <li><a href="#method-i-submit">#submit</a>
+    
+    <li><a href="#method-i-submit_originator_comments">#submit_originator_comments</a>
+    
+    <li><a href="#method-i-submit_processor_comments">#submit_processor_comments</a>
+    
+    <li><a href="#method-i-update_entry">#update_entry</a>
+    
+    <li><a href="#method-i-update_part_numbers">#update_part_numbers</a>
+    
+    <li><a href="#method-i-update_yes_no">#update_yes_no</a>
+    
+    <li><a href="#method-i-view_attachments">#view_attachments</a>
+    
+    <li><a href="#method-i-view_entry">#view_entry</a>
+    
+    <li><a href="#method-i-view_originator_comments">#view_originator_comments</a>
+    
+    <li><a href="#method-i-view_processor_comments">#view_processor_comments</a>
+    
+  </ul>
+</nav>
+
+  </div>
+
+  <div id="project-metadata">
+    <nav id="fileindex-section" class="section project-section">
+  <h3 class="section-header">Pages</h3>
+
+  <ul>
+  
+    <li class="file"><a href="./doc/README_FOR_APP.html">README_FOR_APP</a>
+  
+  </ul>
+</nav>
+
+    <nav id="classindex-section" class="section project-section">
+  <h3 class="section-header">Class and Module Index</h3>
+
+  <ul class="link-list">
+  
+    <li><a href="./AdminController.html">AdminController</a>
+  
+    <li><a href="./ApplicationController.html">ApplicationController</a>
+  
+    <li><a href="./ApplicationHelper.html">ApplicationHelper</a>
+  
+    <li><a href="./Audit.html">Audit</a>
+  
+    <li><a href="./AuditComment.html">AuditComment</a>
+  
+    <li><a href="./AuditController.html">AuditController</a>
+  
+    <li><a href="./AuditMailer.html">AuditMailer</a>
+  
+    <li><a href="./AuditTeammate.html">AuditTeammate</a>
+  
+    <li><a href="./Board.html">Board</a>
+  
+    <li><a href="./BoardController.html">BoardController</a>
+  
+    <li><a href="./BoardDesignEntry.html">BoardDesignEntry</a>
+  
+    <li><a href="./BoardDesignEntryController.html">BoardDesignEntryController</a>
+  
+    <li><a href="./BoardDesignEntryMailer.html">BoardDesignEntryMailer</a>
+  
+    <li><a href="./BoardDesignEntryUser.html">BoardDesignEntryUser</a>
+  
+    <li><a href="./BoardHelper.html">BoardHelper</a>
+  
+    <li><a href="./BoardReviewer.html">BoardReviewer</a>
+  
+    <li><a href="./CcListHistory.html">CcListHistory</a>
+  
+    <li><a href="./ChangeClass.html">ChangeClass</a>
+  
+    <li><a href="./ChangeClassesController.html">ChangeClassesController</a>
+  
+    <li><a href="./ChangeDetail.html">ChangeDetail</a>
+  
+    <li><a href="./ChangeDetailsController.html">ChangeDetailsController</a>
+  
+    <li><a href="./ChangeItem.html">ChangeItem</a>
+  
+    <li><a href="./ChangeItemsController.html">ChangeItemsController</a>
+  
+    <li><a href="./ChangeType.html">ChangeType</a>
+  
+    <li><a href="./ChangeTypesController.html">ChangeTypesController</a>
+  
+    <li><a href="./Check.html">Check</a>
+  
+    <li><a href="./CheckController.html">CheckController</a>
+  
+    <li><a href="./Checklist.html">Checklist</a>
+  
+    <li><a href="./ChecklistController.html">ChecklistController</a>
+  
+    <li><a href="./ChecklistHelper.html">ChecklistHelper</a>
+  
+    <li><a href="./CoreExtensions.html">CoreExtensions</a>
+  
+    <li><a href="./DbCheck.html">DbCheck</a>
+  
+    <li><a href="./DebugController.html">DebugController</a>
+  
+    <li><a href="./DebugHelper.html">DebugHelper</a>
+  
+    <li><a href="./Design.html">Design</a>
+  
+    <li><a href="./DesignCenter.html">DesignCenter</a>
+  
+    <li><a href="./DesignCenterController.html">DesignCenterController</a>
+  
+    <li><a href="./DesignCenterManagerController.html">DesignCenterManagerController</a>
+  
+    <li><a href="./DesignChange.html">DesignChange</a>
+  
+    <li><a href="./DesignChangesController.html">DesignChangesController</a>
+  
+    <li><a href="./DesignChangesHelper.html">DesignChangesHelper</a>
+  
+    <li><a href="./DesignCheck.html">DesignCheck</a>
+  
+    <li><a href="./DesignController.html">DesignController</a>
+  
+    <li><a href="./DesignDirectory.html">DesignDirectory</a>
+  
+    <li><a href="./DesignDirectoryController.html">DesignDirectoryController</a>
+  
+    <li><a href="./DesignPcbasHelper.html">DesignPcbasHelper</a>
+  
+    <li><a href="./DesignReview.html">DesignReview</a>
+  
+    <li><a href="./DesignReviewComment.html">DesignReviewComment</a>
+  
+    <li><a href="./DesignReviewController.html">DesignReviewController</a>
+  
+    <li><a href="./DesignReviewDocument.html">DesignReviewDocument</a>
+  
+    <li><a href="./DesignReviewHelper.html">DesignReviewHelper</a>
+  
+    <li><a href="./DesignReviewMailer.html">DesignReviewMailer</a>
+  
+    <li><a href="./DesignReviewResult.html">DesignReviewResult</a>
+  
+    <li><a href="./DesignReviewResultController.html">DesignReviewResultController</a>
+  
+    <li><a href="./DesignUpdate.html">DesignUpdate</a>
+  
+    <li><a href="./DesignUpdateController.html">DesignUpdateController</a>
+  
+    <li><a href="./Division.html">Division</a>
+  
+    <li><a href="./DivisionController.html">DivisionController</a>
+  
+    <li><a href="./Document.html">Document</a>
+  
+    <li><a href="./DocumentController.html">DocumentController</a>
+  
+    <li><a href="./DocumentMailer.html">DocumentMailer</a>
+  
+    <li><a href="./DocumentType.html">DocumentType</a>
+  
+    <li><a href="./DocumentTypeController.html">DocumentTypeController</a>
+  
+    <li><a href="./EcoComment.html">EcoComment</a>
+  
+    <li><a href="./EcoDocument.html">EcoDocument</a>
+  
+    <li><a href="./EcoDocumentsController.html">EcoDocumentsController</a>
+  
+    <li><a href="./EcoTask.html">EcoTask</a>
+  
+    <li><a href="./EcoTaskMailer.html">EcoTaskMailer</a>
+  
+    <li><a href="./EcoTaskReportsController.html">EcoTaskReportsController</a>
+  
+    <li><a href="./EcoTasksController.html">EcoTasksController</a>
+  
+    <li><a href="./EcoType.html">EcoType</a>
+  
+    <li><a href="./FabHouse.html">FabHouse</a>
+  
+    <li><a href="./FabHouseController.html">FabHouseController</a>
+  
+    <li><a href="./FtpNotification.html">FtpNotification</a>
+  
+    <li><a href="./IncomingDirectory.html">IncomingDirectory</a>
+  
+    <li><a href="./IncomingDirectoryController.html">IncomingDirectoryController</a>
+  
+    <li><a href="./IpdPost.html">IpdPost</a>
+  
+    <li><a href="./IpdPostHelper.html">IpdPostHelper</a>
+  
+    <li><a href="./Location.html">Location</a>
+  
+    <li><a href="./LocationController.html">LocationController</a>
+  
+    <li><a href="./LoginSystem.html">LoginSystem</a>
+  
+    <li><a href="./MailerMethods.html">MailerMethods</a>
+  
+    <li><a href="./OiAssignment.html">OiAssignment</a>
+  
+    <li><a href="./OiAssignmentComment.html">OiAssignmentComment</a>
+  
+    <li><a href="./OiAssignmentReport.html">OiAssignmentReport</a>
+  
+    <li><a href="./OiCategory.html">OiCategory</a>
+  
+    <li><a href="./OiCategorySection.html">OiCategorySection</a>
+  
+    <li><a href="./OiInstruction.html">OiInstruction</a>
+  
+    <li><a href="./OiInstructionController.html">OiInstructionController</a>
+  
+    <li><a href="./OiInstructionHelper.html">OiInstructionHelper</a>
+  
+    <li><a href="./OiInstructionMailer.html">OiInstructionMailer</a>
+  
+    <li><a href="./PartNum.html">PartNum</a>
+  
+    <li><a href="./PartNumber.html">PartNumber</a>
+  
+    <li><a href="./PartNumsController.html">PartNumsController</a>
+  
+    <li><a href="./PartNumsHelper.html">PartNumsHelper</a>
+  
+    <li><a href="./Pcbtr.html">Pcbtr</a>
+  
+    <li><a href="./Ping.html">Ping</a>
+  
+    <li><a href="./PingMailer.html">PingMailer</a>
+  
+    <li><a href="./Platform.html">Platform</a>
+  
+    <li><a href="./PlatformController.html">PlatformController</a>
+  
+    <li><a href="./PostingTimestamp.html">PostingTimestamp</a>
+  
+    <li><a href="./Prefix.html">Prefix</a>
+  
+    <li><a href="./PrefixController.html">PrefixController</a>
+  
+    <li><a href="./Priority.html">Priority</a>
+  
+    <li><a href="./PriorityController.html">PriorityController</a>
+  
+    <li><a href="./ProductType.html">ProductType</a>
+  
+    <li><a href="./ProductTypeController.html">ProductTypeController</a>
+  
+    <li><a href="./Project.html">Project</a>
+  
+    <li><a href="./ProjectController.html">ProjectController</a>
+  
+    <li><a href="./ReportController.html">ReportController</a>
+  
+    <li><a href="./ReportHelper.html">ReportHelper</a>
+  
+    <li><a href="./ReviewGroup.html">ReviewGroup</a>
+  
+    <li><a href="./ReviewGroupController.html">ReviewGroupController</a>
+  
+    <li><a href="./ReviewManagerController.html">ReviewManagerController</a>
+  
+    <li><a href="./ReviewStatus.html">ReviewStatus</a>
+  
+    <li><a href="./ReviewStatusController.html">ReviewStatusController</a>
+  
+    <li><a href="./ReviewType.html">ReviewType</a>
+  
+    <li><a href="./ReviewTypeController.html">ReviewTypeController</a>
+  
+    <li><a href="./Revision.html">Revision</a>
+  
+    <li><a href="./Role.html">Role</a>
+  
+    <li><a href="./RoleController.html">RoleController</a>
+  
+    <li><a href="./Section.html">Section</a>
+  
+    <li><a href="./SectionController.html">SectionController</a>
+  
+    <li><a href="./SessionCleaner.html">SessionCleaner</a>
+  
+    <li><a href="./Subsection.html">Subsection</a>
+  
+    <li><a href="./SubsectionController.html">SubsectionController</a>
+  
+    <li><a href="./TimeHelper.html">TimeHelper</a>
+  
+    <li><a href="./TrackerController.html">TrackerController</a>
+  
+    <li><a href="./TrackerFix.html">TrackerFix</a>
+  
+    <li><a href="./TrackerHelper.html">TrackerHelper</a>
+  
+    <li><a href="./TrackerMailer.html">TrackerMailer</a>
+  
+    <li><a href="./User.html">User</a>
+  
+    <li><a href="./UserController.html">UserController</a>
+  
+    <li><a href="./UserLogin.html">UserLogin</a>
+  
+    <li><a href="./UserMailer.html">UserMailer</a>
+  
+  </ul>
+</nav>
+
+  </div>
+</nav>
+
+<div id="documentation">
+  <h1 class="class">class BoardDesignEntryController</h1>
+
+  <div id="description" class="description">
+    
+<p>Copyright 2005, by Teradyne, Inc., Boston MA</p>
+
+<p>File: board_design_entry_controller.rb</p>
+
+<p>This contains the logic that handles events from the outside world (user
+input), interacts with the board design entry model,</p>
+
+<pre>and displays the appropriate view to the user.</pre>
+
+<p>$Id: board_design_entry_controller.rb,v 1.22.2.10 2012/04/25 19:58:35
+dallas Exp $</p>
+
+  </div><!-- description -->
+
+  
+  
+  
+  <section id="5Buntitled-5D" class="documentation-section">
+    
+
+    
+
+    
+
+    
+
+    <!-- Methods -->
+    
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section section">
+      <h3 class="section-header">Public Instance Methods</h3>
+
+    
+      <div id="method-i-add_document" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_document</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-add_document">#add_document</a></p>
+
+<p>Description: This action provides the information for the <a
+href="BoardDesignEntryController.html#method-i-add_document">#add_document</a>
+view.</p>
+
+<p>Parameters from params id          - the board_design_entry id type       
+- identifies the document type user_action - passing along the
+‘adding’/‘updating’ value</p>
+          
+
+          
+          <div class="method-source-code" id="add_document-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 1003</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">add_document</span>
+
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@document_type</span>      = <span class="ruby-constant">DocumentType</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:type</span>])
+  <span class="ruby-ivar">@user_action</span>        = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>]
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- add_document-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- add_document-method -->
+
+    
+      <div id="method-i-change_part_numbers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">change_part_numbers</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>change_part_number</p>
+
+<p>Description: Change the part number(s) for a board_design_entry</p>
+
+<p>Parameters id =&gt; board_design_entry.id</p>
+          
+
+          
+          <div class="method-source-code" id="change_part_numbers-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 259</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">change_part_numbers</span>
+
+  <span class="ruby-ivar">@board_design_entry</span>   = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">flash</span>[<span class="ruby-string">'rows'</span>]
+    <span class="ruby-ivar">@rows</span> = <span class="ruby-identifier">flash</span>[<span class="ruby-string">'rows'</span>]
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@rows</span> = <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:all</span>,
+    <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-value">:board_design_entry_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">id</span>},
+    <span class="ruby-value">:order</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;'use','prefix','number','dash'&quot;</span> )
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-comment">#add more rows to make a total of 5</span>
+  (<span class="ruby-ivar">@rows</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">+</span><span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">5</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-ivar">@rows</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">new</span>( <span class="ruby-value">:use</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;pcba&quot;</span>,  <span class="ruby-value">:revision</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;a&quot;</span> )
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@heading</span>       = <span class="ruby-string">&quot;PCB Engineering - Update Part Numbers&quot;</span>
+  <span class="ruby-ivar">@next_value</span>    = <span class="ruby-string">&quot;Update Part Numbers&quot;</span>
+  <span class="ruby-ivar">@next_action</span>   = { <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'update_part_numbers'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span><span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">id</span>}
+  <span class="ruby-ivar">@cancel_value</span>  = <span class="ruby-string">&quot;Cancel / Return View Design Entry&quot;</span>
+  <span class="ruby-ivar">@cancel_action</span> = { <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'view_entry'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span><span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">id</span>}
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:template</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'shared/enter_part_numbers'</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- change_part_numbers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- change_part_numbers-method -->
+
+    
+      <div id="method-i-create_board_design_entry" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_board_design_entry</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-create_board_design_entry">#create_board_design_entry</a></p>
+
+<p>Description: This action validates the user’s prefix and number entry.  If
+the entries are invalid then the get_design_id view is redisplayed with a
+message indicating why the input is invalid.  If the input is valid the row
+is added to the board_design_entry table the the <a
+href="BoardDesignEntryController.html#method-i-new_entry">#new_entry</a>
+view is displayed.</p>
+
+<p>Parameters from params None</p>
+          
+
+          
+          <div class="method-source-code" id="create_board_design_entry-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 440</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_board_design_entry</span>
+
+  <span class="ruby-comment">#check to ensure that a legal PCB part number was specified</span>
+  <span class="ruby-identifier">pcb</span> = <span class="ruby-keyword">nil</span>
+  <span class="ruby-identifier">params</span>[<span class="ruby-value">:rows</span>].<span class="ruby-identifier">each_value</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">row</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">row</span>[<span class="ruby-value">:prefix</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&quot;</span>
+      <span class="ruby-identifier">pcb</span> = <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">row</span>) <span class="ruby-keyword">if</span> <span class="ruby-identifier">row</span>[<span class="ruby-value">:use</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;pcb&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">pcb</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">pcb</span>.<span class="ruby-identifier">valid_pcb_part_number?</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;A valid PCB part number like '123-456-78' must be specified&quot;</span>
+    <span class="ruby-identifier">redirect_to</span> <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'get_part_number'</span>, <span class="ruby-value">:rows</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:rows</span>]
+  <span class="ruby-keyword">else</span>
+
+    <span class="ruby-comment">#PCB part number specified</span>
+    <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">add_entry</span>(<span class="ruby-ivar">@logged_in_user</span>)
+
+    <span class="ruby-keyword">if</span> <span class="ruby-ivar">@board_design_entry</span>
+      <span class="ruby-comment">#save and relate the partnumbers to the board design entry</span>
+      <span class="ruby-identifier">fail</span> = <span class="ruby-value">0</span>
+      <span class="ruby-ivar">@errors</span> = []
+      <span class="ruby-ivar">@rows</span>   = []
+      <span class="ruby-identifier">params</span>[<span class="ruby-value">:rows</span>].<span class="ruby-identifier">each_value</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pnum</span><span class="ruby-operator">|</span>
+        <span class="ruby-keyword">unless</span> <span class="ruby-identifier">pnum</span>[<span class="ruby-value">:prefix</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&quot;</span>
+          <span class="ruby-identifier">num</span> = <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">pnum</span>)
+          <span class="ruby-identifier">num</span>.<span class="ruby-identifier">board_design_entry_id</span> = <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">id</span>
+          <span class="ruby-ivar">@rows</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">num</span>
+          <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">num</span>.<span class="ruby-identifier">save</span>
+            <span class="ruby-identifier">fail</span> = <span class="ruby-value">1</span>
+            <span class="ruby-ivar">@errors</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-identifier">num</span>.<span class="ruby-identifier">errors</span>
+          <span class="ruby-keyword">end</span>
+        <span class="ruby-keyword">end</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;The design entry has been stored in the database&quot;</span>
+      
+      <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'new_entry'</span>,
+        <span class="ruby-value">:id</span>          =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">id</span>,
+        <span class="ruby-value">:user_action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'adding'</span>)
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;Failed to create the board design entry&quot;</span>
+      <span class="ruby-identifier">render</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'get_part_number'</span>)
+
+    <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_board_design_entry-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_board_design_entry-method -->
+
+    
+      <div id="method-i-create_tracker_entry" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">create_tracker_entry</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-create_tracker_entry">#create_tracker_entry</a></p>
+
+<p>Description: This action creates the tracker entry.</p>
+
+<p>Parameters from params id            - the board_design_entry id
+review_type   - a hash, accessed by review type name,used to track the</p>
+
+<pre>reviews that the user wants to include if set to 1 
+(or exclude if set to 0)</pre>
+
+<p>priority      - indicates the criticality of the design audit         - the
+value for the skip audit checkbox.  Set to ‘1’ if</p>
+
+<pre>the user wants to skip the audit.</pre>
+          
+
+          
+          <div class="method-source-code" id="create_tracker_entry-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 1152</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">create_tracker_entry</span>
+
+  <span class="ruby-identifier">board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">''</span>
+  
+  <span class="ruby-identifier">board</span> = <span class="ruby-constant">Board</span>.<span class="ruby-identifier">new</span>( <span class="ruby-value">:platform_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">platform_id</span>,
+                     <span class="ruby-value">:project_id</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">project_id</span>,
+                     <span class="ruby-value">:description</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">description</span>,
+                     <span class="ruby-value">:active</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-value">1</span> )
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">board</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;Board created ... &quot;</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;The board already exists - this should never occur&quot;</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'processor_list'</span>)
+    <span class="ruby-keyword">return</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-comment"># Update the board reviewers table for this board.</span>
+  <span class="ruby-identifier">ig_role</span> = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-string">'PCB Input Gate'</span>)
+  <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">board_design_entry_users</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">reviewer_record</span><span class="ruby-operator">|</span>
+
+    <span class="ruby-keyword">next</span> <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">reviewer_record</span>.<span class="ruby-identifier">required?</span>
+
+    <span class="ruby-identifier">board_reviewer</span> = <span class="ruby-identifier">board</span>.<span class="ruby-identifier">board_reviewers</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">br</span><span class="ruby-operator">|</span> <span class="ruby-identifier">br</span>.<span class="ruby-identifier">role_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">reviewer_record</span>.<span class="ruby-identifier">role_id</span> }
+
+    <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">board_reviewer</span>
+    
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">reviewer_record</span>.<span class="ruby-identifier">role_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">ig_role</span>.<span class="ruby-identifier">id</span>
+        <span class="ruby-identifier">reviewer_id</span> = <span class="ruby-identifier">reviewer_record</span>.<span class="ruby-identifier">user_id</span>
+      <span class="ruby-keyword">else</span>
+        <span class="ruby-identifier">reviewer_id</span> = <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">id</span>
+      <span class="ruby-keyword">end</span>
+
+      <span class="ruby-identifier">board_reviewer</span> = <span class="ruby-constant">BoardReviewer</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:board_id</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board</span>.<span class="ruby-identifier">id</span>,
+                                         <span class="ruby-value">:reviewer_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">reviewer_id</span>,
+                                         <span class="ruby-value">:role_id</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">reviewer_record</span>.<span class="ruby-identifier">role_id</span>)
+      <span class="ruby-identifier">board_reviewer</span>.<span class="ruby-identifier">save</span>
+      
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">board_reviewer</span>.<span class="ruby-identifier">reviewer_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">reviewer_record</span>.<span class="ruby-identifier">user_id</span>
+    
+      <span class="ruby-identifier">board_reviewer</span>.<span class="ruby-identifier">update_attribute</span>(<span class="ruby-string">'reviewer_id'</span>, <span class="ruby-identifier">reviewer_record</span>.<span class="ruby-identifier">user_id</span>)
+
+    <span class="ruby-keyword">end</span>
+    
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-comment"># Create the design</span>
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">entry_type</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">'new'</span>
+    <span class="ruby-identifier">type</span> = <span class="ruby-string">'New'</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">'dot_rev'</span>
+    <span class="ruby-identifier">type</span> = <span class="ruby-string">'Dot Rev'</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">'date_code'</span>
+    <span class="ruby-identifier">type</span> = <span class="ruby-string">'Date Code'</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">review_types</span> = <span class="ruby-constant">ReviewType</span>.<span class="ruby-identifier">get_active_review_types</span>
+  
+  <span class="ruby-identifier">phase_id</span> = <span class="ruby-constant">Design</span><span class="ruby-operator">::</span><span class="ruby-constant">COMPLETE</span>
+  <span class="ruby-identifier">review_types</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">review_type</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:review_type</span>][<span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">name</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'1'</span>
+      <span class="ruby-identifier">phase_id</span> = <span class="ruby-identifier">review_type</span>.<span class="ruby-identifier">id</span>
+      <span class="ruby-keyword">break</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">design</span> = <span class="ruby-constant">Design</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:board_id</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board</span>.<span class="ruby-identifier">id</span>,
+                      <span class="ruby-comment">#:part_number_id   =&gt; board_design_entry.part_number_id,</span>
+                      <span class="ruby-value">:phase_id</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">phase_id</span>,
+                      <span class="ruby-value">:design_center_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">design_center_id</span>,
+                      <span class="ruby-value">:revision_id</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">revision_id</span>,
+                      <span class="ruby-value">:numeric_revision</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">numeric_revision</span>,
+                      <span class="ruby-value">:eco_number</span>       =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">eco_number</span>,
+                      <span class="ruby-value">:design_type</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">type</span>,
+                      <span class="ruby-value">:priority_id</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:priority</span>][<span class="ruby-value">:id</span>],
+                      <span class="ruby-value">:pcb_input_id</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">id</span>,
+                      <span class="ruby-value">:created_by</span>       =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">id</span>)
+                
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;Design created ... &quot;</span>
+    
+    <span class="ruby-identifier">design</span>.<span class="ruby-identifier">setup_design_reviews</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:review_type</span>], 
+                                <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">board_design_entry_users</span>)
+                                
+    <span class="ruby-comment"># Create the links to the documents that were attached during board </span>
+    <span class="ruby-comment"># design entry.</span>
+    <span class="ruby-identifier">entry_doc_types</span> = { <span class="ruby-value">:outline_drawing_document_id</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Outline Drawing'</span>, 
+                        <span class="ruby-value">:pcb_attribute_form_document_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'PCB Attribute'</span>,
+                        <span class="ruby-value">:teradyne_stackup_document_id</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'Stackup'</span> }
+                        
+    <span class="ruby-identifier">entry_doc_types</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">message</span>, <span class="ruby-identifier">document_type_name</span><span class="ruby-operator">|</span>
+    
+      <span class="ruby-identifier">document_id</span> = <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">message</span>)
+      
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">document_id</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+      
+        <span class="ruby-identifier">document_type</span> = <span class="ruby-constant">DocumentType</span>.<span class="ruby-identifier">find_by_name</span>(<span class="ruby-identifier">document_type_name</span>)
+        <span class="ruby-constant">DesignReviewDocument</span>.<span class="ruby-identifier">new</span>(
+                          <span class="ruby-value">:board_id</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board</span>.<span class="ruby-identifier">id</span>,
+                          <span class="ruby-value">:design_id</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">id</span>,
+                          <span class="ruby-value">:document_type_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">document_type</span>.<span class="ruby-identifier">id</span>,
+                          <span class="ruby-value">:document_id</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">document_id</span>).<span class="ruby-identifier">save</span>
+      <span class="ruby-keyword">end</span>
+    }
+                                                      
+    <span class="ruby-identifier">audit</span> = <span class="ruby-constant">Audit</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">:design_id</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">design</span>.<span class="ruby-identifier">id</span>,
+                      <span class="ruby-value">:checklist_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-constant">Checklist</span>.<span class="ruby-identifier">latest_release</span>.<span class="ruby-identifier">id</span>,
+                      <span class="ruby-value">:skip</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:audit</span>][<span class="ruby-value">:skip</span>])
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">audit</span>.<span class="ruby-identifier">save</span>
+      <span class="ruby-identifier">audit</span>.<span class="ruby-identifier">create_checklist</span>
+    <span class="ruby-keyword">end</span>
+    
+    <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">ready_to_post</span>
+    <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">design_id</span> = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">id</span>
+    <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">save</span>
+
+    <span class="ruby-comment">#add the design id to the part numbers for the board_design_entry</span>
+    <span class="ruby-identifier">pcb_num</span>=<span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">get_bde_pcb_part_number</span>(<span class="ruby-identifier">board_design_entry</span>)
+    <span class="ruby-identifier">pcb_num</span>.<span class="ruby-identifier">design_id</span> = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">id</span>
+    <span class="ruby-identifier">pcb_num</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">get_bde_pcba_part_numbers</span>(<span class="ruby-identifier">board_design_entry</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pcba</span><span class="ruby-operator">|</span>
+      <span class="ruby-identifier">pcba</span>.<span class="ruby-identifier">design_id</span> = <span class="ruby-identifier">design</span>.<span class="ruby-identifier">id</span>
+      <span class="ruby-identifier">pcba</span>.<span class="ruby-identifier">save</span>
+    <span class="ruby-keyword">end</span>
+    
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;The design already exists - this should never occur&quot;</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'processor_list'</span>)
+    <span class="ruby-keyword">return</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'processor_list'</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- create_tracker_entry-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- create_tracker_entry-method -->
+
+    
+      <div id="method-i-delete_document" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">delete_document</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-delete_document">#delete_document</a></p>
+
+<p>Description: This action deletesthe document that the user selected for
+deletion.</p>
+
+<p>Parameters from params type        - identifies the type of document that
+is being attached user_action - passing along the ‘adding’/‘updating’ value
+viewer      - passing along the ‘processor’/” value</p>
+          
+
+          
+          <div class="method-source-code" id="delete_document-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 1104</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">delete_document</span>
+
+  <span class="ruby-identifier">board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:type</span>]
+  
+  <span class="ruby-keyword">when</span> <span class="ruby-string">'Outline Drawing'</span>
+    <span class="ruby-identifier">document</span> = <span class="ruby-constant">Document</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">outline_drawing_document_id</span>)
+    <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">outline_drawing_document_id</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">'PCB Attribute'</span>
+    <span class="ruby-identifier">document</span> = <span class="ruby-constant">Document</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">pcb_attribute_form_document_id</span>)
+    <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">pcb_attribute_form_document_id</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-string">'Stackup'</span>
+    <span class="ruby-identifier">document</span> = <span class="ruby-constant">Document</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">teradyne_stackup_document_id</span>)
+    <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">teradyne_stackup_document_id</span> = <span class="ruby-value">0</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">document</span>.<span class="ruby-identifier">destroy</span>
+  <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">save</span>
+
+
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'view_attachments'</span>, 
+              <span class="ruby-value">:id</span>          =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">id</span>, 
+              <span class="ruby-value">:user_action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>],
+              <span class="ruby-value">:viewer</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:viewer</span>])
+
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- delete_document-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- delete_document-method -->
+
+    
+      <div id="method-i-delete_entry" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">delete_entry</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>destroy</p>
+
+<p>Description: This method removes the entry from the table.  In addition,
+any  information related to the entry is also cleaned up.</p>
+
+<p>Parameters from params id - the identifier for the board design entry.</p>
+          
+
+          
+          <div class="method-source-code" id="delete_entry-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 138</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">delete_entry</span>
+  <span class="ruby-identifier">board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-value">:first</span>, <span class="ruby-value">:conditions</span> =<span class="ruby-operator">&gt;</span> { <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>] })
+  <span class="ruby-identifier">pcb_number</span> = <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">pcb_number</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">board_design_entry</span>
+    <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">board_design_entry_users</span>.<span class="ruby-identifier">destroy_all</span>
+    <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">part_nums</span>.<span class="ruby-identifier">destroy_all</span>
+
+    <span class="ruby-constant">Document</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">outline_drawing_document_id</span>).<span class="ruby-identifier">destroy</span>          <span class="ruby-keyword">if</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">outline_drawing_document_id?</span>
+    <span class="ruby-constant">Document</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">pcb_attribute_form_document_id</span>).<span class="ruby-identifier">destroy</span>          <span class="ruby-keyword">if</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">pcb_attribute_form_document_id?</span>
+    <span class="ruby-constant">Document</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">teradyne_stackup_document_id</span>).<span class="ruby-identifier">destroy</span>          <span class="ruby-keyword">if</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">teradyne_stackup_document_id?</span>
+
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">destroy</span>
+
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'The entry for '</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">pcb_number</span> <span class="ruby-operator">+</span> <span class="ruby-string">' has been deleted from the database'</span>
+      <span class="ruby-constant">BoardDesignEntryMailer</span><span class="ruby-operator">::</span><span class="ruby-identifier">originator_board_design_entry_deletion</span>(
+        <span class="ruby-identifier">pcb_number</span>,<span class="ruby-ivar">@logged_in_user</span>).<span class="ruby-identifier">deliver</span>
+
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'The request to delete the entry failed - Contact DTG'</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'The entry could not be found'</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">redirect_to</span>( <span class="ruby-identifier">url_for</span>( <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:return</span>] ))
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- delete_entry-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- delete_entry-method -->
+
+    
+      <div id="method-i-design_constraints" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">design_constraints</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-design_constraints">#design_constraints</a></p>
+
+<p>Description: This action displays a form to gather design constraint
+details for the design entry.</p>
+
+<p>Parameters from params id          - the board_design_entry id user_action
+- keeps track of whether the user is adding or updating</p>
+          
+
+          
+          <div class="method-source-code" id="design_constraints-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 830</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">design_constraints</span>
+
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@user_action</span>        = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>]
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- design_constraints-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- design_constraints-method -->
+
+    
+      <div id="method-i-design_setup" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">design_setup</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-design_setup">#design_setup</a></p>
+
+<p>Description: This action retrieves the data forthe design setup view.</p>
+
+<p>Parameters from params id            - the board_design_entry id</p>
+          
+
+          
+          <div class="method-source-code" id="design_setup-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 1300</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">design_setup</span>
+
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@review_types</span>       = <span class="ruby-constant">ReviewType</span>.<span class="ruby-identifier">get_active_review_types</span>
+  <span class="ruby-ivar">@priorities</span>         = <span class="ruby-constant">Priority</span>.<span class="ruby-identifier">get_priorities</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- design_setup-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- design_setup-method -->
+
+    
+      <div id="method-i-display_prompt" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">display_prompt</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-display_prompt">#display_prompt</a></p>
+
+<p>Description: Called when the user clicks one of the radio buttons on the 
+set entry type screen.</p>
+
+<p>Parameters from params None</p>
+          
+
+          
+          <div class="method-source-code" id="display_prompt-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 94</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">display_prompt</span>
+  <span class="ruby-identifier">render</span>(<span class="ruby-value">:layout</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">false</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- display_prompt-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- display_prompt-method -->
+
+    
+      <div id="method-i-edit_entry" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">edit_entry</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-edit_entry">#edit_entry</a></p>
+
+<p>Description: This action provides the data for the user to edit an entry.</p>
+
+<p>Parameters from params None</p>
+          
+
+          
+          <div class="method-source-code" id="edit_entry-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 500</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">edit_entry</span>
+
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@user_action</span>        = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>]
+  <span class="ruby-ivar">@viewer</span>             = <span class="ruby-identifier">params</span>[<span class="ruby-value">:viewer</span>]
+  
+  <span class="ruby-ivar">@design_dir_list</span>   = <span class="ruby-constant">DesignDirectory</span>.<span class="ruby-identifier">get_active_design_directories</span>
+  <span class="ruby-ivar">@division_list</span>     = <span class="ruby-constant">Division</span>.<span class="ruby-identifier">get_active_divisions</span>
+  <span class="ruby-ivar">@incoming_dir_list</span> = <span class="ruby-constant">IncomingDirectory</span>.<span class="ruby-identifier">get_active_incoming_directories</span>
+  <span class="ruby-ivar">@location_list</span>     = <span class="ruby-constant">Location</span>.<span class="ruby-identifier">get_active_locations</span>
+  <span class="ruby-ivar">@platform_list</span>     = <span class="ruby-constant">Platform</span>.<span class="ruby-identifier">get_active_platforms</span>
+  <span class="ruby-ivar">@prefix_list</span>       = <span class="ruby-constant">Prefix</span>.<span class="ruby-identifier">get_active_prefixes</span>
+  <span class="ruby-ivar">@product_type_list</span> = <span class="ruby-constant">ProductType</span>.<span class="ruby-identifier">get_active_product_types</span>
+  <span class="ruby-ivar">@project_list</span>      = <span class="ruby-constant">Project</span>.<span class="ruby-identifier">get_active_projects</span>
+  <span class="ruby-ivar">@revision_list</span>     = <span class="ruby-constant">Revision</span>.<span class="ruby-identifier">get_revisions</span>
+  
+  <span class="ruby-identifier">render</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'new_entry'</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- edit_entry-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- edit_entry-method -->
+
+    
+      <div id="method-i-entry_input_checklist" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">entry_input_checklist</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-entry_input_checklist">#entry_input_checklist</a></p>
+
+<p>Description: This action provides the data for the entry input checklist
+view.</p>
+
+<p>Parameters from params id - the board_design_entry id</p>
+          
+
+          
+          <div class="method-source-code" id="entry_input_checklist-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 667</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">entry_input_checklist</span>
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- entry_input_checklist-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- entry_input_checklist-method -->
+
+    
+      <div id="method-i-get_document" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_document</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-get_document">#get_document</a></p>
+
+<p>Description: This action retrieves the attached document for the user.</p>
+
+<p>Parameters from params id - the document id</p>
+          
+
+          
+          <div class="method-source-code" id="get_document-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 1078</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_document</span>
+
+ <span class="ruby-identifier">document</span> = <span class="ruby-constant">Document</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+ 
+ <span class="ruby-identifier">send_data</span>(<span class="ruby-identifier">document</span>.<span class="ruby-identifier">data</span>.<span class="ruby-identifier">to_a</span>,
+           <span class="ruby-value">:filename</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">document</span>.<span class="ruby-identifier">name</span>,
+           <span class="ruby-value">:type</span>        =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">document</span>.<span class="ruby-identifier">content_type</span>,
+           <span class="ruby-value">:disposition</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;inline&quot;</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_document-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_document-method -->
+
+    
+      <div id="method-i-get_part_number" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">get_part_number</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-get_part_number">#get_part_number</a></p>
+
+<p>Description: Get the part number(s) for a board_design_entry</p>
+
+<p>Parameters None</p>
+          
+
+          
+          <div class="method-source-code" id="get_part_number-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 228</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">get_part_number</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:rows</span>]
+    <span class="ruby-ivar">@rows</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:rows</span>].<span class="ruby-identifier">values</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">row</span><span class="ruby-operator">|</span> <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">row</span>) }
+   <span class="ruby-keyword">else</span>
+    <span class="ruby-ivar">@rows</span> = [ <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">new</span>( <span class="ruby-value">:use</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;pcb&quot;</span>,  <span class="ruby-value">:revision</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;a&quot;</span> ) ]
+  <span class="ruby-keyword">end</span>
+  (<span class="ruby-ivar">@rows</span>.<span class="ruby-identifier">size</span><span class="ruby-operator">+</span><span class="ruby-value">1</span><span class="ruby-operator">..</span><span class="ruby-value">5</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-ivar">@rows</span> <span class="ruby-operator">&lt;&lt;</span> <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">new</span>( <span class="ruby-value">:use</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;pcba&quot;</span>,  <span class="ruby-value">:revision</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;a&quot;</span> )
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@heading</span>       = <span class="ruby-string">&quot;PCB Engineering - New Entry&quot;</span>
+  <span class="ruby-ivar">@next_value</span>    = <span class="ruby-string">&quot;Next --&gt;&quot;</span>
+  <span class="ruby-ivar">@next_action</span>   = { <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'create_board_design_entry'</span> }
+  <span class="ruby-ivar">@cancel_value</span>  = <span class="ruby-string">&quot;Cancel / Return to PCB Engineering Entry List&quot;</span>
+  <span class="ruby-ivar">@cancel_action</span> = { <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'originator_list'</span>}
+  <span class="ruby-ivar">@id</span>            = <span class="ruby-string">&quot;&quot;</span>
+  <span class="ruby-identifier">render</span> <span class="ruby-value">:template</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'shared/enter_part_numbers'</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- get_part_number-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- get_part_number-method -->
+
+    
+      <div id="method-i-new_entry" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">new_entry</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="BoardDesignEntryController.html#method-i-new_entry">#new_entry</a></p>
+
+<p>Description: This method gathers the initial information needed to create a
+new  board.</p>
+
+<p>Parameters from params id - the board directory identifier</p>
+          
+
+          
+          <div class="method-source-code" id="new_entry-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 382</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">new_entry</span>
+
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@user_action</span>        = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>]
+  <span class="ruby-ivar">@design_dir_list</span>    = <span class="ruby-constant">DesignDirectory</span>.<span class="ruby-identifier">get_active_design_directories</span>
+  <span class="ruby-ivar">@division_list</span>      = <span class="ruby-constant">Division</span>.<span class="ruby-identifier">get_active_divisions</span>
+  <span class="ruby-ivar">@incoming_dir_list</span>  = <span class="ruby-constant">IncomingDirectory</span>.<span class="ruby-identifier">get_active_incoming_directories</span>
+  <span class="ruby-ivar">@location_list</span>      = <span class="ruby-constant">Location</span>.<span class="ruby-identifier">get_active_locations</span>
+  <span class="ruby-ivar">@platform_list</span>      = <span class="ruby-constant">Platform</span>.<span class="ruby-identifier">get_active_platforms</span>
+  <span class="ruby-ivar">@product_type_list</span>  = <span class="ruby-constant">ProductType</span>.<span class="ruby-identifier">get_active_product_types</span>
+  <span class="ruby-ivar">@project_list</span>       = <span class="ruby-constant">Project</span>.<span class="ruby-identifier">get_active_projects</span>
+  <span class="ruby-ivar">@revision_list</span>      = <span class="ruby-constant">Revision</span>.<span class="ruby-identifier">get_revisions</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- new_entry-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- new_entry-method -->
+
+    
+      <div id="method-i-originator_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">originator_list</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-originator_list">#originator_list</a></p>
+
+<p>Description: This method retrieves a list of boards from the database for
+display.</p>
+
+<p>Parameters from params None</p>
+          
+
+          
+          <div class="method-source-code" id="originator_list-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 39</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">originator_list</span> 
+  <span class="ruby-ivar">@board_design_entries</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">get_user_entries</span>(<span class="ruby-ivar">@logged_in_user</span>)
+  <span class="ruby-ivar">@other_entries</span>        = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">get_other_pending_entries</span>(<span class="ruby-ivar">@logged_in_user</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- originator_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- originator_list-method -->
+
+    
+      <div id="method-i-process_entry_type" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">process_entry_type</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-process_entry_type">#process_entry_type</a></p>
+
+<p>Description: Called when the user selects the entry type from the set entry
+type screen.</p>
+
+<p>Parameters from params id - the identifier for the board design entry.</p>
+          
+
+          
+          <div class="method-source-code" id="process_entry_type-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 112</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">process_entry_type</span>
+  
+  <span class="ruby-identifier">board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-identifier">entry_type</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:design_type</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'new'</span> <span class="ruby-operator">?</span> <span class="ruby-string">'new'</span> <span class="ruby-operator">:</span> <span class="ruby-string">'dot_rev'</span>
+  <span class="ruby-identifier">message</span>    = <span class="ruby-string">'set_entry_type_'</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">entry_type</span>
+  
+  <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">send</span>(<span class="ruby-identifier">message</span>)
+  
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'design_setup'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">id</span>)
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- process_entry_type-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- process_entry_type-method -->
+
+    
+      <div id="method-i-process_make_from" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">process_make_from</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-process_make_from">#process_make_from</a></p>
+
+<p>Description: This action updates the make from div when the user selects a
+make  from radio button in an edit entry view.</p>
+
+<p>Parameters from params None</p>
+          
+
+          
+          <div class="method-source-code" id="process_make_from-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 648</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">process_make_from</span>
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">make_from</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:value</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;yes&quot;</span> <span class="ruby-operator">?</span> <span class="ruby-value">1</span> <span class="ruby-operator">:</span> <span class="ruby-value">0</span>
+  <span class="ruby-identifier">render</span>(<span class="ruby-value">:layout</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">false</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- process_make_from-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- process_make_from-method -->
+
+    
+      <div id="method-i-processor_list" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">processor_list</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-processor_list">#processor_list</a></p>
+
+<p>Description: This method retrieves a list of boards from the database for
+display for the PCB Input Gate (processor).</p>
+
+<p>Parameters from params None</p>
+          
+
+          
+          <div class="method-source-code" id="processor_list-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 58</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">processor_list</span>
+  <span class="ruby-ivar">@board_design_entries</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">get_entries_for_processor</span>
+  <span class="ruby-ivar">@pre_art_review</span>       = <span class="ruby-constant">ReviewType</span>.<span class="ruby-identifier">get_pre_artwork</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- processor_list-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- processor_list-method -->
+
+    
+      <div id="method-i-return_entry_to_originator" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">return_entry_to_originator</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-return_entry_to_originator">#return_entry_to_originator</a></p>
+
+<p>Description: This method resets the state of the entry to ‘orginated’,
+updates the processor’s comment section and sends mail to the originator 
+indicating that the entry has been returned for more information.</p>
+
+<p>Parameters from params id - the identifier for the board design entry.</p>
+          
+
+          
+          <div class="method-source-code" id="return_entry_to_originator-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 201</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">return_entry_to_originator</span>
+
+  <span class="ruby-identifier">board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  
+  <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">originated</span>
+  <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">update_attribute</span>(<span class="ruby-string">'input_gate_comments'</span>, 
+                                      <span class="ruby-identifier">params</span>[<span class="ruby-value">:board_design_entry</span>][<span class="ruby-value">:input_gate_comments</span>])
+  <span class="ruby-constant">BoardDesignEntryMailer</span><span class="ruby-operator">::</span><span class="ruby-identifier">board_design_entry_return_to_originator</span>(
+    <span class="ruby-identifier">board_design_entry</span>, <span class="ruby-ivar">@logged_in_user</span>).<span class="ruby-identifier">deliver</span>
+
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'processor_list'</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- return_entry_to_originator-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- return_entry_to_originator-method -->
+
+    
+      <div id="method-i-save_document" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">save_document</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-save_document">#save_document</a></p>
+
+<p>Description: This action saves the document that the user selected for
+attachment.</p>
+
+<p>Parameters from params id            - the board_design_entry id document  
+- the document that will be attached document_type - identifies the type of
+document that is being attached user_action   - passing along the
+‘adding’/‘updating’ value viewer        - passing along the ‘processor’/”
+value</p>
+          
+
+          
+          <div class="method-source-code" id="save_document-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 1028</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">save_document</span>
+
+  <span class="ruby-identifier">board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+
+  <span class="ruby-identifier">document</span> = <span class="ruby-constant">Document</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:document</span>]) <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:document</span>][<span class="ruby-value">:document</span>] <span class="ruby-operator">!=</span> <span class="ruby-string">&quot;&quot;</span>
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">document</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">document</span>.<span class="ruby-identifier">data</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-constant">Document</span><span class="ruby-operator">::</span><span class="ruby-constant">MAX_FILE_SIZE</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-node">&quot;The document was too large to attach - it must be smaller than #{Document::MAX_FILE_SIZE/2}&quot;</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-operator">!</span><span class="ruby-identifier">document</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">'No file was specified'</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">document</span>.<span class="ruby-identifier">created_by</span> = <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">id</span>
+    <span class="ruby-identifier">document</span>.<span class="ruby-identifier">unpacked</span>   = <span class="ruby-value">0</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">document</span>.<span class="ruby-identifier">save</span>
+      <span class="ruby-keyword">case</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:document_type</span>]
+      <span class="ruby-keyword">when</span> <span class="ruby-string">'Outline Drawing'</span>
+        <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">outline_drawing_document_id</span> = <span class="ruby-identifier">document</span>.<span class="ruby-identifier">id</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">'PCB Attribute'</span>
+        <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">pcb_attribute_form_document_id</span> = <span class="ruby-identifier">document</span>.<span class="ruby-identifier">id</span>
+      <span class="ruby-keyword">when</span> <span class="ruby-string">'Stackup'</span>
+        <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">teradyne_stackup_document_id</span> = <span class="ruby-identifier">document</span>.<span class="ruby-identifier">id</span>
+      <span class="ruby-keyword">end</span>
+      <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">save</span>
+      
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;The document has been attached&quot;</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;An error occurred - the document was not attached&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'view_attachments'</span>, 
+              <span class="ruby-value">:id</span>          =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">id</span>,
+              <span class="ruby-value">:user_action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>],
+              <span class="ruby-value">:viewer</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:viewer</span>])
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- save_document-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- save_document-method -->
+
+    
+      <div id="method-i-send_back" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">send_back</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="BoardDesignEntryController.html#method-i-send_back">#send_back</a></p>
+
+<p>Description: This method removes the entry from the table.  In addition,
+any  information related to the entry is also cleaned up.</p>
+
+<p>Parameters from params id - the identifier for the board design entry.</p>
+          
+
+          
+          <div class="method-source-code" id="send_back-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 182</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">send_back</span>
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])    
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- send_back-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- send_back-method -->
+
+    
+      <div id="method-i-set_entry_type" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_entry_type</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-set_entry_type">#set_entry_type</a></p>
+
+<p>Description: Gathers the information to display the Set Entry Type screen.</p>
+
+<p>Parameters from params id - the identifier for the board design entry.</p>
+          
+
+          
+          <div class="method-source-code" id="set_entry_type-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 76</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_entry_type</span>
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- set_entry_type-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- set_entry_type-method -->
+
+    
+      <div id="method-i-set_management_team" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_management_team</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-set_management_team">#set_management_team</a></p>
+
+<p>Description: This action displays the form for gathering the names of
+managers associated with the design entry.</p>
+
+<p>Parameters from params id - the board_design_entry id</p>
+          
+
+          
+          <div class="method-source-code" id="set_management_team-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 718</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_management_team</span>
+
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@user_action</span>        = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>]
+  <span class="ruby-ivar">@title</span> = <span class="ruby-string">&quot;Management Team&quot;</span>
+  <span class="ruby-ivar">@members</span> = []
+  <span class="ruby-constant">Role</span>.<span class="ruby-identifier">get_open_manager_reviewer_roles</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">role</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">entry_user</span> = <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">board_design_entry_users</span>.<span class="ruby-identifier">detect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">eu</span><span class="ruby-operator">|</span> <span class="ruby-identifier">eu</span>.<span class="ruby-identifier">role_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">role</span>.<span class="ruby-identifier">id</span> }
+    <span class="ruby-ivar">@members</span> <span class="ruby-operator">&lt;&lt;</span> { <span class="ruby-value">:role</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">role</span>,
+                   <span class="ruby-value">:member_list</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">role</span>.<span class="ruby-identifier">active_users</span>,
+                   <span class="ruby-value">:member_id</span>   =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">entry_user</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">entry_user</span>.<span class="ruby-identifier">user_id</span> <span class="ruby-operator">:</span> <span class="ruby-value">0</span>,
+                   <span class="ruby-value">:required</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">entry_user</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">entry_user</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">entry_user</span>.<span class="ruby-identifier">required?</span>) }
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-ivar">@back_action</span> = <span class="ruby-string">'design_constraints'</span>,
+  <span class="ruby-ivar">@next_action</span> = <span class="ruby-string">'set_review_team'</span>
+
+  <span class="ruby-identifier">render</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;set_team&quot;</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- set_management_team-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- set_management_team-method -->
+
+    
+      <div id="method-i-set_review_team" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_review_team</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-set_review_team">#set_review_team</a></p>
+
+<p>Description: This action displays the form for gathering the names of
+reviewers associated with the design entry.</p>
+
+<p>Parameters from params id - the board_design_entry id</p>
+          
+
+          
+          <div class="method-source-code" id="set_review_team-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 685</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_review_team</span>
+
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@user_action</span>        = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>]
+  <span class="ruby-ivar">@title</span> = <span class="ruby-string">&quot;Review Team&quot;</span>
+  <span class="ruby-ivar">@members</span>  = []
+  <span class="ruby-constant">Role</span>.<span class="ruby-identifier">get_open_reviewer_roles</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">role</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">entry_user</span> = <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">board_design_entry_users</span>.<span class="ruby-identifier">detect</span>{ <span class="ruby-operator">|</span><span class="ruby-identifier">eu</span><span class="ruby-operator">|</span> <span class="ruby-identifier">eu</span>.<span class="ruby-identifier">role_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">role</span>.<span class="ruby-identifier">id</span> }
+    <span class="ruby-ivar">@members</span> <span class="ruby-operator">&lt;&lt;</span> {  <span class="ruby-value">:role</span>         =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">role</span>,
+                   <span class="ruby-value">:member_list</span>  =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">role</span>.<span class="ruby-identifier">active_users</span>,
+                   <span class="ruby-value">:member_id</span>    =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">entry_user</span> <span class="ruby-operator">?</span> <span class="ruby-identifier">entry_user</span>.<span class="ruby-identifier">user_id</span> <span class="ruby-operator">:</span> <span class="ruby-value">0</span>,
+                   <span class="ruby-value">:required</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">entry_user</span> <span class="ruby-operator">||</span> (<span class="ruby-identifier">entry_user</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">entry_user</span>.<span class="ruby-identifier">required?</span>) }
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-ivar">@back_action</span> = <span class="ruby-string">'set_management_team'</span>,
+  <span class="ruby-ivar">@next_action</span> = <span class="ruby-string">'view_attachments'</span>
+
+  <span class="ruby-identifier">render</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">&quot;set_team&quot;</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- set_review_team-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- set_review_team-method -->
+
+    
+      <div id="method-i-set_team_member" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">set_team_member</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-set_team_member">#set_team_member</a></p>
+
+<p>Description: This action is called in response to a user update to a team
+member  role in the select menu of member names.  The member name is
+updated  in the database.  It is used for both managers and reviewers.</p>
+
+<p>Parameters from params bde_id     - the board_design_entry id user_id    -
+the member’s user id role_id    - the role id req        - a boolean set to
+0 if the ‘not-required’ checkbox was checked</p>
+          
+
+          
+          <div class="method-source-code" id="set_team_member-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 757</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">set_team_member</span>
+
+  <span class="ruby-identifier">board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:bde_id</span>])
+  <span class="ruby-identifier">role</span>               = <span class="ruby-constant">Role</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:role_id</span>])
+  <span class="ruby-identifier">member_id</span>          = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_id</span>].<span class="ruby-identifier">to_i</span>
+  <span class="ruby-identifier">required</span>           = <span class="ruby-identifier">params</span>[<span class="ruby-value">:req</span>].<span class="ruby-identifier">to_i</span>
+  <span class="ruby-identifier">entry_user</span> = <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">board_design_entry_users</span>.<span class="ruby-identifier">detect</span> {
+    <span class="ruby-operator">|</span><span class="ruby-identifier">eu</span><span class="ruby-operator">|</span> <span class="ruby-identifier">eu</span>.<span class="ruby-identifier">role_id</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">role</span>.<span class="ruby-identifier">id</span> }
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">entry_user</span>
+    <span class="ruby-comment"># change assignment</span>
+    <span class="ruby-identifier">entry_user</span>.<span class="ruby-identifier">user_id</span> = <span class="ruby-identifier">member_id</span>
+    <span class="ruby-identifier">entry_user</span>.<span class="ruby-identifier">required</span> = <span class="ruby-identifier">required</span>
+    <span class="ruby-identifier">entry_user</span>.<span class="ruby-identifier">save</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-comment"># create assignment</span>
+    <span class="ruby-identifier">entry_user</span> = <span class="ruby-constant">BoardDesignEntryUser</span>.<span class="ruby-identifier">new</span>
+    <span class="ruby-identifier">entry_user</span>.<span class="ruby-identifier">role_id</span>               = <span class="ruby-identifier">role</span>.<span class="ruby-identifier">id</span>
+    <span class="ruby-identifier">entry_user</span>.<span class="ruby-identifier">user_id</span>               = <span class="ruby-identifier">member_id</span>
+    <span class="ruby-identifier">entry_user</span>.<span class="ruby-identifier">required</span>              = <span class="ruby-identifier">required</span>
+    <span class="ruby-identifier">entry_user</span>.<span class="ruby-identifier">board_design_entry_id</span> = <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">id</span>
+    <span class="ruby-identifier">entry_user</span>.<span class="ruby-identifier">save</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">render</span>(<span class="ruby-value">:nothing</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- set_team_member-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- set_team_member-method -->
+
+    
+      <div id="method-i-submit" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">submit</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a href="BoardDesignEntryController.html#method-i-submit">#submit</a></p>
+
+<p>Description: This action submits the board design entry to PCB <a
+href="Design.html">Design</a>.</p>
+
+<p>Parameters from params id - the board_design_entry id</p>
+          
+
+          
+          <div class="method-source-code" id="submit-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 948</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">submit</span>
+
+  <span class="ruby-identifier">board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">submitted</span>
+  
+  <span class="ruby-constant">BoardDesignEntryMailer</span><span class="ruby-operator">::</span><span class="ruby-identifier">board_design_entry_submission</span>(<span class="ruby-identifier">board_design_entry</span>).<span class="ruby-identifier">deliver</span>
+  
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'originator_list'</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- submit-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- submit-method -->
+
+    
+      <div id="method-i-submit_originator_comments" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">submit_originator_comments</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-submit_originator_comments">#submit_originator_comments</a></p>
+
+<p>Description: This action stores the  originator comments for the design
+entry.</p>
+
+<p>Parameters from params id                  - the board_design_entry id
+originator_comments - the originator’s comments</p>
+          
+
+          
+          <div class="method-source-code" id="submit_originator_comments-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 873</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">submit_originator_comments</span>
+
+  <span class="ruby-identifier">board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">update_attribute</span>(<span class="ruby-string">'originator_comments'</span>, 
+                                      <span class="ruby-identifier">params</span>[<span class="ruby-value">:board_design_entry</span>][<span class="ruby-value">:originator_comments</span>])
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'adding'</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'originator_list'</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'view_entry'</span>, <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- submit_originator_comments-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- submit_originator_comments-method -->
+
+    
+      <div id="method-i-submit_processor_comments" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">submit_processor_comments</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-submit_processor_comments">#submit_processor_comments</a></p>
+
+<p>Description: This action stores the processor comments for the design
+entry.</p>
+
+<p>Parameters from params id                 - the board_design_entry id
+processor_comments - the processor’s comments</p>
+          
+
+          
+          <div class="method-source-code" id="submit_processor_comments-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 923</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">submit_processor_comments</span>
+
+  <span class="ruby-identifier">board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">update_attribute</span>(<span class="ruby-string">'input_gate_comments'</span>, 
+                                      <span class="ruby-identifier">params</span>[<span class="ruby-value">:board_design_entry</span>][<span class="ruby-value">:input_gate_comments</span>])
+  
+  <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'view_entry'</span>,
+              <span class="ruby-value">:id</span>     =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>],
+              <span class="ruby-value">:viewer</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'processor'</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- submit_processor_comments-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- submit_processor_comments-method -->
+
+    
+      <div id="method-i-update_entry" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_entry</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-update_entry">#update_entry</a></p>
+
+<p>Description: This method stores the updated entry information.</p>
+
+<p>Parameters from params None</p>
+          
+
+          
+          <div class="method-source-code" id="update_entry-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 533</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_entry</span>
+
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-identifier">bde</span>                 = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:board_design_entry</span>])
+  <span class="ruby-identifier">bde</span>.<span class="ruby-identifier">id</span>              = <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>]
+  <span class="ruby-comment">#bde.part_number_id  = @board_design_entry.part_number_id</span>
+  <span class="ruby-ivar">@viewer</span>             = <span class="ruby-identifier">params</span>[<span class="ruby-value">:viewer</span>]
+  
+  <span class="ruby-comment"># Verify that the required information was submitted before proceeding.</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">bde</span>.<span class="ruby-identifier">division_id</span>   <span class="ruby-operator">||</span> <span class="ruby-operator">!</span><span class="ruby-identifier">bde</span>.<span class="ruby-identifier">location_id</span>           <span class="ruby-operator">||</span>
+     <span class="ruby-operator">!</span><span class="ruby-identifier">bde</span>.<span class="ruby-identifier">revision_id</span>   <span class="ruby-operator">||</span>
+     <span class="ruby-operator">!</span><span class="ruby-identifier">bde</span>.<span class="ruby-identifier">platform_id</span>   <span class="ruby-operator">||</span> <span class="ruby-operator">!</span><span class="ruby-identifier">bde</span>.<span class="ruby-identifier">product_type_id</span>       <span class="ruby-operator">||</span>
+     <span class="ruby-operator">!</span><span class="ruby-identifier">bde</span>.<span class="ruby-identifier">project_id</span>    <span class="ruby-operator">||</span>  <span class="ruby-identifier">bde</span>.<span class="ruby-identifier">description</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+     
+    <span class="ruby-identifier">notice</span> = <span class="ruby-string">&quot;The following information must be provided in order to proceed &lt;br /&gt;&quot;</span>
+    <span class="ruby-identifier">notice</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;&lt;ul&gt;&quot;</span>
+    <span class="ruby-identifier">notice</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;  &lt;li&gt;Board Description&lt;/li&gt;&quot;</span>         <span class="ruby-keyword">if</span> <span class="ruby-identifier">bde</span>.<span class="ruby-identifier">description</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-identifier">notice</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;  &lt;li&gt;Division&lt;/li&gt;&quot;</span>                  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">bde</span>.<span class="ruby-identifier">division_id</span>
+    <span class="ruby-identifier">notice</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;  &lt;li&gt;Location&lt;/li&gt;&quot;</span>                  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">bde</span>.<span class="ruby-identifier">location_id</span>
+    <span class="ruby-identifier">notice</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;  &lt;li&gt;Platform&lt;/li&gt;&quot;</span>                  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">bde</span>.<span class="ruby-identifier">platform_id</span>
+    <span class="ruby-identifier">notice</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;  &lt;li&gt;Product Type&lt;/li&gt;&quot;</span>              <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">bde</span>.<span class="ruby-identifier">product_type_id</span>
+    <span class="ruby-identifier">notice</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;  &lt;li&gt;Project&lt;/li&gt;&quot;</span>                   <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">bde</span>.<span class="ruby-identifier">project_id</span>
+    <span class="ruby-identifier">notice</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;  &lt;li&gt;Revision&lt;/li&gt;&quot;</span>                  <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span><span class="ruby-identifier">bde</span>.<span class="ruby-identifier">revision_id</span>
+    <span class="ruby-identifier">notice</span> <span class="ruby-operator">+=</span> <span class="ruby-string">&quot;&lt;/ul&gt;&quot;</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-identifier">notice</span>
+    
+    <span class="ruby-ivar">@design_dir_list</span>   = <span class="ruby-constant">DesignDirectory</span>.<span class="ruby-identifier">get_active_design_directories</span>
+    <span class="ruby-ivar">@division_list</span>     = <span class="ruby-constant">Division</span>.<span class="ruby-identifier">get_active_divisions</span>
+    <span class="ruby-ivar">@incoming_dir_list</span> = <span class="ruby-constant">IncomingDirectory</span>.<span class="ruby-identifier">get_active_incoming_directories</span>
+    <span class="ruby-ivar">@location_list</span>     = <span class="ruby-constant">Location</span>.<span class="ruby-identifier">get_active_locations</span>
+    <span class="ruby-ivar">@platform_list</span>     = <span class="ruby-constant">Platform</span>.<span class="ruby-identifier">get_active_platforms</span>
+    <span class="ruby-ivar">@prefix_list</span>       = <span class="ruby-constant">Prefix</span>.<span class="ruby-identifier">get_active_prefixes</span>
+    <span class="ruby-ivar">@product_type_list</span> = <span class="ruby-constant">ProductType</span>.<span class="ruby-identifier">get_active_product_types</span>
+    <span class="ruby-ivar">@project_list</span>      = <span class="ruby-constant">Project</span>.<span class="ruby-identifier">get_active_projects</span>
+    <span class="ruby-ivar">@revision_list</span>     = <span class="ruby-constant">Revision</span>.<span class="ruby-identifier">get_revisions</span>
+
+    <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-identifier">bde</span>
+    <span class="ruby-ivar">@new_entry</span>   = <span class="ruby-string">'true'</span>
+    <span class="ruby-ivar">@user_action</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>]
+    <span class="ruby-identifier">render</span>(<span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'new_entry'</span>)
+    
+    <span class="ruby-keyword">return</span>
+    
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">board</span> = <span class="ruby-constant">Board</span>.<span class="ruby-identifier">find_by_prefix_id_and_number</span>(<span class="ruby-identifier">bde</span>.<span class="ruby-identifier">prefix_id</span>, <span class="ruby-identifier">bde</span>.<span class="ruby-identifier">number</span>)  
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">bde</span>.<span class="ruby-identifier">entry_type</span> <span class="ruby-operator">==</span> <span class="ruby-string">'new'</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">board</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-identifier">board</span>.<span class="ruby-identifier">designs</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">last_design</span> = <span class="ruby-identifier">board</span>.<span class="ruby-identifier">designs</span>.<span class="ruby-identifier">sort_by</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">d</span><span class="ruby-operator">|</span> <span class="ruby-identifier">d</span>.<span class="ruby-identifier">revision</span>.<span class="ruby-identifier">name</span> }.<span class="ruby-identifier">pop</span>
+      
+      <span class="ruby-keyword">if</span> <span class="ruby-identifier">last_design</span>.<span class="ruby-identifier">revision</span>.<span class="ruby-identifier">name</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">bde</span>.<span class="ruby-identifier">revision</span>.<span class="ruby-identifier">name</span>
+        <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-node">&quot;#{bde.full_name} not created - a newer revision exists in the system&quot;</span>    
+        <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'edit_entry'</span>,
+                    <span class="ruby-value">:id</span>          =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">id</span>,
+                    <span class="ruby-value">:user_action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'adding'</span>,
+                    <span class="ruby-value">:viewer</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@viewer</span>)
+        <span class="ruby-keyword">return</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">bde</span>.<span class="ruby-identifier">entry_type</span> <span class="ruby-operator">==</span> <span class="ruby-string">'dot_rev'</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">bde</span>.<span class="ruby-identifier">numeric_revision</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;Entry not created - a numeric revision must be specified for a Dot Rev&quot;</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'edit_entry'</span>,
+                <span class="ruby-value">:id</span>          =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">id</span>,
+                <span class="ruby-value">:user_action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'adding'</span>,
+                <span class="ruby-value">:viewer</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@viewer</span>)
+    <span class="ruby-keyword">return</span>
+  <span class="ruby-keyword">end</span>
+  
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">bde</span>.<span class="ruby-identifier">entry_type</span> <span class="ruby-operator">==</span> <span class="ruby-string">'new'</span>
+    <span class="ruby-identifier">bde</span>.<span class="ruby-identifier">numeric_revision</span> = <span class="ruby-value">0</span>
+    <span class="ruby-identifier">bde</span>.<span class="ruby-identifier">eco_number</span>       = <span class="ruby-string">''</span>
+    <span class="ruby-identifier">params</span>[<span class="ruby-value">:board_design_entry</span>][<span class="ruby-value">:numeric_revision</span>] = <span class="ruby-value">0</span>
+    <span class="ruby-identifier">params</span>[<span class="ruby-value">:board_design_entry</span>][<span class="ruby-value">:eco_number</span>]       = <span class="ruby-string">''</span>
+    
+  <span class="ruby-keyword">end</span>
+  
+  <span class="ruby-keyword">if</span> <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">update_attributes</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:board_design_entry</span>])
+
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-node">&quot;Entry #{@board_design_entry.pcb_number} has been updated&quot;</span>
+
+    <span class="ruby-comment">#Update the user's division and/or location if it has changed.</span>
+    <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">save_division</span>(<span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">division_id</span>)
+    <span class="ruby-ivar">@logged_in_user</span>.<span class="ruby-identifier">save_location</span>(<span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">location_id</span>)
+    
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'adding'</span>
+      <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'design_constraints'</span>,
+                  <span class="ruby-value">:id</span>          =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">id</span>,
+                  <span class="ruby-value">:user_action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'adding'</span>)
+    <span class="ruby-keyword">elsif</span> <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>] <span class="ruby-operator">==</span> <span class="ruby-string">'updating'</span>
+      <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'edit_entry'</span>,
+                  <span class="ruby-value">:id</span>          =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">id</span>,
+                  <span class="ruby-value">:user_action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'updating'</span>,
+                  <span class="ruby-value">:viewer</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@viewer</span>)
+    <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update_entry-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update_entry-method -->
+
+    
+      <div id="method-i-update_part_numbers" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_part_numbers</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-update_part_numbers">#update_part_numbers</a></p>
+
+<p>Description: Change the part number(s) for a board_design_entry</p>
+
+<p>Parameters id =&gt; board_design_entry.id</p>
+          
+
+          
+          <div class="method-source-code" id="update_part_numbers-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 293</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_part_numbers</span>
+
+  <span class="ruby-identifier">board_design_entry_id</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>]
+  <span class="ruby-identifier">board_design_entry</span>  = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+
+  <span class="ruby-comment">#create part number objects from form data</span>
+  <span class="ruby-identifier">pnums</span> = <span class="ruby-identifier">params</span>[<span class="ruby-value">:rows</span>].<span class="ruby-identifier">values</span>.<span class="ruby-identifier">collect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">row</span><span class="ruby-operator">|</span> <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">row</span>) }
+
+  <span class="ruby-comment">#check for a valid PCB part number</span>
+  <span class="ruby-identifier">pcb</span>  = <span class="ruby-identifier">pnums</span>.<span class="ruby-identifier">detect</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">pnum</span><span class="ruby-operator">|</span> <span class="ruby-identifier">pnum</span>.<span class="ruby-identifier">use</span> <span class="ruby-operator">==</span> <span class="ruby-string">'pcb'</span> }
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">pcb</span>.<span class="ruby-identifier">valid_pcb_part_number?</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;A valid PCB part number like '123-456-78' must be specified&quot;</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'rows'</span>] = <span class="ruby-identifier">pnums</span>
+    <span class="ruby-identifier">redirect_to</span>( <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'change_part_numbers'</span>,
+      <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry_id</span> ) <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment">#a valid PCB part number was specified</span>
+
+  <span class="ruby-comment">#check for duplicates already assigned</span>
+  <span class="ruby-identifier">fail</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">''</span>
+  <span class="ruby-identifier">pnums</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span> <span class="ruby-identifier">pnum</span> <span class="ruby-operator">|</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">pnum</span>.<span class="ruby-identifier">part_num_exists?</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span> <span class="ruby-operator">&amp;&amp;</span>
+        <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">get_part_number</span>(<span class="ruby-identifier">pnum</span>).<span class="ruby-identifier">board_design_entry_id</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">board_design_entry_id</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;Part number #{pnum.name_string} exists&lt;br&gt;\n&quot;</span>
+      <span class="ruby-identifier">fail</span> = <span class="ruby-value">1</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">fail</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'rows'</span>] = <span class="ruby-identifier">pnums</span>
+    <span class="ruby-identifier">redirect_to</span>( <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'change_part_numbers'</span>,
+      <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry_id</span> ) <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-identifier">old_pcb_num</span> = <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">pcb_number</span>
+  <span class="ruby-identifier">old_pcba_nums</span> = <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">pcbas_string</span>
+
+  <span class="ruby-comment"># delete the current part numbers for the design entry</span>
+  <span class="ruby-constant">PartNum</span>.<span class="ruby-identifier">delete_all</span>(<span class="ruby-value">:board_design_entry_id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry_id</span>)
+
+  <span class="ruby-comment">#save and relate the partnumbers to the design</span>
+  <span class="ruby-identifier">fail</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">''</span>
+  <span class="ruby-identifier">pnums</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">pnum</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">pnum</span>[<span class="ruby-value">:prefix</span>] <span class="ruby-operator">==</span> <span class="ruby-string">&quot;&quot;</span>
+      <span class="ruby-identifier">pnum</span>.<span class="ruby-identifier">board_design_entry_id</span> = <span class="ruby-identifier">board_design_entry_id</span>
+      <span class="ruby-keyword">if</span> <span class="ruby-operator">!</span> <span class="ruby-identifier">pnum</span>.<span class="ruby-identifier">save</span>
+        <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notify'</span>] <span class="ruby-operator">+=</span> <span class="ruby-node">&quot;Couldn't create part number #{pnum.name_string}&quot;</span>
+        <span class="ruby-identifier">fail</span> = <span class="ruby-value">1</span>
+      <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+
+  <span class="ruby-comment">#create 'new' entries for notifier</span>
+  <span class="ruby-identifier">new_pcb_num</span> = <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">pcb_number</span>
+  <span class="ruby-identifier">new_pcba_nums</span> = <span class="ruby-identifier">board_design_entry</span>.<span class="ruby-identifier">pcbas_string</span>
+
+
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">fail</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span>
+    <span class="ruby-identifier">flash</span>[<span class="ruby-string">'rows'</span>] = <span class="ruby-identifier">pnums</span>
+    <span class="ruby-identifier">redirect_to</span>( <span class="ruby-value">:action</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'change_part_numbers'</span>,
+      <span class="ruby-value">:id</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry_id</span> ) <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">change</span> = <span class="ruby-value">0</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">old_pcb_num</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">new_pcb_num</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">old_pcba_nums</span> <span class="ruby-operator">!=</span> <span class="ruby-identifier">new_pcba_nums</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;The new part numbers have been assigned&quot;</span>
+    <span class="ruby-keyword">else</span>
+      <span class="ruby-identifier">flash</span>[<span class="ruby-string">'notice'</span>] = <span class="ruby-string">&quot;The part numbers are unchanged&quot;</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">redirect_to</span>(<span class="ruby-value">:action</span>      =<span class="ruby-operator">&gt;</span> <span class="ruby-string">'view_entry'</span>,
+      <span class="ruby-value">:id</span>          =<span class="ruby-operator">&gt;</span> <span class="ruby-identifier">board_design_entry_id</span> ) <span class="ruby-keyword">and</span> <span class="ruby-keyword">return</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update_part_numbers-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update_part_numbers-method -->
+
+    
+      <div id="method-i-update_yes_no" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">update_yes_no</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-update_yes_no">#update_yes_no</a></p>
+
+<p>Description: This action sets the values for the design constraint
+questions and  updates the row in the view identified by the field key of
+the params hash.</p>
+
+<p>Parameters from params id    - the board_design_entry id field - identifies
+the design constraint that is being updated value - the value that the user
+is setting the field to</p>
+          
+
+          
+          <div class="method-source-code" id="update_yes_no-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 976</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">update_yes_no</span>
+
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@field</span>              = <span class="ruby-identifier">params</span>[<span class="ruby-value">:field</span>]
+  
+  <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">update_attribute</span>(<span class="ruby-ivar">@field</span>, <span class="ruby-identifier">params</span>[<span class="ruby-value">:value</span>] )
+  <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">reload</span>
+ 
+  <span class="ruby-identifier">render</span>(<span class="ruby-value">:nothing</span> =<span class="ruby-operator">&gt;</span> <span class="ruby-keyword">true</span>)
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- update_yes_no-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- update_yes_no-method -->
+
+    
+      <div id="method-i-view_attachments" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">view_attachments</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-view_attachments">#view_attachments</a></p>
+
+<p>Description: This action displays form to gather the attachments associated
+with the design entry.</p>
+
+<p>Parameters from params id          - the board_design_entry id user_action
+- keeps track of whether the user is adding or updating</p>
+          
+
+          
+          <div class="method-source-code" id="view_attachments-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 801</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">view_attachments</span>
+
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@user_action</span>        = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>]
+  
+  <span class="ruby-ivar">@outline_drawing_document</span> = <span class="ruby-constant">Document</span>.<span class="ruby-identifier">find</span>(<span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">outline_drawing_document_id</span>)           <span class="ruby-keyword">if</span> <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">outline_drawing_document_id?</span>
+  <span class="ruby-ivar">@pcb_attribute_document</span>   = <span class="ruby-constant">Document</span>.<span class="ruby-identifier">find</span>(<span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">pcb_attribute_form_document_id</span>)        <span class="ruby-keyword">if</span> <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">pcb_attribute_form_document_id?</span>
+  <span class="ruby-ivar">@stackup_document</span>         = <span class="ruby-constant">Document</span>.<span class="ruby-identifier">find</span>(<span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">teradyne_stackup_document_id</span>)          <span class="ruby-keyword">if</span> <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">teradyne_stackup_document_id?</span>
+  
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- view_attachments-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- view_attachments-method -->
+
+    
+      <div id="method-i-view_entry" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">view_entry</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-view_entry">#view_entry</a></p>
+
+<p>Description: This action provides the data to view an entire board design
+entry.</p>
+
+<p>Parameters from params None</p>
+
+<p>TO DO: Functional Test</p>
+          
+
+          
+          <div class="method-source-code" id="view_entry-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 412</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">view_entry</span>
+
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@return</span>             = <span class="ruby-identifier">params</span>[<span class="ruby-value">:return</span>]
+  <span class="ruby-ivar">@originator</span>         = <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">user</span>
+  <span class="ruby-ivar">@managers</span>           = <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">manager_roles</span>
+  <span class="ruby-ivar">@reviewers</span>          = <span class="ruby-ivar">@board_design_entry</span>.<span class="ruby-identifier">reviewer_roles</span>
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- view_entry-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- view_entry-method -->
+
+    
+      <div id="method-i-view_originator_comments" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">view_originator_comments</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-view_originator_comments">#view_originator_comments</a></p>
+
+<p>Description: This action displays a form to gather originator comments for
+the design entry.</p>
+
+<p>Parameters from params id          - the board_design_entry id user_action
+- keeps track of whether the user is adding or updating</p>
+          
+
+          
+          <div class="method-source-code" id="view_originator_comments-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 852</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">view_originator_comments</span>
+
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@user_action</span>        = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>]
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- view_originator_comments-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- view_originator_comments-method -->
+
+    
+      <div id="method-i-view_processor_comments" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">view_processor_comments</span><span
+            class="method-args">()</span>
+          <span class="method-click-advice">click to toggle source</span>
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p><a
+href="BoardDesignEntryController.html#method-i-view_processor_comments">#view_processor_comments</a></p>
+
+<p>Description: This action displays a form to gather processor comments for
+the design entry.</p>
+
+<p>Parameters from params id          - the board_design_entry id user_action
+- keeps track of whether the user is adding or updating</p>
+          
+
+          
+          <div class="method-source-code" id="view_processor_comments-source">
+            <pre><span class="ruby-comment"># File app/controllers/board_design_entry_controller.rb, line 902</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier">view_processor_comments</span>
+
+  <span class="ruby-ivar">@board_design_entry</span> = <span class="ruby-constant">BoardDesignEntry</span>.<span class="ruby-identifier">find</span>(<span class="ruby-identifier">params</span>[<span class="ruby-value">:id</span>])
+  <span class="ruby-ivar">@user_action</span>        = <span class="ruby-identifier">params</span>[<span class="ruby-value">:user_action</span>]
+
+<span class="ruby-keyword">end</span></pre>
+          </div><!-- view_processor_comments-source -->
+          
+        </div>
+
+        
+
+        
+      </div><!-- view_processor_comments-method -->
+
+    
+    </section><!-- public-instance-method-details -->
+  
+  </section><!-- 5Buntitled-5D -->
+
+</div><!-- documentation -->
+
+
+<footer id="validator-badges">
+  <p><a href="http://validator.w3.org/check/referer">[Validate]</a>
+  <p>Generated by <a href="https://github.com/rdoc/rdoc">RDoc</a> 3.11.
+  <p>Generated with the <a href="http://deveiate.org/projects/Darkfish-Rdoc/">Darkfish Rdoc Generator</a> 3.
+</footer>
+

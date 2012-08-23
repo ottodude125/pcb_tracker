@@ -11,42 +11,32 @@
 #
 ########################################################################
 
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path("../../test_helper", __FILE__)
 
-class DesignTest < Test::Unit::TestCase
-  fixtures(:audits,
-           :boards,
-           :boards_users,
-#           :board_designs,
-           :board_design_entries,
-           :board_design_entry_users,
-           :board_reviewers,
-           :checks,
-           :designs,
-           :design_centers,
-           :design_checks,
-           :design_reviews,
-           :design_review_comments,
-           :design_review_results,
-           :design_updates,
-           :fab_houses,
-           :oi_assignment_reports,
-           :oi_assignments,
-           :oi_categories,
-           :oi_category_sections,
-           :oi_instructions,
-           :part_numbers,
-           :platforms,
-           :priorities,
-           :projects,
-           :review_statuses,
-           :review_types,
-           :review_types_roles,
-           :roles,
-           :roles_users,
-           :sections,
-           :subsections,
-           :users)
+require 'stringio'
+
+#All for capturing STDOUT
+# use like
+# def test
+#   out = capture_stdout do
+#      [commands that would cause STDOUT text]
+#   end
+#   assert_equal("foo", out.string)
+# end
+
+module Kernel
+  def capture_stdout
+    out = StringIO.new
+    $stdout = out
+    yield
+    return out
+  ensure
+    $stdout = STDOUT
+  end
+end
+
+
+class DesignsTest < ActiveSupport::TestCase
 
 
   ######################################################################
@@ -55,6 +45,8 @@ class DesignTest < Test::Unit::TestCase
     @design         = Design.find(1)
     @designs_027    = designs(:designs_027)
     @la453a1_design = designs(:la453a1)
+    @la453b_design  = designs(:la453b)
+    @la455b_design  = designs(:la455b)
     @mx234a_design  = designs(:mx234a)
     @mx600a_design  = designs(:mx600a)
 
@@ -101,10 +93,10 @@ class DesignTest < Test::Unit::TestCase
     @lee_s     = users(:lee_s)
     
     @mx234a_expected_reviewers = [ @espo,    @h_kit,   @lee_s,     
-                                   @dave_m,  @tom_f,   @anthony_g,
-                                   @cathy_m, @john_g,  @matt_d,   
-                                   @art_d,   @dan_g,   @rich_a,
-                                   @lisa_a,  @jim_l,   @eileen_c ].sort_by { |u| u.last_name }
+      @dave_m,  @tom_f,   @anthony_g,
+      @cathy_m, @john_g,  @matt_d,
+      @art_d,   @dan_g,   @rich_a,
+      @lisa_a,  @jim_l,   @eileen_c ].sort_by { |u| u.last_name }
 
     
     @review_complete = ReviewStatus.find_by_name('Review Completed')
@@ -245,8 +237,8 @@ class DesignTest < Test::Unit::TestCase
     assert_equal(1, @emails.size)
     email = @emails.pop
     assert_equal('Catalyst/AC/(pcb252_234_a0_g): Valor reviewer changed for ' +
-                 'the Pre-Artwork design review', 
-                 email.subject)
+        'the Pre-Artwork design review',
+      email.subject)
     
     @mx234a_pre_art_dr.review_status = @review_complete
     @mx234a_pre_art_dr.save
@@ -300,8 +292,8 @@ class DesignTest < Test::Unit::TestCase
     assert_equal(1, @emails.size)
     email = @emails.pop
     assert_equal('Catalyst/AC/(pcb252_234_a0_g): Valor reviewer changed for ' +
-                 'the Final design review', 
-                 email.subject)
+        'the Final design review',
+      email.subject)
 
   end
 
@@ -313,43 +305,43 @@ class DesignTest < Test::Unit::TestCase
     assert_equal(expected_reviewers, @mx234a_design.reviewers.collect { |u| u.name })
     
     assert_equal(expected_reviewers,
-                 @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
+      @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
            
     expected_reviewers -= ['Arthur Davis', 'John Godin', 'Cathy McLaren', 'Dave Macioce']
     @mx234a_pre_art_dr.review_status = @review_complete
     @mx234a_pre_art_dr.save
     @mx234a_design.reload
     assert_equal(expected_reviewers,
-                 @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
+      @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
 
     @mx234a_placement_dr.review_status = @review_complete
     @mx234a_placement_dr.save
     @mx234a_design.reload
     assert_equal(expected_reviewers,
-                 @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
+      @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
 
     expected_reviewers -= ['Dan Gough']
     @mx234a_routing_dr.review_status = @review_complete
     @mx234a_routing_dr.save
     @mx234a_design.reload
     assert_equal(expected_reviewers,
-                 @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
+      @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
 
     expected_reviewers -= ['Rich Ahamed',      'Lisa Austin',      'Matt Disanzo',
-                           'Espo Espedicto',   'Tom Flack',        'Heng Kit Too',
-                           'Anthony Gentile']
+      'Espo Espedicto',   'Tom Flack',        'Heng Kit Too',
+      'Anthony Gentile']
     @mx234a_final_dr.review_status = @review_complete
     @mx234a_final_dr.save
     @mx234a_design.reload
     assert_equal(expected_reviewers,
-                 @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
+      @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
 
     expected_reviewers = []
     @mx234a_release_dr.review_status = @review_complete
     @mx234a_release_dr.save
     @mx234a_design.reload
     assert_equal(expected_reviewers,
-                 @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
+      @mx234a_design.reviewers_remaining_reviews.collect { |u| u.name })
 
   end
   
@@ -380,9 +372,9 @@ class DesignTest < Test::Unit::TestCase
     
     reviewers = mx234a_users[:reviewers].sort_by{ |u| u.last_name }
     expected_reviewers = [ @rich_a,    @lisa_a,    @eileen_c,  @art_d,
-                           @matt_d,    @espo,      @tom_f,     @anthony_g,
-                           @john_g,    @dan_g,     @jim_l,     @dave_m,
-                           @cathy_m,   @lee_s,     @h_kit ]
+      @matt_d,    @espo,      @tom_f,     @anthony_g,
+      @john_g,    @dan_g,     @jim_l,     @dave_m,
+      @cathy_m,   @lee_s,     @h_kit ]
     assert_equal(expected_reviewers, reviewers)
 
   end
@@ -412,13 +404,13 @@ class DesignTest < Test::Unit::TestCase
       'Library'                      => @dave_m,
       'TDE'                          => @rich_a,
       'Hardware Engineering Manager' => User.new(:first_name => 'Not', 
-                                                 :last_name => 'Set'),
+        :last_name => 'Set'),
       'Program Manager'              => User.new(:first_name => 'Not', 
-                                                 :last_name => 'Set')
+        :last_name => 'Set')
     }
     
     assert_equal(expected_users.size,
-                 mx234a_users.size)
+      mx234a_users.size)
     mx234a_users.each { |key, value|
       if expected_users[key]
         assert_equal(expected_users[key].name, value.name)
@@ -446,15 +438,15 @@ class DesignTest < Test::Unit::TestCase
   def test_get_design_review
     
     assert_equal(@mx234a_pre_art_dr,    
-                 @mx234a_design.get_design_review('Pre-Artwork'))
+      @mx234a_design.get_design_review('Pre-Artwork'))
     assert_equal(@mx234a_placement_dr,
-                 @mx234a_design.get_design_review('Placement'))
+      @mx234a_design.get_design_review('Placement'))
     assert_equal(@mx234a_routing_dr, 
-                 @mx234a_design.get_design_review('Routing'))
+      @mx234a_design.get_design_review('Routing'))
     assert_equal(@mx234a_final_dr, 
-                 @mx234a_design.get_design_review('Final'))
+      @mx234a_design.get_design_review('Final'))
     assert_equal(@mx234a_release_dr, 
-                 @mx234a_design.get_design_review('Release'))
+      @mx234a_design.get_design_review('Release'))
     
   end
 
@@ -462,73 +454,74 @@ class DesignTest < Test::Unit::TestCase
   ######################################################################
   def test_accessors
  
-   design = Design.new
+    design = Design.new
 
-   assert_equal('Not Started', design.phase.name)
+    assert_equal('Not Started', design.phase.name)
 
-   design.phase_id = ReviewType.get_final.id
-   assert_equal('Final', design.phase.name)
+    design.phase_id = ReviewType.get_final.id
+    assert_equal('Final', design.phase.name)
    
-   design.phase_id = Design::COMPLETE
-   assert_equal("Complete", design.phase.name)
-   
-   
-   assert_equal('Not Set', design.priority_name)
-   
-   design.priority_id = Priority.find_by_name('High').id
-   assert_equal('High', design.priority_name)
+    design.phase_id = Design::COMPLETE
+    assert_equal("Complete", design.phase.name)
    
    
-   assert_equal('252-234-a0 g', @mx234a_design.part_number.pcb_display_name)
-   assert_equal('942-453-a2 y', designs(:la453a2).part_number.pcb_display_name)
+    assert_equal('Not Set', design.priority_name)
    
-   assert_equal('pcb252_234_a0_g - Catalyst / AC / ', 
-                @mx234a_design.detailed_name)
+    design.priority_id = Priority.find_by_name('High').id
+    assert_equal('High', design.priority_name)
    
-   section_all        = Section.new(:full_review     => 1,
-                                    :date_code_check => 1,
-                                    :dot_rev_check   => 1)
-   section_nothing    = Section.new(:full_review     => 0,
-                                    :date_code_check => 0,
-                                    :dot_rev_check   => 0)
-   subsection_all     = Subsection.new(:full_review     => 1,
-                                       :date_code_check => 1,
-                                       :dot_rev_check   => 1)
-   subsection_nothing = Subsection.new(:full_review     => 0,
-                                       :date_code_check => 0,
-                                       :dot_rev_check   => 0)
-   check_all          = Check.new(:full_review     => 1,
-                                  :date_code_check => 1,
-                                  :dot_rev_check   => 1)
-   check_nothing      = Check.new(:full_review     => 0,
-                                  :date_code_check => 0,
-                                  :dot_rev_check   => 0)
    
-   design.design_type = 'New'
-   assert(design.belongs_to(section_all))
-   assert(!design.belongs_to(section_nothing))
-   assert(design.belongs_to(subsection_all))
-   assert(!design.belongs_to(subsection_nothing))
-   assert(design.belongs_to(check_all))
-   assert(!design.belongs_to(check_nothing))
+    assert_equal('252-234-a0 g', @mx234a_design.part_number.pcb_display_name)
+    assert_equal('942-453-a2 y', designs(:la453a2).part_number.pcb_display_name)
    
-   design.design_type = 'Date Code'
-   assert(design.belongs_to(section_all))
-   assert(!design.belongs_to(section_nothing))
-   assert(design.belongs_to(subsection_all))
-   assert(!design.belongs_to(subsection_nothing))
-   assert(design.belongs_to(check_all))
-   assert(!design.belongs_to(check_nothing))
+    #assert_equal('pcb252_234_a0_g - Catalyst / AC / ',
+    #   @mx234a_design.detailed_name)
+    assert_equal('pcb252_234_a0_g - Catalyst / AC / ',
+      @mx234a_design.detailed_name)
+    section_all        = Section.new(:full_review     => 1,
+      :date_code_check => 1,
+      :dot_rev_check   => 1)
+    section_nothing    = Section.new(:full_review     => 0,
+      :date_code_check => 0,
+      :dot_rev_check   => 0)
+    subsection_all     = Subsection.new(:full_review     => 1,
+      :date_code_check => 1,
+      :dot_rev_check   => 1)
+    subsection_nothing = Subsection.new(:full_review     => 0,
+      :date_code_check => 0,
+      :dot_rev_check   => 0)
+    check_all          = Check.new(:full_review     => 1,
+      :date_code_check => 1,
+      :dot_rev_check   => 1)
+    check_nothing      = Check.new(:full_review     => 0,
+      :date_code_check => 0,
+      :dot_rev_check   => 0)
+   
+    design.design_type = 'New'
+    assert(design.belongs_to(section_all))
+    assert(!design.belongs_to(section_nothing))
+    assert(design.belongs_to(subsection_all))
+    assert(!design.belongs_to(subsection_nothing))
+    assert(design.belongs_to(check_all))
+    assert(!design.belongs_to(check_nothing))
+   
+    design.design_type = 'Date Code'
+    assert(design.belongs_to(section_all))
+    assert(!design.belongs_to(section_nothing))
+    assert(design.belongs_to(subsection_all))
+    assert(!design.belongs_to(subsection_nothing))
+    assert(design.belongs_to(check_all))
+    assert(!design.belongs_to(check_nothing))
 
-   design.design_type = 'Dot Rev'
-   assert(design.belongs_to(section_all))
-   assert(!design.belongs_to(section_nothing))
-   assert(design.belongs_to(subsection_all))
-   assert(!design.belongs_to(subsection_nothing))
-   assert(design.belongs_to(check_all))
-   assert(!design.belongs_to(check_nothing))
+    design.design_type = 'Dot Rev'
+    assert(design.belongs_to(section_all))
+    assert(!design.belongs_to(section_nothing))
+    assert(design.belongs_to(subsection_all))
+    assert(!design.belongs_to(subsection_nothing))
+    assert(design.belongs_to(check_all))
+    assert(!design.belongs_to(check_nothing))
  
- end
+  end
  
  
   ######################################################################
@@ -657,287 +650,287 @@ class DesignTest < Test::Unit::TestCase
   def test_role_functions
 
     test_data = [ { :role     => roles(:admin),
-                    :comments => [design_review_comments(:comment_four),
-                                  design_review_comments(:comment_one)] },
-                  { :role     => roles(:designer),
-                    :comments => [design_review_comments(:comment_six),
-                                  design_review_comments(:comment_three)] },
-                  { :role     => roles(:manager),
-                    :comments => [design_review_comments(:comment_five),
-                                  design_review_comments(:comment_two)] },
-                  { :role     => @hweng_role,
-                    :comments => [] },
-                  { :role     => @valor,
-                    :comments => [design_review_comments(:comment_six),
-                                  design_review_comments(:comment_three)] },
-                  { :role     => roles(:ce_dft),
-                    :comments => [] },
-                  { :role     => roles(:dfm),
-                    :comments => [] },
-                  { :role     => roles(:tde),
-                    :comments => [] },
-                  { :role     => roles(:mechanical),
-                    :comments => [] },
-                  { :role     => roles(:pcb_design),
-                    :comments => [design_review_comments(:comment_five),
-                                  design_review_comments(:comment_two)] },
-                  { :role     => roles(:planning),
-                    :comments => [] },
-                  { :role     => roles(:pcb_input_gate),
-                    :comments => [design_review_comments(:comment_four),
-                                  design_review_comments(:comment_one)] },
-                  { :role     => roles(:library),
-                    :comments => [] },
-                  { :role     => roles(:pcb_mechanical),
-                    :comments => [] },
-                  { :role     => roles(:slm_bom),
-                    :comments => [] },
-                  { :role     => roles(:slm_vendor),
-                    :comments => [] },
-                  { :role     => roles(:operations_manager),
-                    :comments => [] },
-                  { :role     => roles(:pcb_admin),
-                    :comments => [] },
-                  { :role     => roles(:program_manager),
-                    :comments => [] },
-                  { :role     => roles(:compliance_emc),
-                    :comments => [] },
-                  { :role     => roles(:compliance_safety),
-                    :comments => [] },
-                  { :role     => roles(:hweng_manager),
-                    :comments => [] },
-                  { :role     => roles(:mechanical_manufacturing),
-                    :comments => [] } ]
+        :comments => [design_review_comments(:comment_four),
+          design_review_comments(:comment_one)] },
+      { :role     => roles(:designer),
+        :comments => [design_review_comments(:comment_six),
+          design_review_comments(:comment_three)] },
+      { :role     => roles(:manager),
+        :comments => [design_review_comments(:comment_five),
+          design_review_comments(:comment_two)] },
+      { :role     => @hweng_role,
+        :comments => [] },
+      { :role     => @valor,
+        :comments => [design_review_comments(:comment_six),
+          design_review_comments(:comment_three)] },
+      { :role     => roles(:ce_dft),
+        :comments => [] },
+      { :role     => roles(:dfm),
+        :comments => [] },
+      { :role     => roles(:tde),
+        :comments => [] },
+      { :role     => roles(:mechanical),
+        :comments => [] },
+      { :role     => roles(:pcb_design),
+        :comments => [design_review_comments(:comment_five),
+          design_review_comments(:comment_two)] },
+      { :role     => roles(:planning),
+        :comments => [] },
+      { :role     => roles(:pcb_input_gate),
+        :comments => [design_review_comments(:comment_four),
+          design_review_comments(:comment_one)] },
+      { :role     => roles(:library),
+        :comments => [] },
+      { :role     => roles(:pcb_mechanical),
+        :comments => [] },
+      { :role     => roles(:slm_bom),
+        :comments => [] },
+      { :role     => roles(:slm_vendor),
+        :comments => [] },
+      { :role     => roles(:operations_manager),
+        :comments => [] },
+      { :role     => roles(:pcb_admin),
+        :comments => [] },
+      { :role     => roles(:program_manager),
+        :comments => [] },
+      { :role     => roles(:compliance_emc),
+        :comments => [] },
+      { :role     => roles(:compliance_safety),
+        :comments => [] },
+      { :role     => roles(:hweng_manager),
+        :comments => [] },
+      { :role     => roles(:mechanical_manufacturing),
+        :comments => [] } ]
   
     test_data.each do |test|
       assert_equal(test[:comments], @design.comments_by_role(test[:role].name))
     end
     
     assert_equal([design_review_comments(:comment_six),
-                  design_review_comments(:comment_four),
-                  design_review_comments(:comment_three),
-                  design_review_comments(:comment_one)],
-                 @design.comments_by_role(['Designer',           'Valor', 
-                                           'Operations Manager', 'PCB Input Gate']))
+        design_review_comments(:comment_four),
+        design_review_comments(:comment_three),
+        design_review_comments(:comment_one)],
+      @design.comments_by_role(['Designer',           'Valor',
+          'Operations Manager', 'PCB Input Gate']))
 
     assert_equal([design_review_comments(:comment_four),
-                  design_review_comments(:comment_one)],
-                 @design.comments_by_role(['PCB Admin',          'Operations Manager',
-                                           'PCB Input Gate']))
+        design_review_comments(:comment_one)],
+      @design.comments_by_role(['PCB Admin',          'Operations Manager',
+          'PCB Input Gate']))
   
   end
   
   
-######################################################################
-def test_design_setup
+  ######################################################################
+  def test_design_setup
   
-  DesignReview.destroy_all
-  DesignReviewResult.destroy_all
+    DesignReview.destroy_all
+    DesignReviewResult.destroy_all
   
-  active_review_types = ReviewType.get_active_review_types
-  not_started    = ReviewStatus.find_by_name('Not Started')
-  review_skipped = ReviewStatus.find_by_name('Review Skipped')
+    active_review_types = ReviewType.get_active_review_types
+    not_started    = ReviewStatus.find_by_name('Not Started')
+    review_skipped = ReviewStatus.find_by_name('Review Skipped')
   
-  test_design = Design.new
-  test_design.save
+    test_design = Design.new
+    test_design.save
   
-  test_design.setup_design_reviews({}, [])
+    test_design.setup_design_reviews({}, [])
   
-  assert_equal(0, DesignReview.count)
-  assert_equal(0, DesignReviewResult.count)
+    assert_equal(0, DesignReview.count)
+    assert_equal(0, DesignReviewResult.count)
   
-  mx234a_bde = board_design_entries(:mx234a)
-  reviews = { 'Pre-Artwork' => '1',   'Placement' => '1',     'Routing'     => '1',
-              'Final'     => '1',     'Release'     => '1'}
+    mx234a_bde = board_design_entries(:mx234a)
+    reviews = { 'Pre-Artwork' => '1',   'Placement' => '1',     'Routing'     => '1',
+      'Final'     => '1',     'Release'     => '1'}
   
-  @mx234a_design.setup_design_reviews(reviews, mx234a_bde.board_design_entry_users)
-  assert_equal(active_review_types.size,   DesignReview.count)
-  assert_equal(35,                         DesignReviewResult.count)
+    @mx234a_design.setup_design_reviews(reviews, mx234a_bde.board_design_entry_users)
+    assert_equal(active_review_types.size,   DesignReview.count)
+    assert_equal(35,                         DesignReviewResult.count)
   
-  active_review_types.each do |review_type|
-    design_review = @mx234a_design.design_reviews.detect { |dr| dr.review_type == review_type }
-    assert_not_nil(design_review)
-    assert_equal(@mx234a_design.id,         design_review.design_id)
-    assert_equal(@mx234a_design.created_by, design_review.creator_id)
-    assert_equal(@mx234a_design.priority,   design_review.priority)
-    assert_equal(not_started,               design_review.review_status)
-  end
-  
-  DesignReview.destroy_all
-  DesignReviewResult.destroy_all
-  
-  @mx234a_design.design_type = 'Dot Rev'
-  @mx234a_design.save
-
-  reviews = { 'Pre-Artwork' => '1',   'Placement' => '0',     'Routing'     => '0',
-              'Final'     => '1',     'Release'     => '1'}
-
-  @mx234a_design.setup_design_reviews(reviews, mx234a_bde.board_design_entry_users)
-  @mx234a_design.reload
-  assert_equal(active_review_types.size,   DesignReview.count)
-  assert_equal(30,                         DesignReviewResult.count)
-  
-  active_review_types.each do |review_type|
-    design_review = @mx234a_design.design_reviews.detect { |dr| dr.review_type == review_type }
-    assert_not_nil(design_review)
-    assert_equal(@mx234a_design.id,         design_review.design_id)
-    assert_equal(@mx234a_design.created_by, design_review.creator_id)
-    assert_equal(@mx234a_design.priority,   design_review.priority)
-    if reviews[design_review.review_type.name] == '1'
-      assert_equal(not_started, design_review.review_status)
-    else
-      assert_equal(review_skipped, design_review.review_status)
+    active_review_types.each do |review_type|
+      design_review = @mx234a_design.design_reviews.detect { |dr| dr.review_type == review_type }
+      assert_not_nil(design_review)
+      assert_equal(@mx234a_design.id,         design_review.design_id)
+      assert_equal(@mx234a_design.created_by, design_review.creator_id)
+      assert_equal(@mx234a_design.priority,   design_review.priority)
+      assert_equal(not_started,               design_review.review_status)
     end
+  
+    DesignReview.destroy_all
+    DesignReviewResult.destroy_all
+  
+    @mx234a_design.design_type = 'Dot Rev'
+    @mx234a_design.save
+
+    reviews = { 'Pre-Artwork' => '1',   'Placement' => '0',     'Routing'     => '0',
+      'Final'     => '1',     'Release'     => '1'}
+
+    @mx234a_design.setup_design_reviews(reviews, mx234a_bde.board_design_entry_users)
+    @mx234a_design.reload
+    assert_equal(active_review_types.size,   DesignReview.count)
+    assert_equal(30,                         DesignReviewResult.count)
+  
+    active_review_types.each do |review_type|
+      design_review = @mx234a_design.design_reviews.detect { |dr| dr.review_type == review_type }
+      assert_not_nil(design_review)
+      assert_equal(@mx234a_design.id,         design_review.design_id)
+      assert_equal(@mx234a_design.created_by, design_review.creator_id)
+      assert_equal(@mx234a_design.priority,   design_review.priority)
+      if reviews[design_review.review_type.name] == '1'
+        assert_equal(not_started, design_review.review_status)
+      else
+        assert_equal(review_skipped, design_review.review_status)
+      end
+    end
+
   end
 
-end
 
+  ######################################################################
+  def test_work_assignment_data
+   
+    design = designs(:designs_027)
+    assert_equal(0, design.assignment_count)
+    assert_equal(0, design.completed_assignment_count)
+    assert_equal(0, design.report_card_count)
+    assert(design.assignments_complete?)
+    assert(design.report_cards_complete?)
+    assert(design.work_assignments_complete?)
+   
+    design = @mx234a_design
+    assert_equal(2, design.assignment_count)
+    assert_equal(1, design.completed_assignment_count)
+    assert_equal(2, design.report_card_count)
+    assert(!design.assignments_complete?)
+    assert(design.report_cards_complete?)
+    assert(!design.work_assignments_complete?)
+   
+    assignment = oi_assignments(:first)
+    assignment.complete = 1
+    assignment.save
+   
+    design.reload
+    assert_equal(2, design.assignment_count)
+    assert_equal(2, design.completed_assignment_count)
+    assert_equal(2, design.report_card_count)
+    assert(design.assignments_complete?)
+    assert(design.report_cards_complete?)
+    assert(design.work_assignments_complete?)
+   
+    OiAssignmentReport.destroy_all
+    design.reload
+    assert_equal(2, design.assignment_count)
+    assert_equal(2, design.completed_assignment_count)
+    assert_equal(0, design.report_card_count)
+    assert(design.assignments_complete?)
+    assert(!design.report_cards_complete?)
+    assert(!design.work_assignments_complete?)
+ 
+  end
+ 
+ 
+  ######################################################################
+  def test_find
+ 
+    active_designs = Design.find_all_active
+    all_designs    = Design.find(:all)
+    assert(active_designs.size < all_designs.size)
+   
+    active_designs.each { |d| assert(!d.complete?) }
+ 
+    complete_designs = all_designs - active_designs
+    assert(all_designs.size == (complete_designs.size + active_designs.size))
+    complete_designs.each { |d| assert(d.complete?) }
+ 
+  end
+ 
+ 
+  ######################################################################
+  def test_outsource_methods
 
-######################################################################
- def test_work_assignment_data
+    siva_e = users(:siva_e)
+    assert(!@mx234a_design.have_assignments(@cathy_m))
+    assert(@mx234a_design.have_assignments(siva_e))
    
-   design = designs(:designs_027)
-   assert_equal(0, design.assignment_count)
-   assert_equal(0, design.completed_assignment_count)
-   assert_equal(0, design.report_card_count)
-   assert(design.assignments_complete?)
-   assert(design.report_cards_complete?)
-   assert(design.work_assignments_complete?)
+    assert_equal(0, @mx234a_design.my_assignments(@cathy_m.id).size)
    
-   design = @mx234a_design
-   assert_equal(2, design.assignment_count)
-   assert_equal(1, design.completed_assignment_count)
-   assert_equal(2, design.report_card_count)
-   assert(!design.assignments_complete?)
-   assert(design.report_cards_complete?)
-   assert(!design.work_assignments_complete?)
+    siva_assignments = @mx234a_design.my_assignments(siva_e.id)
    
-   assignment = oi_assignments(:first)
-   assignment.complete = 1
-   assignment.save
+    assert_equal(1,                      siva_assignments.size)
+    assert_equal(oi_assignments(:first), siva_assignments[0])
    
-   design.reload
-   assert_equal(2, design.assignment_count)
-   assert_equal(2, design.completed_assignment_count)
-   assert_equal(2, design.report_card_count)
-   assert(design.assignments_complete?)
-   assert(design.report_cards_complete?)
-   assert(design.work_assignments_complete?)
+    assert_equal(0, @designs_027.all_assignments.size)
    
-   OiAssignmentReport.destroy_all
-   design.reload
-   assert_equal(2, design.assignment_count)
-   assert_equal(2, design.completed_assignment_count)
-   assert_equal(0, design.report_card_count)
-   assert(design.assignments_complete?)
-   assert(!design.report_cards_complete?)
-   assert(!design.work_assignments_complete?)
- 
- end
- 
- 
- ######################################################################
- def test_find
- 
-   active_designs = Design.find_all_active
-   all_designs    = Design.find(:all)
-   assert(active_designs.size < all_designs.size)
+    all_assignments = @mx234a_design.all_assignments
+    assert_equal(2, all_assignments.size)
+    assert_equal(oi_assignments(:first),  all_assignments[0])
+    assert_equal(oi_assignments(:second), all_assignments[1])
    
-   active_designs.each { |d| assert(!d.complete?) }
- 
-   complete_designs = all_designs - active_designs
-   assert(all_designs.size == (complete_designs.size + active_designs.size))
-   complete_designs.each { |d| assert(d.complete?) }
- 
- end
- 
- 
- ######################################################################
- def test_outsource_methods
-
-   siva_e = users(:siva_e)
-   assert(!@mx234a_design.have_assignments(@cathy_m))
-   assert(@mx234a_design.have_assignments(siva_e))
+    assembly_drawing = oi_categories(:placement)
+    assert_equal(all_assignments, @mx234a_design.all_assignments(assembly_drawing.id))
    
-   assert_equal(0, @mx234a_design.my_assignments(@cathy_m.id).size)
+    routing = oi_categories(:routing)
+    assert_equal(0, @mx234a_design.all_assignments(routing.id).size)
    
-   siva_assignments = @mx234a_design.my_assignments(siva_e.id)
-   
-   assert_equal(1,                      siva_assignments.size)
-   assert_equal(oi_assignments(:first), siva_assignments[0])
-   
-   assert_equal(0, @designs_027.all_assignments.size)
-   
-   all_assignments = @mx234a_design.all_assignments
-   assert_equal(2, all_assignments.size)
-   assert_equal(oi_assignments(:first),  all_assignments[0])
-   assert_equal(oi_assignments(:second), all_assignments[1])
-   
-   assembly_drawing = oi_categories(:placement)
-   assert_equal(all_assignments, @mx234a_design.all_assignments(assembly_drawing.id))
-   
-   routing = oi_categories(:routing)
-   assert_equal(0, @mx234a_design.all_assignments(routing.id).size)
-   
- end
+  end
 
  
- ######################################################################
- def test_audit_methods
+  ######################################################################
+  def test_audit_methods
  
-   assert_equal('Full',    @mx234a_design.audit_type)
+    assert_equal('Full',    @mx234a_design.audit_type)
    
-   checks_removed_count = @mx234a_design.flip_design_type
-   assert_equal('Partial', @mx234a_design.audit_type)
+    checks_removed_count = @mx234a_design.flip_design_type
+    assert_equal('Partial', @mx234a_design.audit_type)
 
-   @mx234a_design.reload
-   checks_added_count = @mx234a_design.flip_design_type
-   assert_equal('Full',                      @mx234a_design.audit_type)
-   assert_equal((checks_removed_count * -1), checks_added_count)
+    @mx234a_design.reload
+    checks_added_count = @mx234a_design.flip_design_type
+    assert_equal('Full',                      @mx234a_design.audit_type)
+    assert_equal((checks_removed_count * -1), checks_added_count)
  
-   @mx234a_design.reload
-   assert_equal(checks_removed_count, @mx234a_design.flip_design_type)
+    @mx234a_design.reload
+    assert_equal(checks_removed_count, @mx234a_design.flip_design_type)
  
  
-   assert_equal('Partial', @la453a1_design.audit_type)
+    assert_equal('Partial', @la453a1_design.audit_type)
    
-   checks_added_count = @la453a1_design.flip_design_type
-   assert_equal('Full', @la453a1_design.audit_type)
+    checks_added_count = @la453a1_design.flip_design_type
+    assert_equal('Full', @la453a1_design.audit_type)
    
-   @la453a1_design.reload
-   checks_removed_count = @la453a1_design.flip_design_type
-   assert_equal('Partial',                   @la453a1_design.audit_type)
-   assert_equal((checks_removed_count * -1), checks_added_count)
+    @la453a1_design.reload
+    checks_removed_count = @la453a1_design.flip_design_type
+    assert_equal('Partial',                   @la453a1_design.audit_type)
+    assert_equal((checks_removed_count * -1), checks_added_count)
    
-   @la453a1_design.reload
-   assert_equal(checks_added_count, @la453a1_design.flip_design_type)
+    @la453a1_design.reload
+    assert_equal(checks_added_count, @la453a1_design.flip_design_type)
    
- end
+  end
  
  
- ######################################################################
- def test_phase
+  ######################################################################
+  def test_phase
  
-   review_type_list = ReviewType.get_review_types
-   complete_design  = designs(:la453a2)
+    review_type_list = ReviewType.get_review_types
+    complete_design  = designs(:la453a2)
  
-   review_type_list.each { |rt| assert(!complete_design.in_phase?(rt)) }
+    review_type_list.each { |rt| assert(!complete_design.in_phase?(rt)) }
    
-   design_in_placement = designs(:la453a1)
+    design_in_placement = designs(:la453a1)
    
-   review_type_list.each do |rt|
-     if rt.name != 'Placement'
-       assert(!design_in_placement.in_phase?(rt))
-     else
-       assert(design_in_placement.in_phase?(rt))
-     end
-   end
+    review_type_list.each do |rt|
+      if rt.name != 'Placement'
+        assert(!design_in_placement.in_phase?(rt))
+      else
+        assert(design_in_placement.in_phase?(rt))
+      end
+    end
  
- end
+  end
  
  
- ######################################################################
- def test_admin_updates
+  ######################################################################
+  def test_admin_updates
  
  
     la455b = designs(:la455b)
@@ -946,7 +939,7 @@ end
     high = priorities(:high)
     low  = priorities(:low)
     
-    boston = design_centers(:boston_harrison)
+    nr = design_centers(:nr)
     oregon = design_centers(:oregon)
    
     in_review       = review_statuses(:in_review)
@@ -958,30 +951,30 @@ end
     existing_design_updates = DesignUpdate.find(:all)
    
     gold_design = { :designer       => @scott_g,
-                    :peer           => @rich_m,
-                    :pcb_input_gate => @cathy_m,
-                    :criticality    => high }
+      :peer           => @rich_m,
+      :pcb_input_gate => @cathy_m,
+      :criticality    => high }
    
     gold_design_reviews = { 'Pre-Artwork' => { :designer      => @cathy_m,
-                                               :design_center => boston,
-                                               :criticality   => high,
-                                               :status        => @review_complete },
-                            'Placement'   => { :designer      => @scott_g,
-                                               :design_center => boston,
-                                               :criticality   => high,
-                                               :status        => in_review },
-                            'Routing'     => { :designer      => @scott_g,
-                                               :design_center => boston,
-                                               :criticality   => high,
-                                               :status        => not_started },
-                            'Final'       => { :designer      => @scott_g,
-                                               :design_center => boston,
-                                               :criticality   => high,
-                                               :status        => not_started },
-                            'Release'     => { :designer      => @patrice_m,
-                                               :design_center => boston,
-                                               :criticality   => high,
-                                               :status        => not_started } }
+        :design_center => nr,
+        :criticality   => high,
+        :status        => @review_complete },
+      'Placement'   => { :designer      => @scott_g,
+        :design_center => nr,
+        :criticality   => high,
+        :status        => in_review },
+      'Routing'     => { :designer      => @scott_g,
+        :design_center => nr,
+        :criticality   => high,
+        :status        => not_started },
+      'Final'       => { :designer      => @scott_g,
+        :design_center => nr,
+        :criticality   => high,
+        :status        => not_started },
+      'Release'     => { :designer      => @patrice_m,
+        :design_center => nr,
+        :criticality   => high,
+        :status        => not_started } }
    
     # The Pre-Art review is complete.  This should not change the design or the 
     # Pre-Art design review.
@@ -1160,7 +1153,7 @@ end
     assert_equal(la455b.id,           design_updates[0].design_id)
     assert_equal(@jim_l.id,           design_updates[0].user_id)
     assert_equal('Design Center',     design_updates[0].what)
-    assert_equal('Boston (Harrison)', design_updates[0].old_value)
+    assert_equal('North Reading',     design_updates[0].old_value)
     assert_equal('Oregon',            design_updates[0].new_value)
     assert(timestamp_before_update.to_i      <= design_updates[0].created_on.to_i)
     assert(design_updates[0].created_on.to_i <= Time.now.to_i)
@@ -1191,36 +1184,36 @@ end
 
     # Verify that the PCB Input Gate can be updated
     gold_design = { :designer       => @rich_m,
-                    :peer           => @scott_g,
-                    :pcb_input_gate => @cathy_m,
-                    :criticality    => low }
+      :peer           => @scott_g,
+      :pcb_input_gate => @cathy_m,
+      :criticality    => low }
    
     gold_design_reviews = { 'Pre-Artwork' => { :designer      => @cathy_m,
-                                               :design_center => boston,
-                                               :criticality   => low,
-                                               :status        => not_started },
-                            'Placement'   => { :designer      => @rich_m,
-                                               :design_center => boston,
-                                               :criticality   => low,
-                                               :status        => not_started },
-                            'Routing'     => { :designer      => @rich_m,
-                                               :design_center => boston,
-                                               :criticality   => low,
-                                               :status        => not_started },
-                            'Final'       => { :designer      => @rich_m,
-                                               :design_center => boston,
-                                               :criticality   => low,
-                                               :status        => not_started },
-                            'Release'     => { :designer      => @patrice_m,
-                                               :design_center => boston,
-                                               :criticality   => low,
-                                               :status        => not_started } }
+        :design_center => nr,
+        :criticality   => low,
+        :status        => not_started },
+      'Placement'   => { :designer      => @rich_m,
+        :design_center => nr,
+        :criticality   => low,
+        :status        => not_started },
+      'Routing'     => { :designer      => @rich_m,
+        :design_center => nr,
+        :criticality   => low,
+        :status        => not_started },
+      'Final'       => { :designer      => @rich_m,
+        :design_center => nr,
+        :criticality   => low,
+        :status        => not_started },
+      'Release'     => { :designer      => @patrice_m,
+        :design_center => nr,
+        :criticality   => low,
+        :status        => not_started } }
                                                
     # Put everything in a known state.
     update = { :designer      => @rich_m,
-               :peer          => @scott_g,
-               :criticality   => low,
-               :design_center => boston }
+      :peer          => @scott_g,
+      :criticality   => low,
+      :design_center => nr }
                
     mx234c.admin_updates(update, "", @jim_l)
  
@@ -1252,29 +1245,29 @@ end
     assert_equal('Cathy McLaren',      design_updates[0].old_value)
     assert_equal('Jan Kasting',        design_updates[0].new_value)
 
- end
+  end
  
  
- ######################################################################
- def test_directory_name
+  ######################################################################
+  def test_directory_name
    
-   assert_equal('pcb252_600_a0_o', @mx600a_design.directory_name)
+    assert_equal('pcb252_600_a0_o', @mx600a_design.directory_name)
    
-   mx999c = designs(:mx999c)
-   assert_equal('mx999c', mx999c.directory_name)
+    mx999c = designs(:mx999c)
+    assert_equal('pcb252_999_c0_a', mx999c.directory_name)
    
- end
+  end
 
 
- ######################################################################
- def test_pnemonic_based_name
+  ######################################################################
+  def test_pnemonic_based_name
    
-   assert_equal('mx600a', @mx600a_design.pnemonic_based_name)
+    assert_equal('mx600a', @mx600a_design.pnemonic_based_name)
    
-   mx999c = designs(:mx999c)
-   assert_equal('mx999c', mx999c.pnemonic_based_name)
+    mx999c = designs(:mx999c)
+    assert_equal('mx999c', mx999c.pnemonic_based_name)
    
- end
+  end
 
  
   ###################################################################
@@ -1298,7 +1291,7 @@ end
   end
 
 
- ###################################################################
+  ###################################################################
   def test_set_incomplete_reviewer_for_role_used_in_a_select_design_reviews
     
     @mx234a_pre_artwork_valor.result = 'APPROVED'
@@ -1317,11 +1310,11 @@ end
     @mx234a_design.design_reviews.each do |design_review|
       if valor_result = design_review.get_review_result(@valor.name)
         if design_review.review_type.name == 'Pre-Artwork'
-            assert_equal(@lisa_a.name + '/' + design_review.review_type.name,
-                         valor_result.reviewer.name + '/' + design_review.review_type.name)
+          assert_equal(@lisa_a.name + '/' + design_review.review_type.name,
+            valor_result.reviewer.name + '/' + design_review.review_type.name)
         else
-            assert_equal(@scott_g.name + '/' + design_review.review_type.name,
-                         valor_result.reviewer.name + '/' + design_review.review_type.name)
+          assert_equal(@scott_g.name + '/' + design_review.review_type.name,
+            valor_result.reviewer.name + '/' + design_review.review_type.name)
         end
       end
     end
@@ -1347,10 +1340,10 @@ end
       hw_result = design_review.get_review_result(@hweng_role.name)
       if design_review.review_type.name == 'Pre-Artwork'
         assert_equal(@lee_s.name + '/' + design_review.review_type.name,
-                     hw_result.reviewer.name + '/' + design_review.review_type.name)
+          hw_result.reviewer.name + '/' + design_review.review_type.name)
       else
         assert_equal(@ben_b.name + '/' + design_review.review_type.name, 
-                     hw_result.reviewer.name + '/' + design_review.review_type.name)
+          hw_result.reviewer.name + '/' + design_review.review_type.name)
       end
     end
     
@@ -1377,7 +1370,7 @@ end
   
   
   ###################################################################
- def test_set_reviewer_non_role_member
+  def test_set_reviewer_non_role_member
 
     @mx234a_design.design_reviews.each do |design_review|
       hw_result = design_review.get_review_result(@hweng_role.name)
@@ -1388,7 +1381,7 @@ end
 
   rescue => err
     assert_equal('Scott Glover is not a member of the Hardware Engineer (EE) group.', 
-                 err.message)
+      err.message)
     @mx234a_design.reload
     @mx234a_design.design_reviews.each do |design_review|
       hw_result = design_review.get_review_result(@hweng_role.name)
@@ -1415,78 +1408,131 @@ end
     
   end
 
+  ###################################################################
+  def test_surfboards_path
+    assert_equal("/surfboards/board_nr/pcb252_234_a0_g/", @mx234a_design.surfboards_path)
+  end
 
- def validate_design(gold, design)
+  ###################################################################
+  def test_get_active_designs_owned_by
+    expected_designs = [@la453b_design,@la453a1_design,
+                        @la455b_design,@designs_027].sort_by { |d| d.id }
+    designs=Design.get_active_designs_owned_by(@scott_g).sort_by { |d| d.id }
+    assert_equal(designs,expected_designs)
+  end
 
-   msg = "#{design.name} - design - "
-   am  = msg + "DESIGNER"
-   assert_equal(gold[:designer].name,       design.designer.name,   am)
-   am = msg + "PEER"
-   assert_equal(gold[:peer].name,           design.peer.name,       am)
-   am = msg + "PCB INPUT ID"
-   assert_equal(gold[:pcb_input_gate].name, design.input_gate.name, am)
-   am = msg + "CRITICALITY"
-   assert_equal(gold[:criticality].name,    design.priority.name,   am)
+  ###################################################################
+  def test_bom_upload_data
+    expected = "259-232-00|252-232-b0 e|Final|Review Skipped||** NOT SET **|" +
+      "Scott_Glover@notes.teradyne.com|/hwnet/board_minn/pcb252_232_b0_e/|Not Set|\n" +
+      "259-999-00|252-999-c0 a|Pre-Artwork|In Review|matt_disanzo@notes.teradyne.com|" +
+      "lee_schaff@notes.teradyne.com|Robert_Goldin@notes.teradyne.com|" +
+      "/hwnet/board_nr/pcb252_999_c0_a/|Not Set|\n259-999-00|252-999-b0 u|" +
+      "Pre-Artwork|In Review|matt_disanzo@notes.teradyne.com|" +
+      "lee_schaff@notes.teradyne.com|Robert_Goldin@notes.teradyne.com|" +
+      "/hwnet/board_nr/pcb252_999_b0_u/|Not Set|\n259-999-00|252-999-a0 k|" +
+      "Pre-Artwork|In Review|matt_disanzo@notes.teradyne.com|" +
+      "lee_schaff@notes.teradyne.com|Robert_Goldin@notes.teradyne.com|" +
+      "/hwnet/board_nr/pcb252_999_a0_k/|Not Set|\n259-700-00|252-700-b0 a|" +
+      "Pre-Artwork|Not Started||** NOT SET **|Rich_Miller@notes.teradyne.com|" +
+      "/hwnet/board_odc/pcb252_700_b0_a/|Not Set|\n259-600-00|252-600-a0 o|" +
+      "Pre-Artwork|In Review|matt_disanzo@notes.teradyne.com|" +
+      "rich_ahamed@notes.teradyne.com|Robert_Goldin@notes.teradyne.com|" +
+      "/hwnet/board_minn/pcb252_600_a0_o/|Not Set|\n949-455-00|942-455-b0 w|" +
+      "Final|Not Started|matt_disanzo@notes.teradyne.com|" +
+      "lee_schaff@notes.teradyne.com|Scott_Glover@notes.teradyne.com|" +
+      "/hwnet/board_nr/pcb942_455_b0_w/|Not Set|\n259-234-00|252-234-c0 q|" +
+      "Routing|Not Started|matt_disanzo@notes.teradyne.com|** NOT SET **|" +
+      "Rich_Miller@notes.teradyne.com|/hwnet/board_nr/pcb252_234_c0_q/|" +
+      "/hwnet/hw_design_bos/pcb252_234_c0_q/|\n949-454-00|942-454-c3 s|" +
+      "Placement|In Review||lee_schaff@notes.teradyne.com|" +
+      "Rich_Miller@notes.teradyne.com|/hwnet/board_nr/pcb942_454_c3_s/|Not Set|\n" +
+      "259-234-00|252-234-b0 m|Placement|Not Started|matt_disanzo@notes.teradyne.com|" +
+      "** NOT SET **|Rich_Miller@notes.teradyne.com|/hwnet/board_nr/pcb252_234_b0_m/|" +
+      "Not Set|\n949-453-00|942-453-a1 c|Placement|In Review||" +
+      "lee_schaff@notes.teradyne.com|Scott_Glover@notes.teradyne.com|" +
+      "/hwnet/board_nr/pcb942_453_a1_c/|Not Set|\n949-453-00|942-453-b0 i|" +
+      "Placement|Not Started||** NOT SET **|Scott_Glover@notes.teradyne.com|" +
+      "/hwnet/board_nr/pcb942_453_b0_i/|Not Set|\n259-234-00|252-234-a0 g|" +
+      "Pre-Artwork|In Review|matt_disanzo@notes.teradyne.com|" +
+      "lee_schaff@notes.teradyne.com|Robert_Goldin@notes.teradyne.com|" +
+      "/hwnet/board_nr/pcb252_234_a0_g/|/hwnet/hw_design_bos/pcb252_234_a0_g/|\n"
+    out = capture_stdout do
+      Design.bom_upload_data
+    end
+    assert_equal(expected, out.string)
+  end
+  ###################################################################
+  def validate_design(gold, design)
+
+    msg = "" # #{design.name} - design - "
+    am  = msg + "DESIGNER"
+    assert_equal(gold[:designer].name,       design.designer.name,   am)
+    am = msg + "PEER"
+    assert_equal(gold[:peer].name,           design.peer.name,       am)
+    am = msg + "PCB INPUT ID"
+    assert_equal(gold[:pcb_input_gate].name, design.input_gate.name, am)
+    am = msg + "CRITICALITY"
+    assert_equal(gold[:criticality].name,    design.priority.name,   am)
+  end
+ 
+ 
+  def validate_design_reviews(gold, design_reviews)
+ 
+    design_reviews.each do |dr|
    
- end
- 
- 
- def validate_design_reviews(gold, design_reviews)
- 
-   design_reviews.each do |dr|
-   
-     review = dr.review_type.name
-     msg    = "#{dr.design.name} - REVIEW: #{review}"
+      review = dr.review_type.name
+      msg    = "" # #{dr.design.name} - REVIEW: #{review}"
 
-     check_val = gold[review]
+      check_val = gold[review]
 
-     am = msg + "DESIGNER"
-     assert_equal(check_val[:designer].name,      dr.designer.name,      am)
-     am = msg + 'CRITICALITY'
-     assert_equal(check_val[:criticality].name,   dr.priority.name,      am)
-     am = msg + 'STATUS'
-     assert_equal(check_val[:status].name,        dr.review_status.name, am)
+      am = msg + "DESIGNER"
+      assert_equal(check_val[:designer].name,      dr.designer.name,      am)
+      am = msg + 'CRITICALITY'
+      assert_equal(check_val[:criticality].name,   dr.priority.name,      am)
+      am = msg + 'STATUS'
+      assert_equal(check_val[:status].name,        dr.review_status.name, am)
    
-   end
+    end
  
- end
- 
- 
- def dump_all
- 
-   Design.find(:all).each { |d| dump(d) }
- 
- end
+  end
  
  
- def dump(d, msg = '')
+  def dump_all
  
-   puts("****************************************************************")
-   puts("****************************************************************")
-   puts(msg)
-   puts("****************************************************************")
-   puts("****************************************************************")
+    Design.find(:all).each { |d| dump(d) }
  
-   puts("----------------------------------------------------------------")
-   puts("NAME:     #{d.name}\t\tID:        #{d.id}")
-   puts("DESIGNER: #{d.designer.name}\tPEER: #{d.peer.name}\tPCB INPUT: #{d.input_gate.name}")
-   puts("CRITICALTY: #{d.priority.name}\tPHASE ID: #{d.phase_id}")
-   puts("----------------------------------------------------------------")
+  end
  
-   puts("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
-   d.design_reviews.each do |dr|
-     puts("\tID: #{dr.id}\tTYPE: #{dr.review_type.name}")
-     puts("\t  @@@@ PLACMENT/ROUTING COMBINED") if dr.review_type_id_2 > 0
-     puts("\t  STATUS:      #{dr.review_status.name}")
-     begin
-       puts("\t  DESIGNER:    #{dr.designer.name}")
-     rescue 
-       puts("\t  DESIGNER:    NOT FOUND FOR ID #{dr.designer_id}")
-     end
-     puts("\t  CRITICALITY: #{dr.priority.name}")
-     puts("\t  DESIGN CTR:  #{dr.design_center.name}")
-   end
- end
+ 
+  def dump(d, msg = '')
+ 
+    puts("****************************************************************")
+    puts("****************************************************************")
+    puts(msg)
+    puts("****************************************************************")
+    puts("****************************************************************")
+ 
+    puts("----------------------------------------------------------------")
+    puts("NAME:     #{d.name}\t\tID:        #{d.id}")
+    puts("DESIGNER: #{d.designer.name}\tPEER: #{d.peer.name}\tPCB INPUT: #{d.input_gate.name}")
+    puts("CRITICALTY: #{d.priority.name}\tPHASE ID: #{d.phase_id}")
+    puts("----------------------------------------------------------------")
+ 
+    puts("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+    d.design_reviews.each do |dr|
+      puts("\tID: #{dr.id}\tTYPE: #{dr.review_type.name}")
+      puts("\t  @@@@ PLACMENT/ROUTING COMBINED") if dr.review_type_id_2 > 0
+      puts("\t  STATUS:      #{dr.review_status.name}")
+      begin
+        puts("\t  DESIGNER:    #{dr.designer.name}")
+      rescue
+        puts("\t  DESIGNER:    NOT FOUND FOR ID #{dr.designer_id}")
+      end
+      puts("\t  CRITICALITY: #{dr.priority.name}")
+      puts("\t  DESIGN CTR:  #{dr.design_center.name}")
+    end
+  end
 
 
 end

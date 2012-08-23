@@ -49,8 +49,8 @@ class AuditController < ApplicationController
 
       audit.update_design_check(params[key], @logged_in_user)
 
-      if audit.errors.on(:comment_required)
-        flash[params[key][:design_check_id].to_i] = audit.errors.on(:comment_required)
+      if !audit.errors[:comment_required][0].blank?
+        flash[params[key][:design_check_id].to_i] = audit.errors[:comment_required][0]
         flash['notice'] = 'Not all checks were updated - please review the form for errors.'
       end
       
@@ -100,7 +100,7 @@ class AuditController < ApplicationController
     else
       @audit.trim_checklist_for_peer_audit
     end
-    @audit.get_design_checks
+    @design_checks = @audit.design_checks
 
     # Locate the subsection in the checklist.
     @audit.checklist.sections.each do |section|
@@ -177,8 +177,8 @@ class AuditController < ApplicationController
 
     @audit = Audit.find(params[:id])
     @audit.trim_checklist_for_design_type
-    @audit.get_design_checks
-    
+    #@audit.get_design_checks
+    @design_checks= @audit.design_checks
     @checklist = @audit.checklist
     
   end

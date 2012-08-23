@@ -10,13 +10,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'board_design_entry_controller'
 
 # Re-raise errors caught by the controller.
 class BoardDesignEntryController; def rescue_action(e) raise e end; end
 
-class BoardDesignEntryControllerTest < Test::Unit::TestCase
+class BoardDesignEntryControllerTest < ActionController::TestCase
 
   
   def setup
@@ -48,6 +48,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
            :incoming_directories,
            :locations,
            :part_numbers,
+           :part_nums,
            :platforms,
            :prefixes,
            :product_types,
@@ -95,7 +96,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     assert_equal(1, board_design_list.size)
 
     #Verify that the list entry is correct.
-    assert_equal('942-021-c0 / 949-021-00', board_design_list[0].design_name)
+    assert_equal('942-021-00', board_design_list[0].design_name)
 
 
     # Try another user and verify that the list has the 
@@ -107,10 +108,10 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     assert_equal(4, board_design_list.size)
 
     #Verify that the list entries are correct.
-    assert_equal('252-008-b4 / 259-008-00', board_design_list[0].design_name)
-    assert_equal('252-008-b4 / 259-008-00', board_design_list[1].design_name)
-    assert_equal('252-234-a0 / 259-234-00', board_design_list[2].design_name)
-    assert_equal('252-234-c0 / 259-234-00', board_design_list[3].design_name)
+    assert_equal('252-008-b4', board_design_list[0].design_name)
+    assert_equal('252-008-b4', board_design_list[1].design_name)
+    assert_equal('252-234-a0', board_design_list[2].design_name)
+    assert_equal('942-453-b0', board_design_list[3].design_name)
     
     # The process list should show all of the entries.
     post(:processor_list, {}, cathy_admin_session)
@@ -119,14 +120,14 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     assert_equal(review_types(:pre_artwork), assigns(:pre_art_review))
     board_design_entries = assigns(:board_design_entries)
     assert_equal(6, board_design_entries.size)
-    
+    #assert_nil(board_design_entries)
     #Verify that the list of entries is correct
-    assert_equal('100-714-b0 / 150-714-00', board_design_entries[0].design_name)
-    assert_equal('942-021-c0 / 949-021-00', board_design_entries[1].design_name)
-    assert_equal('252-008-b4 / 259-008-00', board_design_entries[2].design_name)
-    assert_equal('252-008-b4 / 259-008-00', board_design_entries[3].design_name)
-    assert_equal('252-234-a0 / 259-234-00', board_design_entries[4].design_name)
-    assert_equal('252-234-c0 / 259-234-00', board_design_entries[5].design_name)
+    assert_equal('959-714-b0', board_design_entries[0].design_name)
+    assert_equal('942-021-00', board_design_entries[1].design_name)
+    assert_equal('252-008-b4', board_design_entries[2].design_name)
+    assert_equal('252-008-b4', board_design_entries[3].design_name)
+    assert_equal('252-234-a0', board_design_entries[4].design_name)
+    assert_equal('942-453-b0', board_design_entries[5].design_name)
 
   end
   
@@ -1055,7 +1056,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     assert_equal(8,  BoardDesignEntry.count)
     assert_equal(3,  BoardDesignEntry.find_all_by_originator_id(session[:user].id).size)
     
-    post(:destroy, :id => new_entry.id)
+    post(:delete_entry, :id => new_entry.id)
 
     assert_equal(7,  BoardDesignEntry.count)
     assert_equal(2,  BoardDesignEntry.find_all_by_originator_id(session[:user].id).size)
@@ -1092,7 +1093,7 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     assert_equal(5, Document.count)
 
     
-    post(:destroy, { :id => board_design_list[0].id }, hweng_session)
+    post(:delete_entry, { :id => board_design_list[0].id }, hweng_session)
     assert_equal(2, Document.count)
 
     
@@ -1136,11 +1137,10 @@ class BoardDesignEntryControllerTest < Test::Unit::TestCase
     la021c_entry.reload
     assert_equal(true, la021c_entry.submitted?)
     
-    la021c_entry.input_gate_comments = "Return to Sender!"
     post(:return_entry_to_originator,
          { :id                 => la021c_entry.id,
-           :board_design_entry => la021c_entry },
-         admin_session)
+           :board_design_entry => { :input_gate_comments => "Return to Sender!"} } ,
+           admin_session)
          
     la021c_entry_1 = BoardDesignEntry.find(board_design_entries(:la021c).id)
     assert_equal(true, la021c_entry_1.originated?)

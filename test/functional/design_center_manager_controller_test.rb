@@ -11,13 +11,13 @@
 #
 ########################################################################
 #
-require File.dirname(__FILE__) + '/../test_helper'
+require File.expand_path( "../../test_helper", __FILE__ )
 require 'design_center_manager_controller'
 
 # Re-raise errors caught by the controller.
 class DesignCenterManagerController; def rescue_action(e) raise e end; end
 
-class DesignCenterManagerControllerTest < Test::Unit::TestCase
+class DesignCenterManagerControllerTest < ActionController::TestCase
 
 
   def setup
@@ -106,7 +106,7 @@ class DesignCenterManagerControllerTest < Test::Unit::TestCase
     designer_list = {}
     designers.each do |designer|
       # They all start off based in Boston.
-      assert_equal(design_centers(:boston_harrison).id,
+      assert_equal(design_centers(:nr).id,
                    designer.design_center_id)
       designer_list[designer.id] = designer
     end
