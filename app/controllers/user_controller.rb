@@ -372,7 +372,7 @@ class UserController < ApplicationController
         end
   
         flash['notice']  = "Login successful"
-        if user.ldap_account.blank? && ! user.ldap_optout?
+        if user.ldap_account.blank? && ! user.ldap_optout? && ! Rails.env.development?
           @user = user
           render(:action => "update_ldap")
         else
