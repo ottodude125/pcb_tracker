@@ -206,7 +206,7 @@ logger.debug designs
       }
     end
     # If a phase was specified then filter the list.
-    selected_ids = params[:review_types]
+    selected_ids = params[:review_types] || []
 logger.debug "--- selected ids ---"
 logger.debug selected_ids
     if selected_ids.include?('Complete')
