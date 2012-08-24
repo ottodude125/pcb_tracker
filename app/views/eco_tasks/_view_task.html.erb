@@ -284,7 +284,8 @@
 
 <% unless @eco_task.id.blank? %>
   <table align="center" width="880" border="0">
-    <tr><td colspan="4"><hr class="div" /></td></tr>
+    <tr><td><hr class="div" /></td></tr>
+  <% if eco_admin %>
     <tr>
            <td align="left" width="220">
            <%= render( :partial => "shared/display_mail_lists",
@@ -294,6 +295,7 @@
                        }) %>
       </td>
     </tr>
-    <tr><td colspan="4"><hr class="div" /></td></tr>
+    <tr><td><hr class="div" /></td></tr>
+  <% end %>
   </table>
 <% end %>

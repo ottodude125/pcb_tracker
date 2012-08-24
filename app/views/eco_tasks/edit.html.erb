@@ -21,9 +21,7 @@
 
   <table align="center" width="880" border="0">
     <tr>
-      <% if eco_admin %>
       <td align="left"   width="220"><%= f.submit "Update" %></td>
-      <% end %>
       <td align="right"  width="220">
         <%= link_to 'Return to List', session[:return_to] %>
       </td>
@@ -93,7 +91,7 @@
                   :collection => @eco_task.eco_comments) %>
     </table>
   <% end %>
-
+  
 
   <hr class="div" />
 
