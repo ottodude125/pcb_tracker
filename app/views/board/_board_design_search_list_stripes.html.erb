@@ -6,15 +6,23 @@
 
 <tr class="dk_gray" valign="top">
   <td align="center">
-    <%= link_to(board_design_search_list_stripes[:design].directory_name,
+  <% logger.debug "====partial==="
+  	 logger.debug design_data 
+  	 logger.debug "======="%>
+    <%= link_to(design_data[:design].directory_name,
                 :controller => 'design',
                 :action     => 'view',
-                :id         => board_design_search_list_stripes[:design].id)%>
+                :id         => design_data[:design].id)%>
   </td>
-  <td> <%= board_design_search_list_stripes[:design].phase.name %> </td>
-  <td> <%= board_design_search_list_stripes[:platform_name] %> /
-       <%= board_design_search_list_stripes[:project_name] %>  /
-       <%= board_design_search_list_stripes[:design].board.description %> </td>
-  <td> <%= board_design_search_list_stripes[:designer_name] %>     </td>
+  <td> <%= design_data[:design].phase.name %> </td>
+  <td> <% if design_data[:design].phase.name == "Complete" -%>
+  	      &nbsp;
+  	   <% else -%>
+  	     <%= design_data[:design].get_phase_design_review.review_status.name -%>
+  	   <% end -%>
+  </td>
+  <td> <%= design_data[:platform_name] %> /
+       <%= design_data[:project_name] %>  /
+       <%= design_data[:design].board.description %> </td>
+  <td> <%= design_data[:designer_name] %>     </td>
 </tr>
-

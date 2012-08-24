@@ -11,7 +11,7 @@
 
   <hr class="div" />
   
-  <table border="0" width="50%" align="center" cellspacing="0">
+  <table border="0"  align="center" cellspacing="0">
     <tr>
       <th align="right" width="50%">Designer: </th>
       <td><%= @designer %></td>
@@ -25,16 +25,10 @@
       <td><%= @project %></td>
     </tr>
     <tr>
-      <th align="right">Phase: </th>
+      <th align="right">Selected Phases: </th>
       <td>
-        <% if params[:review_type][:phase] == 'All' %>
-          All Phases
-        <% elsif params[:review_type][:phase] == 'Final' %>
-          Release and Complete
-        <% else %>
-          Complete
-        <% end %>
-      </td>
+        <%= @selected_phases.join(", ") %>
+     </td>
     </tr>
   </table>
 
@@ -48,13 +42,20 @@
     <tr>
       <th>Design</th>
       <th>Phase</th>
+      <th>Status</th>
       <th>Description</th>
       <th>Designer</th>
     </tr>
 
-   <%= render( :partial    => "board_design_search_list_stripes",
-               :collection => @design_list) %>
+   <% logger.debug "===view===="
+      logger.debug @design_list
+      logger.debug "========="
+   %>
+   <% @design_list.each do |design|  %>
 
+   <%= render( :partial    => "board_design_search_list_stripes",
+               :locals     => { :design_data => design } ) %>
+   <% end %>
   </table>
 
   </div>

@@ -116,6 +116,7 @@ before_filter(:verify_admin_role,
     @designers = designer_role.users.sort_by { |u| u.last_name }
     @platforms = Platform.find(:all, :order => :name)
     @projects  = Project.get_projects
+    @review_types = ReviewType.get_review_types
     
     if (@logged_in_user && @logged_in_user.is_designer?)
       @designer = @logged_in_user
@@ -174,7 +175,9 @@ before_filter(:verify_admin_role,
     release_rt = ReviewType.get_release
     final_rt   = ReviewType.get_final
     
-    @design_list = [] #list of designs with designer info
+    @design_list = [] #list of designs with designer info for view
+    
+    designs = [] #list of designs with designer info for local use
     board_list.each do |board|
       board.designs.each do |design|
         if !(design.complete? || design.in_phase?(release_rt))
@@ -186,39 +189,43 @@ before_filter(:verify_admin_role,
           designer_name = final_review.designer.name
           designer_id   = final_review.designer.id
         end
-        @design_list << { :design => design, 
-                        :designer_name => designer_name,
-                        :designer_id   => designer_id,
-                        :platform_name => board.platform.name,
-                        :project_name  => board.project.name }
+        designs << { :design => design, 
+                          :designer_name => designer_name,
+                          :designer_id   => designer_id,
+                          :platform_name => board.platform.name,
+                          :project_name  => board.project.name }
       end
     end
-
+logger.debug "--before filter--"
+logger.debug designs
     # If the designer was specified  then filter the list.
-    if params[:user][:id] != ''
-      designer = User.find(params[:user][:id]).name
-      @design_list.each do | dl |
-        dl.delete_if { |d| d[:designer_id] != params[:user][:id].to_i}
-      end
+    user_id = params[:user][:id].to_i
+    if user_id != 0
+      designs.delete_if { | design |
+         design[:designer_id] != user_id
+      }
     end
-
-    # If a phase of "Final" or "Release" was specified then filter the list.
-    if params[:review_type][:phase] != 'All'
-      review_types          = ReviewType.get_review_types
-      completed_review_type = review_types.detect { |rt| 
-                                rt.name == params[:review_type][:phase] }
-      review_types.delete_if { |rt| rt.sort_order <= completed_review_type.sort_order }
-
-      @design_list.each do |dl|
-        dl.delete_if do |design| 
-          (!dl[:design].complete? && !review_types.detect { |rt| 
-            rt.id == dl[:design].phase_id })
+    # If a phase was specified then filter the list.
+    selected_ids = params[:review_types]
+logger.debug "--- selected ids ---"
+logger.debug selected_ids
+    if selected_ids.include?('Complete')
+      @design_list += designs.map { |design| 
+        design if design[:design].complete?
+      }
+    end
+    @selected_phases = selected_ids.map { | id |
+        if id == "Complete"
+          "Complete"
+        else
+          ReviewType.find(id).name
         end
-      end
-    
-    end
-    
-  end
-  
-  
+    }
+    @design_list += designs.map { |design| 
+      design if selected_ids.include?(design[:design].phase_id.to_s)
+    }
+    @design_list.delete_if { |dl| dl == nil }  #map adds nil values
+logger.debug "--after filter--"
+logger.debug @design_list
+  end  
 end

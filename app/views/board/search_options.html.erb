@@ -74,44 +74,22 @@
     </tr>
     
     <tr>
-      <th width="50%" valign="top">Last Completed Phase</th>
+      <th width="50%" valign="top">Current Phase</th>
       <td>
         <table border="0">
+          <% @review_types.each do |rt| %>
           <tr>
             <td class="data" align="right">
-              <%= radio_button(:review_type, :phase, 'Pre-Artwork') %>
+              <%= check_box_tag('review_types[]',rt.id) %>
             </td>
-            <th align="left">Pre-Artwork</th>
+            <th align="left"><%= rt.name-%></th>
           </tr>
-          <tr>
+          <%end%>
+           <tr>
             <td class="data" align="right">
-              <%= radio_button(:review_type, :phase, 'Placement') %>
+              <%= check_box_tag('review_types[]','Complete',:checked => 'checked') %>
             </td>
-            <th align="left">Placement</th>
-          </tr>
-          <tr>
-            <td class="data" align="right">
-              <%= radio_button(:review_type, :phase, 'Routing') %>
-            </td>
-            <th align="left">Routing</th>
-          </tr>
-          <tr>
-            <td class="data" align="right">
-              <%= radio_button(:review_type, :phase, 'Final') %>
-            </td>
-            <th align="left">Final</th>
-          </tr>
-          <tr>
-            <td class="data" align="right">
-              <%= radio_button(:review_type, :phase, 'Release') %>
-            </td>
-            <th align="left">Release</th>
-          </tr>
-          <tr>
-            <td class="data" align="right">
-              <%= radio_button(:review_type, :phase, 'All',:checked => 'checked') %>
-            </td>
-            <th align="left">All</th>
+            <th align="left">Completed</th>
           </tr>
         </table>
       </td>
