@@ -196,8 +196,8 @@ before_filter(:verify_admin_role,
                           :project_name  => board.project.name }
       end
     end
-logger.debug "--before filter--"
-logger.debug designs
+#logger.debug "--before filter--"
+#logger.debug designs
     # If the designer was specified  then filter the list.
     user_id = params[:user][:id].to_i
     if user_id != 0
@@ -207,8 +207,8 @@ logger.debug designs
     end
     # If a phase was specified then filter the list.
     selected_ids = params[:review_types] || []
-logger.debug "--- selected ids ---"
-logger.debug selected_ids
+#logger.debug "--- selected ids ---"
+#logger.debug selected_ids
     if selected_ids.include?('Complete')
       @design_list += designs.map { |design| 
         design if design[:design].complete?
@@ -225,7 +225,7 @@ logger.debug selected_ids
       design if selected_ids.include?(design[:design].phase_id.to_s)
     }
     @design_list.delete_if { |dl| dl == nil }  #map adds nil values
-logger.debug "--after filter--"
-logger.debug @design_list
+#logger.debug "--after filter--"
+#logger.debug @design_list
   end  
 end
