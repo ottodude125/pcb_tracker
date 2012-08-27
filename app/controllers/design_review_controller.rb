@@ -2009,11 +2009,8 @@ end
 def process_update_fab_houses
 
   design_review = DesignReview.find(params[:design_review][:id])
-  fab_msg = post_fab_house_updates(design_review, params["fab_house"] )
-  dr_comment = DesignReviewComment.new(
-    :comment          => fab_msg,
-    :user_id          => @logged_in_user.id,
-    :design_review_id => design_review.id).save
+  fab_msg = post_fab_house_updates(design_review, params["fab_house_ids"] )
+
   redirect_to(:action => :view, :id => params[:design_review][:id])
 end
 ########################################################################
@@ -2122,63 +2119,51 @@ def post_fab_house_updates(design_review, fab_house_list)
   # get current fab houses in join design table
   design_fab_houses = design_review.design.fab_houses
 
-  # if list of fab houses passed in includes items not in join table then add them to added comment
-  fab_house_list.each do |fbl|
-    fab_house = FabHouse.find(fbl)
-    if !design_fab_houses.include? fab_house
-      if added == ''
-        added = fab_house.name
-      else
-        added += ', ' + fab_house.name
+  # check if there are any fab houses in the list. if there are then process them to update comment and join tables
+  if fab_house_list != nil
+    
+    # if list of fab houses passed in includes items not in join table then add them to added comment
+    fab_house_list.each do |fbl|
+      fab_house = FabHouse.find(fbl)
+      if !design_fab_houses.include? fab_house
+        if added == ''
+          added = fab_house.name
+        else
+          added += ', ' + fab_house.name
+        end
       end
     end
-  end
+
+    # if join table includes items which are not in the fab house list passed in then add them to removed comment 
+    design_fab_houses.each do |fb2|
+      if !fab_house_list.include? fb2.id.to_s
+        if removed == ''
+          removed = fb2.name
+        else
+          removed += ', ' + fb2.name
+        end
+      end
+    end
+        
+    # update the design and board fab houses join tables
+    design_review.design.fab_houses = FabHouse.find(fab_house_list) if fab_house_list
+    design_review.design.board.fab_houses = FabHouse.find(fab_house_list) if fab_house_list 
   
-  # if join table includes items which are not in the fab house list passed in then add them to removed comment 
-  design_fab_houses.each do |fab_house|
-    if !fab_house_list.include? fab_house.id
+  # Otherwise the user has submitted a form with no vendors selected
+  else
+    # Just add all items in the join table to the removed list
+    design_fab_houses.each do |fab_house|
       if removed == ''
         removed = fab_house.name
       else
         removed += ', ' + fab_house.name
       end
     end
+    
+    # update the design and board fab houses join tables
+    design_review.design.fab_houses -= design_fab_houses
+    design_review.design.board.fab_houses -= design_fab_houses
   end  
-  
-  # update the design and board fab houses join tables
-  design_review.design.fab_houses = FabHouse.find(fab_house_list) if fab_house_list
-  design_review.design.board.fab_houses = FabHouse.find(fab_house_list) if fab_house_list  
-
-#  fab_house_list.each do |id|
-#
-#    fab_house = FabHouse.find(id)
-#    
-#    # Update the design
-#    design = design_review.design
-#    if selected == '0' && design.fab_houses.include?(fab_house)
-#      design.fab_houses.delete(fab_house)
-#      if removed == ''
-#        removed = fab_house.name
-#      else
-#        removed += ', ' + fab_house.name
-#      end
-#    elsif selected == '1' && !design.fab_houses.include?(fab_house)
-#      design.fab_houses << fab_house
-#      if added == ''
-#        added = fab_house.name
-#      else
-#        added += ', ' + fab_house.name
-#      end
-#    end
-
-    # Update the board
-#    board = design.board
-#    if selected == '0' && board.fab_houses.include?(fab_house)
-#      board.fab_houses.delete(fab_house)
-#    elsif selected == '1' && !board.fab_houses.include?(fab_house)
-#      board.fab_houses << fab_house
-#    end
-#  end
 
   # parse together the comment to be posted
   if added !=  '' || removed != ''
