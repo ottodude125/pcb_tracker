@@ -134,4 +134,17 @@ class Ping < ActiveRecord::Base
     PingMailer::ping_design_center_summary(summary).deliver
   
   end
+  
+  ######################################################################
+  #
+  # send_test
+  #
+  # Description:
+  # Sends a test message to the users specified in the argument list
+  #
+  ######################################################################
+  #
+  def self.send_test(*addresses)
+      PingMailer::send_test(addresses).deliver    
+    end
 end

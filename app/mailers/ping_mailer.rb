@@ -93,4 +93,28 @@ class PingMailer < ActionMailer::Base
         )  
   end
 
+ ######################################################################
+  #
+  # ping_test
+  #
+  # Description:
+  # This method generates a test message to the specifed e-mail addresses
+  #
+  # Parameters:
+  #   addresses - an array of email addresses
+  #
+  ######################################################################
+  #
+  def send_test(addresses)
+
+    to_list  = addresses
+    cc_list  = []
+    subject    = 'Test from PCB Tracker'
+
+    mail( :to      => to_list,
+          :subject => subject,
+          :cc      => cc_list
+        )  
+  end
+
 end
