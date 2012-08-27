@@ -67,11 +67,11 @@ class Ping < ActiveRecord::Base
 
   ######################################################################
   #
-  # send_message
+  # send_summary
   #
   # Description:
-  # Goes through all of the design reviews and sends a reminder to the
-  # reviewer.  A summary is sent to the managers and PCB input gates.
+  # Goes through all of the design reviews and sends a summary to the 
+  # managers and PCB input gates.  Called at the end of "send_message".
   #
   ######################################################################
   #
