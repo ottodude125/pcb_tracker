@@ -129,7 +129,7 @@ class DesignMailer < ActionMailer::Base
       role,
       reviewer )
 
-    to_list  = [reviewer.email,'dtg@teradyne.com']
+    to_list  = [reviewer.email]
     cc_list  = []
     subject  = MailerMethods.subject_prefix(design) +
                role.display_name      +
