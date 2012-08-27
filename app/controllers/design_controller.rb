@@ -371,6 +371,7 @@ end
   ######################################################################
   #
   def add_review_role
+
     @design  = Design.find(params[:id])
     @review_roles = Role.get_review_roles + Role.get_manager_review_roles
     @review_roles.delete_if { |r| @design.role_open_review_count(r) > 0 }
@@ -381,18 +382,24 @@ end
       design_reviews = @design.design_reviews.sort_by { |dr| dr.review_type.sort_order }
       design_reviews.delete_if { |dr| dr.review_complete? }
       role = Role.find(role_id)
-      design_reviews.each do |dr|
+      assigned = false
+      design_reviews.each do |dr|    
         if ! dr.role_reviewer(role) # don't reassign
           next if !role.included_in_design_review?(dr.design)
           next if !role.review_types.include?(dr.review_type)
           drr = DesignReviewResult.new(:reviewer_id => reviewer.id,  :role_id => role_id )
           dr.design_review_results << drr
+          assigned = true
         end
       end
-      DesignMailer::review_role_creation_notification(@design,
-        role, reviewer).deliver
-      flash["notice"]  = "The #{role.display_name} role has been added"
-      flash["notice"] += "<br />Mail has been sent to #{reviewer.name}"
+      if assigned
+        DesignMailer::review_role_creation_notification(@design,
+          role, reviewer).deliver
+        flash["notice"]  = "The #{role.display_name} role has been added"
+        flash["notice"] += "<br />Mail has been sent to #{reviewer.name}"
+      else
+        flash["notice"] = "No available reviews to assign #{role.name} role to"
+      end
       redirect_to :action => 'design_review_reviewers', :id => params[:id]
     else
       @url = get_role_users_design_path
