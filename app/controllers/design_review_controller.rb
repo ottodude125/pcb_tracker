@@ -1812,12 +1812,11 @@ def update_fab_houses
 
   if params[:id]
     @design_review  = DesignReview.find(params[:id])
-    design_fab_houses = {}
-    @design_review.design.fab_houses.each { |dfh| design_fab_houses[dfh.id] = dfh }
+    @design_fab_houses = {}
+    @design_review.design.fab_houses.each { |dfh| @design_fab_houses[dfh.id] = dfh }
 
     @fab_houses = FabHouse.get_all_active
-    @selected   = {}
-    @fab_houses.each { |fh| @selected[fh.id] = design_fab_houses[fh.id] != nil }
+
   else
 
     flash['notice'] = "No ID was provided - unable to access the design review"
