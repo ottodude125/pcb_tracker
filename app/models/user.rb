@@ -420,10 +420,14 @@ class User < ActiveRecord::Base
   ######################################################################
   #
   def email
-    if Rails.env.development?
-      self.first_name + " " + self.last_name + " <dtg_ror_devel@lists.teradyne.com>"
+    if read_attribute(:active) == 1
+      if Rails.env.development?
+        self.first_name + " " + self.last_name + " <dtg_ror_devel@lists.teradyne.com>"
+      else
+        read_attribute(:email)
+      end
     else
-      read_attribute(:email)
+      ""
     end
   end
   
