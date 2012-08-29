@@ -1029,7 +1029,7 @@ class BoardDesignEntryController < ApplicationController
   
     board_design_entry = BoardDesignEntry.find(params[:id])
 
-    document = Document.new(params[:document]) if params[:document][:document] != ""
+    document = Document.new(params[:document]) if (params[:document] != nil && params[:document][:document] != "" )
 
     if document && document.data.size > Document::MAX_FILE_SIZE
       flash['notice'] = "The document was too large to attach - it must be smaller than #{Document::MAX_FILE_SIZE/2}"
