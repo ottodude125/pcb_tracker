@@ -39,9 +39,9 @@
       &nbsp;
     <% end %>
   </td>
-  <td><%= eco_tasks_list_stripes.schematic?            ? "&bull;" : "&nbsp;" %></td>
-  <td><%= eco_tasks_list_stripes.assembly_drawing?    ? "&bull;" : "&nbsp;" %></td>
-  <td><%= eco_tasks_list_stripes.fabrication_drawing? ? "&bull;" : "&nbsp;" %></td>
-  <td><%= eco_tasks_list_stripes.cuts_and_jumps? ? "&bull;" : "&nbsp;" %></td>
+  <td><%= eco_tasks_list_stripes.schematic?            ? "&bull;".html_safe : "&nbsp;".html_safe %></td>
+  <td><%= eco_tasks_list_stripes.assembly_drawing?    ? "&bull;".html_safe : "&nbsp;".html_safe %></td>
+  <td><%= eco_tasks_list_stripes.fabrication_drawing? ? "&bull;".html_safe : "&nbsp;".html_safe %></td>
+  <td><%= eco_tasks_list_stripes.cuts_and_jumps? ? "&bull;".html_safe : "&nbsp;".html_safe %></td>
 </tr>
 
