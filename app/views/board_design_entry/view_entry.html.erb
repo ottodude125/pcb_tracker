@@ -14,11 +14,11 @@
     <% @return   = processor ? 'processor_list' : 'originator_list' %>
     <% return_to = @return == 'originator_list' ? 'Entry' : 'Processor' %>
     <td align="center">
-      <% if params[:design_review_id] %>
+      <% if @design_review_id %>
         <input type="button" value="Return"
                onClick="parent.location='<%= url_for( :controller => 'design_review', 
                                                       :action => 'review_attachments',
-                                                      :design_review_id => params[:design_review_id] ) %>'" />
+                                                      :id => @design_review_id ) %>'" />
       <% else %>
         <input type="button" 
                value="Return to PCB Engineering <%= return_to %> List"

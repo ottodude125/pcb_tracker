@@ -413,6 +413,7 @@ class BoardDesignEntryController < ApplicationController
   
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @return             = params[:return]
+    @design_review_id   = params[:design_review_id]
     @originator         = @board_design_entry.user
     @managers           = @board_design_entry.manager_roles
     @reviewers          = @board_design_entry.reviewer_roles
