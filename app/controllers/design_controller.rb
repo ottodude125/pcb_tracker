@@ -388,6 +388,7 @@ end
           next if !role.included_in_design_review?(dr.design)
           next if !role.review_types.include?(dr.review_type)
           drr = DesignReviewResult.new(:reviewer_id => reviewer.id,  :role_id => role_id )
+          drr.result = "No Response" if dr.active? 
           dr.design_review_results << drr
           assigned = true
         end
