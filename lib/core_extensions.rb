@@ -42,7 +42,7 @@ module CoreExtensions
     #
     def format_dd_mon_yy(timestamp=false)
       result  = self.strftime("%d-%b-%y")
-      result += self.strftime(", %I:%M %p %Z") if timestamp
+      result += self.localtime.strftime(", %I:%M %p %Z") if timestamp
       result
     end
 
@@ -90,7 +90,7 @@ module CoreExtensions
     # Example:         18-Apr-09 at 11:23 AM EST
     #
     def format_dd_mm_yy_at_timestamp
-      self.strftime("%d-%b-%y at %I:%M %p %Z")
+      self.localtime.strftime("%d-%b-%y at %I:%M %p %Z")
     end
 
 
@@ -115,7 +115,7 @@ module CoreExtensions
     # Example:         Tue Jan 27, 2009 @ 11:30 AM EST
     #
     def format_day_mon_dd_yyyy_at_timestamp
-      self.strftime("%a %b %d, %Y @ %I:%M %p %Z")
+      self.localtime.strftime("%a %b %d, %Y @ %I:%M %p %Z")
     end
     
   end

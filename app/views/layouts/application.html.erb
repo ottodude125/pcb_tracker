@@ -43,14 +43,7 @@ function setFocus() {
     body { background-image:url('http://boarddev.teradyne.com/Pics/development.png');}
   </style>
 <% end %>
-<script type="text/javascript">
-    function ShowTime()
-    {
-       var dt = new Date();
-        $('#current_time').text(dt.toLocaleDateString() + " " + dt.toLocaleTimeString());
-        window.setTimeout("ShowTime()", 1000);
-    };
-</script>
+
 </head>
 
   <body OnLoad="setFocus()">
@@ -140,6 +133,7 @@ function setFocus() {
         <td align="center">
             <div id="current_time">&nbsp;</div>
             <script type="text/javascript">
+                set_time_zone_offset();
                 ShowTime();
             </script>         
         </td>

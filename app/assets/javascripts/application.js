@@ -8,3 +8,11 @@
 //= require jquery_ujs
 //= require_tree .
 
+
+// Function to display current time. Used in layout to display time at top of display
+function ShowTime()
+{
+    var dt = new Date();
+    $('#current_time').text(dt.toLocaleDateString() + " " + dt.toLocaleTimeString());
+    window.setTimeout("ShowTime()", 1000);
+}

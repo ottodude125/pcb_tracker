@@ -38,7 +38,8 @@ class ApplicationController < ActionController::Base
                                            :release]
 
   before_filter :set_instance_variables
-
+  
+  
 ######################################################################
 #
 # change_cc_list
