@@ -6,9 +6,12 @@
 
 # Ignore eclipse project config files
 /.project
+.DS_Store
 
 # Ignore bundler config
 /.bundle
+
+/db/schema.rb
 
 # Ignore the default SQLite database.
 /db/*.sqlite3
@@ -16,3 +19,8 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp/cache/
+
+*.swp
+.sass-cache
+config/database.yml
+public/stylesheets/compiled/*
