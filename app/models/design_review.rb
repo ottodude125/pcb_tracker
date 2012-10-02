@@ -739,7 +739,8 @@ class DesignReview < ActiveRecord::Base
     else
       User.new(:first_name => 'Not', :last_name => 'Assigned')
     end
-  
+    rescue
+      return User.new(:first_name => 'Unknown', :last_name => 'User')
   end
 
 
