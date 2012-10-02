@@ -2,7 +2,7 @@ The <%= @board_design_entry.pcb_number %> has been returned to you by <%= @proce
 
 COMMENTS:
 --------------------------------------------------------------------------------
-<%= @board_design_entry.input_gate_comments %>
+<%= raw @board_design_entry.input_gate_comments %>
 --------------------------------------------------------------------------------
 
 For details, please refer to <%= Pcbtr::PCBTR_BASE_URL %>board_design_entry/view_entry/<%= @board_design_entry.id %>

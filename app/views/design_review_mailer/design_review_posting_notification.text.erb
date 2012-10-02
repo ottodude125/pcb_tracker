@@ -7,7 +7,7 @@ Posting number: <%= @design_review.posting_count %>
 
 <% if ! @comment.blank? %>
 COMMENT:
-<%= @comment %>
+<%= raw @comment %>
 <% end %>
 
 

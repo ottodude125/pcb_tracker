@@ -9,6 +9,6 @@ Reference:  <%= Pcbtr::PCBTR_BASE_URL %>eco_tasks/<%=  @eco_task.id %>
 <% if @eco_task.eco_comments.size > 0 %>COMMENTS:<% @eco_task.eco_comments.each do |comment| %>
 =================================================================
 Entered by: <%= comment.user.name %> on <%= comment.created_at.format_dd_mm_yy_at_timestamp %>
-<%=  comment.comment %><% end %><% end %>
+<%=  raw comment.comment %><% end %><% end %>
 =================================================================
 

@@ -8,6 +8,6 @@ SECTION:              <%= assignment.oi_instruction.oi_category_section.name %>
 --------------------------------------------------------------------------------
 <%= assignment.oi_instruction.oi_category_section.email_formatted_urls if assignment.oi_instruction.oi_category_section.urls.size > 0 %>
 <% if assignment.oi_instruction.oi_assignments[0].oi_assignment_comments.size > 0 %>ADDITIONAL INFORMATION:
-<%= assignment.oi_instruction.oi_assignments[0].oi_assignment_comments[0].comment %>
+<%= raw assignment.oi_instruction.oi_assignments[0].oi_assignment_comments[0].comment %>
 <% end %>
 <% end %>

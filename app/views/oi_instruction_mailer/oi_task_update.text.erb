@@ -6,6 +6,6 @@
 Posted By: <%= comment.user.name %>
 Date:      <%= comment.created_on.format_dd_mon_yy('timestamp') %>
 
-<%= comment.comment %><% end %>
+<%= raw comment.comment %><% end %>
 
 NOTE: The work instruction information is located at <%= Pcbtr::PCBTR_BASE_URL %>oi_instruction/assignment_view/<%= @assignment.id %>
