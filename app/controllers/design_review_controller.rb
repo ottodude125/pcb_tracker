@@ -1509,11 +1509,11 @@ def perform_ftp_notification
   # Add the Operations Manager from the design_entry to the boards_users data
   if @design.board_design_entry
     ops_manager = @design.board_design_entry.board_design_entry_users.detect { |u| u.role.name == 'Operations Manager'}
-    if ops_manager.user_id > 0
+    if !ops_manager.nil?
       @design.board.users << User.find(ops_manager.user_id) unless board_users.detect { |u| u.id == ops_manager.user_id }
     else
       flash['notice'] = "" if !flash['notice']
-      flash['notice'] += "<br />WARNING: THE OPERATIONS MANAGER WAS NOT AUTOMATICALLY ADDED TO THE CC LIST"
+      flash['notice'] += "<br />WARNING: AN OPERATIONS MANAGER WAS NOT AUTOMATICALLY ADDED TO THE CC LIST"
     end
   end
 
