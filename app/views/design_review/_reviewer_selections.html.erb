@@ -12,45 +12,34 @@
 
       <table width="100%" border="0" rules="all">
         <tr class="th1">
-          <th width="20%">Role</th>
+          <th width="17%">Role</th>
           <th>APPROVE</th>
           <th>WAIVE</th>
           <th>REJECT</th>
           <th>COMMENT ONLY</th>
+          <th>RESET</th>
         </tr>
 
-        <% @my_review_results.each do |review_result| %>
-
-          <% if review_result.no_response? %>
-
+        <% for review_result in @my_review_results %>
             <tr>
-              <th class="th1"><%= review_result.role.display_name %></th>
-              <td align="center">
-                <%= radio_button("role_id_#{review_result.role.id}",
-                  "#{review_result.id}",
-                  "APPROVED") %>
-              </td>
-              <td align="center">
-                <%= radio_button("role_id_#{review_result.role.id}",
-                  "#{review_result.id}",
-                  "WAIVED") %>
-              </td>
-              <td align="center">
-                <%= radio_button("role_id_#{review_result.role.id}",
-                  "#{review_result.id}",
-                  "REJECTED") %>
-              </td>
-              <td align="center">
-                <%= radio_button("role_id_#{review_result.role.id}",
-                  "#{review_result.id}",
-                  "COMMENTED") %>
-              </td>
-            </tr>
-
-          <% end %>
-
+                <th class="th1"><%= review_result.role.display_name %></th>
+                <td align="center">
+                    <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "APPROVED", if(review_result.result == "APPROVED") then true end %>
+                </td>
+                <td align="center">
+                    <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "WAIVED", if(review_result.result == "WAIVED") then true end %>
+                </td>
+                <td align="center">
+                    <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "REJECTED", if(review_result.result == "REJECTED") then true end %>
+                </td>
+                <td align="center">
+                    <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "COMMENTED", if(review_result.result == "COMMENTED") then true end %>
+                </td>
+                <td align="center">
+                    <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "No Response" %>
+                </td>
+            </tr>        
         <% end %>
-
       </table>
 
     <% elsif @design_review.on_hold? %>

@@ -69,6 +69,7 @@ PcbTracker::Application.routes.draw do
       get  'post_review'
       get  'post_results'
       get  'skip_review'
+      get  'confirm_rejection'
    end
   end
 
