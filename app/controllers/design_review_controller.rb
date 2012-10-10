@@ -1193,11 +1193,17 @@ def reviewer_results
       rejected = ((result[0][1] == "REJECTED") || rejected)
         
       # Save the results to store in flash
-      roles << { :id                      => key.split('_')[2],
-        :design_review_result_id => result[0][0],
-        :result                  => result[0][1] }
+      design_review_result = DesignReviewResult.find(result[0][0])
+      
+      if design_review_result.result != result[0][1]
+        roles << { :id                      => key.split('_')[2],
+          :design_review_result_id => result[0][0],
+          :result                  => result[0][1] }                
+      end
     end
   }
+  logger.debug roles
+
 
   # Save the data in flash
   review_results = {
@@ -1217,7 +1223,7 @@ def reviewer_results
     redirect_to(:action => 'view', :id => params["design_review"]["id"])
   elsif not rejected
     redirect_to(:action => :post_results)
-  else
+  else   
     redirect_to(:action => :confirm_rejection)
   end
 end
@@ -1407,11 +1413,10 @@ end
 ######################################################################
 #
 def confirm_rejection
-  
   review_results = flash[:review_results]
-    
+  
   flash[:review_results] = review_results
-    
+  
   @design_review_id = review_results[:design_review_id]
     
 end

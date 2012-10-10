@@ -1,6 +1,9 @@
 <% if @result_update != {} %>RESULTS:
-  <% @result_update.each { |role, result| %> <%= @user.name %> (<%= role %>) <%= result %> <% } %>
+  <% @result_update.each do |role, result| %> 
+    <%= @user.name %> (<%= role %>) <%= result %>
+  <% end %> 
 <% end %>
+
 <% if @comments %>COMMENTS:<% @comments.each do |comment| %>
 =================================================================
 Entered by: <%= comment.user.name %> on <%= comment.created_on.format_dd_mm_yy_at_timestamp %>
