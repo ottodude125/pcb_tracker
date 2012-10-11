@@ -6,19 +6,11 @@
 
 <% @heading = @design_review.design.display_summary %>
 
-<% if display_approval_options(@design_review.review_status_id)
-     form_action         = { :action => 'reviewer_results' }
+<%   form_action         = { :action => 'reviewer_results' }
      comment_only        = false
      submit_button_text  = 'Submit Comments and/or Review Results'
      submit_button_title = 'Add a comment and/or indicate the results of the review'
      submit_button_class = 'buttonPost'
-   else
-     form_action         = { :action => 'add_comment' }
-     comment_only        = true
-     submit_button_text  = 'Add Comment'
-     submit_button_title = 'Add a comment to the design review'
-     submit_button_class = 'buttonPost'
-   end
    %>
 
 <%= form_tag(form_action) do %>
