@@ -1202,8 +1202,6 @@ def reviewer_results
       end
     end
   }
-  logger.debug roles
-
 
   # Save the data in flash
   review_results = {
@@ -1360,7 +1358,21 @@ def post_results
       end
     end
   end
-    
+  
+  # If the status of a review has changed add a comment
+  if result_update && result_update.size > 0
+    dr_comment = DesignReviewComment.new
+    dr_comment.comment          = "Review Status Changed: "
+    result_update.each do | role, result|
+      dr_comment.comment << (role + "-" + result + ",   ")
+    end
+    dr_comment.user_id          = @logged_in_user.id
+    dr_comment.design_review_id = review_results[:design_review_id]
+    dr_comment.save
+      
+    comment_update = true 
+  end
+      
   if comment_update || (result_update && result_update.size > 0)
     DesignReviewMailer::design_review_update(@logged_in_user,
       design_review, comment_update, result_update).deliver
