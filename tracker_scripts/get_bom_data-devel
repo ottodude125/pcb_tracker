@@ -4,7 +4,7 @@
 # Used to retrieve the data used to upload BOMs to 
 # TeamCenter
 #####################################################
-# $Id$
+# in GIT
 #####################################################
 
 if [ $# = 0 ] ; then
