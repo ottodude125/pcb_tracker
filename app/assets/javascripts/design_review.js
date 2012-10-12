@@ -45,7 +45,9 @@ $(function() {
 
 	//Method for _reviewer_selections.html.erb
 	$("#showAllReviews").click(function() {
-	    header.show();
+	    if (rows.length > 0) {
+	    	header.show();
+	    }
 	    rows.show();
 	    return false;
 	});
