@@ -45,10 +45,14 @@ $(function() {
 
 	//Method for _reviewer_selections.html.erb
 	$("#showAllReviews").click(function() {
-	    if (rows.length > 0) {
+	    if (rows.length < 1) {
 	    	header.hide();
 	    }
-	    rows.show();
+	    else {
+	    	header.show();
+	    }
+	    incomplete.show();
+	    complete.show();
 	    return false;
 	});
 });		
