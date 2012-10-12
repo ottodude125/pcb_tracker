@@ -45,7 +45,7 @@ $(function() {
 
 	//Method for _reviewer_selections.html.erb
 	$("#showAllReviews").click(function() {
-	    if (rows.length < 1) {
+	    if (rows.length < 2) {
 	    	header.hide();
 	    }
 	    else {
