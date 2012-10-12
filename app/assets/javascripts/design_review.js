@@ -1,35 +1,51 @@
-// On initial load of _reviewer_selections.html.erb only show incomplete reviews current user needs to perform
+// Methods to show/hide reviews when user clicks a button(All/Incomplete/Complete) in the reviewer_selections.html.erb section
 $(function() {
+	
+	// variables for the _reviewer_selections.html.erb section of the page
+   	var rows = $('table.reviewsTable tr'); // get all the rows in the table
+	var header = rows.filter('.th1'); // header row
+	var incomplete = rows.filter('.incompleteReview'); // incomplete reviews
+	var complete = rows.filter('.completeReview'); // complete reviews
+
+	//On initial load of _reviewer_selections.html.erb only show incomplete reviews current user needs to perform
     $(".completeReview").hide();
-    return false;
-});
 
-
-// Methods to show/hide reviews when user clicks a button
-$(function() {
-	var rows = $('table.reviewsTable tr');
-	var incomplete = rows.filter('.incompleteReview');
-	var complete = rows.filter('.completeReview');
-	var numRows = rows.length;
-
+    // On initial load of _reviewer_selections.html.erb only show header for reviews section if the user has some incompleted reviews
+	if (incomplete.length < 1) {
+		header.hide();
+	}
+    
 	// Method for _reviewer_selections.html.erb	
-	$("#showIncompleteReviews").click(function() {	
-		incomplete.show();
-	    complete.hide();
+	$("#showIncompleteReviews").click(function() {
+		if (incomplete.length > 0) {
+			header.show();
+			incomplete.show();
+		}
+		else {
+			header.hide();
+		}
+		complete.hide();
 	    return false;
 	});
 
 
 	//Method for _reviewer_selections.html.erb
 	$("#showCompletedReviews").click(function() {
+		if (complete.length > 0) {
+			header.show();
+			complete.show();
+		}
+		else {
+			header.hide();
+		}
 		incomplete.hide();
-	    complete.show();
 	    return false;
 	});
 
 
 	//Method for _reviewer_selections.html.erb
 	$("#showAllReviews").click(function() {
+	    header.show();
 	    rows.show();
 	    return false;
 	});
