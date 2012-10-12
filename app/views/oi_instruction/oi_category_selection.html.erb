@@ -17,12 +17,15 @@
     <th width="170" valign="bottom">Category</th>
     <th valign="bottom">Total<br />Sections</th>
     <th valign="bottom">Assignments</th>
+    <th valign="bottom">Cancelled</th>
     <th valign="bottom">Completed</th>
     <th colspan="2" valign="bottom">Create/View</th>
     <th valign="bottom">Report Card</th>
     <th valign="bottom">Completed</th>
+    <th valign="bottom">Cancelled</th>
     <th valign="bottom">To Do</th>
   </tr>
+
 <% @oi_category_list.each do |category| %>
 
   <tr>
@@ -34,6 +37,9 @@
     </td>
     <td>
       <%= oi_assignments[category.id][:assigned] %>
+    </td>
+    <td>
+        <%= oi_assignments[category.id][:cancelled] %>
     </td>
     <td>
       <%= oi_assignments[category.id][:completed] %>
@@ -67,6 +73,10 @@
       <td title="The number of completed report cards">
         <%= oi_assignments[category.id][:reports] %>
       </td>
+      <td title="The number of cancelled report cards">          
+          <%= oi_assignments[category.id][:reports] %>
+      </td>
+      
       <td title="The number of report cards that need to be filled out">
         <%= oi_assignments[category.id][:completed] - oi_assignments[category.id][:reports] %>
       </td>

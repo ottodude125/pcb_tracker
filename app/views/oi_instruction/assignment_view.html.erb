@@ -41,8 +41,13 @@
 
     <tr valign="top">
     <th class="teraheader" align="right">Complete:</th>
-    <th align="left">
-      <%= check_box("assignment", "complete") %>
+    <th>
+        <td align="left">
+            <%= radio_button_tag  'assigned', 'completed' %>
+        </td>
+        <td align="left">
+            <%= radio_button_tag 'assigned', 'cancelled' %>
+        </td>
     </th>
   </tr>
 
