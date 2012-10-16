@@ -41,11 +41,17 @@
         <tr>
          <th class="teraheader">Design Details</th>
 
+          <% if @logged_in_user %>
+              <% user_can_edit = @logged_in_user.is_designer? || @logged_in_user.is_tracker_admin? || @logged_in_user.is_manager? || @logged_in_user.is_pcb_admin? || @logged_in_user.is_pcb_management? %>
+          <% else %>
+              <% user_can_edit = false %> 
+          <% end %>
+          
           <% if ( ( @board_design_entry.modifiable? && ( !@board_design_entry.submitted? && !( processor || peer ))) ||
 
                   ( @board_design_entry.submitted? && processor ) ||
 
-                  ( @logged_in_user.is_designer? || @logged_in_user.is_tracker_admin? || @logged_in_user.is_manager? || @logged_in_user.is_pcb_admin? || @logged_in_user.is_pcb_management? )) %>
+                   user_can_edit ) %>
 
             <td width="90" align="right">
               <%= link_to('Update', 
