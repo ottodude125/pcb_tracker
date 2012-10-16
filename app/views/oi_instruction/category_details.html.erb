@@ -13,6 +13,7 @@
     <th>Category</th>
     <th>Assignments</th>
     <th>Completed</th>
+    <th>Cancelled</th>
   </tr>
   
   <% @category_list.each do |category, assignment_list| %>
@@ -33,6 +34,7 @@
     </td>
     <td align="center"><%= assignment_list.size %></td>
     <td align="center"><%= complete_count(assignment_list) %>
+    <td align="center"><%= cancelled_count(assignment_list) %>
   </tr>
   <% end %>
   

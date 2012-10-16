@@ -345,10 +345,11 @@ class OiInstructionController < ApplicationController
   #
   def assignment_view
 
-    @assignment = OiAssignment.find(params[:id])
-    @design     = @assignment.oi_instruction.design
-    @category   = @assignment.oi_instruction.oi_category_section.oi_category
-    @comments   = @assignment.oi_assignment_comments
+    @assignment  = OiAssignment.find(params[:id])
+    @status_list = OiAssignment.status_list
+    @design      = @assignment.oi_instruction.design
+    @category    = @assignment.oi_instruction.oi_category_section.oi_category
+    @comments    = @assignment.oi_assignment_comments
   
     @post_comment = OiAssignmentComment.new
   
@@ -372,11 +373,12 @@ class OiInstructionController < ApplicationController
   def assignment_update
 
     assignment = OiAssignment.find(params[:assignment][:id])
-    completed  = !assignment.complete? && params[:assignment][:complete] == '1'
-    reset      = assignment.complete?  && params[:assignment][:complete] == '0'
-
-    if completed || reset
-      assignment.complete     = completed ? 1 : 0
+    completed  = !assignment.complete? && ( params[:status][:status_id] == '1' || params[:status][:status_id] == '2' )
+    reset      = assignment.complete?  && params[:status][:status_id] == '0'
+    status_change = ( assignment.complete.to_s != params[:status][:status_id] )
+    
+    if completed || reset || status_change
+      assignment.complete     = params[:status][:status_id]
       assignment.completed_on = Time.now if completed
     end
 
@@ -384,8 +386,13 @@ class OiInstructionController < ApplicationController
     assignment.save
     
     post_comment = ""
-    post_comment = "-- TASK COMPLETE --\n" if completed
-    post_comment = "-- TASK REOPENED --\n" if reset
+    
+    if completed || reset || status_change    
+      post_comment = "-- TASK COMPLETE --\n" if params[:status][:status_id] == '1'
+      post_comment = "-- TASK CANCELLED --\n" if params[:status][:status_id] == '2'
+      post_comment = "-- TASK REOPENED --\n" if reset
+    end
+    
     post_comment += params[:post_comment][:comment]
     
     if post_comment.size > 0
@@ -462,7 +469,7 @@ class OiInstructionController < ApplicationController
     @design.all_assignments(@category.id).each do |a|
       section = a.oi_instruction.oi_category_section
       assignment_list[section] = [] if !assignment_list[section]
-      assignment_list[section] << a if a.complete?
+      assignment_list[section] << a if a.complete == 1
     end
     
     @assignment_list = assignment_list.sort_by { |category, list| category.id }

@@ -22,7 +22,6 @@
     <th colspan="2" valign="bottom">Create/View</th>
     <th valign="bottom">Report Card</th>
     <th valign="bottom">Completed</th>
-    <th valign="bottom">Cancelled</th>
     <th valign="bottom">To Do</th>
   </tr>
 
@@ -32,16 +31,16 @@
     <td>
       <%= category.name %>
     </td>
-    <td>
+    <td align="center">
       <%= category.oi_category_sections.size %>
     </td>
-    <td>
+    <td align="center">
       <%= oi_assignments[category.id][:assigned] %>
     </td>
-    <td>
+    <td align="center">
         <%= oi_assignments[category.id][:cancelled] %>
     </td>
-    <td>
+    <td align="center">
       <%= oi_assignments[category.id][:completed] %>
     </td>
     <td title="Create assigments for <%= category.name %>">
@@ -70,14 +69,11 @@
                       :id         => category.id,
                       :design_id  => @design.id})  %>
       </td>
-      <td title="The number of completed report cards">
+      <td align="center" title="The number of completed report cards">
         <%= oi_assignments[category.id][:reports] %>
       </td>
-      <td title="The number of cancelled report cards">          
-          <%= oi_assignments[category.id][:reports] %>
-      </td>
       
-      <td title="The number of report cards that need to be filled out">
+      <td  align="center" title="The number of report cards that need to be filled out">
         <%= oi_assignments[category.id][:completed] - oi_assignments[category.id][:reports] %>
       </td>
     <% end %>
