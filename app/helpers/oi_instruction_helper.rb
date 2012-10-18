@@ -88,17 +88,22 @@ module OiInstructionHelper
   def assignment_data(oi_instructions)
   
     assignments = {}
-    OiCategory.find(:all).each { |c| assignments[c.id] = { :assigned => 0, :completed => 0 } }
-    
+    OiCategory.find(:all).each { |c| assignments[c.id] = { :assigned => 0, :cancelled => 0, :completed => 0 } }
+            
     oi_instructions.each do |i|
       completed_list = i.oi_assignments.dup
-      completed_list.delete_if { |cl| !cl.complete? }
+      completed_list.delete_if { |cl| cl.complete != OiAssignment.status_id("Completed") }
+      
+      cancelled_list = i.oi_assignments.dup
+      cancelled_list.delete_if { |cl| cl.complete != OiAssignment.status_id("Cancelled") }
       
       reports = 0
       i.oi_assignments.each { |a| reports += 1 if a.oi_assignment_report }
 
       assignments[i.oi_category_section.oi_category_id][:assigned]  += i.oi_assignments.size
       assignments[i.oi_category_section.oi_category_id][:completed] += completed_list.size
+      assignments[i.oi_category_section.oi_category_id][:cancelled] += cancelled_list.size
+      
       if !assignments[i.oi_category_section.oi_category_id][:reports]
         assignments[i.oi_category_section.oi_category_id][:reports] = 0
       end
@@ -112,10 +117,17 @@ module OiInstructionHelper
   
   def complete_count(assignment_list)
     count = 0
-    assignment_list.each { |a| count += 1 if a.complete? }
+    assignment_list.each { |a| count += 1 if a.complete == 1 }
     
     count
   end
+  
+  def cancelled_count(assignment_list)
+    count = 0
+    assignment_list.each { |a| count += 1 if a.complete == 2 }
+    
+    count
+  end  
   
   
   def start_td(line)

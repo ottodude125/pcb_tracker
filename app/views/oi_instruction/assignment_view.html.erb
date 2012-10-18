@@ -39,13 +39,12 @@
     </th>
   </tr>
 
-    <tr valign="top">
-    <th class="teraheader" align="right">Complete:</th>
+  <tr valign="top">
+    <th class="teraheader" align="right">Status:</th>
     <th align="left">
-      <%= check_box("assignment", "complete") %>
+        <%= select "status", "status_id", @status_list, :selected => @assignment.complete  %>
     </th>
   </tr>
-
 </table>
 
 <hr class="div" width="820" />

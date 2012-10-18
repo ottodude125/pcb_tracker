@@ -30,7 +30,10 @@ class OiAssignment < ActiveRecord::Base
   COMPLEXITY = [ ['High',   1],
                  ['Medium', 2], 
                  ['Low',    3] ]
-
+                 
+  STATUS     = [ ['Incomplete',   0],
+                 ['Completed',    1], 
+                 ['Cancelled',    2] ]
 
   ##############################################################################
   #
@@ -93,7 +96,60 @@ class OiAssignment < ActiveRecord::Base
     "Undefined"
   end
   
+  ######################################################################
+  #
+  # status_list
+  #
+  # Description:
+  # This method returns the status list.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def self.status_list
+    STATUS
+  end 
   
+  ######################################################################
+  #
+  # status_id
+  #
+  # Description:
+  # This method returns the id associated with the status name.
+  #
+  # Parameters:
+  # name - The status name
+  #
+  ######################################################################
+  #
+  def self.status_id(name)
+    STATUS.detect { |c| c[0] == name }[1]
+  rescue
+    0
+  end
+  
+  
+  ######################################################################
+  #
+  # status_name
+  #
+  # Description:
+  # This method returns the name associated with the status id.
+  #
+  # Parameters:
+  # id - The status identifier
+  #
+  ######################################################################
+  #
+  def self.status_name(id)
+    STATUS[id][0]
+  rescue
+    "Undefined"
+  end
+  
+    
   ##############################################################################
   #
   # Instance Methods
@@ -116,7 +172,22 @@ class OiAssignment < ActiveRecord::Base
   def complexity_name
     COMPLEXITY[self.complexity_id-1][0]
   end
-  
+
+  ######################################################################
+  #
+  # status_name
+  #
+  # Description:
+  # This method returns the status name for the oi_assigment.
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def status_name
+    STATUS[self.status_id][0]
+  end  
   
   ######################################################################
   #
