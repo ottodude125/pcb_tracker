@@ -13,8 +13,10 @@
 class Check < ActiveRecord::Base
 
   belongs_to(:subsection)
+  
   acts_as_list(:scope => :subsection)
 
+  has_many :design_checks
   
   ######################################################################
   #

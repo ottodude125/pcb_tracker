@@ -19,7 +19,6 @@ class DesignCheck < ActiveRecord::Base
   AUDITOR_INCOMPLETE_RESULTS = %w(None Comment)
 
  
-
   has_many(:audit_comments, :order => 'created_on DESC')
   
   

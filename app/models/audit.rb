@@ -15,7 +15,8 @@ class Audit < ActiveRecord::Base
   belongs_to :checklist
   belongs_to :design
   belongs_to :revision
-
+  belongs_to :check
+  
   has_many :audit_teammates
   has_many :design_checks
 
@@ -122,10 +123,10 @@ PEER_AUDIT       = 2
   def clear_all_checks
     
     self.trim_checklist_for_design_type
-
-    self.design_checks.each_check do | design_check |
-      design_check.auditor_result  = 'None' if design_check.check.is_peer_check?
-      design_check.designer_result = 'None' if design_check.check.is_self_check?
+    
+    self.design_checks.each do | design_check |
+      design_check.auditor_result  = 'None' #if design_check.check.is_peer_check?
+      design_check.designer_result = 'None' #if design_check.check.is_self_check?
       design_check.save
     end
     
