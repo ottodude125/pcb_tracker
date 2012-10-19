@@ -68,6 +68,7 @@ end
 
 group :development do
   gem "rails-erd" # generates schema diagrams by calling rake erd
+  gem "railroady"
 end
 
 # Plugins to Gems

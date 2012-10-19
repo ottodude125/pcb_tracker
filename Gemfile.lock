@@ -68,6 +68,7 @@ GEM
       rack
     rack-test (0.6.1)
       rack (>= 1.0)
+    railroady (1.1.0)
     rails (3.2.0)
       actionmailer (= 3.2.0)
       actionpack (= 3.2.0)
@@ -127,6 +128,7 @@ DEPENDENCIES
   jquery-rails
   mysql2
   net-ldap
+  railroady
   rails (= 3.2.0)
   rails-erd
   rails_autolink
