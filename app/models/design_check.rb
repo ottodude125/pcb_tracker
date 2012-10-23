@@ -13,6 +13,7 @@
 class DesignCheck < ActiveRecord::Base
 
   belongs_to :audit
+  belongs_to :check
   
   
   AUDITOR_COMPLETE_RESULTS   = %w(Verified N/A Waived)

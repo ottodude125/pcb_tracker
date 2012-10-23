@@ -578,6 +578,40 @@ PEER_AUDIT       = 2
 
   end
   
+  ######################################################################
+  #
+  # user_complete?(user)
+  #
+  # Description:
+  # Checks to see if the logged in user has finished all assigned checks
+  #
+  # Parameters:
+  # user - a user record that identifies the person who is logged in.
+  #
+  # Return value:
+  # true if user has finished all checks
+  #
+  ######################################################################
+  #
+  def completed_user?(user)
+    
+    incomplete = false;
+    self.design_checks.each do | dsn_chk |
+      section = dsn_chk.check.section
+      if ( self.is_self_audit? && dsn_chk.designer_result == "None" )
+        auditor = self.audit_teammates.detect { |tmate| 
+          tmate.section_id == section.id && tmate.self? }
+      elsif ( self.is_peer_audit? && dsn_chk.auditor_result == "None" )
+        auditor = self.audit_teammates.detect { |tmate| 
+          tmate.section_id == section.id && !tmate.self? }
+      end
+      if auditor.id == @logged_in_user.id 
+        incomplete = true
+      end
+    end
+    ! incomplete
+    
+  end
   
   ######################################################################
   #
