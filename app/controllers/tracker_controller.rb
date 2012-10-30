@@ -738,7 +738,7 @@ class TrackerController < ApplicationController
       end
       audit.get_design_checks
       audit.checklist.sections.each do | section |
-        auditor = audit.auditor(section).name
+        auditor = audit.auditor(section)? audit.auditor(section).name : " Not Assigned"
         next unless auditor == @logged_in_user.name
         section.subsections.each do | subsection |
           next if audit.is_self_audit? && subsection.completed_self_design_checks_percentage == 100
