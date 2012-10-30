@@ -6,6 +6,7 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require dataTables/jquery.dataTables
 //= require_tree .
 
 
@@ -16,3 +17,30 @@ function ShowTime()
     $('#current_time').text(dt.toLocaleDateString() + " " + dt.toLocaleTimeString());
     window.setTimeout("ShowTime()", 1000);
 }
+
+
+//dynamic text area which grows the more a person types
+function init_textarea(comment_field) {
+if ( !document.getElementById)
+  return;
+document.getElementById(comment_field).rows=5;
+document.getElementById(comment_field).onkeyup = textarea_grow(5);
+};
+
+
+//sets where the focus (cursor) is placed when a page loads
+function setFocus() {
+  if (document.forms.length > 0) {
+    var field = document.forms[0];
+    for (i = 0; i < field.length; i++) {
+      if ((field.elements[i].type == "text") ||
+          (field.elements[i].type == "textarea") ||
+          (field.elements[i].type.toString().charAt(0) == "s")) {
+        document.forms[0].elements[i].focus();
+        break;
+      }
+    }
+  }
+}
+
+

@@ -1,0 +1,24 @@
+<table id="log_table" class="display">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Title</th>
+            <th>Body</th>
+            <th>Submitted By</th>
+            <th>View Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        <% @system_messages.each do |system_message| %>
+          <tr>
+            <td><%= system_message.updated_at.format_dd_mon_yy %></td>
+            <td><%= system_message.title %></td>
+            <td><%= truncate(system_message.body, :length => 65).html_safe %></td>
+            <td><%= User.find(system_message.user_id).name %></td>
+            <td><%= link_to 'Show', system_message_path(system_message.id, :url_return => @return_path.to_s) %></td>
+          </tr>
+        <% end %>
+    </tbody>
+</table>
+
+<br />

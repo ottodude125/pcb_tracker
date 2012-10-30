@@ -11,6 +11,15 @@
 ########################################################################
 #
 PcbTracker::Application.routes.draw do
+  
+  resources :system_messages do
+    collection do
+      get :changelog
+      get :maintenance
+      get :dismiss_messages
+    end
+  end
+  
   resources :part_nums
 
   resources :change_classes do

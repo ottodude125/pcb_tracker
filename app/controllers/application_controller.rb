@@ -39,31 +39,10 @@ class ApplicationController < ActionController::Base
 
   before_filter :set_instance_variables
   
-  
-######################################################################
-#
-# change_cc_list
-#
-# Description:
-# This method updates the CC list depending on the user to be
-# added or removed.
-#
-# Parameters from params
-# [:id] - Identifies the user to be added/removed to the CC list.
-# [:mode] - Indicates "add_name" or "remove_name"
-#
-# Displays a partial containing the two selection lists.
-#
-# Return value:
-# None
-#
-# Additional information:
-#
-######################################################################
-#
+  before_filter :load_valid_system_messages
+
 
   protected
-  
   
   ######################################################################
   #
@@ -84,6 +63,31 @@ class ApplicationController < ActionController::Base
     rescue => e
       logger.error(e)
     end
+  end
+  
+  ######################################################################
+  #
+  # load_valid_system_messages
+  #
+  # Description:
+  # Loads the system messages which the user has not yet seen.
+  #
+  ######################################################################
+  def load_valid_system_messages
+    @message = ""
+    if @logged_in_user
+      messages  = SystemMessage.users_valid_messages(Time.now, @logged_in_user)
+    
+      if messages != []
+        @message = ""
+        
+        messages.each do |m|
+          @message << "<b>" + m.title + " - " + m.updated_at.format_month_dd_yyyy + 
+                      "</b><br/>" + m.body + "<br/>-- " + User.find(m.user_id).name + "<br/><br/>"
+        end
+      end
+    end    
+    @message
   end
 
 

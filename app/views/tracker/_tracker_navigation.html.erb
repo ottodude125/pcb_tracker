@@ -1,0 +1,191 @@
+<!-- View:    tracker:_tracker_navigation                                           -->
+<!-- Purpose: Displays the tracker navigation links             -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<table width="90%" align="center" rules="rows" cellpadding="2" border="1">
+
+    <tr class="teraheader"><th>View Boards</th></tr>
+    
+    <!-- ############################################################ -->
+    <!-- All Boards                                                   -->
+    <!-- ############################################################ -->    
+    <tr>
+        <td align="center">
+            <%= link_to("All Boards",
+                        { :controller => 'board', 
+                          :action => 'show_boards' },
+                          :title => 'Access to all boards') %>
+        </td>
+    </tr>
+
+
+    <% if @logged_in_user %>    
+    
+        <% @designer      = current_role({ :message => :designer_role,       :name => 'Designer' })%>
+        <% @reviewer      = current_role({ :message => :reviewer_role,       :name => 'Reviewer' })%>
+        <% @pcb_management = current_role({ :message => :pcb_management_role, :name => 'PCB Management' })%>
+        <% @pcb_admin     = current_role({ :message => :pcb_admin_role,      :name => 'PCB Admin'})%>
+        <% @tracker_admin = current_role({ :message => :tracker_admin_role,  :name => 'Tracker Admin' })%>
+        <% @basic_user      = @logged_in_user.active_role_id == 27 %>
+
+
+        <!-- ############################################################ -->
+        <!-- Board Search                                                 -->
+        <!-- ############################################################ -->    
+        <tr>
+            <td align="center">
+                <%= link_to("Board Search",
+                            { :controller => 'board', 
+                              :action => 'search_options' },
+                              :title => 'Search boards by designer, project, platform, and phase') %>
+            </td>
+        </tr>
+    
+    
+        <!-- ############################################################ -->
+        <!-- PCB Engineering Entry Partial                                -->
+        <!-- ############################################################ -->
+        <%= render(:partial => 'pcb_engineering_entry') %>
+    
+
+        <% if !@designer && !@reviewer && !@pcb_admin && !@basic_user %>
+
+            <!-- ############################################################ -->
+            <!-- No clue what the heck this is for                            -->
+            <!-- ############################################################ -->
+            <% if @logged_in_user.active_role.name == 'Admin' %>
+                <tr>
+                    <td align="center">
+                        <table>
+                            <tr>
+                                <td>
+                                    <%= link_to("Process PCB Engineering Entries",
+                                                { :controller => 'board_design_entry',
+                                                  :action     => 'processor_list' }) %>
+                                </td>
+                            </tr>
+                            <% if @submissions > 0 %>
+                                <tr title="<%= @submissions.to_s %> Board Design <%= @submissions == 1 ? "Entry" : "Entries" %> Submitted">
+                                    <td bgcolor="#df4545">
+                                        <b>Needs Action</b>
+                                    </td>
+                                </tr>
+                            <% end %>
+                    </table>
+                    </td>
+                </tr>
+            <% end %>
+        
+       
+            <!-- ############################################################ -->
+            <!-- Pending Design Changes                                            -->
+            <!-- ############################################################ -->
+            <% if DesignChange.pending_approval? %>
+                <tr>
+                    <th class="teraheader">
+                        <font color="red">Design Change</font>
+                    </th>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <%= link_to "#{DesignChange.pending_count} Changes Pending Approval", 
+                                    { :action => 'pending_list', 
+                                      :controller => 'design_changes' } %>
+                    </td>
+                </tr>
+            <% end %>
+        <% end %> <!-- End !designer && !@reviewer && !@pcb_admin -->
+   
+        <% if !@designer && !@reviewer && !@basic_user %>    
+
+            <!-- ############################################################ -->
+            <!-- Active Eco Cad Tasks                                         -->
+            <!-- ############################################################ -->
+            <% if @logged_in_user.is_a_role_member?('ECO Admin') || (@logged_in_user.is_an_lcr_designer? && EcoTask.find_open.size > 0) %>
+                <tr>
+                    <th class="teraheader">
+                        ECO/RELEASE CAD TASKING
+                    </th>
+                </tr>
+                <% if @logged_in_user.is_an_lcr_designer? && EcoTask.find_open.size > 0 %>
+                    <tr bgcolor="yellow">
+                <% else %>
+                    <tr>
+                <% end %>
+                    <td align="center">
+                        <%= link_to("Active ECO CAD Tasks", eco_tasks_url) %>
+                    </td>
+                </tr>
+            <% end %>
+        <% end %> <!-- End !designer && !@reviewer -->
+    
+        <tr class="teraheader"><th>Reports</th></tr>
+
+        <!-- ############################################################ -->
+        <!-- Reviewer Workload                                            -->
+        <!-- ############################################################ -->
+        <tr>
+            <td align="center">
+                <%= link_to("Reviewer Workload",
+                            { :controller => 'report',
+                              :action     => 'reviewer_workload' }) %>
+            </td>
+        </tr>        
+    
+        <% if !@designer && !@reviewer && !@pcb_admin && !@basic_user %>
+    
+            <!-- ############################################################ -->
+            <!-- ECO CAD Tasking                                            -->
+            <!-- ############################################################ -->
+            <tr>
+                <td align="center">
+                    <%= link_to("ECO CAD Tasking", eco_task_reports_url) %>
+                </td>
+            </tr>
+        
+        
+            <!-- TODO: MANAGER THIS IS ONLY AVAILABLE TO LOGGED IN USER? -->
+            <!-- ############################################################ -->
+            <!-- Outsource Instruction Roll-up                                -->
+            <!-- ############################################################ -->
+            <tr>
+                <td align="center">
+                    <%= link_to("Outsource Instruction Roll-up",
+                                { :controller => 'report',
+                                  :action     => 'report_card_rollup' }) %>
+                </td>
+            </tr>
+        
+        
+            <!-- ############################################################ -->
+            <!-- ECO CAD Tasking                                            -->
+            <!-- ############################################################ -->
+            <tr>
+                <td align="center">
+                    <%= link_to("Design Entry Summary",
+                                { :controller => 'report',
+                                  :action     => 'summary_data' }) %>
+                </td>
+            </tr>    
+        <% end %> <!-- End !designer && !@reviewer && !@pcb_admin -->
+
+        <!-- ############################################################ -->
+        <!-- Admin Portal                                                 -->
+        <!-- ############################################################ -->
+        <% if @logged_in_user.active_role.name == 'Admin' %>
+            <tr class="teraheader"><th>Administration</th></tr>
+            <tr>
+                <td align="center">
+                    <%= link_to("Admin Portal", { :controller => "admin" }) %>
+                </td>
+            </tr>
+        <% end %>
+
+    <% end %> <!-- End logged_in_user -->
+
+    <%= render(:partial => "system_messages") %>
+    
+</table>
+

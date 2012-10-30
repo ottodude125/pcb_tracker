@@ -1,51 +1,22 @@
-<!-- View:    tracker                                           -->
+<!-- View:    tracker:designer_home                                           -->
 <!-- Purpose: Displays the tracker home page.                   -->
 <!-- ********************************************************** -->
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
 <% @title = "PCB Design Board/Data Tracker" %>
-<%# debug session %>
+<!--% debug session %-->
 
+<br />
 <table width="100%" border="0" cellspacing="2" align="center" rules="cols">
-  <tr>
-    <td width="155" valign="top">
-      <table align="center" rules="rows" cellpadding="5" border="0">
+  <tr valign="top">
 
-        <tr>
-          <td align="center">
-            <%= link_to("All Boards",
-                        { :controller => 'board',
-                          :action     => 'show_boards' }) %> <br />
-          </td>
-        </tr>
-        <tr>
-          <td align="center">
-            <%= link_to("Board Search",
-                        { :controller => 'board',
-                          :action     => 'search_options' }) %> <br />
-          </td>
-        </tr>
-        <%= render(:partial => 'pcb_engineering_entry') %>
-        <% if @logged_in_user.is_an_lcr_designer? && EcoTask.find_open.size > 0 %>
-          <tr bgcolor="yellow">
-            <td align="center">
-              <%= link_to("Active ECO CAD Tasks", eco_tasks_url) %>
-            </td>
-          </tr>
-        <% end %>
-       <tr>
-          <td align="center">
-            <%= link_to("Reviewer Workload",
-                        { :controller => 'report',
-                          :action     => 'reviewer_workload' }) %>
-          </td>
-        </tr>
-        
-        <tr><td>&nbsp;</td></tr>
-        
-      </table>
+    <!-- Left column - navigation links -->
+    <td width="15%">
+        <%= render(:partial => 'tracker_navigation') %>
     </td>
+
+    <!-- Right column - home body       -->
     <% if @logged_in_user.active_role.name == "Designer" %>
       <td>
         <table width="100%" border="0">

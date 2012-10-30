@@ -1,0 +1,28 @@
+<p>
+  <b>Message Type:</b>
+  <%= @system_message.message_type %>
+</p>
+
+<p>
+  <b>Title:</b>
+  <%= @system_message.title %>
+</p>
+
+<p>
+  <b>Body:</b><br/>
+  <%= @system_message.body.html_safe %>
+</p>
+
+<p>
+    <b>Submitted by:</b>
+    <%= User.find(@system_message.user_id).name %>
+</p>
+
+
+<% if @logged_in_user %>
+    <% if @logged_in_user.is_tracker_admin? || @logged_in_user.is_manager? %>
+        <%= link_to 'Edit', edit_system_message_path(@system_message) %> |
+  <% end %>
+<% end %>
+
+<%= link_to 'Back', @return_url %>

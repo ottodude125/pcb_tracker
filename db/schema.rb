@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120807125400) do
+ActiveRecord::Schema.define(:version => 20121030152124) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :default => 0, :null => false
@@ -92,7 +92,7 @@ ActiveRecord::Schema.define(:version => 20120807125400) do
     t.boolean  "rohs",                                          :default => true
     t.boolean  "thieving",                                      :default => false
     t.boolean  "no_copper",                                     :default => false
-    t.string   "enclosure"
+    t.boolean  "enclosure",                                     :default => false
   end
 
   add_index "board_design_entries", ["design_id"], :name => "design_id"
@@ -721,6 +721,17 @@ ActiveRecord::Schema.define(:version => 20120807125400) do
     t.string "name", :limit => 1, :default => "", :null => false
   end
 
+  create_table "system_messages", :force => true do |t|
+    t.string   "message_type"
+    t.string   "title"
+    t.text     "body"
+    t.datetime "valid_from"
+    t.datetime "valid_until"
+    t.integer  "user_id"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
+  end
+
   create_table "users", :force => true do |t|
     t.string   "login",            :limit => 80
     t.string   "first_name",       :limit => 32
@@ -740,6 +751,7 @@ ActiveRecord::Schema.define(:version => 20120807125400) do
     t.datetime "access"
     t.string   "ldap_account"
     t.boolean  "ldap_optout",                    :default => false
+    t.datetime "message_seen"
   end
 
 end

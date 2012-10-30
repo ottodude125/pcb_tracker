@@ -4,10 +4,8 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% design_review = DesignReview.find(basic_user_home_list_inactive_stripes.id,
-                                     :include => [:review_type,
-                                                  :priority,
-                                                  :review_status])%>
+<% design_review = basic_user_home_list_inactive_stripes[:review] %>
+
 <% design        = Design.find(design_review.design_id,
                               :include => [:revision,
                                            :audit]) %>

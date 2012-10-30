@@ -1,150 +1,22 @@
-<!-- View:    tracker                                           -->
+<!-- View:    tracker:manager_home                                           -->
 <!-- Purpose: Displays the tracker home page.                   -->
 <!-- ********************************************************** -->
 <!-- $Id$ -->
 <!-- ********************************************************** -->
-<% content_for :header do %>
-    /* manage display of review details */
-    jQuery( function($) {
-      $('#details> button').click(function(){
-        if( $(this).text() == "Show Details") {
-           $(this).text("Hide Details")
-        }
-        else {
-           $(this).text("Show Details")
-        }
-        $(this).next("#results_table").toggle();
-      });
-    });
-<% end %>
 
 <% @title = "PCB Design Board/Data Tracker" %>
-<%# debug session %>
+<!--% debug session %-->
 
+<br />
 <table width="100%" border="0" cellspacing="2" align="center" rules="cols">
-  <tr>
-    <td width="155" valign="top">
-      <table align="center" rules="rows" cellpadding="5" border="0">
-        <tr>
-          <td align="center">
-            <%= link_to("All Boards",
-                          { :controller => 'board',
-                            :action     => 'show_boards' }) %>
-          </td>
-        </tr>
-        
-        <tr>
-          <td align="center">
-            <%= link_to("Board Search",
-                        { :controller => 'board',
-                          :action     => 'search_options' }) %> <br />
-          </td>
-        </tr>
+  <tr valign="top">
 
-        <% if @logged_in_user.active_role.name == 'Admin' %>
-        <tr>
-          <td align="center">
-            <%= link_to("Admin Portal", { :controller => "admin" }) %>
-          </td>
-        </tr>
-        <% end %>
-
-        <% if @logged_in_user.is_a_role_member?('ECO Admin') %>
-        <tr>
-          <th class="teraheader">
-            ECO/RELEASE CAD TASKING
-          </th>
-        </tr>
-
-        <tr>
-          <td align="center">
-            <%= link_to("Active ECO CAD Tasks", eco_tasks_url) %>
-          </td>
-        </tr>
-        <% end %>
-  
-        <%= render(:partial => 'pcb_engineering_entry') %>
-        
-        <% if @logged_in_user.active_role.name == 'Admin' %>
-        <tr>
-          <td align="center">
-            <table>
-              <tr>
-                <td>
-                  <%= link_to("Process PCB Engineering Entries",
-                              { :controller => 'board_design_entry',
-                                :action     => 'processor_list' }) %>
-                </td>
-              </tr>
-              <% if @submissions > 0 %>
-                <tr title="<%= @submissions.to_s %> Board Design <%= @submissions == 1 ? "Entry" : "Entries" %> Submitted">
-                  <td bgcolor="#df4545">
-                    <b>Needs Action</b>
-                  </td>
-                </tr>
-              <% end %>
-            </table>
-          </td>
-        </tr>
-        <% end %>
-
-        <% if DesignChange.pending_approval? %>
-          <tr>
-            <th class="teraheader">
-              <font color="red">Design Change</font>
-            </th>
-          </tr>
-          <tr>
-            <td align="center">
-              <%= link_to "#{DesignChange.pending_count} Changes Pending Approval", 
-                          {:action => 'pending_list', :controller => 'design_changes' } %>
-            </td>
-        </tr>
-
-        <% end %>
-        
-        <tr>
-          <th class="teraheader">
-            Reports
-          </th>
-        </tr>
-        
-        <tr>
-          <td align="center">
-            <%= link_to("ECO CAD Tasking", eco_task_reports_url) %>
-          </td>
-        </tr>
-
-        <tr>
-          <td align="center">
-            <%= link_to("Outsource Instruction Roll-up",
-                        { :controller => 'report',
-                          :action     => 'report_card_rollup' }) %>
-          </td>
-        </tr>
-        
-        <tr>
-          <td align="center">
-            <%= link_to("Reviewer Workload",
-                        { :controller => 'report',
-                          :action     => 'reviewer_workload' }) %>
-          </td>
-        </tr>
-
-         <tr>
-          <td align="center">
-            <%= link_to("Design Entry Summary",
-                        { :controller => 'report',
-                          :action     => 'summary_data' }) %>
-          </td>
-        </tr>
-       <tr>
-          <td>&nbsp;</td>
-        </tr>
-        
-      </table>
+    <!-- Left column - navigation links -->
+    <td width="15%">
+        <%= render(:partial => 'tracker_navigation') %>
     </td>
 
+    <!-- Right column - home body -->
     <td>
       <table width="100%"
              border="0">

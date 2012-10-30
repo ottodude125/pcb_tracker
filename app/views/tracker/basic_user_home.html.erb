@@ -1,4 +1,4 @@
-<!-- View:    tracker                                           -->
+<!-- View:    tracker:basic_user_home                                           -->
 <!-- Purpose: Displays the tracker home page.                   -->
 <!-- ********************************************************** -->
 <!-- $Id$ -->
@@ -17,56 +17,20 @@
       });
     });
 <% end %>
+
 <% @title = "PCB Design Board/Data Tracker" %>
-<%# debug session %>
+<!--% debug session %-->
 
-<table width="100%"
-       border="0" 
-       cellspacing="2"
-       align="center"
-       rules="cols">
-  <tr>
-    <td width="155" valign="top">
-      <table align="center" rules="rows" cellpadding="5" border="0">
-        <tr>
-          <td align="center">
-            <%= link_to("All Boards",
-                          { :controller => 'board',
-                            :action     => 'show_boards' }) %>
-          </td>
-        </tr>
-        
-        <tr>
-          <td align="center">
-            <%= link_to("Board Search",
-                        { :controller => 'board',
-                          :action     => 'search_options' }) %> <br />
-          </td>
-        </tr>
+<br />
+<table width="100%" border="0" cellspacing="2" align="center" rules="cols">
+  <tr valign="top">
 
-        <%= render(:partial => 'pcb_engineering_entry') %>
-
-        <tr>
-          <th class="teraheader">
-            Reports
-          </th>
-        </tr>
-
-        <tr>
-          <td align="center">
-            <%= link_to("Reviewer Workload",
-                        { :controller => 'report',
-                          :action     => 'reviewer_workload' }) %>
-          </td>
-        </tr>
-
-        <tr>
-          <td>&nbsp;</td>
-        </tr>
-        
-      </table>
+    <!-- Left column - navigation links -->
+    <td width="15%">
+        <%= render(:partial => 'tracker_navigation') %>
     </td>
 
+    <!-- Right column - home body       -->
     <td>
       <table width="100%"
              border="0">

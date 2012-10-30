@@ -129,5 +129,27 @@ module TrackerHelper
     
   end
 
+  ######################################################################
+  #
+  # current_role
+  #
+  # Description:
+  # Returns a flag if passed role is the users current role
+  # TRUE.
+  #
+  ######################################################################
+  #
+  def current_role(roles)
+    
+    current_role = false        
+
+    new_role = @logged_in_user.send(roles[:message])
+    if (new_role && @logged_in_user && (@logged_in_user.active_role.id == new_role.id))
+        current_role = true
+    end
+
+    current_role
+    
+  end
 
 end

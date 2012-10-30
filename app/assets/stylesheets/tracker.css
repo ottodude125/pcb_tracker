@@ -246,6 +246,7 @@ a:hover { color: #fff; background-color:#000; }
   background: #023a94;
   font-size: 14px;
   color: #ffffff;
+  font-weight: bold;
 }
 
 .subheading {
@@ -258,7 +259,7 @@ a:hover { color: #fff; background-color:#000; }
 }
 
 .notice { 
-    color: red;
+    color: #000000;
 }
 
 .name_select {
@@ -390,7 +391,7 @@ table.sortable thead {
     margin-top:    2px;
     text-align:  right;
     font-weight: bold;
-    background-color: lightblue;
+    background-color: #4DCFA8;
 }
 
 .design_change_selection {
@@ -461,3 +462,12 @@ table.sortable thead {
 }
 
 
+#notice_table {
+    border-width: 1px;
+    border-style: dashed;
+    border-color: #000000;
+    width: 100%;
+    background-color: #99E266;
+    text-align: left;
+    color: #000000;
+}

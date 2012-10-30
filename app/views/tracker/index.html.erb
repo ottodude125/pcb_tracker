@@ -1,29 +1,24 @@
-<!-- View:    tracker                                           -->
+<!-- View:    tracker:index                                           -->
 <!-- Purpose: Displays the tracker home page.                   -->
 <!-- ********************************************************** -->
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
 <% @title = "PCB Design Board/Data Tracker" %>
-<%# debug session %>
+<!--% debug session %-->
 
 <h1 align="center">Welcome to the PCB Design Tracker</h1>
 
-<table width="100%" border="0" cellspacing="2" align="center" rules="cols">
-  <tr>
-    <td width="15%" valign="top">
-      <table width="90%" align="center" rules="rows" cellpadding="5" border="0">
-        <tr>
-          <td align="center">
-            <%= link_to("Show Boards",
-                          { :controller => 'board',
-                            :action     => 'show_boards' }) %>
-          </td>
-        </tr>
-      </table>
+<table width="100%" border="0" cellspacing="2" align="center">
+  <tr valign="top">
+
+    <!-- Left column - navigation links -->
+    <td width="15%">
+        <%= render(:partial => 'tracker_navigation') %>
     </td>
 
-    <td align="left">
+    <!-- Right column - home body -->
+    <td align="center">
       <h1>Active Designs</h1>
       <table class="sortable" id="anyid" border="1" cellspacing="0" cellpadding="1">
 

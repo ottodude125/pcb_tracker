@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  message_type: MyString
+  title: MyString
+  body: MyText
+  valid_from: 2012-10-30 11:16:48
+  valid_until: 2012-10-30 11:16:48
+
+two:
+  message_type: MyString
+  title: MyString
+  body: MyText
+  valid_from: 2012-10-30 11:16:48
+  valid_until: 2012-10-30 11:16:48

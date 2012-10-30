@@ -20,6 +20,8 @@ group :assets do
   # gem 'therubyracer'
 
   gem 'uglifier', '>= 1.0.3'
+  gem 'jquery-datatables-rails'
+  gem 'jquery-ui-rails'
 end
 
 # Exception notifier for production mode
@@ -73,3 +75,6 @@ end
 
 # Plugins to Gems
 gem 'acts_as_list-rails3'
+
+gem 'will_paginate'
+

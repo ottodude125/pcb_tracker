@@ -1,0 +1,20 @@
+<h1>HW Document Tracker Maintenance Log</h1>
+
+<hr class="div" width="900" />
+
+<p><b>The table lists messages which are related to maintenance which is/was scheduled for the hardware tracker.</b></p>
+
+<% @return_path = "maintenance" %>
+
+<%= render 'log_table' %>
+
+<hr class="div" width="900" />
+
+<table border='0' align="center" width="800">
+  <tr>
+    <td align="center">
+      <input type="button" value="Home" 
+        onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index') %>'" />
+    </td>
+  </tr>
+</table>

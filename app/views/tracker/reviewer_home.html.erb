@@ -1,49 +1,22 @@
-<!-- View:    tracker                                           -->
+<!-- View:    tracker:reviewer_home                                           -->
 <!-- Purpose: Displays the tracker home page.                   -->
 <!-- ********************************************************** -->
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
 <% @title = "PCB Design Board/Data Tracker" %>
-<%# debug session %>
+<!--% debug session %-->
 
-<table width="100%"
-       border="0" 
-       cellspacing="2"
-       align="center"
-       rules="cols">
-  <tr>
-    <td width="155" valign="top" rowspan="2">
-      <table align="center" rules="rows" cellpadding="5" border="0">
-        <tr>
-          <td align="center">
-            <%= link_to("All Boards",
-                        { :controller => 'board', :action => 'show_boards' },
-                        :title => 'Access to all boards') %>
-          </td>
-        </tr>
-        
-        <tr>
-          <td align="center">
-            <%= link_to("Board Search",
-                        { :controller => 'board', :action => 'search_options' },
-                        :title => 'Search boards by designer, project, platform, and phase') %>
-          </td>
-        </tr>
-        
-        <%= render(:partial => 'pcb_engineering_entry') %>
-        
-        <tr>
-          <td align="center">
-            <%= link_to("Reviewer Workload",
-                        { :controller => 'report',
-                          :action     => 'reviewer_workload' }) %>
-          </td>
-        </tr>
+<br />
+<table width="100%" border="0" cellspacing="2" align="center">
+  <tr valign="top">
 
-      </table>
+    <!-- Left column - navigation links -->
+    <td width="15%">
+        <%= render(:partial => 'tracker_navigation') %>
     </td>
 
+    <!-- Right column - home body       -->
     <td>
       <table border="0" width="100%">
         <tr>
@@ -60,13 +33,7 @@
                                          :reviews => @my_processed_reviews }) %>
           </td>
         </tr>
-      </table>
-    </td>
-  </tr>
 
-  <tr>
-    <td>
-      <table border="0" width="100%">
         <tr>
           <td>
             <table align="left" border="0" cellspacing="0" width="100%">

@@ -11,33 +11,19 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<meta http-equiv="Content-Language" content="en-us" />
     <meta http-equiv="expires" content="Sat, 1 Jan 2000 08:00:00 GMT" />
-    <%= csrf_meta_tag %>
+    <%= stylesheet_link_tag "application", media: "all" %>
     <%= javascript_include_tag "application" %>
+    <%= csrf_meta_tag %>
 
-  <title><%=h @heading||@title %></title>
+  <title><%=h @heading || @title || "PCB Design Tracker" %></title>
   <%= stylesheet_link_tag 'tracker' %>
+
   <%= yield :rawheader %>
-  <script type="text/javascript">
-<!-- Begin
 
-function setFocus() {
-  if (document.forms.length > 0) {
-    var field = document.forms[0];
-    for (i = 0; i < field.length; i++) {
-      if ((field.elements[i].type == "text") ||
-          (field.elements[i].type == "textarea") ||
-          (field.elements[i].type.toString().charAt(0) == "s")) {
-        document.forms[0].elements[i].focus();
-        break;
-      }
-    }
-  }
-}
-
-<%= yield :header %>
-
-// End -->
+<script type="text/javascript">
+    <%= yield :header %>
 </script>
+
 <% if Rails.env.development? %>
   <style type="text/css">
     body { background-image:url('http://boarddev.teradyne.com/Pics/development.png');}
@@ -59,7 +45,7 @@ function setFocus() {
             <td align="right">
               <table width="100%">
                 <tr>
-                  <td align="right">
+                  <td align="center">
                     <% if Rails.env.production? %>
                       <font size="4" color="white">
                         <b>PCB Design Tracker V3</b>
@@ -77,14 +63,25 @@ function setFocus() {
         </table>
       </td>
       <td width="46">
-         <%= link_to(image_tag('question.gif'),
-            "http://boarddev.teradyne.com/DSR_Track/bug.php?op=add",:target => '_blank',
-            :title => "Submit DSR") %>
-      </td>
-      <td width="46">
         <%= link_to(image_tag('home_house.png'), 
                     { :controller => :tracker },
                     :title => "Navigate to your PCB Design Tracker Home Page") %>
+      </td>
+      <td width="46" align="center">
+        <% if Rails.env.production? %>
+         <%= link_to(image_tag('question.gif'),
+            "http://boarddev.teradyne.com/boarddev/",:target => '_blank',
+            :title => "Help") %>
+        <% else %>
+          <%= link_to(image_tag('question.gif'),
+            "http://boarddev-beta.teradyne.com/boarddev/",:target => '_blank',
+            :title => "Help") %>
+        <% end %>
+      </td>
+      <td width="46">
+         <%= link_to(image_tag('dsrLogo.gif'),
+            "http://boarddev.teradyne.com/DSR_Track/bug.php?op=add",:target => '_blank',
+            :title => "Submit DSR") %>
       </td>
       <td width="46" bgcolor="white" valign="middle">
         <%= image_tag 'dtgLogo.gif', {'border' => '0' } %>
@@ -140,7 +137,7 @@ function setFocus() {
     </tr>
     <% if !@logged_in_user %>
     <tr>
-        <td colspan="4" align="left" bgcolor="#f6f792">
+        <td colspan="6" align="left" bgcolor="#99E266">
           <%= link_to('Login Help',
                       {:controller => 'user',
                        :action     => 'show_users'}) %>
@@ -149,9 +146,9 @@ function setFocus() {
     <% end %>
     
     <%- flash.each do |key, msg| -%>
-      <%- if key == :notice || key == :error || key == :ack || key == 'notice'  -%>
-        <tr bgcolor="#f6f792">
-          <td colspan="4">
+      <%- if key == :notice || key == :error || key == :ack -%>
+        <tr bgcolor="#99E266">
+          <td colspan="6">
             <span class="notice">
                 <p><%= raw msg %></p>
             </span>
@@ -162,12 +159,12 @@ function setFocus() {
     
     <% if @logged_in_user %>
       <tr bgcolor="#ffffff">
-        <td colspan="1">
+        <td colspan="1" align="left">
           <%= link_to("Logout #{@logged_in_user.name}",
                       { :controller => "user",
                         :action     => "logout" }) %>
         </td>
-        <td colspan="1" align = 'right'>
+        <td colspan="5" align = 'center'>
           <%= link_to("Change Password", 
           			  { :controller => "user",
           			    :action     => "user_set_password",
@@ -176,6 +173,34 @@ function setFocus() {
       </tr>
     <% end %>
   </table>
+
+  <!-- Display the System Messages Table if there are any unviewed -->
+  <% if @logged_in_user && @message != "" %>
+    <br>
+    <div id="notice_table" >
+        <table width=100% >
+          <tr>
+              <td colspan="6" align="center" style="font-size: 200%">
+                  <% if @logged_in_user.message_seen %>
+                    <%= "<b>System Messages since ".html_safe + @logged_in_user.message_seen.format_month_dd_yyyy + "</b><br/>".html_safe %>
+                  <% else %>
+                    <%= "<b>New System Message(s)<b><br/>".html_safe %>
+                  <% end %>
+              </td>              
+          </tr>        
+          <tr>
+              <td>
+                  <%= @message.html_safe %>
+              </td>
+          </tr>
+          <tr>
+              <td align='right'>
+                  <%= link_to("Dismiss", dismiss_messages_system_messages_path) %>
+              </td>
+          </tr>      
+        </table>
+    </div>
+  <% end %>
 
   <% if @heading %>
     <h1><%=h @heading %></h1>

@@ -1,0 +1,20 @@
+<h1>HW Document Tracker Changelog</h1>
+
+<hr class="div" width="900" />
+
+<p><b>The table lists messages which are related to changes, updates, and new features added to the hardware tracker.</b></p>
+
+<% @return_path = "changelog" %>
+
+<%= render 'log_table' %>
+
+<hr class="div" width="900" />
+
+<table border='0' align="center" width="800">
+  <tr>
+    <td align="center">
+      <input type="button" value="Home" 
+        onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index') %>'" />
+    </td>
+  </tr>
+</table>
