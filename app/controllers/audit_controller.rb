@@ -260,11 +260,13 @@ class AuditController < ApplicationController
   ######################################################################
   #
   def reset_check_list
-    audit = Audit.find(params[:audit_id])
-    design = params[:design]
+    audit_id = params[:audit_id]
+    audit = Audit.find(audit_id)
+    design_name = audit.design.name
     audit.clear_all_checks
-    flash['notice'] = "checklists for '#{design}' cleared"
-    redirect_to("/audit/show_sections/#{params[:audit_id]}")
-  end
+    flash['notice'] = "checklists for '#{design_name}' cleared"
+    #redirect_to("/audit/show_sections/#{params[:audit_id]}")
+    redirect_to( :action => 'show_sections', :id => audit_id )
+  end 
 
 end # class AuditController

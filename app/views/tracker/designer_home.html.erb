@@ -245,13 +245,13 @@
                                                 { :controller => 'audit',
                                                   :action     => 'print',
                                                   :id         =>  design.audit.id},
-                                                 :title => "Access to the completed #{design.name} Peer Audit Review") %>
+                                                 :title => "Access to the completed #{design.name} Design Audit") %>
                                   <% elsif design.phase.name != 'Pre_Artwork' %>
                                     <%= link_to("Design Audit",
                                                 { :controller => 'audit',
                                                   :action     => 'show_sections',
                                                   :id         =>  design.audit.id},
-                                                 :title => "Access to the #{design.name} Peer Audit Review")  %>
+                                                 :title => "Access to the #{design.name} Peer Design Audit")  %>
                                   <% end %>
                                 </td>
                                 <td align="center">
@@ -409,14 +409,14 @@
                 <% else %>
                   <tr>
                     <td align="center">
-                      <b>You are not assigned to any Peer Audits</b>
+                      <b>You are not assigned to any audits</b>
                     </td>
                   </tr>
                 <% end %>
 
                 <% @audits.each do |a|
-                	audit = a[:audit] %>
-
+                	audit = a[:audit]
+                    next if (audit.is_self_audit? != a[:self])  %>
                   <tr>
                     <td align="center"
                         valign="top">
@@ -448,18 +448,19 @@
                         <tr>
                           <td>
                             <% audit_type = (audit.is_self_audit? && a[:self]) ? 'Self Audit' : 'Peer Audit' %>
-                            <% if audit_locked_for_peer(audit) || audit.auditor_complete?%>
-                              <%= link_to(audit_type,
+                            <% if (! a[:self] && audit_locked_for_peer(audit) ) || 
+                            	    audit.auditor_complete?%>
+                              <%= link_to(audit_type + " (view)",
                                           { :controller => 'audit',
                                             :action     => 'print',
                                             :id         => audit.id },
-                                          :title => "Access to the #{audit.design.name} Peer Audit Review") %>
+                                          :title => "Access to the '#{audit.design.name}' #{audit_type} Review") %>
                             <% else %>
-                              <%= link_to(audit_type,
+                              <%= link_to(audit_type + " (update)",
                                           { :controller => 'audit',
                                             :action     => 'show_sections',
                                             :id         => audit.id },
-                                          :title => "Access to the #{audit.design.name} Peer Audit Review") %>
+                                          :title => "Access to the '#{audit.design.name}' #{audit_type} Review") %>
                             <% end %>
                           </td>
                           <td align="center">

@@ -13,13 +13,13 @@
 class DesignCheck < ActiveRecord::Base
 
   belongs_to :audit
+  belongs_to :check
   
   
   AUDITOR_COMPLETE_RESULTS   = %w(Verified N/A Waived)
   AUDITOR_INCOMPLETE_RESULTS = %w(None Comment)
 
  
-
   has_many(:audit_comments, :order => 'created_on DESC')
   
   

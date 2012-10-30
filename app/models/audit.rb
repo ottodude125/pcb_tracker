@@ -15,7 +15,8 @@ class Audit < ActiveRecord::Base
   belongs_to :checklist
   belongs_to :design
   belongs_to :revision
-
+  belongs_to :check
+  
   has_many :audit_teammates
   has_many :design_checks
 
@@ -122,10 +123,10 @@ PEER_AUDIT       = 2
   def clear_all_checks
     
     self.trim_checklist_for_design_type
-
-    self.design_checks.each_check do | design_check |
-      design_check.auditor_result  = 'None' if design_check.check.is_peer_check?
-      design_check.designer_result = 'None' if design_check.check.is_self_check?
+    
+    self.design_checks.each do | design_check |
+      design_check.auditor_result  = 'None' #if design_check.check.is_peer_check?
+      design_check.designer_result = 'None' #if design_check.check.is_self_check?
       design_check.save
     end
     
@@ -577,6 +578,40 @@ PEER_AUDIT       = 2
 
   end
   
+  ######################################################################
+  #
+  # user_complete?(user)
+  #
+  # Description:
+  # Checks to see if the logged in user has finished all assigned checks
+  #
+  # Parameters:
+  # user - a user record that identifies the person who is logged in.
+  #
+  # Return value:
+  # true if user has finished all checks
+  #
+  ######################################################################
+  #
+  def completed_user?(user)
+    
+    incomplete = false;
+    self.design_checks.each do | dsn_chk |
+      section = dsn_chk.check.section
+      if ( self.is_self_audit? && dsn_chk.designer_result == "None" )
+        auditor = self.audit_teammates.detect { |tmate| 
+          tmate.section_id == section.id && tmate.self? }
+      elsif ( self.is_peer_audit? && dsn_chk.auditor_result == "None" )
+        auditor = self.audit_teammates.detect { |tmate| 
+          tmate.section_id == section.id && !tmate.self? }
+      end
+      if auditor.id == @logged_in_user.id 
+        incomplete = true
+      end
+    end
+    ! incomplete
+    
+  end
   
   ######################################################################
   #

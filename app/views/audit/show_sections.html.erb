@@ -34,7 +34,7 @@
 
       <% @audit.checklist.sections.each do |section| %>
       
-        <% auditor = @audit.auditor(section).name %>
+        <% auditor = @audit.auditor(section) ? @audit.auditor(section).name : "Not Assigned" %>
         <% section_color = auditor == @logged_in_user.name ? "#00ff00" : "#ff0000" %>
         <tr>
           <% color = '#' + section.background_color %>
@@ -76,10 +76,12 @@
                 <% end %>
               </td>
               <td>
-                <%= link_to('Audit Checks',
+                <%= if auditor == @logged_in_user.name
+                	link_to('Audit Checks',
                             { :action        => 'perform_checks',
                               :subsection_id => subsection.id,
-                              :audit_id      => @audit.id }) %>
+                              :audit_id      => @audit.id }) 
+                     end %>
               </td>
             </tr>
           <% end %>

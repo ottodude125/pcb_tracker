@@ -704,41 +704,53 @@ class TrackerController < ApplicationController
       @designs << dsn
     end
 
-    audits = {}
     #
-    # Get the audits where the user is the member of an audit team.
-    # 
-    my_audit_teams = AuditTeammate.find_all_by_user_id(@logged_in_user.id)
-    my_audit_teams.each do |audit_team|
-      
-      audit = audit_team.audit
-      next if audit.is_peer_audit? & audit_team.self?
- 
-      audits[audit.id] = { :audit => audit, 'self' => audit_team.self? , 
-                           'priority' => audit.design.priority.value  }
-      
+    @audits = []
+    # Get the self audits from the users designs
+    mydesigns.each do | design |
+      if design.audit.is_self_audit? && ! design.audit.is_complete? #completed_user?(@logged_in_user)
+        @audits << { :audit => design.audit,
+                     :priority => design.priority.value,
+                     :self => true }
+      end 
     end
-    
-    #
-    # Get the audits where the user is listed as the lead peer.
-    # 
-    # TODO Add a class method to Design - find_all_peer_designs(peer)
+    # Get the audits where the user is the assigned peer
     peer_designs = Design.find(:all,
                                :conditions => "peer_id=#{@logged_in_user.id}",
-                               :include    => :audit,
-                               :order      => 'created_on')
-
+                               :include    => :audit)
     peer_designs.each do |peer_design|
       audit = peer_design.audit
-      next if ((audit.is_self_audit? && audits[audit.id]) || audit.is_complete?)
-      audits[audit.id] = { :audit => audit, 'self' => false , 
-                           'priority' => audit.design.priority.value }
+      next if audit.is_complete? #completed_user?(@logged_in_user)
+      @audits << { :audit    => audit, 'self' => false , 
+                   :priority => audit.design.priority.value ,
+                   :self     => false }
+    end
+     
+    # Get the audits where the user is the member of an audit tm.
+    my_audit_teams = AuditTeammate.find_all_by_user_id(@logged_in_user.id)
+    my_audit_teams.each do |audit_team|
+      audit = audit_team.audit
+      next if audit.is_complete? 
+      if audit.is_self_audit?
+        audit.trim_checklist_for_self_audit
+      else
+        audit.trim_checklist_for_peer_audit
+      end
+      audit.get_design_checks
+      audit.checklist.sections.each do | section |
+        auditor = audit.auditor(section)? audit.auditor(section).name : " Not Assigned"
+        next unless auditor == @logged_in_user.name
+        section.subsections.each do | subsection |
+          next if audit.is_self_audit? && subsection.completed_self_design_checks_percentage == 100
+          next if audit.is_peer_audit? && subsection.completed_peer_design_checks_percentage == 100
+          @audits << { :audit => audit, 
+                       :priority => audit.design.priority.value,
+                       :self => audit_team.self?  }
+          end
+      end
     end
     
-    audit_list = []
-    audits.each_value { |a| audit_list << a }
-    
-    @audits = audit_list.sort_by { |a| a[:priority] }
+    @audits = @audits.uniq.sort_by { |a| a[:priority] }
     ##
     #TODO: After reversing the values of priority so that the call to reverse is not
     #      needed make this a multi-level sort.
