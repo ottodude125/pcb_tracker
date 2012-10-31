@@ -19,8 +19,12 @@
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp/cache/
+/tmp/*
 
 *.swp
 .sass-cache
 config/database.yml
 public/stylesheets/compiled/*
+/public/assets/*
+
+
