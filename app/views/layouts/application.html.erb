@@ -26,7 +26,6 @@
 
 <% if Rails.env.development? %>
   <style type="text/css">
-    body { background-image:url('http://boarddev.teradyne.com/Pics/development.png');}
   </style>
 <% end %>
 
@@ -146,7 +145,7 @@
     <% end %>
     
     <%- flash.each do |key, msg| -%>
-      <%- if key == :notice || key == :error || key == :ack -%>
+      <%- if key == :notice || key == :error || key == :ack || (key == "notice" && !msg.blank? ) -%>
         <tr bgcolor="#99E266">
           <td colspan="6">
             <span class="notice">
