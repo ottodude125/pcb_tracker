@@ -215,7 +215,7 @@
         <td height=30>P</td>
     </tr>
 
-    <!-- Piwik -->
+    <!-- Piwik - PRODUCTION -->
     <script type="text/javascript">
         var pkBaseURL = (("https:" == document.location.protocol) ? "https://boarddev.teradyne.com/analytics/" : "http://boarddev.teradyne.com/analytics/");
         document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
@@ -230,7 +230,22 @@
     </script>
     
     <noscript><p><img src="http://boarddev.teradyne.com/analytics/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
-    <!-- End Piwik Tracking Code -->
+    <!-- End Piwik PRODUCTION Tracking Code -->
+
+    <!-- Piwik - BETA --> 
+    <script type="text/javascript">
+        var pkBaseURL = (("https:" == document.location.protocol) ? "https://boarddev-beta.teradyne.com/analytics_katon/" : "http://boarddev-beta.teradyne.com/analytics_katon/");
+        document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
+    </script>
+    <script type="text/javascript">
+        try {
+        var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 1);
+        piwikTracker.trackPageView();
+        piwikTracker.enableLinkTracking();
+        } catch( err ) {}
+    </script>
+    <noscript><p><img src="http://boarddev-beta.teradyne.com_katon/analytics_katon/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
+    <!-- End Piwik BETA Tracking Code -->
 
 </tfoot>
 
