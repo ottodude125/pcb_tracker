@@ -26,5 +26,5 @@
 config/database.yml
 public/stylesheets/compiled/*
 /public/assets/*
-
+/vendor/bundle/*
 
