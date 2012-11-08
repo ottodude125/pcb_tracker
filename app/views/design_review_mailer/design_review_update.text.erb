@@ -1,13 +1,22 @@
-<% if @result_update != {} %>RESULTS:
-  <% @result_update.each do |role, result| %> 
-    <%= @user.name %> (<%= role %>) <%= result %>
-  <% end %> 
-<% end %>
+Replies to this e-mail will not be recorded in the tracker. Please click on the 
+this link to record a comment. <%= Pcbtr::PCBTR_BASE_URL %>design_review/view/<%= @design_review_id%>
+=================================================================
+<% if @result_update != {} -%>
 
-<% if @comments %>COMMENTS:<% @comments.each do |comment| %>
+RESULTS:
+<% @result_update.each do |role, result| -%> 
+    <%= @user.name %> (<%= role %>) <%= result %>
+<% end #each %> 
+<% end #if %>
+<% if @comments -%>
+
+COMMENTS:
+<% @comments.each do |comment| -%>
 =================================================================
 Entered by: <%= comment.user.name %> on <%= comment.created_on.format_dd_mm_yy_at_timestamp %>
-<%= raw comment.comment %><% end %><% end %>
+<%= raw comment.comment %>
+<% end #each%>
+<% end #if %>
 
 =================================================================
 
