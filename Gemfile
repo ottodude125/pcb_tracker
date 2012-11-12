@@ -78,3 +78,5 @@ gem 'acts_as_list-rails3'
 
 gem 'will_paginate'
 
+gem 'piwik_analytics'
+

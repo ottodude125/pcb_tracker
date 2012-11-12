@@ -75,6 +75,10 @@ GEM
     multipart-post (1.1.5)
     mysql2 (0.3.11)
     net-ldap (0.3.1)
+    piwik_analytics (1.0.2)
+      actionpack
+      activesupport
+      rails (>= 3.0.0)
     polyglot (0.3.3)
     rack (1.4.1)
     rack-cache (1.2)
@@ -162,6 +166,7 @@ DEPENDENCIES
   jquery-ui-rails
   mysql2
   net-ldap
+  piwik_analytics
   railroady
   rails (= 3.2.0)
   rails-erd

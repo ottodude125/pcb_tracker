@@ -207,35 +207,9 @@
   <% end %>
 
   <%= yield %>
-
+  
+  <%= piwik_tracking_tag %>
+    
 </body>
-
-<tfoot>
-    <tr>
-        <td height=30>P</td>
-    </tr>
-
-    <!-- Piwik - PRODUCTION -->
-    <script type="text/javascript">
-        var https_server_name = "https://" + location.host + "/analytics/";
-        var http_server_name  = "http://" + location.host + "/analytics/";
-        var analytics_piwik_url = "http://" + location.host + "/analytics/piwik.php?idsite=1";
-        var pkBaseURL = (("https:" == document.location.protocol) ? https_server_name : http_server_name);
-        document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-    </script>
-    
-    <script type="text/javascript">
-        try {
-        var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 1);
-        piwikTracker.trackPageView();
-        piwikTracker.enableLinkTracking();
-        } catch( err ) {}
-    </script>
-    
-    <noscript><p><img src=analytics_piwik_url style="border:0" alt="" /></p></noscript>
-    <!-- End Piwik PRODUCTION Tracking Code -->
-
-
-</tfoot>
 
 </html>
