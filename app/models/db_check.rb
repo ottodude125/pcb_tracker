@@ -1,9 +1,8 @@
-class DbCheck #< ActiveRecord::Base
-  #self.abstract_class = true
-  #@columns = []
+class DbCheck < ActiveRecord::Base
 
   def self.master?
-    User.find_by_sql("SHOW SLAVE STATUS").blank?
+    r = ActiveRecord::Base.connection.exec_query("show slave status")
+    r.first['Slave_IO_Running'] != "Yes" 
   end
   
   def self.exist?
