@@ -124,7 +124,7 @@ class SystemMessagesController < ApplicationController
   def dismiss_messages
     respond_to do |format|
       if @logged_in_user.update_column(:message_seen, Time.now)
-        format.html { redirect_to :root, notice: 'Congrats you dismised a message.' }
+        format.html { redirect_to :root, notice: 'Congrats you dismissed a message.' }
         format.json { head :no_content }
       else
         format.html { redirect_to :root, notice: 'Oh Boy!! Looks like your not dismissing that message today!! Better get help.' }
