@@ -44,7 +44,7 @@ class User < ActiveRecord::Base
   @@salt = 'GO_PIRATES!!!'
   cattr_accessor :salt
 
-  validates :email, :format => { :with => %r/<dtg_ror_devel@lists.teradyne.com>|^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i}
+  validates :email, :format => { :with => %r/<dtg_ror_devel@lists.teradyne.com>|^$|^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i}
   
   # Authenticate a user. 
   #

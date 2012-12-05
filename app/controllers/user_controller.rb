@@ -281,12 +281,15 @@ class UserController < ApplicationController
   #
   def update
 
+    logger.debug "THIS IS SOME GREAT INFORMATION THAT IS FOUND BELOW THIS AMAZING COMMENT THAT i AM WRITING HERE!!!"
+    logger.debug params[:user][:email]
+    
     user_form = params[:user]
     @user = User.find(user_form['id'])
 
-    if user_form['email'] == ''
-      user_form['email'] = user_form['first_name'].downcase + '.' +
-        user_form['last_name'].downcase + '@teradyne.com'
+    if params[:user][:email] == ''
+      params[:user][:email] = params[:user][:first_name].downcase + '.' +
+        params[:user][:last_name].downcase + '@teradyne.com'
     end
 
     assigned_roles = params[:role].select { |id,value| value == '1' }.size > 0
