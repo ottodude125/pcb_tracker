@@ -179,11 +179,61 @@ class EcoTasksController < ApplicationController
         end
       end
     end
-    
+
+### Commenting this out 12/5/12. Was unable to upload attachments so replaced this with code from create method above.
+=begin    
     if params[:eco_attachment] && params[:eco_attachment][:document] != ''
       @eco_attachment = @eco_task.attach_document(EcoDocument.new(params[:eco_attachment]),
                                                 @logged_in_user)
                                               
+      task_updated = true
+      if !@eco_attachment.errors.empty?
+        if @eco_attachment.errors[:empty_document]
+          flash['notice'] += "<br />#{@eco_attachment.errors[:empty_document]}"
+        end
+        if @eco_attachment.errors[:document_too_large]
+          flash['notice'] += "<br />#{@eco_attachment.errors[:document_too_large]}"
+        end
+      end
+    end
+=end
+    
+    if params[:eco_attachment1] && params[:eco_attachment1][:document] != ''
+      @eco_attachment = @eco_task.attach_document(EcoDocument.new(params[:eco_attachment1]),
+                                                @logged_in_user)                                            
+      task_updated = true
+      if !@eco_attachment.errors.empty?
+
+        if @eco_attachment.errors[:empty_document]
+
+          flash['notice'] += "<br />#{@eco_attachment.errors[:empty_document]}"
+        end
+        if @eco_attachment.errors[:document_too_large]
+
+          flash['notice'] += "<br />#{@eco_attachment.errors[:document_too_large]}"
+        end
+      end
+    end
+
+   if params[:eco_attachment2] && params[:eco_attachment2][:document] != ''
+      @eco_attachment = @eco_task.attach_document(EcoDocument.new(params[:eco_attachment2]),
+                                                @logged_in_user)
+
+      task_updated = true
+      if !@eco_attachment.errors.empty?
+        if @eco_attachment.errors[:empty_document]
+          flash['notice'] += "<br />#{@eco_attachment.errors[:empty_document]}"
+        end
+        if @eco_attachment.errors[:document_too_large]
+          flash['notice'] += "<br />#{@eco_attachment.errors[:document_too_large]}"
+        end
+      end
+    end
+
+   if params[:eco_attachment3] && params[:eco_attachment3][:document] != ''
+      @eco_attachment = @eco_task.attach_document(EcoDocument.new(params[:eco_attachment3]),
+                                                @logged_in_user)
+
       task_updated = true
       if !@eco_attachment.errors.empty?
         if @eco_attachment.errors[:empty_document]

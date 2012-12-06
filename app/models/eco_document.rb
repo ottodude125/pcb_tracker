@@ -17,6 +17,9 @@ class EcoDocument < ActiveRecord::Base
   belongs_to :eco_task
   belongs_to :user
   
+  #MAX_FILE_SIZE = 4294967296 # 4GB
+  MAX_FILE_SIZE = 47185920  # 45 MB
+
   
   # Accessor that recieves the data from the form in the view.
   # 
@@ -50,13 +53,15 @@ class EcoDocument < ActiveRecord::Base
   #
   # Validates the file and updates the errors.
   def save_attachment
-
     if self.data.size == 0
+
       errors.add(:empty_document,     "The file contains no data - the document was not saved")
-    elsif self.data.size >= Document::MAX_FILE_SIZE
-      errors.add(:document_too_large, "The file is too large (LIMIT: #{Document::MAX_FILE_SIZE})" +
+    elsif self.data.size >= EcoDocument::MAX_FILE_SIZE
+
+      errors.add(:document_too_large, "The file is too large (LIMIT: #{EcoDocument::MAX_FILE_SIZE})" +
                                       " - the document was not saved")
     else
+
       self.unpacked = 0
       self.save
     end

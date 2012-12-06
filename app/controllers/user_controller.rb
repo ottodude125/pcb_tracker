@@ -281,9 +281,6 @@ class UserController < ApplicationController
   #
   def update
 
-    logger.debug "THIS IS SOME GREAT INFORMATION THAT IS FOUND BELOW THIS AMAZING COMMENT THAT i AM WRITING HERE!!!"
-    logger.debug params[:user][:email]
-    
     user_form = params[:user]
     @user = User.find(user_form['id'])
 

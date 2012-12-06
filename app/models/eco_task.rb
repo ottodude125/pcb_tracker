@@ -313,18 +313,19 @@ class EcoTask < ActiveRecord::Base
   #
   # Updates the ECO Task's document list.
   #
-  def attach_document(document, 
+  def attach_document(eco_document, 
                       user,
                       specification = false)
-    document.user_id       = user.id
-    document.specification = specification
-    document.eco_task_id   = self.id
-    document.save_attachment
+    eco_document.user_id       = user.id
+    eco_document.specification = specification
+    eco_document.eco_task_id   = self.id
+    eco_document.save_attachment
+
     if specification && self.document_link.blank?
       self.started_at = Time.now
       self.save
     end
-    document
+    eco_document
   end
   
   
