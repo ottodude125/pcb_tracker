@@ -11,12 +11,11 @@
                 :action     => 'initial_attachments',
                 :design_id  => @design_review.design_id }
    else
-     action = { :action        => 'review_attachments',
-                :design_review_id => @design_review.id }
+     action = { :action => 'review_attachments' }
    end %>
-<%= form_tag(action) do %>
+<%= form_tag( action, :method => 'get' ) do %>
                    
-<%= hidden_field "design_review", "id" %>
+  <%= hidden_field "design_review", "id" %>
 
   <table width="100%">
     <tr>
@@ -25,7 +24,7 @@
       </td>
     </tr>
   </table>
-
+  <% end %>
   <hr class="div" />
 
   <table border="0"
@@ -55,7 +54,7 @@
 
   <hr class="div" />
 
-  <% end %>
+
 
 <%# debug params %>
 
