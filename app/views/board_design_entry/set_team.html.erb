@@ -1,63 +1,64 @@
-<%  content_for :header do %>
-
+<%  content_for :header do  -%>
 jQuery(function($) { //SELECT List
-  $("select").change( function () {
-    role_id = this.name.replace(/^.*_/,"");
-    user_id = this.value;  /* user id */
-    bde_id  = $(this).parents("table").attr('bde_id')
-    req     = 1;
-    url     = $(this).parents("table").attr('url');
+      $("select").change( function () {
+        role_id = this.name.replace(/^.*_/,"");
+        user_id = this.value;  /* user id */
+        bde_id  = $(this).parents("table").attr('bde_id')
+        req     = 1;
+        url     = $(this).parents("table").attr('url');
 
-    /* alert("user_id=" + user_id + ", role_id=" + role_id + ", bde_id=" + bde_id +
-          ", req=" + req + "url=" + url ) ;
-    */
-    $.post(url, { user_id: user_id, role_id: role_id, bde_id: bde_id,
-                  req: req } ); //no return dwata
+        /* alert("user_id=" + user_id + ", role_id=" + role_id + ", bde_id=" + bde_id +
+              ", req=" + req + "url=" + url ) ;
+        */
+        $.post(url, { user_id: user_id, role_id: role_id, bde_id: bde_id,
+                      req: req } ); //no return dwata
 
-    /* update the assigned user text and color */
-    var cur_id = "#current_"+role_id;
-    var text   = $(this).find('option:selected').text();
-    $(cur_id).text(text);
-    $(cur_id).css("color","");
-    $(cur_id).css("font-weight","");
+        /* update the assigned user text and color */
+        var cur_id = "#current_"+role_id;
+        var text   = $(this).find('option:selected').text();
+        $(cur_id).text(text);
+        $(cur_id).css("color","");
+        $(cur_id).css("font-weight","");
 
-    /* uncheck the "Not Required" box */
-    var req_id = "#required_"+role_id;
-    $(req_id).attr('checked',false);
-  });
+        /* uncheck the "Not Required" box */
+        var req_id = "#required_"+role_id;
+        $(req_id).attr('checked',false);
+      });
 });
+
 jQuery(function($) { //NOT REQUIRED Check Box
-  $("input").change( function () {
-    role_id = this.name.replace(/^.*_/,"");
-    user_id = this.value;  /* user id */
-    req     = 0;
-    bde_id  = $(this).parents("table").attr('bde_id')
-    url     = $(this).parents("table").attr('url');
+      $("input").change( function () {
+        role_id = this.name.replace(/^.*_/,"");
+        user_id = this.value;  /* user id */
+        req     = 0;
+        bde_id  = $(this).parents("table").attr('bde_id')
+        url     = $(this).parents("table").attr('url');
 
-    /* alert("user_id=" + user_id + ", role_id=" + role_id + ", bde_id=" + bde_id +
-          ", req =" + req + "url=" + url ) ;
-    */
-    $.post(url, { user_id: user_id, role_id: role_id, bde_id: bde_id,
-                  req: req} ); //no return data
+        /* alert("user_id=" + user_id + ", role_id=" + role_id + ", bde_id=" + bde_id +
+              ", req =" + req + "url=" + url ) ;
+        */
+        $.post(url, { user_id: user_id, role_id: role_id, bde_id: bde_id,
+                      req: req} ); //no return data
 
-    /* change the assigned user to "Not Required" in red */
-    var cur_id = "#current_"+role_id;
-    $(cur_id).text("Not Required");
-    $(cur_id).css("color","darkorange");
-    $(cur_id).css("font-weight","bold");
+        /* change the assigned user to "Not Required" in red */
+        var cur_id = "#current_"+role_id;
+        $(cur_id).text("Not Required");
+        $(cur_id).css("color","darkorange");
+        $(cur_id).css("font-weight","bold");
 
-    /* uncheck the "Not Required" box */
-    // var req_id = "#required_"+role_id;
-    // $(req_id).attr('checked',false);
+        /* uncheck the "Not Required" box */
+        // var req_id = "#required_"+role_id;
+        // $(req_id).attr('checked',false);
 
-    /* reset the selection list to the first item */
-    var select_id = "#role_id_"+role_id;
-    $(select_id).val("");
-    
-  });
+        /* reset the selection list to the first item */
+        var select_id = "#role_id_"+role_id;
+        $(select_id).val("");
+        
+      });
 });
-<% end %>
- 
+
+<% end -%>
+
 <% @heading = 'PCB Engineering - ' +
                @board_design_entry.pcb_number +
               ' - ' + @title %>
@@ -114,7 +115,7 @@ jQuery(function($) { //NOT REQUIRED Check Box
       </td>
       <td align="center" class="design_team_required">
           <%= check_box_tag("required_#{member[:role].id}",  #name, id
-                        1,                                   #value
+                        0,                                   #value
                         false                                # not checked
                         ) %>
         Not Required

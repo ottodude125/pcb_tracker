@@ -9,7 +9,6 @@
 //= require dataTables/jquery.dataTables
 //= require_tree .
 
-
 // Function to display current time. Used in layout to display time at top of display
 function ShowTime()
 {
@@ -42,5 +41,4 @@ function setFocus() {
     }
   }
 }
-
 
