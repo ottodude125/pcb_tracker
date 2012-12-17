@@ -1183,27 +1183,22 @@ end
 #
 def reviewer_results
 
-  # Go through the results for each role and look for a rejection
-  rejected = false
   roles    = []
   params.each { |key, value|
-
     if key.include?("role_id")
       result = value.to_a
-      rejected = ((result[0][1] == "REJECTED") || rejected)
-        
-      # Save the results to store in flash
+
       design_review_result = DesignReviewResult.find(result[0][0])
-      
+
       if design_review_result.result != result[0][1]
         roles << { :id                      => key.split('_')[2],
           :design_review_result_id => result[0][0],
-          :result                  => result[0][1] }                
+          :result                  => result[0][1] }
       end
     end
   }
 
-  # Save the data in flash
+  # Aggregate the parameters so we can pass them to other functions 
   review_results = {
     :comments         => params["post_comment"]["comment"],
     :design_review_id => params["design_review"]["id"],
@@ -1213,40 +1208,13 @@ def reviewer_results
     :peer             => params["peer"],
     :fab_houses       => params["fab_house_ids"]
   }
-  flash[:review_results] = review_results
 
   if roles.size == 0 && params["post_comment"]["comment"].strip == "" &&
     params["fab_house_ids"].blank?
     flash['notice'] = "No information was provided - no update was recorded"
     redirect_to(:action => 'view', :id => params["design_review"]["id"])
-  elsif not rejected
-    redirect_to(:action => :post_results)
-  else   
-    redirect_to(:action => :confirm_rejection)
   end
-end
-  
-  
-######################################################################
-#
-# post_results
-#
-# Description:
-#
-# Parameters from params
-#
-# Return value:
-# None
-#
-# Additional information:
-#
-######################################################################
-#
-def post_results
 
-  ignore_rejection = params[:note] && params[:note] == 'ignore'
-
-  review_results    = flash[:review_results]
   flash_msg         = ''
   fab_msg           = ''
   comment_update    = false
@@ -1290,7 +1258,7 @@ def post_results
         rr.role_id.to_s == review_result[:id]
       end
 
-      if review_result[:result] != 'COMMENTED' && review_record && !ignore_rejection
+      if review_result[:result] != 'COMMENTED' && review_record 
         review_record.result      = review_result[:result]
         review_record.reviewed_on = Time.now
         review_record.save
@@ -1407,32 +1375,6 @@ def post_results
     
   redirect_to(:action => :view, :id => review_results[:design_review_id])
 end
-  
-  
-######################################################################
-#
-# confirm_rejection
-#
-# Description:
-#
-# Parameters from params
-#
-# Return value:
-# None
-#
-# Additional information:
-#
-######################################################################
-#
-def confirm_rejection
-  review_results = flash[:review_results]
-  
-  flash[:review_results] = review_results
-  
-  @design_review_id = review_results[:design_review_id]
-    
-end
-
 
 ######################################################################
 #
@@ -1499,7 +1441,8 @@ def perform_ftp_notification
   @fab_houses          = FabHouse.find(:all, :conditions => "active=1")
   board_users          = @design.board.users.uniq
 
-
+  flash['notice'] = ""
+  
   @ftp_notification = FtpNotification.new(:design_id => @design.id)
 
   if params[:division_id]
@@ -1527,7 +1470,6 @@ def perform_ftp_notification
   if @design.board_design_entry
     ops_manager = @design.board_design_entry.board_design_entry_users.detect { |u| u.role.name == 'Operations Manager'}
     if ops_manager.nil?  || ops_manager.user_id == 0
-     flash['notice'] = "" if !flash['notice']
      flash['notice'] += "<br />WARNING: AN OPERATIONS MANAGER WAS NOT AUTOMATICALLY ADDED TO THE CC LIST"
     else
      @design.board.users << User.find(ops_manager.user_id) unless board_users.detect { |u| u.id == ops_manager.user_id }

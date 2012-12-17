@@ -64,7 +64,6 @@ PcbTracker::Application.routes.draw do
     member do
       post 'display_peer_auditor_select'
       post 'display_designer_select'
-      get 'post_results'
       get  'review_mail_list'
       get  'review_attachments'
     end
@@ -76,9 +75,7 @@ PcbTracker::Application.routes.draw do
       get  'change_design_center'
       get  'repost_review'
       get  'post_review'
-      get  'post_results'
       get  'skip_review'
-      get  'confirm_rejection'
    end
   end
 

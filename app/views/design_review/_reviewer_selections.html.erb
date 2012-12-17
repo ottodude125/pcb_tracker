@@ -4,7 +4,57 @@
 <!-- ********************************************************** -->
 <!-- $Id$ -->
 <!-- ********************************************************** -->
+<% content_for :rawheader do %>
+<style type="text/css" ">
 
+.rejectText { 
+	background-color: gold 
+}
+.ui-dialog .ui-dialog-buttonpane { 
+    text-align: center;
+}
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset { 
+    float: none;
+}
+</style>
+<% end %>
+<% content_for :header do %>
+   //Method for _reviewer_selections.html.erb
+   $(document).ready(function() {    
+     $("#rejectDialog").dialog({
+        autoOpen: false
+     }) // end of dialog initialization
+        
+     $(".reject").click(function() {
+	    var id = $(this).attr('id');
+	    id = id.replace("REJECTED","COMMENTED");
+      	var item=this;
+        //Set the buttons
+        $("#rejectDialog").dialog("option", "buttons", [
+          { text: "Change Reject to Comment", click: function() {
+           	    $('#' + id).prop('checked', true);
+	          	item.checked = false;
+	          	$(this).dialog("close");
+	          }
+	      },
+          { text: "Keep Reject", click: function() {
+	          	$(this).dialog("close");
+	          }
+	      },
+	     ]
+        );  
+        $("#rejectDialog").dialog("open");
+     });
+   });
+<% end %>
+
+<div id="rejectDialog" title="Reject Confirmation" >
+	<p class="rejectText"><%= image_tag("important2.gif") %> A rejection will result in the 
+		<b>withdrawal</b> of all existing approvals and requires a <b>REPOST</b> of the review.</p>
+	<p class="rejectText">If your findings do not require updated files to be posted and reviewed by 
+		other groups, please add only a comment expressing your concerns.
+    </p>
+</div>
 <tr>
   <td>
 
@@ -38,16 +88,20 @@
                     <tr class="completeReview">
                         <th class="th1"><%= review_result.role.display_name %></th>
                         <td align="center">
-                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "APPROVED", if(review_result.result == "APPROVED") then true end %>
+                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "APPROVED", 
+                                 if(review_result.result == "APPROVED") then true end %>
                         </td>
                         <td align="center">
-                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "WAIVED", if(review_result.result == "WAIVED") then true end %>
+                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "WAIVED", 
+                                 if(review_result.result == "WAIVED") then true end %>
+                        </td>
+                        <td align="center" >
+                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "REJECTED", 
+                                  if(review_result.result == "REJECTED") then true end, :class => "reject"  %>
                         </td>
                         <td align="center">
-                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "REJECTED", if(review_result.result == "REJECTED") then true end %>
-                        </td>
-                        <td align="center">
-                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "COMMENTED", if(review_result.result == "COMMENTED") then true end %>
+                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "COMMENTED", 
+                                  if(review_result.result == "COMMENTED") then true end %>
                         </td>
                         <td align="center">
                             <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "No Response" %>
@@ -57,19 +111,23 @@
                     <tr class="incompleteReview">
                         <th class="th1"><%= review_result.role.display_name %></th>
                         <td align="center">
-                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "APPROVED", if(review_result.result == "APPROVED") then true end %>
+                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "APPROVED", 
+                                 if(review_result.result == "APPROVED") then true end %>
                         </td>
                         <td align="center">
-                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "WAIVED", if(review_result.result == "WAIVED") then true end %>
+                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "WAIVED", 
+                                 if(review_result.result == "WAIVED") then true end %>
                         </td>
                         <td align="center">
-                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "REJECTED", if(review_result.result == "REJECTED") then true end %>
+                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "REJECTED", 
+                                 if(review_result.result == "REJECTED") then true end, :class => "reject" %>
                         </td>
                         <td align="center">
-                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "COMMENTED", if(review_result.result == "COMMENTED") then true end %>
+                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "COMMENTED", 
+                                if(review_result.result == "COMMENTED") then true end %>
                         </td>
                         <td align="center">
-                            <%= %>
+                            <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "No Response" %>
                         </td>
                     </tr>                    
                 <% end %>
