@@ -40,7 +40,7 @@
           { text: "Keep Reject", click: function() {
 	          	$(this).dialog("close");
 	          }
-	      },
+	     }
 	     ]
         );  
         $("#rejectDialog").dialog("open");
@@ -97,7 +97,7 @@
                         </td>
                         <td align="center" >
                             <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "REJECTED", 
-                                  if(review_result.result == "REJECTED") then true end, :class => "xreject", :disabled => "true" %>
+                                  if(review_result.result == "REJECTED") then true end, :class => "reject" %>
                         </td>
                         <td align="center">
                             <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "COMMENTED", 
@@ -120,7 +120,7 @@
                         </td>
                         <td align="center">
                             <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "REJECTED", 
-                                 if(review_result.result == "REJECTED") then true end, :class => "xreject" , :disabled => "true"%>
+                                 if(review_result.result == "REJECTED") then true end, :class => "reject" %>
                         </td>
                         <td align="center">
                             <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "COMMENTED", 
