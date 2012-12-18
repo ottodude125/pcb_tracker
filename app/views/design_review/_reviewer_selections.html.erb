@@ -5,10 +5,10 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 <% content_for :rawheader do %>
-<style type="text/css" ">
+<style type="text/css" >
 
 .rejectText { 
-	background-color: gold 
+	background-color: gold ;
 }
 .ui-dialog .ui-dialog-buttonpane { 
     text-align: center;
@@ -97,7 +97,7 @@
                         </td>
                         <td align="center" >
                             <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "REJECTED", 
-                                  if(review_result.result == "REJECTED") then true end, :class => "reject"  %>
+                                  if(review_result.result == "REJECTED") then true end, :class => "xreject", :disabled => "true" %>
                         </td>
                         <td align="center">
                             <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "COMMENTED", 
@@ -120,7 +120,7 @@
                         </td>
                         <td align="center">
                             <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "REJECTED", 
-                                 if(review_result.result == "REJECTED") then true end, :class => "reject" %>
+                                 if(review_result.result == "REJECTED") then true end, :class => "xreject" , :disabled => "true"%>
                         </td>
                         <td align="center">
                             <%= radio_button_tag "role_id_#{review_result.role.id}[#{review_result.id}]", "COMMENTED", 
