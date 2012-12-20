@@ -243,14 +243,14 @@
             <td class="label" width="140">Yes: </td>
             <td class="data" align="left">
               <%= radio_button_tag('board_design_entry[hipot_testing_required]', '1',
-              !!@board_design_entry.hipot_testing_required ) %>
+              @board_design_entry.hipot_testing_required == 1 ) %>
             </td>
           </tr>
           <tr>
             <td class="label">No: </td>
             <td class="data" align="left">
               <%= radio_button_tag('board_design_entry[hipot_testing_required]', '0',
-              !@board_design_entry.hipot_testing_required ) %>
+              @board_design_entry.hipot_testing_required == 0 ) %>
             </td>
           </tr>
         </table>
