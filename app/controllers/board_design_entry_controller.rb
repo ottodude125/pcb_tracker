@@ -536,6 +536,7 @@ class BoardDesignEntryController < ApplicationController
     @board_design_entry = BoardDesignEntry.find(params[:id])
     bde                 = BoardDesignEntry.new(params[:board_design_entry])
     bde.id              = params[:id]
+    bde.user_id         = @logged_in_user.id
     #bde.part_number_id  = @board_design_entry.part_number_id
     @viewer             = params[:viewer]
     
