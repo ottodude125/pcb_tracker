@@ -209,6 +209,31 @@
     </td>
   </tr>
 
+
+<!-- ********************************************************** -->
+  <tr>
+    <td class="label" valign="top">ASIC/FPGA on Board:</td>
+    <td class="data" colspan="2" valign="top">
+        <table cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td class="label" width="140">Yes: </td>
+            <td class="data" align="left">
+              <%= radio_button_tag('board_design_entry[asic_fpga]', '1' ,
+              !!@board_design_entry.asic_fpga) %>
+            </td>
+          </tr>
+          <tr>
+            <td class="label">No: </td>
+            <td class="data" align="left">
+              <%= radio_button_tag('board_design_entry[asic_fpga]', '0',
+              !@board_design_entry.asic_fpga ) %>
+            </td>
+          </tr>
+        </table>
+    </td>
+    <td class="data" colspan="4" valign="top">&nbsp;</td>
+  </tr>
+
 <!-- ********************************************************** -->
   <tr>
     <td class="label" valign="top">HiPot Testing Required: </td>
@@ -217,13 +242,15 @@
           <tr>
             <td class="label" width="140">Yes: </td>
             <td class="data" align="left">
-              <%= radio_button(:board_design_entry, :hipot_testing_required, '1') %>
+              <%= radio_button_tag('board_design_entry[hipot_testing_required]', '1',
+              !!@board_design_entry.hipot_testing_required ) %>
             </td>
           </tr>
           <tr>
             <td class="label">No: </td>
             <td class="data" align="left">
-              <%= radio_button(:board_design_entry, :hipot_testing_required, '0') %>
+              <%= radio_button_tag('board_design_entry[hipot_testing_required]', '0',
+              !@board_design_entry.hipot_testing_required ) %>
             </td>
           </tr>
         </table>

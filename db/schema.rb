@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121030152124) do
+ActiveRecord::Schema.define(:version => 20121220162841) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :default => 0, :null => false
@@ -93,6 +93,7 @@ ActiveRecord::Schema.define(:version => 20121030152124) do
     t.boolean  "thieving",                                      :default => false
     t.boolean  "no_copper",                                     :default => false
     t.boolean  "enclosure",                                     :default => false
+    t.boolean  "asic_fpga",                                     :default => false
   end
 
   add_index "board_design_entries", ["design_id"], :name => "design_id"
