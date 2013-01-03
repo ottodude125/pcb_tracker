@@ -64,13 +64,14 @@ gem 'rails_autolink'
 gem 'net-ldap'
 
 group :test do
-  # Pretty printed test output
+  # Pretty printed test outputtouch
   gem 'turn', '0.8.2', :require => false
 end
 
 group :development do
   gem "rails-erd" # generates schema diagrams by calling rake erd
   gem "railroady"
+  gem 'meta_request', '0.2.0'  # Required by RailsPanel which is a Chrome extension that will end your tailing of development.log
 end
 
 # Plugins to Gems

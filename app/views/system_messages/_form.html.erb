@@ -17,28 +17,28 @@
       </tr>  <tr>
         <th class="teraheader" align="right">Message Type:&nbsp;</th>
         <td>
-          <%= select("system_message", "message_type", options_for_select(@types), :selected => @system_message.message_type) %>
+          <%= select("system_message", "message_type", options_for_select(@types)) %>
         </td>
       </tr>
       <tr>
         <th class="teraheader" align="right">Message:&nbsp;</th>
         <td>
           <%= text_area("system_message", "body", :size => "60x3" ) %>
-          <script type="text/javascript">
-                init_textarea("system_message_body");
-          </script>
+
         </td>
       </tr>
       <tr>
         <th class="teraheader" align="right">Valid From:&nbsp;</th>
         <td>
-          <%= datetime_select(:system_message, :valid_from, :start_year => Time.now.year, :end_year => Time.now.year+1) %>
+      	  <%= text_field(:system_message, :valid_from, :value => (@system_message.new_record? ? Time.now.strftime("%B %d, %Y") : @system_message.valid_from.strftime("%B %d, %Y")))%>
+          <%#= datetime_select(:system_message, :valid_from, :order => [:year, :month, :day], :default => {:year => Time.now.year, :month => 1, :day => 1}, :discard_minute => true, :discard_hour => true,  :start_year => Time.now.year, :end_year => Time.now.year+99 ) %>
         </td>
       </tr>
       <tr>
         <th class="teraheader" align="right">Valid Until:&nbsp;</th>
         <td>
-          <%= datetime_select(:system_message, :valid_until, :start_year => Time.now.year, :end_year => Time.now.year+1) %>
+      	  <%= text_field(:system_message, :valid_until, :value => (@system_message.new_record? ? Date.new(Time.now.year+10).strftime("%B %d, %Y") : @system_message.valid_until.strftime("%B %d, %Y")))%>
+          <%#= datetime_select(:system_message, :valid_until, :order => [:year, :month, :day], :default => {:year => Time.now.year+99, :month => 1, :day => 1}, :discard_minute => true, :discard_hour => true,  :start_year => Time.now.year, :end_year => Time.now.year+99 ) %>
         </td>
       </tr>
     </table>

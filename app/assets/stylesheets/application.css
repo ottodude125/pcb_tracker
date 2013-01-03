@@ -5,6 +5,17 @@
  *= require_self
  *= require jquery.ui.core
  *= require jquery.ui.theme
+ *= require jquery.ui.datepicker
  *= require dataTables/src/demo_table_jui
  *= require_tree . 
 */
+
+
+/*  
+ * This is required by jquery.autosize.js so that it can work correctly in Internet Explorer 8. 
+ * I also had to add the !important on the end despite it being a bad practice because there is
+ * something somewhere else that is screwing up the rending of the text area in IE8 otherwise.
+ * If that is not there then several lines of a large paragraph do not appear in the box
+ * http://www.jacklmoore.com/autosize
+*/
+#content textarea, .mirroredText { line-height:20px !important; }

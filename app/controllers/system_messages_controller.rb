@@ -43,6 +43,7 @@ class SystemMessagesController < ApplicationController
   def edit
     @system_message = SystemMessage.find(params[:id])
     @types = SystemMessage.type_list
+    @type_id = SystemMessage.type_id(@system_message.message_type) 
   end
 
   # POST /system_messages
@@ -59,7 +60,8 @@ class SystemMessagesController < ApplicationController
         format.html { redirect_to @system_message, notice: 'System message was successfully created.' }
         format.json { render json: @system_message, status: :created, location: @system_message }
       else
-        format.html { render action: "new" }
+        @types = SystemMessage.type_list
+        format.html { render action: "new"}
         format.json { render json: @system_message.errors, status: :unprocessable_entity }
       end
     end
@@ -79,6 +81,7 @@ class SystemMessagesController < ApplicationController
         format.html { redirect_to @system_message, notice: 'System message was successfully updated.' }
         format.json { head :no_content }
       else
+        @types = SystemMessage.type_list        
         format.html { render action: "edit" }
         format.json { render json: @system_message.errors, status: :unprocessable_entity }
       end
@@ -124,10 +127,10 @@ class SystemMessagesController < ApplicationController
   def dismiss_messages
     respond_to do |format|
       if @logged_in_user.update_column(:message_seen, Time.now)
-        format.html { redirect_to :root, notice: 'Congrats you dismissed a message.' }
+        format.html { redirect_to :root }
         format.json { head :no_content }
       else
-        format.html { redirect_to :root, notice: 'Oh Boy!! Looks like your not dismissing that message today!! Better get help.' }
+        format.html { redirect_to :root, notice: 'There was a problem dismissing the message. Please contact DTG for further assistance.' }
         format.json { render json: @logged_in_user.errors, status: :unprocessable_entity }
       end
     end

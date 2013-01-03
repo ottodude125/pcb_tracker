@@ -7,8 +7,10 @@
 //= require jquery
 //= require jquery_ujs
 //= require jquery.ui.dialog
+//= require jquery.ui.datepicker
 //= require dataTables/jquery.dataTables
 //= require_tree .
+
 
 // Function to display current time. Used in layout to display time at top of display
 function ShowTime()
@@ -17,15 +19,6 @@ function ShowTime()
     $('#current_time').text(dt.toLocaleDateString() + " " + dt.toLocaleTimeString());
     window.setTimeout("ShowTime()", 1000);
 }
-
-
-//dynamic text area which grows the more a person types
-function init_textarea(comment_field) {
-if ( !document.getElementById)
-  return;
-document.getElementById(comment_field).rows=5;
-document.getElementById(comment_field).onkeyup = textarea_grow(5);
-};
 
 
 //sets where the focus (cursor) is placed when a page loads
@@ -42,4 +35,9 @@ function setFocus() {
     }
   }
 }
+
+$(document).ready(function(){
+    $('textarea').autosize({className:'mirroredText'});
+});
+
 
