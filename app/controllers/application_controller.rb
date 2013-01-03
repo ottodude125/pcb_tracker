@@ -41,6 +41,7 @@ class ApplicationController < ActionController::Base
   
   before_filter :load_valid_system_messages
 
+  before_filter :set_access
 
   protected
   
@@ -88,6 +89,18 @@ class ApplicationController < ActionController::Base
       end
     end    
     @message
+  end
+
+  # Record the last time a user accessed a page
+  #
+  # :call-seq:
+  #    set_access
+  #
+  #  Sets @logged_in_user.access to NOW
+  def set_access
+    if @logged_in_user
+      @logged_in_user.update_column(:access, Time.now)
+    end
   end
 
 
@@ -269,3 +282,4 @@ class ApplicationController < ActionController::Base
   end
 
 end
+
