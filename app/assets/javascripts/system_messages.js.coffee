@@ -4,8 +4,8 @@
 
 jQuery ->
   $('#log_table').dataTable
-    sPaginationType: "full_numbers"
-    bJQueryUI: true
+    sPaginationType: "full_numbers",
+    bJQueryUI: true,
     aaSorting: [[0,'desc']]
     
   $('#system_message_valid_from').datepicker

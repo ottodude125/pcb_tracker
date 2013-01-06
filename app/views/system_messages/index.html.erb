@@ -23,7 +23,7 @@
                 <td><%= truncate(system_message.body, :length => 50).html_safe %></td>
                 <td><%= system_message.valid_from.format_dd_mon_yy %></td>
                 <td><%= system_message.valid_until.format_dd_mon_yy %></td>
-                <td><%= link_to 'Show', system_message_path(system_message.id, :url_return => "/hwtr/system_messages") %></td>
+                <td><%= link_to 'Show', system_message_path(system_message.id, :url_return => "/pcbtr/system_messages") %></td>
                 <td><%= link_to 'Edit', edit_system_message_path(system_message) %></td>
                 <td><%= link_to 'Destroy', system_message, confirm: 'Are you sure?', method: :delete %></td>
             </tr>
