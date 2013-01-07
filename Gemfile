@@ -71,7 +71,7 @@ end
 group :development do
   gem "rails-erd" # generates schema diagrams by calling rake erd
   gem "railroady"
-  gem 'meta_request', '0.2.0'  # Required by RailsPanel which is a Chrome extension that will end your tailing of development.log
+  gem 'meta_request' # Required by RailsPanel which is a Chrome extension that will end your tailing of development.log
 end
 
 # Plugins to Gems

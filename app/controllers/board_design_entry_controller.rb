@@ -226,6 +226,7 @@ class BoardDesignEntryController < ApplicationController
   ######################################################################
   #
   def get_part_number
+
     if params[:rows]
       @rows = params[:rows].values.collect { |row| PartNum.new(row) }
      else
