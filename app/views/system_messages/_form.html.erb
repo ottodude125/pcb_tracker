@@ -17,7 +17,7 @@
       </tr>  <tr>
         <th class="teraheader" align="right">Message Type:&nbsp;</th>
         <td>
-          <%= select("system_message", "message_type", options_for_select(@types)) %>
+          <%= select("system_message", "message_type", options_for_select(@types, @type_id)) %>
         </td>
       </tr>
       <tr>
