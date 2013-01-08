@@ -844,7 +844,7 @@ class TrackerController < ApplicationController
                 :conditions => "phase_id!=#{Design::COMPLETE}",
                 :include    => :design_reviews).each do |design|
 
-      next if design.phase_id == 0
+      next if design.phase_id == 0 
       design_review = design.design_reviews.detect { |dr| dr.review_type_id == design.phase_id }
 
 
@@ -854,12 +854,15 @@ class TrackerController < ApplicationController
         priority_name = 'Unset'
       end
       
+      reviewers = 0
+      approvals = 0
+      if design.phase.name != "Planning"
       results = design_review.design_review_results.collect { |r| r.result }
-      reviewers = results.size
-      approvals = results.find_all { |r| 
-                                   (r == DesignReviewResult::APPROVED ||
-                                    r == DesignReviewResult::WAIVED) }.size
-                                    
+        reviewers = results.size
+        approvals = results.find_all { |r| 
+                                     (r == DesignReviewResult::APPROVED ||
+                                      r == DesignReviewResult::WAIVED) }.size
+      end                           
       design_reviews << { :review => design_review, :priority_name => priority_name, 
                           :reviewers => reviewers, :approvals => approvals } 
     
