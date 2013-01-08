@@ -85,11 +85,7 @@
 
     <th align="right" width="25%">Revision: </th>
     <td align="left">
-      <%= if @board_design_entry.revision_name.include?("<font color=")
-        raw(@board_design_entry.revision_name)
-      else
-        @board_design_entry.revision_name
-      end %>
+      <%= @board_design_entry.pcb_rev %>
     </td>
   </tr>
   
