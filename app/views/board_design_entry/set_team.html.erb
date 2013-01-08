@@ -59,53 +59,46 @@ jQuery(function($) { //NOT REQUIRED Check Box
 
 <% end -%>
 
-<% @heading = 'PCB Engineering - ' +
-               @board_design_entry.pcb_number +
-              ' - ' + @title %>
+<% @heading = 'PCB Engineering - ' + @board_design_entry.pcb_number %>
 
-<%= render(:partial => 'nav_bar',
-           :locals  => { :back_action => @back_action,
-                         :next_action => @next_action }) %>
-
+<!-- SET UP MANAGEMENT TEAM -->
 
 <hr class="div" />
+<br />
 
-
-  <table class="design_team" align="center" cellspacing="0" border="0"
-  url="<%=  url_for(:action => 'set_team_member')%>"
-  bde_id="<%=@board_design_entry.id%>">
+<p align="center" style = "font-weight: bold; font-size: 20px"><%= @management_title %></p>
+<table class="design_team" align="center" cellspacing="0" border="0" url="<%=  url_for(:action => 'set_team_member')%>" bde_id="<%=@board_design_entry.id%>">
   <tr>
     <th class="teraheader">Role</th>
     <th align="center" class="teraheader">Current Value</th>
 
     <th colspan="2" align="center" class="teraheader">Change To</th>
   </tr>
-<% for member in @members %>
+  
+  <% for member in @management_members %>
 
-    <tr valign="top">
-      <th class="design_team_name" align="left"><%= member[:role].display_name %></th>
+  <tr valign="top">
+    <th class="design_team_name" align="left"><%= member[:role].display_name %></th>
       <% if member[:required]
-        if member[:member_id] > 0
-          text  = User.find(member[:member_id]).name
-          style = "font-weight bold"
-        else
-          text  = "Not Set"
-          style = "color: red; font-weight: bold"
-        end
-      else
-        text  = "Not Required"
-        style = "color: darkorange; font-weight: bold"
-      end
+            if member[:member_id] > 0
+                text  = User.find(member[:member_id]).name
+                style = "font-weight: bold"
+            else
+                text  = "Not Set"
+                style = "color: red; font-weight: bold"
+            end
+         else
+            text  = "Not Required"
+            style = "color: darkorange; font-weight: bold"
+         end
       %>
 
-      <td class="design_team_data" align="center" id="current_<%=member[:role].id%>"
-        style="<%=raw(style)-%>">
-        <%=text-%>
+      <td class="design_team_data" align="center" id="current_<%=member[:role].id%>" style="<%=raw(style)-%>">
+        <%= text -%>
       </td>
+      
       <td class="design_team_data" align="center">
-        <select id="role_id_<%= member[:role].id %>"
-                name="role_id_<%= member[:role].id %>"
-                class="name_select">
+        <select id="role_id_<%= member[:role].id %>" name="role_id_<%= member[:role].id %>" class="name_select">
            <option value="">Select a Name</option>
            <%= options_from_collection_for_select(member[:member_list],
                                                  "id",
@@ -113,6 +106,7 @@ jQuery(function($) { //NOT REQUIRED Check Box
                                                  member[:member_id]) %>
         </select>
       </td>
+      
       <td align="center" class="design_team_required">
           <%= check_box_tag("required_#{member[:role].id}",  #name, id
                         0,                                   #value
@@ -120,13 +114,76 @@ jQuery(function($) { //NOT REQUIRED Check Box
                         ) %>
         Not Required
       </td>
-    </tr>
- <% end %>
- </table>
+  </tr>
+  <% end %>
+</table>
+
+<br />
+<br />
+
+<!-- SET UP REVIEW TEAM -->
+
+<p align="center" style = "font-weight: bold; font-size: 20px"><%= @review_title %></p>
+
+<table class="design_team" align="center" cellspacing="0" border="0" url="<%=  url_for(:action => 'set_team_member')%>" bde_id="<%=@board_design_entry.id%>">
+  <tr>
+    <th class="teraheader">Role</th>
+    <th align="center" class="teraheader">Current Value</th>
+
+    <th colspan="2" align="center" class="teraheader">Change To</th>
+  </tr>
+  
+  <% for member in @members %>
+
+  <tr valign="top">
+    <th class="design_team_name" align="left"><%= member[:role].display_name %></th>
+      <% if member[:required]
+            if member[:member_id] > 0
+                text  = User.find(member[:member_id]).name
+                style = "font-weight: bold"
+            else
+                text  = "Not Set"
+                style = "color: red; font-weight: bold"
+            end
+         else
+            text  = "Not Required"
+            style = "color: darkorange; font-weight: bold"
+         end
+      %>
+
+      <td class="design_team_data" align="center" id="current_<%=member[:role].id%>" style="<%=raw(style)-%>">
+        <%= text -%>
+      </td>
+      
+      <td class="design_team_data" align="center">
+        <select id="role_id_<%= member[:role].id %>" name="role_id_<%= member[:role].id %>" class="name_select">
+           <option value="">Select a Name</option>
+           <%= options_from_collection_for_select(member[:member_list],
+                                                 "id",
+                                                 "last_name_first",
+                                                 member[:member_id]) %>
+        </select>
+      </td>
+      
+      <td align="center" class="design_team_required">
+          <%= check_box_tag("required_#{member[:role].id}",  #name, id
+                        0,                                   #value
+                        false                                # not checked
+                        ) %>
+        Not Required
+      </td>
+  </tr>
+  <% end %>
+</table>
 
 
 
 <hr class="div" />
+
+<%= render(:partial => 'nav_bar',
+           :locals  => { :back_action => @back_action,
+                         :next_action => @next_action }) %>
+
 
 <%# debug @user_action %>
 <%# debug "MANAGERS ----------------------------------" %>

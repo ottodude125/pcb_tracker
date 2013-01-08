@@ -237,7 +237,7 @@ class BoardDesignEntryController < ApplicationController
     end
 
     @heading       = "PCB Engineering - New Entry"
-    @next_value    = "Next -->"
+    @next_value    = "Continue to Next Step ==>"
     @next_action   = { :action => 'create_board_design_entry' }
     @cancel_value  = "Cancel / Return to PCB Engineering Entry List"
     @cancel_action = { :action => 'originator_list'}
@@ -570,6 +570,7 @@ class BoardDesignEntryController < ApplicationController
       @product_type_list = ProductType.get_active_product_types
       @project_list      = Project.get_active_projects
       @revision_list     = Revision.get_revisions
+      @hw_engineers      = User.get_hw_engineers(User.find(:all, :order => "last_name ASC"))
 
       @board_design_entry = bde
       @new_entry   = 'true'
@@ -622,7 +623,7 @@ class BoardDesignEntryController < ApplicationController
       @logged_in_user.save_location(@board_design_entry.location_id)
       
       if params[:user_action] == 'adding'
-        redirect_to(:action      => 'design_constraints',
+        redirect_to(:action      => 'set_team',
                     :id          => @board_design_entry.id,
                     :user_action => 'adding')
       elsif params[:user_action] == 'updating'
@@ -691,7 +692,6 @@ class BoardDesignEntryController < ApplicationController
   
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @user_action        = params[:user_action]
-    @title = "Review Team"
     @members  = []
     Role.get_open_reviewer_roles.each do |role|
       entry_user = @board_design_entry.board_design_entry_users.detect{ |eu| eu.role_id == role.id }
@@ -706,7 +706,49 @@ class BoardDesignEntryController < ApplicationController
     render(:action => "set_team")
   end
   
-  
+  ######################################################################
+  #
+  # set_team
+  #
+  # Description:
+  # This action displays the form for gathering the names of managers
+  # and reviewers associated with the design entry.
+  # 
+  # Parameters from params
+  # id - the board_design_entry id
+  #
+  ######################################################################
+  #
+  def set_team
+    @board_design_entry = BoardDesignEntry.find(params[:id])
+    @user_action        = params[:user_action]
+    @management_title = "Management Team"
+    @review_title = "Review Team"
+
+    @members  = []
+    Role.get_open_reviewer_roles.each do |role|
+      entry_user = @board_design_entry.board_design_entry_users.detect{ |eu| eu.role_id == role.id }
+      @members << {  :role         => role,
+                     :member_list  => role.active_users,
+                     :member_id    => entry_user ? entry_user.user_id : 0,
+                     :required     => !entry_user || (entry_user && entry_user.required?) }
+    end
+
+    @management_members = []
+    Role.get_open_manager_reviewer_roles.each do |role|
+      entry_user = @board_design_entry.board_design_entry_users.detect{ |eu| eu.role_id == role.id }
+      @management_members << { :role         => role,
+                     :member_list => role.active_users,
+                     :member_id   => entry_user ? entry_user.user_id : 0,
+                     :required    => !entry_user || (entry_user && entry_user.required?) }
+    end
+
+    @back_action = 'edit_entry'
+    @next_action = 'view_attachments'
+
+    render(:action => "set_team")
+
+  end  
   ######################################################################
   #
   # set_management_team
@@ -734,7 +776,7 @@ class BoardDesignEntryController < ApplicationController
                      :required    => !entry_user || (entry_user && entry_user.required?) }
     end
 
-    @back_action = 'design_constraints'
+    @back_action = 'edit_entry'
     @next_action = 'set_review_team'
 
     render(:action => "set_team")

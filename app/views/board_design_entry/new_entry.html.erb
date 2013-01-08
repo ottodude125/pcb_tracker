@@ -5,6 +5,21 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
+<%  content_for :header do %>
+
+jQuery(function($) {
+  $(":checkbox").change( function () {
+    field = this.name;
+    value = $(this).attr("checked")?1:0;  /* user id */
+    url   = $(this).parents("table").attr('url');
+
+    //alert("entered value = " + value + " field = " + field + " url=" + url) ;
+    $.post(url, { field: field, value: value} ); //no return data
+  });
+});
+
+<% end %>
+
 <% if @user_action == 'updating' %>
 
   <% @heading = "PCB Engineering - Design Details " + 
@@ -42,11 +57,7 @@
     <td class="data"  colspan="2">
         <select id="board_design_entry_user_id" name="board_design_entry[user_id]">
             <option value="0"></option>
-            <% if @board_design_entry.user_id %>
-                <%= options_from_collection_for_select(@hw_engineers, "id", "name", @board_design_entry.user_id) %>
-            <% else %>
-                <%= options_from_collection_for_select(@hw_engineers, "id", "name", @logged_in_user.id) %>
-            <% end %>                
+                <%= options_from_collection_for_select(@hw_engineers, "id", "name", user.id) %>               
         </select>
     </td>
     
@@ -407,10 +418,74 @@
                       :order      => [:month, :day, :year]) %>
     </td>
   </tr>
+  
+  <tr>
+    <th class="label">Differential Pairs:</th>
+    <td class="data" colspan="6">
+      <table class="design_constraints" align="center" cellspacing="0" url="<%= url_for(:action =>"update_yes_no")%>">
+        <tr>
+          <td >
+            <%= check_box_tag("differential_pairs",  #name, id
+                              1,                     #value
+                              @board_design_entry.differential_pairs? #checked
+                              ) %>
+          </td>
+        </tr>
+      </table>
+  </tr>
+  <tr>
+    <th class="label">Controlled Impedance:</th>
+    <td class="data" colspan="6">
+      <table class="design_constraints" align="center" cellspacing="0" url="<%= url_for(:action =>"update_yes_no")%>">
+          <tr>
+            <td >
+              <%= check_box_tag("controlled_impedance", 1, @board_design_entry.controlled_impedance? ) %>
+            </td>
+          </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <th class="label">Scheduled Nets:</th>
+    <td class="data" colspan="6">
+      <table class="design_constraints" align="center" cellspacing="0" url="<%= url_for(:action =>"update_yes_no")%>">
+          <tr>      
+            <td>
+              <%= check_box_tag("scheduled_nets", 1, @board_design_entry.scheduled_nets? ) %>
+            </td>
+          </tr>      
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <th class="label">Propagation Delay:</th>
+    <td class="data" colspan="6">
+      <table class="design_constraints" align="center" cellspacing="0" url="<%= url_for(:action =>"update_yes_no")%>">
+          <tr>
+            <td>
+              <%= check_box_tag("propagation_delay",1,@board_design_entry.propagation_delay? ) %>
+            </td>
+          </tr>      
+      </table>
+    </td>
+ </tr>
+  <tr>
+    <th class="label">Matched Propagation Delay:</th>
+    <td class="data" colspan="6">
+      <table class="design_constraints" align="center" cellspacing="0" url="<%= url_for(:action =>"update_yes_no")%>">
+          <tr>            
+            <td>
+              <%= check_box_tag("matched_propagation_delay",1,@board_design_entry.matched_propagation_delay? ) %>
+            </td>
+          </tr>      
+      </table>
+    </td>
+  </tr>
 
 </table>
 
 <hr class="div" />
+
 
 <table width="80%" align="center">
   <tr>
@@ -427,8 +502,8 @@
     <td align="right">
       <% if @user_action == 'updating'%>
         <input type="submit" class="form_submit" value="Update Entry" />
-      <% elsif @user_action == 'adding' %>
-        <input type="submit" class="form_submit" value="Next -->" />
+      <% elsif @user_action == 'adding' %>      
+        <input type="submit" class="form_submit" value="Continue to Next Step ==>" />
       <% end %>
     </td>
   </tr>

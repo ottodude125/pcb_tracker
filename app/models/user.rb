@@ -190,7 +190,7 @@ class User < ActiveRecord::Base
   def self.get_hw_engineers(users)
     hw_engineers = []
     users.each do |user|
-      hwe = user.roles.detect { |r| r.name == 'HWENG'}
+      hwe = user.roles.detect { |r| r.name == 'HWENG' || r.name == "PCB Admin"}
       hw_engineers << user if hwe && user.active == 1 
     end
     hw_engineers

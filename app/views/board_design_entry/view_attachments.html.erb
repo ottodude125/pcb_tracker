@@ -2,10 +2,6 @@
                @board_design_entry.pcb_number +
               ' - Attachments' %>
 
-<%= render(:partial => 'nav_bar',
-           :locals  => { :back_action => 'set_review_team',
-                         :next_action => 'view_originator_comments' }) %>
-
 
 <hr class="div" />
 
@@ -123,6 +119,14 @@
 
 
 <hr class="div" />
+
+
+<%= render(:partial => 'nav_bar',
+           :locals  => { :back_action => 'set_team',
+                         :next_action => 'view_originator_comments' }) %>
+
+
+
 
 <%# debug @user_action %>
 <%# debug "REVIWERS ----------------------------------" %>
