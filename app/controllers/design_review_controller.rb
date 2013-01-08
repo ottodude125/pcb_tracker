@@ -1743,8 +1743,10 @@ def admin_update
     @review_statuses << ReviewStatus.find_by_name('Review On-Hold')
   end
 
-  @release_poster = @design_review.design.get_design_review('Release').designer
-    
+  @release_poster = nil
+  if ( @design_review.design.get_design_review('Release') )
+      @release_poster = @design_review.design.get_design_review('Release').designer
+  end
   selects = { :designer  => @design_review.design.designer.id,
     :peer      => @design_review.design.peer.id}
   flash[:selects] = selects
