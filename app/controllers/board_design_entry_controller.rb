@@ -392,6 +392,7 @@ class BoardDesignEntryController < ApplicationController
     @product_type_list  = ProductType.get_active_product_types
     @project_list       = Project.get_active_projects
     @revision_list      = Revision.get_revisions
+    @hw_engineers       = User.get_hw_engineers(User.find(:all, :order => "last_name ASC"))
 
   end
   
@@ -514,6 +515,7 @@ class BoardDesignEntryController < ApplicationController
     @product_type_list = ProductType.get_active_product_types
     @project_list      = Project.get_active_projects
     @revision_list     = Revision.get_revisions
+    @hw_engineers      = User.get_hw_engineers(User.find(:all, :order => "last_name ASC"))
     
     render(:action => 'new_entry')
   

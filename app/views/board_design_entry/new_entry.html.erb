@@ -39,7 +39,16 @@
   <tr>
   
     <td class="label">Originator: </td>
-    <td class="data"  colspan="2"><%= user.name %></td>
+    <td class="data"  colspan="2">
+        <select id="board_design_entry_user_id" name="board_design_entry[user_id]">
+            <option value="0"></option>
+            <% if @board_design_entry.user_id %>
+                <%= options_from_collection_for_select(@hw_engineers, "id", "name", @board_design_entry.user_id) %>
+            <% else %>
+                <%= options_from_collection_for_select(@hw_engineers, "id", "name", @logged_in_user.id) %>
+            <% end %>                
+        </select>
+    </td>
     
     <td class="label">Division: </td>
     <td class="data">

@@ -180,6 +180,21 @@ class User < ActiveRecord::Base
     designer = self.roles.detect { |r| r.name == 'Designer'}
     designer && !self.employee?
   end
+
+  # Return all active users who have hw engineering role
+  #
+  # :call-seq:
+  #   get_hw_engineers(users) -> users
+  #
+  #  Returns hash of users.
+  def self.get_hw_engineers(users)
+    hw_engineers = []
+    users.each do |user|
+      hwe = user.roles.detect { |r| r.name == 'HWENG'}
+      hw_engineers << user if hwe && user.active == 1 
+    end
+    hw_engineers
+  end
   
   
   # Update the user's division
