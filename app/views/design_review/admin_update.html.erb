@@ -39,7 +39,7 @@
       <th align="left">New Value</th>
     </tr>
     
-    
+    <% if ( @design_review.design.phase.name != "Planning"  ) %>
     <tr>
       <th align="left">Pre-Artwork:</th>
       <td align="left">
@@ -79,7 +79,7 @@
             <% end %>
         </td>
     </tr>
-    
+    <% end %>
     <tr>
       <th align="left" width="140">Designer:</th>
       <td align="left">
