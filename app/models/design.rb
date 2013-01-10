@@ -1129,39 +1129,59 @@ class Design < ActiveRecord::Base
   def setup_design_reviews(review_types_list, 
                            board_team_list)
                            
-    not_started    = ReviewStatus.find_by_name('Not Started')
-    review_skipped = ReviewStatus.find_by_name('Review Skipped')
-    review_types   = ReviewType.get_active_review_types
+    if review_types_list.size == 1
+      in_review      = ReviewStatus.find_by_name('In Review')
+      review_types   = ReviewType.get_active_review_types
 
-    #Find the ECN Manager for the design
-    ecn_manager_role = Role.find_by_name("ECN")
-    ecn_manager = board_team_list.detect do |x|
-      x.role_id == ecn_manager_role.id
-    end
-
-    #Go through each of the review types and setup a review.
-    review_types_list.each do |review, active|
-
-      review_type = review_types.detect { |rt| rt.name == review }
-      
-      design_review = DesignReview.new(:review_type_id => review_type.id,
-                                       :creator_id     => self.created_by,
-                                       :priority_id    => self.priority_id)
-      design_review.review_status_id = active == '1' ? not_started.id : review_skipped.id
-      
-      if review_type.name == "Pre-Artwork"
-        design_review.designer_id = self.pcb_input_id
-      elsif review_type.name == 'Release'
-        design_review.designer_id = ecn_manager.user_id
-      end
-      
-      self.design_reviews << design_review
-
-      # Create Design Review Result entries
-      design_review.add_reviewers(board_team_list)
-
-    end
+      #Go through each of the review types and setup a review.
+      review_types_list.each do |review, active|
   
+        review_type = review_types.detect { |rt| rt.name == review }
+        
+        design_review = DesignReview.new(:review_type_id => review_type.id,  
+                                         :creator_id     => self.created_by,  
+                                         :priority_id    => self.priority_id)  
+        
+        design_review.review_status_id = in_review.id      
+        self.design_reviews << design_review
+      end
+          
+    else      
+      not_started    = ReviewStatus.find_by_name('Not Started')
+      review_skipped = ReviewStatus.find_by_name('Review Skipped')
+      review_types   = ReviewType.get_active_review_types
+  
+      # Find the ECN Manager for the design
+      ecn_manager_role = Role.find_by_name("ECN")
+      
+      ecn_manager = board_team_list.detect do |x|
+        x.role_id == ecn_manager_role.id
+      end
+  
+      #Go through each of the review types and setup a review.
+      review_types_list.each do |review, active|
+  
+        review_type = review_types.detect { |rt| rt.name == review }
+        
+        design_review = DesignReview.new(:review_type_id => review_type.id,  
+                                         :creator_id     => self.created_by,  
+                                         :priority_id    => self.priority_id)  
+        
+        design_review.review_status_id = active == '1' ? not_started.id : review_skipped.id      
+        
+        if review_type.name == "Pre-Artwork"
+          design_review.designer_id = self.pcb_input_id
+        elsif review_type.name == 'Release'
+          design_review.designer_id = ecn_manager.user_id
+        end
+        
+        self.design_reviews << design_review
+  
+        # Create Design Review Result entries
+        design_review.add_reviewers(board_team_list)
+  
+      end
+    end
   end
   
   

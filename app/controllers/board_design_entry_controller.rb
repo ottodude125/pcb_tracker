@@ -535,7 +535,8 @@ class BoardDesignEntryController < ApplicationController
   ######################################################################
   #
   def update_entry
-
+    flash['notice'] = ""
+    
     @board_design_entry = BoardDesignEntry.find(params[:id])
     bde                 = BoardDesignEntry.new(params[:board_design_entry])
     bde.id              = params[:id]
@@ -581,8 +582,10 @@ class BoardDesignEntryController < ApplicationController
       
     end
 
+    # I think this will always return null except for a small subset of boards created in 2006-2007 ( JonK 1/2013 )
     board = Board.find_by_prefix_id_and_number(bde.prefix_id, bde.number)  
     
+    # I believe entry type is not set until the bde has been submitted and then it is processed and added to the tracker. When it is set it is either "new" or "dot_rev"  ( JonK 1/2013 )
     if bde.entry_type == 'new'
       if board && board.designs.size > 0
         last_design = board.designs.sort_by { |d| d.revision.name }.pop
@@ -613,11 +616,129 @@ class BoardDesignEntryController < ApplicationController
       params[:board_design_entry][:eco_number]       = ''
       
     end
-    
+
+    # Try to update the board design entry 
     if @board_design_entry.update_attributes(params[:board_design_entry])
 
-      flash['notice'] = "Entry #{@board_design_entry.pcb_number} has been updated"
+      flash['notice'] += "Entry #{@board_design_entry.pcb_number} has been updated   "
 
+      
+      ####### 1/2013 - BEGIN NEW SECTION ADDED TO CREATE/UPDATE BDE, BOARD, DESIGN, AND PLANNING DESIGN REVIEW FOR NEW PLANNING STAGE  ###############
+
+      ### FIND/CREATE THE BOARD ###
+
+      # Try to located the board_id to see if it already exists
+      design = Design.find_by_id(@board_design_entry.design_id)
+
+      # If it exists then update it
+      if design != nil && design.board_id != nil
+        @board = Board.find_by_id(design.board_id)
+        
+        board_attributes = { :platform_id => @board_design_entry.platform_id,
+                             :project_id  => @board_design_entry.project_id,
+                             :description => @board_design_entry.description,
+                             :active      => 1 
+                           }
+        @board.update_attributes!(board_attributes)        
+        
+        flash['notice'] += "Board updated ... "
+      # Otherwise create it
+      else
+        @board = Board.new( :platform_id => @board_design_entry.platform_id,
+                            :project_id  => @board_design_entry.project_id,
+                            :description => @board_design_entry.description,
+                            :active      => 1 
+                         )         
+        if @board.save
+          flash['notice'] += "Board created ... "
+        else
+          flash['notice'] += "The board already exists - this should never occur. If you see this message please contact DTG immediately"
+          redirect_to(:action => 'processor_list')
+          return
+        end
+      end
+      
+
+      ### FIND/CREATE THE DESIGN AND DESIGN REVIEW ###
+      
+      review_types = []      
+      review_types << "Planning"
+
+      phase_id = ReviewType.find_by_name("Planning").id
+      
+      # Check if the design already exists... If it does then update it. 
+      # There really isnt anything from the board_design_entry/new_entry for to add to this update so this is kind of pointless
+      if @board_design_entry.design_id != 0
+        design = Design.find_by_id(@board_design_entry.design_id)
+        design_attributes = { #:part_number_id   => board_design_entry.part_number_id, # All these entries are already blank
+                              :revision_id      => @board_design_entry.revision_id,
+                              :numeric_revision => @board_design_entry.numeric_revision
+                              #:eco_number       => @board_design_entry.eco_number,       # This never gets populated in the BDE Table
+                              #:designer_id      => @logged_in_user.id,                   # This was left out... shoudl it be added
+                              #:pcb_input_id     => @logged_in_user.id,                   # This is already populated... Dont think it should be overwritten
+                              #:created_by       => @logged_in_user.id                    # This is already populated... Dont think it should be overwritten
+                            }
+                             
+        design.update_attributes!(design_attributes)     
+        flash['notice'] += "Design updated ... "
+     
+      # If it doesn't already exist then create it
+      else
+        design = Design.new( #:part_number_id   => board_design_entry.part_number_id, 
+                             :design_center_id => @logged_in_user.design_center_id,
+                             :phase_id         => phase_id,
+                             :priority_id      => 1,
+                             :board_id         => @board.id,
+                             :revision_id      => @board_design_entry.revision_id,
+                             :numeric_revision => @board_design_entry.numeric_revision,
+                             :eco_number       => @board_design_entry.eco_number,
+                             :designer_id      => @logged_in_user.id,
+                             :pcb_input_id     => @logged_in_user.id,
+                             :created_by       => @logged_in_user.id
+                           )      
+                    
+        if design.save
+          flash['notice'] += "Design created ... "
+          
+          users = []
+          users << User.find_by_id(@board_design_entry.user_id)
+          
+          # Create the "Planning Review"
+          design.setup_design_reviews(review_types, users)
+                                               
+          # Update the design_id in the board_design_entry table
+          @board_design_entry.design_id = design.id
+          @board_design_entry.save
+    
+          # Update the design_id for pcb and pcba in the part_nums table
+          pcb_num = PartNum.get_bde_pcb_part_number(@board_design_entry)
+          pcb_num.design_id = design.id
+          pcb_num.save
+          
+          PartNum.get_bde_pcba_part_numbers(@board_design_entry).each do |pcba|
+            pcba.design_id = design.id
+            pcba.save
+          end
+  
+        else
+          flash['notice'] += "The design already exists - this should never occur. If you see this message please contact DTG immediately"
+          redirect_to(:action => 'processor_list')
+          return
+        end
+      end
+
+      audit = Audit.new( :design_id    => design.id,
+                         :checklist_id => Checklist.latest_release.id,
+                         :skip         => 1
+                       )
+      if audit.save
+        audit.create_checklist
+      end
+      
+      ####### 1/2013 - END SECTION ADDED TO CREATE/UPDATE BDE, BOARD, DESIGN, AND PLANNING DESIGN REVIEW FOR NEW PLANNING STAGE  ###############      
+      
+      
+      # I dont really see the reason why you would want to use the bde id's to update a users id's ( JonK 1/2013 )
       #Update the user's division and/or location if it has changed.
       @logged_in_user.save_division(@board_design_entry.division_id)
       @logged_in_user.save_location(@board_design_entry.location_id)
@@ -1201,10 +1322,10 @@ class BoardDesignEntryController < ApplicationController
     board_design_entry = BoardDesignEntry.find(params[:id])
     flash['notice'] = ''
     
-    board = Board.new( :platform_id => board_design_entry.platform_id,
-                       :project_id  => board_design_entry.project_id,
-                       :description => board_design_entry.description,
-                       :active      => 1 )
+    board = Board.find_or_create_by( :platform_id => board_design_entry.platform_id,
+                                     :project_id  => board_design_entry.project_id,
+                                     :description => board_design_entry.description,
+                                     :active      => 1 )
     if board.save
       flash['notice'] = "Board created ... "
     else
