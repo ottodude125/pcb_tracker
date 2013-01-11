@@ -620,7 +620,7 @@ class BoardDesignEntryController < ApplicationController
     # Try to update the board design entry 
     if @board_design_entry.update_attributes(params[:board_design_entry])
 
-      flash['notice'] += "Entry #{@board_design_entry.pcb_number} has been updated   "
+      flash['notice'] += "Entry #{@board_design_entry.pcb_number} has been updated...   "
 
       
       ####### 1/2013 - BEGIN NEW SECTION ADDED TO CREATE/UPDATE BDE, BOARD, DESIGN, AND PLANNING DESIGN REVIEW FOR NEW PLANNING STAGE  ###############
@@ -674,7 +674,7 @@ class BoardDesignEntryController < ApplicationController
                               :revision_id      => @board_design_entry.revision_id,
                               :numeric_revision => @board_design_entry.numeric_revision
                               #:eco_number       => @board_design_entry.eco_number,       # This never gets populated in the BDE Table
-                              #:designer_id      => @logged_in_user.id,                   # This was left out... shoudl it be added
+                              #:designer_id      => @logged_in_user.id,                   # This was left out... should it be added
                               #:pcb_input_id     => @logged_in_user.id,                   # This is already populated... Dont think it should be overwritten
                               #:created_by       => @logged_in_user.id                    # This is already populated... Dont think it should be overwritten
                             }
@@ -1321,19 +1321,40 @@ class BoardDesignEntryController < ApplicationController
   
     board_design_entry = BoardDesignEntry.find(params[:id])
     flash['notice'] = ''
-    
-    board = Board.find_or_create_by( :platform_id => board_design_entry.platform_id,
-                                     :project_id  => board_design_entry.project_id,
-                                     :description => board_design_entry.description,
-                                     :active      => 1 )
-    if board.save
-      flash['notice'] = "Board created ... "
+
+    ### FIND/CREATE THE BOARD ###
+
+    # Try to located the board_id to see if it already exists
+    design = Design.find_by_id(board_design_entry.design_id)
+
+    # If it exists then update it
+    if design != nil && design.board_id != nil
+      board = Board.find_by_id(design.board_id)
+      
+      board_attributes = { :platform_id => board_design_entry.platform_id,
+                           :project_id  => board_design_entry.project_id,
+                           :description => board_design_entry.description,
+                           :active      => 1 
+                         }
+      board.update_attributes!(board_attributes)        
+      
+      flash['notice'] += "Board updated ... "
+    # Otherwise create it
     else
-      flash['notice'] = "The board already exists - this should never occur"
-      redirect_to(:action => 'processor_list')
-      return
+      board = Board.new( :platform_id => board_design_entry.platform_id,
+                         :project_id  => board_design_entry.project_id,
+                         :description => board_design_entry.description,
+                         :active      => 1 
+                       )         
+      if board.save
+        flash['notice'] += "Board created ... "
+      else
+        flash['notice'] += "The board already exists - this should never occur. If you see this message please contact DTG immediately"
+        redirect_to(:action => 'processor_list')
+        return
+      end
     end
-    
+
     # Update the board reviewers table for this board.
     ig_role = Role.find_by_name('PCB Input Gate')
     board_design_entry.board_design_entry_users.each do |reviewer_record|
@@ -1373,7 +1394,11 @@ class BoardDesignEntryController < ApplicationController
       type = 'Date Code'
     end
     
-    review_types = ReviewType.get_active_review_types
+    # Get all active reviews except planning
+    review_types = []
+    ReviewType.get_active_review_types.each do |rt|
+      review_types << rt if rt.name != "Planning"
+    end
     
     phase_id = Design::COMPLETE
     review_types.each do |review_type|
@@ -1383,21 +1408,68 @@ class BoardDesignEntryController < ApplicationController
       end
     end
     
-    design = Design.new(:board_id         => board.id,
-                        #:part_number_id   => board_design_entry.part_number_id,
-                        :phase_id         => phase_id,
-                        :design_center_id => @logged_in_user.design_center_id,
-                        :revision_id      => board_design_entry.revision_id,
-                        :numeric_revision => board_design_entry.numeric_revision,
-                        :eco_number       => board_design_entry.eco_number,
-                        :design_type      => type,
-                        :priority_id      => params[:priority][:id],
-                        :pcb_input_id     => @logged_in_user.id,
-                        :created_by       => @logged_in_user.id)
-                  
-    if design.save
-      flash['notice'] += "Design created ... "
+    created_or_updated_design = false
+    
+    # Check if the design already exists... If it does then update it. 
+    # There really isnt anything from the board_design_entry/new_entry for to add to this update so this is kind of pointless
+    if board_design_entry.design_id != 0
+      design = Design.find_by_id(board_design_entry.design_id)
+
+      design_attributes = { :board_id         => board.id,
+                            #:part_number_id   => board_design_entry.part_number_id,
+                            :phase_id         => phase_id,
+                            :design_center_id => @logged_in_user.design_center_id,
+                            :revision_id      => board_design_entry.revision_id,
+                            :numeric_revision => board_design_entry.numeric_revision,
+                            :eco_number       => board_design_entry.eco_number,
+                            :design_type      => type,
+                            :priority_id      => params[:priority][:id],
+                            :pcb_input_id     => @logged_in_user.id,
+                            :created_by       => @logged_in_user.id
+                          }                           
+
+      design.update_attributes!(design_attributes)     
+      flash['notice'] += "Design updated ... "
+      created_or_updated_design = true
       
+    # If it doesn't already exist then create it
+    else
+      design = Design.new(:board_id         => board.id,
+                          #:part_number_id   => board_design_entry.part_number_id,
+                          :phase_id         => phase_id,
+                          :design_center_id => @logged_in_user.design_center_id,
+                          :revision_id      => board_design_entry.revision_id,
+                          :numeric_revision => board_design_entry.numeric_revision,
+                          :eco_number       => board_design_entry.eco_number,
+                          :design_type      => type,
+                          :priority_id      => params[:priority][:id],
+                          :pcb_input_id     => @logged_in_user.id,
+                          :created_by       => @logged_in_user.id)
+                  
+      if design.save
+        flash['notice'] += "Design created ... "
+        created_or_updated_design = true
+      end
+    end
+    
+    if created_or_updated_design
+      
+      planning_review_id = ReviewType.find_by_name("Planning").id
+      completed_review_status_id = ReviewStatus.find_by_name("Review Completed").id
+      
+      logger.debug "asdpoifuaspdoifuaspodufsapoidufposaidufposiaufdposaiufdpsaoifduo"
+      logger.debug design.id
+      logger.debug planning_review_id
+      logger.debug DesignReview.find_by_design_id_and_review_type_id(design.id, planning_review_id).id
+      
+      planning_review = DesignReview.find_by_design_id_and_review_type_id(design.id, planning_review_id)
+      if planning_review != nil
+        planning_review.review_status_id = completed_review_status_id
+        planning_review.completed_on = Time.now
+        planning_review.save
+      end
+      
+      # Create the design reviews  
       design.setup_design_reviews(params[:review_type], 
                                   board_design_entry.board_design_entry_users)
                                   
@@ -1414,40 +1486,42 @@ class BoardDesignEntryController < ApplicationController
         if document_id > 0
         
           document_type = DocumentType.find_by_name(document_type_name)
-          DesignReviewDocument.new(
-                            :board_id         => board.id,
-                            :design_id        => design.id,
-                            :document_type_id => document_type.id,
-                            :document_id      => document_id).save
+          DesignReviewDocument.new( :board_id         => board.id,
+                                    :design_id        => design.id,
+                                    :document_type_id => document_type.id,
+                                    :document_id      => document_id).save
         end
       }
-                                                        
-      audit = Audit.new(:design_id    => design.id,
-                        :checklist_id => Checklist.latest_release.id,
-                        :skip         => params[:audit][:skip])
-      if audit.save
-        audit.create_checklist
-      end
+      
+      audit = Audit.find_or_create_by_design_id( design.id )
+      
+      audit_params = { :checklist_id => Checklist.latest_release.id,
+                       :skip         => params[:audit][:skip]
+                     }
+      audit.update_attributes!(audit_params)
+      audit.create_checklist                                                        
       
       board_design_entry.ready_to_post
       board_design_entry.design_id = design.id
       board_design_entry.save
 
       #add the design id to the part numbers for the board_design_entry
-      pcb_num=PartNum.get_bde_pcb_part_number(board_design_entry)
+      pcb_num = PartNum.get_bde_pcb_part_number(board_design_entry)
       pcb_num.design_id = design.id
       pcb_num.save
+      
       PartNum.get_bde_pcba_part_numbers(board_design_entry).each do |pcba|
         pcba.design_id = design.id
         pcba.save
       end
       
     else
-      flash['notice'] = "The design already exists - this should never occur"
+      flash['notice'] += "There was an error and the design was not created!!! Please contact DTG!!"
       redirect_to(:action => 'processor_list')
       return
     end
     
+    flash['notice'] += " The #{board_design_entry.part_number} Board Design has been successfully setup in the tracker"
     redirect_to(:action => 'processor_list')
   
   end
@@ -1458,7 +1532,7 @@ class BoardDesignEntryController < ApplicationController
   # design_setup
   #
   # Description:
-  # This action retrieves the data forthe design setup view.  
+  # This action retrieves the data for the design setup view.  
   # 
   # Parameters from params
   # id            - the board_design_entry id
@@ -1468,8 +1542,14 @@ class BoardDesignEntryController < ApplicationController
   def design_setup
   
     @board_design_entry = BoardDesignEntry.find(params[:id])
-    @review_types       = ReviewType.get_active_review_types
-    @priorities         = Priority.get_priorities
+    
+    # Get all active reviews except planning
+    @review_types = []
+    ReviewType.get_active_review_types.each do |rt|
+      @review_types << rt if rt.name != "Planning"
+    end
+
+    @priorities = Priority.get_priorities
   
   end
 

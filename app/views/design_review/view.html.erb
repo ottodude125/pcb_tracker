@@ -44,23 +44,24 @@
       <tr valign="top">
         <td width=530>
           <table cellpadding="0" cellspacing="0">
-
-            <% if @my_review_results && !comment_only %>
-              <%= render :partial => "reviewer_selections" %>
-            <% else %>
-              <% if  @design_review.posting_count == 0 &&
-                     @design_review.is_reviewer?(@user) %>
-                <tr>
-                  <td>
-                    <b>This design review has not been posted for review yet.</b>
-                  </td>
-                </tr>
-
-                <tr><td><hr class="div" /></td></tr>
-        
-              <% end %>
-            <% end %>
+            
+            <% if  @review_type.name != "Planning"%>
+                <% if @my_review_results && !comment_only %>
+                  <%= render :partial => "reviewer_selections" %>
+                <% else %>
+                  <% if  @design_review.posting_count == 0 &&
+                         @design_review.is_reviewer?(@user) %>
+                    <tr>
+                      <td>
+                        <b>This design review has not been posted for review yet.</b>
+                      </td>
+                    </tr>
     
+                    <tr><td><hr class="div" /></td></tr>
+            
+                  <% end %>
+                <% end %>
+            <% end %>
             <tr><td><label for="comment" >Comment:</label></td></tr>
             <tr>
               <td>
@@ -78,24 +79,28 @@
             <tr>
               <td valign="top">
                  <table>
-                 <%= render :partial => "buttons_roles_all" %>
-
-                 <% if @logged_in_user.is_reviewer? %>
-                      <%= render :partial => "buttons_role_reviewer" %>
-                 <% end %>
-
-                 <% if @logged_in_user.is_designer? %>
-                      <%= render :partial => "buttons_role_designer" %>
-                 <% end %>
+                     <%= render :partial => "buttons_roles_all" %>
+                     
+                     <% if  @review_type.name != "Planning"%>
+                         <% if @logged_in_user.is_reviewer? %>
+                              <%= render :partial => "buttons_role_reviewer" %>
+                         <% end %>
+        
+                         <% if @logged_in_user.is_designer? %>
+                              <%= render :partial => "buttons_role_designer" %>
+                         <% end %>
+                     <% end %>
                  </table>
               </td>
               <td valign="top">
                  <table>
-                 <% if (@logged_in_user.is_pcb_management? ||
-                        @logged_in_user.is_pcb_admin?      ||
-                        @logged_in_user.is_tracker_admin?) %>
-                     <%= render :partial => "buttons_roles_admin_management" %>
-                 <% end %>
+                     <% if  @review_type.name != "Planning" %>
+                         <% if (@logged_in_user.is_pcb_management? ||
+                                @logged_in_user.is_pcb_admin?      ||
+                                @logged_in_user.is_tracker_admin?) %>
+                             <%= render :partial => "buttons_roles_admin_management" %>
+                         <% end %>
+                     <% end %>
                   </table>
               </td>
            </tr>
@@ -114,35 +119,38 @@
       </tr>
         
     <% end %>
-    <tr>
-      <td colspan="2"><hr class="div" /></td>
-    </tr>
-    <tr>
-      <td colspan="2">
-        <table width="100%">
-          <% if @design_review.inactive_reviewers? %>
-            <tr>
-              <td>
-                <table bgcolor="yellow">
-                  <% @design_review.inactive_reviewers.each do |user| %>
-                    <tr>
-                      <td>
-                        WARNING: <%= user.name %> is no longer active in the tracker.
-                      </td>
-                    </tr>
-                  <% end unless @design_review.review_complete? %>
-                </table>
-              </td>
-            </tr>
-          <% end %>
-          <tr>
-            <td>
-              <%= render :partial => "reviewer_list_stripes" %>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
+    
+    <% if  @review_type.name != "Planning"%>
+        <tr>
+          <td colspan="2"><hr class="div" /></td>
+        </tr>
+        <tr>
+          <td colspan="2">
+            <table width="100%">
+              <% if @design_review.inactive_reviewers? %>
+                <tr>
+                  <td>
+                    <table bgcolor="yellow">
+                      <% @design_review.inactive_reviewers.each do |user| %>
+                        <tr>
+                          <td>
+                            WARNING: <%= user.name %> is no longer active in the tracker.
+                          </td>
+                        </tr>
+                      <% end unless @design_review.review_complete? %>
+                    </table>
+                  </td>
+                </tr>
+              <% end %>
+              <tr>
+                <td>
+                  <%= render :partial => "reviewer_list_stripes" %>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+    <% end %>
   </table>
 
   <br />
