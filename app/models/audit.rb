@@ -409,10 +409,14 @@ PEER_AUDIT       = 2
   ######################################################################
   #
   def peer_percent_complete
-    if self.auditor_completed_checks <= self.peer_check_count
-      self.auditor_completed_checks * 100.0 / self.peer_check_count
+    if !self.peer_check_count.blank?
+      if self.auditor_completed_checks <= self.peer_check_count
+        self.auditor_completed_checks * 100.0 / self.peer_check_count
+      else
+        100.0
+      end
     else
-      100.0
+      0
     end
   end
   
@@ -458,10 +462,14 @@ PEER_AUDIT       = 2
   ######################################################################
   #
   def self_percent_complete
-    if self.designer_completed_checks <= self.self_check_count
-      self.designer_completed_checks * 100.0 / self.self_check_count
+    if !self.self_check_count.blank?
+      if self.designer_completed_checks <= self.self_check_count
+        self.designer_completed_checks * 100.0 / self.self_check_count
+      else
+        100.0
+      end
     else
-      100.0
+      0
     end
   end
   
