@@ -85,6 +85,8 @@ class DesignReviewController < ApplicationController
         end
 
       end
+    @review_type = ReviewType.find_by_id(@design_review.review_type_id)
+    
     else
 
       flash['notice'] = "No ID was provided - unable to access the design review"

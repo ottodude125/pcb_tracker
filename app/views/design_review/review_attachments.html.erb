@@ -46,9 +46,15 @@
         </td>
         <td>PCB Input Form</td>
         <td><%= @design_review.design.board_design_entry.originator %></td>
-        <td>
-          <%= @design_review.design.board_design_entry.submitted_on.format_dd_mon_yy('timestamp') %>
-        </td>
+        <% if @design_review.design.board_design_entry.submitted_on %>
+          <td>
+            <%= @design_review.design.board_design_entry.submitted_on.format_dd_mon_yy('timestamp') %>
+          </td>
+        <% else %>
+          <td style="color: red; font-weight: bold" >
+            <%= "The #{@design_review.design.board_design_entry.part_number} Input Checklist has not been finalized yet!! " %>
+          </td>
+        <% end %>
       </tr>
     <% end %>
 

@@ -1128,6 +1128,8 @@ class Design < ActiveRecord::Base
   #
   def setup_design_reviews(review_types_list, 
                            board_team_list)
+    logger.debug "asdfposiaudfiaosudioasudpoifuasdpoifusapoidufpoasidufpoasiudiosuadpoifuaspodifusapoufd"
+    logger.debug review_types_list
                            
     if review_types_list.size == 1
       in_review      = ReviewStatus.find_by_name('In Review')
