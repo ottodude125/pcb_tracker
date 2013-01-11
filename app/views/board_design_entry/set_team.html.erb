@@ -18,7 +18,7 @@ jQuery(function($) { //SELECT List
         var text   = $(this).find('option:selected').text();
         $(cur_id).text(text);
         $(cur_id).css("color","");
-        $(cur_id).css("font-weight","");
+        $(cur_id).css("font-weight","bold");
 
         /* uncheck the "Not Required" box */
         var req_id = "#required_"+role_id;
@@ -33,27 +33,36 @@ jQuery(function($) { //NOT REQUIRED Check Box
         req     = 0;
         bde_id  = $(this).parents("table").attr('bde_id')
         url     = $(this).parents("table").attr('url');
-
+        var req_id = "#required_"+role_id;
+		
         /* alert("user_id=" + user_id + ", role_id=" + role_id + ", bde_id=" + bde_id +
               ", req =" + req + "url=" + url ) ;
         */
-        $.post(url, { user_id: user_id, role_id: role_id, bde_id: bde_id,
-                      req: req} ); //no return data
-
-        /* change the assigned user to "Not Required" in red */
-        var cur_id = "#current_"+role_id;
-        $(cur_id).text("Not Required");
-        $(cur_id).css("color","darkorange");
-        $(cur_id).css("font-weight","bold");
-
-        /* uncheck the "Not Required" box */
-        // var req_id = "#required_"+role_id;
-        // $(req_id).attr('checked',false);
-
-        /* reset the selection list to the first item */
-        var select_id = "#role_id_"+role_id;
-        $(select_id).val("");
-        
+        if ( $(this).attr("checked") ) {
+	        $.post(url, { user_id: user_id, role_id: role_id, bde_id: bde_id,
+	                      req: req} ); //no return data
+	
+	        /* change the assigned user to "Not Required" in orange */
+	        var cur_id = "#current_"+role_id;
+	        $(cur_id).text("Not Required");
+	        $(cur_id).css("color","darkorange");
+	        $(cur_id).css("font-weight","bold");
+	
+	        /* uncheck the "Not Required" box */
+	        // var req_id = "#required_"+role_id;
+	        // $(req_id).attr('checked',false);
+	
+	        /* reset the selection list to the first item */
+	        var select_id = "#role_id_"+role_id;
+	        $(select_id).val("");
+        }
+        else {
+        /* set current value to Not Set in bold red */
+	        var cur_id = "#current_"+role_id;
+	        $(cur_id).text("Not Set");
+	        $(cur_id).css("color","red");
+	        $(cur_id).css("font-weight","bold");
+	    }
       });
 });
 
@@ -102,7 +111,7 @@ jQuery(function($) { //NOT REQUIRED Check Box
            <option value="">Select a Name</option>
            <%= options_from_collection_for_select(member[:member_list],
                                                  "id",
-                                                 "last_name_first",
+                                                 "name",
                                                  member[:member_id]) %>
         </select>
       </td>
@@ -160,7 +169,7 @@ jQuery(function($) { //NOT REQUIRED Check Box
            <option value="">Select a Name</option>
            <%= options_from_collection_for_select(member[:member_list],
                                                  "id",
-                                                 "last_name_first",
+                                                 "name",
                                                  member[:member_id]) %>
         </select>
       </td>
