@@ -526,6 +526,19 @@ class BoardDesignEntry < ActiveRecord::Base
     self.product_type ? self.product_type.name : NOT_SET
   end
   
+  ######################################################################
+  #
+  # description_name
+  #
+  # Description:
+  # This method returns the project description.
+  #
+  ######################################################################
+  #
+  def description_name
+    !self.description.blank? ? self.description : NOT_SET
+  end
+  
   
   ######################################################################
   #
@@ -1063,6 +1076,33 @@ class BoardDesignEntry < ActiveRecord::Base
     self.all_roles_assigned?(Role.get_open_manager_reviewer_roles)
   end
   
+  ######################################################################
+  #
+  # design_data_filled_in?
+  #
+  # Description:
+  # This method determines if the required information on the board design
+  # entry form has been provided
+  #
+  # Paramters:
+  # None
+  #
+  # Return value:
+  # TRUE is all the fields are set
+  # otherwise FALSE
+  #
+  ######################################################################
+  #
+  def design_data_filled_in?
+    !self.description.blank? && 
+    !self.platform.blank? && 
+    !self.product_type.blank? && 
+    !self.project.blank? &&
+    !self.design_directory? &&
+    !self.incoming_directory? &&
+    !self.requested_start_date? &&
+    !self.requested_completion_date?
+  end
   
   ######################################################################
   #
@@ -1082,8 +1122,10 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #
   def ready_for_submission?
-    self.all_reviewers_assigned? && self.all_manager_reviewers_assigned?
+    self.all_reviewers_assigned? && 
+    self.all_manager_reviewers_assigned? &&
+    self.design_data_filled_in?
   end
 
-
+  
 end

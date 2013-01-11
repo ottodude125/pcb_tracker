@@ -35,6 +35,13 @@
 <%# ************************************************************************************************* %>
 <%# Design Details %>
 <%# ************************************************************************************************* %>
+  <% if !@board_design_entry.design_data_filled_in? %>
+    <tr bgcolor="red">
+      <td colspan="4">
+      	<b>Required Design Details need to be set</b>
+      </td>
+    </tr>
+  <% end %>
   <tr>
     <td colspan="4" width="100%">
       <table align="center" width="100%" cellpadding="0" cellspacing="0">
@@ -137,7 +144,7 @@
 
   <tr valign="top">
     <th align="right">Board Description: </th>
-    <td align="left"><%= @board_design_entry.description %></td>
+    <td align="left"><%= raw @board_design_entry.description_name %></td>
 
     <th align="right">Product Type: </th>
     <td align="left"><%= raw @board_design_entry.product_type_name %></td>
@@ -230,20 +237,12 @@
   <tr valign="top">
     <th align="right">Design Directory Location: </th>
     <td align="left">
-      <%= if @board_design_entry.design_directory_name.include?("<font color=")
-        raw(@board_design_entry.design_directory_name)
-      else
-        @board_design_entry.design_directory_name
-      end %>
+         <%= raw(@board_design_entry.design_directory_name) %>
     </td>
 
     <th align="right">Incoming Directory Location: </th>
-    <td align="left"
-      <%= if @board_design_entry.incoming_directory_name.include?("<font color=")
-        raw(@board_design_entry.incoming_directory_name)
-      else
-        @board_design_entry.incoming_directory_name
-      end %>
+    <td align="left">
+        <%= raw(@board_design_entry.incoming_directory_name) %>
     </td>
   </tr>
   
