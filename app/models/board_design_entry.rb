@@ -1098,10 +1098,10 @@ class BoardDesignEntry < ActiveRecord::Base
     !self.platform.blank? && 
     !self.product_type.blank? && 
     !self.project.blank? &&
-    !self.design_directory? &&
-    !self.incoming_directory? &&
-    !self.requested_start_date? &&
-    !self.requested_completion_date?
+    !self.design_directory.blank? &&
+    !self.incoming_directory.blank? &&
+    !self.requested_start_date.blank? &&
+    !self.requested_completion_date.blank?
   end
   
   ######################################################################
