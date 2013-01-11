@@ -676,33 +676,57 @@ z
     design_review   = DesignReview.find(params[:id])
     design_id        = design_review.design_id
 
-    #create part number objects from form data
-    pnums = params[:rows].values.collect { |row| PartNum.new(row) }
+    pnums = []
+    params[:rows].values.each do |row| 
+      if !row[:prefix].blank? || !row[:number].blank? || !row[:dash].blank?
+         pnums << PartNum.new(row)
+      end
+    end
 
+    flash['rows'] = pnums
+    
     #check for a valid PCB part number
     pcb  = pnums.detect { |pnum| pnum.use == 'pcb' }
     unless pcb.valid_pcb_part_number?
       flash['notice'] = "A valid PCB part number like '123-456-78' must be specified"
       redirect_to( :action => 'change_part_numbers',
         :id => design_review.id,
-        :pnums => pnums ) and return
+        :pnums => 1 ) and return
     end
 
-    #a valid PCB part number was specified
- 
-    #check for duplicates already assigned
+    #check all specified part numbers for validity
     fail = 0
     flash['notice'] = ''
     pnums.each do | pnum |
-      if pnum.part_num_exists? == 1 && PartNum.get_part_number(pnum).design_id != design_id
-        flash['notice'] += "Part number #{pnum.name_string} exists<br>\n"
-        fail = 1
+      unless pnum.valid_pcb_part_number?
+          flash['notice'] += "Part number #{pnum.name_string} invalid<br>\n"
+          fail = 1
       end
     end
+
     if fail == 1
       redirect_to( :action => 'change_part_numbers',
         :id => design_review.id,
-        :pnums => pnums  ) and return
+        :pnums => 1 ) and return
+    end
+    
+    #check for duplicates already assigned
+    fail = 0
+    flash['notice'] = ''
+    
+    design_pnum = PartNum.get_design_pcb_part_number(design_id) 
+    
+    pnums.each do | pnum |
+      db_pnum = pnum.get_part_number
+      if  ! db_pnum.blank?  && db_pnum.id != design_id 
+          flash['notice'] += "Part number #{pnum.name_string} exists<br>\n"
+          fail = 1
+      end
+    end
+    if fail == 1      
+      redirect_to( :action => 'change_part_numbers',
+        :id => design_review.id,
+        :pnums => 1  ) and return
     end
 
     # get current numbers to add to comment
@@ -710,15 +734,19 @@ z
     old_pcb_num = design.pcb_number
     old_pcba_nums = design.pcbas_string
 
+    # get the current board_design_entry_id
+    bde_id = design_pnum.board_design_entry_id
+    
     # delete the current part numbers for the design
     PartNum.delete_all(:design_id => design_id )
 
-    #save and relate the partnumbers to the design
+    #save and relate the part numbers to the design
     fail = 0
     flash['notice'] = ''
     pnums.each do |pnum|
       unless pnum[:prefix] == ""
         pnum.design_id = design_id
+        pnum.board_design_entry_id = bde_id
         if ! pnum.save
           flash['notify'] += "Couldn't create part number #{pnum.name_string}"
           fail = 1

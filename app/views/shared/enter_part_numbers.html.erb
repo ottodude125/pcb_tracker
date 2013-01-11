@@ -23,12 +23,12 @@
       }
     }
   }
+
 </SCRIPT>
 <% flash['errors'] %>
 <hr class="div" />
 
-<%= form_tag( @next_action, {:name => "part_number_entry",
-  :onsubmit => "return validatePCB(this)"}) do %>
+<%= form_tag( @next_action, {:name => "part_number_entry"}) do %>
 
   <% @tabindex = 0  %>
   <% row_num = 0 %>

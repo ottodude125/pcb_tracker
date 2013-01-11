@@ -90,23 +90,13 @@ jQuery(function($) {
   <tr>
     <td class="label">PCB Part Number: </td>
     <td class="data" colspan="2">
-      <%= @board_design_entry.pcb_number %>
+      <%= @board_design_entry.pcb_display %>
     </td>
-    <td class="label">Revision: </td>
+    <td class="label" >PCBA #(s): </td>
     <td class="data" colspan="3">
-      <%= @board_design_entry.pcb_rev %>
-    </td>
-  </tr>
-  
-<!-- ********************************************************** -->
-  <% if @board_design_entry.new? %>
-  <tr>
-    <td class="label" valign="top">PCBA Part Number(s): </td>
-    <td class="data" colspan="6">
       <%= @board_design_entry.pcbas_string %>
     </td>
   </tr>
-  <% end %>
   
 <!-- ********************************************************** -->
   <tr>

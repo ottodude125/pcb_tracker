@@ -83,6 +83,7 @@ PcbTracker::Application.routes.draw do
     collection do
       get  'originator_list'
       get  'processor_list'
+      get  'get_part_number'
     end
     member do
       post 'update_yes_no'

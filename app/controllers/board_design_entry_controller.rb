@@ -261,7 +261,7 @@ class BoardDesignEntryController < ApplicationController
 
     @board_design_entry   = BoardDesignEntry.find(params[:id])
     if ! params['pnums'].blank?
-      @rows = params['pnums']
+      @rows = flash['rows']
     else
       @rows = PartNum.find(:all,
       :conditions => { :board_design_entry_id => @board_design_entry.id},
@@ -298,6 +298,7 @@ class BoardDesignEntryController < ApplicationController
 
     #create part number objects from form data
     pnums = params[:rows].values.collect { |row| PartNum.new(row) }
+    flash['rows'] = pnums
 
     #check for a valid PCB part number
     pcb  = pnums.detect { |pnum| pnum.use == 'pcb' }
@@ -313,13 +314,17 @@ class BoardDesignEntryController < ApplicationController
     #check for duplicates already assigned
     fail = 0
     flash['notice'] = ''
+   
+    bde_pnum = PartNum.get_bde_pcb_part_number(board_design_entry_id)
+    
     pnums.each do | pnum |
-      if pnum.part_num_exists? == 1 &&
-          PartNum.get_part_number(pnum).board_design_entry_id != board_design_entry_id
-        flash['notice'] += "Part number #{pnum.name_string} exists<br>\n"
-        fail = 1
+      db_pnum = pnum.get_part_number
+      if  ! db_pnum.blank?  && ! db_pnum.board_design_entry_id == board_design_entry_id
+          flash['notice'] += "Part number #{pnum.name_string} exists #{db_pnum.board_design_entry_id}, #{board_design_entry_id}<br>\n"
+          fail = 1
       end
     end
+
     if fail == 1
       redirect_to( :action => 'change_part_numbers',
         :id => board_design_entry_id,
@@ -332,7 +337,7 @@ class BoardDesignEntryController < ApplicationController
     # delete the current part numbers for the design entry
     PartNum.delete_all(:board_design_entry_id => board_design_entry_id)
 
-    #save and relate the partnumbers to the design
+    #save and relate the part numbers to the design
     fail = 0
     flash['notice'] = ''
     pnums.each do |pnum|
@@ -442,50 +447,80 @@ class BoardDesignEntryController < ApplicationController
   #
   def create_board_design_entry
 
-    #check to ensure that a legal PCB part number was specified
-    pcb = nil
-    params[:rows].each_value do |row|
-      unless row[:prefix] == ""
-        pcb = PartNum.new(row) if row[:use] == "pcb"
+    #create part number objects from form data
+    pnums = []
+    params[:rows].values.each { |row| 
+      if !row[:prefix].blank? || !row[:number].blank? || !row[:dash].blank?
+         pnums << PartNum.new(row)
       end
-    end
+    }
+  
+    #check for a valid PCB part number
+    pcb  = pnums.detect { |pnum| pnum.use == 'pcb' }
     unless pcb && pcb.valid_pcb_part_number?
       flash['notice'] = "A valid PCB part number like '123-456-78' must be specified"
-      redirect_to :action => 'get_part_number', :rows => params[:rows]
-    else
+      redirect_to( :action => 'get_part_number', :rows => params[:rows] ) and return
+    end
+    
+    #check all specified part numbers for validity
+    fail = 0
+    flash['notice'] = ''
+    pnums.each do | pnum |
+      unless pnum.valid_pcb_part_number?
+          flash['notice'] += "Part number #{pnum.name_string} invalid<br>\n"
+          fail = 1
+      end
+    end
 
-      #PCB part number specified
-      @board_design_entry = BoardDesignEntry.add_entry(@logged_in_user)
+    if fail == 1
+      redirect_to( :action => 'get_part_number', :rows => params[:rows] ) and return
+    end
+    
+    
+    #check for duplicates already assigned
+    fail = 0
+    flash['notice'] = ''
+   
+    pnums.each do | pnum |
+      db_pnum = pnum.get_part_number
+      if  ! db_pnum.blank?
+          flash['notice'] += "Part number #{pnum.name_string} exists<br>\n"
+          fail = 1
+      end
+    end
 
-      if @board_design_entry
-        #save and relate the partnumbers to the board design entry
-        fail = 0
-        @errors = []
-        @rows   = []
-        params[:rows].each_value do |pnum|
-          unless pnum[:prefix] == ""
-            num = PartNum.new(pnum)
-            num.board_design_entry_id = @board_design_entry.id
-            @rows << num
-            if ! num.save
-              fail = 1
-              @errors << num.errors
-            end
-          end
+    if fail == 1
+      redirect_to( :action => 'get_part_number', :rows => params[:rows] ) and return
+    end
+
+    # PN ok - create entry
+    @board_design_entry = BoardDesignEntry.add_entry(@logged_in_user)
+
+    if @board_design_entry
+      #save and relate the part numbers to the board design entry
+      fail = 0
+      @errors = []
+      @rows   = []
+      pnums.each do |pnum|
+        pnum.board_design_entry_id = @board_design_entry.id
+        @rows << pnum
+        if ! pnum.save
+          fail = 1
+          @errors << pnum.errors
         end
-
-        flash['notice'] = "The design entry has been stored in the database"
-        
-        redirect_to(:action      => 'new_entry',
-          :id          => @board_design_entry.id,
-          :user_action => 'adding')
-      else
-        flash['notice'] = "Failed to create the board design entry"
-        render(:action => 'get_part_number')
-
       end
 
+      flash['notice'] = "The design entry has been stored in the database"
+      
+      redirect_to(:action      => 'new_entry',
+        :id          => @board_design_entry.id,
+        :user_action => 'adding')
+    else
+      flash['notice'] = "Failed to create the board design entry"
+      render(:action => 'get_part_number')
+
     end
+
   end
   
   ######################################################################
