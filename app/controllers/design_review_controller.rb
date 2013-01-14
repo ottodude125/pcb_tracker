@@ -720,7 +720,7 @@ z
     
     pnums.each do | pnum |
       db_pnum = pnum.get_part_number
-      if  ! db_pnum.blank?  && db_pnum.id != design_id 
+      if  ! db_pnum.blank?  && db_pnum.design_id != design_id 
           flash['notice'] += "Part number #{pnum.name_string} exists<br>\n"
           fail = 1
       end
