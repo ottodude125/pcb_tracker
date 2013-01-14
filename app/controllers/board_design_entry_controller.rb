@@ -136,8 +136,36 @@ class BoardDesignEntryController < ApplicationController
   ######################################################################
   #
   def delete_entry
+    flash['notice'] = ""
     board_design_entry = BoardDesignEntry.find(:first, :conditions => { :id => params[:id] })
     pcb_number = board_design_entry.pcb_number
+    
+    if board_design_entry.design_id != 0
+      design = Design.find_by_id(board_design_entry.design_id)
+      design.design_reviews.destroy_all
+      board = Board.find_by_id(design.board_id)
+      board.board_reviewers.destroy_all
+      #BoardsUsers.destroy_all(:board_id => board.id)
+      
+      if design.destroy
+        flash['notice'] += 'The design has been deleted...  '
+      else
+        flash['notice'] += 'The request to delete the design failed... '
+      end
+
+      if board.destroy
+        flash['notice'] += 'The board has been deleted...  '
+      else
+        flash['notice'] += 'The request to delete the board failed... '
+      end
+      
+      if Audit.destroy_all(:design_id => design.id)
+        flash['notice'] += 'The audit has been deleted...  '
+      else
+        flash['notice'] += 'The request to delete the audit failed... '
+      end
+    end
+
     if board_design_entry
       board_design_entry.board_design_entry_users.destroy_all
       board_design_entry.part_nums.destroy_all
@@ -148,18 +176,19 @@ class BoardDesignEntryController < ApplicationController
         if board_design_entry.pcb_attribute_form_document_id?
       Document.find(board_design_entry.teradyne_stackup_document_id).destroy \
         if board_design_entry.teradyne_stackup_document_id?
+          
 
       if board_design_entry.destroy
 
-        flash['notice'] = 'The entry for ' + pcb_number + ' has been deleted from the database'
+        flash['notice'] += 'The entry for ' + pcb_number + ' has been deleted from the database'
         BoardDesignEntryMailer::originator_board_design_entry_deletion(
           pcb_number,@logged_in_user).deliver
 
       else
-        flash['notice'] = 'The request to delete the entry failed - Contact DTG'
+        flash['notice'] += 'The request to delete the entry failed - Contact DTG'
       end
     else
-      flash['notice'] = 'The entry could not be found'
+      flash['notice'] += 'The entry could not be found'
     end
     redirect_to( url_for( :action => params[:return] ))
 
@@ -581,12 +610,13 @@ class BoardDesignEntryController < ApplicationController
     
     # Verify that the required information was submitted before proceeding.
     if !bde.division_id   || !bde.location_id           ||
-       !bde.revision_id   ||
+       !bde.revision_id   || params[:board_design_entry][:user_id] == "0"           ||
        !bde.platform_id   || !bde.product_type_id       ||
        !bde.project_id    ||  bde.description.size == 0
        
       notice = "The following information must be provided in order to proceed <br />"
       notice += "<ul>"
+      notice += "  <li>Originator</li>"                if params[:board_design_entry][:user_id] == "0"
       notice += "  <li>Board Description</li>"         if bde.description.size == 0
       notice += "  <li>Division</li>"                  if !bde.division_id
       notice += "  <li>Location</li>"                  if !bde.location_id
