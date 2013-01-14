@@ -481,10 +481,17 @@ jQuery(function($) {
   <tr>
     <td align="left">
       <% if @user_action == 'updating' %>
-        <input type="button" class="form_return" value="Return"
-               onClick="parent.location='<%= url_for( :action => 'view_entry', 
-                                                      :id     => @board_design_entry.id,
-                                                      :viewer => @viewer) %>'" />
+	      <% if @design_review_id %>
+	        <input type="button" value="Return"
+	               onClick="parent.location='<%= url_for( :controller => 'design_review', 
+	                                                      :action => 'review_attachments',
+	                                                      :id => @design_review_id ) %>'" />
+	      <% else %>        
+	      	<input type="button" class="form_return" value="Return"
+	               onClick="parent.location='<%= url_for( :action => 'view_entry', 
+	                                                      :id     => @board_design_entry.id,
+	                                                      :viewer => @viewer) %>'" />
+	      <% end %>
      <% end %>
     </td>
     
