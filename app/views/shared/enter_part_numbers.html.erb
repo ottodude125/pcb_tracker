@@ -28,7 +28,7 @@
 <% flash['errors'] %>
 <hr class="div" />
 
-<%= form_tag( @next_action, {:name => "part_number_entry"}) do %>
+<%= form_tag( @next_action,{ :planning_review => @planning, :name => "part_number_entry"}) do %>
 
   <% @tabindex = 0  %>
   <% row_num = 0 %>
@@ -80,7 +80,7 @@
                  onClick="parent.location='<%= url_for( @cancel_action ) %>'" />
       </td>
       <td align="right">
-          <input type="submit" class="form_submit" value="<%=@next_value%>" />
+          <input type="submit" class="form_submit" name="<%=@planning%>" value="<%=@next_value%>" />
       </td>
     </tr>
   </table>

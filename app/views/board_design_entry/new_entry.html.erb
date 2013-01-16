@@ -31,10 +31,12 @@ jQuery(function($) {
                   :viewer      => @viewer }
      user     = @board_design_entry.user %>
 
-<% elsif @user_action == 'adding' %>
 
+
+<% elsif @user_action == 'adding' %>
+  <% @bde_type = (@planning == "planning") ? "Planning" : "Board" %>
   <% @heading = "PCB Engineering - Design Details "  +
-  @board_design_entry.pcb_number + " - New Entry"
+  @board_design_entry.pcb_number + ' - New ' + @bde_type + " Entry "
   
      action   = { :action      => 'update_entry',
                   :id          => @board_design_entry.id,
@@ -54,15 +56,10 @@ jQuery(function($) {
   <tr>
   
     <td class="label">Originator: </td>
-    <td class="data"  colspan="2">
-        <select id="board_design_entry_user_id" name="board_design_entry[user_id]">
-            <option value="0"></option>
-                <%= options_from_collection_for_select(@hw_engineers, "id", "name", user.id) %>               
-        </select>
-    </td>
+    <td class="data"  width="150px"><%= user.name %></td>
     
     <td class="label">Division: </td>
-    <td class="data">
+    <td class="data"  style="color:red; font-weight:bold;">
       <select id="board_design_entry_division_id"
               name="board_design_entry[division_id]">
       <option value="0"></option>
@@ -70,26 +67,26 @@ jQuery(function($) {
                                              "id",
                                              "name",
                                              user.division_id) %>
-      </select>
+      </select> &nbsp; &nbsp; required
     </td>
 
     <td class="label">Location: </td>
-    <td class="data">
+    <td class="data"  style="color:red; font-weight:bold;">
       <select id="board_design_entry_location_id"
               name="board_design_entry[location_id]">
       <option value="0"></option>
       <%= options_from_collection_for_select(@location_list,
                                              "id",
                                              "name",
-                                             user.location_id) %>
-      </select>
+                                             user.location_id) %> 
+      </select> &nbsp; &nbsp; required
     </td>
   </tr>
 
 <!-- ********************************************************** -->
   <tr>
     <td class="label">PCB Part Number: </td>
-    <td class="data" colspan="2">
+    <td class="data" width="150px">
       <%= @board_design_entry.pcb_display %>
     </td>
     <td class="label" >PCBA #(s): </td>
@@ -101,44 +98,45 @@ jQuery(function($) {
 <!-- ********************************************************** -->
   <tr>
     <td class="label" valign="top">Platform: </td>
-    <td class="data" colspan="6">
+    <td class="data" colspan="6" style="color:red; font-weight:bold;">
       <%= select("board_design_entry", 
                  "platform_id", 
                  @platform_list.collect { |p| [ p.name, p.id ] }, 
                  { :include_blank => true },
-                 "class" => 'wide_select' ) %>
+                 "class" => 'wide_select' ) %> &nbsp; &nbsp; required
+           
     </td>
   </tr>
 
 <!-- ********************************************************** -->
   <tr>
     <td class="label" valign="top">Project: </td>
-    <td class="data" colspan="6">
+    <td class="data" colspan="6" style="color:red; font-weight:bold;">
       <%= select("board_design_entry", 
                  "project_id", 
                  @project_list.collect { |p| [ p.name, p.id ] }, 
                  { :include_blank => true },
-                 "class" => 'wide_select' ) %>
+                 "class" => 'wide_select' ) %> &nbsp; &nbsp; required
     </td>
   </tr>
 
 <!-- ********************************************************** -->
   <tr>
     <td class="label" valign="top">Board Description: </td>
-    <td class="data" colspan="6">
-      <%= text_field("board_design_entry", "description", "size" => 40, "maxlength" => 40) %>
+    <td class="data" colspan="6" style="color:red; font-weight:bold;">
+      <%= text_field("board_design_entry", "description", "size" => 40, "maxlength" => 40) %> &nbsp; &nbsp; required
     </td>
   </tr>
 
 <!-- ********************************************************** -->
   <tr>
     <td class="label" valign="top">Product Type: </td>
-    <td class="data" colspan="6">
+    <td class="data" colspan="6" style="color:red; font-weight:bold;">
       <%= select("board_design_entry", 
                  "product_type_id", 
                  @product_type_list.collect { |p| [ p.name, p.id ] }, 
                  { :include_blank => true },
-                 "class" => 'wide_select' ) %>
+                 "class" => 'wide_select' ) %> &nbsp; &nbsp; required
 
     </td>
   </tr>
@@ -488,14 +486,19 @@ jQuery(function($) {
      <% end %>
     </td>
     
-
-    <td align="right">
+    <% if @planning == "planning" %>
+      <td align="center">
+        <input type="submit" class="form_submit" name="<%=@planning%>" value="Create Planning (R&D) Board Entry" /> 
+      </td>
+    <% else %>
+    <td align="right">     
       <% if @user_action == 'updating'%>
-        <input type="submit" class="form_submit" value="Update Entry" />
+        <input type="submit" class="form_submit" name="<%=@planning%>" value="Update Entry" />
       <% elsif @user_action == 'adding' %>      
-        <input type="submit" class="form_submit" value="Continue to Next Step ==>" />
+        <input type="submit" class="form_submit" name="<%=@planning%>" value="Continue to Next Step ==>" />
       <% end %>
     </td>
+    <% end %>
   </tr>
 </table>
 

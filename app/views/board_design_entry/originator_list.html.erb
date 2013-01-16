@@ -15,6 +15,7 @@
     <tr>
       <th>PCB Part Number</th>
       <th>Revision</th>
+      <th>Planning</th>
       <th>Submitted</th>
       <th align="left">Submission Date</th>
       <td colspan="3">&nbsp;</td>
@@ -23,6 +24,7 @@
       <tr>
         <td align="center"><%= entry.pcb_number%></td>
         <td align="center"><%= entry.pcb_rev%></td>
+        <td align="center"><%= DesignReview.find_by_design_id(entry.design_id) ? "Yes" : "No" %></td>
         <td align="center"><%= entry.submitted? ? "Yes" : "No" %></td>
         <% if entry.submitted? %>
           <td><%= entry.submitted_on.format_month_dd_yyyy %></td>
@@ -83,13 +85,16 @@
 <table width="75%" align="center">
   <tr>
     <td align="left">
-      <input type="submit" value="Create a New Board Entry" />
-    </td>
-    <td align="right">
       <input type="button" 
              value="Home"
              onClick="parent.location='<%= url_for( :controller => 'tracker', 
                                                     :action     => 'index') %>'" />
+    </td>
+    <td align="center">
+      <input type="submit" name="bde" value="Create a New Board Entry" />
+    </td>
+    <td align="right">
+      <input type="submit" name="planning" value="Create a New Planning (R&D) Board Entry" />
     </td>
   </tr>
 </table>
