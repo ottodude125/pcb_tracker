@@ -620,6 +620,7 @@ class BoardDesignEntryController < ApplicationController
     @board_design_entry = BoardDesignEntry.find(params[:id])
     @user_action        = params[:user_action]
     @viewer             = params[:viewer]
+    @design_review_id   = params[:design_review_id]
     
     @design_dir_list   = DesignDirectory.get_active_design_directories
     @division_list     = Division.get_active_divisions
