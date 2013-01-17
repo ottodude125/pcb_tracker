@@ -115,4 +115,36 @@ class BoardDesignEntryMailer < ActionMailer::Base
   end
 
 
+  ######################################################################
+  #
+  # planning_board_design_entry_submission
+  #
+  # Description:
+  # This method generates mail to indicate that a planning board design  
+  # entry has been submitted to PCB Design.
+  #
+  # Parameters:
+  #   board_design_entry - the board design entry
+  #
+  ######################################################################
+  
+  def planning_board_design_entry_submission(board_design_entry)
+
+    to_list   = Role.add_role_members(['PCB Input Gate', 'Manager']).uniq
+    cc_list   = ([board_design_entry.user.email] - to_list).uniq
+    subject   = 'The ' +
+                board_design_entry.pcb_number +
+                ' design entry planning phase has been initialized.'
+                  
+
+    @board_design_entry = board_design_entry
+    @originator         = board_design_entry.user
+
+    mail( :to      => to_list,
+          :subject => subject,
+          :cc      => cc_list
+        )   
+  end
+
+
 end

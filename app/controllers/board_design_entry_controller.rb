@@ -885,6 +885,9 @@ class BoardDesignEntryController < ApplicationController
         end
         
         ####### 1/2013 - END SECTION ADDED TO CREATE/UPDATE BDE, BOARD, DESIGN, AND PLANNING DESIGN REVIEW FOR NEW PLANNING STAGE  ###############       
+      
+        BoardDesignEntryMailer::planning_board_design_entry_submission(@board_design_entry).deliver
+        flash['notice'] += "An email has been sent out. "
       end      
       
       # I dont really see the reason why you would want to use the bde id's to update a users id's ( JonK 1/2013 )
