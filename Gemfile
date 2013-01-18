@@ -25,7 +25,7 @@ group :assets do
 end
 
 # Exception notifier for production mode
-gem 'exception_notification'
+gem 'exception_notification', '2.6.1'
 
 # jQuery
 gem 'jquery-rails'
