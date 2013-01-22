@@ -1242,7 +1242,7 @@ def reviewer_results
   if roles.size == 0 && params["post_comment"]["comment"].strip == "" &&
     params["fab_house_ids"].blank?
     flash['notice'] = "No information was provided - no update was recorded"
-    redirect_to(:action => 'view', :id => params["design_review"]["id"])
+    redirect_to(:action => 'view', :id => params["design_review"]["id"]) and return
   end
 
   flash_msg         = ''
