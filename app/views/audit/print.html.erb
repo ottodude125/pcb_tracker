@@ -93,7 +93,6 @@
                     <% if check.check != '' %>
                       <%= check.check %>
                     <% end %>
-                    (<%= design_check.id %>)
                   </td>
                   <% if design_check.designer_result != 'None' %>
                     <td align="center" width="40%" bgcolor="<%= color %>">
@@ -121,7 +120,7 @@
                         <%= design_check.auditor_checked_on.format_day_mon_dd_yyyy_at_timestamp %>
                     </font></b></td>
                   <% else %>
-                    <td width="30%" bgcolor="<%= color %>">&nbsp;?</td>
+                    <td width="30%" bgcolor="<%= color %>">&nbsp;</td>
                   <% end %>
                 </tr>
               <% else %>
