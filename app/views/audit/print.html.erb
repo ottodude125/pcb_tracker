@@ -93,9 +93,10 @@
                     <% if check.check != '' %>
                       <%= check.check %>
                     <% end %>
+                    (<%= design_check.id %>)
                   </td>
                   <% if design_check.designer_result != 'None' %>
-                    <td align="center" width="40%">
+                    <td align="center" width="40%" bgcolor="<%= color %>">
                     <b><font size="-2">
                       <%= design_check.designer_result %>
                       by 
@@ -110,7 +111,7 @@
               <% if check.designer_auditor? %>
                 <tr>
                   <% if design_check.auditor_result != 'None' %>
-                    <td align="center" width="30%">
+                    <td align="center" bgcolor="<%= color %>">
                       <b><font size="-2">
                         <%= design_check.auditor_result %>
                         by
@@ -120,12 +121,12 @@
                         <%= design_check.auditor_checked_on.format_day_mon_dd_yyyy_at_timestamp %>
                     </font></b></td>
                   <% else %>
-                    <td width="30%" bgcolor="<%= color %>">&nbsp;</td>
+                    <td width="30%" bgcolor="<%= color %>">&nbsp;?</td>
                   <% end %>
                 </tr>
               <% else %>
                 <tr>
-                  <td width="30%" bgcolor="#000000">&nbsp;</td>
+                  <td width="30%" bgcolor="#888888">&nbsp;</td>
                 </tr>
               <% end %>
               <% if design_check.audit_comments.size > 0 %>
