@@ -86,22 +86,35 @@
   
     <div id="board_design_details-<%= design_review.id %>">
 
-    <table width="95%" align="right" border="0">
+    <table  border="0">
       <tr>
+      	<td width='3'>&nbsp;</td>
         <td width="50%" align="left">
           <% if !design.audit.skip? %>
             <table border="0">
               <tr>
-                <td width="70">
+                <td>
                   <%= link_to('Audit',
                               :controller => 'audit',
                               :action     => 'print',
                               :id         => design.audit.id)%>
+                 </td>
+                 <td width="10">&nbsp;</td>
+                 <td width="10">
+                  <% if design.audit.designer_complete == 0 %>
+                  	<%= link_to('Skip',
+                              :controller => 'audit',
+                              :action     => 'skip',
+                              :id         => design.audit.id)%>
+                 <% else %>
+                    &nbsp;
+                 <% end %>
                 </td>
+                <td width="30">&nbsp;</td>
                 <% stats = design.audit.completion_stats %>
-                <th width="50" align="right" class="th1">Self: </th>
+                <th width="40" align="right" class="th1">Self: </th>
                 <td width="100"> <%= sprintf("%3.f", stats[:self]) %>&#37;</td>
-                <th width="50" align="right" class="th1">Peer: </th>
+                <th width="30" align="right" class="th1">Peer: </th>
                 <td width="100"> <%= sprintf("%3.f", stats[:peer]) %>&#37;</td>
               </tr>
             </table>
