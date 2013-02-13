@@ -89,19 +89,18 @@
     <table  border="0">
       <tr>
       	<td width='3'>&nbsp;</td>
-        <td width="50%" align="left">
+        <td width="400" align="left">
           <% if !design.audit.skip? %>
-            <table border="0">
+            <table>
               <tr>
-                <td>
+                <td width="40">
                   <%= link_to('Audit',
                               :controller => 'audit',
                               :action     => 'print',
                               :id         => design.audit.id)%>
                  </td>
-                 <td width="10">&nbsp;</td>
-                 <td width="10">
-                  <% if design.audit.designer_complete == 0 %>
+                 <td width="50" align="right" >
+                  <% if design.audit.designer_completed_checks == 0 %>
                   	<%= link_to('Skip',
                               :controller => 'audit',
                               :action     => 'skip',
@@ -122,7 +121,13 @@
             No Audit
           <% end %>
         </td>
-        <td align="left" class="th1">FTP: </td><td><%= design.ftp_notification.created_at.format_dd_mon_yy('timestamp') if design.ftp_notification && design.ftp_notification.created_at%> </td>
+        <td align="left" class="th1">FTP: </td>
+        <td width="200"><%= if design.ftp_notification && design.ftp_notification.created_at
+        		   design.ftp_notification.created_at.format_dd_mon_yy('timestamp')
+        		else
+        		   raw("&nbsp;")
+        		end %>
+        </td>
         <td align="right">
           <div id="details"><button type ="button" class="small_font_button">Show Details</button>
 
