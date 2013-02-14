@@ -27,13 +27,13 @@
                    border="0"
                    cellspacing="0">
     	        <tr>
-                <th colspan="9"
+                <th colspan="10"
                     class="teraheader">
                   <font color="#ffffff">Active Reviews</font>
                 </th>
               </tr>
               <tr>
-                <th align="left" valign="bottom">
+                <th align="left" valign="bottom" colspan=2>
                   <%= link_to('PCB Part Number Rev',
                               {:action => 'manager_list_by_design',
                                :order  => @sort_order[:design]},
