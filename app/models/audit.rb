@@ -138,6 +138,45 @@ PEER_AUDIT       = 2
     
   end
   
+  # Force a skip of a setup audit
+  #
+  # :call-seq:
+  #   force_skip_audit() => status message
+  #
+  # Delete all the audit checks and set the audit to skipped
+  # If auditor_completed_checks == 0
+  
+  def force_skip_audit
+  
+    msg = "Can't force skip because audit has started" 
+    return msg if self.designer_completed_checks != 0
+    
+    msg = ""
+    ok = true
+    self.trim_checklist_for_design_type
+    
+    self.design_checks.each do | design_check |
+      unless design_check.delete
+        msg += "Can't delete check - id = #{design_check.id}"
+        ok = false
+      end
+    end
+    
+    if ok
+      self.auditor_completed_checks  = 0
+      self.auditor_complete          = false
+      self.designer_completed_checks = 0
+      self.designer_complete         = false
+      self.lock_version              = 0
+      self.skip                      = 1
+      if self.save
+        msg = "Audit skipped"
+      else
+        msg = "Failed to update audit status - id = #{self.id}"
+      end
+    end
+    return msg
+  end
   
   # Report the status of the audit.
   #

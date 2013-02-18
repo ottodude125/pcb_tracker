@@ -15,7 +15,8 @@
 class DesignController < ApplicationController
 
   before_filter(:verify_admin_role, 
-                :except => [:design_review_reviewers,
+                :except => [:change_cc_list,
+                            :design_review_reviewers,
                             :pcb_mechanical_comments, 
                             :process_reviewer_modifications,
                             :view])

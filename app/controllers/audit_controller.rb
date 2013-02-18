@@ -183,6 +183,31 @@ class AuditController < ApplicationController
     
   end
 
+  ######################################################################
+  #
+  # print
+  #
+  # Description:
+  # This method retrieves the check from the database for display.
+  #
+  # Parameters:
+  # params['id'] - The ID of the check used to identify the check to bo
+  #                be retrieved.
+  #
+  # Return value:
+  # None
+  #
+  # Additional information:
+  # Validates the user is an Admin before proceeding.
+  #
+  ######################################################################
+  #
+  def skip
+
+    audit = Audit.find(params[:id])
+    flash[:notice] = audit.force_skip_audit
+    redirect_to(:controller => 'tracker', :action => 'index')
+  end
 
   ######################################################################
   #

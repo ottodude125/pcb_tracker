@@ -95,7 +95,7 @@
                     <% end %>
                   </td>
                   <% if design_check.designer_result != 'None' %>
-                    <td align="center" width="40%">
+                    <td align="center" width="40%" bgcolor="<%= color %>">
                     <b><font size="-2">
                       <%= design_check.designer_result %>
                       by 
@@ -110,7 +110,7 @@
               <% if check.designer_auditor? %>
                 <tr>
                   <% if design_check.auditor_result != 'None' %>
-                    <td align="center" width="30%">
+                    <td align="center" bgcolor="<%= color %>">
                       <b><font size="-2">
                         <%= design_check.auditor_result %>
                         by
@@ -125,7 +125,7 @@
                 </tr>
               <% else %>
                 <tr>
-                  <td width="30%" bgcolor="#000000">&nbsp;</td>
+                  <td width="30%" bgcolor="#888888">&nbsp;</td>
                 </tr>
               <% end %>
               <% if design_check.audit_comments.size > 0 %>
