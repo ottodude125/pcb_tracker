@@ -1,5 +1,5 @@
 <br />
-<table border="0" width='1000' align="center">
+<table border="0" width='1000' align="center" id="user">
 
   <tr>
 
@@ -8,33 +8,34 @@
       <table width="100%">
 
         <tr>
-          <th>Excluded Groups</th>
+          <th>Excluded Users</th>
         </tr>
-        <% exclude_group_list = unassigned_groups %>
-        <% if exclude_group_list.size >= 0 %>
+        <% exclude_user_list = unassigned_users %>
+        <% if exclude_user_list.size >= 0 %>
           <tr>
             <td align="center">
               <font size="-2">
-                To add to the included list click on group name.
+                To add to the included list click on user name.
               </font>
             </td>
           </tr>
           <tr>
             <td align="center">
               <%= collection_select(:add,
-                                    :group,
-                                    exclude_group_list,
+                                    :user,
+                                    exclude_user_list,
                                     :id,
                                     :name,
                                     {:include_blank => false},
-                                    "class" => 'group_select',
+                                    "class" => 'user_select',
+                                    "name" => "#{@role.id}",
                                     "size" => 30,
                                     :style => "width:400px") %>
  
             </td>
           </tr>
         <% else %>
-          <tr align="center"><td>No groups remain to be added.</td></tr>
+          <tr align="center"><td>No users remain to be added.</td></tr>
         <% end %>
 
       </table>
@@ -45,33 +46,34 @@
       <table width="100%">
 
         <tr>
-          <th>Groups Assigned To This Role</th>
+          <th>Users Assigned To This Role</th>
         </tr>
 
-        <% include_group_list = assigned_groups %>
-        <% if include_group_list.size >= 0 %>
+        <% include_user_list = assigned_users %>
+        <% if include_user_list.size >= 0 %>
           <tr>
             <td align="center">
               <font size="-2">
-                To remove from the included list click on group name.
+                To remove from the included list click on user name.
               </font>
             </td>
           </tr>
           <tr>
             <td align="center">
               <%= collection_select(:remove,
-                                    :group,
-                                    include_group_list,
+                                    :user,
+                                    include_user_list,
                                     :id,
                                     :name,
                                     {:include_blank => false},
-                                    "class" => 'group_select',
+                                    "class" => 'user_select',
+                                    "name" => "#{@role.id}",
                                     "size"  => '30',
                                     :style => "width:400px") %>
             </td>
           </tr>
         <% else %>
-          <tr align="center"><td>No groups remain to be added.</td></tr>
+          <tr align="center"><td>No users remain to be added.</td></tr>
         <% end %>
 
       </table>

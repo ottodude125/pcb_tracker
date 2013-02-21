@@ -90,7 +90,12 @@ PcbTracker::Application.routes.draw do
       get  'delete_entry'
     end
   end
-
+  
+  resources :roles do
+    member do
+      post :change_users_list
+    end
+  end
  
   # In the event that only the root is provided in the URL,
   # display the tracker home page (index).
