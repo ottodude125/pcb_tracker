@@ -2,9 +2,12 @@
 
 The following part number descriptions were automatically udpated from Teamcenter data:
 
-<%= "Part Number \t Old Description \t New Description "%>
+<%= "################################################################################" %>
 
 <% @part_numbers.each do |pn| %>
-<%= "#{pn[:number]} \t #{pn[:old_descrip]} \t #{pn[:new_descrip]} "%>
+<%= "Part Number: #{pn[:number]}" %>
+<%= "Old Description: #{pn[:old_descrip]}" %>
+<%= "New Description: #{pn[:new_descrip]}" %>
+<%= "################################################################################\n" %>
 <% end %>
 

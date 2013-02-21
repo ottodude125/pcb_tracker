@@ -5,7 +5,7 @@ class PartNum < ActiveRecord::Base
 
   #validates_inclusion_of :use, :in => [:pcb, :pcba]
 
-  validates :description, :length => { :maximum => 60 }
+  validates :description, :length => { :maximum => 80 }
 
   ######################################################################
   #
