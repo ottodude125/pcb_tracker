@@ -1,0 +1,10 @@
+<%= "There currently are #{@active_designs} active designs with #{@total_part_nums} PCB/PCBA part numbers of which #{@num_updated_part_nums} PCB/PCBA part number descriptions were updated."%>
+
+The following part number descriptions were automatically udpated from Teamcenter data:
+
+<%= "Part Number \t Old Description \t New Description "%>
+
+<% @part_numbers.each do |pn| %>
+<%= "#{pn[:number]} \t #{pn[:old_descrip]} \t #{pn[:new_descrip]} "%>
+<% end %>
+

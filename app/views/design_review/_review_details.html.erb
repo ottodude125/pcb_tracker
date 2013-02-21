@@ -27,7 +27,7 @@
     <td colspan="3">
       <%= @design_review.design.board.platform.name %> /
       <%= @design_review.design.board.project.name %> /
-      <%= h @design_review.design.board.description %>
+      <%= h PartNum.find_by_design_id(@design_review.design.id).description %>
     </td>
   </tr>
   <tr>

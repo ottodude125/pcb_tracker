@@ -538,7 +538,33 @@ class BoardDesignEntry < ActiveRecord::Base
   def description_name
     !self.description.blank? ? self.description : NOT_SET
   end
-  
+
+  ######################################################################
+  #
+  # bde_description
+  #
+  # Description:
+  # This method returns the descrption in the bde table
+  #
+  ######################################################################
+  #  
+  def bde_description
+    read_attribute(:description)
+  end
+
+  ######################################################################
+  #
+  # description
+  #
+  # Description:
+  # This method returns the partnum description. It overides the description
+  # column in the BDE table and instead gets the description from PartNum
+  #
+  ######################################################################
+  #  
+  def description
+    PartNum.find_by_board_design_entry_id(self.id).description rescue ""  
+  end
   
   ######################################################################
   #

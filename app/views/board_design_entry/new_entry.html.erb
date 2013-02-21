@@ -84,16 +84,35 @@ jQuery(function($) {
   </tr>
 
 <!-- ********************************************************** -->
-  <tr>
-    <td class="label">PCB Part Number: </td>
-    <td class="data" width="150px">
-      <%= @board_design_entry.pcb_display %>
-    </td>
-    <td class="label" >PCBA #(s): </td>
-    <td class="data" colspan="3">
-      <%= @board_design_entry.pcbas_string %>
-    </td>
-  </tr>
+  <%- @part_nums.each do |pn| %>
+    <%- if pn.use == "pcb" %>
+      <tr>
+        <td class="label">PCB Part Number: </td>
+        <td class="data" width="150px" >
+          <%= pn.name_string + " " + pn.revision %>
+        </td>
+        <td class="data" colspan="6"  style="border-left:transparent;" >
+          <%= text_field("part_num[#{pn.id}]", "description", :value => pn.description, "size" => 60, "maxlength" => 60, :placeholder => "Teamcenter Description Not Found") %> 
+          <span style="font-weight:normal; font-size: 10px; ">(auto updated from teamcenter)</span>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>    
+    
+  <%- @part_nums.each do |pn| %>
+    <%- if pn.use == "pcba" %>
+      <tr>
+        <td class="label" >PCBA: </td>
+        <td class="data" width="150px">
+            <%= pn.name_string %>
+        </td>
+        <td class="data" colspan="6" style="border-left:transparent;" >
+          <%= text_field("part_num[#{pn.id}]", "description", :value => pn.description, "size" => 60, "maxlength" => 60, :placeholder => "Teamcenter Description Not Found") %> 
+          <span style="font-weight:normal; font-size: 10px; ">(auto updated from teamcenter)</span>
+        </td>
+      </tr>
+    <% end %>
+  <% end %>    
   
 <!-- ********************************************************** -->
   <tr>
@@ -117,14 +136,6 @@ jQuery(function($) {
                  @project_list.collect { |p| [ p.name, p.id ] }, 
                  { :include_blank => true },
                  "class" => 'wide_select' ) %> &nbsp; &nbsp; required
-    </td>
-  </tr>
-
-<!-- ********************************************************** -->
-  <tr>
-    <td class="label" valign="top">Board Description: </td>
-    <td class="data" colspan="6" style="color:red; font-weight:bold;">
-      <%= text_field("board_design_entry", "description", "size" => 40, "maxlength" => 40) %> &nbsp; &nbsp; required
     </td>
   </tr>
 
