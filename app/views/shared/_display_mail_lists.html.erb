@@ -10,11 +10,11 @@ $(document).ready(function() {
 
 
 function updateLists(elem) {
-    id  = $(elem).attr("value");  /* user id */
+    id  = $(elem).val();  /* user id */
     url = "<%= url %>" ;
     mode= $(elem).attr('jqtype');
 
-    //alert("value = " + id + " mode=" + mode + " url=" + url) ;
+    alert("value = " + id + " mode=" + mode + " url=" + url) ;
     if( id == <%=@logged_in_user.id-%> && mode == "remove_name" ) {
        show_me = true ;
     }
