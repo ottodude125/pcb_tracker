@@ -5,6 +5,8 @@ class PartNum < ActiveRecord::Base
 
   #validates_inclusion_of :use, :in => [:pcb, :pcba]
 
+  validates :description, :length => { :maximum => 80 }
+
   ######################################################################
   #
   # part_num_exists?

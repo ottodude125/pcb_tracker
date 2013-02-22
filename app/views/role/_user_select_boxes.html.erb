@@ -1,0 +1,86 @@
+<br />
+<table border="0" width='1000' align="center" id="user">
+
+  <tr>
+
+    <td valign="top" width="50%">
+
+      <table width="100%">
+
+        <tr>
+          <th>Excluded Users</th>
+        </tr>
+        <% exclude_user_list = unassigned_users %>
+        <% if exclude_user_list.size >= 0 %>
+          <tr>
+            <td align="center">
+              <font size="-2">
+                To add to the included list click on user name.
+              </font>
+            </td>
+          </tr>
+          <tr>
+            <td align="center">
+              <%= collection_select(:add,
+                                    :user,
+                                    exclude_user_list,
+                                    :id,
+                                    :name,
+                                    {:include_blank => false},
+                                    "class" => 'user_select',
+                                    "name" => "#{@role.id}",
+                                    "size" => 30,
+                                    :style => "width:400px") %>
+ 
+            </td>
+          </tr>
+        <% else %>
+          <tr align="center"><td>No users remain to be added.</td></tr>
+        <% end %>
+
+      </table>
+    </td>
+
+    <td valign="top" width="50%">
+
+      <table width="100%">
+
+        <tr>
+          <th>Users Assigned To This Role</th>
+        </tr>
+
+        <% include_user_list = assigned_users %>
+        <% if include_user_list.size >= 0 %>
+          <tr>
+            <td align="center">
+              <font size="-2">
+                To remove from the included list click on user name.
+              </font>
+            </td>
+          </tr>
+          <tr>
+            <td align="center">
+              <%= collection_select(:remove,
+                                    :user,
+                                    include_user_list,
+                                    :id,
+                                    :name,
+                                    {:include_blank => false},
+                                    "class" => 'user_select',
+                                    "name" => "#{@role.id}",
+                                    "size"  => '30',
+                                    :style => "width:400px") %>
+            </td>
+          </tr>
+        <% else %>
+          <tr align="center"><td>No users remain to be added.</td></tr>
+        <% end %>
+
+      </table>
+    </td>
+  </tr>
+
+</table>
+
+
+

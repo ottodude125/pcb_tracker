@@ -40,4 +40,35 @@ $(document).ready(function(){
     $('textarea').autosize({className:'mirroredText'});
 });
 
+$(document).ready(function() {
+	  $('.user_select').change( function() {
+	      userid  = this.value;
+	      url = $('#user').attr('action');
+	      role = this.name;
+	      //alert(url + " - " + userid + " - " + this.name)
+	      $.post( url, { user_id: userid, mode: this.id, id: role},
+	         function(data) {
+	           var $response = $(data);
+	           //update the two select lists data
+	           var content = $response.find('#remove_user').html();
+	           $('#remove_user').empty().append(content);
+	           var content = $response.find('#add_user').html();
+	           $('#add_user').empty().append(content);
+	         }
+	     );
+	  });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 

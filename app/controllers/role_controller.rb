@@ -61,7 +61,8 @@ class RoleController < ApplicationController
   def add
   
     @role = Role.new(:active => 1)
-  
+    @users = User.all
+    
     render(:action => 'edit')
     
   end
@@ -113,6 +114,7 @@ class RoleController < ApplicationController
   #
   def edit 
     @role = Role.find(params[:id])
+    @users = User.all
   end
 
 
@@ -240,5 +242,23 @@ class RoleController < ApplicationController
     render(:partial => 'toggle_reviewer_selection')
   end
 
+  # POST
+  # Method takes permission selected from list of permissions on the edit page and adds or deletes it 
+  # from the permissions_roles join table based on what list user selected the permission from
+  def change_users_list
+    @role = Role.find(params[:id])
+    user = User.find(params[:user_id])
+    mode = params[:mode]
+    
+    if mode == "add_user"
+      @role.users << user if user
+    else
+      @role.users.delete(user) if user
+    end
+    
+    @role.reload
+    render :partial => 'user_select_boxes'
+  end
+  
 
 end

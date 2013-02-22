@@ -329,7 +329,6 @@ class BoardDesignEntryController < ApplicationController
   ######################################################################
   #
   def update_part_numbers
-
     board_design_entry_id = params[:id]
     board_design_entry  = BoardDesignEntry.find(params[:id])
 
@@ -422,10 +421,7 @@ class BoardDesignEntryController < ApplicationController
   #
   ######################################################################
   #
-  def new_entry
-  
-    logger.debug "aspdoifuasdpoifuaspodifuaspoidufpaosidufpaosidufpasoidufpasioudfpoaisudioasudpofiuasdpoifuaspoiduf"
-    
+  def new_entry    
     @planning = "bde"
     
     if params[:bde]
@@ -446,6 +442,7 @@ class BoardDesignEntryController < ApplicationController
     @project_list       = Project.get_active_projects
     @revision_list      = Revision.get_revisions
     @hw_engineers       = User.get_hw_engineers(User.find(:all, :order => "last_name ASC"))
+    @part_nums          = PartNum.find_all_by_board_design_entry_id(@board_design_entry.id)
 
   end
   
@@ -562,6 +559,15 @@ class BoardDesignEntryController < ApplicationController
       end
     end
 
+    # PN ok - check if description already exists in the oracle_part_num table and if it does then update the part_num table
+    pnums.each do |p|
+      num_string = p.name_string
+      if OraclePartNum.find_by_number(num_string)
+        p.description = OraclePartNum.find_by_number(num_string).description
+        p.save
+      end
+    end
+    
     # PN ok - create entry
     @board_design_entry = BoardDesignEntry.add_entry(@logged_in_user)
 
@@ -632,6 +638,7 @@ class BoardDesignEntryController < ApplicationController
     @project_list      = Project.get_active_projects
     @revision_list     = Revision.get_revisions
     @hw_engineers      = User.get_hw_engineers(User.find(:all, :order => "last_name ASC"))
+    @part_nums          = PartNum.find_all_by_board_design_entry_id(@board_design_entry.id)
     
     render(:action => 'new_entry')
   
@@ -673,11 +680,11 @@ class BoardDesignEntryController < ApplicationController
     if !bde.division_id   || !bde.location_id           ||
        !bde.revision_id   || 
        !bde.platform_id   || !bde.product_type_id       ||
-       !bde.project_id    ||  bde.description.size == 0
+       !bde.project_id    #||  bde.description.size == 0
        
       notice = "The following information must be provided in order to proceed <br />"
       notice += "<ul>"
-      notice += "  <li>Board Description</li>"         if bde.description.size == 0
+      #notice += "  <li>Board Description</li>"         if bde.description.size == 0
       notice += "  <li>Division</li>"                  if !bde.division_id
       notice += "  <li>Location</li>"                  if !bde.location_id
       notice += "  <li>Platform</li>"                  if !bde.platform_id
@@ -697,6 +704,7 @@ class BoardDesignEntryController < ApplicationController
       @project_list      = Project.get_active_projects
       @revision_list     = Revision.get_revisions
       @hw_engineers      = User.get_hw_engineers(User.find(:all, :order => "last_name ASC"))
+      @part_nums          = PartNum.find_all_by_board_design_entry_id(@board_design_entry.id)
 
       @board_design_entry = bde
       @new_entry   = 'true'
@@ -764,12 +772,23 @@ class BoardDesignEntryController < ApplicationController
       params[:board_design_entry][:eco_number]       = ''
       
     end
-
+    
+    # Grab the current description or set it to ""
+    # This is implemented because descriptions are phased out and are not placed with the part number
+    # but I dont want to delete all the old data 2/19/13
+    params[:board_design_entry][:description] = @board_design_entry.description? ? @board_design_entry.description : ""
+    
     # Try to update the board design entry 
     if @board_design_entry.update_attributes(params[:board_design_entry])
 
       flash['notice'] += "Entry #{@board_design_entry.pcb_number} has been updated...   "
       
+      # Update the descriptions on the Part Numbers
+      params[:part_num].each do |pn|
+        pnum = PartNum.find_by_id(pn[0])
+        pn_atts = { :description => pn[1][:description]}
+        pnum.update_attributes(pn_atts)
+      end      
       
       ####### 1/2013 - BEGIN NEW SECTION ADDED TO CREATE/UPDATE BDE, BOARD, DESIGN, AND PLANNING DESIGN REVIEW FOR NEW PLANNING STAGE  ###############
       if @planning == "planning"      
@@ -884,8 +903,8 @@ class BoardDesignEntryController < ApplicationController
           audit.create_checklist
         end
         
-        ####### 1/2013 - END SECTION ADDED TO CREATE/UPDATE BDE, BOARD, DESIGN, AND PLANNING DESIGN REVIEW FOR NEW PLANNING STAGE  ###############       
-      
+        ####### 1/2013 - END SECTION ADDED TO CREATE/UPDATE BDE, BOARD, DESIGN, AND PLANNING DESIGN REVIEW FOR NEW PLANNING STAGE  ###############               
+        
         BoardDesignEntryMailer::planning_board_design_entry_submission(@board_design_entry).deliver
         flash['notice'] += "An email has been sent out. "
       end      
