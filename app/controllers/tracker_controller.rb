@@ -72,7 +72,7 @@ class TrackerController < ApplicationController
         render( :action => 'reviewer_home' )
       when "Manager", "Admin"
         manager_home_setup
-        render( :action => 'manager_home' )
+        render 'manager_home'
       when "PCB Admin"
         pcb_admin_home_setup
         render( :action => 'pcb_admin_home' )

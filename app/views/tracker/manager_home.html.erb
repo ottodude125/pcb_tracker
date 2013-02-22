@@ -81,32 +81,15 @@
               <%= render( :partial    =>"manager_home_list_stripes",
                           :collection => @active_reviews) %>
 
-            </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-
-  <tr>
-    <td>&nbsp;</td>
-    <td>
-      <table width="100%"
-             border="0">
-        <tr>
-          <td>
-            <table width="100%" 
-                   align="left" 
-                   border="0"
-                   cellspacing="0">
+  
     	        <tr>
-                <th colspan="9"
+                <th colspan="10"
                     class="teraheader">
                   <font color="#ffffff">Active Boards (Reviews Not Started)</font>
                 </th>
               </tr>
               <tr class="th1">
-                <th align="left" valign="bottom">PCB Part Number Rev</th>
+                <th align="left" valign="bottom" colspan=2>PCB Part Number Rev</th>
                 <th align="left" valign="bottom" width="85">Criticality</th>
                 <th align="left" valign="bottom">Posted By</th>
                 <th align="left" valign="bottom">Peer</th>
@@ -114,7 +97,7 @@
                 <th align="left" valign="bottom">Status</th>
               </tr>
               
-              <%= render( :partial    => "manager_home_list_inactive_stripes",
+              <%= render( :partial    => "manager_home_list_stripes",
                           :collection => @inactive_reviews) %>
 
             </table>
