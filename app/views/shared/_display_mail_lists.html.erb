@@ -14,7 +14,7 @@ function updateLists(elem) {
     url = "<%= url %>" ;
     mode= $(elem).attr('jqtype');
 
-    alert("value = " + id + " mode=" + mode + " url=" + url) ;
+    //alert("value = " + id + " mode=" + mode + " url=" + url) ;
     if( id == <%=@logged_in_user.id-%> && mode == "remove_name" ) {
        show_me = true ;
     }
