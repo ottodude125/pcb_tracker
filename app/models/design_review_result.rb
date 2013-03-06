@@ -98,19 +98,19 @@ class DesignReviewResult < ActiveRecord::Base
   # Set the reviewer for the design review result
   #
   # :call-seq:
-  #   set_reviewer(user) -> status
+  #   set_reviewer(user) -> nil
   #
   #  The reviewer_id field is updated with the id of the user if the user
-  #  is a member of the review group.
-  #  
-  #  return is result of self.save or false if user is not in the role
-
+  #  is a memeber of the review group.
+  #
+  # Exception
+  #   ArgumentError - indicates that the user is not a member of the group (role).
   def set_reviewer(user)
     if user.roles.detect { |role| role.id == self.role_id}
       self.reviewer_id = user.id
       self.save
     else
-      false
+      raise ArgumentError.new("#{user.name} is not a member of the #{role.display_name} group.")
     end
   end
   

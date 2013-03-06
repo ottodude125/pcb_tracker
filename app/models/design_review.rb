@@ -966,18 +966,20 @@ class DesignReview < ActiveRecord::Base
   # Set the reviewer for the design review/role
   #
   # :call-seq:
-  #   set_reviewer(role, user) -> status of set_reviewer or nil
+  #   set_reviewer(role, user) -> nil
   #
   #  Locates the review result for the role and updates the reviewer.  If no
   #  review result is found for the role, no action is taken.
   #
+  # Exception
+  #   ArgumentError - indicates that the user is not a member of the group (role).
   def set_reviewer(role, user)
     review_result = self.design_review_results.detect { |drr| drr.role_id == role.id }
     if review_result  && !review_result.complete?
       review_result.set_reviewer(user)
-    else
-      true
     end
+  rescue
+    raise
   end
   
   
