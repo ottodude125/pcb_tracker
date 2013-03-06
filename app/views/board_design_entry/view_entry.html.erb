@@ -80,6 +80,7 @@
     <th align="right" width="25%">PCB Part Number: </th>
     <td width="25%" align="left">
       <%=  @board_design_entry.pcb_number %>
+      <%=  @board_design_entry.description %>
       &nbsp;
       <%= if ( @board_design_entry.modifiable? &&
                   ( !@board_design_entry.submitted? && !(processor || peer) ) ||
@@ -100,7 +101,7 @@
   <tr valign="top">
     <th align="right" width="25%">PCBA Part Number(s): </th>
     <td width="25%" align="left" colspan="3">
-      <%= @board_design_entry.pcbas_string %>
+      <%= @board_design_entry.pcbas_string.html_safe %>
     </td>
   </tr>
   

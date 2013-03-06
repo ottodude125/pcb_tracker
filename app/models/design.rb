@@ -1947,6 +1947,23 @@ class Design < ActiveRecord::Base
     end
   end
 
+   ######################################################################
+  #
+  # pcb_number_with_description
+  #
+  # Description:
+  # This method returns the pcb number with its description.
+  #
+  ######################################################################
+  #
+  def pcb_number_with_description
+    pnum = PartNum.get_design_pcb_part_number(self.id)
+    if pnum
+      pnum.name_string_with_description
+    else
+      ""
+    end
+  end
 
   ######################################################################
   #
@@ -1962,10 +1979,10 @@ class Design < ActiveRecord::Base
     pcbas = ""
     PartNum.get_design_pcba_part_numbers(self.id).each { |pcba|
       if first == 1
-        pcbas = pcba.name_string
+        pcbas = pcba.name_string_with_description
         first = 0
       else
-        pcbas = pcbas + ", " + pcba.name_string
+        pcbas << "<br>" + pcba.name_string_with_description
       end
     }
     pcbas

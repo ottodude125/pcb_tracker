@@ -256,6 +256,28 @@ def get_part_number
 
   ######################################################################
   #
+  # part_number_name_with_description
+  #
+  # Description:
+  # Return the name for a part number with description
+  #
+  # Parameters:
+  # None
+  #
+  # Return values:
+  # The assembled name for the part number
+  #
+  ######################################################################
+  def name_string_with_description
+    "#{self.prefix}-#{self.number}-#{self.dash} #{self.description}"
+  end
+  
+  def part_number_name_with_description
+    "#{self.prefix}-#{self.number}-#{self.dash} #{self.description}"
+  end
+
+  ######################################################################
+  #
   # part_number_revision
   #
   # Description:

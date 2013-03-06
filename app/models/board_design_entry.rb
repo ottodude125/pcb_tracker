@@ -648,10 +648,12 @@ class BoardDesignEntry < ActiveRecord::Base
     pcbas = ""
     PartNum.get_bde_pcba_part_numbers(self.id).each { |pcba|
       if first == 1
-        pcbas = pcba.name_string
+        pcbas = pcba.name_string + " "
+        pcbas << pcba.description rescue ""
         first = 0
       else
-        pcbas = pcbas + ", " + pcba.name_string
+        pcbas << "<br>" + pcba.name_string + " "
+        pcbas << pcba.description rescue ""
       end
     }
     pcbas
