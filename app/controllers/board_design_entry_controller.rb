@@ -379,6 +379,7 @@ class BoardDesignEntryController < ApplicationController
     pnums.each do |pnum|
       unless pnum[:prefix] == ""
         pnum.board_design_entry_id = board_design_entry_id
+        pnum.design_id = board_design_entry.design_id
         if ! pnum.save
           flash['notice'] += "Couldn't create part number #{pnum.name_string}"
           fail = 1
