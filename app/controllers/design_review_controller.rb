@@ -2230,7 +2230,12 @@ def post_pcb_design_results(design_review, review_results)
     design.save
       
     if !audit_skipped
-      design.set_reviewer(Role.find_by_name("Valor"), peer)
+      if peer.is_a_role_member?("Valor")
+        # set Valor reviewer as peer
+        design.set_role_reviewer(Role::find_by_name("Valor"), peer, @logged_in_user)
+      else
+        results[:alternate_msg] += "Peer, #{peer.name}, does not have Valor reviewer role and was not assigned. "  
+      end
     else
       results[:alternate_msg] += 'No Valor reviewer set (Audit Skipped) - '
     end
@@ -2245,7 +2250,7 @@ def post_pcb_design_results(design_review, review_results)
     end
 
     results[:alternate_msg] += "Criticality is #{priority.name}, " if priority_update
-    results[:alternate_msg] += "the Designer is #{designer.name}"
+    results[:alternate_msg] += "The Designer is #{designer.name}"
     if !audit_skipped
       results[:alternate_msg] += " and the Peer is #{peer.name}"
     end
