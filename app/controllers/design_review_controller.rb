@@ -2230,7 +2230,9 @@ def post_pcb_design_results(design_review, review_results)
     design.save
       
     if !audit_skipped
-      design.set_reviewer(Role.find_by_name("Valor"), peer)
+      unless design.set_reviewer(Role.find_by_name("Valor"), peer)
+        results[:alternate_msg] += "Peer, #{peer.name}, does not have Valor reviewer role. Not assigned"   
+      end
     else
       results[:alternate_msg] += 'No Valor reviewer set (Audit Skipped) - '
     end

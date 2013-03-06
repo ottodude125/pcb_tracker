@@ -1456,17 +1456,14 @@ class Design < ActiveRecord::Base
   # role.
   #
   # :call-seq:
-  #   set_reviewer(role, user) -> nil
+  #   set_reviewer(role, user) -> status
   #
   #  For each of the design reviews associated with the design, set the reviewer
   #  for the specified role.
   #
-  # Exception
-  #   ArgumentError - indicates that the user is not a member of the group (role).
+  # returns status of set_reviewer: true if OK, false otherwise
   def set_reviewer(role, user)
     self.design_reviews.each { |dr| dr.set_reviewer(role, user) }
-  rescue
-    raise
   end
   
   
