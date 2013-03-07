@@ -32,10 +32,10 @@
 
   <table align="center" border="0">
     <tr>
-      <th align="left" width="170">PCB Part Number: </th>
-      <td width="200"><%= @audit.design.pcb_number %></td>
+      <th align="left" width="170">PCB Part Number/Description: </th>
+      <td width="200"><%= @audit.design.pcb_number_with_description %></td>
 	  <%# if @audit.design.part_number.new? %>
-        <th align="left" width="170">PCBA Part Numbers: </th>
+        <th align="left" width="170">PCBA Part Number(s)/Description(s): </th>
         <td width="200"><%= @audit.design.pcbas_string %></td>
       <%# end %>
     </tr>

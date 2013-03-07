@@ -1947,6 +1947,16 @@ class Design < ActiveRecord::Base
     end
   end
 
+
+  def pcb_display_with_description
+    part_num = PartNum.get_design_pcb_part_number(self.id)
+    if part_num
+      part_num.name_string + ' ' + part_num.rev_string + ' ' + part_num.description
+    else
+      "(no part number)"
+    end
+  end
+
    ######################################################################
   #
   # pcb_number_with_description

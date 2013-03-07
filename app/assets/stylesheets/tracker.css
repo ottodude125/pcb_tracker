@@ -28,6 +28,8 @@ h2 {
 .th1 {
   font: 11px Verdana, Geneva, Arial, Helvetica, sans-serif;
   font-weight: bold;
+  width: 100px;
+  padding-right: 15px;
 }
 
 pre {

@@ -77,7 +77,7 @@
   </tr>
 
   <tr valign="top">
-    <th align="right" width="25%">PCB Part Number: </th>
+    <th align="right" width="25%">PCB Part Number/Description: </th>
     <td width="25%" align="left">
       <%=  @board_design_entry.pcb_number %>
       <%=  @board_design_entry.description %>
@@ -99,7 +99,7 @@
   </tr>
   
   <tr valign="top">
-    <th align="right" width="25%">PCBA Part Number(s): </th>
+    <th align="right" width="25%">PCBA Part Number(s)/Description(s): </th>
     <td width="25%" align="left" colspan="3">
       <%= @board_design_entry.pcbas_string.html_safe %>
     </td>
@@ -145,9 +145,6 @@
   </tr>
 
   <tr valign="top">
-    <th align="right">Board PCB Description: </th>
-    <td align="left"><%= raw @board_design_entry.description_name %></td>
-
     <th align="right">Product Type: </th>
     <td align="left"><%= raw @board_design_entry.product_type_name %></td>
   </tr>

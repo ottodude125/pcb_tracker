@@ -6,11 +6,11 @@
 
 <table border="0" width="100%">
   <tr>
-    <td class="th1">PCB Part Number:</td>
+    <td class="th1">PCB Part Number/Description:</td>
     <td> 
         <%= @design_review.design.pcb_number_with_description %>
     </td>
-    <td class="th1">PCBA Part Number(s):</td>
+    <td class="th1">PCBA Part Number(s)/Description(s):</td>
     <td><%= @design_review.design.pcbas_string.html_safe %></td>
   </tr>
   <tr>
@@ -25,11 +25,10 @@
      </td>
    </tr>
   <tr>
-    <td class="th1">Description:</td>
+    <td class="th1">Platform/Project:</td>
     <td colspan="3">
       <%= @design_review.design.board.platform.name %> /
-      <%= @design_review.design.board.project.name %> /
-      <%= h PartNum.find_by_design_id(@design_review.design.id).description %>
+      <%= @design_review.design.board.project.name %> 
     </td>
   </tr>
   <tr>

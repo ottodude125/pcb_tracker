@@ -10,10 +10,10 @@
 jQuery(function($) {
   $(":checkbox").change( function () {
     field = this.name;
-    value = $(this).attr("checked")?1:0;  /* user id */
+    value = $(this).is(':checked') ? 1 : 0;  /* user id */
     url   = $(this).parents("table").attr('url');
 
-    //alert("entered value = " + value + " field = " + field + " url=" + url) ;
+    alert("entered value = " + value + " field = " + field + " url=" + url) ;
     $.post(url, { field: field, value: value} ); //no return data
   });
 });
@@ -474,7 +474,7 @@ jQuery(function($) {
       <table class="design_constraints" align="center" cellspacing="0" url="<%= url_for(:action =>"update_yes_no")%>">
           <tr>            
             <td>
-              <%= check_box_tag("matched_propagation_delay",1,@board_design_entry.matched_propagation_delay? ) %>
+              <%= check_box_tag("matched_propagation_delay",1, @board_design_entry.matched_propagation_delay? ) %>
             </td>
           </tr>      
       </table>

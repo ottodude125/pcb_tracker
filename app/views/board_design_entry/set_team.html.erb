@@ -38,7 +38,7 @@ jQuery(function($) { //NOT REQUIRED Check Box
         /* alert("user_id=" + user_id + ", role_id=" + role_id + ", bde_id=" + bde_id +
               ", req =" + req + "url=" + url ) ;
         */
-        if ( $(this).attr("checked") ) {
+        if ( $(this).is(':checked') ) {
 	        $.post(url, { user_id: user_id, role_id: role_id, bde_id: bde_id,
 	                      req: req} ); //no return data
 	
