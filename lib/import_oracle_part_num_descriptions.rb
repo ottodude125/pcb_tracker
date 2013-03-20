@@ -3,23 +3,28 @@
 # This file load the part numbers and descriptions from the 
 # nightly team center oracle dump and loads it into a
 # table in the pcb tracker database
+# Run file by: /hwnet/dtg_devel/web/beta-katon/applications/pcb_tracker/lib/import_oracle_part_num_descriptions.rb
 
+# Detect hostname so we know if we are on mimir1 or mimir3 for cronjob
+require 'socket'
+hostname = Socket.gethostname
 
 # load the oracle description file into a database table
 file = '/hwnet/dtg_devel/cis_mrp/descript_oracle.txt'
-host   = "mimir2"
-port   = 3308
-db     = "pcbtr3_development"
+host   = hostname
+port   = 3307
+db     = "pcbtr3_production"
 table  = "oracle_part_nums"
 user   = "pcbtr"
 passwd = "PcBtR"
 
-# number = first ten characters
-# description = rest of line
+
+
 
 require 'mysql'
 
-
+# partnum = first ten characters
+# description = rest of line
 begin
   con = Mysql.new host, user, passwd, db, port
   con.query("DROP TABLE IF EXISTS #{table}")
