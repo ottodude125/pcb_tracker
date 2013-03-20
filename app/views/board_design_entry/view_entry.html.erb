@@ -80,7 +80,11 @@
     <th align="right" width="25%">PCB Part Number/Description: </th>
     <td width="25%" align="left">
       <%=  @board_design_entry.pcb_number %>
-      <%=  @board_design_entry.description %>
+      <% if @board_design_entry.description.empty? -%>
+        <span style='color: red; font-weight: bold;'>Description Not Set</span>
+      <% else %>
+        <%= @board_design_entry.description %>
+      <% end %>
       &nbsp;
       <%= if ( @board_design_entry.modifiable? &&
                   ( !@board_design_entry.submitted? && !(processor || peer) ) ||
