@@ -133,7 +133,11 @@
                 ShowTime();
             </script>         
         </td>
-        <td colspan="3"><%=request.env['SERVER_NAME'].sub(/\..*/, "")%></td>
+        <td colspan="3"><%=request.env['SERVER_NAME'].sub(/\..*/, "")%>
+        <%= if Rails.env.development? 
+           raw("<br/>") + Socket.gethostname
+         end %>
+        </td>
     </tr>
     <% if !@logged_in_user %>
     <tr>
