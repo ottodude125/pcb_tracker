@@ -1,0 +1,89 @@
+<HEAD>
+ <STYLE type="text/css">
+   h1 {font: bold 16px Helvetica; 
+       color: red; 
+       }
+   #base {border-width: 1px;
+          border-spacing: 0;
+          border-style: outset;
+          border-collapse: collapse;
+          background-color: white;
+          border-color: #666;
+          margin: 30px auto 0px auto;
+          text-align: center;   
+         }
+   th.firstcolumn{min-width: 250px;}
+   th{border-width: thin;
+      padding: 2px;
+      border-style: groove;
+      border-color: gray;
+      background-color: white;
+      font: bold 16px Helvetica;
+      background-color: #AAAAAA;
+     }
+   td{border-width: thin;
+      padding: 7px 10px;
+      border-style: groove;
+      border-color: gray;
+      background-color: white;
+     }
+   tr.oddrow td{background-color: #BBD9EE;
+               }    
+   tr.evenrow td{background-color: #F1EFE2;
+                }
+ </STYLE>
+</HEAD>
+
+<BODY>
+    <br>
+    <h1> PCB Designer: Please ensure that descriptions are updated on affected drawings.</h1>
+    
+    <br>
+    
+    <%= "There currently are #{@active_designs} active designs with #{@total_part_nums} PCB/PCBA part numbers of which #{@num_updated_part_nums} PCB/PCBA part number descriptions were updated."%>
+    
+    <br>
+    
+    <p>The following part number descriptions were automatically udpated from Teamcenter data:</p>
+    
+    <br>
+    <% rownum = 0 %>
+    <% currentrow = "oddrow" %>
+    <table id="base">
+        <tr>
+            <th class="firstcolumn">
+                Part Number
+            </th>
+            <th>
+                Designer
+            </th>
+            <th>
+                Old Description
+            </th>
+            <th>
+                New Description
+            </th>
+        </tr>
+        
+        <% @part_numbers.each do |pn| %>
+            <% rownum += 1 %>
+            <%  currentrow = rownum.modulo(2).nonzero? ? "oddrow" : "evenrow" %>
+            <tr class="<%= currentrow %>">
+                <td>
+                    <%= link_to "#{pn[:number]}".html_safe, "http://boarddev.teradyne.com/pcbtr/design_review/view/#{pn[:design_review_id]}" %>
+                </td>
+                <td>
+                    <%= "#{pn[:designer].name}".html_safe%>
+                </td>
+                <td>
+                    <%= "#{pn[:old_descrip]}".html_safe %>
+                </td>
+                <td>
+                    <%=  "#{pn[:new_descrip]}".html_safe %>
+                </td>
+            </tr>
+        <% end %>
+    </table>
+</BODY>
+
+

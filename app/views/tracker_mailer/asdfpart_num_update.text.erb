@@ -1,0 +1,49 @@
+<%= "There currently are #{@active_designs} active designs with #{@total_part_nums} PCB/PCBA part numbers of which #{@num_updated_part_nums} PCB/PCBA part number descriptions were updated."%>
+
+PCB Designer: Please ensure that descriptions are updated on affected drawings.
+
+The following part number descriptions were automatically udpated from Teamcenter data:
+
+<%= "################################################################################" %>
+
+<% @part_numbers.each do |pn| %>
+<%= "Part Number: #{pn[:number]}".html_safe %>
+<%= "Old Description: #{pn[:old_descrip]}".html_safe %>
+<%=  "New Description: #{pn[:new_descrip]}".html_safe %>
+<%= "################################################################################\n" %>
+<% end %>
+
+   #base
+    {
+      border-width: 1px;
+      border-spacing: 0;
+      border-style: outset;
+      border-collapse: separate;
+      background-color: white;
+      border-color: #666;
+      margin: 30px auto 0px auto;
+      -webkit-box-shadow: 0px 0px 10px rgba(0,0,100,1);
+         -moz-box-shadow: 0px 0px 10px rgba(0,0,100,1);
+              box-shadow: 0px 2px 10px rgba(0,0,100,1);     
+    }
+    
+   th
+    {
+      border-width: thin;
+      padding: 2px;
+      border-style: groove;
+      border-color: gray;
+      background-color: white;
+      font: bold 16px Helvetica;
+      background-color: #808080;
+    }
+
+    
+   td
+    {
+      border-width: thin;
+      padding: 3px 10px;
+      border-style: groove;
+      border-color: gray;
+      background-color: white;
+    }
