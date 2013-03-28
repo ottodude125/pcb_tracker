@@ -1,12 +1,16 @@
 class DbCheck < ActiveRecord::Base
 
   def self.master?
-    r = ActiveRecord::Base.connection.exec_query("show slave status")
+    sql = "select `variable_value` from " +
+          "`information_schema`.`global_variables` " +
+          "where `variable_name` = 'read_only';"
+    r = ActiveRecord::Base.connection.exec_query( sql )
     if r.first
-      r.first['Slave_IO_Running'] != "Yes"
+      r.first['variable_value'] == "OFF"
     else
       true #no slave status
-    end   end
+    end   
+  end
   
   def self.exist?
     ! User.find_by_sql("SHOW TABLES").blank?

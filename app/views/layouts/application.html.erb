@@ -89,7 +89,7 @@
     </tr>
     <tr>
       <% if ! DbCheck.master? %>
-        <td>No Login - Running as replicated slave on <%=Pcbtr.hostname%></td>
+        <td>No Login - <%=Pcbtr.hostname%> is not the master</td>
       <% elsif ! DbCheck.exist?  %>
         <td>No Login - Running without a database on <%=Pcbtr.hostname%></td>      
       <% elsif !@logged_in_user %>
@@ -133,7 +133,11 @@
                 ShowTime();
             </script>         
         </td>
-        <td colspan="3"><%=request.env['SERVER_NAME'].sub(/\..*/, "")%></td>
+        <td colspan="3"><%=request.env['SERVER_NAME'].sub(/\..*/, "")%>
+        <%= if Rails.env.development? 
+           raw("<br/>") + Socket.gethostname
+         end %>
+        </td>
     </tr>
     <% if !@logged_in_user %>
     <tr>
