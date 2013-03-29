@@ -1,0 +1,141 @@
+<HEAD>
+ <STYLE type="text/css">
+   h1 {font: bold 16px Helvetica; 
+       color: red; 
+       }
+   h2 {font: bold 14px Helvetica;
+       color: red;
+       }
+   h3{ font: bold 14px Helvetica;
+       margin: 0px 0px 5px 0px;
+     }
+   table{border-width: 1px;
+          border-spacing: 0;
+          border-style: outset;
+          border-collapse: collapse;
+          background-color: white;
+          border-color: #666;
+          margin: 0px auto 15px auto;
+          text-align: center;   
+         }
+   th{border-width: thin;
+      padding: 2px;
+      border-style: groove;
+      border-color: gray;
+      background-color: white;
+      font: bold 14px Helvetica;
+      background-color: #00628B;
+     }
+   td{border-width: thin;
+      padding: 7px 10px;
+      border-style: groove;
+      border-color: gray;
+      background-color: white;
+      font: 12px Helvetica;
+     }
+   table#results tr th{
+       background-color: #00628B;
+       color: #FFFFFF; 
+       }
+   table#results tr.oddrow td{
+       background-color: #81A594;
+       }    
+   table#results tr.evenrow td{
+       background-color: #E6E6DC;
+       }
+   table#comments tr th{       
+       background-color: #00628B;
+       color: #FFFFFF; 
+       }
+   table#comments tr.evenrow td{
+       background-color: #81A594;
+       }    
+   table#comments tr.oddrow td{
+       background-color: #E6E6DC;
+       }
+ </STYLE>
+</HEAD>
+
+<BODY>
+    <br>
+    <h1> Replies to this e-mail will not be recorded in the tracker.</h1>
+    <br>
+    <h2>
+        <%= "Open the review to record a comment: <br> #{Pcbtr::PCBTR_BASE_URL}design_review/view/#{@design_review_id}".html_safe %>
+    </h2>
+    <br>
+
+    <% rownum = 0 %>
+    <% currentrow = "oddrow" %>
+    
+    <% if @result_update != {} -%>
+        <h3>
+            Results:
+        </h3>
+        <table id="results">
+            <tr>
+                <th>
+                    User
+                </th>
+                <th>
+                    Role
+                </th>
+                <th>
+                    Result
+                </th>
+            </tr>        
+            <% @result_update.each do |role, result| -%> 
+                <% rownum += 1 %>
+                <%  currentrow = rownum.modulo(2).nonzero? ? "oddrow" : "evenrow" %>
+                <tr class="<%= currentrow %>">
+                    <td>
+                        <%= @user.name %>
+                    </td>
+                    <td>
+                        <%= role %>
+                    </td>
+                    <td>
+                        <%= result %>
+                    </td>
+                </tr>
+            <% end %>     
+        </table>
+    <% end %>
+    
+    <% if @comments -%>
+        <h3>
+            Comments:
+        </h3>
+        <table id="comments">
+            <tr>
+                <th>
+                    Entered By:
+                </th>
+                <th>
+                    Comment
+                </th>
+                <th>
+                    Date
+                </th>
+            </tr>
+            
+            <% @comments.each do |comment| %>
+                <% rownum += 1 %>
+                <%  currentrow = rownum.modulo(2).nonzero? ? "oddrow" : "evenrow" %>
+                <tr class="<%= currentrow %>">
+                    <td>
+                        <%= comment.user.name %>
+                    </td>
+                    <td>
+                        <%= raw comment.comment %>
+                    </td>
+                    <td>
+                        <%= comment.created_on.format_dd_mm_yy_at_timestamp %>
+                    </td>
+                </tr>
+            <% end %>
+        </table>
+    <% end %>
+    <br>
+    <br>
+</BODY>

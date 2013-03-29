@@ -123,7 +123,7 @@ class DesignReviewMailer < ActionMailer::Base
 
     mail( :to      => to_list,
           :subject => subject,
-          :cc      => cc_list
+          :cc      => cc_list 
         )
   end
 
