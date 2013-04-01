@@ -66,7 +66,7 @@
                       <table width="95%" align="right" border="0">
                         <% if dsn[:reviews].size > 0 %>
                           <tr>
-                            <td bgcolor="#ffffff">&nbsp;</td>
+                            <td>&nbsp;</td>
                             <td><font size="-2"><b>Posted</b></font></td>
                             <td><font size="-2"><b>Status</b></font></td>
                             <td><font size="-2"><b>Reviewers</b></font></td>
@@ -198,11 +198,11 @@
                             <% else %>
                               
                                 <tr>
-                                <td bgcolor="#ffffff" width="100">&nbsp;</td>
-                                <td align="center">
+                                <td width="100">&nbsp;</td>
+                                <td align="center" width="100">
                                   <font size="-2"><b>% Complete</b></font>
                                 </td>
-                                <td>
+                                <td align="center">
                                   <font size="-2"><b>Peer</b></font>
                                 </td>
                                 <td align="center">
@@ -230,7 +230,7 @@
                                     <%= sprintf("%4.1f", design.audit.self_percent_complete) %>
                                   </b>
                                 </td>
-                                <td>
+                                <td align="center">
                                   <b><%= design.peer.name %></b>
                                 </td>
                                 <td align="center">
