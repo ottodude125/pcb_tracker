@@ -1998,6 +1998,28 @@ class Design < ActiveRecord::Base
     pcbas
   end
 
+  ######################################################################
+  #
+  # pcba part numbers
+  #
+  # Description:
+  # These methods returns the pcba part number.
+  #
+  ######################################################################
+  #
+  def pcbas_string_wo_description
+    first = 1
+    pcbas = ""
+    PartNum.get_design_pcba_part_numbers(self.id).each { |pcba|
+      if first == 1
+        pcbas = pcba.name_string
+        first = 0
+      else
+        pcbas << "<br>" + pcba.name_string
+      end
+    }
+    pcbas
+  end
  ######################################################################
   #
   # subject_prefix

@@ -1,0 +1,131 @@
+<HEAD>
+    <style>
+        h1{
+            font: bold 14px Helvetica;
+        }
+        a{
+            color: #00008B;
+            background-color: transparent;
+        }       
+       #base{
+            border-width: 1px;
+            border-spacing: 0;
+            border-style: outset;
+            border-collapse: collapse;
+            background-color: white;
+            border-color: #666;
+            margin: 30px auto 0px auto;
+            text-align: center;   
+       }
+       table#base th{
+            border-width: thin;
+            padding: 7px 30px;
+            border-style: groove;
+            border-color: gray;
+            background-color: white;
+            font: bold 14px Helvetica;
+            background-color: #AAAAAA;
+       }
+       table#base td{
+            font: bold 12px Helvetica;
+            border-width: thin;
+            padding: 7px 10px;
+            border-style: groove;
+            border-color: gray;
+       }
+       table#base tr th{
+            background-color: #734854;
+            color: #F2F2E9; 
+       }
+       table#base tr.oddrow td{
+            background-color: #A69580;
+       }    
+       table#base tr.evenrow td{
+            background-color: #F2F2E9;
+       }
+       table#base tr.breakrow td{
+            background-color: #333333;
+            font: 7px;
+            padding: 0;
+       }
+       
+    </style>
+</HEAD>
+<BODY>
+    <br>
+    <h1> 
+        <%= "#{@user.name}, you need to resolve the following reviews." %>
+    </h1>
+    
+    <table id="base">
+        <tr>
+            <th>
+                PCB Number
+            </th>
+            <th>
+                PCBA Number(s)
+            </th>
+            <th>
+                Review
+            </th>
+            <th>
+                Age
+            </th>
+            <th>
+                Criticality
+            </th>
+            <th>
+                Role
+            </th>
+            <th>
+                Comments
+            </th>
+        </tr>        
+        <% rownum = 0 %>
+        <% currentrow = "oddrow" %>
+        <% @result.each do |entry| dr = entry.design_review -%>            
+            <% rownum += 1 %>
+            <%  currentrow = rownum.modulo(2).nonzero? ? "oddrow" : "evenrow" %>
+            <tr class="<%= currentrow %>">
+                <td>
+                    <%= link_to "#{dr.design.pcb_display}".html_safe, "http://boarddev.teradyne.com/pcbtr/design_review/view/#{dr.id}" %>
+                </td>
+                <td>
+                    <%= "#{dr.design.pcbas_string_wo_description}".html_safe %>
+                </td>
+                <td>
+                    <%= dr.review_type.name %>
+                </td>
+                <td>
+                    <%= dr.age/1.day %>
+                </td>
+                <td>
+                    <%= dr.priority.name %>
+                </td>
+                <td>
+                    <%= entry.role.display_name %>
+                </td>
+                <td>
+                    <%= dr.comments(@user).size.to_s %>
+                </td>
+            </tr>
+        <% end %>
+    </table>
+
+    <p>
+        Please review these boards as soon as possible using the PCB Tracker.
+        The design information is located at <%= Pcbtr::PCBTR_BASE_URL %>tracker
+    </p>
+
+</BODY>
+
+
+
+
+
+
+
+
+
+
+    

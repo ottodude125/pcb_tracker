@@ -47,10 +47,10 @@
        background-color: #00628B;
        color: #FFFFFF; 
        }
-   table#comments tr.evenrow td{
+   table#comments tr.oddrow td{
        background-color: #81A594;
        }    
-   table#comments tr.oddrow td{
+   table#comments tr.evenrow td{
        background-color: #E6E6DC;
        }
  </STYLE>
@@ -101,6 +101,9 @@
             <% end %>     
         </table>
     <% end %>
+
+    <% rownum = 0 %>
+    <% currentrow = "oddrow" %>
     
     <% if @comments -%>
         <h3>
