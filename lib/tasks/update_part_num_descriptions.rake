@@ -23,19 +23,19 @@ namespace :update_part_num do
       # Grab all the part nums to each design and update their descriptions and create comment on current design review
       part_nums.each do |pn|
         @numparts += 1
-        number = pn.prefix + "-" + pn.number + "-" + pn.dash
+        number = pn.prefix + "-" + pn.number + "-" + pn.dash + " " + pn.use
         oracle_descrip = OraclePartNum.find_by_number(number)
         
         # if there is an oracle entry for this partnum and the current description does not match oracle description 
-        if oracle_descrip && (pn.description != oracle_descrip.description)
+        if oracle_descrip && (pn.description.strip != oracle_descrip.description.strip)
           @numpartsup += 1
           part_info = {}
           part_info[:old_descrip] = pn.description
           part_info[:number] = number
-          part_info[:new_descrip] = oracle_descrip.description
+          part_info[:new_descrip] = oracle_descrip.description.strip
           part_info[:designer] = design.designer
           part_info[:design_review_id] = design.get_phase_design_review.id
-          #pn.description = oracle_descrip.description
+          #pn.description = oracle_descrip.description.strip
           #pn.save
           @updated_part_nums << part_info
           
