@@ -36,19 +36,19 @@ namespace :update_part_num do
           part_info[:new_descrip] = oracle_descrip.description.strip
           part_info[:designer] = design.designer
           part_info[:design_review_id] = design.get_phase_design_review.id
-          #pn.description = oracle_descrip.description.strip
-          #pn.save
+          pn.description = oracle_descrip.description.strip
+          pn.save
           @updated_part_nums << part_info
           
           # Create review comment
-          #design_review = design.get_phase_design_review
-          #user_id = User.find_by_login("Anonymous").id
-          #comment =  "Using teamcenter data the description for " + part_info[:number] + " was auto updated from " + part_info[:old_descrip] + " to " + part_info[:new_descrip]
-          #drcomment = DesignReviewComment.new(:design_review_id => design_review.id, :user_id => user_id, :comment => comment)
-          #drcomment.save
+          design_review = design.get_phase_design_review
+          user_id = User.find_by_login("Anonymous").id
+          comment =  "Using teamcenter data the description for " + part_info[:number] + " was auto updated from " + part_info[:old_descrip] + " to " + part_info[:new_descrip]
+          drcomment = DesignReviewComment.new(:design_review_id => design_review.id, :user_id => user_id, :comment => comment)
+          drcomment.save
           
           # Add the designer to list of designers to get email
-          #@designers << design.designer
+          @designers << design.designer
         end      
       end      
     end
@@ -56,7 +56,7 @@ namespace :update_part_num do
     # if there are part numbers that have been updated then send out email     
     if !@updated_part_nums.empty?
       TrackerMailer.part_num_update(@updated_part_nums, @designers, @numdes, @numparts, @numpartsup).deliver
-      puts " There were #{@numdes} designs and #{@numparts} part numbers and #{@numpartsup} partnums were updated"
+      #puts " There were #{@numdes} designs and #{@numparts} part numbers and #{@numpartsup} partnums were updated"
     end
   end
 end
