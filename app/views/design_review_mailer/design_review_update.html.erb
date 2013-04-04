@@ -52,6 +52,9 @@
        }    
    table#comments tr.evenrow td{
        background-color: #E6E6DC;
+       }       
+   td.commentcolumn{
+       text-align: left;
        }
  </STYLE>
 </HEAD>
@@ -122,18 +125,18 @@
                 </th>
             </tr>
             
-            <% @comments.each do |comment| %>
+            <% @comments.each do |commentlist| %>
                 <% rownum += 1 %>
                 <%  currentrow = rownum.modulo(2).nonzero? ? "oddrow" : "evenrow" %>
                 <tr class="<%= currentrow %>">
                     <td>
-                        <%= comment.user.name %>
+                        <%= commentlist.user.name %>
+                    </td>
+                    <td class="commentcolumn">
+                        <%= auto_link simple_format(h(commentlist.comment)) %>
                     </td>
                     <td>
-                        <%= raw comment.comment %>
-                    </td>
-                    <td>
-                        <%= comment.created_on.format_dd_mm_yy_at_timestamp %>
+                        <%= commentlist.created_on.format_dd_mm_yy_at_timestamp %>
                     </td>
                 </tr>
             <% end %>
