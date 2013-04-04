@@ -14,7 +14,7 @@ namespace :update_part_num do
     @designers = []
     
     # Grab all designs which are not completed and go through each one
-    incomplete_designs = Design.get_active_designs#find(:all, :conditions => 'phase_id != "255"')
+    incomplete_designs = Design.get_active_designs_for_auto_part_num_update#find(:all, :conditions => 'phase_id != "255"')
     
     incomplete_designs.each do |design|
       @numdes += 1
