@@ -1,0 +1,12 @@
+<h1>Review History for <%= @logged_in_user.name%></h1>
+<%= @test %>
+<table>
+	<% @designs.each { | des | %>
+    <tr>
+    	<td><%=des.pcb_number%></td>
+    	<td></td>
+    	<td><%=des.created_on.format_dd_mon_yy%></td>
+    </tr>
+    <% } %>
+</table>
+
