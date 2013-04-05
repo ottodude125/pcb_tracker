@@ -34,4 +34,5 @@ PcbTracker::Application.configure do
   #:sender_address => %{DEVEL_PCB_Tracker <dtg_noreply@lists.teradyne.com>},
   #:exception_recipients => %w{dtg_ror_devel@lists.teradyne.com}
 
+  BetterErrors::Middleware.allow_ip! "131.101.160.151"
 end
