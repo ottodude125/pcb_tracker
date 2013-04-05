@@ -132,8 +132,19 @@
                             { :controller => 'report',
                               :action     => 'reviewer_workload' }) %>
             </td>
-        </tr>        
-    
+        </tr>
+        
+        <% if @reviewer %>
+        <tr>
+            <td align="center">
+                <%= link_to("Reviewer History",
+                            { :controller => 'report',
+                              :action     => 'user_review_history' }) %>
+            </td>
+        </tr>
+        
+            
+        <% end %>
         <% if !@designer && !@reviewer && !@pcb_admin && !@basic_user %>
     
             <!-- ############################################################ -->

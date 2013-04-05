@@ -229,7 +229,6 @@ class ReportController < ApplicationController
 
     @reviewer_result_list = result_hash.to_a.sort_by { |r| r[0].last_name }
 
-
   end
   
   
@@ -238,6 +237,17 @@ class ReportController < ApplicationController
     @design_reviews       = DesignReview.summary_data
   end
   
+    def user_review_history
+    @test = "test"
+    results = DesignReviewResult.find_all_by_reviewer_id(@logged_in_user)
+    @designs = Array.new
+    results.each { | result |
+      @designs << result.design_review.design
+    }
+    @designs.uniq
+    @results = results
+    
+  end
   
 private
 
@@ -266,5 +276,5 @@ private
     common_part + '_report_count_graph.png'
   end
  
-  
+
 end
