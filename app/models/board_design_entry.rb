@@ -563,7 +563,7 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #  
   def description
-    PartNum.find_by_board_design_entry_id(self.id).description rescue ""  
+    PartNum.find_by_board_design_entry_id_and_use(self.id, "pcb").description rescue ""  
   end
   
   ######################################################################
