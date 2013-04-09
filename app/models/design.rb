@@ -1762,7 +1762,7 @@ class Design < ActiveRecord::Base
   def detailed_name
     brd = self.board
     self.directory_name + ' - ' + brd.platform.name + ' / ' +
-    brd.project.name + ' / ' + brd.description
+    brd.project.name + ' / ' + self.pcb_description
   end
 
   
@@ -2060,7 +2060,7 @@ class Design < ActiveRecord::Base
   def subject_prefix
     self.board.platform.name + '/' +
     self.board.project.name  + '/' +
-    self.board.description   + '(' +
+    self.pcb_description   + '(' +
     self.directory_name      +  '): '
   end
 
