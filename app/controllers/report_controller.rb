@@ -238,22 +238,41 @@ class ReportController < ApplicationController
   end
   
   def user_review_history
+    Date::DATE_FORMATS[:mmddyyyy] = "%m/%d/%Y"
+    @max_date    = Date.today.to_s(:mmddyyyy)
+    @min_date = "1/1/2006"
+    @from = params[:from].blank? ? @min_date : params[:from]
+    @to   = params[:to].blank?   ? @max_date : params[:to]
+    #convert m/d/y to y-m-d for database
+    fromX   = @from.split("/")
+    fromDB  = fromX[2] + "-" + fromX[0] + "-" + fromX[1]
+    toX     = @to.split("/")
+    toDB    = toX[2] + "-" + toX[0] + "-" + toX[1]
+
     @data = Array.new
-    review_results = DesignReviewResult.find_all_by_reviewer_id(@logged_in_user)
+    #review_results = DesignReviewResult.find_all_by_reviewer_id(@logged_in_user)
+    review_results = DesignReviewResult.find(:all, :conditions => [
+      "reviewer_id = #{@logged_in_user.id} AND " +
+      "reviewed_on >= '#{fromDB}' AND " +
+      "reviewed_on <= '#{toDB}'"
+    ])
+ 
     review_results.group_by(&:design_review_id).each { | review_id, results |
       result = results.sort_by{ |r| r.reviewed_on}.reverse.first
+      next if result.reviewed_on.blank?
       item = Hash.new
       design = result.design_review.design
       part_num = PartNum.find_by_design_id_and_use(result.design_review.design_id, "pcb")
       item[:part_number] = part_num.name_string
-      item[:description] = part_num.description
-      item[:date]        = result.reviewed_on
+      item[:description] = part_num.description || "(Description not found)"
+      item[:review_name] = result.design_review.review_name
+      item[:date]        = result.reviewed_on 
       @data << item
     }
-
-  #end
+    
+  end
   
-  #def user_review_history_OBS
+  def user_review_history_OBS
     @test = "test"
     results = DesignReviewResult.find_all_by_reviewer_id(@logged_in_user)
     @designs = Array.new

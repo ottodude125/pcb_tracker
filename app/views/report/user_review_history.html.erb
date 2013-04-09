@@ -1,29 +1,9 @@
 <% content_for :rawheader do %>
  <STYLE type="text/css">
- 
-    table#reviews  {
-    	border-width: thin;
-      	border-style: solid;
-      	border-collapse: collapse;
-    }
-	table#reviews th {
-		font: bold 16px Helvetica;
-		background-color: #AAAAAA;
-    }
-    table#reviews td {
-		padding: 7px 10px;
-    }
-    
-   	table#reviews tr.oddrow td{
-   		background-color: #BBD9EE;
-   	}    
-   	table#reviews tr.evenrow td{
-   		background-color: #F1EFE2; 
-	}
-	
+ 	
     table#data  {
-    	border-width: thin;
-      	border-style: solid;
+    	#border-width: thin;
+      	#border-style: solid;
       	border-collapse: collapse;
     }
 	table#data th {
@@ -34,56 +14,90 @@
 		padding: 7px 10px;
     }
     
-   	table#data tr.oddrow td{
+   	xtable#data tr.oddrow td{
    		background-color: #BBD9EE;
    	}    
-   	table#data tr.evenrow td{
+   	xtable#data tr.evenrow td{
+   		background-color: #F1EFE2; 
+	}
+   	table#data tr:nth-child(odd) {
+   		background-color: #BBD9EE;
+   	}    
+   	table#data tr:nth-child(even) {
    		background-color: #F1EFE2; 
 	}
      
  </STYLE>
+<script>
+$(function() {
+	$( "#from" ).datepicker({
+		setDate: <%= @from %>,
+		minDate: "<%=@min_date%>",
+		maxDate: "<%=@max_date%>",
+		changeMonth: true,
+		numberOfMonths: 1,
+		showOn: "button",
+		buttonImage: "<%= asset_path('calendar.gif') %>",
+		buttonImageOnly: true,
+		changeMonth: true,
+		changeYear: true,
+		onClose: function( selectedDate ) {
+			$( "#to" ).datepicker( "option", "minDate", selectedDate );
+		}
+	});
+
+	$( "#to" ).datepicker({
+		setDate: <%= @to %>,
+		minDate: "<%=@min_date%>",
+		maxDate: "<%=@max_date%>",
+		changeMonth: true,
+		numberOfMonths: 1,
+		showOn: "button",
+		buttonImage: "<%= asset_path 'calendar.gif' %>",
+		buttonImageOnly: true,
+		changeMonth: true,
+		changeYear: true,
+		onClose: function( selectedDate ) {
+			$( "#from" ).datepicker( "option", "maxDate", selectedDate );
+		}
+	});
+});
+</script>
  <% end %>
+
 <h1>Review History for <%= @logged_in_user.name%></h1>
 
+<%= form_tag do %>
+<table><tr>
+	<td><%=@data.count%> review<%= "s" if @data.count != 1 %> found</td>
+	<td>&nbsp;</td>
+	<td><label for="from">from: </label>
+		<input type="text" id="from" name="from" value = "<%= @from %>" />
+	</td>
+	<td><lable for="to">to:</lable>
+		<input type="text" id="to" name="to" value = "<%= @to %>" />
+	</td>
+	<td><%= submit_tag("Change Date Range") %></td>
+</tr></table>
+<p></p>
+<% end # form %>
 
-<table>
-	<tr valign="top"><td>
 <%if ! @data.blank? -%>
 <table id="data">
-	<tr><th>PCB #</th><th>DESCRIPTION</th><th>DATE</th></tr>
-	<% rownum = 0 %>
+	<tr><th>PCB #</th><th>DESCRIPTION</th><th>TYPE</th><th>DATE</th></tr>
 	<% @data.each { | row | %>
-       <% rownum += 1 %>
-       <% currentrow = rownum.modulo(2).nonzero? ? "oddrow" : "evenrow" %>
-    <tr class="<%= currentrow %>">
-    	<td><%=row[:part_number]%></td>
-    	<td><%=row[:description]%></td>
-    	<td><%=row[:date].format_dd_mon_yy%></td>
-    </tr>
-    <% } %>
+	<tr>
+		<td><%=row[:part_number]%></td>
+		<td><%=row[:description]%></td>
+		<td><%=row[:review_name]%></td>
+		<td><%=row[:date].format_dd_mon_yy%></td>
+	</tr>
+    <% } # each row %>
 </table>
-<% else %>
-<p>No designs found</p>
-<% end %>
-</td>
 
-<td>
-<% if ! @designs.blank? -%>
-<table id="reviews">
-	<tr><th>PCB #</th><th>DESCRIPTION</th><th>DATE</th></tr>
-	<% rownum = 0 %>
-	<% @designs.each { | des | %>
-       <% rownum += 1 %>
-       <%  currentrow = rownum.modulo(2).nonzero? ? "oddrow" : "evenrow" %>
-    <tr class="<%= currentrow %>">
- 
-    	<td><%=des.pcb_number%></td>
-    	<td><%=des.board.description%></td>
-    	<td><%=des.created_on.format_dd_mon_yy%></td>
-    </tr>
-    <% } %>
-</table>
 <% else %>
-<p>No designs found</p>
+
+<h1>No reviews found for <%= @logged_in_user.name%></h1>
+
 <% end %>
-</td></tr>
+
