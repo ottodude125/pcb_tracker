@@ -1,12 +1,89 @@
+<% content_for :rawheader do %>
+ <STYLE type="text/css">
+ 
+    table#reviews  {
+    	border-width: thin;
+      	border-style: solid;
+      	border-collapse: collapse;
+    }
+	table#reviews th {
+		font: bold 16px Helvetica;
+		background-color: #AAAAAA;
+    }
+    table#reviews td {
+		padding: 7px 10px;
+    }
+    
+   	table#reviews tr.oddrow td{
+   		background-color: #BBD9EE;
+   	}    
+   	table#reviews tr.evenrow td{
+   		background-color: #F1EFE2; 
+	}
+	
+    table#data  {
+    	border-width: thin;
+      	border-style: solid;
+      	border-collapse: collapse;
+    }
+	table#data th {
+		font: bold 16px Helvetica;
+		background-color: #AAAAAA;
+    }
+    table#data td {
+		padding: 7px 10px;
+    }
+    
+   	table#data tr.oddrow td{
+   		background-color: #BBD9EE;
+   	}    
+   	table#data tr.evenrow td{
+   		background-color: #F1EFE2; 
+	}
+     
+ </STYLE>
+ <% end %>
 <h1>Review History for <%= @logged_in_user.name%></h1>
-<%= @test %>
+
+
 <table>
+	<tr valign="top"><td>
+<%if ! @data.blank? -%>
+<table id="data">
+	<tr><th>PCB #</th><th>DESCRIPTION</th><th>DATE</th></tr>
+	<% rownum = 0 %>
+	<% @data.each { | row | %>
+       <% rownum += 1 %>
+       <% currentrow = rownum.modulo(2).nonzero? ? "oddrow" : "evenrow" %>
+    <tr class="<%= currentrow %>">
+    	<td><%=row[:part_number]%></td>
+    	<td><%=row[:description]%></td>
+    	<td><%=row[:date].format_dd_mon_yy%></td>
+    </tr>
+    <% } %>
+</table>
+<% else %>
+<p>No designs found</p>
+<% end %>
+</td>
+
+<td>
+<% if ! @designs.blank? -%>
+<table id="reviews">
+	<tr><th>PCB #</th><th>DESCRIPTION</th><th>DATE</th></tr>
+	<% rownum = 0 %>
 	<% @designs.each { | des | %>
-    <tr>
+       <% rownum += 1 %>
+       <%  currentrow = rownum.modulo(2).nonzero? ? "oddrow" : "evenrow" %>
+    <tr class="<%= currentrow %>">
+ 
     	<td><%=des.pcb_number%></td>
-    	<td></td>
+    	<td><%=des.board.description%></td>
     	<td><%=des.created_on.format_dd_mon_yy%></td>
     </tr>
     <% } %>
 </table>
-
+<% else %>
+<p>No designs found</p>
+<% end %>
+</td></tr>

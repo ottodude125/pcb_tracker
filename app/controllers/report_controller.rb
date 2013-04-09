@@ -237,7 +237,23 @@ class ReportController < ApplicationController
     @design_reviews       = DesignReview.summary_data
   end
   
-    def user_review_history
+  def user_review_history
+    @data = Array.new
+    review_results = DesignReviewResult.find_all_by_reviewer_id(@logged_in_user)
+    review_results.group_by(&:design_review_id).each { | review_id, results |
+      result = results.sort_by{ |r| r.reviewed_on}.reverse.first
+      item = Hash.new
+      design = result.design_review.design
+      part_num = PartNum.find_by_design_id_and_use(result.design_review.design_id, "pcb")
+      item[:part_number] = part_num.name_string
+      item[:description] = part_num.description
+      item[:date]        = result.reviewed_on
+      @data << item
+    }
+
+  #end
+  
+  #def user_review_history_OBS
     @test = "test"
     results = DesignReviewResult.find_all_by_reviewer_id(@logged_in_user)
     @designs = Array.new
@@ -248,7 +264,7 @@ class ReportController < ApplicationController
     @results = results
     
   end
-  
+
 private
 
 
