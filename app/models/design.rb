@@ -1969,6 +1969,9 @@ class Design < ActiveRecord::Base
     end
   end
 
+  def pcb_description
+    PartNum.find_by_design_id_and_use(self.id, "pcb").description || "(Description not set)"
+  end
 
   def pcb_display_with_description
     part_num = PartNum.get_design_pcb_part_number(self.id)

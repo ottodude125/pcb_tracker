@@ -128,7 +128,7 @@ module MailerMethods
   def self.subject_prefix(design)
     design.board.platform.name + '/' +
     design.board.project.name  + '/' +
-    design.board.description   + '(' +
+    design.pcb_description     + '(' +
     design.directory_name      +  '): '
   end
 end
