@@ -38,7 +38,7 @@
           <tr>
             <td align="center"> <%= pcba.name_string %></td>
             <td align="center"> <%= design.pcb_number %></td>
-            <td> &nbsp;<%= design.board.project.name + " / " +design.board.description %> </td>
+            <td> &nbsp;<%= design.board.project.name + " / " +design.pcb_description %> </td>
             <td align="center"> <%= link_to(design.phase.name,
                              { :controller => 'design_review',
                                :action     => :view,

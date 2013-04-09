@@ -25,7 +25,7 @@
               <table width="100%" align="left" border="0">
       	        <tr>
                   <th colspan="2">
-                    My Designs
+                    <h1>My Designs</h1>
                   </th>
                 </tr>
 
@@ -56,7 +56,7 @@
                         <b><%= design.directory_name %> - 
                         <%= design.board.platform.name %> / 
                         <%= design.board.project.name %> /
-                        <%= design.board.description %></b>
+                        <%= design.pcb_description %></b>
                       </font>
                     </td>
                   </tr>
@@ -368,7 +368,7 @@
               <table width="100%" 
                      align="center" 
                      border="0">
-                <tr><th colspan="3">My Audits</th></tr>
+                <tr><td colspan="3"><h1>My Audits</h1></td></tr>
 
                 <% if @audits.size > 0 %>
                   <tr>
@@ -397,7 +397,7 @@
                       <b><%= audit.design.directory_name %> -
                       <%= audit.design.board.platform.name %> /
                       <%= audit.design.board.project.name %> /
-                      <%= audit.design.board.description %></b>
+                      <%= audit.design.pcb_description %></b>
                     </td>
                   </tr>
                   <tr>
