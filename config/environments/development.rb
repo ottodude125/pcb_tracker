@@ -34,4 +34,9 @@ PcbTracker::Application.configure do
   #:sender_address => %{DEVEL_PCB_Tracker <dtg_noreply@lists.teradyne.com>},
   #:exception_recipients => %w{dtg_ror_devel@lists.teradyne.com}
 
+  #Allow BetterErrors to work on client other than "localhost"
+  #You can find your apparent IP by hitting the old error page's "Show env dump" and looking at "REMOTE_ADDR".
+  #allow_ip! is actually backed by a Set, so you can add more than one IP address or subnet.
+  BetterErrors::Middleware.allow_ip! "131.101.160.151"
+
 end

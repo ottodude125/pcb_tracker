@@ -65,9 +65,9 @@ class TrackerMailer < ActionMailer::Base
     subject = 'Part Number Descriptions Have Been Auto Updated' 
 
     recipients = []
-    #recipients += designers.collect { |u| u.email}
-    #recipients += User.where(:last_name => ["Kasting", "Light", "Michaels"]).collect { |u| u.email}
-    recipients += "dtg@teradyne.com"
+    recipients += designers.collect { |u| u.email}
+    recipients += User.where(:last_name => ["Kasting", "Light", "Michaels"]).collect { |u| u.email}
+    recipients << "dtg@teradyne.com"
     
     @part_numbers = part_numbers
     @active_designs = active_designs

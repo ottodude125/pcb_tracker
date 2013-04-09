@@ -176,6 +176,28 @@ class Design < ActiveRecord::Base
               :conditions => "phase_id!='#{Design::COMPLETE}'",
               :order      => 'created_on')
   end
+
+  ######################################################################
+  #
+  # get_active_designs_for_auto_part_num_update
+  #
+  # Description:
+  # Retrieves a list of all active designs which were created after 
+  # March 28, 2013 to be used by the part_num_update rake task
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of active designs created after 3/28/13
+  #
+  ######################################################################
+  #
+  def self.get_active_designs_for_auto_part_num_update 
+    self.find(:all,
+              :conditions => "phase_id!='#{Design::COMPLETE}' AND created_on > '#{Time.utc(2013, "mar", 28)}'",
+              :order      => 'created_on')
+  end
   
   def is_active?
     self.phase_id != Design::COMPLETE
@@ -1998,6 +2020,28 @@ class Design < ActiveRecord::Base
     pcbas
   end
 
+  ######################################################################
+  #
+  # pcba part numbers
+  #
+  # Description:
+  # These methods returns the pcba part number.
+  #
+  ######################################################################
+  #
+  def pcbas_string_wo_description
+    first = 1
+    pcbas = ""
+    PartNum.get_design_pcba_part_numbers(self.id).each { |pcba|
+      if first == 1
+        pcbas = pcba.name_string
+        first = 0
+      else
+        pcbas << "<br>" + pcba.name_string
+      end
+    }
+    pcbas
+  end
  ######################################################################
   #
   # subject_prefix

@@ -31,7 +31,7 @@ passwd = "PcBtR"
 mydb   = "information_schema"
 myuser = "root"
 mypswd = "connect"
-mytbl  = "global_status"
+mytbl  = "global_variables"
 
 
 require 'mysql'
@@ -41,7 +41,7 @@ require 'mysql'
 begin
   # Check if database is running in slave mode
   cona = Mysql.new host, myuser, mypswd, mydb, port
-  result = cona.query("SELECT variable_value FROM #{mytbl} WHERE variable_name = ('SLAVE_RUNNING')")
+  result = cona.query("SELECT variable_value FROM #{mytbl} WHERE variable_name = ('READ_ONLY')")
   status = "ON" # Default status to ON as a safeguard just incase query fails
   result.each_hash do |row|
     status = row['variable_value']

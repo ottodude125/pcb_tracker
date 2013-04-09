@@ -57,7 +57,7 @@
   <% else %>
     <input type="button" value="Cancel" 
            onClick="parent.location='<%= url_for(:action => 'review_attachments', 
-                                                 :design_review_id => @design_review.id) %>'" />
+                                                 :id => @design_review.id) %>'" />
   <% end %>
 
   <% end %>

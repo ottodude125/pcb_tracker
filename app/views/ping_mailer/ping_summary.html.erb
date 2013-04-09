@@ -1,0 +1,293 @@
+<HEAD>
+    <style>
+        h1{
+            font: bold 14px Helvetica;
+        }
+        a{
+            color: #00008B;
+            background-color: transparent;
+        }
+
+        table#main_table{
+            width: 700px;
+            border-width: 1px;
+            border-spacing: 0;
+            border-style: outset;
+            border-collapse: collapse;
+            background-color: #D9D7C5;
+            border-color: #888888;
+            margin: 20px auto 0 auto;     
+        }
+        td.section_title{
+            font: bold 14px Helvetica;
+            text-align: center;
+            padding: 5px 0 5px 0;
+            border-width: 1px;
+            border-spacing: 0;
+            border-style: outset;
+            border-collapse: collapse;
+            background-color: #736766;
+            color: #F2F2E9;
+            border-color: #888888;  
+        }
+        table.core_details {
+            margin: 10px auto 20px auto;
+            font: 12px Helvetica;
+        }
+        
+        td.core_title{
+            font: bold 14px Helvetica;
+            padding: 0px 5px 0px 30px;
+        }
+        
+        table.roles
+        {
+            width: 80%;
+            border-width: 1px;
+            border-spacing: 0;
+            border-style: outset;
+            border-collapse: collapse;
+            border-color: #666;
+            margin: 0 auto 20px 50px;    
+        }
+        
+        table.roles th
+        {
+            border-width: thin;
+            padding: 5px 5px;
+            border-style: groove;
+            border-color: gray;
+            font: bold 14px Helvetica;
+        }                
+        table.roles td
+        {
+            border-width: thin;
+            padding: 6px 15px;
+            border-style: groove;
+            border-color: gray;
+            text-align: center;
+            font: bold 12px Helvetica;
+        }
+       table.roles tr th{       
+            background-color: #734854;
+            color: #F2F2E9; 
+       }
+       table.roles tr.oddrow td{
+            background-color: #F2F2E9;
+       }    
+       table.roles tr.evenrow td{
+            background-color: #A69580;
+       }        
+       
+       #base{
+            border-width: 1px;
+            border-spacing: 0;
+            border-style: outset;
+            border-collapse: collapse;
+            background-color: white;
+            border-color: #666;
+            margin: 30px auto 0px auto;
+            text-align: center;   
+       }
+       table#base th{
+            border-width: thin;
+            padding: 7px 30px;
+            border-style: groove;
+            border-color: gray;
+            background-color: white;
+            font: bold 14px Helvetica;
+            background-color: #AAAAAA;
+       }
+       table#base td{
+            font: bold 12px Helvetica;
+            border-width: thin;
+            padding: 7px 10px;
+            border-style: groove;
+            border-color: gray;
+       }
+       table#base tr th{
+            background-color: #734854;
+            color: #F2F2E9; 
+       }
+       table#base tr.oddrow td{
+            background-color: #A69580;
+       }    
+       table#base tr.evenrow td{
+            background-color: #F2F2E9;
+       }
+       table#base tr.breakrow td{
+            background-color: #333333;
+            font: 7px;
+            padding: 0;
+       }
+       
+    </style>
+</HEAD>
+<BODY>
+    <br>
+    <h1> The following reviewers with incomplete reviews have been pinged.</h1>
+    
+    <% if @active_reviews %>
+        <table id="main_table">
+            <% @active_reviews.each do |dr| %>
+                <tr>
+                    <td class="section_title">
+                        <%= link_to "#{dr.design.directory_name}".html_safe, "http://boarddev.teradyne.com/pcbtr/design_review/view/#{dr.id}" %>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table class="core_details">
+                            <tr>
+                                <td class="core_title">
+                                    <%= "Criticality: " %>
+                                </td>
+                                <td>
+                                    <%= dr.priority.name %>
+                                </td>
+                                <td class="core_title">
+                                    <%= "Age: " %>
+                                </td>
+                                <td>
+                                    <%= dr.age/1.day %>
+                                </td>
+                                <td class="core_title">
+                                    <%= "Phase: " %>
+                                </td>
+                                <td>
+                                    <%= dr.review_name %>
+                                </td>
+                                <td class="core_title">
+                                    <%= "Project: " %>
+                                </td>
+                                <td>
+                                    <%= dr.design.board.project.name %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="core_title">
+                                    <%= "Platform: " %>
+                                </td>
+                                <td>
+                                    <%= dr.design.board.platform.name %>
+                                </td>
+                                <td class="core_title">
+                                    <%= "Description: " %>
+                                </td>
+                                <td colspan="5">
+                                    <%= PartNum.find_by_design_id_and_use(dr.design.id, "pcb").description %>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <% if dr.design_review_results != [] %>
+                    <% rownum = 0 %>
+                    <% currentrow = "oddrow" %>
+                    <tr>
+                        <td colspan="8">
+                            <table class="roles">
+                                <tr>
+                                    <th>
+                                        <%= "Designer" %>
+                                    </th>
+                                    <th>
+                                        <%= "Role" %>
+                                    </th>
+                                </tr>
+                                <% dr.design_review_results.each do |drr| %>
+                                    <% rownum += 1 %>
+                                    <%  currentrow = rownum.modulo(2).nonzero? ? "oddrow" : "evenrow" %>
+                                    <tr class="<%= currentrow %>">
+                                        <td>
+                                            <%= drr.reviewer.name %>
+                                        </td>
+                                        <td>
+                                            <%= drr.role.display_name %>
+                                        </td>
+                                    </tr>
+                                <% end %>
+                            </table>
+                        </td>
+                    </tr>
+                <% end %>
+            <% end %>
+        </table>
+            
+    <% end %>
+
+
+    <br>
+    <br>
+    <br>
+    <h1> The table below is a summary of incomplete reviews grouped by reviewer.</h1>
+
+    <table id="base">
+        <tr>
+            <th>
+                Reviewer
+            </th>
+            <th>
+                Design
+            </th>
+            <th>
+                Criticality
+            </th>
+            <th>
+                Age
+            </th>
+            <th>
+                Role
+            </th>
+            <th>
+                Phase
+            </th>
+        </tr>        
+        <% rownum = 0 %>
+        <% currentrow = "oddrow" %>
+        <% @reviews.each do |userid, data| %>
+            <% data[:results].each do |entry| dr = entry.design_review -%>
+                <% rownum += 1 %>
+                <%  currentrow = rownum.modulo(2).nonzero? ? "oddrow" : "evenrow" %>
+                <tr class="<%= currentrow %>">
+                    <td>
+                        <%= data[:user].name %>
+                    </td>
+                    <td>
+                        <%= link_to "#{dr.design.directory_name}".html_safe, "http://boarddev.teradyne.com/pcbtr/design_review/view/#{dr.id}" %>
+                    </td>
+                    <td>
+                        <%= dr.priority.name %>
+                    </td>
+                    <td>
+                        <%= dr.age/1.day %>
+                    </td>
+                    <td>
+                        <%=  entry.role.display_name %>
+                    </td>
+                    <td>
+                        <%=  dr.design.phase.name %>
+                    </td>
+                </tr>
+            <% end %>
+            <tr class="breakrow">
+                <td colspan="6">
+                    &nbsp;
+                </td>
+            </tr>
+        <% end %>
+    </table>
+
+
+</BODY>
+
+
+
+
+
+
+
+
+
+
+    
