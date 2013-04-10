@@ -1762,7 +1762,7 @@ class Design < ActiveRecord::Base
   def detailed_name
     brd = self.board
     self.directory_name + ' - ' + brd.platform.name + ' / ' +
-    brd.project.name + ' / ' + brd.description
+    brd.project.name + ' / ' + self.pcb_description
   end
 
   
@@ -1969,6 +1969,9 @@ class Design < ActiveRecord::Base
     end
   end
 
+  def pcb_description
+    PartNum.find_by_design_id_and_use(self.id, "pcb").description || "(Description not set)"
+  end
 
   def pcb_display_with_description
     part_num = PartNum.get_design_pcb_part_number(self.id)
@@ -2057,7 +2060,7 @@ class Design < ActiveRecord::Base
   def subject_prefix
     self.board.platform.name + '/' +
     self.board.project.name  + '/' +
-    self.board.description   + '(' +
+    self.pcb_description   + '(' +
     self.directory_name      +  '): '
   end
 
