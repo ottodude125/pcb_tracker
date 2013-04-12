@@ -77,20 +77,21 @@ $(function() {
 	<td><lable for="to">to:</lable>
 		<input type="text" id="to" name="to" value = "<%= @to %>" />
 	</td>
-	<td><%= submit_tag("Change Date Range") %></td>
+	<td><%= submit_tag("Change Review Date Range") %></td>
 </tr></table>
 <p></p>
 <% end # form %>
 
 <%if ! @data.blank? -%>
 <table id="data">
-	<tr><th>PCB #</th><th>DESCRIPTION</th><th>TYPE</th><th>DATE</th></tr>
+	<tr><th>PCB #</th><th>DESCRIPTION</th><th>TYPE</th><th>POSTED</th><th>REVIEWED</TH></tr>
 	<% @data.each { | row | %>
 	<tr>
 		<td><%=row[:part_number]%></td>
 		<td><%=row[:description]%></td>
 		<td><%=row[:review_name]%></td>
-		<td><%=row[:date].format_dd_mon_yy%></td>
+		<td><%=row[:postdate].format_dd_mon_yy%></td>
+		<td><%=row[:reviewdate].format_dd_mon_yy%></td>
 	</tr>
     <% } # each row %>
 </table>

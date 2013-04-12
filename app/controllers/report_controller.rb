@@ -263,10 +263,12 @@ class ReportController < ApplicationController
       item = Hash.new
       design = result.design_review.design
       part_num = PartNum.find_by_design_id_and_use(result.design_review.design_id, "pcb")
+      postdate = result.design_review.reposted_on.blank? ? result.design_review.created_on : result.design_review.reposted_on
       item[:part_number] = part_num.name_string
       item[:description] = part_num.description || "(Description not found)"
       item[:review_name] = result.design_review.review_name
-      item[:date]        = result.reviewed_on 
+      item[:reviewdate]  = result.reviewed_on 
+      item[:postdate]    = postdate
       @data << item
     }
     
