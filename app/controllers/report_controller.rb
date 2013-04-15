@@ -256,33 +256,34 @@ class ReportController < ApplicationController
       "reviewed_on >= '#{fromDB}' AND " +
       "reviewed_on <= '#{toDB}'"
     ])
- 
+    
+    @heads = [ "PCB #",
+      "DESCRIPTION",
+      "TYPE",
+      "POSTED",
+      "REVIEWED"] 
+      
     review_results.group_by(&:design_review_id).each { | review_id, results |
       result = results.sort_by{ |r| r.reviewed_on}.reverse.first
       next if result.reviewed_on.blank?
-      item = Hash.new
+
       design = result.design_review.design
       part_num = PartNum.find_by_design_id_and_use(result.design_review.design_id, "pcb")
-      postdate = result.design_review.reposted_on.blank? ? result.design_review.created_on : result.design_review.reposted_on
-      item[:part_number] = part_num.name_string
-      item[:description] = part_num.description || "(Description not found)"
-      item[:review_name] = result.design_review.review_name
-      item[:reviewdate]  = result.reviewed_on 
-      item[:postdate]    = postdate
+      postdate = result.design_review.reposted_on.blank? ? 
+        result.design_review.created_on : result.design_review.reposted_on
+
+      item = [ part_num.name_string,
+        part_num.description || "(Description not found)",
+        result.design_review.review_name,
+        result.reviewed_on.format_dd_mon_yy ,
+        postdate.format_dd_mon_yy ]
       @data << item
     }
     
-  end
-  
-  def user_review_history_OBS
-    @test = "test"
-    results = DesignReviewResult.find_all_by_reviewer_id(@logged_in_user)
-    @designs = Array.new
-    results.each { | result |
-      @designs << result.design_review.design
-    }
-    @designs.uniq
-    @results = results
+    respond_to do | format | 
+      format.html
+      format.csv { send_data to_csv(@heads,@data) }
+    end
     
   end
 
@@ -312,6 +313,14 @@ private
   def report_count_graph_filename(common_part)
     common_part + '_report_count_graph.png'
   end
- 
+
+  def to_csv(heads, data)
+    CSV.generate() do |csv|
+      csv << heads
+      data.each do |row|
+        csv << row
+      end
+    end
+  end
 
 end

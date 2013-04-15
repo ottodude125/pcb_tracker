@@ -83,15 +83,23 @@ $(function() {
 <% end # form %>
 
 <%if ! @data.blank? -%>
+
+<p>
+  Download:
+  <%= link_to "CSV",   :action => "user_review_history", :format => "csv" %>
+</p>
+
 <table id="data">
-	<tr><th>PCB #</th><th>DESCRIPTION</th><th>TYPE</th><th>POSTED</th><th>REVIEWED</TH></tr>
+	<tr>
+	<% @heads.each { | head | %>
+		<th><%=head%></th>
+	<% }%>
+	</tr>
 	<% @data.each { | row | %>
 	<tr>
-		<td><%=row[:part_number]%></td>
-		<td><%=row[:description]%></td>
-		<td><%=row[:review_name]%></td>
-		<td><%=row[:postdate].format_dd_mon_yy%></td>
-		<td><%=row[:reviewdate].format_dd_mon_yy%></td>
+		<% row.each { | cell | %>
+		<td><%=cell%></td>
+		<% } %>
 	</tr>
     <% } # each row %>
 </table>
