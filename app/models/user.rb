@@ -509,7 +509,7 @@ class User < ActiveRecord::Base
 
   validates_confirmation_of :password
   validates_length_of :login, :within => 3..40
-  validates_length_of :password, :within => 5..40
+  validates_length_of :password, :within => 4..40
   validates_presence_of :login, :password, :password_confirmation
 end
 
