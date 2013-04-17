@@ -1,69 +1,4 @@
-<% content_for :rawheader do %>
- <STYLE type="text/css">
- 	
-    table#data  {
-    	#border-width: thin;
-      	#border-style: solid;
-      	border-collapse: collapse;
-    }
-	table#data th {
-		font: bold 16px Helvetica;
-		background-color: #AAAAAA;
-    }
-    table#data td {
-		padding: 7px 10px;
-    }
-    
-   	xtable#data tr.oddrow td{
-   		background-color: #BBD9EE;
-   	}    
-   	xtable#data tr.evenrow td{
-   		background-color: #F1EFE2; 
-	}
-   	table#data tr:nth-child(odd) {
-   		background-color: #BBD9EE;
-   	}    
-   	table#data tr:nth-child(even) {
-   		background-color: #F1EFE2; 
-	}
-     
- </STYLE>
-<script>
-$(function() {
-	$( "#from" ).datepicker({
-		setDate: <%= @from %>,
-		minDate: "<%=@min_date%>",
-		maxDate: "<%=@max_date%>",
-		changeMonth: true,
-		numberOfMonths: 1,
-		showOn: "button",
-		buttonImage: "<%= asset_path('calendar.gif') %>",
-		buttonImageOnly: true,
-		changeMonth: true,
-		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#to" ).datepicker( "option", "minDate", selectedDate );
-		}
-	});
 
-	$( "#to" ).datepicker({
-		setDate: <%= @to %>,
-		minDate: "<%=@min_date%>",
-		maxDate: "<%=@max_date%>",
-		changeMonth: true,
-		numberOfMonths: 1,
-		showOn: "button",
-		buttonImage: "<%= asset_path 'calendar.gif' %>",
-		buttonImageOnly: true,
-		changeMonth: true,
-		changeYear: true,
-		onClose: function( selectedDate ) {
-			$( "#from" ).datepicker( "option", "maxDate", selectedDate );
-		}
-	});
-});
-</script>
- <% end %>
 
 <h1>Review History for <%= @logged_in_user.name%></h1>
 
@@ -72,10 +7,12 @@ $(function() {
 	<td><%=@data.count%> review<%= "s" if @data.count != 1 %> found</td>
 	<td>&nbsp;</td>
 	<td><label for="from">from: </label>
-		<input type="text" id="from" name="from" value = "<%= @from %>" />
+		<input type="text" id="from" name="from" value="<%= @from %>" 
+			min="<%=@min_date%>" max="<%=@max_date%>" />
 	</td>
 	<td><lable for="to">to:</lable>
-		<input type="text" id="to" name="to" value = "<%= @to %>" />
+		<input type="text" id="to" name="to" value="<%= @to %>" 
+			min="<%=@min_date%>" max="<%=@max_date%>" />
 	</td>
 	<td><%= submit_tag("Change Review Date Range") %></td>
 </tr></table>
@@ -85,8 +22,7 @@ $(function() {
 <%if ! @data.blank? -%>
 
 <p>
-  Download:
-  <%= link_to "CSV",   :action => "user_review_history", :format => "csv" %>
+  <%= link_to "Download as CSV",   :action => "user_review_history", :format => "csv" %>
 </p>
 
 <table id="data">

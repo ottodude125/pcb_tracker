@@ -1,0 +1,21 @@
+
+table#data  {
+	/* border-width: thin; */
+  	/* border-style: solid; */
+  	border-collapse: collapse;
+}
+table#data th {
+	font: bold 16px Helvetica;
+	background-color: #AAAAAA;
+}
+table#data td {
+	padding: 7px 10px;
+}
+
+table#data tr:nth-child(odd) {
+	background-color: #BBD9EE;
+}    
+table#data tr:nth-child(even) {
+	background-color: #F1EFE2; 
+}
+ 
