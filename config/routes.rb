@@ -97,6 +97,13 @@ PcbTracker::Application.routes.draw do
     end
   end
  
+  resources :report do
+    collection do
+      get 'user_review_history(.:format)'
+    end
+  end
+  #match '/reports/user_review_history(.:format)' => "report#user_review_history"
+
   # In the event that only the root is provided in the URL,
   # display the tracker home page (index).
   root :to => 'tracker#index'
