@@ -100,6 +100,7 @@ PcbTracker::Application.routes.draw do
   resources :report do
     collection do
       get 'user_review_history(.:format)'
+      get '/reviewer_workload'
     end
   end
   #match '/reports/user_review_history(.:format)' => "report#user_review_history"
