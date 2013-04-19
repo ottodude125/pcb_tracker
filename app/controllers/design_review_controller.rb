@@ -685,11 +685,15 @@ z
       end
     end
 
-    flash['rows'] = pnums
+    # if no "pcb" entry, add one 
+    pcb  = pnums.detect { |pnum| pnum.use == 'pcb' }
+    unless pcb 
+      pnums.unshift(PartNum.new( :use => "pcb",  :revision => "a" ) )
+    end
+    flash['rows'] = pnums  #to pass to "change_part_numbers"
     
     #check for a valid PCB part number
-    pcb  = pnums.detect { |pnum| pnum.use == 'pcb' }
-    unless pcb.valid_pcb_part_number?
+    unless pcb && pcb.valid_pcb_part_number?
       flash['notice'] = "A valid PCB part number like '123-456-78' must be specified"
       redirect_to( :action => 'change_part_numbers',
         :id => design_review.id,
