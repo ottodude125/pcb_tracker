@@ -648,12 +648,7 @@ class BoardDesignEntry < ActiveRecord::Base
     first = 1
     pcbas = ""
     PartNum.get_bde_pcba_part_numbers(self.id).each { |pcba|
-      string = pcba.name_string + " "
-      if pcba.description.empty?
-        string << "<span style='color: red; font-weight: bold;'>Description Not Set</span>"
-      else
-        string << pcba.description
-      end
+      string = pcba.name_string + " " + self.description
       if first == 1
         pcbas << string  
         first = 0
