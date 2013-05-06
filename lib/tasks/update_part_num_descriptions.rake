@@ -97,14 +97,14 @@ namespace :update_part_num do
           @designers << design.designer
         end      
       end      
-    end  #task: descriptions
+    end  # incomplete_designs.each
 
     # if there are part numbers that have been updated then send out email     
     if !@updated_part_nums.empty?
       TrackerMailer.part_num_update(@updated_part_nums, @designers, @numdes, @numparts, @numpartsup).deliver
       #puts " There were #{@numdes} designs and #{@numparts} part numbers and #{@numpartsup} partnums were updated"
     end
-  end
+  end #task: descriptions
     
 end
 
