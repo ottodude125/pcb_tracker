@@ -3,9 +3,55 @@
 # Send out email summary
 # Create review comment for each number that has been updated
 
-
 namespace :update_part_num do
-  task :descriptions => :environment do |t|
+  
+  desc "Load the part number descriptions into the oracle_part_nums table"
+  task :database => :environment do
+    #STDERR.puts "Loading database"
+    
+    env = ActiveRecord::Base.configurations[Rails.env]
+    table  = "oracle_part_nums"
+        
+    begin
+      #Update the oracle part nums table
+      con = Mysql2::Client.new( :username => env['username'], 
+                                :password => env['password'], 
+                                :database => env['database'],
+                                :host     => env['host'], 
+                                :port     => env['port']
+                              )
+      con.query("DROP TABLE IF EXISTS #{table}")
+      con.query("CREATE TABLE #{table}(id INT PRIMARY KEY AUTO_INCREMENT,
+                                           number VARCHAR(255) ,
+                                           description VARCHAR(80),
+                                           INDEX (number) )")
+                                           
+      file = '/hwnet/dtg_devel/cis_mrp/descript_oracle.txt'    
+      # partnum = first ten characters
+      # description = rest of line
+      #although it is slower, lets load one row at a time
+      File.readlines(file).each do |line|
+        parts = line.unpack('a10a*')
+        partnum     = parts[0]
+        description = parts[1]
+        description = description.gsub(/'/,"''");
+        con.query("INSERT IGNORE INTO #{table} (`number`,`description`)
+          VALUES ('#{partnum}','#{description}') ")
+      end
+    rescue Mysql2::Error => e
+      puts e.errno
+      puts e.error
+
+    ensure
+      con.close if con
+      
+    end
+  end # task: database
+
+  desc "Update the part_nums data table from oracle_part_nums database table."
+  # requires a load of the oracle data file first.
+  task :descriptions => [ :environment, :database ] do 
+    #STDERR.puts "Updating descriptions"
     # vars to hold statistical info and part nums data that was updated for email
     @numdes = 0
     @numparts = 0
@@ -51,7 +97,7 @@ namespace :update_part_num do
           @designers << design.designer
         end      
       end      
-    end
+    end  #task: descriptions
 
     # if there are part numbers that have been updated then send out email     
     if !@updated_part_nums.empty?
@@ -59,5 +105,6 @@ namespace :update_part_num do
       #puts " There were #{@numdes} designs and #{@numparts} part numbers and #{@numpartsup} partnums were updated"
     end
   end
+    
 end
 
