@@ -45,7 +45,7 @@
           	  PCBA Part Number(s)/Description(s):
           	</th>
 			<td width="300">
-			  <%= @design_review.design.pcbas_string %>
+			  <%= @design_review.design.pcbas_string.html_safe %>
 			</td>
           </tr>
           <tr>
