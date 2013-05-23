@@ -21,11 +21,14 @@ namespace :update_part_num do
                                 :port     => env['port']
                               )
       con.query("DROP TABLE IF EXISTS #{table}")
-      con.query("CREATE TABLE #{table}(id INT PRIMARY KEY AUTO_INCREMENT,
-                                           number VARCHAR(255) ,
-                                           description VARCHAR(80),
-                                           INDEX (number) )")
-                                           
+      con.query("CREATE TABLE #{table}(
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        number      VARCHAR(15) ,
+        description VARCHAR(80),
+        INDEX (number) )")
+      #insert an update marker
+      con.query("INSERT IGNORE INTO #{table} (`number`,`description`)
+        VALUES ('LOADED','#{Time.now}') ")                                           
       file = '/hwnet/dtg_devel/cis_mrp/descript_oracle.txt'    
       # partnum = first ten characters
       # description = rest of line
@@ -34,7 +37,10 @@ namespace :update_part_num do
         parts = line.unpack('a10a*')
         partnum     = parts[0]
         description = parts[1]
-        description = description.gsub(/'/,"''");
+        description = description.gsub("\n",'')
+        description = description.gsub(/'/,"''")
+        # next gsub preserves backslashes
+        description = description.gsub("\\",'\\\\\\\\')
         con.query("INSERT IGNORE INTO #{table} (`number`,`description`)
           VALUES ('#{partnum}','#{description}') ")
       end
@@ -105,6 +111,6 @@ namespace :update_part_num do
       #puts " There were #{@numdes} designs and #{@numparts} part numbers and #{@numpartsup} partnums were updated"
     end
   end #task: descriptions
-    
+  
 end
 
