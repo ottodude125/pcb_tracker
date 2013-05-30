@@ -1975,8 +1975,9 @@ class Design < ActiveRecord::Base
 
   def pcb_display_with_description
     part_num = PartNum.get_design_pcb_part_number(self.id)
+    part_num_description = part_num.description ? part_num.description : "(Description not set)"
     if part_num
-      part_num.name_string + ' ' + part_num.rev_string + ' ' + part_num.description
+      part_num.name_string + ' ' + part_num.rev_string + ' ' + part_num_description
     else
       "(no part number)"
     end
