@@ -13,7 +13,7 @@ jQuery(function($) {
     value = $(this).is(':checked') ? 1 : 0;  /* user id */
     url   = $(this).parents("table").attr('url');
 
-    alert("entered value = " + value + " field = " + field + " url=" + url) ;
+    //alert("entered value = " + value + " field = " + field + " url=" + url) ;
     $.post(url, { field: field, value: value} ); //no return data
   });
 });
