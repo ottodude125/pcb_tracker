@@ -1,4 +1,10 @@
 <%= stylesheet_link_tag "report.css" %>
+<script type="text/javascript">
+function download_csv(){
+	$('form').attr("action","reviewer_approval_time.csv");
+	$('form').submit();
+}
+</script>
 
 <h1>Review Approval Time</h1>
 
@@ -16,7 +22,10 @@
 	</td>
 	<td><%= submit_tag("Change Review Date Range") %></td>
 </tr>
-<tr><td><%= submit_tag("Download as CSV", :formaction => "reviewer_approval_time.csv" ) %></td></tr>
+<tr><td><%= #submit_tag("Download as CSV", :formaction => "reviewer_approval_time.csv") NOT IN IE8 
+         %>
+  <input type="button" onclick="download_csv()" value="Download as CSV">
+</td></tr>
 </table>
 <p></p>
 <% end # form %>
