@@ -1,0 +1,76 @@
+<h1> Reason Relationships </h1>
+
+
+<table>
+	<tr>
+		<th>
+			Classes
+		</th>
+		<th>
+			Types
+		</th>
+		<th>
+			Items
+		</th>
+		<th>
+			Details
+		</th>
+	</tr>
+	<%- @reasons.each do |r| %>
+		<tr>
+			<td>
+				<%= r.name %>
+			</td>
+		</tr>
+		
+		<%- r.change_types.each do |ct| %>
+			<tr>
+				<td>
+					
+				</td>
+				<td>
+					<%= ct.name %>
+				</td>
+			</tr>
+			
+			<%- ct.change_items.each do |ci| %>
+				<tr>
+					<td>
+						
+					</td>
+					<td>
+						
+					</td>
+					<td>
+						<%= ci.name %>
+					</td>
+				</tr>
+				
+				<%- ci.change_details.each do |cd| %>
+					<tr>
+						<td>
+							
+						</td>
+						<td>
+							
+						</td>
+						<td>
+							
+						</td>
+						<td>
+							<%= cd.name %>
+						</td>
+					</tr>				
+				<% end %>
+			<% end %>
+		
+		<% end %>				
+		
+	<% end %>
+</table>
+
+
+
+
+
+

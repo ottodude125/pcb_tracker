@@ -24,6 +24,9 @@ PcbTracker::Application.routes.draw do
 
   resources :change_classes do
     resources :change_types, :name_prefix => "change_class_"
+    collection do
+      get  :reason_relationships
+    end
   end
   
   resources :change_types do
