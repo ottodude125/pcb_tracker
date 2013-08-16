@@ -76,8 +76,7 @@
                     </table>
                     </td>
                 </tr>
-            <% end %>
-        
+            <% end %>  
        
             <!-- ############################################################ -->
             <!-- Pending Design Changes                                            -->
@@ -181,6 +180,22 @@
                 </td>
             </tr>    
         <% end %> <!-- End !designer && !@reviewer && !@pcb_admin -->
+
+        <% if !@pcb_admin %>
+     
+            <!-- ############################################################ -->
+            <!-- Reviewer Approval Time                                           -->
+            <!-- ############################################################ -->
+            <tr>
+                <td align="center">
+                    <%= link_to("Reviewer Approval Time",
+                                { :controller => 'report',
+                                  :action     => 'reviewer_approval_time' }) %>
+                </td>
+            </tr>    
+        <% end %> <!-- End @pcb_admin -->
+          
+        
 
         <!-- ############################################################ -->
         <!-- Admin Portal                                                 -->
