@@ -391,33 +391,36 @@ private
       line = Array.new
       line.concat(heads)
       types.each do | type |
-        line << type + "/Role"
-        line << type + "/User"
+        line << type 
         line << "Days"
       end
       csv << line
 
-      data.each do |key,row|
-        line = []
-        heads.each do | head |
-          line << row[head]
-        end
-        types.each do | type |
-          role = row["#{type}_role"]
-          if role.blank?
-            line << "" #role
-            line << "" #user
-            line << "" #time
-          else
-            user = row["#{type}_user"] || ""
-            time = row["#{type}_time"] || ""
-            line << role
-            line << user
-            line << time
-          end
-        end
-        csv << line
-      end
+      data.each do | board,brd_data |
+        description = "Unknown"
+        brd_data.each do | reviewer, revr_data | 
+          if reviewer == "Description" 
+            description = revr_data
+            next
+          end         
+          line = []
+          line << board
+          line << description
+          line << reviewer
+          types.each do | type |
+            role = revr_data["#{type}_role"]
+            if role.blank?
+              line << "" #role
+              line << "" #time
+            else
+              time = revr_data["#{type}_time"] || ""
+              line << role
+              line << time
+            end
+          end #each type
+          csv << line
+        end  #each brd_data
+      end #each data
     end
   end
 
