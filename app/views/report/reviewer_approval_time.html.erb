@@ -46,13 +46,20 @@ function submit_html(){
 		<th>Days</th>
 	<% }%>
 	</tr>
-	<% @data.each { | key, row | %>
-	<tr>
-		<% @heads.each { | head| %>
-			<td><%=row[head]%></td>
-		<% }%>
-		<% @types.each { | type | 
-			time=row["#{type}_time"]
+	<% @data.each { | board, brd_data  | 
+      description = "Unknown"
+	  brd_data.each{ | reviewer, revr_data | 
+	    if reviewer == "Description" 
+		  description = revr_data
+		  next
+		 end 
+	%>	
+		 <tr>
+		 <td><%= board %></td>
+		 <td><%= description %></td>
+		 <td><%= reviewer %></td>
+		 <% @types.each { | type | 
+			time=revr_data["#{type}_time"]
 			if time.blank? %>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
@@ -62,16 +69,20 @@ function submit_html(){
 				else
 					red = ""
 		    	end
-		    %>
-			<td><%= link_to(row["#{type}_role"],
+		        %>
+			    <td><%= link_to(revr_data["#{type}_role"],
                              { :controller => 'design_review',
                                :action     => :view,
-                               :id         => row["#{type}_rr_id"] })
-                               %><hr/><%=row["#{type}_user"]%></td>
-			<td <%=red%>><%= time%></td>
-		<% end }%>
-	</tr>
-    <% } # each row 
+                               :id         => revr_data["#{type}_rr_id"] })
+                     %></td>
+			    <td <%=red%>><%= time%></td>
+	    <% end } # if time; each type
+	    %>
+		</tr>
+      <% } # each reviewer
+      %>
+    <td colspan=15><hr/></td>
+    <% } # each board
     %>
 </table>
 

@@ -308,7 +308,7 @@ class ReportController < ApplicationController
       "reviewed_on <= '#{toDB}'"
     ])
     
-    @heads = [ "PCB","Description"]
+    @heads = [ "PCB","Description","Reviewer"]
     @types = ReviewType.select(:name).order(:sort_order).map(&:name)
       
     review_results.each { | result |
@@ -328,17 +328,16 @@ class ReportController < ApplicationController
         time        = business_days_between(postdate,reviewdate)
         rr_id       = result.design_review.id
         
-        unless @data.has_key?(pnum_str)
+        unless @data.has_key?(pnum_str) # Make a new board key
           @data[pnum_str] = Hash.new
-          @data[pnum_str]["PCB"] = pnum_str
           @data[pnum_str]["Description"] = description
         end
-        row = @data[pnum_str] 
-        row["#{type}_user"] = reviewer
-        row["#{type}_role"] = role
-        row["#{type}_time"] = time
-        row["#{type}_rr_id"] = rr_id
-        @data[pnum_str] = row
+        unless @data[pnum_str].has_key?(reviewer)
+          @data[pnum_str][reviewer] = Hash.new
+        end
+        @data[pnum_str][reviewer]["#{type}_time"] = time
+        @data[pnum_str][reviewer]["#{type}_rr_id"] = rr_id
+        @data[pnum_str][reviewer]["#{type}_role"] = role
       else
         #TODO: should put something here
       end
