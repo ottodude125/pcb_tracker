@@ -932,11 +932,12 @@ class DesignReview < ActiveRecord::Base
   ######################################################################
   #
   def review_locked?
-  
-    (self.review_type.name == "Final" && 
-     (!(self.design.audit.skip? || self.design.audit.auditor_complete?) ||
-      !self.design.work_assignments_complete?))
-
+    #(self.review_type.name == "Final" && 
+    # (!(self.design.audit.skip? || self.design.audit.auditor_complete?) ||
+    #  !self.design.work_assignments_complete?))
+    !(self.review_type.name != "Final" || 
+      !( !self.design.audit.skip? && !self.design.audit.auditor_complete?) ||
+      !self.design.work_assignments_complete?)
   end
   
   
