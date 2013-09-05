@@ -110,7 +110,7 @@ class ChangeClassesController < ApplicationController
   #end
   
   def reason_relationships
-    @reasons = ChangeClass.includes(change_types: [change_items: :change_details]).order("position")
+    @change_classes = ChangeClass.includes(change_types: [change_items: :change_details]).order("position")
   end
   
 end

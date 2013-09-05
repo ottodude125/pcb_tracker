@@ -16,20 +16,40 @@
 			Details
 		</th>
 	</tr>
-	<%- @reasons.each do |r| %>
+	<%- @change_classes.each do |cc| %>
 		<tr>
 			<td>
-				<%= r.name %>
+				<div id="<%=cc.id%>_<%=cc.name.gsub(/\s/,'')%>" style="display:none">
+					<h1>
+						<%= cc.name%>
+					</h1>
+					<p>
+						<%= cc.definition %>
+					</p>
+				</div>
+				<a href="#<%=cc.id%>_<%=cc.name.gsub(/\s/,'')%>" rel="modal:open">
+					<%= cc.name %>
+				</a>
 			</td>
 		</tr>
 		
-		<%- r.change_types.each do |ct| %>
+		<%- cc.change_types.each do |ct| %>
 			<tr>
 				<td>
 					
 				</td>
 				<td>
-					<%= ct.name %>
+					<div id="<%=ct.id%>_<%=ct.name.gsub(/\s/,'')%>" style="display:none">
+						<h1>
+							<%= ct.name%>
+						</h1>
+						<p>
+							<%= ct.definition %>
+						</p>
+					</div>
+					<a href="#<%=ct.id%>_<%=ct.name.gsub(/\s/,'')%>" rel="modal:open">
+						<%= ct.name %>
+					</a>
 				</td>
 			</tr>
 			
@@ -42,7 +62,17 @@
 						
 					</td>
 					<td>
-						<%= ci.name %>
+						<div id="<%=ci.id%>_<%=ci.name.gsub(/\s/,'')%>" style="display:none">
+							<h1>
+								<%= ci.name%>
+							</h1>
+							<p>
+								<%= ci.definition %>
+							</p>
+						</div>
+						<a href="#<%=ci.id%>_<%=ci.name.gsub(/\s/,'')%>" rel="modal:open">
+							<%= ci.name %>
+						</a>
 					</td>
 				</tr>
 				
@@ -58,7 +88,17 @@
 							
 						</td>
 						<td>
-							<%= cd.name %>
+							<div id="<%=cd.id%>_<%=cd.name.gsub(/\s/,'')%>" style="display:none">
+								<h1>
+									<%= cd.name%>
+								</h1>
+								<p>
+									<%= cd.definition %>
+								</p>
+							</div>
+							<a href="#<%=cd.id%>_<%=cd.name.gsub(/\s/,'')%>" rel="modal:open">
+								<%= cd.name %>
+							</a>
 						</td>
 					</tr>				
 				<% end %>
