@@ -20,7 +20,7 @@
                 <td><%= system_message.updated_at.format_dd_mon_yy %></td>
                 <td><%= system_message.message_type %></td>
                 <td><%= system_message.title %></td>
-                <td><%= truncate(system_message.body, :length => 50).html_safe %></td>
+                <td><%= truncate(system_message.body, :length => 50) %></td>
                 <td><%= system_message.valid_from.format_dd_mon_yy %></td>
                 <td><%= system_message.valid_until.format_dd_mon_yy %></td>
                 <td><%= link_to 'Show', system_message_path(system_message.id, :url_return => "/pcbtr/system_messages") %></td>
