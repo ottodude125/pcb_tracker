@@ -58,7 +58,34 @@ class OiInstruction < ActiveRecord::Base
   #
   def completed_assignment_count
     total = 0
-    self.oi_assignments.each { |assignment| total += 1 if assignment.complete? }
+    #self.oi_assignments.each { |assignment| total += 1 if assignment.complete? }
+    self.oi_assignments.each { |assignment| 
+      total += 1 if assignment.complete ==OiAssignment.status_id("Completed") 
+    }
+    total
+  end
+  
+  ######################################################################
+  #
+  # cancelled_assignment_count
+  #
+  # Description:
+  # Returns the total number of cancelled assignments for the instruction.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An integer representing the number of cancelled assignments for the
+  # instruction.
+  #
+  ######################################################################
+  #
+  def cancelled_assignment_count
+    total = 0
+    self.oi_assignments.each { |assignment| 
+      total += 1 if assignment.complete ==OiAssignment.status_id("Cancelled") 
+    }
     total
   end
   

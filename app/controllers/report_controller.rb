@@ -266,17 +266,20 @@ class ReportController < ApplicationController
     review_results.group_by(&:design_review_id).each { | review_id, results |
       result = results.sort_by{ |r| r.reviewed_on}.reverse.first
       next if result.reviewed_on.blank?
-
-      design = result.design_review.design
-      part_num = PartNum.find_by_design_id_and_use(result.design_review.design_id, "pcb")
-      postdate = result.design_review.reposted_on.blank? ? 
-        result.design_review.created_on : result.design_review.reposted_on
-
-      item = [ part_num.name_string,
-        part_num.description || "(Description not found)",
-        result.design_review.review_name,
-        result.reviewed_on.format_dd_mon_yy ,
-        postdate.format_dd_mon_yy ]
+      if result.design_review 
+        design = result.design_review.design
+        part_num = PartNum.find_by_design_id_and_use(result.design_review.design_id, "pcb")
+        postdate = result.design_review.reposted_on.blank? ? 
+          result.design_review.created_on : result.design_review.reposted_on
+  
+        item = [ part_num.name_string,
+          part_num.description || "(Description not found)",
+          result.design_review.review_name,
+          result.reviewed_on.format_dd_mon_yy ,
+          postdate.format_dd_mon_yy ]
+      else
+        item = [ "ERROR", "Review Result = #{result.id}" , "", "", ""]
+      end
       @data << item
     }
     
