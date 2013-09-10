@@ -108,4 +108,16 @@ class ChangeClassesController < ApplicationController
   #    format.xml  { head :ok }
   #  end
   #end
+  
+  def reason_relationships
+    @change_classes = ChangeClass.includes(change_types: [change_items: :change_details]).order("position")
+  end
+  
 end
+
+
+
+
+
+
+

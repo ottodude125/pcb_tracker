@@ -341,8 +341,9 @@ class Design < ActiveRecord::Base
     self.oi_instructions.each { |inst| total += inst.assignment_count }
     total
   end
-  
-  
+
+
+
   ######################################################################
   #
   # completed_assignment_count
@@ -365,7 +366,32 @@ class Design < ActiveRecord::Base
     self.oi_instructions.each { |inst| total += inst.completed_assignment_count }
     total
   end
+      
+  ######################################################################
+  #
+  # cancelled_assignment_count
+  #
+  # Description:
+  # Computes the number of cancelled outsource instruction assignments 
+  # for the design.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # An integer representing the number of cancelled outsource 
+  # instruction assignments assigned for the design.
+  #
+  ######################################################################
+  #
+  def cancelled_assignment_count
+    total = 0
+    self.oi_instructions.each { |inst| total += inst.cancelled_assignment_count }
+    total
+  end
+    
   
+
   
   ######################################################################
   #
@@ -409,7 +435,7 @@ class Design < ActiveRecord::Base
   ######################################################################
   #
   def assignments_complete?
-    self.assignment_count == self.completed_assignment_count
+    self.assignment_count == ( self.completed_assignment_count + self.cancelled_assignment_count )
   end
 
 
@@ -431,7 +457,7 @@ class Design < ActiveRecord::Base
   ######################################################################
   #
   def report_cards_complete?
-    self.assignment_count == self.report_card_count
+    self.completed_assignment_count == self.report_card_count
   end
   
   

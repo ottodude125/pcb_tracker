@@ -167,7 +167,7 @@ PEER_AUDIT       = 2
       self.auditor_complete          = false
       self.designer_completed_checks = 0
       self.designer_complete         = false
-      self.lock_version              = 0
+      #self.lock_version              = 0
       self.skip                      = 1
       if self.save
         msg = "Audit skipped"
