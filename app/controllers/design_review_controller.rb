@@ -1765,7 +1765,13 @@ def admin_update
   @design_review = DesignReview.find(params[:id])
     
   @designers           = Role.active_designers
-  @designer_list       = @designers - [@design_review.design.peer]
+  if ( @design_review.design.audit.skip? || @design_review.design.audit.is_complete?) 
+    # include all designers if audit skipped or complete
+    @designer_list       = @designers
+  else
+    # otherwise exclude peer
+    @designer_list       = @designers - [@design_review.design.peer]
+  end
   @peer_list           = @designers - [@design_review.design.designer]
   @pcb_input_gate_list = Role.find_by_name('PCB Input Gate').active_users
   @priorities          = Priority.get_priorities
@@ -1848,6 +1854,7 @@ def process_admin_update
   # person as both the designer and the peer auditor.  There is a remote
   # chance that the user could select the same person for both roles.
   # Since the chance is remote I am dealing with it here.
+  # If the audit is skipped or complete, there is no "peer" parameter
   if params[:peer] && params[:peer][:id] != "" &&
      params[:peer][:id] == params[:designer][:id]
     redirect_to(:action => 'admin_update', :id => params[:id])
