@@ -146,7 +146,9 @@ class OiInstructionController < ApplicationController
 
     hw_engineers = @design.get_role_reviewers('HWENG').map { |u| u.name }
 
-    if hw_engineers.size == 1
+    if hw_engineers.size == 0
+      @hw_engineers = ""
+    elsif hw_engineers.size == 1
       @hw_engineers = hw_engineers.last
     else
       count = hw_engineers.size

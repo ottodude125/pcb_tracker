@@ -142,8 +142,12 @@
     <tr>
       <td>&nbsp;</td>
       <td bgcolor="#efefef" valign="center">
+      	<% if @hw_engineers == "" %>
+      	No hardware engineers assigned
+      	<% else %>
         <b>Copy <%= @hw_engineers %> on all email: </b>
         <%= check_box('assignment', 'cc_hw_engineer')%>
+        <% end %>
       </td>
     </tr>
     
