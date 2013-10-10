@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/rtomayko/rack-cache.git
+  revision: d00e6e491fcc7bdca9c27d735abde5c4fdb48cd9
+  specs:
+    rack-cache (1.2)
+      rack (>= 0.4)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -82,8 +89,6 @@ GEM
       rails (>= 3.0.0)
     polyglot (0.3.3)
     rack (1.4.5)
-    rack-cache (1.2)
-      rack (>= 0.4)
     rack-contrib (1.1.0)
       rack (>= 0.9.1)
     rack-ssl (1.3.3)
@@ -160,6 +165,7 @@ DEPENDENCIES
   mysql2
   net-ldap
   piwik_analytics
+  rack-cache!
   railroady
   rails (= 3.2.0)
   rails-erd
