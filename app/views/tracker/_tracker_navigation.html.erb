@@ -76,8 +76,7 @@
                     </table>
                     </td>
                 </tr>
-            <% end %>
-        
+            <% end %>  
        
             <!-- ############################################################ -->
             <!-- Pending Design Changes                                            -->
@@ -145,7 +144,21 @@
             </td>
         </tr>
         
-        <% if !@designer && !@reviewer && !@pcb_admin && !@basic_user %>
+        <% if @pcb_admin || @tracker_admin %>
+     
+            <!-- ############################################################ -->
+            <!-- Reviewer Approval Time                                           -->
+            <!-- ############################################################ -->
+            <tr>
+                <td align="center">
+                    <%= link_to("Reviewer Approval Time",
+                                { :controller => 'report',
+                                  :action     => 'reviewer_approval_time' }) %>
+                </td>
+            </tr>    
+       <% end %> <!-- End @pcb_admin -->
+          
+       <% if !@designer && !@reviewer && !@pcb_admin && !@basic_user %>
     
             <!-- ############################################################ -->
             <!-- ECO CAD Tasking                                            -->
@@ -181,6 +194,8 @@
                 </td>
             </tr>    
         <% end %> <!-- End !designer && !@reviewer && !@pcb_admin -->
+
+        
 
         <!-- ############################################################ -->
         <!-- Admin Portal                                                 -->

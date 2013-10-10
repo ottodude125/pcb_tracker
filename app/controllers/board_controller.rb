@@ -85,14 +85,15 @@ before_filter(:verify_admin_role,
 
     #Get the board information
     @type = params[:type] || 'pcb'
-    @designs = PartNum.get_designs(params[:part_number],@type)
+    part_number = params[:part_number]
+    @designs = PartNum.get_designs(part_number,@type)
     
     flash['notice'] = 'Number of designs - ' + @designs.size.to_s
-    if @designs.size.to_s == 0
-      redirect_to(:action => 'show_boards')
+    # First sort the designs by name, then sort the reviews by review order.
+    @designs = @designs.sort_by { |design| design.id }
+    if @designs.size == 0
+      @detailed_name = "Part number prefix #{part_number} not found"
     else
-      # First sort the designs by name, then sort the reviews by review order.
-      @designs = @designs.sort_by { |design| design.id }
       @detailed_name = @designs[0].detailed_name
     end
   end

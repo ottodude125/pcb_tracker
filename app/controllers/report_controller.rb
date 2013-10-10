@@ -285,9 +285,69 @@ class ReportController < ApplicationController
     
     respond_to do | format | 
       format.html
-      format.csv { send_data to_csv(@heads,@data) }
+      format.csv { send_data reviewer_to_csv(@heads,@data) }
     end
+  end
     
+  def reviewer_approval_time
+    Date::DATE_FORMATS[:mmddyyyy] = "%m/%d/%Y"
+    @max_date    = Date.today.to_s(:mmddyyyy)
+    @min_date = (Date.today - 3.months).beginning_of_month.to_s(:mmddyyyy)
+    @from = params[:from].blank? ? @min_date : params[:from]
+    @to   = params[:to].blank?   ? @max_date : params[:to]
+    #convert m/d/y to y-m-d for database
+    fromX   = @from.split("/")
+    fromDB  = fromX[2] + "-" + fromX[0] + "-" + fromX[1]
+    toX     = @to.split("/")
+    toDB    = toX[2] + "-" + toX[0] + "-" + toX[1]
+
+    @data = Hash.new
+    #review_results = DesignReviewResult.find_all_by_reviewer_id(@logged_in_user)
+    review_results = DesignReviewResult.find(:all, :conditions => [
+      "reviewed_on >= '#{fromDB}' AND " +
+      "reviewed_on <= '#{toDB}'"
+    ])
+    
+    @heads = [ "PCB","Description","Reviewer"]
+    @types = ReviewType.select(:name).order(:sort_order).map(&:name)
+      
+    review_results.each { | result |
+      next if result.reviewed_on.blank?
+      if result.design_review 
+        design     = result.design_review.design
+        part_num   = PartNum.find_by_design_id_and_use(result.design_review.design_id, "pcb")
+        pnum_str   = part_num.name_string
+        pnum_sym   = pnum_str.to_sym
+        postdate   = result.design_review.reposted_on.blank? ? 
+          result.design_review.created_on : result.design_review.reposted_on
+        reviewdate  = result.reviewed_on
+        description = part_num.description || "(Description not found)"
+        type        = result.design_review.review_name
+        role        = result.role.display_name
+        reviewer    = result.reviewer.name
+        time        = business_days_between(postdate,reviewdate)
+        rr_id       = result.design_review.id
+        
+        unless @data.has_key?(pnum_str) # Make a new board key
+          @data[pnum_str] = Hash.new
+          @data[pnum_str]["Description"] = description
+        end
+        unless @data[pnum_str].has_key?(reviewer)
+          @data[pnum_str][reviewer] = Hash.new
+        end
+        @data[pnum_str][reviewer]["#{type}_time"] = time
+        @data[pnum_str][reviewer]["#{type}_rr_id"] = rr_id
+        @data[pnum_str][reviewer]["#{type}_role"] = role
+      else
+        #TODO: should put something here
+      end
+    }
+
+    respond_to do | format | 
+      format.html
+      format.csv { send_data time_to_csv(@heads,@types,@data)}
+    end
+
   end
 
 private
@@ -317,13 +377,61 @@ private
     common_part + '_report_count_graph.png'
   end
 
-  def to_csv(heads, data)
+  def reviewer_to_csv(heads, data)
     CSV.generate() do |csv|
       csv << heads
       data.each do |row|
         csv << row
       end
     end
+  end
+  
+  def time_to_csv(heads, types, data)
+    CSV.generate() do |csv|
+      line = Array.new
+      line.concat(heads)
+      types.each do | type |
+        line << type 
+        line << "Days"
+      end
+      csv << line
+
+      data.each do | board,brd_data |
+        description = "Unknown"
+        brd_data.each do | reviewer, revr_data | 
+          if reviewer == "Description" 
+            description = revr_data
+            next
+          end         
+          line = []
+          line << board
+          line << description
+          line << reviewer
+          types.each do | type |
+            role = revr_data["#{type}_role"]
+            if role.blank?
+              line << "" #role
+              line << "" #time
+            else
+              time = revr_data["#{type}_time"] || ""
+              line << role
+              line << time
+            end
+          end #each type
+          csv << line
+        end  #each brd_data
+      end #each data
+    end
+  end
+
+  def business_days_between(date1,date2)
+    business_days = 0
+    date = date2
+    while date > date1
+      business_days = business_days + 1 unless date.saturday? or date.sunday?
+      date = date - 1.day
+    end
+    business_days
   end
 
 end
