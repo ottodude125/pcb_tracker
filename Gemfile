@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '3.2.0'
-gem "rack-cache", :git => "https://github.com/rtomayko/rack-cache.git"
+gem "rack-cache"
 #gem 'rake', '~> 0.9.2.2'
 #gem 'rdoc', '~> 3.12'
 
