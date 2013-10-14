@@ -21,6 +21,6 @@ fi
 
 cd /hwnet/dtg_devel/web/boarddev/applications/pcb_tracker
 
-PATH=/usr/local/bin:/usr/bin:/bin /usr/local/bin/rake npi_bom:get_design_data RAILS_ENV=production > $outfile
+PATH=/usr/local/bin:/usr/bin:/bin bundle exec rake npi_bom:get_design_data RAILS_ENV=production > $outfile
 #/usr/local/bin/rails runner -e production 'Design.bom_upload_data' > \
 #    $outfile
