@@ -106,6 +106,7 @@ PcbTracker::Application.routes.draw do
       get 'reviewer_approval_time(.:format)'
       get '/reviewer_workload'
       post 'reviewer_approval_time(.:format)'
+      get 'summary_data'
     end
   end
   #match '/reports/user_review_history(.:format)' => "report#user_review_history"

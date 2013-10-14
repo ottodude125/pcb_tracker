@@ -29,7 +29,13 @@
             <th class="teraheader" width="200">Total Entries: </th>
             <td width="100"><%= entry_list.size %></td>
             <th class="teraheader" width="200">Total Reviews: </th>
-            <td width="100"><%= @design_reviews[key].size %></td>
+            <td width="100">
+            <%= if ( @design_reviews[key] )
+            	@design_reviews[key].size 
+            else 
+            	"0"
+            end %>
+            </td>
           </tr>
         </table>
       </td>

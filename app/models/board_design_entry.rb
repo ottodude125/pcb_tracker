@@ -44,11 +44,13 @@ class BoardDesignEntry < ActiveRecord::Base
     sorted_by_quarter = {}
     
     entries.each do |entry|
-      quarter = 'Q' + entry.submitted_on.current_quarter.to_s
-      year    = entry.submitted_on.strftime("%Y")
-      key     = year + quarter
-      sorted_by_quarter[key] = [] if !sorted_by_quarter[key]
-      sorted_by_quarter[key] << entry
+      if ( ! entry.submitted_on.blank? )
+        quarter = 'Q' + entry.submitted_on.current_quarter.to_s
+        year    = entry.submitted_on.strftime("%Y")
+        key     = year + quarter
+        sorted_by_quarter[key] = [] if !sorted_by_quarter[key]
+        sorted_by_quarter[key] << entry
+      end
     end
     
     sorted_by_quarter
