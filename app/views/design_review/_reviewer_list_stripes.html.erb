@@ -31,19 +31,23 @@
     <th>Comments</th>
   </tr>
 
-  <% @review_results.each do |review_result| %>
-    <% if review_result.result == "No Response" %>
-    <tr class="no_response">
-    <% elsif review_result.positive_response? %>
-    <tr class="approved">
-    <% elsif review_result.result == "COMMENTED" %>
-    <tr class="commented">
-    <% elsif review_result.result == "REJECTED" %>
-    <tr class="rejected">
-    <% else %>
-    <tr class="withdrawn">
-    <% end %>
-
+  <% @review_results.each do |review_result|
+  	str = "" 
+    if ( review_result.reviewer.active != 1 ) 
+    	str = str + 'warn '
+ 	end
+    if review_result.result == "No Response"
+    	str = str + 'no_response '
+    elsif review_result.positive_response?
+    	str = str + 'approved '
+    elsif review_result.result == "COMMENTED"
+    	str = str + 'commented '
+    elsif review_result.result == "REJECTED"
+    	str = str + 'rejected '
+    else
+      	str = str + 'withdrawn '
+    end %>
+	<tr class="<%= str %>">
     <% bold_entry = review_result.reviewer == @logged_in_user %>
 
       <td align="left">
