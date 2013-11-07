@@ -81,6 +81,7 @@ GEM
       activesupport
       rails (>= 3.0.0)
     polyglot (0.3.3)
+    query_reviewer (0.2.2)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -104,6 +105,8 @@ GEM
       activesupport (>= 3.0)
       choice (~> 0.1.6)
       ruby-graphviz (~> 1.0.4)
+    rails-footnotes (3.7.9)
+      rails (>= 3.0.0)
     rails_autolink (1.0.9)
       rails (~> 3.1)
     railties (3.2.0)
@@ -160,10 +163,12 @@ DEPENDENCIES
   mysql2
   net-ldap
   piwik_analytics
+  query_reviewer
   rack-cache
   railroady
   rails (= 3.2.0)
   rails-erd
+  rails-footnotes (>= 3.7.9)
   rails_autolink
   sass-rails (~> 3.2.3)
   therubyracer (= 0.12.0)
