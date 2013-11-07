@@ -47,7 +47,7 @@ gem 'jquery-rails'
 
 # Java
 gem 'execjs'
-gem 'therubyracer'
+gem "therubyracer", '0.12.0',  :require => 'v8'
 
 # Graphs 
 #gem 'gruff'

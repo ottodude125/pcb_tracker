@@ -11,20 +11,27 @@
 # Ignore bundler config
 /.bundle
 
-/db/schema.rb
-
-# Ignore the default SQLite database.
-/db/*.sqlite3
-
 # Ignore all logfiles and tempfiles.
 /log/*.log
 /tmp/cache/
 /tmp/*
 
+
 *.swp
 .sass-cache
-config/database.yml
 public/stylesheets/compiled/*
 /public/assets/*
+public/assets/
+public/assets
 /vendor/bundle/*
 
+#Window thumbnail file
+Thumbs.db
+
+# Katon's special db.yml files for his mac
+/config/database.ymlalt
+/config/database.ymlmimir
+
+# Katon's rvm files
+.ruby-gemset
+.ruby-version
