@@ -133,9 +133,9 @@
                 ShowTime();
             </script>         
         </td>
-        <td colspan="3"><%=request.env['SERVER_NAME'].sub(/\..*/, "")%>
+        <td colspan="4"><%=request.env['SERVER_NAME'].sub(/\..*/, "")%>
         <%= if Rails.env.development? 
-           raw("<br/>") + Socket.gethostname
+           raw(": " + `git branch | sed -n '/*/s/^.* //p'` + "<br/>" + Socket.gethostname )
          end %>
         </td>
     </tr>
