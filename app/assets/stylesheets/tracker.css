@@ -48,6 +48,10 @@ a:hover { color: #fff; background-color:#000; }
 .board_table { font: 11px Verdana, Geneva, Arial, Helvetica, sans-serif; }
 /* same as a: - used for null cells in table*/
 
+.highlight {
+  background-color: yellow;
+  font-weight: bold;
+}
 
 .actiontable {
   border-collapse: collapse;

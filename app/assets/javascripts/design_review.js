@@ -55,5 +55,41 @@ $(function() {
 	    complete.show();
 	    return false;
 	});
-});		
+
+	
+
+	// METHODS FOR design_review/add_attachment
+
+	// Method checks user chose a file and selected a document type when "Upload File" button is clicked
+	// If above is not true then page is not submitted, empty fields are highlighted, and user is asked to fill out highlighted fields
+	$("#uploadfile").click(function(event) {
+		$(".document_type_row").removeClass(" highlight ");
+		$(".file_select_row").removeClass(" highlight ");
+		var doc_type_id = $("#document_type_id").val();
+		var file_input = $("#document_document").val();
+		if (!file_input) {
+			$(".file_select_row").addClass(" highlight ");
+		}
+		if (!doc_type_id) {
+			$(".document_type_row").addClass(" highlight ");
+		}
+		if (!file_input || !doc_type_id) {
+			alert("Please fill in highlighted fields before trying to upload file.");		
+			event.preventDefault();
+		}
+	});	
+
+});
+
+
+
+
+
+
+
+
+
+
+
+		
 	
