@@ -9,13 +9,6 @@
 # And be sure to use new-style password hashing:
 #   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
 
-<% require 'socket'
-   host = Socket.gethostname
-   ports = { "development" => 3308,
-             "test"        => 3308,
-             "production"  => 3307 } 
-   
-%>
 
 <% %w(development test production).each do |env| %>
 <%= env %>:
@@ -24,9 +17,8 @@
   reconnect: false
   database: pcbtr3_<%= env %>
   pool: 5
-  username: pcbtr
-  password: PcBtR
-  host: <%= host %>
-  port: <%= ports[env] %>
+  username: root 
+  password: connect
+  host: localhost
 
 <% end %>
