@@ -33,7 +33,7 @@ group :development do
   gem 'meta_request'               # Required by RailsPanel which is a Chrome extension that will end your tailing of development.log
   gem "better_errors"              # Creates more descriptive error messages
   gem "binding_of_caller"          # For better_errors advanced features
-  gem "query_reviewer"             # QueryReviewer is an advanced SQL query analyzer 
+  #gem "query_reviewer"             # QueryReviewer is an advanced SQL query analyzer 
   gem 'rails-footnotes', '>= 3.7.9'# Footnotes that gives information about your application
 end
 

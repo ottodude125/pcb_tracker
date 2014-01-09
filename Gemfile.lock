@@ -81,7 +81,6 @@ GEM
       activesupport
       rails (>= 3.0.0)
     polyglot (0.3.3)
-    query_reviewer (0.2.2)
     rack (1.4.5)
     rack-cache (1.2)
       rack (>= 0.4)
@@ -163,7 +162,6 @@ DEPENDENCIES
   mysql2
   net-ldap
   piwik_analytics
-  query_reviewer
   rack-cache
   railroady
   rails (= 3.2.0)
