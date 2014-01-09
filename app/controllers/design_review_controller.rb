@@ -1307,6 +1307,7 @@ def reviewer_results
 
     # Go through the design review list and withdraw the approvals and set the
     # status to "Pending Repost"
+=begin
     if rejection_entered
 
       for review_result in review_result_list
@@ -1321,9 +1322,10 @@ def reviewer_results
       design_review.save
 
     elsif review_results[:roles].size > 0
-
+=end
+    if review_results[:roles].size > 0
       # If all of the reviews have a positive response, the review is complete
-      response = ['WITHDRAWN', 'No Response', 'REJECTED', 'COMMENTED']
+      response = ['WITHDRAWN', 'No Response', 'REJECTED', 'COMMENTED'] # dont continue if any
       outstanding_result = review_result_list.detect { |rr| response.include?(rr.result) }
 
       if not outstanding_result
