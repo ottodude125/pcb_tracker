@@ -27,11 +27,11 @@
   <table border="0"
          width="90%"
          align="center">
-    <tr>
+    <tr class="file_select_row" >
       <th align="right">Filename:</th>
       <td><%= file_field('document', 'document') %></td>
     </tr>
-    <tr>
+    <tr class="document_type_row" >
       <th align="right">Type:</th>
       <td>
         <%= collection_select(:document_type,
@@ -48,7 +48,7 @@
 
   <hr class="div" />
 
-  <input type="submit" value="Upload File" />
+  <input id="uploadfile" type="submit" value="Upload File" />
   <% if params[:return_to] == 'initial_attachments' %>
     <input type="button" value="Cancel" 
            onClick="parent.location='<%= url_for(:controller => 'design',
