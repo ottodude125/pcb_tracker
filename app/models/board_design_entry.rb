@@ -565,8 +565,12 @@ class BoardDesignEntry < ActiveRecord::Base
   ######################################################################
   #  
   def description
-    PartNum.find_by_board_design_entry_id_and_use(self.id, "pcb").description || "(Description not set)"
-    #rescue "(Part number not found)"  
+    if row=PartNum.find_by_board_design_entry_id_and_use(self.id, "pcb")
+      row.description || "(Description not set)"
+    else 
+     
+     self.bde_description || "(Description not found)"
+    end  
   end
   
   ######################################################################

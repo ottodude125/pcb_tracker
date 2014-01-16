@@ -79,21 +79,25 @@
   <tr valign="top">
     <th align="right" width="25%">PCB Part Number/Description: </th>
     <td width="25%" align="left">
-      <%=  @board_design_entry.pcb_number %>
+      <%=  if @board_design_entry.pcb_number == ""
+      	      "???-???-??"
+           else
+              @board_design_entry.pcb_number
+           end 
+      -%>
       <% if @board_design_entry.description.empty? -%>
         <span style='color: red; font-weight: bold;'>Description Not Set</span>
-      <% else %>
+      <% else -%>
         <%= @board_design_entry.description %>
-      <% end %>
-      &nbsp;
+      <% end -%>
       <%= if ( @board_design_entry.modifiable? &&
                   ( !@board_design_entry.submitted? && !(processor || peer) ) ||
-                  (  @board_design_entry.submitted? && processor  ) )
-      link_to('Change',
+                  (  @board_design_entry.submitted? && processor  ) ) 
+        link_to('Change',
   { :action    => 'change_part_numbers',
     :id        => @board_design_entry.id,
   }) 
-      end %>
+      end -%>
     </td>
 
     <th align="right" width="25%">Revision: </th>
