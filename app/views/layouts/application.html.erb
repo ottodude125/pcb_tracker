@@ -135,7 +135,8 @@
         </td>
         <td colspan="4"><%=request.env['SERVER_NAME'].sub(/\..*/, "")%>
         <%= if Rails.env.development? 
-           raw(": " + `git branch | sed -n '/*/s/^.* //p'` + "<br/>" + Socket.gethostname )
+           raw(": " + `git branch | sed -n '/*/s/^.* //p'` + "<br/>" + Socket.gethostname +
+		" " + RUBY_VERSION )
          end %>
         </td>
     </tr>
