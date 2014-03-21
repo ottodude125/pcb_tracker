@@ -32,6 +32,6 @@ Thumbs.db
 /config/database.ymlalt
 /config/database.ymlmimir
 
-# Katon's rvm files
+# rvm / rbenv files
 .ruby-gemset
-.ruby-version
+.ruby-version*
