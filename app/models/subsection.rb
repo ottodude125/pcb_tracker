@@ -65,7 +65,8 @@ class Subsection < ActiveRecord::Base
     self.save
     
     if self.errors.empty?
-      section.subsections.last.insert_at(position)
+      #section.subsections.last.insert_at(position)
+      self.insert_at(position)
     end
 
   end
