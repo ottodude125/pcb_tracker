@@ -115,10 +115,14 @@
        table#base tr.evenrow td{
             background-color: #F2F2E9;
        }
-       td.extreme{
+       td.extreme,
+       table#base tr.oddrow td.extreme,
+       table#base tr.evenrow td.extreme{
             background-color: red;
        }    
-       td.major{
+       td.major,
+       table#base tr.oddrow td.major,
+       table#base tr.evenrow td.major{
             background-color: yellow;
        }
        table#base tr.breakrow td{
@@ -159,8 +163,10 @@
                                 <%- ageclass = (busage > 10) ? "extreme" : ageclass %>
                                 <td class="<%=ageclass%>">
                                     <%= busage %>
-                                    <%= image_tag(attachments['warning.png'].url, :border => 0) %>
-                                </td>
+				    <% if (busage > 10) %> 
+                                      <%= image_tag(attachments['warning.png'].url, :border => 0) %>
+                                    <% end %>
+				</td>
                                 <td class="core_title">
                                     <%= "Phase: " %>
                                 </td>
@@ -274,8 +280,10 @@
                     <%- ageclass = (busage > 10) ? "extreme" : ageclass %>
                     <td class="<%=ageclass%>">
                         <%= busage %>
-                        <%= image_tag(attachments['warning.png'].url, :border => 0) %>
-                    </td>
+			<% if (busage > 10) %>
+                          <%= image_tag(attachments['warning.png'].url, :border => 0) %>
+                        <% end %>
+		    </td>
                     <td>
                         <%=  entry.role.display_name %>
                     </td>
