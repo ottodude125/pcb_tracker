@@ -115,16 +115,16 @@
        table#base tr.evenrow td{
             background-color: #F2F2E9;
        }
+       td.extreme{
+            background-color: red;
+       }    
+       td.major{
+            background-color: yellow;
+       }
        table#base tr.breakrow td{
             background-color: #333333;
             font: 7px;
             padding: 0;
-       }
-       td.extreme {
-       		background-color: red;
-       }
-       td.major {
-       		background-color: yellow;
        }
        
     </style>
@@ -157,7 +157,7 @@
                                 <%- busage = dr.age/1.day %>
                                 <%- ageclass = (busage > 5) ? "major" : "" %>
                                 <%- ageclass = (busage > 10) ? "extreme" : ageclass %>
-                                <td class=ageclass>
+                                <td class="<%=ageclass%>">
                                     <%= busage %>
                                 </td>
                                 <td class="core_title">
@@ -271,7 +271,7 @@
                     <%- busage = dr.age/1.day %>
                     <%- ageclass = (busage > 5) ? "major" : "" %>
                     <%- ageclass = (busage > 10) ? "extreme" : ageclass %>
-                    <td class=ageclass>
+                    <td class="<%=ageclass%>">
                         <%= busage %>
                     </td>
                     <td>
