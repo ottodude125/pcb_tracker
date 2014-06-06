@@ -11,7 +11,7 @@
 ########################################################################
 
 class PingMailer < ActionMailer::Base
-
+  helper :time
   default  :from  => Pcbtr::SENDER
   default  :bcc   => []
 
@@ -40,7 +40,7 @@ class PingMailer < ActionMailer::Base
     @reviews = reviews
     @active_reviews = active_reviews
     
-    mail( :to      => to_list,
+    mail( :to      => "jonathan.katon@teradyne.com",#to_list,
           :subject => subject,
           :cc      => cc_list
         )
@@ -87,7 +87,7 @@ class PingMailer < ActionMailer::Base
     @user = review[:user]
     @result = review[:results]
 
-    mail( :to      => to_list,
+    mail( :to      => "jonathan.katon@teradyne.com",#to_list,
           :subject => subject,
           :cc      => cc_list
         )  

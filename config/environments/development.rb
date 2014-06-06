@@ -1,3 +1,5 @@
+require 'socket'
+
 PcbTracker::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb
 
@@ -18,7 +20,22 @@ PcbTracker::Application.configure do
   
   # Don't care if the mailer can't send
   config.action_mailer.raise_delivery_errors = false
-
+  config.action_mailer.perform_deliveries = true
+  
+  sock = Socket.gethostname
+  if !sock.index("katonj-mac").nil?
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.default_url_options = { :to => "jonathan.katon@teradyne.com"}
+    config.action_mailer.smtp_settings = {
+      address:              'smtp.gmail.com',
+      port:                 587,
+      domain:               'gmail.com',
+      user_name:            'ottodude125@gmail.com',
+      password:             'Gr0phic0l',
+      authentication:       'plain',
+      enable_starttls_auto: true  }  
+  end
+  
   # Print deprecation notices to the Rails logger
   config.active_support.deprecation = :log
 
@@ -41,5 +58,9 @@ PcbTracker::Application.configure do
   #You can find your apparent IP by hitting the old error page's "Show env dump" and looking at "REMOTE_ADDR".
   #allow_ip! is actually backed by a Set, so you can add more than one IP address or subnet.
   BetterErrors::Middleware.allow_ip! "131.101.160.151"
+  BetterErrors::Middleware.allow_ip! '131.101.103.241' #mimir1
+  BetterErrors::Middleware.allow_ip! '131.101.60.26' #???
+  BetterErrors::Middleware.allow_ip! '132.223.6.104' #mac pro
+  BetterErrors::Middleware.allow_ip! '132.223.5.51' #mac pro
 
 end

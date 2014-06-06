@@ -55,7 +55,7 @@ class Ping < ActiveRecord::Base
     count = 0
     
     review_list.each do |userid, data|
-      PingMailer::ping_reviewer(data).deliver    
+      #PingMailer::ping_reviewer(data).deliver    
       #sleep(1)
     end
     

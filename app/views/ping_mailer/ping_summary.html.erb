@@ -120,6 +120,12 @@
             font: 7px;
             padding: 0;
        }
+       td.extreme {
+       		background-color: red;
+       }
+       td.major {
+       		background-color: yellow;
+       }
        
     </style>
 </HEAD>
@@ -148,8 +154,11 @@
                                 <td class="core_title">
                                     <%= "Age: " %>
                                 </td>
-                                <td>
-                                    <%= dr.age/1.day %>
+                                <%- busage = dr.age/1.day %>
+                                <%- ageclass = (busage > 5) ? "major" : "" %>
+                                <%- ageclass = (busage > 10) ? "extreme" : ageclass %>
+                                <td class=ageclass>
+                                    <%= busage %>
                                 </td>
                                 <td class="core_title">
                                     <%= "Phase: " %>
@@ -259,8 +268,11 @@
                     <td>
                         <%= dr.priority.name %>
                     </td>
-                    <td>
-                        <%= dr.age/1.day %>
+                    <%- busage = dr.age/1.day %>
+                    <%- ageclass = (busage > 5) ? "major" : "" %>
+                    <%- ageclass = (busage > 10) ? "extreme" : ageclass %>
+                    <td class=ageclass>
+                        <%= busage %>
                     </td>
                     <td>
                         <%=  entry.role.display_name %>
