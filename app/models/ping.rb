@@ -42,9 +42,13 @@ class Ping < ActiveRecord::Base
         reviewer = drr.reviewer
                 
         if !review_list.include?(reviewer.id)
-          review_list[reviewer.id] = {:user => reviewer, :results => []}
+          review_list[reviewer.id] = {:user => reviewer, :results => [], :urgent => false}
         end
-
+        
+        if (dr.age/1.day) > 10
+          review_list[reviewer.id][:urgent] = true
+        end
+        
         review_list[reviewer.id][:results] << drr
       end     
     end
@@ -55,13 +59,13 @@ class Ping < ActiveRecord::Base
     count = 0
     
     review_list.each do |userid, data|
-      #PingMailer::ping_reviewer(data).deliver    
+      PingMailer::ping_reviewer(data).deliver    
       #sleep(1)
     end
     
     #sleep(10)
 
-    PingMailer.ping_summary(review_list, active_reviews).deliver!
+    PingMailer::ping_summary(review_list, active_reviews).deliver
 
   end
 

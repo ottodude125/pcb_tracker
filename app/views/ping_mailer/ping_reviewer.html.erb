@@ -48,6 +48,16 @@
             font: 7px;
             padding: 0;
        }
+       td.extreme,
+       table#base tr.oddrow td.extreme,
+       table#base tr.evenrow td.extreme{
+            background-color: red;
+       }    
+       td.major,
+       table#base tr.oddrow td.major,
+       table#base tr.evenrow td.major{
+            background-color: yellow;
+       }
        
     </style>
 </HEAD>
@@ -96,9 +106,15 @@
                 <td>
                     <%= dr.review_type.name %>
                 </td>
-                <td>
-                    <%= dr.age/1.day %>
-                </td>
+                <%- busage = dr.age/1.day %>
+                <%- ageclass = (busage > 5) ? "major" : "" %>
+                <%- ageclass = (busage > 10) ? "extreme" : ageclass %>
+                <td class="<%=ageclass%>">
+                    <%= busage %>
+					<% if (busage > 10) %>
+                      	<%= image_tag(attachments['warning.png'].url, :border => 0) %>
+                    <% end %>
+	    		</td>
                 <td>
                     <%= dr.priority.name %>
                 </td>

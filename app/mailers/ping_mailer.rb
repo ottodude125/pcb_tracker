@@ -90,9 +90,16 @@ class PingMailer < ActionMailer::Base
     
     attachments.inline['warning.png'] = File.read('app/assets/images/warning.png')
 
+    if review[:urgent]
+      logger.debug "asdfkjasfjasdfjasdfjasldkfjalskdjflaksjdflkaj"
+      headers['Importance'] = 'high'
+      headers['X-Priority'] = '1'
+      headers['X-MSMail-Priority'] = 'High'
+    end
+
     mail( :to      => "jonathan.katon@teradyne.com",#to_list,
           :subject => subject,
-          :cc      => cc_list
+          :cc      => cc_list,
         )  
   end
 
