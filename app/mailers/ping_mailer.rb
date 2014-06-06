@@ -41,7 +41,7 @@ class PingMailer < ActionMailer::Base
     @active_reviews = active_reviews
     attachments.inline['warning.png'] = File.read('app/assets/images/warning.png')
     
-    mail( :to      => "jonathan.katon@teradyne.com",#to_list,
+    mail( :to      => to_list,
           :subject => subject,
           :cc      => cc_list
         )
@@ -88,16 +88,14 @@ class PingMailer < ActionMailer::Base
     @user = review[:user]
     @result = review[:results]
     
-    attachments.inline['warning.png'] = File.read('app/assets/images/warning.png')
-
     if review[:urgent]
-      logger.debug "asdfkjasfjasdfjasdfjasldkfjalskdjflaksjdflkaj"
+      attachments.inline['warning.png'] = File.read('app/assets/images/warning.png')
       headers['Importance'] = 'high'
       headers['X-Priority'] = '1'
       headers['X-MSMail-Priority'] = 'High'
     end
 
-    mail( :to      => "jonathan.katon@teradyne.com",#to_list,
+    mail( :to      => to_list,
           :subject => subject,
           :cc      => cc_list,
         )  
