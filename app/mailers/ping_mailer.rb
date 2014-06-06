@@ -39,6 +39,7 @@ class PingMailer < ActionMailer::Base
 
     @reviews = reviews
     @active_reviews = active_reviews
+    attachments.inline['warning.png'] = File.read('app/assets/images/warning.png')
     
     mail( :to      => "jonathan.katon@teradyne.com",#to_list,
           :subject => subject,
@@ -86,6 +87,8 @@ class PingMailer < ActionMailer::Base
 
     @user = review[:user]
     @result = review[:results]
+    
+    attachments.inline['warning.png'] = File.read('app/assets/images/warning.png')
 
     mail( :to      => "jonathan.katon@teradyne.com",#to_list,
           :subject => subject,

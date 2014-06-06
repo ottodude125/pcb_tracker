@@ -159,6 +159,7 @@
                                 <%- ageclass = (busage > 10) ? "extreme" : ageclass %>
                                 <td class="<%=ageclass%>">
                                     <%= busage %>
+                                    <%= image_tag(attachments['warning.png'].url, :border => 0) %>
                                 </td>
                                 <td class="core_title">
                                     <%= "Phase: " %>
@@ -273,6 +274,7 @@
                     <%- ageclass = (busage > 10) ? "extreme" : ageclass %>
                     <td class="<%=ageclass%>">
                         <%= busage %>
+                        <%= image_tag(attachments['warning.png'].url, :border => 0) %>
                     </td>
                     <td>
                         <%=  entry.role.display_name %>

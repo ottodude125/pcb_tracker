@@ -61,7 +61,7 @@ class Ping < ActiveRecord::Base
     
     #sleep(10)
 
-    PingMailer::ping_summary(review_list, active_reviews).deliver
+    PingMailer.ping_summary(review_list, active_reviews).deliver!
 
   end
 
