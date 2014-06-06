@@ -82,8 +82,16 @@ function submit_html(){
       <% } # each reviewer
       %>
     <tr><td colspan=15 ><hr/></td></tr>
+	<% @heads.each { | head | %>
+		<th><%=head%></th>
+	<% }%>
+	<% @types.each { | type | %>
+		<th><%=type%></th>
+		<th>Days</th>
+	<% }%>
     <% } # each board
     %>
+    
 </table>
 
 <% else %>
