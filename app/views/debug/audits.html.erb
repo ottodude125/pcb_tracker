@@ -38,7 +38,7 @@
 	  	<%# link_to(audit.design.id,
                     { :action => 'design', :id => audit.design.id }) %>
 	  </td>
-	  <td><%= audit.design.part_number.pcb_display_name %></td>
+	  <td><%= PartNum.find_by_design_id_and_use(audit.design_id,"pcb").part_number_name  %></td>
 	  <td><%= audit.designer_complete? %></td>
 	  <td><%= audit.designer_completed_checks %></td>
 	  <td><%= completed_checks[:self] %> / <%= trimmed_checks[:self] %></td>

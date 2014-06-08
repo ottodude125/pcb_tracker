@@ -65,7 +65,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
       end
     end
     
-    design_checks = audit.design_checks
+    design_checks = @audit.design_checks
     
     @audit.checklist.each_check do |check|
      check.design_check = design_checks.detect { |dc| dc.check_id == check.id }      
@@ -415,7 +415,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
   
   
   def part_numbers
-    @part_numbers = PartNum.find(:all)
+    @part_numbers = PartNum.select("*, NULL as design_count, NULL as bde_count")
     designs       = Design.find(:all)
     bde_list      = BoardDesignEntry.find(:all)
     
@@ -423,7 +423,7 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
       pn_designs = []
       pn_bdes    = []
       
-      designs.each { |d| pn_designs << d if d.pcba_number == pn.name_string }
+      designs.each { |d| pn_designs << d if d.id == pn.design_id }
       pn[:design_count] = pn_designs.size
       if pn_designs.size == 0
         pn[:design_id] = '-'
@@ -433,14 +433,14 @@ before_filter(:verify_admin_role, :except => [:cycle_time])
         pn[:design_id] = 'ERR'
       end
       
-      bde_list.each { |bde| pn_bdes << bde if bde.part_number_id == pn.id }
+      bde_list.each { |bde| pn_bdes << bde if bde.id == pn.board_design_entry_id }
       pn[:bde_count] = pn_bdes.size
       if pn_bdes.size == 0
-        pn[:bde_id] = '-'
+        pn[:board_design_entry_id] = '-'
       elsif pn_bdes.size == 1
-        pn[:bde_id] = pn_bdes[0].id
+        pn[:board_design_entry_id] = pn_bdes[0].id
       else
-        pn[:bde_id] = 'ERR'
+        pn[:board_design_entry_id] = 'ERR'
       end
       
     end

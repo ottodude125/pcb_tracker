@@ -65,11 +65,11 @@
       <td><%= check.id %></td>
       <td><%= check.full_review?.to_s %></td>
       <td><%= check.dot_rev_check?.to_s %></td>
-      <td><%= check.design_check.id %></td>
-      <td><%= check.design_check.self_auditor_checked?.to_s %></td>
-      <td><%= check.design_check.designer_result %></td>
-      <td><%= check.design_check.peer_auditor_checked?.to_s %></td>
-      <td><%= check.design_check.auditor_result %></td>
+      <td><%= check.design_check.id rescue "" %></td>
+      <td><%= check.design_check.self_auditor_checked?.to_s rescue "" %></td>
+      <td><%= check.design_check.designer_result rescue "" %></td>
+      <td><%= check.design_check.peer_auditor_checked?.to_s rescue "" %></td>
+      <td><%= check.design_check.auditor_result rescue "" %></td>
     </tr>
   <% end %>
 </table>

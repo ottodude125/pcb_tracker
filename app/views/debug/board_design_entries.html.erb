@@ -35,8 +35,8 @@
     <td><%= bde.submitted?     ? 'Yes' : 'No' %>
     <td><%= bde.complete?      ? 'Yes' : 'No' %>
 	<td><%= bde.part_number_id %></td>
-	<td><%= bde.part_number.pcb_display_name %></td>
-	<td><%= bde.part_number.pcba_display_name %></td>
+	<td><%= PartNum.find_by_board_design_entry_id_and_use(bde.id,"pcb").part_number_name rescue "-" %></td>
+	<td><%= PartNum.find_by_board_design_entry_id_and_use(bde.id,"pcba").part_number_name rescue "-" %></td>
   </tr>
   <% end %>
 </table>
