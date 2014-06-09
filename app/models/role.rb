@@ -283,6 +283,28 @@ class Role < ActiveRecord::Base
 
   ######################################################################
   #
+  # group_select_active_users
+  #
+  # Description:
+  # This method returns an alphabetized list of active users for
+  # the role. An array is returned with special id and users name
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A list of User records.
+  #
+  ######################################################################
+  #
+  def group_select_active_users
+    users = self.users.delete_if { |u| !u.active? }.sort_by { |usr| usr.last_name }
+    users.each {|u| u.specialid = u.id.to_s + "_" + self.id.to_s } 
+  end
+
+
+  ######################################################################
+  #
   # include?
   #
   # Description:

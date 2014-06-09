@@ -38,7 +38,8 @@ class User < ActiveRecord::Base
   has_and_belongs_to_many :ipd_posts
   has_and_belongs_to_many :roles
 
-
+  attr_accessor :specialid # user_id_role_id for message_broadcast role/user select
+  
   # Please change the salt to something else, 
   # Every application should use a different one 
   @@salt = 'GO_PIRATES!!!'

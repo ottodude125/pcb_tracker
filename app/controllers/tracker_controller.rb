@@ -443,14 +443,8 @@ class TrackerController < ApplicationController
     @subject      = params[:subject] ? params[:subject] : 'IMPORTANT - Please Read'
     @message      = params[:message] ? params[:message] : ''
     @active_roles = Role.find_all_active
-    # present the previously selected roles if any
-    all_role_ids = []
-    @active_roles.each do |role|
-      all_role_ids << "#{role.id}"
-    end
-    @roles        = params[:roles] ? params[:roles] : all_role_ids
- 
-    end
+
+  end
 
   
   ######################################################################
@@ -509,29 +503,29 @@ class TrackerController < ApplicationController
   ######################################################################
   #
   def deliver_broadcast_message
+    
     message = params[:mail][:message].strip
     recipients = []
 
     if message.size == 0     
       flash['notice'] = 'The mail message was not sent - there was no message'
       redirect_to(:action     => 'message_broadcast', 
-                  :subject    => params[:mail][:subject],
-                  :roles      => params[:roles])
+                  :subject    => params[:mail][:subject])
     else
-    
-      if params[:all_users] == '1'
+      users = []
+      params[:role][:user_id].each do |uid|
+        # uid is of form userid_roleid so split and grab user id
+        users << User.find(uid.split(/_/)[0]) unless !uid.present?
+      end
 
-        recipients = User.find_all_by_active(1).collect { |u| u.email}
-
-      else
-        params[:roles].each do |role|
-            recipients += Role.find(role).active_users.collect { |u| u.email }          
-        end
+      # grab only unique recipients
+      users.each do |u|
+        recipients |= [u.email] 
       end
       
       if recipients.size > 0
         message += "\n\n" + recipients.join("\n")
-        TrackerMailer::broadcast_message(params[:mail][:subject],
+        TrackerMailer.broadcast_message(params[:mail][:subject],
                                          message,
                                          recipients).deliver
 
@@ -541,11 +535,9 @@ class TrackerController < ApplicationController
         flash['notice'] = 'The mail message was not sent - no recipient roles were selected'
         redirect_to(:action  => 'message_broadcast', 
                     :subject    => params[:mail][:subject],
-                    :message    => params[:mail][:message],
-                    :roles      => params[:roles])
+                    :message    => params[:mail][:message])
       end
     end
-  
   end
   
   

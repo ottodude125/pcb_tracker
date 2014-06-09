@@ -32,6 +32,22 @@ h2 {
   padding-right: 15px;
 }
 
+.th2 {
+  font: 14px Verdana, Geneva, Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  text-align: center;
+  width: 100px;
+  padding-right: 15px;	
+}
+
+.th3 {
+  font: 12px Verdana, Geneva, Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  text-align: center;
+  padding-right: 40px;
+  padding-left: 40px;	
+}
+
 pre {
   background-color: #eee;
   padding: 10px;
