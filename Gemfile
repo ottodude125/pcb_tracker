@@ -35,6 +35,7 @@ group :development do
   gem "binding_of_caller"          # For better_errors advanced features
   #gem "query_reviewer"             # QueryReviewer is an advanced SQL query analyzer 
   gem 'rails-footnotes', '>= 3.7.9'# Footnotes that gives information about your application
+  gem 'webrick', '1.3.1'           # Add this specifically to get rid of bogus error message in output all the time
 end
 
 #gem 'rake', '~> 0.9.2.2'

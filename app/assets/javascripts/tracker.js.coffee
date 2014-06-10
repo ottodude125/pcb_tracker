@@ -1,8 +1,9 @@
-# manage display of review details
+
 
 
 jQuery ($) ->
 
+  # manage display of review details
   $("#details> button").click ->
     if $(this).text() is "Show Details"
       $(this).text "Hide Details"

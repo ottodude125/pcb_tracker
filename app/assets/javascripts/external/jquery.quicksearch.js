@@ -1,3 +1,7 @@
+/* Stole on 6/10/2014. This is used by jquery.multi-select
+* and adds the ability to add a search bar to the select lists.
+* This is used on the message broadcast page
+*/
 /*! jQuery-QuickSearch - v2.0.4 - 2014-05-27
 * Copyright (c) 2014 Deux Huit Huit (http://deuxhuithuit.com/);
 * Licensed MIT http://deuxhuithuit.mit-license.org */

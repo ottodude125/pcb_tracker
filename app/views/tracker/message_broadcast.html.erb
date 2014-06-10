@@ -3,20 +3,6 @@
 <!-- ********************************************************** -->
 <!-- $Id$ -->
 <!-- ********************************************************** -->
-<%  content_for :header do %>
- jQuery(function($) {
-   $("#all_users").change(function() {
-      if ( $(this).is(":checked") ) {
-        $(".role_checks").attr("checked", "checked");
-      } else {
-        $(".role_checks").removeAttr("checked");
-      }
-    });
- });
- 
-
-
-<% end %>
 
 <% @heading = "PCB Design Track - Message Broadcast" %>
 
