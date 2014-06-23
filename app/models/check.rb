@@ -180,7 +180,8 @@ class Check < ActiveRecord::Base
     self.save
     
     if self.errors.empty?
-      subsection.checks.last.insert_at(position)
+      #subsection.checks.last.insert_at(position)
+      self.insert_at(position)
       subsection.section.checklist.increment_checklist_counters(self, 1)
     end
 
