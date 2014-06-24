@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130219162019) do
+ActiveRecord::Schema.define(:version => 20140623234723) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :default => 0, :null => false
@@ -202,7 +202,7 @@ ActiveRecord::Schema.define(:version => 20130219162019) do
     t.datetime "created_on"
     t.integer  "created_by",                                     :default => 0, :null => false
     t.integer  "designer_only_count",               :limit => 1, :default => 0, :null => false
-    t.integer  "designer_auditor_count",            :limit => 1, :default => 0, :null => false
+    t.integer  "designer_auditor_count",            :limit => 2, :default => 0, :null => false
     t.integer  "dc_designer_only_count",            :limit => 1, :default => 0, :null => false
     t.integer  "dc_designer_auditor_count",         :limit => 1, :default => 0, :null => false
     t.integer  "dr_designer_only_count",            :limit => 1, :default => 0, :null => false
