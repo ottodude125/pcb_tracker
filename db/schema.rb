@@ -566,20 +566,6 @@ ActiveRecord::Schema.define(:version => 20140623234723) do
 
   add_index "oracle_part_nums", ["number"], :name => "number"
 
-  create_table "oracle_part_nums_save", :force => true do |t|
-    t.string "number"
-    t.string "description", :limit => 80
-  end
-
-  add_index "oracle_part_nums_save", ["number"], :name => "number"
-
-  create_table "oracle_part_numsxx", :force => true do |t|
-    t.string "number",      :limit => 15
-    t.string "description", :limit => 80
-  end
-
-  add_index "oracle_part_numsxx", ["number"], :name => "number"
-
   create_table "part_numbers", :force => true do |t|
     t.string "pcb_prefix",       :limit => 3, :default => "", :null => false
     t.string "pcb_number",       :limit => 3, :default => "", :null => false
