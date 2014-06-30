@@ -287,8 +287,9 @@
                   (  @board_design_entry.submitted? && processor  ) )  %>
             <td width="90" align="right">
               <%= link_to('Update', 
-                          { :action      => 'design_constraints', 
+                          { :action      => 'edit_entry', 
                             :id          => @board_design_entry.id,
+                            :design_review_id => @design_review_id,
                             :user_action => 'updating',
                             :viewer      => params[:viewer] }) %>
             </td>
