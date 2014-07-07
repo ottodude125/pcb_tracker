@@ -275,8 +275,8 @@ class ReportController < ApplicationController
         item = [ part_num.name_string,
           part_num.description || "(Description not found)",
           result.design_review.review_name,
-          result.reviewed_on.format_dd_mon_yy ,
-          postdate.format_dd_mon_yy ]
+          postdate.format_dd_mon_yy,
+	  result.reviewed_on.format_dd_mon_yy ]
       else
         item = [ "ERROR", "Review Result = #{result.id}" , "", "", ""]
       end
