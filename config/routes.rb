@@ -12,15 +12,17 @@
 #
 PcbTracker::Application.routes.draw do
   
-  resources :system_messages do
+  resources :board_design_entry do
     collection do
-      get :changelog
-      get :maintenance
-      get :dismiss_messages
+      get  'originator_list'
+      get  'processor_list'
+      get  'get_part_number'
+    end
+    member do
+      post 'update_yes_no'
+      get  'delete_entry'
     end
   end
-  
-  resources :part_nums
 
   resources :change_classes do
     resources :change_types, :name_prefix => "change_class_"
@@ -29,40 +31,33 @@ PcbTracker::Application.routes.draw do
     end
   end
   
+  resources :change_items do
+    resources :change_details, :name_prefix => "change_item_"
+  end
+
   resources :change_types do
     resources :change_items, :name_prefix => "change_type_"
   end
   
-  resources :change_items do
-    resources :change_details, :name_prefix => "change_item_"
+  resources :design do
+    member do
+      post 'change_cc_list'
+      post 'get_role_users'
+      get  'view'
+    end
+    collection do
+      get  'initial_cc_list'
+      get  'initial_attachments'
+      get  'list'
+    end
   end
-   
+  
   resources :design_changes do
     collection do
       get 'pending_list'
     end
   end
 
-  resources :eco_tasks do
-    collection do
-      post 'change_cc_list'
-    end
-  end
-  resources :eco_task_reports
-  resources :eco_documents
-
-  resources :design do
-    member do
-      post 'change_cc_list'
-      post  'get_role_users'
-      get   'view'
-    end
-    collection do
-      get  'initial_cc_list'
-      get 'initial_attachments'
-    end
-  end
-  
   resources :design_review do
     member do
       post 'display_peer_auditor_select'
@@ -82,24 +77,18 @@ PcbTracker::Application.routes.draw do
    end
   end
 
-  resources :board_design_entry do
+  resources :eco_documents
+
+  resources :eco_tasks do
     collection do
-      get  'originator_list'
-      get  'processor_list'
-      get  'get_part_number'
-    end
-    member do
-      post 'update_yes_no'
-      get  'delete_entry'
+      post 'change_cc_list'
     end
   end
   
-  resources :roles do
-    member do
-      post :change_users_list
-    end
-  end
- 
+  resources :eco_task_reports
+    
+  resources :part_nums
+
   resources :report do
     collection do
       get 'user_review_history(.:format)'
@@ -109,6 +98,21 @@ PcbTracker::Application.routes.draw do
       get 'summary_data'
     end
   end
+
+  resources :roles do
+    member do
+      post :change_users_list
+    end
+  end
+ 
+  resources :system_messages do
+    collection do
+      get :changelog
+      get :maintenance
+      get :dismiss_messages
+    end
+  end
+  
   #match '/reports/user_review_history(.:format)' => "report#user_review_history"
 
   # In the event that only the root is provided in the URL,
