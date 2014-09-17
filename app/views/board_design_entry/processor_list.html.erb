@@ -59,7 +59,7 @@
       <% if entry.originated? || entry.submitted? %>
         <td align="center">
           <%= link_to('Delete', 
-                      {:action => 'destroy',
+                      {:action => 'delete_entry',
                        :id     => entry.id,
                        :return => params[:action]},
                       :title  => "Delete the PDB Engineering Entry",
