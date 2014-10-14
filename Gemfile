@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.0'                  # The reason why we are here
+gem 'rails', '3.2.13'                  # The reason why we are here
 gem 'mysql2'                          # Mysql library for ruby binding to libmysql
 gem 'exception_notification', '2.6.1' # Exception notifier for production mode
 gem 'jquery-rails'                    # Adds Jquery to Rails!!
