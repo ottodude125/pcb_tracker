@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140623234723) do
+ActiveRecord::Schema.define(:version => 20150121152747) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :default => 0, :null => false
@@ -348,6 +348,7 @@ ActiveRecord::Schema.define(:version => 20140623234723) do
     t.integer  "pcb_input_id",                   :default => 0,    :null => false
     t.datetime "created_on"
     t.integer  "created_by",                     :default => 0,    :null => false
+    t.string   "pcba_eco_number",  :limit => 10, :default => ""
   end
 
   create_table "designs_fab_houses", :id => false, :force => true do |t|
@@ -565,6 +566,20 @@ ActiveRecord::Schema.define(:version => 20140623234723) do
   end
 
   add_index "oracle_part_nums", ["number"], :name => "number"
+
+  create_table "oracle_part_nums_save", :force => true do |t|
+    t.string "number"
+    t.string "description", :limit => 80
+  end
+
+  add_index "oracle_part_nums_save", ["number"], :name => "number"
+
+  create_table "oracle_part_numsxx", :force => true do |t|
+    t.string "number",      :limit => 15
+    t.string "description", :limit => 80
+  end
+
+  add_index "oracle_part_numsxx", ["number"], :name => "number"
 
   create_table "part_numbers", :force => true do |t|
     t.string "pcb_prefix",       :limit => 3, :default => "", :null => false
