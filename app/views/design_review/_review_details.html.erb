@@ -14,15 +14,24 @@
     <td><%= @design_review.design.pcbas_string.html_safe %></td>
   </tr>
   <tr>
-    <td class="th1">Revision:</td>
-    <td> <%= @design_review.design.pcb_rev %></td>
-    <td class="th1">ECN Number:</td>
+    <td class="th1">PCB ECN Number:</td>
     <td><% if @design_review.design.eco_number != '' %>
           <%=@design_review.design.eco_number%>
         <%else%>
             <b><font color="red">Not Set</font></b>
         <% end %>
      </td>
+    <td class="th1">PCBA ECN Number:</td>
+    <td><% if @design_review.design.pcba_eco_number != '' %>
+          <%=@design_review.design.pcba_eco_number%>
+        <%else%>
+            <b><font color="red">Not Set</font></b>
+        <% end %>
+     </td>    
+  </tr>
+  <tr>
+    <td class="th1">Revision:</td>
+    <td> <%= @design_review.design.pcb_rev %></td>
    </tr>
   <tr>
     <td class="th1">Platform/Project:</td>

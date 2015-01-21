@@ -212,8 +212,9 @@
       </td>
     </tr>
 
+
     <tr>
-      <th align="left">ECN Number:</th>
+      <th align="left">PCB ECN Number:</th>
       <td align="left">
         <% if @design_review.design.eco_number != '' %>
           <%=@design_review.design.eco_number%>
@@ -225,6 +226,22 @@
         <input type="text" name="eco_number" class="name_select" value="<%=@design_review.design.eco_number%>"/>
         </td>
     </tr>
+
+
+    <tr>
+      <th align="left">PCBA ECN Number:</th>
+      <td align="left">
+        <% if @design_review.design.pcba_eco_number != '' %>
+          <%=@design_review.design.pcba_eco_number%>
+        <%else%>
+        <b><font color="red">Not Set</font></b>
+        <% end %>
+      </td>
+      <td>
+        <input type="text" name="pcba_eco_number" class="name_select" value="<%=@design_review.design.pcba_eco_number%>"/>
+        </td>
+    </tr>
+
 
     <% if @design_review.design.audit.skip? %>
       <tr>
