@@ -1423,6 +1423,12 @@ class Design < ActiveRecord::Base
       self.eco_number = update[:eco_number]
       changes[:ecn_number] = { :old => old_eco_number, :new => update[:eco_number]}
     end
+
+    if update[:pcba_eco_number] && self.pcba_eco_number != update[:pcba_eco_number]
+      old_pcba_eco_number = self.pcba_eco_number
+      self.pcba_eco_number = update[:pcba_eco_number]
+      changes[:pcba_ecn_number] = { :old => old_pcba_eco_number, :new => update[:pcba_eco_number]}
+    end
     
     audit = self.audit
     if update[:peer] && self.peer_id != update[:peer].id 
@@ -2140,6 +2146,9 @@ class Design < ActiveRecord::Base
     end
     if changes[:ecn_number]
       msg += "The ECN number was changed from #{changes[:ecn_number][:old]} to #{changes[:ecn_number][:new]}\n"
+    end
+    if changes[:pcba_ecn_number]
+      msg += "The PCBA ECN number was changed from #{changes[:pcba_ecn_number][:old]} to #{changes[:pcba_ecn_number][:new]}\n"
     end
 
     msg += "\n\n" + post_comment if post_comment.size > 0

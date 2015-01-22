@@ -52,8 +52,9 @@ class DesignReviewController < ApplicationController
       :id         => params[:id]}
 
     if params[:id]
-
+      
       @design_review  = DesignReview.find(params[:id])
+      design_id = @design_review.design_id
       @brd_dsn_entry  = BoardDesignEntry.find(:first,
         :conditions => "design_id='#{@design_review.design_id}'")
       @review_results = @design_review.review_results_by_role_name
@@ -85,8 +86,15 @@ class DesignReviewController < ApplicationController
         end
 
       end
-    @review_type = ReviewType.find_by_id(@design_review.review_type_id)
-    
+      
+      @review_type = ReviewType.find_by_id(@design_review.review_type_id)
+      
+      # Get date pre-art review was originally posted
+      preart_review_type_id = ReviewType.find_by_name("Pre-Artwork").id
+      @preart_des_review_post_date = DesignReview.find_by_design_id_and_review_type_id(design_id, preart_review_type_id).created_on.to_i rescue 0
+      
+      # Check if design has a pcba (is not bareboard)
+      @haspcba = PartNum.find_all_by_design_id_and_use(design_id,"pcba").empty? ? false : true
     else
 
       flash['notice'] = "No ID was provided - unable to access the design review"
@@ -1765,6 +1773,13 @@ def admin_update
   end
     
   @design_review = DesignReview.find(params[:id])
+  design_id = @design_review.design_id
+  # Get date pre-art review was originally posted
+  preart_review_type_id = ReviewType.find_by_name("Pre-Artwork").id
+  @preart_des_review_post_date = DesignReview.find_by_design_id_and_review_type_id(design_id, preart_review_type_id).created_on.to_i rescue 0
+  
+  # Check if design has a pcba (is not bareboard)
+  @haspcba = PartNum.find_all_by_design_id_and_use(design_id,"pcba").empty? ? false : true
     
   @designers           = Role.active_designers
   if ( @design_review.design.audit.skip? || @design_review.design.audit.is_complete?) 
@@ -1886,6 +1901,7 @@ def process_admin_update
   updates[:design_center]  = DesignCenter.find(params[:design_center][:id])
   updates[:criticality]    = Priority.find(params[:priority][:id]) if params[:priority]
   updates[:eco_number]     = params[:eco_number]
+  updates[:pcba_eco_number]     = params[:pcba_eco_number]
     
   flash['notice'] = design.admin_updates(updates,
     params[:post_comment][:comment],

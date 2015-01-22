@@ -227,14 +227,16 @@
         </td>
     </tr>
 
-
     <tr>
       <th align="left">PCBA ECN Number:</th>
       <td align="left">
         <% if @design_review.design.pcba_eco_number != '' %>
           <%=@design_review.design.pcba_eco_number%>
+        <!-- If preart posted before 1/22/15(1421884800) and this is not a bare board then display pcb ecn. This is date pcba's started having their own ecn -->
+        <%elsif ((@preart_des_review_post_date < 1421884800) && @haspcba) %>
+           <%=@design_review.design.eco_number%>
         <%else%>
-        <b><font color="red">Not Set</font></b>
+          <b><font color="red">Not Set</font></b>
         <% end %>
       </td>
       <td>
