@@ -91,10 +91,14 @@ PcbTracker::Application.routes.draw do
 
   resources :report do
     collection do
-      get 'user_review_history(.:format)'
-      get 'reviewer_approval_time(.:format)'
-      get '/reviewer_workload'
-      post 'reviewer_approval_time(.:format)'
+      #get 'user_review_history(.:format)'
+      #get 'reviewer_approval_time(.:format)'
+      #get '/reviewer_workload'
+      #post 'reviewer_approval_time(.:format)'
+      get 'user_review_history'
+      get 'reviewer_approval_time'
+      get 'reviewer_workload'
+      post 'reviewer_approval_time'
       get 'summary_data'
     end
   end
