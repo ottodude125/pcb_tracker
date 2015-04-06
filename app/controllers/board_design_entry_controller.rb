@@ -908,6 +908,26 @@ class BoardDesignEntryController < ApplicationController
         
         BoardDesignEntryMailer::planning_board_design_entry_submission(@board_design_entry).deliver
         flash['notice'] += "An email has been sent out. "
+      
+      # If not planning just updated Board if it exists
+      else
+    
+        # Try to located the board_id to see if it already exists
+        design = Design.find_by_id(@board_design_entry.design_id)
+  
+        # If it exists then update it
+        if design != nil && design.board_id != nil
+          @board = Board.find_by_id(design.board_id)
+          
+          board_attributes = { :platform_id => @board_design_entry.platform_id,
+                               :project_id  => @board_design_entry.project_id,
+                               :description => @board_design_entry.description,
+                               :active      => 1 
+                             }
+          @board.update_attributes!(board_attributes)        
+          
+          flash['notice'] += "Board updated ... "
+	end
       end      
       
       # I dont really see the reason why you would want to use the bde id's to update a users id's ( JonK 1/2013 )
