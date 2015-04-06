@@ -69,10 +69,12 @@ class Board < ActiveRecord::Base
     list = []
     DocumentType.get_document_types.each do |doc_type|
       next if doc_type.name == 'Other'
+      next if doc_type.name == 'Pad Patterns'
       document = self.get_current_document(doc_type)
       list << document if document
     end
-    list + self.get_documents_other
+    list.push(*self.get_documents_pad_patterns)
+    list.push(*self.get_documents_other)
   end
 
 
@@ -87,7 +89,7 @@ class Board < ActiveRecord::Base
     documents = self.design_review_documents
 
     docs = documents.collect { |d| d if d.document_type_id == document_type.id }.compact
-    if document_type.name != 'Other' && docs.size > 0
+    if document_type.name != 'Other' && document_type.name != 'Pad Patterns' && docs.size > 0
       docs.sort_by { |d| d.document.created_on }.pop
     else
       nil
@@ -104,7 +106,7 @@ class Board < ActiveRecord::Base
   # Returns an array of documents
   def get_obsolete_document_list(document_type)
 
-    if document_type.name != 'Other'
+    if document_type.name != 'Other' && document_type.name != 'Pad Pattern'
       documents = self.design_review_documents
       docs = documents.collect { |d| d if d.document_type_id == document_type.id }.compact
       if docs.size > 0
@@ -130,15 +132,15 @@ class Board < ActiveRecord::Base
     documents = self.design_review_documents
 
     other_document = document_type.name == 'Other'
-    if !other_document
+    pad_p_document = document_type.name == 'Pad Patterns'
+    if !other_document && !pad_p_document
       documents |= self.design_review_documents
       docs = documents.collect { |d| d if d.document_type_id == document_type.id }.compact
     end
 
-    !other_document && docs.size > 1
+    !other_document && !pad_p_document && docs.size > 1
     
   end
-
 
  # Retrieve a list of the 'Other' document type documents that have been
  # attached to the board
@@ -152,6 +154,21 @@ class Board < ActiveRecord::Base
 
     doc_type_other = DocumentType.find_by_name('Other')
     documents.collect { |d| d if d.document_type_id == doc_type_other.id }.compact
+  end
+  
+
+ # Retrieve a list of the 'Pad Patterns' document type documents that have been
+ # attached to the board
+ #
+ # :call-seq:
+ #   get_documents_pad_patterns() -> [document]
+ #
+ # Returns an array of documents
+ def get_documents_pad_patterns
+    documents = self.design_review_documents
+
+    doc_type_pad_p = DocumentType.find_by_name('Pad Patterns')
+    documents.collect { |d| d if d.document_type_id == doc_type_pad_p.id }.compact
   end
   
      ######################################################################

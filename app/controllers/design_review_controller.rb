@@ -948,9 +948,11 @@ def add_attachment
   documents = DesignReviewDocument.find(:all,
     :conditions => "design_id='#{@design_review.design_id}'")
   other = DocumentType.find_by_name('Other')
+  pad_p = DocumentType.find_by_name('Pad Patterns')
 
   for doc in documents
     next if doc.document_type_id == other.id
+    next if doc.document_type_id == pad_p.id
     @document_types.delete_if { |dt| dt.id == doc.document_type_id }
   end
 
@@ -1049,11 +1051,11 @@ def delete_document
   document = Document.find(drd.document_id)
   doc_name = document.name
   
-  if drd.document_type.name == "Other"
+  if drd.document_type.name == "Other" || drd.document_type.name == "Pad Patterns"
     drd.remove
     flash['notice'] = "File #{doc_name} has been deleted"
   else
-    flash['notice'] = "Only 'OTHER' document types can be deleted. File #{doc_name} has not been deleted"    
+    flash['notice'] = "Only 'OTHER or PAD PATTERNS' document types can be deleted. File #{doc_name} has not been deleted"    
   end
   redirect_to(:action => :review_attachments,
      :id => design_review_id )

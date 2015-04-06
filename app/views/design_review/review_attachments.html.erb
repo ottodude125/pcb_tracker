@@ -68,7 +68,7 @@
         <td><%= drd.document.user.name %></td>
         <td><%= drd.document.created_on.format_dd_mon_yy('timestamp') %></td>
         <td>
-          <% if drd.document_type.name != "Other" && @logged_in_user %>
+          <% if drd.document_type.name != "Other" && drd.document_type.name != "Pad Patterns" && @logged_in_user %>
             <%= link_to("Update",
                         {:action           => 'update_documents',
                          :design_review_id => @design_review.id,
