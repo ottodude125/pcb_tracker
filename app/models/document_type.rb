@@ -63,4 +63,80 @@ class DocumentType < ActiveRecord::Base
     self.find(:all, :conditions => 'active=1', :order => 'name')
   end
 
+  ######################################################################
+  #
+  # get_test_document_type
+  #
+  # Description:
+  # This method retrieves the Test document type
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A document type
+  #
+  ######################################################################
+  #
+  def self.get_test_document_type
+    self.find_by_name("Test")
+  end
+  
+  ######################################################################
+  #
+  # get_other_document_type
+  #
+  # Description:
+  # This method retrieves the Other document type
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A document type
+  #
+  ######################################################################
+  #
+  def self.get_other_document_type
+    self.find_by_name("Other")
+  end
+  
+  ######################################################################
+  #
+  # get_mech_drawing_document_type
+  #
+  # Description:
+  # This method retrieves the Mech Drawing document type
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A document type
+  #
+  ######################################################################
+  #
+  def self.get_mech_drawing_document_type
+    self.find_by_name("Mech Drawing")
+  end
+  
+  ######################################################################
+  #
+  # get_pad_patterns_document_type
+  #
+  # Description:
+  # This method retrieves the Pad Patterns document type
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A document type
+  #
+  ######################################################################
+  #
+  def self.get_pad_patterns_document_type
+    self.find_by_name("Pad Patterns")
+  end
+        
 end

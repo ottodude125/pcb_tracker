@@ -67,14 +67,24 @@ class Board < ActiveRecord::Base
   # Returns an array of documents
   def current_document_list
     list = []
+    
+    other = DocumentType.get_other_document_type.name
+    pad_p = DocumentType.get_pad_patterns_document_type.name
+    mechd = DocumentType.get_mech_drawing_document_type.name
+    test  = DocumentType.get_test_document_type.name
+    
     DocumentType.get_document_types.each do |doc_type|
-      next if doc_type.name == 'Other'
-      next if doc_type.name == 'Pad Patterns'
+      next if doc_type.name == other
+      next if doc_type.name == pad_p
+      next if doc_type.name == mechd
+      next if doc_type.name == test
       document = self.get_current_document(doc_type)
       list << document if document
     end
     list.push(*self.get_documents_pad_patterns)
+    list.push(*self.get_documents_mech_drawing)
     list.push(*self.get_documents_other)
+    list.push(*self.get_documents_test)
   end
 
 
@@ -87,9 +97,13 @@ class Board < ActiveRecord::Base
   def get_current_document(document_type)
 
     documents = self.design_review_documents
+    other = DocumentType.get_other_document_type.name
+    pad_p = DocumentType.get_pad_patterns_document_type.name
+    mechd = DocumentType.get_mech_drawing_document_type.name
+    test  = DocumentType.get_test_document_type.name
 
     docs = documents.collect { |d| d if d.document_type_id == document_type.id }.compact
-    if document_type.name != 'Other' && document_type.name != 'Pad Patterns' && docs.size > 0
+    if document_type.name != other && document_type.name != pad_p && document_type.name != mechd && document_type.name != test && docs.size > 0
       docs.sort_by { |d| d.document.created_on }.pop
     else
       nil
@@ -105,8 +119,12 @@ class Board < ActiveRecord::Base
   #
   # Returns an array of documents
   def get_obsolete_document_list(document_type)
+    other = DocumentType.get_other_document_type.name
+    pad_p = DocumentType.get_pad_patterns_document_type.name
+    mechd = DocumentType.get_mech_drawing_document_type.name
+    test  = DocumentType.get_test_document_type.name
 
-    if document_type.name != 'Other' && document_type.name != 'Pad Pattern'
+    if document_type.name != other && document_type.name != pad_p && document_type.name != mechd && document_type.name != test
       documents = self.design_review_documents
       docs = documents.collect { |d| d if d.document_type_id == document_type.id }.compact
       if docs.size > 0
@@ -130,15 +148,22 @@ class Board < ActiveRecord::Base
   # Returns the most recent version of the document type
   def multiple_documents?(document_type)
     documents = self.design_review_documents
+    other = DocumentType.get_other_document_type.name
+    pad_p = DocumentType.get_pad_patterns_document_type.name
+    mechd = DocumentType.get_mech_drawing_document_type.name
+    test  = DocumentType.get_test_document_type.name
 
-    other_document = document_type.name == 'Other'
-    pad_p_document = document_type.name == 'Pad Patterns'
-    if !other_document && !pad_p_document
+    other_document = document_type.name == other
+    pad_p_document = document_type.name == pad_p
+    mechd_document = document_type.name == mechd
+    test_document  = document_type.name == test
+    
+    if !other_document && !pad_p_document && !mechd_document && !test_document
       documents |= self.design_review_documents
       docs = documents.collect { |d| d if d.document_type_id == document_type.id }.compact
     end
 
-    !other_document && !pad_p_document && docs.size > 1
+    !other_document && !pad_p_document && !mechd_document && !test_document && docs.size > 1
     
   end
 
@@ -152,7 +177,7 @@ class Board < ActiveRecord::Base
  def get_documents_other
     documents = self.design_review_documents
 
-    doc_type_other = DocumentType.find_by_name('Other')
+    doc_type_other = DocumentType.get_other_document_type
     documents.collect { |d| d if d.document_type_id == doc_type_other.id }.compact
   end
   
@@ -167,11 +192,39 @@ class Board < ActiveRecord::Base
  def get_documents_pad_patterns
     documents = self.design_review_documents
 
-    doc_type_pad_p = DocumentType.find_by_name('Pad Patterns')
+    doc_type_pad_p = DocumentType.get_pad_patterns_document_type
     documents.collect { |d| d if d.document_type_id == doc_type_pad_p.id }.compact
   end
+
+ # Retrieve a list of the 'Mech Drawing' document type documents that have been
+ # attached to the board
+ #
+ # :call-seq:
+ #   get_documents_mech_drawing() -> [document]
+ #
+ # Returns an array of documents
+ def get_documents_mech_drawing
+    documents = self.design_review_documents
+
+    doc_type_mechd = DocumentType.get_mech_drawing_document_type
+    documents.collect { |d| d if d.document_type_id == doc_type_mechd.id }.compact
+  end  
+
+ # Retrieve a list of the 'Test' document type documents that have been
+ # attached to the board
+ #
+ # :call-seq:
+ #   get_documents_test() -> [document]
+ #
+ # Returns an array of documents
+ def get_documents_test
+    documents = self.design_review_documents
+
+    doc_type_test = DocumentType.get_test_document_type
+    documents.collect { |d| d if d.document_type_id == doc_type_test.id }.compact
+  end
   
-     ######################################################################
+  ######################################################################
   #
   # copy_to_on_milestone
   #

@@ -825,6 +825,10 @@ z
 #
 def review_attachments
   @design_review = DesignReview.find(params[:id])
+    @other = DocumentType.get_other_document_type.name
+    @pad_p = DocumentType.get_pad_patterns_document_type.name
+    @mechd = DocumentType.get_mech_drawing_document_type.name
+    @test  = DocumentType.get_test_document_type.name
 end
   
   
@@ -947,12 +951,16 @@ def add_attachment
   # Eliminate document types that are already attached.
   documents = DesignReviewDocument.find(:all,
     :conditions => "design_id='#{@design_review.design_id}'")
-  other = DocumentType.find_by_name('Other')
-  pad_p = DocumentType.find_by_name('Pad Patterns')
+  other = DocumentType.get_other_document_type.id
+  pad_p = DocumentType.get_pad_patterns_document_type.id
+  mechd = DocumentType.get_mech_drawing_document_type.id
+  test  = DocumentType.get_test_document_type.id
 
   for doc in documents
-    next if doc.document_type_id == other.id
-    next if doc.document_type_id == pad_p.id
+    next if doc.document_type_id == other
+    next if doc.document_type_id == pad_p
+    next if doc.document_type_id == mechd
+    next if doc.document_type_id == test
     @document_types.delete_if { |dt| dt.id == doc.document_type_id }
   end
 
@@ -1050,12 +1058,16 @@ def delete_document
   drd = DesignReviewDocument.find(drd_id)
   document = Document.find(drd.document_id)
   doc_name = document.name
+  other = DocumentType.get_other_document_type.name
+  pad_p = DocumentType.get_pad_patterns_document_type.name
+  mechd = DocumentType.get_mech_drawing_document_type.name
+  test  = DocumentType.get_test_document_type.name
   
-  if drd.document_type.name == "Other" || drd.document_type.name == "Pad Patterns"
+  if drd.document_type.name == other || drd.document_type.name == pad_p || drd.document_type.name == mechd || drd.document_type.name == test
     drd.remove
     flash['notice'] = "File #{doc_name} has been deleted"
   else
-    flash['notice'] = "Only 'OTHER or PAD PATTERNS' document types can be deleted. File #{doc_name} has not been deleted"    
+    flash['notice'] = "Only 'Other, Pad Patterns, Mech Drawing, and Test' document types can be deleted. File #{doc_name} has not been deleted"    
   end
   redirect_to(:action => :review_attachments,
      :id => design_review_id )
