@@ -1,0 +1,31 @@
+<!-- View:    fab deliverable                                        -->
+<!-- Purpose: Displays a list of fabrication deliverables.             -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "PCB Tracker Fabrication Deliverables - List" %>
+
+<%= form_tag(:action => 'new') do %>
+
+  <hr class="div" />
+
+  <table width="40%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+    
+    <tr>
+      <th>Fabrication Deliverables</th>
+      <th>Parent</th>
+      <th>Active</th>
+    </tr>
+	
+    <%= render( :partial => "fab_deliverable_list_stripes", :collection => @fab_deliverables ) %>
+
+  </table>
+
+  <hr class="div" />
+
+  <input type="submit" value="New Fabrication Deliverable" />
+  <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
+
+<% end %>
+

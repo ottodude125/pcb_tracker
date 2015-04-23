@@ -11,7 +11,10 @@
 ########################################################################
 #
 PcbTracker::Application.routes.draw do
-  
+
+  resources :fab_issues
+
+
   resources :board_design_entry do
     collection do
       get  'originator_list'
@@ -86,6 +89,9 @@ PcbTracker::Application.routes.draw do
   end
   
   resources :eco_task_reports
+
+  #resources :fab_deliverables
+  #resources :fab_failure_modes
     
   resources :part_nums
 

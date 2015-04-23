@@ -1,0 +1,40 @@
+<!-- View:    fab deliverable                                         -->
+<!-- Purpose: Displays a form to add a new fabrication deliverable.   -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Create a New Fabrication Deliverable" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'create') do %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="fab_deliverable_name">Fabrication Deliverable</label>
+        <%= text_field "fab_deliverable", "name", "size" => 32, "maxlength" => 32 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: 
+        <%= check_box "fab_deliverable", "active", { 'checked' => 'checked' } %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Parent Deliverable 
+      	<%= collection_select(:fab_deliverable, :parent_id, @fab_deliverables, :id, :name, {include_blank: true}) %>
+      </td>
+    </tr>    
+    
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Create Fabricaton Deliverable" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'index' ) %>'" />
+
+<% end %>
+
+
+

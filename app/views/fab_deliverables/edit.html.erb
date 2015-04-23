@@ -1,0 +1,38 @@
+<!-- View:    fab_deliverable                                         -->
+<!-- Purpose: Displays a fabrication deliverable for editing.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Fabrication Deliverable" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'update') do %>
+
+  <%= hidden_field "fab_deliverable", "id" %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="fab_deliverable_name">Fabrication Deliverable</label>
+        <%= text_field "fab_deliverable", "name", "size" => 32, "maxlength" => 32 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: 
+        <%= check_box "fab_deliverable", "active" %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Parent Deliverable 
+      	<%= collection_select(:fab_deliverable, :parent_id, @fab_deliverables, :id, :name, {include_blank: true}) %>
+      </td>
+    </tr>   
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Fabrication Deliverable" />
+  <input type="button" value="Return to Fabrication Deliverable List" onClick="parent.location='<%= url_for( :action => 'index' ) %>'" />
+
+<% end %>

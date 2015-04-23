@@ -1,0 +1,18 @@
+<!-- View:    design_review                                     -->
+<!-- Purpose: Displays the buttons common to the designer role. -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<tr>
+  <td>
+    <input type="button" value="Fab Issues"
+           title="View, Create & Update Fabrication Issues"
+           onClick="parent.location='<%= url_for(:controller       => 'fab_issues', 
+                                                 :action           => 'index',
+                                                 :design_review_id => @design_review.id) %>'"
+           class="small_font_wide_button" />
+  </td>
+</tr>
+
+

@@ -1,0 +1,13 @@
+<tr class="<%= fab_deliverable_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% rid = fab_deliverable_list_stripes.id %>
+    <%= link_to fab_deliverable_list_stripes.name, { :action => 'edit', :id => rid } %> </td>
+  <td><%= FabDeliverable.find(fab_deliverable_list_stripes.parent_id).name rescue "" %></td>
+  <td align="center">
+    <% if fab_deliverable_list_stripes.active? %>
+      Yes
+    <% else %>
+      No
+    <% end %>
+  </td>
+</tr>

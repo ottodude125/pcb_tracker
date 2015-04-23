@@ -53,6 +53,7 @@ class DesignReviewController < ApplicationController
 
     if params[:id]
       
+      @fir_role_name = Role.get_fir_role.name
       @design_review  = DesignReview.find(params[:id])
       design_id = @design_review.design_id
       @brd_dsn_entry  = BoardDesignEntry.find(:first,

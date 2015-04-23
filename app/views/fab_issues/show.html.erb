@@ -1,0 +1,114 @@
+<% @heading = 'Viewing Fabrication Issue - ' + @design_review.display_header %>
+
+
+<hr class="div" width="820" />
+
+<%= form_for(@fab_issue) do %>
+
+	<%= hidden_field :design_review, :id, :value => @design_review.id %>
+    
+  <table border='1' align="center" width="800">
+    <tr>
+      <th class="teraheader" align="right">Description:&nbsp;</th>
+      <td>
+        <%= @fab_issue.description %>
+      </td>
+    </tr>
+    <tr>
+      <th class="teraheader" align="right">Date Received:&nbsp;</th>
+      <td>
+    	  <%= @fab_issue.date_received.strftime("%d-%b-%y") %>
+      </td>
+    </tr>  
+    <tr>
+      <th class="teraheader" align="right">Deliverable Affected:&nbsp;</th>
+      <td>
+      	<%= @fab_issue.fab_deliverable.name %>
+      </td>
+    </tr>
+    <tr>
+      <th class="teraheader" align="right">Cause:&nbsp;</th>
+      <td>
+        <%= @fab_issue.cause %>
+      </td>
+    </tr>
+    <tr>
+      <th class="teraheader" align="right">Resolution:&nbsp;</th>
+      <td>
+        <%= @fab_issue.resolution %>
+      </td>
+    </tr>
+    <tr>
+    	<th class="teraheader" align="right">Documentation Issue:&nbsp;</th>
+      <% if @fab_issue.documentation_issue %>
+      	<td><%= image_tag("check_mark.png") %></td>
+  		<% else %>
+      	<td><%= image_tag("icon_x.png") %></td>
+      <% end %>
+    </tr>
+    <tr>
+      <th class="teraheader" align="right">Clean Up Required:&nbsp;</th>
+      <% if @fab_issue.clean_up_reqd %>
+      	<td><%= image_tag("check_mark.png") %></td>
+  		<% else %>
+      	<td><%= image_tag("icon_x.png") %></td>
+      <% end %>
+    </tr>
+    <tr>
+      <th class="teraheader" align="right">Clean Up Completed:&nbsp;</th>
+      <td>
+    	  <%= @fab_issue.clean_up_complete_date.strftime("%d-%b-%y") rescue "" %>
+      </td>
+    </tr>  
+    <tr>
+      <th class="teraheader" align="right">Corrected Before Pre-Production Release:&nbsp;</th>
+      <% if @fab_issue.corrected_b4_pre_prod_rel %>
+      	<td><%= image_tag("check_mark.png") %></td>
+  		<% else %>
+      	<td><%= image_tag("icon_x.png") %></td>
+      <% end %>
+    </tr>
+    <tr>
+      <th class="teraheader" align="right">Full Rev Required:&nbsp;</th>
+      <% if @fab_issue.full_rev_reqd %>
+      	<td><%= image_tag("check_mark.png") %></td>
+  		<% else %>
+      	<td><%= image_tag("icon_x.png") %></td>
+      <% end %>
+    </tr>
+    <tr>
+      <th class="teraheader" align="right">Bareboard Change Required:&nbsp;</th>
+      <% if @fab_issue.bare_brd_change_reqd %>
+      	<td><%= image_tag("check_mark.png") %></td>
+  		<% else %>
+      	<td><%= image_tag("icon_x.png") %></td>
+      <% end %>
+    </tr>
+    <tr>
+      <th class="teraheader" align="right">Failure Mode:&nbsp;</th>
+      <td>
+        <%= @fab_issue.fab_failure_mode.name %>
+      </td>
+    </tr>
+  </table>
+
+        
+
+  <hr class="div" width="820" />
+  
+  <table border='0' align="center" width="800">
+    <tr>
+      <td align="left">
+      	<input type="button" value="Return" onClick="parent.location='<%= url_for( :controller => 'fab_issues', :action => 'index', :design_review_id => @design_review.id ) %>'" />
+      </td>
+      <td align="center">
+        <input type="button" value="Edit Fabrication Issue" 
+          onClick="parent.location='<%= url_for( :controller => 'fab_issues', :action => 'edit', :design_review_id => @design_review.id) %>'" />
+      </td>
+      <td align="right">
+        <input type="button" value="Home" 
+          onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index') %>'" />
+      </td>
+    </tr>
+  </table>
+<% end %>

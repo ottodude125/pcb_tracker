@@ -26,6 +26,7 @@ class User < ActiveRecord::Base
   has_many :board_design_entry_users
   has_many :design_review_comments
   has_many :design_update
+  has_many :fab_issues
   has_many :eco_comments
   has_many :eco_documents
   has_many :oi_assignments

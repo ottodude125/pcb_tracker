@@ -5,7 +5,8 @@ gem 'mysql2'                          # Mysql library for ruby binding to libmys
 gem 'exception_notification', '2.6.1' # Exception notifier for production mode
 gem 'jquery-rails'                    # Adds Jquery to Rails!!
 gem 'execjs'                          # ExecJS lets you run JavaScript code from Ruby
-gem "therubyracer", '0.12.0',  :require => 'v8' # Embed the V8 Javascript interpreter into Ruby
+#gem "therubyracer", '0.12.0',  :require => 'v8' # Embed the V8 Javascript interpreter into Ruby
+gem 'therubyracer'
 gem 'rails_autolink'                  # Autolink for messages
 gem 'net-ldap'                        # Implements client access
 gem 'acts_as_list-rails3'             # Plugins to Gems

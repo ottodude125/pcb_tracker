@@ -1,0 +1,140 @@
+class FabIssuesController < ApplicationController
+  # GET /fab_issues
+  # GET /fab_issues.json
+  def index
+    #@fab_issues = FabIssue.all
+    @design_review = ""
+    if params[:design_review_id]
+      @design_review = DesignReview.find(params[:design_review_id])
+      @fab_issues = FabIssue.find_all_by_design_id(@design_review.design_id)
+    else
+      @fab_issues = FabIssue.all
+    end
+    
+    if @fab_issues.nil?
+      @fab_issues = []
+    end
+
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json { render json: @fab_issues }
+    end
+  end
+
+  # GET /fab_issues/1
+  # GET /fab_issues/1.json
+  def show
+    @design_review = DesignReview.find(params[:design_review_id])
+    @fab_issue = FabIssue.find(params[:id])
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.json { render json: @fab_issue }
+    end
+  end
+
+  # GET /fab_issues/new
+  # GET /fab_issues/new.json
+  def new
+    @fab_issue = FabIssue.new
+    @design_review = DesignReview.find(params[:design_review_id])
+    @fab_failure_modes = FabFailureMode.order("name").find_all_by_active(true)
+    fab_deliverables = FabDeliverable.order("parent_id DESC, id ASC").find_all_by_active(true)    
+    @fab_deliverables = {"Other" => []}
+    
+    fab_deliverables.each do |fd|     
+      # A) if fd parent id not empty then check if its parent is already in hash
+      # if not add it then add fd as first item in its array otherwise just add it
+      # B) if fd parent id is empty then check if fd item is already used in hash
+      # if not then add it to Other
+      if !fd.parent_id.nil?
+        parent = FabDeliverable.find(fd.parent_id)
+        if !@fab_deliverables.has_key?(parent.name)
+          @fab_deliverables[parent.name] = []
+        end
+        @fab_deliverables[parent.name] << [fd.name, fd.id]
+      else
+        if !@fab_deliverables.has_key?(fd.name)
+          @fab_deliverables["Other"] << [fd.name, fd.id]
+        end
+      end
+    end
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @fab_issue }
+    end
+  end
+
+  # GET /fab_issues/1/edit
+  def edit
+    @fab_issue = FabIssue.find(params[:id])
+    @design_review = DesignReview.find(params[:design_review_id])
+    @fab_failure_modes = FabFailureMode.order("name").find_all_by_active(true)
+    fab_deliverables = FabDeliverable.order("parent_id DESC, id ASC").find_all_by_active(true)    
+    @fab_deliverables = {"Other" => []}
+    
+    fab_deliverables.each do |fd|     
+      # A) if fd parent id not empty then check if its parent is already in hash
+      # if not add it then add fd as first item in its array otherwise just add it
+      # B) if fd parent id is empty then check if fd item is already used in hash
+      # if not then add it to Other
+      if !fd.parent_id.nil?
+        parent = FabDeliverable.find(fd.parent_id)
+        if !@fab_deliverables.has_key?(parent.name)
+          @fab_deliverables[parent.name] = []
+        end
+        @fab_deliverables[parent.name] << [fd.name, fd.id]
+      else
+        if !@fab_deliverables.has_key?(fd.name)
+          @fab_deliverables["Other"] << [fd.name, fd.id]
+        end
+      end
+    end
+  end
+
+  # POST /fab_issues
+  # POST /fab_issues.json
+  def create
+    @fab_issue = FabIssue.new(params[:fab_issue])
+
+    respond_to do |format|
+      if @fab_issue.save
+        format.html { redirect_to fab_issues_url(:design_review_id => params[:design_review][:id]), notice: 'Fab issue was successfully created.' }
+        format.json { render json: @fab_issue, status: :created, location: @fab_issue }
+      else
+        format.html { render action: "new" }
+        format.json { render json: @fab_issue.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PUT /fab_issues/1
+  # PUT /fab_issues/1.json
+  def update
+    @fab_issue = FabIssue.find(params[:id])
+
+    respond_to do |format|
+      if @fab_issue.update_attributes(params[:fab_issue])
+        format.html { redirect_to fab_issues_url(:design_review_id => params[:design_review][:id]), notice: 'Fab issue was successfully updated.' }
+        format.json { head :no_content }
+      else
+        format.html { render action: "edit" }
+        format.json { render json: @fab_issue.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /fab_issues/1
+  # DELETE /fab_issues/1.json
+  def destroy
+    @fab_issue = FabIssue.find(params[:id])
+    @fab_issue.destroy
+
+    respond_to do |format|
+      format.html { redirect_to fab_issues_url }
+      format.json { head :no_content }
+    end
+  end
+end

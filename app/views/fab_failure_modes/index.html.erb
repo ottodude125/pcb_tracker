@@ -1,0 +1,30 @@
+<!-- View:    fab failure modes                                        -->
+<!-- Purpose: Displays a list of fabrication failure modes.             -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "PCB Tracker Fabrication Failure Modes - List" %>
+
+<%= form_tag(:action => 'new') do %>
+
+  <hr class="div" />
+
+  <table width="40%" align="center" border="1" cellspacing="2" cellpadding="2" rules="all">
+    
+    <tr>
+      <th>Fabrication Failure Modes</th>
+      <th>Active</th>
+    </tr>
+	
+    <%= render( :partial => "fab_failure_mode_list_stripes", :collection => @fab_failure_modes ) %>
+
+  </table>
+
+  <hr class="div" />
+
+  <input type="submit" value="New Fabrication Failure Mode" />
+  <input type="button" value="Return to Admin portal" onClick="parent.location='<%= url_for( :controller => 'admin', :action => 'index' ) %>'" />
+
+<% end %>
+

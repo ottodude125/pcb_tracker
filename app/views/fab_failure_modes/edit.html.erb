@@ -1,0 +1,33 @@
+<!-- View:    fab_failure_mode                                         -->
+<!-- Purpose: Displays a fabrication failure mode for editing.         -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Edit Fabrication Failure Mode" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'update') do %>
+
+  <%= hidden_field "fab_failure_mode", "id" %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="fab_failure_mode_name">Fabrication Failure Mode</label>
+        <%= text_field "fab_failure_mode", "name", "size" => 32, "maxlength" => 32 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: 
+        <%= check_box "fab_failure_mode", "active" %>
+      </td>
+    </tr> 
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Update Fabrication Failure Mode" />
+  <input type="button" value="Return to Fabrication Failure Mode List" onClick="parent.location='<%= url_for( :action => 'index' ) %>'" />
+
+<% end %>

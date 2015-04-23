@@ -1,0 +1,34 @@
+<!-- View:    fab failure mode                                         -->
+<!-- Purpose: Displays a form to add a new fabrication failure mode.   -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading = "Create a New Fabrication Failure Mode" %>
+
+<hr class="div" />
+
+<%= form_tag(:action => 'create') do %>
+
+  <table border="0">
+    <tr>
+      <td>
+        <label for="fab_failure_mode_name">Fabrication Failure Mode</label>
+        <%= text_field "fab_failure_mode", "name", "size" => 32, "maxlength" => 32 %>
+      </td>
+    </tr>
+    <tr>
+      <td align="left">Active: 
+        <%= check_box "fab_failure_mode", "active", { 'checked' => 'checked' } %>
+      </td>
+    </tr>    
+  </table>
+
+  <hr class="div" />
+  <input type="submit" value="Create Fabricaton Failure Mode" />
+  <input type="button" value="Cancel" onClick="parent.location='<%= url_for( :action => 'index' ) %>'" />
+
+<% end %>
+
+
+

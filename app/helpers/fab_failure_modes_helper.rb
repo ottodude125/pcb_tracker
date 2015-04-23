@@ -1,0 +1,2 @@
+module FabFailureModesHelper
+end

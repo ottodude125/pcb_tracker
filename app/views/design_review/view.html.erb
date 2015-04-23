@@ -90,6 +90,7 @@
                               <%= render :partial => "buttons_role_designer" %>
                          <% end %>
                      <% end %>
+                     
                  </table>
               </td>
               <td valign="top">
@@ -100,6 +101,10 @@
                                 @logged_in_user.is_tracker_admin?) %>
                              <%= render :partial => "buttons_roles_admin_management" %>
                          <% end %>
+                                              
+	                     <% if @logged_in_user.is_a_role_member?(@fir_role_name) %>
+	                     	<%= render :partial => "buttons_role_fab_issue" %>
+	                     <% end %>
                      <% end %>
                   </table>
               </td>

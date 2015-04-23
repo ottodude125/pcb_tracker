@@ -24,6 +24,7 @@ class Design < ActiveRecord::Base
   has_many :design_review_documents
   has_many :design_reviews
   has_many :design_updates
+  has_many :fab_issues
   has_many :ipd_posts
   has_many :oi_instructions
   #has_many :part_numbers

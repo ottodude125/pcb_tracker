@@ -1,0 +1,2 @@
+module FabIssuesHelper
+end
