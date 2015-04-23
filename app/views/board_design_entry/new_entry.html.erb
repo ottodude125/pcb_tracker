@@ -92,8 +92,9 @@ jQuery(function($) {
           <%= pn.name_string + " " + pn.revision %>
         </td>
         <td class="data" colspan="6"  style="border-left:transparent;" >
-          <%= text_field("part_num[#{pn.id}]", "description", :value => pn.description, "size" => 60, "maxlength" => 80, :placeholder => "Teamcenter Description Not Found") %> 
-          <span style="font-weight:normal; font-size: 10px; ">(auto updated from teamcenter)</span>
+          <%= text_field("part_num[#{pn.id}]", "description", :value => pn.description, "size" => 60, "maxlength" => 80, :placeholder => "Enter Temporary Description") %> 
+	  <span style="color:red; font=weight:bold;">required</span>
+	  <span style="font-weight:normal; font-size: 10px; ">(auto updated from teamcenter)</span>
         </td>
       </tr>
     <% end %>
@@ -107,7 +108,8 @@ jQuery(function($) {
             <%= pn.name_string %>
         </td>
         <td class="data" colspan="6" style="border-left:transparent;" >
-          <%= text_field("part_num[#{pn.id}]", "description", :value => pn.description, "size" => 60, "maxlength" => 80, :placeholder => "Teamcenter Description Not Found") %> 
+          <%= text_field("part_num[#{pn.id}]", "description", :value => pn.description, "size" => 60, "maxlength" => 80, :placeholder => "Enter Temporary Description") %> 
+	  <span style="color:red; font=weight:bold;">required</span>
           <span style="font-weight:normal; font-size: 10px; ">(auto updated from teamcenter)</span>
         </td>
       </tr>
