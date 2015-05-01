@@ -21,15 +21,14 @@
 	<table id="fab_issues_table" class="display">
     <thead>
     	<tr>
-    		<th>Date RCVD</th>
+    		<th>Closed</th>
+    		<th>RCVD On</th>
     		<th>Deliverable</th>
     		<th>Description</th>
     		<th>Cause</th>
     		<th>Resolution</th>
     		<th>Doc Issue?</th>
-    		<th>Clean Up?</th>
-    		<th>Clean Up Complete</th>
-    		<th>Corrected Before Pre-Prod Rel?</th>
+    		<th>Clean Up Completed On</th>
     		<th>Full Rev?</th>
     		<th>Bare BRD CHG?</th>
     		<th>Failure</th>
@@ -42,8 +41,14 @@
     <tbody>
     	<% @fab_issues.each do |fab_issue| %>
         <tr>
+          
+          <% if fab_issue.resolved %>
+          	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
+      		<% else %>
+          	<td class="fab_iss_chkbox_col" ><%= image_tag("icon_x.png") %></td>
+          <% end %>
         	
-        	<td class="fab_iss_date_col" ><%= fab_issue.date_received.strftime("%d-%b-%y") %></td>
+        	<td class="fab_iss_date_col" ><%= fab_issue.received_on.strftime("%d-%b-%y") %></td>
         	<td><%= fab_issue.fab_deliverable.name %></td>
           
         	<td><%= truncate(fab_issue.description, :length => 50) %></td>
@@ -56,19 +61,8 @@
           	<td class="fab_iss_chkbox_col" ><%= image_tag("icon_x.png") %></td>
           <% end %>
         	
-          <% if fab_issue.clean_up_reqd %>
-          	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
-      		<% else %>
-          	<td class="fab_iss_chkbox_col" ><%= image_tag("icon_x.png") %></td>
-          <% end %>
 					
-					<td class="fab_iss_date_col" ><%= fab_issue.clean_up_complete_date.strftime("%d-%b-%y") rescue "" %></td>
-          
-          <% if fab_issue.corrected_b4_pre_prod_rel %>
-          	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
-      		<% else %>
-          	<td class="fab_iss_chkbox_col" ><%= image_tag("icon_x.png") %></td>
-          <% end %>
+					<td class="fab_iss_date_col" ><%= fab_issue.clean_up_complete_on.strftime("%d-%b-%y") rescue "" %></td>
           
           <% if fab_issue.full_rev_reqd %>
           	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
@@ -88,8 +82,13 @@
         	<td class="fab_iss_other_col" ><%= fab_issue.user.last_name_first %></td>
 
 			    <td><%= link_to image_tag("black_view.png"), fab_issue_path(fab_issue, :design_review_id => @design_review.id) %></td>
-			    <td><%= link_to image_tag("black_edit.png"), edit_fab_issue_path(fab_issue, :design_review_id => @design_review.id) %></td>
-			    <td><%= link_to image_tag("black_delete.png"), fab_issue, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <% if !fab_issue.resolved %>
+			    	<td><%= link_to image_tag("black_edit.png"), edit_fab_issue_path(fab_issue, :design_review_id => @design_review.id) %></td>
+			    	<td><%= link_to image_tag("black_delete.png"), fab_issue, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+			    <% else %>
+			    	<td></td>
+			    	<td></td>
+			    <% end %>
     		</tr>
     	<% end %>
     </tbody>
@@ -102,5 +101,7 @@
   <% end %>
 
 <% end %>
+
+
 
 

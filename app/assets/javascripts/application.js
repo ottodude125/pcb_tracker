@@ -6,10 +6,12 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.ui.all
 //= require jquery.ui.dialog
 //= require jquery.ui.datepicker
 //= require dataTables/jquery.dataTables
-//= require_tree .
+//= require_directory ./external
+//= require_directory .
 
 
 // Function to display current time. Used in layout to display time at top of display

@@ -1,0 +1,238 @@
+
+<h1><%= "FIR Metrics - " +  @quarter.capitalize + " Quarter " + Time.now.strftime("%Y") %></h1>
+
+<br>
+<div id="fir_metrics_tabs">
+	<ul>
+		<li><%= link_to "Quarterly History", "#fir_metrics_tab-1" %></li>
+		<li><%= link_to "1q15", "#fir_metrics_tab-2" %></li>
+		<li><%= link_to "Board Data", "#fir_metrics_tab-3" %></li>
+		<li><%= link_to "Documentation Issues", "#fir_metrics_tab-4" %></li>
+		<li><%= link_to "Clarrification Issues", "#fir_metrics_tab-5" %></li>
+	</ul>
+
+	<div id="fir_metrics_tab-1">
+		<p class="firChartTitle" >
+			<%= "FAB Issue Report" %>
+		</p>
+		<div id="firQuartersChart" class="firQuartersChart" >
+		</div>
+		<script>
+			fir_quarts = <%= raw @fir_quarterly_history.to_json %>;
+      chart = new cfx.Chart();
+			document.ready = FirQuartersChart(fir_quarts, chart);
+		</script>
+	</div>
+
+	<div id="fir_metrics_tab-2">
+		<div id="issuesPinsChart" class="issuesPinsChart" >
+			<p class="firChartTitle" >
+				<%= "FIR Issues/Pins" %>
+			</p>
+			<div id="firIssuesPinsChart" class="firIssuesPinsChart" >
+			</div>
+			<script>
+				fir_issues_pins = <%= raw @fab_iss_deliverable.to_json %>;
+	      chart = new cfx.Chart();
+				document.ready = FirIssuesPinsChart(fir_issues_pins, chart);
+			</script>
+		</div>
+
+		<div id="deliverableChart" class="deliverableChart" >
+			<p class="firChartTitle" >
+				<%= "FIR Issue Deliverables" %>
+			</p>
+			<div id="firDeliverableChart" class="firDeliverableChart" >
+			</div>
+			<script>
+				fir_deliverables = <%= raw @fab_iss_deliverablea.to_json %>;
+	      chart = new cfx.Chart();
+				document.ready = FirDeliverableChart(fir_deliverables, chart);
+			</script>
+		</div>
+	
+		<div id="drawingChart" class="drawingChart" >
+			<p class="firChartTitle" >
+				<%= "FIR Issue Drawing" %>
+			</p>
+			<div id="firDrawingChart" class="firDrawingChart" >
+			</div>
+			<script>
+				fir_iss_drawing = <%= raw @fab_iss_drawing.to_json %>;
+	      chart = new cfx.Chart();
+				document.ready = FirDrawingChart(fir_iss_drawing, chart);
+			</script>
+		</div>
+
+		<div id="modeChart" class="modeChart" >
+			<p class="firChartTitle" >
+				<%= "FIR Issue Mode" %>
+			</p>
+			<div id="firModeChart" class="firModeChart" >
+			</div>
+			<script>
+				fir_modes = <%= raw @fab_iss_mode.to_json %>;
+	      chart = new cfx.Chart();
+				document.ready = FirModeChart(fir_modes, chart);
+			</script>
+		</div>
+	</div>
+
+	<div id="fir_metrics_tab-3">
+		<table  id="fir_board_data_table" class="display" cellspacing="0" width="100%">
+		  <thead>
+				<tr>
+					<th class="fir_col_width" >Part #</th>
+					<th>Pins</td>
+					<th>Board Type</td>
+					<th class="fir_col_width" >FTP</th>
+					<th>Vendor Issues Rcvd</th>
+					<th class="fir_col_width" >Vend Iss Rcvd</th>
+					<th>Vend Iss Closed</th>
+					<th>Cleanup Reqd</th>
+					<th>Cleanup Complete</th>
+					<th>Documentation Issues</th>
+					<th>Documentation Issues/Pins</th>
+					<th>Clarification Issues</th>
+					<th>Clarifications Issues/Pins</th>
+				</tr>
+		  </thead>
+		  <tbody>
+				<%- pintotal = 0.000001 %>
+				<%- doctotal = 0 %>
+				<%- clartotal = 0 %>
+				<%- proddoctotal = 0 %>
+				<%- prodclartotal = 0 %>
+				<% @ftps.each do |ftp| %>
+					<%- num = PartNum.get_design_pcb_part_number(ftp.design_id).name_string  %>
+					<%- issues = FabIssue.find_all_by_design_id(ftp.design_id)  %>
+					<%- isscount = issues.count %>
+					<%- dociss = FabIssue.find_all_by_design_id_and_documentation_issue(ftp.design_id, true)  %>
+					<%- docisscount = dociss.count %>
+					<%- doctotal += docisscount %>
+					<%- clariss = FabIssue.find_all_by_design_id_and_documentation_issue(ftp.design_id, false)  %>
+					<%- clarisscount = clariss.count %>
+					<%- clartotal += clarisscount %>
+			
+					<%- sched_part = PcbSchedulerPartNum.find_by_number_and_pcba(num+"A", false) %>
+					<%- sched_brd = PcbSchedulerBoard.find(sched_part.board_id)  rescue "Error" %>
+					<%- sched_brd_class = PcbSchedulerBoardClass.find(sched_brd.board_class_id) rescue "Error" %>
+					<%- sched_brd_des_proc = PcbSchedulerDesignProcess.find(sched_brd.design_process_id) rescue "Error" %>
+					<%- pins = "N/A" %>
+					<%- docpins = "N/A" %>
+					<%- clarpins = "N/A" %>
+			
+					<tr>
+						<td><%= num  %></td>
+			
+						
+						<% if sched_brd_class != "Error" && (sched_brd_class.name == "P1" || sched_brd_class.name == "P2") %>
+							<%- pins = "N/A" %>
+							<%- brd_type = "Engineering" %>
+						<% elsif sched_brd_des_proc != "Error" && sched_brd_des_proc.short_name == "BF" %>
+							<%- pins = "N/A" %>
+							<%- brd_type = "Bareboard Only" %>
+						<% elsif sched_brd_des_proc != "Error" && sched_brd_des_proc.short_name == "RF" %>
+							<%- brd_type = "Revision" %>
+						<% else %>
+							<%- brd_type = "Production (New)" %>
+							<%- pins = sched_brd.actual_ending_pin_count rescue "Error" %>
+							<%- docpins = (docisscount*1.000/pins).round(3).to_s + "%" %>
+							<%- clarpins = (clarisscount*1.000/pins).round(3).to_s + "%" %>
+							<%- pintotal += pins %>
+							<%- proddoctotal += docisscount %>
+							<%- prodclartotal += clarisscount %>
+						<% end %>
+						
+						<td><%= pins %></td>
+						<td><%= brd_type  %></td>
+						<td><%= ftp.created_at.format_dd_mon_yy %></td>
+						<td><%= (isscount > 0) ? "Yes" : "No" %></td>
+			
+						<td><%= (isscount > 0) ? issues.first.received_on.strftime("%d-%b-%y") : "N/A" %></td>
+						
+						<td><%= (isscount > 0) ? "Set to last comp dt if all comp or set blank" : "N/A" %></td>
+						
+						<td><%= (docisscount > 0) ? "Yes" : "No" %></td>
+						<td><%= (docisscount > 0) ? "Set to last doc iss comp dt if all doc iss comp or set blank" : "N/A" %></td>
+						<td><%= docisscount %></td>
+						<td><%= docpins %></td>
+						<td><%= clarisscount %></td>
+						<td><%= clarpins %></td>
+					</tr>
+				<% end %>
+			</tbody>
+			<tfoot>
+				<tr>
+					<th></th>
+					<th><%= pintotal.round(0) %></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th><%= proddoctotal %></th>
+					<th><%= (proddoctotal/pintotal).round(3).to_s + "%" %></th>
+					<th><%= prodclartotal %></th>
+					<th><%= (prodclartotal/pintotal).round(3).to_s + "%" %></th>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
+		
+	<div id="fir_metrics_tab-4">
+		<table id="fir_doc_issues_table" class="display">
+		  <thead>
+				<tr>
+					<th>Deliverable</th>
+					<th class="fir_col_width" >Board</th>
+					<th>Issue</th>
+					<th>Cause</th>
+					<th>Resolution</th>
+					<th class="fir_col_width" >Failure Mode</th>
+				</tr>
+		  </thead>
+		  <tbody>
+				<% @doc_firs.each do |f| %>
+					<tr>
+						<td><%= f.fab_deliverable.parent_id ? f.fab_deliverable.parent.name : f.fab_deliverable.name %></td>
+						<td><%= PartNum.get_design_pcb_part_number(f.design_id).name_string  %></td>
+						<td><%= f.description %></td>
+						<td><%= f.cause %></td>
+						<td><%= f.resolution %></td>
+						<td><%= f.fab_failure_mode.name %></td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+		
+		
+	<div id="fir_metrics_tab-5">
+		<table id="fir_clar_issues_table" class="display">
+		  <thead>
+				<tr>
+					<th>Deliverable</th>
+					<th class="fir_col_width" >Board</th>
+					<th>Issue</th>
+					<th>Cause</th>
+					<th>Resolution</th>
+				</tr>
+		  </thead>
+		  <tbody>
+				<% @clr_firs.each do |f| %>
+					<tr>
+						<td><%= f.fab_deliverable.name %></td>
+						<td><%= PartNum.get_design_pcb_part_number(f.design_id).name_string  %></td>
+						<td><%= f.description %></td>
+						<td><%= f.cause %></td>
+						<td><%= f.resolution %></td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</div>
+

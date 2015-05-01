@@ -22,7 +22,7 @@
     <tr>
       <th class="teraheader" align="right">Date Received:&nbsp;</th>
       <td>
-    	  <%= text_field(:fab_issue, :date_received, :value => (@fab_issue.new_record? ? Time.now.strftime("%B %d, %Y") : @fab_issue.date_received.strftime("%B %d, %Y")))%>
+    	  <%= text_field(:fab_issue, :received_on, :value => (@fab_issue.new_record? ? Time.now.strftime("%B %d, %Y") : @fab_issue.received_on.strftime("%B %d, %Y")))%>
       </td>
     </tr>  
     <tr>
@@ -49,42 +49,39 @@
         <%= check_box :fab_issue, :documentation_issue %>
       </td>
     </tr>
-    <tr>
-      <th class="teraheader" align="right">Clean Up Required:&nbsp;</th>
-      <td>
-        <%= check_box :fab_issue, :clean_up_reqd %>
-      </td>
-    </tr>
-    <tr>
+    
+    <tr id="clean_up_complete_row" style="display:none" >
       <th class="teraheader" align="right">Clean Up Completed:&nbsp;</th>
       <td>
-    	  <%= text_field(:fab_issue, :clean_up_complete_date, :value => (@fab_issue.clean_up_complete_date.strftime("%B %d, %Y") rescue "") )%>
+    	  <%= text_field(:fab_issue, :clean_up_complete_on, :value => (@fab_issue.clean_up_complete_on.strftime("%B %d, %Y") rescue "") )%>
       </td>
     </tr>  
+
     <tr>
-      <th class="teraheader" align="right">Corrected Before Pre-Production Release:&nbsp;</th>
+      <th class="teraheader" align="right">CleanUp Required:&nbsp;</th>
       <td>
-        <%= check_box :fab_issue, :corrected_b4_pre_prod_rel %>
-      </td>
+				<%= radio_button_tag(:cleanup, "full", @fab_issue.full_rev_reqd ) %>
+				<%= label_tag(:cleanup_full, "Full Rev") %>
+				<%= radio_button_tag(:cleanup, "bareboard", @fab_issue.bare_brd_change_reqd) %>
+				<%= label_tag(:cleanup_bareboard, "Bareboard") %>      
+				<%= radio_button_tag(:cleanup, "na", (!@fab_issue.full_rev_reqd && !@fab_issue.bare_brd_change_reqd) ) %>
+				<%= label_tag(:cleanup_na, "N/A") %>      
+			</td>
     </tr>
-    <tr>
-      <th class="teraheader" align="right">Full Rev Required:&nbsp;</th>
-      <td>
-        <%= check_box :fab_issue, :full_rev_reqd %>
-      </td>
-    </tr>
-    <tr>
-      <th class="teraheader" align="right">Bareboard Change Required:&nbsp;</th>
-      <td>
-        <%= check_box :fab_issue, :bare_brd_change_reqd %>
-      </td>
-    </tr>
-    <tr>
+    
+    <tr id="fab_failure_mode_complete_row" style="display:none" >
       <th class="teraheader" align="right">Failure Mode:&nbsp;</th>
       <td>
         <%= collection_select(:fab_issue, :fab_failure_mode_id, @fab_failure_modes, :id, :name, :include_blank => true) %>
       </td>
     </tr>
+    <tr>
+      <th class="teraheader" align="right">Close Issue:&nbsp;</th>
+      <td>
+        <%= check_box :fab_issue, :resolved %>
+      </td>
+    </tr>
+
   </table>
 
         

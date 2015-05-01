@@ -15,6 +15,16 @@ class FabIssuesController < ApplicationController
       @fab_issues = []
     end
 
+    # Get unique design ids with ftp date in last quarter
+    today = Date.today.beginning_of_quarter - 10.days
+    @begin_date = today.beginning_of_quarter
+    @end_date = today.end_of_quarter
+    @ftps = FtpNotification.find(:all, :conditions => ["created_at > ? AND created_at < ?", @begin_date, @end_date] )     
+    @designs = @ftps.map(&:design_id).uniq
+    
+    # Get all fir doc/clariffication issues for ftp'd designs
+    @doc_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", @designs, true])
+    @clr_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", @designs, false])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -97,6 +107,20 @@ class FabIssuesController < ApplicationController
   # POST /fab_issues
   # POST /fab_issues.json
   def create
+    if params[:cleanup] == "full"
+      params[:fab_issue][:full_rev_reqd] = true
+      params[:fab_issue][:bare_brd_change_reqd] = false
+    elsif params[:cleanup] == "bareboard"
+      params[:fab_issue][:full_rev_reqd] = false
+      params[:fab_issue][:bare_brd_change_reqd] = true
+    else
+      params[:fab_issue][:full_rev_reqd] = false
+      params[:fab_issue][:bare_brd_change_reqd] = false
+    end
+    if params[:fab_issue][:resolved]
+      params[:fab_issue][:resolved_on] = Date.today
+    end
+    
     @fab_issue = FabIssue.new(params[:fab_issue])
 
     respond_to do |format|
@@ -114,6 +138,20 @@ class FabIssuesController < ApplicationController
   # PUT /fab_issues/1.json
   def update
     @fab_issue = FabIssue.find(params[:id])
+
+    if params[:cleanup] == "full"
+      params[:fab_issue][:full_rev_reqd] = true
+      params[:fab_issue][:bare_brd_change_reqd] = false
+    elsif params[:cleanup] == "bareboard"
+      params[:fab_issue][:full_rev_reqd] = false
+      params[:fab_issue][:bare_brd_change_reqd] = true
+    else
+      params[:fab_issue][:full_rev_reqd] = false
+      params[:fab_issue][:bare_brd_change_reqd] = false
+    end
+    if params[:fab_issue][:resolved]
+      params[:fab_issue][:resolved_on] = Date.today
+    end
 
     respond_to do |format|
       if @fab_issue.update_attributes(params[:fab_issue])

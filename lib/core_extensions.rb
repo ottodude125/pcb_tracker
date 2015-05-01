@@ -120,6 +120,33 @@ module CoreExtensions
       result = self.strftime("%a %b %d, %Y @ %I:%M %p")
       result += self.localtime.strftime(" %Z") 
     end
+
+    ######################################################################
+    #
+    # current_quarter
+    #
+    # Description:
+    # Computes the current quarter.
+    #
+    # Parameters
+    # None
+    #
+    # Return value:
+    # In integer 1 through 4 that represents the current quarter.
+    #
+    ######################################################################
+    #
+    def current_quarter
+
+      case self.month
+
+      when 1..3 then 1
+      when 4..6 then 2
+      when 7..9 then 3
+      else           4
+      end
+
+    end
     
   end
   

@@ -350,6 +350,203 @@ class ReportController < ApplicationController
 
   end
 
+  ######################################################################
+  #
+  # fir_metrics
+  #
+  # Description:
+  # This method retrieves the information for the fir_metrics view 
+  #
+  # Parameters:
+  # None
+  #
+  ######################################################################
+  #
+  def fir_metrics
+    
+    # Get last quarter date range
+    today = Date.today.beginning_of_quarter - 10.days
+    # Get quarter name
+=begin    
+    @begin_date = today.beginning_of_quarter
+    @end_date = today.end_of_quarter
+        
+    # Get unique design ids with ftp date in last quarter
+    @ftps = FtpNotification.find(:all, :conditions => ["created_at > ? AND created_at < ?", @begin_date, @end_date] )     
+    @designs = @ftps.map(&:design_id).uniq
+    
+    # Get all fir doc/clarification issues for ftp'd designs
+    @doc_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", @designs, true])
+    @clr_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", @designs, false])
+
+    @fir_quarts = []
+    dpin = 0.01
+    cpin = 0.02
+    ftpd = 20
+    doci = 10
+    clai = 15
+    ["1Q14","2Q14","3Q14","4Q14","1Q15"].each do |i|
+      fir_quart = {}
+      fir_quart["Date"] = i
+      fir_quart["Documentation Issues/Pins"] = dpin
+      fir_quart["Clarification Issues/Pins"] = cpin
+      fir_quart["Designs FTPd"] = ftpd
+      fir_quart["Designs w/Documentation Issues"] = doci
+      fir_quart["Designs w/Clarification Issues"] = clai
+      @fir_quarts << fir_quart
+      dpin += 0.01
+      cpin += 0.02
+      ftpd -= 2
+      doci += 2
+      clai += 1
+    end
+    @fir_quarts = @fir_quarts.to_json
+    puts @fir_quarts
+=end
+
+    ##### Data to aquire for each quarter #####
+    # 1) Documentation Issues/Pins
+    # 1a) Need get unique list of designs with ftp date within quarter with scheduler design_class != [P1 || P2] && design_process = standard
+    # 1b) Need to sum pins for all designs 1a
+    # 1c) Need to sum documentation issues for 1a
+    # 1d) 1c/1b is solution
+    # 2) Clarification Issues/Pins
+    # 2a) Need to sum documentation issues for 1a
+    # 2b) 2a/1b is solution
+    # 3) Designs FTPd
+    # 3a) 1a.count is solution
+    # 4) Designs w/Documentation Issues
+    # 4a) For each in 1a check if any doc issues and add to total
+    # 5) Designs w/Clarification Issues
+    # 5a) For each in 1a check if any clar issues and add to total
+    
+    @fir_quarterly_history = []
+    @fab_iss_deliverable = {}
+    @fab_iss_drawing = {}
+    FabDeliverable.all.each do |fd|
+      if fd.parent_id.nil?
+        #deliverable = {}
+        @fab_iss_deliverable[fd.name] = {"Documentation Issue" => 0, "Vendor Clarification" => 0}
+        #@fab_iss_deliverable << deliverable
+      else
+        #deliverable = {}
+        @fab_iss_drawing[fd.name] = {"Documentation Issue" => 0, "Vendor Clarification" => 0}
+        #@fab_iss_drawing << deliverable          
+      end
+    end
+    @fab_iss_mode = {}
+    FabFailureMode.all.each do |fm|
+      #mode = {}
+      @fab_iss_mode[fm.name] = {"Documentation Issue" => 0}
+      #@fab_iss_mode << mode
+    end      
+
+    # Reverse step through each offset to build data for that quarter
+    5.step(1,-1).each do |offset|
+      fir_quart = {}
+      fir_quart["Date"] = ""
+      fir_quart["Documentation Issues/Pins"] = -1
+      fir_quart["Clarification Issues/Pins"] = -1
+      fir_quart["Designs FTPd"] = -1
+      fir_quart["Designs w/Documentation Issues"] = -1
+      fir_quart["Designs w/Clarification Issues"] = -1
+      pincount = 0.00001
+      
+      # Get start/end date of offset quarter 
+      quart_date = Date.today << (offset * 3)
+      begin_date = quart_date.beginning_of_quarter
+      end_date = quart_date.end_of_quarter
+      
+      quarter = ((quart_date.beginning_of_quarter.month - 1) / 3) + 1
+      year = quart_date.beginning_of_quarter.strftime("%y")
+      fir_quart["Date"] = quarter.to_s + "Q" + year 
+      case quarter
+      when 1
+        @quarter = "first"
+      when 2
+        @quarter = "second"
+      when 3
+        @quarter = "third"
+      when 4
+        @quarter = "fourth"
+      end
+      
+      # Get unique design ids with ftp date in offset quarter
+      @ftps = FtpNotification.find(:all, :conditions => ["created_at > ? AND created_at < ?", begin_date, end_date] )     
+      designs = @ftps.map(&:design_id).uniq
+      fir_quart["Designs FTPd"] = designs.count rescue 0
+
+      # Get all fir doc/clarification issues for ftp'd designs
+      @doc_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", designs, true])
+      @clr_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", designs, false])
+      fir_quart["Designs w/Documentation Issues"] = @doc_firs.count rescue 0
+      fir_quart["Designs w/Clarification Issues"] = @clr_firs.count rescue 0
+      
+      # Get all Non P1/P2 board classes w/ standard design process and add up pins
+      production_design_ids = []
+      prod_design_pins = {}
+      designs.each do |d|
+        part_num = PartNum.get_design_pcb_part_number(d).name_string
+        sched_part = PcbSchedulerPartNum.find_by_number_and_pcba(part_num+"A", false)
+        sched_brd = PcbSchedulerBoard.find(sched_part.board_id)  rescue "Error"
+        sched_brd_class = PcbSchedulerBoardClass.find(sched_brd.board_class_id) rescue "Error"
+        sched_brd_des_proc = PcbSchedulerDesignProcess.find(sched_brd.design_process_id) rescue "Error"
+        # if design found in scheduler and its brd_class is not P1/P2 and its brd_process is standard then add to list of designs
+        if sched_brd_class != "Error" && sched_brd_class.name != "P1" && sched_brd_class.name != "P2" && sched_brd_des_proc.short_name == "SF"
+          production_design_ids << d
+          pincount += sched_brd.actual_ending_pin_count
+        end
+      end
+
+      # Get sum of fir doc/clarification issues for ftp'd designs Non P1/P2 board classes w/ standard design process
+      prod_doc_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", production_design_ids, true])
+      prod_clr_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", production_design_ids, false])      
+      fir_quart["Documentation Issues/Pins"] = (prod_doc_firs.count/pincount).round(5) rescue 0
+      fir_quart["Clarification Issues/Pins"] = (prod_clr_firs.count/pincount).round(5) rescue 0
+
+      @fir_quarterly_history << fir_quart
+      
+      
+      @doc_firs.each do |f|
+        @fab_iss_mode[f.fab_failure_mode.name]["Documentation Issue"] += 1 unless f.fab_failure_mode.nil?
+        if f.fab_deliverable.parent_id.nil?
+          @fab_iss_deliverable[f.fab_deliverable.name]["Documentation Issue"] += 1
+        else
+          @fab_iss_drawing[f.fab_deliverable.name]["Documentation Issue"] += 1
+        end
+      end
+      @clr_firs.each do |f|
+        @fab_iss_mode[f.fab_failure_mode.name]["Documentation Issue"] += 1 unless f.fab_failure_mode.nil?
+        if f.fab_deliverable.parent_id.nil?
+          @fab_iss_deliverable[f.fab_deliverable.name]["Documentation Issue"] += 1
+        else
+          @fab_iss_drawing[f.fab_deliverable.name]["Documentation Issue"] += 1
+        end
+      end
+      
+    end
+    @fir_quarterly_history = @fir_quarterly_history.to_json
+    @fab_iss_deliverablea = []
+    @fab_iss_deliverablea << @fab_iss_deliverable
+    #@fab_iss_deliverablea = @fab_iss_deliverablea.to_json
+    @fab_iss_deliverable = @fab_iss_deliverable.to_json
+    @fab_iss_drawing = @fab_iss_drawing.to_json
+    @fab_iss_mode = @fab_iss_mode.to_json
+    puts @fir_quarterly_history
+    puts "\n\n"
+    puts @fab_iss_deliverable
+    puts "\n\n"
+    puts @fab_iss_drawing
+    puts "\n\n"
+    puts @fab_iss_mode
+    puts "\n\n"
+    
+    respond_to do | format | 
+      format.html
+      format.csv { send_data reviewer_to_csv(@heads,@data) }
+    end  
+  end
+
 private
 
 

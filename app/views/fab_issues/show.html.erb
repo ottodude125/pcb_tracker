@@ -17,7 +17,7 @@
     <tr>
       <th class="teraheader" align="right">Date Received:&nbsp;</th>
       <td>
-    	  <%= @fab_issue.date_received.strftime("%d-%b-%y") %>
+    	  <%= @fab_issue.received_on.strftime("%d-%b-%y") %>
       </td>
     </tr>  
     <tr>
@@ -47,27 +47,11 @@
       <% end %>
     </tr>
     <tr>
-      <th class="teraheader" align="right">Clean Up Required:&nbsp;</th>
-      <% if @fab_issue.clean_up_reqd %>
-      	<td><%= image_tag("check_mark.png") %></td>
-  		<% else %>
-      	<td><%= image_tag("icon_x.png") %></td>
-      <% end %>
-    </tr>
-    <tr>
       <th class="teraheader" align="right">Clean Up Completed:&nbsp;</th>
       <td>
-    	  <%= @fab_issue.clean_up_complete_date.strftime("%d-%b-%y") rescue "" %>
+    	  <%= @fab_issue.clean_up_complete_on.strftime("%d-%b-%y") rescue "" %>
       </td>
     </tr>  
-    <tr>
-      <th class="teraheader" align="right">Corrected Before Pre-Production Release:&nbsp;</th>
-      <% if @fab_issue.corrected_b4_pre_prod_rel %>
-      	<td><%= image_tag("check_mark.png") %></td>
-  		<% else %>
-      	<td><%= image_tag("icon_x.png") %></td>
-      <% end %>
-    </tr>
     <tr>
       <th class="teraheader" align="right">Full Rev Required:&nbsp;</th>
       <% if @fab_issue.full_rev_reqd %>

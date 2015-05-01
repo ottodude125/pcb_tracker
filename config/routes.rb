@@ -12,8 +12,6 @@
 #
 PcbTracker::Application.routes.draw do
 
-  resources :fab_issues
-
 
   resources :board_design_entry do
     collection do
@@ -92,6 +90,7 @@ PcbTracker::Application.routes.draw do
 
   #resources :fab_deliverables
   #resources :fab_failure_modes
+  resources :fab_issues
     
   resources :part_nums
 
@@ -106,6 +105,7 @@ PcbTracker::Application.routes.draw do
       get 'reviewer_workload'
       post 'reviewer_approval_time'
       get 'summary_data'
+      get 'fir_metrics'
     end
   end
 

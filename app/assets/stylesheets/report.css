@@ -18,4 +18,44 @@ table#data tr:nth-child(odd) {
 table#data tr:nth-child(even) {
 	background-color: #F1EFE2; 
 }
+
+table#fir_board_data_table th,
+table#fir_doc_issues_table th,
+table#fir_clar_issues_table th,
+table#fir_board_data_table td,
+table#fir_doc_issues_table td,
+table#fir_clar_issues_table td {
+	font-size: 10px;
+}
+
+table#fir_board_data_table td {
+	text-align: center;
+}
+.fir_col_width {
+	width: 70px;
+}
+
  
+p.firChartTitle {
+  font: bold 18px Helvetica;
+  text-align: center;
+  margin-bottom: 10px;
+  margin-top: 10px;
+}
+
+div#firQuartersChart,
+div#firDeliverableChart,
+div#firIssuesPinsChart,
+div#firDrawingChart,
+div#firModeChart {
+	position: relative;
+	z-index: 10;
+  min-width: 310px;
+  max-width: 90%; 
+  height: 400px; 
+  margin: 0 auto;    
+}
+
+
+
+

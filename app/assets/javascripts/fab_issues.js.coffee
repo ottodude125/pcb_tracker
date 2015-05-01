@@ -6,21 +6,41 @@ jQuery ->
   $('#fab_issues_table').dataTable
     sPaginationType: "full_numbers",
     bJQueryUI: true,
+    "iDisplayLength": 25,
     aaSorting: [[0,'desc']]
 
-
-  $('#fab_issue_date_received').datepicker
+  $('#fab_issue_received_on').datepicker
     dateFormat: 'MM d, yy',
     showWeek: true,
     changeMonth: true,
     changeYear: true,
     minDate: "-1y",
-    maxDate: "+2y",
+    maxDate: "+2y"
 
-  $('#fab_issue_clean_up_complete_date').datepicker
+  $('#fab_issue_clean_up_complete_on').datepicker
     dateFormat: 'MM d, yy',
     showWeek: true,
     changeMonth: true,
     changeYear: true,
     minDate: "-1y",
-    maxDate: "+2y",
+    maxDate: "+2y"
+    
+  # On page load display clean up complete row if clean up reqd checked
+  if $('#fab_issue_documentation_issue').is(':checked')    
+      $('#clean_up_complete_row').show()      
+      $('#fab_failure_mode_complete_row').show()      
+    else
+      $('#fab_issue_clean_up_complete_on').val ""
+      $('#clean_up_complete_row').val("").hide()
+      $('#fab_failure_mode_complete_row').val("").hide()
+
+  # When clean up reqd is check/unchecked show/hide date row
+  $('#fab_issue_documentation_issue').click -> 
+    if $(this).is(':checked')      
+      $('#clean_up_complete_row').show()
+      $('#fab_failure_mode_complete_row').show()
+    else
+      $('#fab_issue_clean_up_complete_on').val ""
+      $('#clean_up_complete_row').hide()
+      $('#fab_failure_mode_complete_row').hide()
+      
