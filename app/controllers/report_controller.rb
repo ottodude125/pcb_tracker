@@ -584,7 +584,7 @@ class ReportController < ApplicationController
           elsif sched_brd_des_proc != "Error" && sched_brd_des_proc.short_name == "RF"
             design[:pins] = "N/A"
             design[:brd_type] = "Revision"
-          else
+          elsif sched_brd != "Error"
             design[:pins] = sched_brd.actual_ending_pin_count rescue "Error"
             design[:brd_type] = "Production (New)"
             design[:doc_iss_pins] = (docisscount*1.000/design[:pins]).round(3).to_s + "%"
@@ -592,6 +592,11 @@ class ReportController < ApplicationController
             pintotal += design[:pins]
             doctotal += design[:num_doc_issues]
             clartotal += design[:num_clar_issues]
+          else
+            design[:pins] = "Error"
+            design[:brd_type] = "Error"
+            design[:doc_iss_pins] = "Error"
+            design[:clar_iss_pins] = "Error"           
           end
           @ftps << design
         end
