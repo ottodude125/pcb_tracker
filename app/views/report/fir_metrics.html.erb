@@ -12,27 +12,115 @@
 	</ul>
 
 	<div id="fir_metrics_tab-1">
-		<p class="firChartTitle" >
-			<%= "FAB Issue Report" %>
-		</p>
-		<div id="firQuartersChart" class="firQuartersChart" >
+		<div class="splitcontentleft" >
+			<p class="firChartTitle" >
+				<%= "FAB Issue Report - Quarterly Status" %>
+			</p>
+			<div id="firQuartersChart" class="firQuartersChart" >
+			</div>
+			<script>
+				fir_quarts = <%= raw @fir_quarterly_history.to_json %>;
+	      chart = new cfx.Chart();
+				document.ready = FirQuartersChart(fir_quarts, chart);
+			</script>
+			<p>
+				NOTES: 
+				<ul>
+					<li>All sums are for FTP'd designs within stated quarter</li>
+					<li>Documentation Issues/Pins - Sum of documentation issues for Production(New) designs divided by pin count</li>
+					<li>Clarification Issues/Pins - Sum of clarification issues for Production(New) designs divided by pin count</li>
+					<li>Designs FTPd - Sum of designs FTP'd</li>
+					<li>Designs w/Documentation Issues - Sum of designs that had at least one documentation issue</li>
+					<li>Designs w/Clarification Issues - Sum of designs that had at least one clarification issue</li>
+				</ul>
+			</p>
 		</div>
-		<script>
-			fir_quarts = <%= raw @fir_quarterly_history.to_json %>;
-      chart = new cfx.Chart();
-			document.ready = FirQuartersChart(fir_quarts, chart);
-		</script>
+		<div class="splitcontentright" >
+			<div class="fir_table" >
+				<p class="fir_table_title" >1Q15 - Designs w/o Doc Change FIR's</p>
+				<p class="fir_table_title_note" >(First Revision, Production, not a "Make From" or Eng)</p>
+				<table class="fir_table" >
+					<tr>
+						<th>Board</th>
+						<th>Designer</th>
+						<th>Project</th>
+						<th>Pins</th>							
+					</tr>
+					<% @prod_des_wo_doc_changes.each do |p| %>
+						<tr>
+							<td><%= p[:part_number] %></td>
+							<td><%= p[:designer] %></td>
+							<td><%= p[:project] %></td>
+							<td><%= p[:pins] %></td>							
+						</tr>
+					<% end %>
+				</table>
+			</div>
+			<br>
+			<div class="fir_table" >
+				<p class="fir_table_title" >1Q15 - Designs w/o Doc Change FIR's</p>
+				<p class="fir_table_title_note" >(Revisions, Engineering, Make Froms, Bareboard Only)</p>
+				<table class="fir_table" >
+					<tr>
+						<th>Board</th>
+						<th>Designer</th>
+						<th>Project</th>
+						<th>Pins</th>							
+					</tr>
+					<% @des_wo_doc_changes.each do |p| %>
+						<tr>
+							<td><%= p[:part_number] %></td>
+							<td><%= p[:designer] %></td>
+							<td><%= p[:project] %></td>
+							<td><%= p[:pins] %></td>							
+						</tr>
+					<% end %>
+				</table>
+			</div>
+			<br>
+			<div class="fir_table" >
+				<p class="fir_table_title" >1Q15 Summary</p>
+				<table class="fir_table" >
+					<tr>
+						<td>Total Pins (New Prod Type Only)</td>
+						<td><%= @design_sum[:pintotal] %></td>
+					</tr>
+					<tr>
+						<td>Documentation Issues/Pins</td>
+						<td><%= @design_sum[:doc_iss_pins_total] %></td>
+					</tr>
+					<tr>
+						<td>Clarification Issues/Pins</td>
+						<td><%= @design_sum[:clar_iss_pins_total] %></td>
+					</tr>
+					<%- fir_quarterly_history = JSON.parse(@fir_quarterly_history) %>
+					<tr>
+						<td>Designs FTP'd (All Types Combined)</td>
+						<td><%= fir_quarterly_history.last["Designs FTPd"]  %></td>
+					</tr>
+					<tr>
+						<td>Designs with Documentation Issues</td>
+						<td><%= fir_quarterly_history.last["Designs w/Documentation Issues"]  %></td>
+					</tr>
+					<tr>
+						<td>Designs with Clarification Issues</td>
+						<td><%= fir_quarterly_history.last["Designs w/Clarification Issues"]  %></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div style="clear: both;"></div>
 	</div>
 
 	<div id="fir_metrics_tab-2">
 		<div id="issuesPinsChart" class="issuesPinsChart" >
 			<p class="firChartTitle" >
-				<%= "FIR Issues/Pins" %>
+				<%= "Issues/Pins (%) by Board" %>
 			</p>
 			<div id="firIssuesPinsChart" class="firIssuesPinsChart" >
 			</div>
 			<script>
-				fir_issues_pins = <%= raw @fab_iss_deliverable.to_json %>;
+				fir_issues_pins = <%= raw @fir_pins_brds.to_json %>;
 	      chart = new cfx.Chart();
 				document.ready = FirIssuesPinsChart(fir_issues_pins, chart);
 			</script>
@@ -40,12 +128,12 @@
 
 		<div id="deliverableChart" class="deliverableChart" >
 			<p class="firChartTitle" >
-				<%= "FIR Issue Deliverables" %>
+				<%= "Fabrication Issues Sorted by Deliverable for All Types of Designs" %>
 			</p>
 			<div id="firDeliverableChart" class="firDeliverableChart" >
 			</div>
 			<script>
-				fir_deliverables = <%= raw @fab_iss_deliverablea.to_json %>;
+				fir_deliverables = <%= raw @fab_iss_deliverable.to_json %>;
 	      chart = new cfx.Chart();
 				document.ready = FirDeliverableChart(fir_deliverables, chart);
 			</script>
@@ -53,7 +141,7 @@
 	
 		<div id="drawingChart" class="drawingChart" >
 			<p class="firChartTitle" >
-				<%= "FIR Issue Drawing" %>
+				<%= "Fabrication Drawing Issues Sorted by Drawing Part for All Types of Designs" %>
 			</p>
 			<div id="firDrawingChart" class="firDrawingChart" >
 			</div>
@@ -66,7 +154,7 @@
 
 		<div id="modeChart" class="modeChart" >
 			<p class="firChartTitle" >
-				<%= "FIR Issue Mode" %>
+				<%= "Fabrication Issues Sorted by Failure Mode for All Types of Designs" %>
 			</p>
 			<div id="firModeChart" class="firModeChart" >
 			</div>
@@ -98,85 +186,39 @@
 				</tr>
 		  </thead>
 		  <tbody>
-				<%- pintotal = 0.000001 %>
-				<%- doctotal = 0 %>
-				<%- clartotal = 0 %>
-				<%- proddoctotal = 0 %>
-				<%- prodclartotal = 0 %>
 				<% @ftps.each do |ftp| %>
-					<%- num = PartNum.get_design_pcb_part_number(ftp.design_id).name_string  %>
-					<%- issues = FabIssue.find_all_by_design_id(ftp.design_id)  %>
-					<%- isscount = issues.count %>
-					<%- dociss = FabIssue.find_all_by_design_id_and_documentation_issue(ftp.design_id, true)  %>
-					<%- docisscount = dociss.count %>
-					<%- doctotal += docisscount %>
-					<%- clariss = FabIssue.find_all_by_design_id_and_documentation_issue(ftp.design_id, false)  %>
-					<%- clarisscount = clariss.count %>
-					<%- clartotal += clarisscount %>
-			
-					<%- sched_part = PcbSchedulerPartNum.find_by_number_and_pcba(num+"A", false) %>
-					<%- sched_brd = PcbSchedulerBoard.find(sched_part.board_id)  rescue "Error" %>
-					<%- sched_brd_class = PcbSchedulerBoardClass.find(sched_brd.board_class_id) rescue "Error" %>
-					<%- sched_brd_des_proc = PcbSchedulerDesignProcess.find(sched_brd.design_process_id) rescue "Error" %>
-					<%- pins = "N/A" %>
-					<%- docpins = "N/A" %>
-					<%- clarpins = "N/A" %>
-			
-					<tr>
-						<td><%= num  %></td>
-			
-						
-						<% if sched_brd_class != "Error" && (sched_brd_class.name == "P1" || sched_brd_class.name == "P2") %>
-							<%- pins = "N/A" %>
-							<%- brd_type = "Engineering" %>
-						<% elsif sched_brd_des_proc != "Error" && sched_brd_des_proc.short_name == "BF" %>
-							<%- pins = "N/A" %>
-							<%- brd_type = "Bareboard Only" %>
-						<% elsif sched_brd_des_proc != "Error" && sched_brd_des_proc.short_name == "RF" %>
-							<%- brd_type = "Revision" %>
-						<% else %>
-							<%- brd_type = "Production (New)" %>
-							<%- pins = sched_brd.actual_ending_pin_count rescue "Error" %>
-							<%- docpins = (docisscount*1.000/pins).round(3).to_s + "%" %>
-							<%- clarpins = (clarisscount*1.000/pins).round(3).to_s + "%" %>
-							<%- pintotal += pins %>
-							<%- proddoctotal += docisscount %>
-							<%- prodclartotal += clarisscount %>
-						<% end %>
-						
-						<td><%= pins %></td>
-						<td><%= brd_type  %></td>
-						<td><%= ftp.created_at.format_dd_mon_yy %></td>
-						<td><%= (isscount > 0) ? "Yes" : "No" %></td>
-			
-						<td><%= (isscount > 0) ? issues.first.received_on.strftime("%d-%b-%y") : "N/A" %></td>
-						
-						<td><%= (isscount > 0) ? "Set to last comp dt if all comp or set blank" : "N/A" %></td>
-						
-						<td><%= (docisscount > 0) ? "Yes" : "No" %></td>
-						<td><%= (docisscount > 0) ? "Set to last doc iss comp dt if all doc iss comp or set blank" : "N/A" %></td>
-						<td><%= docisscount %></td>
-						<td><%= docpins %></td>
-						<td><%= clarisscount %></td>
-						<td><%= clarpins %></td>
-					</tr>
+				<tr>
+					<td><%= ftp[:part_num] %></td>
+					<td><%= ftp[:pins] %></td>
+					<td><%= ftp[:brd_type] %></td>
+					<td><%= ftp[:ftp_date] %></td>
+					<td><%= ftp[:vend_iss_rcvd] %></td>
+					<td><%= ftp[:date_vend_iss_rcvd] %></td>
+					<td><%= ftp[:date_vend_iss_closed] %></td>
+					<td><%= ftp[:cleanup_reqd] %></td>
+					<td><%= ftp[:date_cleanup_comp] %></td>
+					<td><%= ftp[:num_doc_issues] %></td>
+					<td><%= ftp[:doc_iss_pins] %></td>
+					<td><%= ftp[:num_clar_issues] %></td>
+					<td><%= ftp[:clar_iss_pins] %></td>
+				</tr>
 				<% end %>
 			</tbody>
 			<tfoot>
 				<tr>
-					<th></th>
-					<th><%= pintotal.round(0) %></th>
-					<th></th>
-					<th></th>
+					<th><%= @design_sum[:total] %></th>
+					<th><%= @design_sum[:pintotal] %></th>
 					<th></th>
 					<th></th>
 					<th></th>
 					<th></th>
 					<th></th>
-					<th><%= proddoctotal %></th>
-					<th><%= (proddoctotal/pintotal).round(3).to_s + "%" %></th>
-					<th><%= prodclartotal %></th>
-					<th><%= (prodclartotal/pintotal).round(3).to_s + "%" %></th>
+					<th></th>
+					<th></th>
+					<th><%= @design_sum[:doctotal] %></th>
+					<th><%= @design_sum[:doc_iss_pins_total] %></th>
+					<th><%= @design_sum[:clartotal] %></th>
+					<th><%= @design_sum[:clar_iss_pins_total] %></th>
 				</tr>
 			</tfoot>
 		</table>
@@ -235,4 +277,6 @@
 		</table>
 	</div>
 </div>
+
+
 

@@ -363,46 +363,6 @@ class ReportController < ApplicationController
   ######################################################################
   #
   def fir_metrics
-    
-    # Get last quarter date range
-    today = Date.today.beginning_of_quarter - 10.days
-    # Get quarter name
-=begin    
-    @begin_date = today.beginning_of_quarter
-    @end_date = today.end_of_quarter
-        
-    # Get unique design ids with ftp date in last quarter
-    @ftps = FtpNotification.find(:all, :conditions => ["created_at > ? AND created_at < ?", @begin_date, @end_date] )     
-    @designs = @ftps.map(&:design_id).uniq
-    
-    # Get all fir doc/clarification issues for ftp'd designs
-    @doc_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", @designs, true])
-    @clr_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", @designs, false])
-
-    @fir_quarts = []
-    dpin = 0.01
-    cpin = 0.02
-    ftpd = 20
-    doci = 10
-    clai = 15
-    ["1Q14","2Q14","3Q14","4Q14","1Q15"].each do |i|
-      fir_quart = {}
-      fir_quart["Date"] = i
-      fir_quart["Documentation Issues/Pins"] = dpin
-      fir_quart["Clarification Issues/Pins"] = cpin
-      fir_quart["Designs FTPd"] = ftpd
-      fir_quart["Designs w/Documentation Issues"] = doci
-      fir_quart["Designs w/Clarification Issues"] = clai
-      @fir_quarts << fir_quart
-      dpin += 0.01
-      cpin += 0.02
-      ftpd -= 2
-      doci += 2
-      clai += 1
-    end
-    @fir_quarts = @fir_quarts.to_json
-    puts @fir_quarts
-=end
 
     ##### Data to aquire for each quarter #####
     # 1) Documentation Issues/Pins
@@ -420,29 +380,33 @@ class ReportController < ApplicationController
     # 5) Designs w/Clarification Issues
     # 5a) For each in 1a check if any clar issues and add to total
     
-    @fir_quarterly_history = []
-    @fab_iss_deliverable = {}
-    @fab_iss_drawing = {}
+    @fir_quarterly_history = [] # Values for Top Sheet Graph
+    @prod_des_wo_doc_changes = [] # Values for Top Sheet Table One
+    @des_wo_doc_changes = [] # Values for Top Sheet Table Two
+    @fir_pins_brds = [] # Values for Issues/Pins by Board Graph
+    @fab_iss_deliverable = [] # Values for Fab Issues Sorted by Deliverable
+    @fab_iss_drawing = [] # Values for Fab Drawing Issues Sorted by Drawing
+    @fab_iss_mode = [] # Values for Fab Issues Sorted by Failure Mode
+    
+    # Initialize FabDeliverable and Fab Drawing Value Arrays
     FabDeliverable.all.each do |fd|
       if fd.parent_id.nil?
-        #deliverable = {}
-        @fab_iss_deliverable[fd.name] = {"Documentation Issue" => 0, "Vendor Clarification" => 0}
-        #@fab_iss_deliverable << deliverable
+        @fab_iss_deliverable << {"Deliverable" => fd.name, "Documentation Issue" => 0, "Vendor Clarification" => 0}
       else
-        #deliverable = {}
-        @fab_iss_drawing[fd.name] = {"Documentation Issue" => 0, "Vendor Clarification" => 0}
-        #@fab_iss_drawing << deliverable          
+        @fab_iss_drawing << {"Drawing" => fd.name, "Documentation Issue" => 0, "Vendor Clarification" => 0}
       end
     end
-    @fab_iss_mode = {}
+    # Initialize FabFailureMode Value Array
     FabFailureMode.all.each do |fm|
-      #mode = {}
-      @fab_iss_mode[fm.name] = {"Documentation Issue" => 0}
-      #@fab_iss_mode << mode
+      @fab_iss_mode << {"Mode" => fm.name, "Documentation Issue" => 0}
     end      
 
-    # Reverse step through each offset to build data for that quarter
-    5.step(1,-1).each do |offset|
+    # Reverse step through each "OFFSET" to build data for that quarter for Top Sheet
+    # On last quarter (most recent) generate values for all other graphs
+    numQuarters = 5
+    endQuarter = 1
+    numQuarters.step(endQuarter,-1).each do |offset|
+      # Initialize "offset" quarter vals for Top Sheet
       fir_quart = {}
       fir_quart["Date"] = ""
       fir_quart["Documentation Issues/Pins"] = -1
@@ -457,30 +421,27 @@ class ReportController < ApplicationController
       begin_date = quart_date.beginning_of_quarter
       end_date = quart_date.end_of_quarter
       
+      # Get Quarter/Year string for graph and page title
       quarter = ((quart_date.beginning_of_quarter.month - 1) / 3) + 1
-      year = quart_date.beginning_of_quarter.strftime("%y")
-      fir_quart["Date"] = quarter.to_s + "Q" + year 
+      fir_quart["Date"] = quarter.to_s + "Q" + quart_date.beginning_of_quarter.strftime("%y") 
       case quarter
-      when 1
-        @quarter = "first"
-      when 2
-        @quarter = "second"
-      when 3
-        @quarter = "third"
-      when 4
-        @quarter = "fourth"
+      when 1 then @quarter = "first" 
+      when 2 then @quarter = "second"
+      when 3 then @quarter = "third"
+      when 4 then @quarter = "fourth"
+      else @quarter = ""
       end
       
-      # Get unique design ids with ftp date in offset quarter
-      @ftps = FtpNotification.find(:all, :conditions => ["created_at > ? AND created_at < ?", begin_date, end_date] )     
-      designs = @ftps.map(&:design_id).uniq
+      # Get unique design ids with ftp date in "offset" quarter
+      ftps = FtpNotification.find(:all, :conditions => ["created_at > ? AND created_at < ?", begin_date, end_date] )     
+      designs = ftps.map(&:design_id).uniq
       fir_quart["Designs FTPd"] = designs.count rescue 0
 
       # Get all fir doc/clarification issues for ftp'd designs
       @doc_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", designs, true])
       @clr_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", designs, false])
-      fir_quart["Designs w/Documentation Issues"] = @doc_firs.count rescue 0
-      fir_quart["Designs w/Clarification Issues"] = @clr_firs.count rescue 0
+      fir_quart["Designs w/Documentation Issues"] = @doc_firs.map(&:design_id).uniq.count rescue 0
+      fir_quart["Designs w/Clarification Issues"] = @clr_firs.map(&:design_id).uniq.count rescue 0
       
       # Get all Non P1/P2 board classes w/ standard design process and add up pins
       production_design_ids = []
@@ -494,7 +455,17 @@ class ReportController < ApplicationController
         # if design found in scheduler and its brd_class is not P1/P2 and its brd_process is standard then add to list of designs
         if sched_brd_class != "Error" && sched_brd_class.name != "P1" && sched_brd_class.name != "P2" && sched_brd_des_proc.short_name == "SF"
           production_design_ids << d
-          pincount += sched_brd.actual_ending_pin_count
+          pincount += sched_brd.actual_ending_pin_count          
+          
+          # If last quarter to process then calculate issues/pins by board for single quarter graph
+          if endQuarter == offset
+            doc_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, true).count*1.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
+            cla_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, false).count*1.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
+            puts doc_iss_pins.to_s + " && " + cla_iss_pins.to_s
+            @fir_pins_brds << {"Part Number" => part_num + " w/" + sched_brd.actual_ending_pin_count.to_s + " Pins", 
+                                "Documentation Issues/Pins" => doc_iss_pins, 
+                                "Clarification Issues/Pins" => cla_iss_pins}
+          end
         end
       end
 
@@ -506,41 +477,141 @@ class ReportController < ApplicationController
 
       @fir_quarterly_history << fir_quart
       
-      
-      @doc_firs.each do |f|
-        @fab_iss_mode[f.fab_failure_mode.name]["Documentation Issue"] += 1 unless f.fab_failure_mode.nil?
-        if f.fab_deliverable.parent_id.nil?
-          @fab_iss_deliverable[f.fab_deliverable.name]["Documentation Issue"] += 1
-        else
-          @fab_iss_drawing[f.fab_deliverable.name]["Documentation Issue"] += 1
+      # If this is the last quarter to process the calculate values for single quarter graphs
+      if endQuarter == offset
+        
+        # Build data for Quarterly History Table 1
+        prod_des_id_wo_doc_changes = production_design_ids - prod_doc_firs.map(&:design_id).uniq
+        prod_des_id_wo_doc_changes.each do |p|
+          part_num = PartNum.get_design_pcb_part_number(p).name_string
+          designer = Design.find(p).designer.last_name
+          project = Design.find(p).board.project.name
+          sched_part = PcbSchedulerPartNum.find_by_number_and_pcba(part_num+"A", false)
+          sched_brd = PcbSchedulerBoard.find(sched_part.board_id)  rescue "Error"
+          pins = sched_brd.actual_ending_pin_count rescue "Error"
+          @prod_des_wo_doc_changes << {:part_number => part_num, 
+                                        :designer => designer,
+                                        :project => project, 
+                                        :pins => pins}
         end
-      end
-      @clr_firs.each do |f|
-        @fab_iss_mode[f.fab_failure_mode.name]["Documentation Issue"] += 1 unless f.fab_failure_mode.nil?
-        if f.fab_deliverable.parent_id.nil?
-          @fab_iss_deliverable[f.fab_deliverable.name]["Documentation Issue"] += 1
-        else
-          @fab_iss_drawing[f.fab_deliverable.name]["Documentation Issue"] += 1
+        
+        # Build data for Quarterly History Table 2
+        des_id_wo_doc_changes = designs - production_design_ids
+        des_id_wo_doc_changes.each do |p|
+          part_num = PartNum.get_design_pcb_part_number(p).name_string
+          designer = Design.find(p).designer.last_name
+          project = Design.find(p).board.project.name
+          sched_part = PcbSchedulerPartNum.find_by_number_and_pcba(part_num+"A", false)
+          sched_brd = PcbSchedulerBoard.find(sched_part.board_id)  rescue "Error"
+          pins = sched_brd.actual_ending_pin_count rescue "Error"
+          @des_wo_doc_changes << {:part_number => part_num, 
+                                  :designer => designer,
+                                  :project => project, 
+                                  :pins => pins}
         end
+        
+        
+        @doc_firs.each do |f|          
+          # Add to Mode count          
+          @fab_iss_mode.find {|fim| fim["Mode"] == f.fab_failure_mode.name }["Documentation Issue"] += 1 unless f.fab_failure_mode.nil?
+              
+          # Add to Deliverable/Drawing count     
+          if f.fab_deliverable.parent_id.nil?
+            @fab_iss_deliverable.find {|fid| fid["Deliverable"] == f.fab_deliverable.name }["Documentation Issue"] += 1
+          else
+            # Get find the root deliverable cycling through parents. Add issue to the root count
+            deliverable_root = FabDeliverable.find(f.fab_deliverable.parent_id)
+            while !deliverable_root.parent_id.nil?
+              deliverable_root = FabDeliverable.find(deliverable_root.parent_id)
+            end
+            @fab_iss_deliverable.find {|fid| fid["Deliverable"] == deliverable_root.name }["Documentation Issue"] += 1
+            @fab_iss_drawing.find {|fid| fid["Drawing"] == f.fab_deliverable.name }["Documentation Issue"] += 1
+          end
+        end
+        @clr_firs.each do |f|
+          # Add to Deliverable/Drawing count     
+          if f.fab_deliverable.parent_id.nil?
+            @fab_iss_deliverable.find {|fid| fid["Deliverable"] == f.fab_deliverable.name }["Vendor Clarification"] += 1
+          else
+            deliverable_root = FabDeliverable.find(f.fab_deliverable.parent_id)
+            while !deliverable_root.parent_id.nil?
+              deliverable_root = FabDeliverable.find(deliverable_root.parent_id)
+            end
+            @fab_iss_deliverable.find {|fid| fid["Deliverable"] == deliverable_root.name }["Vendor Clarification"] += 1
+            @fab_iss_drawing.find {|fid| fid["Drawing"] == f.fab_deliverable.name }["Vendor Clarification"] += 1
+          end
+        end
+        
+        # Build array of data for "Board Data" Table
+        @ftps = []
+        pintotal = 0.0000001
+        doctotal = 0
+        clartotal = 0
+        ftps.each do |ftp|
+          design = {}
+          design[:doc_iss_pins] = "N/A"
+          design[:clar_iss_pins] = "N/A"
+           
+          design[:part_num] = PartNum.get_design_pcb_part_number(ftp.design_id).name_string
+          design[:ftp_date] = ftp.created_at.format_dd_mon_yy
+          
+          issues = FabIssue.find_all_by_design_id(ftp.design_id)
+          isscount = issues.count
+          design[:vend_iss_rcvd] = (isscount > 0) ? "Yes" : "No"
+          design[:date_vend_iss_rcvd] = (isscount > 0) ? issues.first.received_on.strftime("%d-%b-%y") : "N/A"
+          design[:date_vend_iss_closed] = (isscount > 0) ? "Set to last comp dt if all comp or set blank" : "N/A"
+
+          dociss = FabIssue.find_all_by_design_id_and_documentation_issue(ftp.design_id, true)
+          docisscount = dociss.count
+          design[:cleanup_reqd] = (docisscount > 0) ? "Yes" : "No"
+          design[:date_cleanup_comp] = (docisscount > 0) ? "Set to last doc iss comp dt if all doc iss comp or set blank" : "N/A"
+          design[:num_doc_issues] = docisscount          
+
+          clarisscount = FabIssue.find_all_by_design_id_and_documentation_issue(ftp.design_id, false).count
+          design[:num_clar_issues] = clarisscount
+          
+          sched_part = PcbSchedulerPartNum.find_by_number_and_pcba(design[:part_num]+"A", false)
+          sched_brd = PcbSchedulerBoard.find(sched_part.board_id)  rescue "Error"
+          sched_brd_class = PcbSchedulerBoardClass.find(sched_brd.board_class_id) rescue "Error"
+          sched_brd_des_proc = PcbSchedulerDesignProcess.find(sched_brd.design_process_id) rescue "Error"
+
+          if sched_brd_class != "Error" && (sched_brd_class.name == "P1" || sched_brd_class.name == "P2")
+            design[:pins] = "N/A"
+            design[:brd_type] = "Engineering"
+          elsif sched_brd_des_proc != "Error" && sched_brd_des_proc.short_name == "BF"
+            design[:pins] = "N/A"
+            design[:brd_type] = "Bareboard Only"
+          elsif sched_brd_des_proc != "Error" && sched_brd_des_proc.short_name == "RF"
+            design[:pins] = "N/A"
+            design[:brd_type] = "Revision"
+          else
+            design[:pins] = sched_brd.actual_ending_pin_count rescue "Error"
+            design[:brd_type] = "Production (New)"
+            design[:doc_iss_pins] = (docisscount*1.000/design[:pins]).round(3).to_s + "%"
+            design[:clar_iss_pins] = (clarisscount*1.000/design[:pins]).round(3).to_s + "%"
+            pintotal += design[:pins]
+            doctotal += design[:num_doc_issues]
+            clartotal += design[:num_clar_issues]
+          end
+          @ftps << design
+        end
+        @design_sum = {}
+        @design_sum[:total] = "Total"
+        @design_sum[:pintotal] = pintotal.round(0)
+        @design_sum[:doctotal] = doctotal
+        @design_sum[:doc_iss_pins_total] = (doctotal/pintotal).round(3).to_s + "%"
+        @design_sum[:clartotal] = clartotal
+        @design_sum[:clar_iss_pins_total] = (clartotal/pintotal).round(3).to_s + "%"
       end
       
     end
+    
     @fir_quarterly_history = @fir_quarterly_history.to_json
-    @fab_iss_deliverablea = []
-    @fab_iss_deliverablea << @fab_iss_deliverable
-    #@fab_iss_deliverablea = @fab_iss_deliverablea.to_json
+    @fir_pins_brds = @fir_pins_brds.to_json
     @fab_iss_deliverable = @fab_iss_deliverable.to_json
     @fab_iss_drawing = @fab_iss_drawing.to_json
     @fab_iss_mode = @fab_iss_mode.to_json
-    puts @fir_quarterly_history
-    puts "\n\n"
-    puts @fab_iss_deliverable
-    puts "\n\n"
-    puts @fab_iss_drawing
-    puts "\n\n"
-    puts @fab_iss_mode
-    puts "\n\n"
-    
+
     respond_to do | format | 
       format.html
       format.csv { send_data reviewer_to_csv(@heads,@data) }

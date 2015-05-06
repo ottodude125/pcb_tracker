@@ -56,6 +56,44 @@ div#firModeChart {
   margin: 0 auto;    
 }
 
+div.splitcontentleft {
+  float: left;
+  width: 70%;
+  margin-left: 10px;
+}
+
+div.splitcontentright {
+  float: right;
+  width: 26%;
+  margin-right: 10px;
+}
+
+
+
+div.fir_table {
+  background-color: #81AFD2 ;
+  padding: 10px;
+	text-align: center;
+}
+p.fir_table_title {
+	font-weight: bold;
+	font-size: .9em;
+	margin: 0px;
+}
+p.fir_table_title_note {
+	font-size: .7em;
+	margin: 0px;
+}
+table.fir_table {
+	margin: 0 auto;
+}
+table.fir_table th {
+	font-size: .85em;
+}
+table.fir_table td {
+	text-align: center;
+	font-size: .75em;
+}
 
 
 
