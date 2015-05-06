@@ -9,6 +9,13 @@
 # And be sure to use new-style password hashing:
 #   http://dev.mysql.com/doc/refman/5.0/en/old-client.html
 
+<% require 'socket'
+   host = Socket.gethostname
+   ports = { "development" => 3308,
+             "test"        => 3308,
+             "production"  => 3307 } 
+   
+%>
 
 <% %w(development test production).each do |env| %>
 <%= env %>:
@@ -17,12 +24,14 @@
   reconnect: false
   database: pcbtr3_<%= env %>
   pool: 5
-  username: root 
-  password: connect
-  host: localhost
+  username: pcbtr
+  password: PcBtR
+  host: <%= host %>
+  port: <%= ports[env] %>
 
 <% end %>
 
+# Connect to pcb scheduler db
 <% %w(development test production).each do |env| %>
 <%= "pcb_scheduler_" + env %>:
   adapter: mysql2
@@ -30,9 +39,9 @@
   reconnect: false
   database: pcbscheduler_<%= env %>
   pool: 5
-  username: root 
-  password: connect
-  host: localhost
+  username: pcbscheduler
+  password: Pcbscheduler
+  host: <%= host %>
+  port: <%= ports[env] %>
 
 <% end %>
-
