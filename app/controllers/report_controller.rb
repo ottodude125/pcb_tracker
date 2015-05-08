@@ -459,8 +459,8 @@ class ReportController < ApplicationController
           
           # If last quarter to process then calculate issues/pins by board for single quarter graph
           if endQuarter == offset
-            doc_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, true).count*1.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
-            cla_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, false).count*1.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
+            doc_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, true).count*100.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
+            cla_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, false).count*100.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
             puts doc_iss_pins.to_s + " && " + cla_iss_pins.to_s
             @fir_pins_brds << {"Part Number" => part_num + " w/" + sched_brd.actual_ending_pin_count.to_s + " Pins", 
                                 "Documentation Issues/Pins" => doc_iss_pins, 
@@ -472,8 +472,8 @@ class ReportController < ApplicationController
       # Get sum of fir doc/clarification issues for ftp'd designs Non P1/P2 board classes w/ standard design process
       prod_doc_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", production_design_ids, true])
       prod_clr_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", production_design_ids, false])      
-      fir_quart["Documentation Issues/Pins"] = (prod_doc_firs.count/pincount).round(5) rescue 0
-      fir_quart["Clarification Issues/Pins"] = (prod_clr_firs.count/pincount).round(5) rescue 0
+      fir_quart["Documentation Issues/Pins"] = (prod_doc_firs.count*100/pincount).round(5) rescue 0
+      fir_quart["Clarification Issues/Pins"] = (prod_clr_firs.count*100/pincount).round(5) rescue 0
 
       @fir_quarterly_history << fir_quart
       
@@ -587,8 +587,8 @@ class ReportController < ApplicationController
           elsif sched_brd != "Error"
             design[:pins] = sched_brd.actual_ending_pin_count rescue "Error"
             design[:brd_type] = "Production (New)"
-            design[:doc_iss_pins] = (docisscount*1.000/design[:pins]).round(3).to_s + "%"
-            design[:clar_iss_pins] = (clarisscount*1.000/design[:pins]).round(3).to_s + "%"
+            design[:doc_iss_pins] = (docisscount*100.000/design[:pins]).round(3).to_s + "%"
+            design[:clar_iss_pins] = (clarisscount*100.000/design[:pins]).round(3).to_s + "%"
             pintotal += design[:pins]
             doctotal += design[:num_doc_issues]
             clartotal += design[:num_clar_issues]
@@ -604,9 +604,9 @@ class ReportController < ApplicationController
         @design_sum[:total] = "Total"
         @design_sum[:pintotal] = pintotal.round(0)
         @design_sum[:doctotal] = doctotal
-        @design_sum[:doc_iss_pins_total] = (doctotal/pintotal).round(3).to_s + "%"
+        @design_sum[:doc_iss_pins_total] = (doctotal*100/pintotal).round(3).to_s + "%"
         @design_sum[:clartotal] = clartotal
-        @design_sum[:clar_iss_pins_total] = (clartotal/pintotal).round(3).to_s + "%"
+        @design_sum[:clar_iss_pins_total] = (clartotal*100/pintotal).round(3).to_s + "%"
       end
       
     end
