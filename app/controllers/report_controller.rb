@@ -471,8 +471,8 @@ class ReportController < ApplicationController
           
           # If last quarter to process then calculate issues/pins by board for single quarter graph
           if endQuarter == offset
-            doc_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, true).count*100.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
-            cla_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, false).count*100.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
+            doc_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, true).count*1.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
+            cla_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, false).count*1.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
             @fir_pins_brds << {"Part Number" => part_num + " w/" + sched_brd.actual_ending_pin_count.to_s + " Pins",
                                 "spacer" => 0, 
                                 "Documentation Issues/Pins" => doc_iss_pins, 
@@ -484,8 +484,8 @@ class ReportController < ApplicationController
       # Get sum of fir doc/clarification issues for ftp'd designs Non P1/P2 board classes w/ standard design process
       prod_doc_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", production_design_ids, true])
       prod_clr_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", production_design_ids, false])      
-      fir_quart["Documentation Issues/Pins"] = (prod_doc_firs.count*100/pincount).round(5) rescue 0
-      fir_quart["Clarification Issues/Pins"] = (prod_clr_firs.count*100/pincount).round(5) rescue 0
+      fir_quart["Documentation Issues/Pins"] = (prod_doc_firs.count/pincount).round(5) rescue 0
+      fir_quart["Clarification Issues/Pins"] = (prod_clr_firs.count/pincount).round(5) rescue 0
       ldxs << offset
       ldys << fir_quart["Documentation Issues/Pins"]
       lcxs << offset
@@ -665,7 +665,7 @@ class ReportController < ApplicationController
       c_quart_val = c_y_intercept + c_slope * count
       @fir_quarterly_history.find{|fqh| fqh["Date"] == fir_quart_date}["Linear (Clarification Issues/Pins)"] = c_quart_val rescue 0
     end
-    
+
     @fir_quarterly_history = @fir_quarterly_history.to_json
     @fir_pins_brds = @fir_pins_brds.to_json
     @fab_iss_deliverable = @fab_iss_deliverable.to_json

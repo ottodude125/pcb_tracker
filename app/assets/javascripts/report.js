@@ -76,7 +76,7 @@ window.FirQuartersChart = function(fir_quarts, firchart) {
 	firchart.getAxisX().setStep(1);
 
 	firchart.getData().setSeries(14);
-
+	
 	firchart.getSeries().getItem(0).setVisible(false);
 	firchart.getSeries().getItem(1).setGallery(cfx.Gallery.Bar);
 	firchart.getSeries().getItem(2).setGallery(cfx.Gallery.Bar);
@@ -105,6 +105,7 @@ window.FirQuartersChart = function(fir_quarts, firchart) {
 	firchart.getSeries().getItem(11).setAxisY(firchart.getAxisY2());
 	
 	firchart.getAxisY().getTitle().setText("Issues/Pins");
+	firchart.getAxisY().getLabelsFormat().setFormat(cfx.AxisFormat.Percentage);
 	firchart.getAxisY2().getTitle().setText("Designs");
 
 	firchart.setDataSource(jQuery.parseJSON(fir_quarts));
@@ -118,10 +119,12 @@ window.FirIssuesPinsChart = function(fir_deliv, firchart) {
 	var chartDiv;
 	//firchart.getDataGrid().setVisible(true);
 	//firchart.getDataGrid().setShowHeader(false);
-
+			
 	firchart.getAxisY().getTitle().setText("Issues/Pins");
 	firchart.getAxisX().setLabelAngle(45);
-
+	firchart.getAxisY().getLabelsFormat().setDecimals(2);
+	firchart.getAxisY().getLabelsFormat().setFormat(cfx.AxisFormat.Percentage);	 
+	 
 	firchart.getData().setSeries(4);
 	firchart.getSeries().getItem(0).setVisible(false);
 	firchart.getSeries().getItem(1).setGallery(cfx.Gallery.Bar);
