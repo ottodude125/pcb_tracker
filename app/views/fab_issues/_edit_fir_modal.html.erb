@@ -26,7 +26,9 @@
     <tr>
       <th>Date Received:&nbsp;</th>
       <td>
-    	  <%= text_field(:fab_issue, :received_on, :value => (@fab_issue.new_record? ? Time.now.strftime("%B %d, %Y") : @fab_issue.received_on.strftime("%B %d, %Y")))%>
+    	  <%= text_field(:fab_issue, 
+    	  								:received_on, 
+    	  								:value => (@fab_issue.new_record? ? Time.now.strftime("%B %d, %Y") : @fab_issue.received_on.strftime("%B %d, %Y")))%>
       </td>
     </tr>  
     <tr>
@@ -50,14 +52,17 @@
     <tr>
       <th>Documentation Issue:&nbsp;</th>
       <td>
-        <%= check_box :fab_issue, :documentation_issue %>
+        <%= check_box :fab_issue, :documentation_issue, class: "fab_issue_doc_issue " + design_id.to_s + " " + @fab_issue.id.to_s  %>
       </td>
     </tr>
     
-    <tr id="clean_up_complete_row" style="display:none" >
+    <tr id="clean_up_complete_row_<%=design_id%>_<%=@fab_issue.id%>" style="display:none" >
       <th>Clean Up Completed:&nbsp;</th>
       <td>
-    	  <%= text_field(:fab_issue, :clean_up_complete_on, :value => (@fab_issue.clean_up_complete_on.strftime("%B %d, %Y") rescue "") )%>
+    	  <%= text_field(:fab_issue, 
+    	  								:clean_up_complete_on, 
+    	  								:class => "fab_issue_complete_on_" + design_id.to_s + "_" + @fab_issue.id.to_s + " fab_issue_received_on_datepicker", 
+    	  								:value => (@fab_issue.clean_up_complete_on.strftime("%B %d, %Y") rescue "") )%>
       </td>
     </tr>  
 
@@ -73,7 +78,7 @@
 			</td>
     </tr>
     
-    <tr id="fab_failure_mode_complete_row" style="display:none" >
+    <tr id="fab_failure_mode_complete_row_<%=design_id%>_<%=@fab_issue.id%>" style="display:none" >
       <th>Failure Mode:&nbsp;</th>
       <td>
         <%= collection_select(:fab_issue, :fab_failure_mode_id, @fab_failure_modes, :id, :name, :include_blank => true) %>
