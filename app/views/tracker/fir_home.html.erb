@@ -1,0 +1,166 @@
+<!-- View:    tracker:pcb_admin_home                                           -->
+<!-- Purpose: Displays the tracker home page.                   -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @title = "PCB Design Board/Data Tracker" %>
+<!--% debug session %-->
+<h1>Active FIRS for all Active Designs</h1>
+<div class="firtogglebuttondiv">
+  <%= button_to "Display Only My FIRs", {}, {:class => "togglebutton"} %>
+</div>
+
+<table width="100%" border="0" cellspacing="2" align="center" rules="cols">
+  <tr valign="top">
+
+    <!-- Left column - navigation links -->
+    <td width="15%">
+        <%= render(:partial => 'tracker_navigation') %>
+    </td>
+
+    <!-- Right column - home body -->
+    <td>
+    	<% @design_reviews_firs.each do |drf| %>
+      	<table width="100%" 
+             		align="left" 
+             		border="0"
+             		cellspacing="0">
+	        <tr class="teraheader">
+	          <th class="fir_dr_link" align="center" valign="bottom" width="33%">
+	            <font color="#ffffff">
+	            	<%= link_to(drf[:part_number],
+	                :controller => 'design_review',
+	                :action     => 'view',
+	                :id         => drf[:design_review_id])%>
+	            </font>
+	          </th>
+	          <th align="center" valign="bottom" width="33%">
+	            <font color="#ffffff"><%= drf[:review_phase] %></font>
+	          </th>
+	          <th align="center" valign="bottom" width="33%">
+	            <font color="#ffffff"><%= drf[:review_status] %></font>
+	          </th>
+	        </tr>
+	      </table>
+	            
+				<table class="firbuttons">
+					<tr>
+						<td class="firbuttonleft" >
+							<div id="edit_fir_design_<%= drf[:design_id] %>" class="firdashmodal" style="display:none">
+									<%= render partial: "fab_issues/edit_fir_modal", 
+											locals: {fab_issue:@new_fab_issue, 
+																title:drf[:part_number],
+																logged_in_user_id:@logged_in_user.id,
+																design_id:drf[:design_id],
+																design_review_id:drf[:design_review_id],
+																fab_deliverables:@fab_deliverables,
+																fab_failure_modes:@fab_failure_modes} %>
+							</div>									    	
+	          	<input type="button"
+	          					id="<%= drf[:design_id] %>"
+	          					class="new_fir_button" 
+	          					value="Create New Fabrication Issue" />
+          	</td>
+						<td class="firbuttonright" >
+							<% if drf[:fir_complete] %>
+								<p class="fir_complete" >Design Marked All FIRs Complete</p>
+							<% else %>
+		          	<input type="button" 
+		          					class="mark_des_fir_comp_button" 
+		          					value="Confirm All Design FIRs Are Complete"
+			                 	onClick="parent.location='<%= url_for(:controller => 'design', 
+			                 																				:action => 'set_fir_complete',
+			                 																				:design_id => drf[:design_id]) %>'"/>
+							<% end %>
+          	</td>
+					</tr>
+				</table>
+        <% if drf[:firs].count > 0 %>
+          <table class="design_fir_table" >
+          	<tr>
+			    		<th class="fircol" >RCVD On</th>
+			    		<th>Description</th>
+			    		<th class="fircol" >Closed</th>
+			    		<th class="fircol" >Doc Issue?</th>
+			    		<th class="fircol" >Clean Up Completed On</th>
+			    		<th class="fircol" >Full Rev?</th>
+			    		<th class="fircol" >Bare BRD CHG?</th>
+			    		<th class="fircol" >Created By</th>
+			    		<th class="fircol2" >View</th>
+			    		<th class="fircol2" >Edit</th>
+			    		<th class="fircol2" >Delete</th>
+          	</tr>
+            <% drf[:firs].each do |fab_issue| %>
+            	<%- classname = (fab_issue.user_id == @logged_in_user.id) ? "" : "notcuruser" %>
+            	<tr class="<%= classname %>" >
+            		<td><%= fab_issue.received_on.strftime("%d-%b-%y") %></td>
+            		<td class="description" ><%= truncate(fab_issue.description, :length => 110) %></td>
+			          <% if fab_issue.resolved %>
+			          	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
+			      		<% else %>
+			          	<td class="fab_iss_chkbox_col" ><%= image_tag("icon_x.png") %></td>
+			          <% end %>
+						    
+			          <% if fab_issue.documentation_issue %>
+			          	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
+			      		<% else %>
+			          	<td class="fab_iss_chkbox_col" ><%= image_tag("icon_x.png") %></td>
+			          <% end %>
+			        	
+								
+								<td class="fab_iss_date_col" ><%= fab_issue.clean_up_complete_on.strftime("%d-%b-%y") rescue "" %></td>
+			          
+			          <% if fab_issue.full_rev_reqd %>
+			          	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
+			      		<% else %>
+			          	<td class="fab_iss_chkbox_col" ><%= image_tag("icon_x.png") %></td>
+			          <% end %>
+			        	
+			          <% if fab_issue.bare_brd_change_reqd %>
+			          	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
+			      		<% else %>
+			          	<td class="fab_iss_chkbox_col" ><%= image_tag("icon_x.png") %></td>
+			          <% end %>
+
+						    <td class="fab_iss_other_col" ><%= fab_issue.user.last_name_first %></td>
+						    
+						    <td>
+									<div id="view_fir_<%= fab_issue.id %>_design_<%= drf[:design_id] %>" class="firdashmodal" style="display:none">
+										<%= render partial: "fab_issues/view_fir_modal", locals: {fab_issue:fab_issue, title:drf[:part_number]} %>
+									</div>									    	
+						    	<a href="#view_fir_<%= fab_issue.id %>_design_<%= drf[:design_id] %>" rel="modal:open"><%= image_tag("black_view.png") %></a>
+					    	</td>
+						    
+						    						          
+			          <% if !fab_issue.resolved && %>
+						    	<td>
+										<div id="edit_fir_<%= fab_issue.id %>_design_<%= drf[:design_id] %>" class="firdashmodal" style="display:none">
+											<%= render partial: "fab_issues/edit_fir_modal", 
+													locals: {fab_issue:fab_issue, 
+																		title:drf[:part_number],
+																		logged_in_user_id:@logged_in_user.id,
+																		design_id:drf[:design_id],
+																		design_review_id:drf[:design_review_id],
+																		fab_deliverables:@fab_deliverables,
+																		fab_failure_modes:@fab_failure_modes} %>
+										</div>									    	
+										<a href="#edit_fir_<%= fab_issue.id %>_design_<%= drf[:design_id] %>" rel="modal:open"><%= image_tag("black_edit.png") %></a>
+						    	</td>
+						    	<td><%= link_to image_tag("black_delete.png"), fab_issue, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+						    <% else %>
+						    	<td></td>
+						    	<td></td>
+						    <% end %>
+            	</tr>
+            <% end %>
+          </table>
+        <% else %>
+          <p class="nofirs" >Design does not contain any FIRs.</p>
+        <% end %>      
+      <% end %>
+
+    </td>
+  </tr>
+</table>
+

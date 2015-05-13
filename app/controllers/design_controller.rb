@@ -23,6 +23,35 @@ class DesignController < ApplicationController
 
   #auto_complete_for :design, :name
 
+  ######################################################################
+  #
+  # set_fir_complete
+  #
+  # Description:
+  # Provides the data for the .
+  #
+  # Parameters from params
+  # design_id - identifies the design
+  #
+  ######################################################################
+  #
+  def set_fir_complete
+    @design = Design.find(params[:design_id])
+    @design.update_attributes(:fir_complete => true)
+
+    # Find Release/ECN Manager - if exists send email to them. also cc person who posted fir complete    
+    role_id = Role.get_ecn_role.id
+    review_type_id = ReviewType.get_release.id
+    release_review_id = DesignReview.find_by_design_id_and_review_type_id(@design.id, review_type_id).id
+    reviewer_id = DesignReviewResult.find_by_design_review_id_and_role_id(release_review_id, role_id).reviewer_id
+    reviewer = User.find(reviewer_id)
+    
+    DesignMailer::fir_complete_notification(@design, release_review_id, reviewer, @logged_in_user).deliver unless reviewer_id.nil?   
+    
+    respond_to do |format|
+      format.html { redirect_to root_url, notice: 'Design was successfully updated.' }
+    end
+  end
 
   ######################################################################
   #

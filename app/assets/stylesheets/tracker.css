@@ -493,3 +493,136 @@ table.sortable thead {
     text-align: left;
     color: #000000;
 }
+
+
+/* SECTION FOR FIR REVIEWER DASH STYLING */
+.firdashmodal {
+  z-index: 99999999 !important;
+  width: 600px;
+  background-color: #FFF0D4;
+}
+
+table.firdashmodaltable,
+table.firdashmodaltableedit {
+  table-layout: fixed;
+  width: 90%;
+  text-align: center;
+  border-width: 1px;
+  border-spacing: 0;
+  border-style: outset;
+  border-collapse: separate;
+  background-color: #206BA4;
+  padding: 5px;
+  margin: 10px auto 0px auto;
+  -webkit-box-shadow: 0px 0px 10px rgba(0,0,100,1);
+     -moz-box-shadow: 0px 0px 10px rgba(0,0,100,1);
+          box-shadow: 0px 2px 10px rgba(0,0,100,1);     
+}
+table.firdashmodaltable th,
+table.firdashmodaltableedit th {
+  width: 150px;
+}    
+table.firdashmodaltable th,
+table.firdashmodaltable td, 
+table.firdashmodaltableedit th,
+table.firdashmodaltableedit td {
+  border-width: thin;
+  padding: 2px 10px;
+  border-style: groove;
+  border-color: black;
+  height: 30px;
+}
+table.firdashmodaltableedit td {
+	text-align: left;
+}
+p.firdashmodalsubmit {
+	margin: 0 auto;
+	text-align: center;
+}
+
+.firtogglebuttondiv {
+  margin: 10px auto 0 auto;
+  text-align: center;
+}
+th.fir_dr_link a:visited {
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+th.fir_dr_link a {
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+}
+th.fir_dr_link a:hover {
+  color: white;
+  background-color: black;  
+  font-size: 14px;
+  font-weight: bold;
+}
+
+table.design_fir_table  {
+	width: 95%;
+  border-width: thin; 
+  border-style: solid; 
+  border-collapse: collapse;
+	margin-top: 5px;
+	margin-right: auto;
+	margin-bottom: 30px;
+	margin-left: auto;
+  text-align: center;
+}
+table.design_fir_table th {
+	font: bold 12px Helvetica;
+	background-color: #AAAAAA;
+}
+table.design_fir_table th.fircol {
+	width: 80px;
+}
+table.design_fir_table th.fircol2 {
+	width: 50px;
+}
+table.design_fir_table td {
+	font: normal 11px Helvetica;
+	padding: 7px 10px;
+}
+table.design_fir_table td.description {
+	text-align: left;
+}
+table.design_fir_table tr:nth-child(odd) {
+	background-color: #BBD9EE;
+}    
+table.design_fir_table tr:nth-child(even) {
+	background-color: #F1EFE2; 
+}
+
+p.nofirs {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: center;
+}
+
+table.firbuttons {
+	text-align: center;
+	width: 100%;
+}
+table.firbuttons td.firbuttonleft {
+	text-align: right;
+	width: 50%;
+	padding-right: 30px;
+}
+table.firbuttons td.firbuttonright {
+	text-align: left;
+	width: 50%;
+	padding-left: 30px;
+}
+p.fir_complete {
+	font-weight: bold;
+	color: green;
+}
+
+
+
+
+
+

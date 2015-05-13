@@ -67,6 +67,9 @@ class TrackerController < ApplicationController
       when "Designer"
         designer_home_setup
         render( :action => 'designer_home' )
+       when "FIR"
+        fir_home_setup
+        render( :action => 'fir_home' )
       when "Reviewer"
         reviewer_home_setup
         render( :action => 'reviewer_home' )
@@ -181,6 +184,21 @@ class TrackerController < ApplicationController
     redirect_to(:action => 'index')
   end
 
+  ######################################################################
+  #
+  # fir_home
+  #
+  # Description:
+  # This method redirects to index to accommodate an obsolete action.
+  #
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def fir_home
+    redirect_to(:action => 'index')
+  end
 
   ######################################################################
   #
@@ -762,6 +780,49 @@ class TrackerController < ApplicationController
 
   end
 
+  ######################################################################
+  #
+  # fir_home_setup
+  #
+  # Description:
+  # This method gathers the information to display the FIR Reviewer's 
+  # home page.
+  #
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def fir_home_setup
+
+    # Get all design_review_results with role_id = 31 (fir) and reviewer_id = @logged_in_user
+    # 
+
+    @design_reviews_firs = get_active_reviews_firs_current_user_fir_role
+    @new_fab_issue = FabIssue.new
+    @fab_failure_modes = FabFailureMode.order("name").find_all_by_active(true)
+    fab_deliverables = FabDeliverable.order("parent_id DESC, id ASC").find_all_by_active(true)    
+    @fab_deliverables = {"Other" => []}
+    
+    fab_deliverables.each do |fd|     
+      # A) if fd parent id not empty then check if its parent is already in hash
+      # if not add it then add fd as first item in its array otherwise just add it
+      # B) if fd parent id is empty then check if fd item is already used in hash
+      # if not then add it to Other
+      if !fd.parent_id.nil?
+        parent = FabDeliverable.find(fd.parent_id)
+        if !@fab_deliverables.has_key?(parent.name)
+          @fab_deliverables[parent.name] = []
+        end
+        @fab_deliverables[parent.name] << [fd.name, fd.id]
+      else
+        if !@fab_deliverables.has_key?(fd.name)
+          @fab_deliverables["Other"] << [fd.name, fd.id]
+        end
+      end
+    end
+
+  end
   
   
   ######################################################################
@@ -873,6 +934,57 @@ class TrackerController < ApplicationController
     
   end
   
+  ######################################################################
+  #
+  # get_active_reviews_firs_current_user_fir_role
+  #
+  # Description:
+  # This method retrieves all of the active design reviews for the current 
+  # user if they were assigned as FIR Reviewer and also all active dr's 
+  # with no FIR reviewer. It then grabs all the FIRs for each of these designs
+  #
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def get_active_reviews_firs_current_user_fir_role
+
+    design_reviews_firs = []
+    designs = Design.find(:all,
+                          :conditions => "phase_id!=#{Design::COMPLETE}",
+                          :include    => :design_reviews)
+    designs = designs.sort_by {|design| design.phase_id }
+    designs = designs.sort_by {|design| FtpNotification.find_by_design_id(design.id).created_at rescue Time.now }
+    
+    designs.each do |design|
+      next if design.phase_id == 0 
+      cur_design_review = design.design_reviews.detect { |dr| dr.review_type_id == design.phase_id }
+      
+      # Check if current user assigned to FIR review on any of the design reviews for this design
+      cur_user_fir_rev = DesignReviewResult.find(:all, :conditions => ["reviewer_id=? && role_id=? && design_review_id IN (?)",
+                                                                        @logged_in_user, 
+                                                                        Role.get_fir_role.id, 
+                                                                        design.design_reviews]).count
+      # Check if no user assigned to FIR review on any of the design reviews for this design
+      no_fir_rev = DesignReviewResult.find(:all, :conditions => ["role_id=? && design_review_id IN (?)",
+                                                                  Role.get_fir_role.id, design.design_reviews]).count
+      
+      # If current user assigned as FIR reviewer or if there were no FIR reviewers add to list of designs to display
+      if cur_user_fir_rev > 0 || no_fir_rev == 0
+        des_rev_fir = {}
+        des_rev_fir[:design_id] = design.id
+        des_rev_fir[:fir_complete] = design.fir_complete
+        des_rev_fir[:part_number] = design.pcb_display
+        des_rev_fir[:review_phase] = cur_design_review.review_type.name
+        des_rev_fir[:review_status] = cur_design_review.review_status.name
+        des_rev_fir[:design_review_id] = cur_design_review.id
+        des_rev_fir[:firs] = FabIssue.find(:all, :conditions => ["design_id=?", design.id])
+        design_reviews_firs << des_rev_fir                                                                  
+      end      
+    end
+    return design_reviews_firs    
+  end
 
 private
 

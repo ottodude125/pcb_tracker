@@ -11,6 +11,9 @@
 //= require jquery.ui.datepicker
 //= require dataTables/jquery.dataTables
 //= require_directory ./external
+//= require ./jchartfx745596/jchartfx.system.js
+//= require ./jchartfx745596/jchartfx.coreVector.js
+//= require ./jchartfx745596/jchartfx.advanced.js
 //= require_directory .
 
 

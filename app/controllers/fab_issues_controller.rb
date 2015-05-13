@@ -125,7 +125,9 @@ class FabIssuesController < ApplicationController
 
     respond_to do |format|
       if @fab_issue.save
-        format.html { redirect_to fab_issues_url(:design_review_id => params[:design_review][:id]), notice: 'Fab issue was successfully created.' }
+        #format.html { redirect_to fab_issues_url(:design_review_id => params[:design_review][:id]), notice: 'Fab issue was successfully created.' }
+        format.html { redirect_to session[:return_to], notice: 'Fab issue was successfully created.' }
+        
         format.json { render json: @fab_issue, status: :created, location: @fab_issue }
       else
         format.html { render action: "new" }
@@ -155,7 +157,8 @@ class FabIssuesController < ApplicationController
 
     respond_to do |format|
       if @fab_issue.update_attributes(params[:fab_issue])
-        format.html { redirect_to fab_issues_url(:design_review_id => params[:design_review][:id]), notice: 'Fab issue was successfully updated.' }
+        #format.html { redirect_to fab_issues_url(:design_review_id => params[:design_review][:id]), notice: 'Fab issue was successfully updated.' }
+        format.html { redirect_to session[:return_to], notice: 'Fab issue was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -171,7 +174,7 @@ class FabIssuesController < ApplicationController
     @fab_issue.destroy
 
     respond_to do |format|
-      format.html { redirect_to fab_issues_url }
+      format.html { redirect_to session[:return_to], notice: 'Fab issue was successfully deleted.' }
       format.json { head :no_content }
     end
   end

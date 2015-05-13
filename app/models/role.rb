@@ -33,22 +33,32 @@ class Role < ActiveRecord::Base
 
   ######################################################################
   #
-  # get_fir_roles
+  # get_fir_role
   #
-  # Description:
-  # This method returns the fir roles
+  # Description: This method returns the fir role 
   #
-  # Parameters:
-  # None
-  #
-  # Return value:
-  # An role record
+  # Return value: A role record
   #
   ######################################################################
   #
   def self.get_fir_role
     self.find_by_name("FIR")
   end  
+
+  ######################################################################
+  #
+  # get_ecn_role
+  #
+  # Description: This method returns the ecn role 
+  #
+  # Return value: A role record
+  #
+  ######################################################################
+  #
+  def self.get_ecn_role
+    self.find_by_name("ECN")
+  end  
+
   ######################################################################
   #
   # get_review_roles

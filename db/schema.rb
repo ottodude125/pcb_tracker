@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150422191252) do
+ActiveRecord::Schema.define(:version => 20150511151528) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :default => 0, :null => false
@@ -349,6 +349,7 @@ ActiveRecord::Schema.define(:version => 20150422191252) do
     t.datetime "created_on"
     t.integer  "created_by",                     :default => 0,    :null => false
     t.string   "pcba_eco_number",  :limit => 10, :default => ""
+    t.boolean  "fir_complete"
   end
 
   create_table "designs_fab_houses", :id => false, :force => true do |t|
@@ -445,22 +446,7 @@ ActiveRecord::Schema.define(:version => 20150422191252) do
     t.datetime "updated_at",                   :null => false
   end
 
-  create_table "fab_deliverables2", :force => true do |t|
-    t.string   "name",                         :null => false
-    t.boolean  "active",     :default => true
-    t.integer  "parent_id"
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
-  end
-
   create_table "fab_failure_modes", :force => true do |t|
-    t.string   "name",                         :null => false
-    t.boolean  "active",     :default => true
-    t.datetime "created_at",                   :null => false
-    t.datetime "updated_at",                   :null => false
-  end
-
-  create_table "fab_failure_modes2", :force => true do |t|
     t.string   "name",                         :null => false
     t.boolean  "active",     :default => true
     t.datetime "created_at",                   :null => false
@@ -491,23 +477,13 @@ ActiveRecord::Schema.define(:version => 20150422191252) do
     t.datetime "updated_at",                              :null => false
   end
 
-  create_table "fab_issues2", :force => true do |t|
-    t.string   "description"
-    t.string   "cause"
-    t.string   "resolution"
-    t.boolean  "documentation_issue",       :default => false
-    t.date     "date_received"
-    t.boolean  "clean_up_reqd",             :default => false
-    t.date     "clean_up_complete_date"
-    t.boolean  "corrected_b4_pre_prod_rel", :default => false
-    t.boolean  "full_rev_reqd",             :default => false
-    t.boolean  "bare_brd_change_reqd",      :default => false
-    t.integer  "user_id",                                      :null => false
-    t.integer  "design_id",                                    :null => false
-    t.integer  "fab_deliverable_id",                           :null => false
-    t.integer  "fab_failure_mode_id"
-    t.datetime "created_at",                                   :null => false
-    t.datetime "updated_at",                                   :null => false
+  create_table "fab_quarterly_statuses", :force => true do |t|
+    t.integer  "quarter",     :null => false
+    t.integer  "year",        :null => false
+    t.text     "status_note"
+    t.string   "image_name"
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "ftp_notifications", :force => true do |t|
@@ -634,20 +610,6 @@ ActiveRecord::Schema.define(:version => 20150422191252) do
   end
 
   add_index "oracle_part_nums", ["number"], :name => "number"
-
-  create_table "oracle_part_nums_save", :force => true do |t|
-    t.string "number"
-    t.string "description", :limit => 80
-  end
-
-  add_index "oracle_part_nums_save", ["number"], :name => "number"
-
-  create_table "oracle_part_numsxx", :force => true do |t|
-    t.string "number",      :limit => 15
-    t.string "description", :limit => 80
-  end
-
-  add_index "oracle_part_numsxx", ["number"], :name => "number"
 
   create_table "part_numbers", :force => true do |t|
     t.string "pcb_prefix",       :limit => 3, :default => "", :null => false

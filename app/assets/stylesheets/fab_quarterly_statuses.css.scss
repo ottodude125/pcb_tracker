@@ -1,0 +1,15 @@
+// Place all the styles related to the FabQuarterlyStatuses controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+
+table#fab_quarterly_statuses_table th {
+  font-size: .9em;
+}
+table#fab_quarterly_statuses_table td{
+  font-size: .8em;
+}
+table#fab_quarterly_statuses_table td.colfmt {
+  text-align: center;
+}

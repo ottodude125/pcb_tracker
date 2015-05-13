@@ -1,0 +1,64 @@
+<!-- View:    Fabrication Issue Form                                         -->
+<!-- Purpose: Displays a form to prompt for a fabrication.  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<hr class="div" width="820" />
+
+<%= form_for(@fab_quarterly_status) do |f| %>
+  <table border='0' align="center" width="800">
+    <tr>
+      <th class="teraheader" align="right">Quarter:&nbsp;</th>
+      <td>
+      	<% if @fab_quarterly_status.new_record? %>
+        	<%= f.select :quarter, options_for_select((1..4).step(1), @fab_quarterly_status.quarter) %>
+      	<% else %>
+      		<%= @fab_quarterly_status.quarter %>
+      	<% end %>
+      </td>
+    </tr>
+    <tr>
+      <th class="teraheader" align="right">Year:&nbsp;</th>
+      <td>        
+      	<% if @fab_quarterly_status.new_record? %>
+        	<%= f.select :year, options_for_select((2015..(Time.now.year+5)).step(1), @fab_quarterly_status.year) %>
+      	<% else %>
+      		<%= @fab_quarterly_status.year %>
+      	<% end %>
+      </td>
+    </tr>
+    <tr>
+      <th class="teraheader" align="right">Status Note:&nbsp;</th>
+      <td>
+        <%= f.text_area :status_note, :size => "60x3"  %>
+      </td>
+    </tr>
+    <tr>
+      <th class="teraheader" align="right">Image:&nbsp;</th>
+	    <td>
+				<% FabQuarterlyStatus::FAB_STAT_IMAGES.each do |name| %>
+					<%= f.radio_button :image_name, name, :checked => name == @fab_quarterly_status.image_name %>
+					<%= (name == FabQuarterlyStatus::FAB_STAT_IMAGES.last)? "N/A" : image_tag(name) %>
+				<% end %>
+      </td>
+    </tr>
+  </table>
+
+  <hr class="div" width="820" />
+  
+  <table border='0' align="center" width="800">
+    <tr>
+      <td align="left">
+      	<input type="button" value="Return" onClick="parent.location='<%= url_for( :controller => 'fab_quarterly_statuses', :action => 'index' ) %>'" />
+      </td>
+      <td align="center">
+        <%= f.submit %>
+      </td>
+      <td align="right">
+        <input type="button" value="Home" 
+          onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index') %>'" />
+      </td>
+    </tr>
+  </table>
+<% end %>

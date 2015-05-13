@@ -13,6 +13,9 @@
 PcbTracker::Application.routes.draw do
 
 
+  resources :fab_quarterly_statuses
+
+
   resources :board_design_entry do
     collection do
       get  'originator_list'
@@ -50,6 +53,7 @@ PcbTracker::Application.routes.draw do
       get  'initial_cc_list'
       get  'initial_attachments'
       get  'list'
+      get 'set_fir_complete'
     end
   end
   

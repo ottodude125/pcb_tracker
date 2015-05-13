@@ -387,18 +387,19 @@ class ReportController < ApplicationController
     @fab_iss_deliverable = [] # Values for Fab Issues Sorted by Deliverable
     @fab_iss_drawing = [] # Values for Fab Drawing Issues Sorted by Drawing
     @fab_iss_mode = [] # Values for Fab Issues Sorted by Failure Mode
+    ldxs, ldys, lcxs, lcys = [], [], [], [] # arrays for linear regression x/y values
     
     # Initialize FabDeliverable and Fab Drawing Value Arrays
     FabDeliverable.all.each do |fd|
       if fd.parent_id.nil?
-        @fab_iss_deliverable << {"Deliverable" => fd.name, "Documentation Issue" => 0, "Vendor Clarification" => 0}
+        @fab_iss_deliverable << {"Deliverable" => fd.name, "spacer" => 0, "Documentation Issue" => 0, "Vendor Clarification" => 0}
       else
-        @fab_iss_drawing << {"Drawing" => fd.name, "Documentation Issue" => 0, "Vendor Clarification" => 0}
+        @fab_iss_drawing << {"Drawing" => fd.name, "spacer" => 0, "Documentation Issue" => 0, "Vendor Clarification" => 0}
       end
     end
     # Initialize FabFailureMode Value Array
     FabFailureMode.all.each do |fm|
-      @fab_iss_mode << {"Mode" => fm.name, "Documentation Issue" => 0}
+      @fab_iss_mode << {"Mode" => fm.name, "spacer" => 0, "Documentation Issue" => 0}
     end      
 
     # Reverse step through each "OFFSET" to build data for that quarter for Top Sheet
@@ -407,13 +408,24 @@ class ReportController < ApplicationController
     endQuarter = 1
     numQuarters.step(endQuarter,-1).each do |offset|
       # Initialize "offset" quarter vals for Top Sheet
+      # JchartFX does not allow you to select the color to use for the series
+      # Therefore there are 7 extra series added so that each bar/line is a specific color
       fir_quart = {}
       fir_quart["Date"] = ""
+      fir_quart["spacer"] = 0
       fir_quart["Documentation Issues/Pins"] = -1
-      fir_quart["Clarification Issues/Pins"] = -1
+      fir_quart["Clarification Issues/Pins"] = -1      
+      fir_quart["spacer1"] = 0
+      fir_quart["spacer2"] = 0
+      fir_quart["spacer3"] = 0
+      fir_quart["spacer4"] = 0
+      fir_quart["spacer5"] = 0
       fir_quart["Designs FTPd"] = -1
-      fir_quart["Designs w/Documentation Issues"] = -1
+      fir_quart["spacer6"] = 0
       fir_quart["Designs w/Clarification Issues"] = -1
+      fir_quart["Designs w/Documentation Issues"] = -1
+      fir_quart["Linear (Clarification Issues/Pins)"] = 0
+      fir_quart["Linear (Documentation Issues/Pins)"] = 0
       pincount = 0.00001
       
       # Get start/end date of offset quarter 
@@ -461,8 +473,8 @@ class ReportController < ApplicationController
           if endQuarter == offset
             doc_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, true).count*100.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
             cla_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, false).count*100.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
-            puts doc_iss_pins.to_s + " && " + cla_iss_pins.to_s
-            @fir_pins_brds << {"Part Number" => part_num + " w/" + sched_brd.actual_ending_pin_count.to_s + " Pins", 
+            @fir_pins_brds << {"Part Number" => part_num + " w/" + sched_brd.actual_ending_pin_count.to_s + " Pins",
+                                "spacer" => 0, 
                                 "Documentation Issues/Pins" => doc_iss_pins, 
                                 "Clarification Issues/Pins" => cla_iss_pins}
           end
@@ -474,17 +486,25 @@ class ReportController < ApplicationController
       prod_clr_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", production_design_ids, false])      
       fir_quart["Documentation Issues/Pins"] = (prod_doc_firs.count*100/pincount).round(5) rescue 0
       fir_quart["Clarification Issues/Pins"] = (prod_clr_firs.count*100/pincount).round(5) rescue 0
-
+      ldxs << offset
+      ldys << fir_quart["Documentation Issues/Pins"]
+      lcxs << offset
+      lcys << fir_quart["Clarification Issues/Pins"]
+      
       @fir_quarterly_history << fir_quart
       
       # If this is the last quarter to process the calculate values for single quarter graphs
       if endQuarter == offset
-        
+        @fab_quarterly_status = FabQuarterlyStatus.find_by_quarter_and_year(quarter, quart_date.beginning_of_quarter.strftime("%Y"))
+
         # Build data for Quarterly History Table 1
         prod_des_id_wo_doc_changes = production_design_ids - prod_doc_firs.map(&:design_id).uniq
         prod_des_id_wo_doc_changes.each do |p|
           part_num = PartNum.get_design_pcb_part_number(p).name_string
+          
           designer = Design.find(p).designer.last_name
+          designer = DesignReview.find_by_design_id_and_review_type_id(p, 1).designer.last_name
+          
           project = Design.find(p).board.project.name
           sched_part = PcbSchedulerPartNum.find_by_number_and_pcba(part_num+"A", false)
           sched_brd = PcbSchedulerBoard.find(sched_part.board_id)  rescue "Error"
@@ -499,15 +519,16 @@ class ReportController < ApplicationController
         des_id_wo_doc_changes = designs - production_design_ids
         des_id_wo_doc_changes.each do |p|
           part_num = PartNum.get_design_pcb_part_number(p).name_string
+          
           designer = Design.find(p).designer.last_name
+          designer = DesignReview.find_by_design_id_and_review_type_id(p, 1).designer.last_name
+          
           project = Design.find(p).board.project.name
           sched_part = PcbSchedulerPartNum.find_by_number_and_pcba(part_num+"A", false)
           sched_brd = PcbSchedulerBoard.find(sched_part.board_id)  rescue "Error"
-          pins = sched_brd.actual_ending_pin_count rescue "Error"
           @des_wo_doc_changes << {:part_number => part_num, 
                                   :designer => designer,
-                                  :project => project, 
-                                  :pins => pins}
+                                  :project => project}
         end
         
         
@@ -555,18 +576,31 @@ class ReportController < ApplicationController
           design[:part_num] = PartNum.get_design_pcb_part_number(ftp.design_id).name_string
           design[:ftp_date] = ftp.created_at.format_dd_mon_yy
           
-          issues = FabIssue.find_all_by_design_id(ftp.design_id)
+          #issues = FabIssue.find_all_by_design_id(ftp.design_id).order("resolved_on DESC")
+          issues = FabIssue.find(:all, :conditions => ["design_id = ?", ftp.design_id], :order => "resolved_on")
           isscount = issues.count
-          design[:vend_iss_rcvd] = (isscount > 0) ? "Yes" : "No"
-          design[:date_vend_iss_rcvd] = (isscount > 0) ? issues.first.received_on.strftime("%d-%b-%y") : "N/A"
-          design[:date_vend_iss_closed] = (isscount > 0) ? "Set to last comp dt if all comp or set blank" : "N/A"
+          if isscount > 0            
+            design[:vend_iss_rcvd] = "Yes"
+            design[:date_vend_iss_rcvd] = issues.first.received_on.strftime("%d-%b-%y")
+            design[:date_vend_iss_closed] = issues.first.resolved_on.nil? ? "" : issues.last.resolved_on.strftime("%d-%b-%y")
+          else
+            design[:vend_iss_rcvd] = "No"
+            design[:date_vend_iss_rcvd] = "N/A"
+            design[:date_vend_iss_closed] = "N/A"            
+          end
 
-          dociss = FabIssue.find_all_by_design_id_and_documentation_issue(ftp.design_id, true)
+          #dociss = FabIssue.find_all_by_design_id_and_documentation_issue(ftp.design_id, true)
+          dociss = FabIssue.find(:all, :conditions => ["design_id = ? AND documentation_issue = ? ", ftp.design_id, true], :order => "clean_up_complete_on")
           docisscount = dociss.count
-          design[:cleanup_reqd] = (docisscount > 0) ? "Yes" : "No"
-          design[:date_cleanup_comp] = (docisscount > 0) ? "Set to last doc iss comp dt if all doc iss comp or set blank" : "N/A"
-          design[:num_doc_issues] = docisscount          
-
+          design[:num_doc_issues] = docisscount
+          if docisscount > 0
+            design[:cleanup_reqd] = "Yes"
+            design[:date_cleanup_comp] = dociss.first.clean_up_complete_on.nil? ? "" : dociss.last.clean_up_complete_on.strftime("%d-%b-%y")
+          else
+            design[:cleanup_reqd] = "No"
+            design[:date_cleanup_comp] = "N/A"
+          end
+          
           clarisscount = FabIssue.find_all_by_design_id_and_documentation_issue(ftp.design_id, false).count
           design[:num_clar_issues] = clarisscount
           
@@ -609,6 +643,27 @@ class ReportController < ApplicationController
         @design_sum[:clar_iss_pins_total] = (clartotal*100/pintotal).round(3).to_s + "%"
       end
       
+    end
+    
+    # Calculate linear regression values and update quarterly_history hash
+    d_linear_model = SimpleLinearRegression.new(ldxs, ldys)
+    d_slope = d_linear_model.slope
+    d_y_intercept = d_linear_model.y_intercept
+    c_linear_model = SimpleLinearRegression.new(lcxs, lcys)
+    c_slope = c_linear_model.slope
+    c_y_intercept = c_linear_model.y_intercept     
+    count = 0
+    numQuarters.step(endQuarter,-1).each do |offset|
+      count += 1
+      # Get Quarter/Year string for graph and page title
+      quart_date = Date.today << (offset * 3)
+      quarter = ((quart_date.beginning_of_quarter.month - 1) / 3) + 1
+      fir_quart_date = quarter.to_s + "Q" + quart_date.beginning_of_quarter.strftime("%y") 
+
+      d_quart_val = d_y_intercept + d_slope * count
+      @fir_quarterly_history.find{|fqh| fqh["Date"] == fir_quart_date}["Linear (Documentation Issues/Pins)"] = d_quart_val rescue 0
+      c_quart_val = c_y_intercept + c_slope * count
+      @fir_quarterly_history.find{|fqh| fqh["Date"] == fir_quart_date}["Linear (Clarification Issues/Pins)"] = c_quart_val rescue 0
     end
     
     @fir_quarterly_history = @fir_quarterly_history.to_json

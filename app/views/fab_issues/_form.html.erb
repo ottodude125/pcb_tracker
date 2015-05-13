@@ -28,7 +28,7 @@
     <tr>
       <th class="teraheader" align="right">Deliverable Affected:&nbsp;</th>
       <td>
-      	<%= select(:fab_issue, :fab_deliverable_id, grouped_options_for_select(@fab_deliverables)) %>
+      	<%= select(:fab_issue, :fab_deliverable_id, grouped_options_for_select(@fab_deliverables, @fab_issue.fab_deliverable_id)) %>
       </td>
     </tr>
     <tr>

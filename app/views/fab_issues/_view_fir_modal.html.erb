@@ -1,0 +1,71 @@
+
+<h1>
+	<%= title %> - Fabrication Issue Details
+</h1>
+
+<table class="firdashmodaltable">
+	<tr>
+		<th>Description:</th>
+		<td><%= fab_issue.description %></td>
+	</tr>
+	<tr>
+		<th>Date Received:</th>
+		<td><%= fab_issue.received_on.strftime("%d-%b-%y") %></td>
+	</tr>
+	<tr>
+		<th>Created By:</th>
+		<td><%= fab_issue.user.last_name_first %></td>
+	</tr>
+	<tr>
+		<th>Deliverable Affected:</th>
+		<td><%= fab_issue.fab_deliverable.name %></td>
+	</tr>
+	<tr>
+		<th>Cause</th>
+		<td><%= fab_issue.cause %></td>
+	</tr>
+	<tr>
+		<th>Resolution</th>
+		<td><%= fab_issue.resolution %></td>
+	</tr>
+
+  <% if fab_issue.documentation_issue %>
+		<tr>
+			<th>Documentation Issue:</th>
+			<td><%= image_tag("check_mark.png") %></td>
+		</tr>
+		<tr>
+			<th>Clean Up Completed:</th>
+			<td><%= fab_issue.clean_up_complete_on.strftime("%d-%b-%y") rescue "" %></td>
+		</tr>
+		<tr>
+			<th>Failure Mode</th>
+			<td><%= fab_issue.fab_failure_mode.name rescue "" %></td>
+		</tr>
+	<% else %>
+		<tr>
+			<th>Documentation Issue</th>
+  		<td><%= image_tag("icon_x.png") %></td>
+		</tr>
+  <% end %>
+	<tr>
+		<th>Full Rev Required:</th>
+    <% if fab_issue.full_rev_reqd %>
+    	<td><%= image_tag("check_mark.png") %></td>
+		<% else %>
+    	<td><%= image_tag("icon_x.png") %></td>
+    <% end %>
+	</tr>
+	<tr>
+		<th>Bareboard Change Required:</th>
+    <% if fab_issue.bare_brd_change_reqd %>
+    	<td><%= image_tag("check_mark.png") %></td>
+		<% else %>
+    	<td><%= image_tag("icon_x.png") %></td>
+    <% end %>
+	</tr>
+</table>
+
+
+
+

@@ -146,4 +146,35 @@ class DesignMailer < ActionMailer::Base
     
   end
 
+  ######################################################################
+  #
+  # fir_complete_notification
+  #
+  # Description:
+  # This method generates mail to indicate that the design has been 
+  # marked as fir reviews completed
+  #
+  # Parameters:
+  #   designer_review   - the design review
+  #   release_review_id - the release review id
+  #   reviewer          - the person assigned to the review
+  #   current_user      - the person who marked the design as fir complete
+  ######################################################################
+
+  def fir_complete_notification (design, release_review_id, reviewer, current_user)
+
+    to_list  = [reviewer.email]
+    cc_list  = [current_user.email]
+    subject  = 'FIR Completed - ' + MailerMethods.subject_prefix(design)
+
+    @pcb_display = design.pcb_display
+    @release_review_id = release_review_id
+
+    mail( :to      => to_list,
+          :subject => subject,
+          :cc      => cc_list
+        )   
+    
+  end
+
 end

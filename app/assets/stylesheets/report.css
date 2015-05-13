@@ -43,7 +43,15 @@ p.firChartTitle {
   margin-top: 10px;
 }
 
-div#firQuartersChart,
+div#firQuartersChart {
+	position: relative;
+	z-index: 10;
+  min-width: 310px;
+  max-width: 90%; 
+  height: 550px; 
+  margin: 0 auto;    
+}
+
 div#firDeliverableChart,
 div#firIssuesPinsChart,
 div#firDrawingChart,

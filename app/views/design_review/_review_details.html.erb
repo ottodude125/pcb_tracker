@@ -139,5 +139,17 @@
       <td>&nbsp;</td><td>&nbsp;</td>
     <% end %>
   </tr>
-  </table>
+  <tr>
+  	<td class="th1" >FIR Emails:</td>
+  	<td><%= link_to("http://k2.corp.teradyne.com/Mail/Supportb.nsf", "http://k2.corp.teradyne.com/Mail/Supportb.nsf") %></td>
+  </tr>
+  <tr>
+  	<td class="th1" >All FIRs Complete:</td>
+  	<% if @design_review.design.fir_complete %>
+  		<td style="color:green;font-weight:bold;">True</td>
+		<% else %>
+  		<td style="color:red;font-weight:bold;">False</td>
+		<% end %>
+  </tr>
+</table>
 

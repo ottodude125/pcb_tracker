@@ -65,14 +65,12 @@
 						<th>Board</th>
 						<th>Designer</th>
 						<th>Project</th>
-						<th>Pins</th>							
 					</tr>
 					<% @des_wo_doc_changes.each do |p| %>
 						<tr>
 							<td><%= p[:part_number] %></td>
 							<td><%= p[:designer] %></td>
 							<td><%= p[:project] %></td>
-							<td><%= p[:pins] %></td>							
 						</tr>
 					<% end %>
 				</table>
@@ -105,6 +103,14 @@
 					<tr>
 						<td>Designs with Clarification Issues</td>
 						<td><%= fir_quarterly_history.last["Designs w/Clarification Issues"]  %></td>
+					</tr>
+					<tr>
+						<td>
+							<%= @fab_quarterly_status.status_note rescue "" %>
+						</td>
+						<td>
+							<%= image_tag(@fab_quarterly_status.image_name) rescue "" %>
+						</td>
 					</tr>
 				</table>
 			</div>
@@ -244,7 +250,7 @@
 						<td><%= f.description %></td>
 						<td><%= f.cause %></td>
 						<td><%= f.resolution %></td>
-						<td><%= f.fab_failure_mode.name %></td>
+						<td><%= f.fab_failure_mode.name rescue "" %></td>
 					</tr>
 				<% end %>
 			</tbody>

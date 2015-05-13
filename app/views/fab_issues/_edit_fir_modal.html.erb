@@ -1,0 +1,94 @@
+<% @logged_in_user_id = logged_in_user_id %>
+<% @design_id = design_id %>
+<% @design_review_id = design_review_id %>
+<% @fab_issue = fab_issue %>
+<% @fab_deliverables = fab_deliverables %>
+<% @fab_failure_modes = fab_failure_modes %>
+
+<% viewtype = @fab_issue.new_record? ? " - Creating New Fabrication Issue" : " - Editing Fabrication Issue Details" %>
+<h1>
+	<%= title + viewtype %>
+</h1>
+
+<%= form_for(@fab_issue) do %>
+
+	<%= hidden_field :fab_issue, :user_id, :value => @logged_in_user_id %>
+	<%= hidden_field :fab_issue, :design_id, :value => @design_id %>
+	<%= hidden_field :design_review, :id, :value => @design_review_id %>
+    
+  <table class="firdashmodaltableedit design_fir_table">
+    <tr>
+      <th>Description:&nbsp;</th>
+      <td>
+        <%= text_field(:fab_issue, :description, :size => 50) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Date Received:&nbsp;</th>
+      <td>
+    	  <%= text_field(:fab_issue, :received_on, :value => (@fab_issue.new_record? ? Time.now.strftime("%B %d, %Y") : @fab_issue.received_on.strftime("%B %d, %Y")))%>
+      </td>
+    </tr>  
+    <tr>
+      <th>Deliverable Affected:&nbsp;</th>
+      <td>
+      	<%= select(:fab_issue, :fab_deliverable_id, grouped_options_for_select(@fab_deliverables, @fab_issue.fab_deliverable_id)) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Cause:&nbsp;</th>
+      <td>
+        <%= text_area(:fab_issue, :cause, :size => "50x1" ) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Resolution:&nbsp;</th>
+      <td>
+        <%= text_area(:fab_issue, :resolution, :size => "50x1" ) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Documentation Issue:&nbsp;</th>
+      <td>
+        <%= check_box :fab_issue, :documentation_issue %>
+      </td>
+    </tr>
+    
+    <tr id="clean_up_complete_row" style="display:none" >
+      <th>Clean Up Completed:&nbsp;</th>
+      <td>
+    	  <%= text_field(:fab_issue, :clean_up_complete_on, :value => (@fab_issue.clean_up_complete_on.strftime("%B %d, %Y") rescue "") )%>
+      </td>
+    </tr>  
+
+    <tr>
+      <th>CleanUp Required:&nbsp;</th>
+      <td>
+				<%= radio_button_tag(:cleanup, "full", @fab_issue.full_rev_reqd ) %>
+				<%= label_tag(:cleanup_full, "Full Rev") %>
+				<%= radio_button_tag(:cleanup, "bareboard", @fab_issue.bare_brd_change_reqd) %>
+				<%= label_tag(:cleanup_bareboard, "Bareboard") %>      
+				<%= radio_button_tag(:cleanup, "na", (!@fab_issue.full_rev_reqd && !@fab_issue.bare_brd_change_reqd) ) %>
+				<%= label_tag(:cleanup_na, "N/A") %>      
+			</td>
+    </tr>
+    
+    <tr id="fab_failure_mode_complete_row" style="display:none" >
+      <th>Failure Mode:&nbsp;</th>
+      <td>
+        <%= collection_select(:fab_issue, :fab_failure_mode_id, @fab_failure_modes, :id, :name, :include_blank => true) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Close Issue:&nbsp;</th>
+      <td>
+        <%= check_box :fab_issue, :resolved %>
+      </td>
+    </tr>
+
+  </table>
+	
+	<p class="firdashmodalsubmit" >
+  	<input type="submit" value="Submit Fabrication Issue" />
+	</p>
+<% end %>

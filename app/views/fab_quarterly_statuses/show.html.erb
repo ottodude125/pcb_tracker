@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Quarter:</b>
+  <%= @fab_quarterly_status.quarter %>
+</p>
+
+<p>
+  <b>Year:</b>
+  <%= @fab_quarterly_status.year %>
+</p>
+
+<p>
+  <b>Status note:</b>
+  <%= @fab_quarterly_status.status_note %>
+</p>
+
+<p>
+  <b>Image name:</b>
+  <%= @fab_quarterly_status.image_name %>
+</p>
+
+
+<%= link_to 'Edit', edit_fab_quarterly_status_path(@fab_quarterly_status) %> |
+<%= link_to 'Back', fab_quarterly_statuses_path %>

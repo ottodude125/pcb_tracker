@@ -71,7 +71,7 @@
     <tr>
       <th class="teraheader" align="right">Failure Mode:&nbsp;</th>
       <td>
-        <%= @fab_issue.fab_failure_mode.name %>
+        <%= @fab_issue.fab_failure_mode.name rescue "" %>
       </td>
     </tr>
   </table>

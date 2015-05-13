@@ -1,0 +1,41 @@
+<h1>Listing Fab Quarterly Statuses</h1>
+
+<table id="fab_quarterly_statuses_table" class="display">
+  <thead>
+	  <tr>
+	    <th class="colfmt" >Quarter</th>
+	    <th class="colfmt" >Year</th>
+	    <th>Status note</th>
+	    <th class="colfmt" >Image</th>
+	    <th class="colfmt" ></th>
+	  </tr>
+	</thead>
+	<tbody>
+		<% @fab_quarterly_statuses.each do |fqs| %>
+		  <tr>
+		    <td class="colfmt" ><%= fqs.quarter %></td>
+		    <td class="colfmt" ><%= fqs.year %></td>
+		    <td><%= fqs.status_note %></td>
+		    <td class="colfmt" ><%= image_tag(fqs.image_name) unless fqs.image_name == FabQuarterlyStatus::FAB_STAT_IMAGES.last %></td>
+		    <td class="colfmt" ><%= link_to 'Edit', edit_fab_quarterly_status_path(fqs) %></td>
+		  </tr>
+		<% end %>
+	</tbody>
+</table>
+
+<br />
+
+<hr class="div" />
+
+<table width="100%">
+  <tr>
+    <td align="left">
+      <input type="button" value="New Fab Quarterly Status" onClick="parent.location='<%= url_for( :controller => 'fab_quarterly_statuses', :action => "new") %>'" />
+    </td>
+    <td align="right">
+      <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+    </td>
+  </tr>
+</table>
+
+  

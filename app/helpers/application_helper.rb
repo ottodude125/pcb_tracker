@@ -241,6 +241,7 @@ module ApplicationHelper
   def role_links(generate_links=false)
     
     roles = [ { :message => :designer_role,       :name => 'Designer' },
+              { :message => :fir_role,            :name => 'FIR Reviewer' },
               { :message => :reviewer_role,       :name => 'Reviewer' },
               { :message => :pcb_management_role, :name => 'PCB Management' },
               { :message => :pcb_admin_role,      :name => 'PCB Admin'},

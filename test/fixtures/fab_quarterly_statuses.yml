@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  quarter: 
+  year: 
+  status_note: MyText
+  image_name: MyString
+
+two:
+  quarter: 
+  year: 
+  status_note: MyText
+  image_name: MyString

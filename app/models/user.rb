@@ -367,6 +367,40 @@ class User < ActiveRecord::Base
   def pcb_admin_role
     self.roles.detect { |r| r.name == 'PCB Admin' }
   end
+
+
+  ######################################################################
+  #
+  # is_fir?
+  #
+  # Description:
+  # Determines if the user is a fir reviewer.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the user is a fir reviewer,  Otherwise FALSE.
+  #
+  ######################################################################
+  #
+  def is_fir?
+    self.fir_role != nil
+  end
+  
+  
+  # Retrieve the FIR role record from the user's list of roles
+  # records.
+  #
+  # :call-seq:
+  #   fir_role() -> role
+  #
+  #  Look through the user's list of roles for a FIR role record.  
+  #  If a FIR role record is detected then it is returned.
+  #  Otherwise a Nil is returned.
+  def fir_role
+    self.roles.detect { |r| r.name == 'FIR' }
+  end
   
 
   ######################################################################

@@ -60,3 +60,26 @@ jQuery ($) ->
     $("#optgroup").multiSelect "deselect_all"
     false
 
+  # Toggles the display of exceptions which were not created by the current user. 
+  # Also changes the text in the button that fires off this functionality
+  $(".togglebutton").click (event) ->
+    event.preventDefault()
+    $("tr.notcuruser").toggle
+      easing: "easeInOutCubic"
+      duration: 500
+    if $(".togglebutton").attr("value") is "Display All FIRs"
+      $(".togglebutton").prop "value", "Display Only My FIRs"
+    else
+      $(".togglebutton").prop "value", "Display All FIRs"
+
+  # On FIR Reviewer Dash open modal when "Create New Fab Issue" clicked
+  $('.new_fir_button').click (event) ->
+    event.preventDefault()
+    button_id = $(this).attr("id")
+    $("#edit_fir_design_"+button_id).modal()
+    false
+
+
+
+
+
