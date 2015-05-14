@@ -307,5 +307,38 @@ module ApplicationHelper
     session[:return_to] ? url_for(session[:return_to]) : url_for( :controller => 'tracker' )
   end
   
-  
+  # Method adds the html formatting code to the description string
+  def parse_post(post)
+    ret = ''
+    #post = post.post if post.is_a? UserPost
+    #post = UserPost.find(post).post if post.is_a? Fixnum
+    ret = post
+    post.scan(/(<(.*?)>)/).each{|s| ret.sub!(s[0], '['+s[1]+']')} #removes html tags
+    post.scan(/(\[(.*?)\]\((.*?)\))/).each do |arr| #urls
+      orig = arr[0]
+      text = arr[2]
+      url = arr[1]
+      new_url = /^http/.match(url) ? url : "http://#{url}"
+      ret.gsub!(orig, '<a href='+new_url+'>'+text+'</a>')
+    end
+    post.scan(/(\*\*(.*?)\*\*)/).each do |arr| #bold
+      orig = arr[0]
+      text = arr[1]
+      ret.gsub!(orig, '<b>'+text+'</b>')
+    end
+    post.scan(/(_(.*?)_)/).each do |arr| #italics
+      orig = arr[0]
+      text = arr[1]
+      ret.gsub!(orig, '<i>'+text+'</i>')
+    end
+    post.scan(/(\{\{(.*?)\|(.*?)\|(.*?)\}\})/).each do |arr| #color
+      orig = arr[0]
+      command = arr[1]
+      color = arr[2]
+      text = arr[3]
+      ret.gsub!(orig, "<span style='color:" + color + ";'>" + text + '</span>')
+    end
+    return ret.html_safe
+  end
+
 end

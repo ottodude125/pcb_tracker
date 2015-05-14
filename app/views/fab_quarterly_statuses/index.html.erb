@@ -15,8 +15,8 @@
 		  <tr>
 		    <td class="colfmt" ><%= fqs.quarter %></td>
 		    <td class="colfmt" ><%= fqs.year %></td>
-		    <td><%= fqs.status_note %></td>
-		    <td class="colfmt" ><%= image_tag(fqs.image_name) unless fqs.image_name == FabQuarterlyStatus::FAB_STAT_IMAGES.last %></td>
+		    <td><%= parse_post(fqs.status_note).html_safe rescue "" %></td>
+		    <td class="colfmt" ><%= image_tag(fqs.image_name, :size => "24x24") unless fqs.image_name == FabQuarterlyStatus::FAB_STAT_IMAGES.last %></td>
 		    <td class="colfmt" ><%= link_to 'Edit', edit_fab_quarterly_status_path(fqs) %></td>
 		  </tr>
 		<% end %>

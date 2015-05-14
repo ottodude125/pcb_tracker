@@ -24,7 +24,7 @@ jQuery ->
     changeYear: true,
     minDate: "-1y",
     maxDate: "+2y"
-    
+  
 
     
   # On page load display clean up complete row if clean up reqd checked

@@ -48,9 +48,10 @@ div#firQuartersChart {
 	z-index: 10;
   min-width: 310px;
   max-width: 90%; 
-  height: 550px; 
+  height: 551px; 
   margin: 0 auto;    
 }
+
 
 div#firDeliverableChart,
 div#firIssuesPinsChart,
@@ -102,6 +103,52 @@ table.fir_table td {
 	text-align: center;
 	font-size: .75em;
 }
+
+.jchartfx .Attribute0 {
+    fill: #D3696C;
+    stroke: #D3696C;
+    stroke-width: 1;
+    opacity: 1;
+}
+.jchartfx .Attribute1 {
+    fill: #55AA55;
+    stroke: #55AA55;
+    stroke-width: 1;
+    opacity: 1;
+}
+.jchartfx .Attribute2Line {
+    fill: #000000;
+    stroke: #000000;
+    stroke-width: 1;
+    opacity: 1;
+}
+.jchartfx .Attribute3Line {
+    fill: #7E1518;
+    stroke: #7E1518;
+    stroke-width: 1;
+    opacity: 1;
+}
+.jchartfx .Attribute4Line {
+    fill: #116611;
+    stroke: #116611;
+    stroke-width: 1;
+    opacity: 1;
+}
+.jchartfx .Attribute5Line {
+    fill: #A8383B;
+    stroke: #A8383B;
+    stroke-width: 2;
+    opacity: 0.9;
+}
+.jchartfx .Attribute6Line {
+    fill: #2D882D;
+    stroke: #2D882D;
+    stroke-width: 2;
+    opacity: 0.8;
+}
+
+
+
 
 
 

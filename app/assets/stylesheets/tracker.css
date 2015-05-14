@@ -620,6 +620,10 @@ p.fir_complete {
 	font-weight: bold;
 	color: green;
 }
+textarea#fab_issue_cause,
+textarea#fab_issue_resolution {
+	width: 300px;
+}
 
 
 

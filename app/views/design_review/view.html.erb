@@ -101,7 +101,7 @@
                                 @logged_in_user.is_tracker_admin?) %>
                              <%= render :partial => "buttons_roles_admin_management" %>
                          <% end %>
-                                              
+                       <%- "Only render fab_issue button if user has fab role" %>                       
 	                     <% if @logged_in_user.is_a_role_member?(@fir_role_name) %>
 	                     	<%= render :partial => "buttons_role_fab_issue" %>
 	                     <% end %>

@@ -1,8 +1,7 @@
 class FabQuarterlyStatus < ActiveRecord::Base
   #attr_accessible :image_name, :quarter, :status_note, :year
   
-  FAB_STAT_IMAGES = ["black_delete.png", 
-                      "black_edit.png", 
-                      "black_view.png",
+  FAB_STAT_IMAGES = ["gold_star.png", 
+                      "traffic_light.png", 
                       "N/A"]
 end

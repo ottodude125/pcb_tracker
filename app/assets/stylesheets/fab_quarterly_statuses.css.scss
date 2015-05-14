@@ -13,3 +13,36 @@ table#fab_quarterly_statuses_table td{
 table#fab_quarterly_statuses_table td.colfmt {
   text-align: center;
 }
+table.styletable {
+  min-width: 400px;
+  border-width: 2px;
+  border-spacing: 0;
+  border-style: outset;
+  border-collapse: collapse;
+  border-color: #DDDDDD;
+  margin: 10px auto 0 auto;
+
+}
+
+table.styletable th {
+  background-color: yellow;
+  padding: 10px;
+  border-width: 2px;
+  border-spacing: 0;
+  border-style: outset;
+  border-collapse: collapse;
+  border-color: #DDDDDD;
+}
+
+table.styletable td {
+  padding: 10px;
+  border-width: 2px;
+  border-spacing: 0;
+  border-style: outset;
+  border-collapse: collapse;
+  border-color: #DDDDDD;
+}
+
+.hidden {
+  display: none;
+}

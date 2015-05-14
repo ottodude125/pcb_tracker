@@ -32,14 +32,70 @@
       <th class="teraheader" align="right">Status Note:&nbsp;</th>
       <td>
         <%= f.text_area :status_note, :size => "60x3"  %>
+      	<%= link_to 'Styling Help', '#', class: "style_help_button create_post" %>
+				<div class="hidden style_help" style="text-align: -webkit-center;">
+			    <table class="styletable">
+			      <tr>
+			        <th>
+			          <i>
+			            <%= "You Type:" %>
+			          </i>
+			        </th>
+			        <th>
+			          <i>
+			            <%= "You See" %>
+			          </i>
+			        </th>
+			      </tr>
+			      <tr>
+			        <td>
+			          <%= "**Bold**" %>
+			        </td>
+			        <td>
+			          <b>
+			            <%= "Bold" %>
+			          </b>
+			        </td>
+			      </tr>
+			      <tr>
+			        <td>
+			          <%= "{{color|green|This is green}}" %>
+			        </td>
+			        <td> 
+		            <span style="color:green;">
+		            	<%= "Green" %>
+		            </span>
+			        </td>
+			      </tr>
+			      <tr>
+			        <td>
+			          <%= "_Italics_" %>
+			        </td>
+			        <td>
+			          <i>
+			            <%= "Italics" %>
+			          </i>
+			        </td>
+			      </tr>
+			      <tr>
+			        <td>
+			          <%= "[www.monkey.com](link_text)" %>
+			        </td>
+			        <td>
+			          <%= link_to "link_text", "http://www.monkey.com" %>
+			        </td>
+			      </tr>
+			    </table>
+				</div>
       </td>
     </tr>
+    
     <tr>
       <th class="teraheader" align="right">Image:&nbsp;</th>
 	    <td>
 				<% FabQuarterlyStatus::FAB_STAT_IMAGES.each do |name| %>
 					<%= f.radio_button :image_name, name, :checked => name == @fab_quarterly_status.image_name %>
-					<%= (name == FabQuarterlyStatus::FAB_STAT_IMAGES.last)? "N/A" : image_tag(name) %>
+					<%= (name == FabQuarterlyStatus::FAB_STAT_IMAGES.last)? "N/A" : image_tag(name, :size => "24x24") %>
 				<% end %>
       </td>
     </tr>

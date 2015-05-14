@@ -392,14 +392,14 @@ class ReportController < ApplicationController
     # Initialize FabDeliverable and Fab Drawing Value Arrays
     FabDeliverable.all.each do |fd|
       if fd.parent_id.nil?
-        @fab_iss_deliverable << {"Deliverable" => fd.name, "spacer" => 0, "Documentation Issue" => 0, "Vendor Clarification" => 0}
+        @fab_iss_deliverable << {"Deliverable" => fd.name, "Documentation Issue" => 0, "Vendor Clarification" => 0}
       else
-        @fab_iss_drawing << {"Drawing" => fd.name, "spacer" => 0, "Documentation Issue" => 0, "Vendor Clarification" => 0}
+        @fab_iss_drawing << {"Drawing" => fd.name, "Documentation Issue" => 0, "Vendor Clarification" => 0}
       end
     end
     # Initialize FabFailureMode Value Array
     FabFailureMode.all.each do |fm|
-      @fab_iss_mode << {"Mode" => fm.name, "spacer" => 0, "Documentation Issue" => 0}
+      @fab_iss_mode << {"Mode" => fm.name, "Documentation Issue" => 0}
     end      
 
     # Reverse step through each "OFFSET" to build data for that quarter for Top Sheet
@@ -408,24 +408,15 @@ class ReportController < ApplicationController
     endQuarter = 1
     numQuarters.step(endQuarter,-1).each do |offset|
       # Initialize "offset" quarter vals for Top Sheet
-      # JchartFX does not allow you to select the color to use for the series
-      # Therefore there are 7 extra series added so that each bar/line is a specific color
       fir_quart = {}
-      fir_quart["Date"] = ""
-      fir_quart["spacer"] = 0
       fir_quart["Documentation Issues/Pins"] = -1
       fir_quart["Clarification Issues/Pins"] = -1      
-      fir_quart["spacer1"] = 0
-      fir_quart["spacer2"] = 0
-      fir_quart["spacer3"] = 0
-      fir_quart["spacer4"] = 0
-      fir_quart["spacer5"] = 0
       fir_quart["Designs FTPd"] = -1
-      fir_quart["spacer6"] = 0
-      fir_quart["Designs w/Clarification Issues"] = -1
       fir_quart["Designs w/Documentation Issues"] = -1
-      fir_quart["Linear (Clarification Issues/Pins)"] = 0
+      fir_quart["Designs w/Clarification Issues"] = -1
       fir_quart["Linear (Documentation Issues/Pins)"] = 0
+      fir_quart["Linear (Clarification Issues/Pins)"] = 0
+      fir_quart["Date"] = ""
       pincount = 0.00001
       
       # Get start/end date of offset quarter 
@@ -474,7 +465,6 @@ class ReportController < ApplicationController
             doc_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, true).count*1.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
             cla_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, false).count*1.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
             @fir_pins_brds << {"Part Number" => part_num + " w/" + sched_brd.actual_ending_pin_count.to_s + " Pins",
-                                "spacer" => 0, 
                                 "Documentation Issues/Pins" => doc_iss_pins, 
                                 "Clarification Issues/Pins" => cla_iss_pins}
           end
@@ -638,18 +628,18 @@ class ReportController < ApplicationController
         @design_sum[:total] = "Total"
         @design_sum[:pintotal] = pintotal.round(0)
         @design_sum[:doctotal] = doctotal
-        @design_sum[:doc_iss_pins_total] = (doctotal*100/pintotal).round(3).to_s + "%"
+        @design_sum[:doc_iss_pins_total] = (doctotal*100/pintotal).round(5).to_s + "%"
         @design_sum[:clartotal] = clartotal
-        @design_sum[:clar_iss_pins_total] = (clartotal*100/pintotal).round(3).to_s + "%"
+        @design_sum[:clar_iss_pins_total] = (clartotal*100/pintotal).round(5).to_s + "%"
       end
       
     end
     
     # Calculate linear regression values and update quarterly_history hash
-    d_linear_model = SimpleLinearRegression.new(ldxs, ldys)
+    d_linear_model = SimpleLinearRegression.new(ldxs.reverse, ldys)
     d_slope = d_linear_model.slope
     d_y_intercept = d_linear_model.y_intercept
-    c_linear_model = SimpleLinearRegression.new(lcxs, lcys)
+    c_linear_model = SimpleLinearRegression.new(lcxs.reverse, lcys)
     c_slope = c_linear_model.slope
     c_y_intercept = c_linear_model.y_intercept     
     count = 0
@@ -661,9 +651,9 @@ class ReportController < ApplicationController
       fir_quart_date = quarter.to_s + "Q" + quart_date.beginning_of_quarter.strftime("%y") 
 
       d_quart_val = d_y_intercept + d_slope * count
-      @fir_quarterly_history.find{|fqh| fqh["Date"] == fir_quart_date}["Linear (Documentation Issues/Pins)"] = d_quart_val rescue 0
+      @fir_quarterly_history.find{|fqh| fqh["Date"] == fir_quart_date}["Linear (Documentation Issues/Pins)"] = d_quart_val.round(7) rescue 0
       c_quart_val = c_y_intercept + c_slope * count
-      @fir_quarterly_history.find{|fqh| fqh["Date"] == fir_quart_date}["Linear (Clarification Issues/Pins)"] = c_quart_val rescue 0
+      @fir_quarterly_history.find{|fqh| fqh["Date"] == fir_quart_date}["Linear (Clarification Issues/Pins)"] = c_quart_val.round(7) rescue 0
     end
 
     @fir_quarterly_history = @fir_quarterly_history.to_json
@@ -671,7 +661,7 @@ class ReportController < ApplicationController
     @fab_iss_deliverable = @fab_iss_deliverable.to_json
     @fab_iss_drawing = @fab_iss_drawing.to_json
     @fab_iss_mode = @fab_iss_mode.to_json
-
+    
     respond_to do | format | 
       format.html
       format.csv { send_data reviewer_to_csv(@heads,@data) }

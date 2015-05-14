@@ -12,29 +12,30 @@
 	</ul>
 
 	<div id="fir_metrics_tab-1">
-		<div class="splitcontentleft" >
-			<p class="firChartTitle" >
-				<%= "FAB Issue Report - Quarterly Status" %>
-			</p>
-			<div id="firQuartersChart" class="firQuartersChart" >
-			</div>
-			<script>
-				fir_quarts = <%= raw @fir_quarterly_history.to_json %>;
-	      chart = new cfx.Chart();
-				document.ready = FirQuartersChart(fir_quarts, chart);
-			</script>
-			<p>
-				NOTES: 
-				<ul>
-					<li>All sums are for FTP'd designs within stated quarter</li>
-					<li>Documentation Issues/Pins - Sum of documentation issues for Production(New) designs divided by pin count</li>
-					<li>Clarification Issues/Pins - Sum of clarification issues for Production(New) designs divided by pin count</li>
-					<li>Designs FTPd - Sum of designs FTP'd</li>
-					<li>Designs w/Documentation Issues - Sum of designs that had at least one documentation issue</li>
-					<li>Designs w/Clarification Issues - Sum of designs that had at least one clarification issue</li>
-				</ul>
-			</p>
-		</div>
+<div class="splitcontentleft" >
+	<p class="firChartTitle" >
+		<%= "FAB Issue Report - Quarterly Status" %>
+	</p>
+	<div id="firQuartersChartBox" class="firQuartersChartBox" >
+		<div id="firQuartersChart" class="firQuartersChart" ></div>							
+	</div>
+	<script>
+		fir_quarts = <%= raw @fir_quarterly_history %>;
+    chart = new cfx.Chart();
+		document.ready = FirQuartersChart(fir_quarts, chart);
+	</script>
+	<p>
+		NOTES: 
+		<ul>
+			<li>All sums are for FTP'd designs within stated quarter</li>
+			<li>Documentation Issues/Pins - Sum of documentation issues for Production(New) designs divided by pin count</li>
+			<li>Clarification Issues/Pins - Sum of clarification issues for Production(New) designs divided by pin count</li>
+			<li>Designs FTPd - Sum of designs FTP'd</li>
+			<li>Designs w/Documentation Issues - Sum of designs that had at least one documentation issue</li>
+			<li>Designs w/Clarification Issues - Sum of designs that had at least one clarification issue</li>
+		</ul>
+	</p>
+</div>
 		<div class="splitcontentright" >
 			<div class="fir_table" >
 				<p class="fir_table_title" >1Q15 - Designs w/o Doc Change FIR's</p>
@@ -105,12 +106,16 @@
 						<td><%= fir_quarterly_history.last["Designs w/Clarification Issues"]  %></td>
 					</tr>
 					<tr>
-						<td>
-							<%= @fab_quarterly_status.status_note rescue "" %>
-						</td>
-						<td>
-							<%= image_tag(@fab_quarterly_status.image_name) rescue "" %>
-						</td>
+						<table>
+							<tr>
+								<td>
+									<%= image_tag(@fab_quarterly_status.image_name, :size => "80x80") rescue "" %>
+								</td>
+								<td>
+									<%= parse_post(@fab_quarterly_status.status_note).html_safe rescue ""  %>
+								</td>
+							</tr>
+						</table>
 					</tr>
 				</table>
 			</div>
