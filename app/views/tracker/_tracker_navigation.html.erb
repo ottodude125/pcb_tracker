@@ -222,21 +222,22 @@
             </tr>
         <% end %>
 
+		    <!-- ############################################################ -->
+		    <!-- FIRs                                                  -->
+		    <!-- ############################################################ -->
+		    <% if @logged_in_user.active_role.name == 'FIR' %>
+		        <tr class="teraheader"><th>FIRs</th></tr>
+		        <tr>
+		            <td align="center">
+		                <%= link_to("Update FIR Quarterly Summary", { :controller => "fab_quarterly_statuses" }) %>
+		            </td>
+		        </tr>
+		    <% end %>
+
     <% end %> <!-- End logged_in_user -->
 
     <%= render(:partial => "system_messages") %>
 
-    <!-- ############################################################ -->
-    <!-- FIRs                                                  -->
-    <!-- ############################################################ -->
-    <% if @logged_in_user.active_role.name == 'FIR' %>
-        <tr class="teraheader"><th>FIRs</th></tr>
-        <tr>
-            <td align="center">
-                <%= link_to("Update FIR Quarterly Summary", { :controller => "fab_quarterly_statuses" }) %>
-            </td>
-        </tr>
-    <% end %>
     
 </table>
 
