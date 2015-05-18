@@ -19,6 +19,7 @@ table#data tr:nth-child(even) {
 	background-color: #F1EFE2; 
 }
 
+
 table#fir_board_data_table th,
 table#fir_doc_issues_table th,
 table#fir_clar_issues_table th,
@@ -35,7 +36,6 @@ table#fir_board_data_table td {
 	width: 70px;
 }
 
- 
 p.firChartTitle {
   font: bold 18px Helvetica;
   text-align: center;
@@ -47,7 +47,7 @@ div#firQuartersChart {
 	position: relative;
 	z-index: 10;
   min-width: 310px;
-  max-width: 90%; 
+  max-width: 95%; 
   height: 551px; 
   margin: 0 auto;    
 }
@@ -77,8 +77,6 @@ div.splitcontentright {
   margin-right: 10px;
 }
 
-
-
 div.fir_table {
   background-color: #81AFD2 ;
   padding: 10px;
@@ -93,13 +91,19 @@ p.fir_table_title_note {
 	font-size: .7em;
 	margin: 0px;
 }
-table.fir_table {
+table.fir_table_outer {
+	width: 95%;
 	margin: 0 auto;
 }
 table.fir_table th {
 	font-size: .85em;
 }
 table.fir_table td {
+	text-align: center;
+	font-size: .75em;
+}
+table.fir_table td.reward_image {
+	width: 60px;
 	text-align: center;
 	font-size: .75em;
 }

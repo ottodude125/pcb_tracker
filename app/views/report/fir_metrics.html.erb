@@ -14,7 +14,7 @@
 		<li><%= link_to "1q15", "#fir_metrics_tab-2" %></li>
 		<li><%= link_to "Board Data", "#fir_metrics_tab-3" %></li>
 		<li><%= link_to "Documentation Issues", "#fir_metrics_tab-4" %></li>
-		<li><%= link_to "Clarrification Issues", "#fir_metrics_tab-5" %></li>
+		<li><%= link_to "Clarification Issues", "#fir_metrics_tab-5" %></li>
 	</ul>
 
 	<div id="fir_metrics_tab-1">
@@ -46,40 +46,54 @@
 			<div class="fir_table" >
 				<p class="fir_table_title" >1Q15 - Designs w/o Doc Change FIR's</p>
 				<p class="fir_table_title_note" >(First Revision, Production, not a "Make From" or Eng)</p>
-				<table class="fir_table" >
+				<table class="fir_table_outer" >
 					<tr>
-						<th>Board</th>
-						<th>Designer</th>
-						<th>Project</th>
-						<th>Pins</th>							
+						<td id="reward_image"><%= image_tag("gold_star2.png", :size => "60x60") %></td>
+						<td>
+							<table class="fir_table">
+								<tr>
+									<th>Board</th>
+									<th>Designer</th>
+									<th>Project</th>
+									<th>Pins</th>							
+								</tr>
+								<% @prod_des_wo_doc_changes.each do |p| %>
+									<tr>
+										<td><%= p[:part_number] %></td>
+										<td><%= p[:designer] %></td>
+										<td><%= p[:project] %></td>
+										<td><%= p[:pins] %></td>							
+									</tr>
+								<% end %>
+							</table>
+						</td>
 					</tr>
-					<% @prod_des_wo_doc_changes.each do |p| %>
-						<tr>
-							<td><%= p[:part_number] %></td>
-							<td><%= p[:designer] %></td>
-							<td><%= p[:project] %></td>
-							<td><%= p[:pins] %></td>							
-						</tr>
-					<% end %>
 				</table>
 			</div>
 			<br>
-			<div class="fir_table" >
+			<div class="fir_table" > 
 				<p class="fir_table_title" >1Q15 - Designs w/o Doc Change FIR's</p>
 				<p class="fir_table_title_note" >(Revisions, Engineering, Make Froms, Bareboard Only)</p>
-				<table class="fir_table" >
+				<table class="fir_table_outer">
 					<tr>
-						<th>Board</th>
-						<th>Designer</th>
-						<th>Project</th>
+						<td id="reward_image"><%= image_tag("gold_star2.png", :size => "60x60") %></td>
+						<td>
+							<table class="fir_table">
+								<tr>
+									<th>Board</th>
+									<th>Designer</th>
+									<th>Project</th>
+								</tr>
+								<% @des_wo_doc_changes.each do |p| %>
+									<tr>
+										<td><%= p[:part_number] %></td>
+										<td><%= p[:designer] %></td>
+										<td><%= p[:project] %></td>
+									</tr>
+								<% end %>
+							</table>
+						</td>
 					</tr>
-					<% @des_wo_doc_changes.each do |p| %>
-						<tr>
-							<td><%= p[:part_number] %></td>
-							<td><%= p[:designer] %></td>
-							<td><%= p[:project] %></td>
-						</tr>
-					<% end %>
 				</table>
 			</div>
 			<br>
