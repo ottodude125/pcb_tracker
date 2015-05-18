@@ -59,10 +59,9 @@ $(function ()  {
 	$("#fir_metrics_tabs").tabs({
 		event: "click"
 	});
-	
+    // Make ie9+ rqd message visible if user has ie8 	
     if ($('html').hasClass('ie8')) {
-        alert("test");
-        $("div#ie8_required_div").toggle;
+        $("div#ie8_required_div").toggle();
     }
 
 });
