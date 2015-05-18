@@ -59,6 +59,12 @@ $(function ()  {
 	$("#fir_metrics_tabs").tabs({
 		event: "click"
 	});
+	
+    if ($('html').hasClass('ie8')) {
+        alert("test");
+        $("div#ie8_required_div").toggle;
+    }
+
 });
 
 // JchartFX does not allow you to select the color to use for the series

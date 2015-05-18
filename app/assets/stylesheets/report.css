@@ -147,6 +147,15 @@ table.fir_table td {
     opacity: 0.8;
 }
 
+p.ie8_note {
+  font: bold 12px Helvetica;
+  background-color: black;
+  color: red;
+  width: 250px;
+  margin: 10px auto;    
+  padding: 5px;
+  text-align: center;
+}
 
 
 
