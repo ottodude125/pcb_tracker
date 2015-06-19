@@ -27,6 +27,12 @@
       </td>
     </tr>
     <tr>
+      <th class="teraheader" align="right">Fabrication House:&nbsp;</th>
+      <td>
+      	<%= FabHouse.find(@fab_issue.fab_house_id).name  rescue "" %>
+      </td>
+    </tr>
+    <tr>
       <th class="teraheader" align="right">Cause:&nbsp;</th>
       <td>
         <%= @fab_issue.cause %>
@@ -74,6 +80,12 @@
         <%= @fab_issue.fab_failure_mode.name rescue "" %>
       </td>
     </tr>
+    <tr>
+      <th class="teraheader" align="right">Date Resolved:&nbsp;</th>
+      <td>
+    	  <%= @fab_issue.resolved_on.strftime("%d-%b-%y") rescue "" %>
+      </td>
+    </tr>  
   </table>
 
         

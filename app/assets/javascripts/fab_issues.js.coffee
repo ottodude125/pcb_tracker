@@ -17,6 +17,14 @@ jQuery ->
     minDate: "-1y",
     maxDate: "+2y"
 
+  $('#fab_issue_resolved_on').datepicker
+    dateFormat: 'MM d, yy',
+    showWeek: true,
+    changeMonth: true,
+    changeYear: true,
+    minDate: "-1y",
+    maxDate: "+2y"
+
   $('#fab_issue_clean_up_complete_on').datepicker
     dateFormat: 'MM d, yy',
     showWeek: true,

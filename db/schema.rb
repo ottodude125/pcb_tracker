@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150511151528) do
+ActiveRecord::Schema.define(:version => 20150618193319) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :default => 0, :null => false
@@ -475,6 +475,7 @@ ActiveRecord::Schema.define(:version => 20150511151528) do
     t.integer  "fab_failure_mode_id"
     t.datetime "created_at",                              :null => false
     t.datetime "updated_at",                              :null => false
+    t.integer  "fab_house_id"
   end
 
   create_table "fab_quarterly_statuses", :force => true do |t|

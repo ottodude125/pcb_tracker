@@ -52,7 +52,8 @@ class FabIssuesController < ApplicationController
     @fab_failure_modes = FabFailureMode.order("name").find_all_by_active(true)
     fab_deliverables = FabDeliverable.order("parent_id DESC, id ASC").find_all_by_active(true)    
     @fab_deliverables = {"Other" => []}
-    
+    @fab_houses = @design_review.design.fab_houses.order("name ASC")
+
     fab_deliverables.each do |fd|     
       # A) if fd parent id not empty then check if its parent is already in hash
       # if not add it then add fd as first item in its array otherwise just add it
@@ -84,6 +85,7 @@ class FabIssuesController < ApplicationController
     @fab_failure_modes = FabFailureMode.order("name").find_all_by_active(true)
     fab_deliverables = FabDeliverable.order("parent_id DESC, id ASC").find_all_by_active(true)    
     @fab_deliverables = {"Other" => []}
+    @fab_houses = @design_review.design.fab_houses.order("name ASC")
     
     fab_deliverables.each do |fd|     
       # A) if fd parent id not empty then check if its parent is already in hash
@@ -117,10 +119,10 @@ class FabIssuesController < ApplicationController
       params[:fab_issue][:full_rev_reqd] = false
       params[:fab_issue][:bare_brd_change_reqd] = false
     end
-    if params[:fab_issue][:resolved]
+    if (params[:fab_issue][:resolved].to_i == 1) && params[:fab_issue][:resolved_on].blank?
       params[:fab_issue][:resolved_on] = Date.today
     end
-    
+
     @fab_issue = FabIssue.new(params[:fab_issue])
 
     respond_to do |format|
@@ -151,7 +153,7 @@ class FabIssuesController < ApplicationController
       params[:fab_issue][:full_rev_reqd] = false
       params[:fab_issue][:bare_brd_change_reqd] = false
     end
-    if params[:fab_issue][:resolved]
+    if (params[:fab_issue][:resolved].to_i == 1) && params[:fab_issue][:resolved_on].blank?
       params[:fab_issue][:resolved_on] = Date.today
     end
 

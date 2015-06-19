@@ -21,6 +21,10 @@
 		<td><%= fab_issue.fab_deliverable.name %></td>
 	</tr>
 	<tr>
+		<th>Fabrication House:</th>
+		<td><%= FabHouse.find(fab_issue.fab_house_id).name rescue "" %></td>
+	</tr>
+	<tr>
 		<th>Cause</th>
 		<td><%= fab_issue.cause %></td>
 	</tr>
@@ -63,6 +67,10 @@
 		<% else %>
     	<td><%= image_tag("icon_x.png") %></td>
     <% end %>
+	</tr>
+	<tr>
+		<th>Date Resolved:</th>
+		<td><%= fab_issue.resolved_on.strftime("%d-%b-%y") rescue "" %></td>
 	</tr>
 </table>
 

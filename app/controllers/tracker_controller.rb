@@ -980,6 +980,7 @@ class TrackerController < ApplicationController
         des_rev_fir[:review_status] = cur_design_review.review_status.name
         des_rev_fir[:design_review_id] = cur_design_review.id
         des_rev_fir[:firs] = FabIssue.find(:all, :conditions => ["design_id=?", design.id])
+        des_rev_fir[:fab_houses] = design.fab_houses.order("name ASC")
         design_reviews_firs << des_rev_fir                                                                  
       end      
     end

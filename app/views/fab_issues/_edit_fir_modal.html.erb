@@ -4,6 +4,8 @@
 <% @fab_issue = fab_issue %>
 <% @fab_deliverables = fab_deliverables %>
 <% @fab_failure_modes = fab_failure_modes %>
+<% @fab_houses = fab_houses %>
+
 
 <% viewtype = @fab_issue.new_record? ? " - Creating New Fabrication Issue" : " - Editing Fabrication Issue Details" %>
 <h1>
@@ -35,6 +37,12 @@
       <th>Deliverable Affected:&nbsp;</th>
       <td>
       	<%= select(:fab_issue, :fab_deliverable_id, grouped_options_for_select(@fab_deliverables, @fab_issue.fab_deliverable_id)) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Fabrication House:&nbsp;</th>
+      <td>
+        <%= collection_select(:fab_issue, :fab_house_id, @fab_houses, :id, :name, :include_blank => true) %>
       </td>
     </tr>
     <tr>
@@ -82,6 +90,12 @@
       <th>Failure Mode:&nbsp;</th>
       <td>
         <%= collection_select(:fab_issue, :fab_failure_mode_id, @fab_failure_modes, :id, :name, :include_blank => true) %>
+      </td>
+    </tr>
+    <tr>
+      <th>Date Resolved:&nbsp;</th>
+      <td>
+        <%= text_field(:fab_issue, :resolved_on, :value => (@fab_issue.new_record? ? "" : @fab_issue.resolved_on.strftime("%B %d, %Y") rescue ""))%>
       </td>
     </tr>
     <tr>

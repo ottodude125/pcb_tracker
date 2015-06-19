@@ -1,5 +1,23 @@
+<%- @quart_string = @quarter_num.to_s + "Q" + @year %>
 
-<h1><%= "FIR Metrics - " +  @quarter.capitalize + " Quarter " + Time.now.strftime("%Y") %></h1>
+<h1><%= "FIR Metrics - " +  @quarter.capitalize + " Quarter " + @year %></h1>
+
+
+<h3>
+  <%= form_tag({:controller => 'report', :action => 'fir_metrics'}) do %>
+		<div id="quarterselect">
+		  <%= "View Alternate Quarter " %>
+		  <%= select_tag('quarter_sel', options_for_select(@fir_quarters)) %>
+		  <%= submit_tag 'Submit' %>
+		</div>
+  <% end %>
+</h3>
+<p>
+	Fabrication Metrics are available in the PCB Tracker starting First Quarter 2015. 
+	To view metrics for previous quarters please go to the 
+	<a href="http://boarddev.teradyne.com/boarddev/mfggate/bareboardTech/FIR/index.php?file=fir_quarterly_report.html">FIR Metrics</a>
+	page on the Boarddev website.
+</p>
 
 <div id="ie8_required_div" style="display:none">
 	<p class="ie8_note">
@@ -11,7 +29,7 @@
 <div id="fir_metrics_tabs">
 	<ul>
 		<li><%= link_to "Quarterly History", "#fir_metrics_tab-1" %></li>
-		<li><%= link_to "1q15", "#fir_metrics_tab-2" %></li>
+		<li><%= link_to @quart_string, "#fir_metrics_tab-2" %></li>
 		<li><%= link_to "Board Data", "#fir_metrics_tab-3" %></li>
 		<li><%= link_to "Documentation Issues", "#fir_metrics_tab-4" %></li>
 		<li><%= link_to "Clarification Issues", "#fir_metrics_tab-5" %></li>
@@ -44,7 +62,7 @@
 </div>
 		<div class="splitcontentright" >
 			<div class="fir_table" >
-				<p class="fir_table_title" >1Q15 - Designs w/o Doc Change FIR's</p>
+				<p class="fir_table_title" ><%= @quart_string + " - Designs w/o Doc Change FIR's" %></p>
 				<p class="fir_table_title_note" >(First Revision, Production, not a "Make From" or Eng)</p>
 				<table class="fir_table_outer" >
 					<tr>
@@ -72,7 +90,7 @@
 			</div>
 			<br>
 			<div class="fir_table" > 
-				<p class="fir_table_title" >1Q15 - Designs w/o Doc Change FIR's</p>
+				<p class="fir_table_title" ><%= @quart_string + " - Designs w/o Doc Change FIR's" %></p>
 				<p class="fir_table_title_note" >(Revisions, Engineering, Make Froms, Bareboard Only)</p>
 				<table class="fir_table_outer">
 					<tr>
@@ -98,7 +116,7 @@
 			</div>
 			<br>
 			<div class="fir_table" >
-				<p class="fir_table_title" >1Q15 Summary</p>
+				<p class="fir_table_title" ><%= @quart_string + " Summary" %></p>
 				<table class="fir_table" >
 					<tr>
 						<td>Total Pins (New Prod Type Only)</td>

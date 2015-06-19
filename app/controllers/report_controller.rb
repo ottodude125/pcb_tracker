@@ -380,6 +380,38 @@ class ReportController < ApplicationController
     # 5) Designs w/Clarification Issues
     # 5a) For each in 1a check if any clar issues and add to total
     
+    # If user selected an alternate yr/quarter to view then calculate the adjusted offset
+    # for new quarter range we need to calculate/display
+    offset_adjustment = 0 # adjustment to offset variable used below
+    last_full_quarter = ((Date.today.beginning_of_quarter.month - 1) / 3)
+    cur_year = Date.today.strftime("%Y").to_i
+    if params[:quarter_sel]
+      param_year,param_quarter = params[:quarter_sel].split("Q")
+      offset_adjustment = (cur_year - param_year.to_i) * 4 + last_full_quarter - param_quarter.to_i
+      # 2015Q2 => 2014Q1 : (2015 - 2014) * 4 + 2 - 1 = 4 + 2 - 1 = 5
+      # 2015Q2 => 2014Q3 : (2015 - 2014) * 4 + 2 - 3 = 4 + 2 - 3 = 3 
+    end
+    
+    # Build array of yr/quarters for alternate quarter select list in report view
+    @fir_quarters = []
+    yr_en = 2015
+    qr_en = 1
+    yr_st = cur_year
+    qr_st = last_full_quarter
+    range_end = Date.new(yr_en,qr_en*3,1)
+    while (Date.new(yr_st,qr_st*3,1) >= range_end) do 
+      yrq = yr_st.to_s + "Q" + qr_st.to_s # Build yr/q string ex 2015Q1
+      @fir_quarters << [yrq,yrq] # add to select array
+      yr_st = (qr_st == 1) ? (yr_st - 1) : yr_st # if on Q1 then proceed to previous year
+      # reduce qr_en by 1 
+      case qr_st
+      when 1 then qr_st = 4 
+      when 2 then qr_st = 1 
+      when 3 then qr_st = 2 
+      when 4 then qr_st = 3 
+      end
+    end 
+
     @fir_quarterly_history = [] # Values for Top Sheet Graph
     @prod_des_wo_doc_changes = [] # Values for Top Sheet Table One
     @des_wo_doc_changes = [] # Values for Top Sheet Table Two
@@ -401,7 +433,7 @@ class ReportController < ApplicationController
     FabFailureMode.all.each do |fm|
       @fab_iss_mode << {"Mode" => fm.name, "Documentation Issue" => 0}
     end      
-
+    
     # Reverse step through each "OFFSET" to build data for that quarter for Top Sheet
     # On last quarter (most recent) generate values for all other graphs
     numQuarters = 5
@@ -420,11 +452,11 @@ class ReportController < ApplicationController
       pincount = 0.00001
       
       # Get start/end date of offset quarter 
-      quart_date = Date.today << (offset * 3)
+      quart_date = Date.today << ((offset + offset_adjustment) * 3)
       begin_date = quart_date.beginning_of_quarter
       end_date = quart_date.end_of_quarter
       
-      # Get Quarter/Year string for graph and page title
+      # Get Quarter/Year string for graph, page title, tab text, and section titles
       quarter = ((quart_date.beginning_of_quarter.month - 1) / 3) + 1
       fir_quart["Date"] = quarter.to_s + "Q" + quart_date.beginning_of_quarter.strftime("%y") 
       case quarter
@@ -434,6 +466,8 @@ class ReportController < ApplicationController
       when 4 then @quarter = "fourth"
       else @quarter = ""
       end
+      @quarter_num = quarter
+      @year = quart_date.beginning_of_quarter.strftime("%Y")
       
       # Get unique design ids with ftp date in "offset" quarter
       ftps = FtpNotification.find(:all, :conditions => ["created_at > ? AND created_at < ?", begin_date, end_date] )     
@@ -646,7 +680,7 @@ class ReportController < ApplicationController
     numQuarters.step(endQuarter,-1).each do |offset|
       count += 1
       # Get Quarter/Year string for graph and page title
-      quart_date = Date.today << (offset * 3)
+      quart_date = Date.today << ((offset + offset_adjustment) * 3)
       quarter = ((quart_date.beginning_of_quarter.month - 1) / 3) + 1
       fir_quart_date = quarter.to_s + "Q" + quart_date.beginning_of_quarter.strftime("%y") 
 

@@ -55,7 +55,8 @@
 																design_id:drf[:design_id],
 																design_review_id:drf[:design_review_id],
 																fab_deliverables:@fab_deliverables,
-																fab_failure_modes:@fab_failure_modes} %>
+																fab_failure_modes:@fab_failure_modes,
+																fab_houses:drf[:fab_houses]} %>
 							</div>									    	
 	          	<input type="button"
 	          					id="<%= drf[:design_id] %>"
@@ -143,7 +144,8 @@
 																		design_id:drf[:design_id],
 																		design_review_id:drf[:design_review_id],
 																		fab_deliverables:@fab_deliverables,
-																		fab_failure_modes:@fab_failure_modes} %>
+																		fab_failure_modes:@fab_failure_modes,
+																		fab_houses:drf[:fab_houses]} %>
 										</div>									    	
 										<a href="#edit_fir_<%= fab_issue.id %>_design_<%= drf[:design_id] %>" rel="modal:open"><%= image_tag("black_edit.png") %></a>
 						    	</td>

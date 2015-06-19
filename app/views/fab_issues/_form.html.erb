@@ -33,6 +33,12 @@
       </td>
     </tr>
     <tr>
+      <th class="teraheader" align="right">Fabrication House:&nbsp;</th>
+      <td>
+        <%= collection_select(:fab_issue, :fab_house_id, @fab_houses, :id, :name, :include_blank => true) %>
+      </td>
+    </tr>
+    <tr>
       <th class="teraheader" align="right">Cause:&nbsp;</th>
       <td>
         <%= text_area(:fab_issue, :cause, :size => "60x3" ) %>
@@ -77,6 +83,12 @@
       <th class="teraheader" align="right">Failure Mode:&nbsp;</th>
       <td>
         <%= collection_select(:fab_issue, :fab_failure_mode_id, @fab_failure_modes, :id, :name, :include_blank => true) %>
+      </td>
+    </tr>
+    <tr>
+      <th class="teraheader" align="right">Date Resolved:&nbsp;</th>
+      <td>
+        <%= text_field(:fab_issue, :resolved_on, :value => (@fab_issue.new_record? ? "" : @fab_issue.resolved_on.strftime("%B %d, %Y") rescue ""))%>
       </td>
     </tr>
     <tr>
