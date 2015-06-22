@@ -21,18 +21,20 @@
 	<table id="fab_issues_table" class="display">
     <thead>
     	<tr>
-    		<th>Closed</th>
     		<th>RCVD On</th>
     		<th>Deliverable</th>
     		<th>Description</th>
     		<th>Cause</th>
     		<th>Resolution</th>
+    		<th>Fab House</th>
     		<th>Doc Issue?</th>
     		<th>Clean Up Completed On</th>
     		<th>Full Rev?</th>
     		<th>Bare BRD CHG?</th>
     		<th>Failure</th>
     		<th>Created By</th>
+    		<th>Resolved</th>
+    		<th>Closed</th>
     		<th></th>
     		<th></th>
     		<th></th>
@@ -42,12 +44,6 @@
     	<% @fab_issues.each do |fab_issue| %>
         <tr>
           
-          <% if fab_issue.resolved %>
-          	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
-      		<% else %>
-          	<td class="fab_iss_chkbox_col" ><%= image_tag("icon_x.png") %></td>
-          <% end %>
-        	
         	<td class="fab_iss_date_col" ><%= fab_issue.received_on.strftime("%d-%b-%y") %></td>
         	<td><%= fab_issue.fab_deliverable.name %></td>
           
@@ -55,6 +51,8 @@
           <td><%= truncate(fab_issue.cause, :length => 50) %></td>
         	<td><%= truncate(fab_issue.resolution, :length => 50) %></td>
           
+        	<td class="fab_iss_other_col" ><%= FabHouse.find(fab_issue.fab_house_id).name rescue "" %></td>
+
           <% if fab_issue.documentation_issue %>
           	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
       		<% else %>
@@ -81,6 +79,14 @@
 
         	<td class="fab_iss_other_col" ><%= fab_issue.user.last_name_first %></td>
 
+        	<td class="fab_iss_date_col" ><%= fab_issue.resolved_on.strftime("%d-%b-%y") rescue "" %></td>
+
+          <% if fab_issue.resolved %>
+          	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
+      		<% else %>
+          	<td class="fab_iss_chkbox_col" ><%= image_tag("icon_x.png") %></td>
+          <% end %>
+        	
 			    <td><%= link_to image_tag("black_view.png"), fab_issue_path(fab_issue, :design_review_id => @design_review.id) %></td>
           <% if !fab_issue.resolved %>
 			    	<td><%= link_to image_tag("black_edit.png"), edit_fab_issue_path(fab_issue, :design_review_id => @design_review.id) %></td>

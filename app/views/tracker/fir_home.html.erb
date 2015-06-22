@@ -82,12 +82,14 @@
           	<tr>
 			    		<th class="fircol" >RCVD On</th>
 			    		<th>Description</th>
-			    		<th class="fircol" >Closed</th>
+			    		<th class="fircol" >Fab House</th>
 			    		<th class="fircol" >Doc Issue?</th>
 			    		<th class="fircol" >Clean Up Completed On</th>
 			    		<th class="fircol" >Full Rev?</th>
 			    		<th class="fircol" >Bare BRD CHG?</th>
 			    		<th class="fircol" >Created By</th>
+			    		<th class="fircol" >Resolved</th>
+			    		<th class="fircol" >Closed</th>
 			    		<th class="fircol2" >View</th>
 			    		<th class="fircol2" >Edit</th>
 			    		<th class="fircol2" >Delete</th>
@@ -97,11 +99,8 @@
             	<tr class="<%= classname %>" >
             		<td><%= fab_issue.received_on.strftime("%d-%b-%y") %></td>
             		<td class="description" ><%= truncate(fab_issue.description, :length => 110) %></td>
-			          <% if fab_issue.resolved %>
-			          	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
-			      		<% else %>
-			          	<td class="fab_iss_chkbox_col" ><%= image_tag("icon_x.png") %></td>
-			          <% end %>
+						    
+						    <td class="fab_iss_other_col" ><%= FabHouse.find(fab_issue.fab_house_id).name rescue "" %></td>
 						    
 			          <% if fab_issue.documentation_issue %>
 			          	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
@@ -125,6 +124,14 @@
 			          <% end %>
 
 						    <td class="fab_iss_other_col" ><%= fab_issue.user.last_name_first %></td>
+
+								<td class="fab_iss_date_col" ><%= fab_issue.resolved_on.strftime("%d-%b-%y") rescue "" %></td>
+
+			          <% if fab_issue.resolved %>
+			          	<td class="fab_iss_chkbox_col" ><%= image_tag("check_mark.png") %></td>
+			      		<% else %>
+			          	<td class="fab_iss_chkbox_col" ><%= image_tag("icon_x.png") %></td>
+			          <% end %>
 						    
 						    <td>
 									<div id="view_fir_<%= fab_issue.id %>_design_<%= drf[:design_id] %>" class="firdashmodal" style="display:none">
