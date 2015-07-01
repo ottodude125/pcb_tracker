@@ -492,7 +492,7 @@ class ReportController < ApplicationController
         # if design found in scheduler and its brd_class is not P1/P2 and its brd_process is standard then add to list of designs
         if sched_brd_class != "Error" && sched_brd_class.name != "P1" && sched_brd_class.name != "P2" && sched_brd_des_proc.short_name == "SF"
           production_design_ids << d
-          actual_end_pin_ct = sched_brd.actual_ending_pin_count rescue 0
+          actual_end_pin_ct = sched_brd.actual_ending_pin_count.nil? ? 0 : sched_brd.actual_ending_pin_count
           pincount += actual_end_pin_ct          
           
           # If last quarter to process then calculate issues/pins by board for single quarter graph
