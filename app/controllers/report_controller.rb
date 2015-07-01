@@ -492,13 +492,14 @@ class ReportController < ApplicationController
         # if design found in scheduler and its brd_class is not P1/P2 and its brd_process is standard then add to list of designs
         if sched_brd_class != "Error" && sched_brd_class.name != "P1" && sched_brd_class.name != "P2" && sched_brd_des_proc.short_name == "SF"
           production_design_ids << d
-          pincount += sched_brd.actual_ending_pin_count          
+          actual_end_pin_ct = sched_brd.actual_ending_pin_count rescue 0
+          pincount += actual_end_pin_ct          
           
           # If last quarter to process then calculate issues/pins by board for single quarter graph
           if endQuarter == offset
-            doc_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, true).count*1.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
-            cla_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, false).count*1.0000/sched_brd.actual_ending_pin_count).round(5) rescue 0
-            @fir_pins_brds << {"Part Number" => part_num + " w/" + sched_brd.actual_ending_pin_count.to_s + " Pins",
+            doc_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, true).count*1.0000/actual_end_pin_ct).round(5) rescue 0
+            cla_iss_pins = (FabIssue.find_all_by_design_id_and_documentation_issue(d, false).count*1.0000/actual_end_pin_ct).round(5) rescue 0
+            @fir_pins_brds << {"Part Number" => part_num + " w/" + actual_end_pin_ct.to_s + " Pins",
                                 "Documentation Issues/Pins" => doc_iss_pins, 
                                 "Clarification Issues/Pins" => cla_iss_pins}
           end
