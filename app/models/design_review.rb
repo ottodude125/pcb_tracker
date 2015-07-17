@@ -143,6 +143,19 @@ class DesignReview < ActiveRecord::Base
   end
 
 
+  # Checks if design review review type is "Release"
+  #
+  # :call-seq:
+  #   is_release_review?() -> [design_reviews]
+  #
+  #  Returns true or false if is "Release" review
+  #
+  def is_release_review?
+    release_review = ReviewType.get_release
+    self.review_type_id == release_review.id
+  end
+
+
   # Retrieve the roles that the user is a member of for the the review.
   #
   # :call-seq:

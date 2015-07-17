@@ -240,9 +240,19 @@ class Design < ActiveRecord::Base
 
 
 
+
   def surfboards_path
     "/surfboards/#{self.design_center.pcb_path}/#{self.directory_name}/"
   end
+
+  # Returns if design marked all firs complete
+  # :call-seq:
+  #   fir_complete?() -> true/false
+  #
+   def fir_complete?
+     !self.fir_complete.nil?
+   end
+
    
   # Provide the number of approved hours of adjustment that have been
   # applied to the schedule.

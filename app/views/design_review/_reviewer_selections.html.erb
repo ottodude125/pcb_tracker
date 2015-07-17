@@ -67,7 +67,13 @@
 <tr>
   <td>
 
-    <% if @design_review.in_review? %>
+    <% if @design_review.in_review? && !@design_review.design.fir_complete? && @design_review.is_release_review? %>
+      <b>
+        Not accepting results until all FIRs have been completed.<br />
+        Please submit comments to provide any additional feedback.
+      </b>
+
+    <% elsif @design_review.in_review? %>
     
      <b>To change the status of an already submitted review click on "Completed", 
          select desired status for each review, 
