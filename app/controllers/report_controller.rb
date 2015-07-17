@@ -469,14 +469,17 @@ class ReportController < ApplicationController
       @quarter_num = quarter
       @year = quart_date.beginning_of_quarter.strftime("%Y")
       
-      # Get unique design ids with ftp date in "offset" quarter
-      ftps = FtpNotification.find(:all, :conditions => ["created_at > ? AND created_at < ?", begin_date, end_date] )     
-      designs = ftps.map(&:design_id).uniq
+      # Get unique design ids with ftp date in "offset" quarter that are marked fir_complete
+      #ftps = FtpNotification.find(:all, :conditions => ["created_at > ? AND created_at < ?", begin_date, end_date] )
+      ftps = FtpNotification.where("created_at > ? AND created_at < ?", begin_date, end_date).joins(:design).where(:designs => {:fir_complete => true})
+      designs = ftps.map(&:design_id).uniq            
       fir_quart["Designs FTPd"] = designs.count rescue 0
 
+      
       # Get all fir doc/clarification issues for ftp'd designs
       @doc_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", designs, true])
       @clr_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", designs, false])
+            
       fir_quart["Designs w/Documentation Issues"] = @doc_firs.map(&:design_id).uniq.count rescue 0
       fir_quart["Designs w/Clarification Issues"] = @clr_firs.map(&:design_id).uniq.count rescue 0
       
@@ -541,7 +544,7 @@ class ReportController < ApplicationController
         end
         
         # Build data for Quarterly History Table 2
-        des_id_wo_doc_changes = designs - production_design_ids
+        des_id_wo_doc_changes = designs - production_design_ids - @doc_firs.map(&:design_id).uniq
         des_id_wo_doc_changes.each do |p|
           part_num = PartNum.get_design_pcb_part_number(p).name_string
           
