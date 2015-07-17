@@ -27,7 +27,7 @@
              		border="0"
              		cellspacing="0">
 	        <tr class="teraheader">
-	          <th class="fir_dr_link" align="center" valign="bottom" width="33%">
+	          <th class="fir_dr_link" align="center" valign="bottom" width="25%">
 	            <font color="#ffffff">
 	            	<%= link_to(drf[:part_number],
 	                :controller => 'design_review',
@@ -35,11 +35,14 @@
 	                :id         => drf[:design_review_id])%>
 	            </font>
 	          </th>
-	          <th align="center" valign="bottom" width="33%">
+	          <th align="center" valign="bottom" width="25%">
 	            <font color="#ffffff"><%= drf[:review_phase] %></font>
 	          </th>
-	          <th align="center" valign="bottom" width="33%">
+	          <th align="center" valign="bottom" width="25%">
 	            <font color="#ffffff"><%= drf[:review_status] %></font>
+	          </th>
+	          <th align="center" valign="bottom" width="25%">
+	            <font color="#ffffff">FTP'd: <%= drf[:ftp_date] %></font>
 	          </th>
 	        </tr>
 	      </table>
@@ -70,7 +73,8 @@
 		          	<input type="button" 
 		          					class="mark_des_fir_comp_button" 
 		          					value="Confirm All Design FIRs Are Complete"
-			                 	onClick="parent.location='<%= url_for(:controller => 'design', 
+			                 	onClick="if (confirm('Are you sure ALL FIRs have been completed for this design?'))
+			                 					 parent.location='<%= url_for(:controller => 'design', 
 			                 																				:action => 'set_fir_complete',
 			                 																				:design_id => drf[:design_id]) %>'"/>
 							<% end %>

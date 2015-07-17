@@ -10,6 +10,21 @@
       <td align="left">
         <input type="button" value="Return" onClick="parent.location='<%= url_for( :controller => 'design_review', :action => 'view', :id => @design_review.id ) %>'" />
       </td>
+
+      <td align="center">
+				<% if @design_review.design.fir_complete == true %>
+					<p class="fir_complete" >Design Marked All FIRs Complete</p>
+				<% else %>
+        	<input type="button" 
+        					class="mark_des_fir_comp_button" 
+        					value="Confirm All Design FIRs Are Complete"
+                 	onClick="if (confirm('Are you sure ALL FIRs have been completed for this design?'))
+                 						parent.location='<%= url_for(:controller => 'design', 
+                 																				:action => 'set_fir_complete',
+                 																				:design_id => @design_review.design_id) %>'"/>
+				<% end %>
+      </td>
+
       <td align="right">
         <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
       </td>
@@ -103,8 +118,17 @@
   <hr class="div" />
 
   <% if @logged_in_user %>
-    <input type="submit" value="New Fabrication Issue" />
+	  <table width="100%">
+	    <tr>
+	      <td align="center">
+	        <input type="submit" value="New Fabrication Issue" />
+	      </td>
+	    </tr>
+	  </table>
   <% end %>
+
+
+
 
 <% end %>
 
