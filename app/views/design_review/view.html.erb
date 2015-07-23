@@ -13,12 +13,12 @@
      submit_button_class = 'buttonPost'
    %>
 
-<%= form_tag(form_action) do %>
+
 
   <%= render :partial => "design_review_nav" %>
   <hr class="div" />
 
-  <%= hidden_field "design_review", "id" %>
+
 
   <table border="0" width="100%">
     <tr>
@@ -42,34 +42,44 @@
     
     <!-- The user is logged in                                           -->
       <tr valign="top">
-        <td width=530>
-          <table cellpadding="0" cellspacing="0">
-            
-            <% if  @review_type.name != "Planning"%>
-                <% if @my_review_results && !comment_only %>
-                  <%= render :partial => "reviewer_selections" %>
-                <% else %>
-                  <% if  @design_review.posting_count == 0 &&
-                         @design_review.is_reviewer?(@user) %>
-                    <tr>
-                      <td>
-                        <b>This design review has not been posted for review yet.</b>
-                      </td>
-                    </tr>
-    
-                    <tr><td><hr class="div" /></td></tr>
-            
-                  <% end %>
-                <% end %>
-            <% end %>
-            <tr><td><label for="comment" >Comment:</label></td></tr>
-            <tr>
-              <td>
-                <%= text_area("post_comment", "comment", :cols => 60, :rows => 5) %>
-              </td>
-            </tr>
-          </table>
-        </td>
+      	<%= form_tag(form_action) do %>
+  		  	<%= hidden_field "design_review", "id" %>
+	        <td width=530>
+	          <table cellpadding="0" cellspacing="0">
+	            
+	            <% if  @review_type.name != "Planning"%>
+	                <% if @my_review_results && !comment_only %>
+	                  <%= render :partial => "reviewer_selections" %>
+	                <% else %>
+	                  <% if  @design_review.posting_count == 0 &&
+	                         @design_review.is_reviewer?(@user) %>
+	                    <tr>
+	                      <td>
+	                        <b>This design review has not been posted for review yet.</b>
+	                      </td>
+	                    </tr>
+	    
+	                    <tr><td><hr class="div" /></td></tr>
+	            
+	                  <% end %>
+	                <% end %>
+	            <% end %>
+	            <tr><td><label for="comment" >Comment:</label></td></tr>
+	            <tr>
+	              <td>
+	                <%= text_area("post_comment", "comment", :cols => 60, :rows => 5) %>
+	              </td>
+	            </tr>
+			      <tr>
+			        <td align="center">
+			          <input type="submit" value="<%= submit_button_text %>"
+			                 title="<%= submit_button_title %>"
+			                 class="<%= submit_button_class %>" />
+			        </td>
+			      </tr>
+	          </table>
+	        </td>
+      	<% end %>
 
         <td valign="top" align="left">
 
@@ -115,13 +125,7 @@
         </td>
       </tr>
     
-      <tr>
-        <td align="center">
-          <input type="submit" value="<%= submit_button_text %>"
-                 title="<%= submit_button_title %>"
-                 class="<%= submit_button_class %>" />
-        </td>
-      </tr>
+
         
     <% end %>
     
@@ -175,7 +179,7 @@
 
   <hr class="div" />
 
-  <% end %>
+
 
 <%# debug @design_review %>
 <%# debug @user %>

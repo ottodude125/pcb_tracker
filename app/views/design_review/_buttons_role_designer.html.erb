@@ -45,3 +45,16 @@
   </tr>
 <% end %>
 
+<% if @design_review.design.design_center %>
+	<tr>
+		<td align="center">
+		<%= form_tag("/boarddev/web_tools/design_copy/", {:method => 'post', :target => '_blank' }) do %>
+			<%= hidden_field_tag(:Designer, 1) %>
+			<%= hidden_field_tag(:SOURCE, "/hwnet/"+@design_review.design.design_center.pcb_path+"/"+@design_review.design.directory_name+"/") %>
+      <%= submit_tag("Copy Design", class: "small_font_wide_button") %>
+    <% end %>
+		</td>
+	</tr>
+<% end %>	
+
+
