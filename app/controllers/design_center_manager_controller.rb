@@ -67,7 +67,7 @@ class DesignCenterManagerController < ApplicationController
     # design centers.
     params.each { |form_tag, design_center_id|
 
-      next if (form_tag == "action" or form_tag == "controller")
+      next if (form_tag == "action" or form_tag == "controller" or form_tag == "authenticity_token" or form_tag == "utf8")
 
       name, id = form_tag.split('_')
       designer          = User.find(id)
