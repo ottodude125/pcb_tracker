@@ -186,6 +186,20 @@
   </tr>
 
   <tr valign="top">
+    <th align="right">Backplane: </th>
+    <td align="left">
+      <%= @board_design_entry.backplane? ? 'Yes' : 'No' %>
+    </td>
+  
+    <% if @board_design_entry.backplane? %>  
+      <th align="right">Purchased Assembly Number: </th>
+      <td align="left">
+        <%= @board_design_entry.purchased_assembly_number %>
+      </td>
+    <% end %>
+  </tr>
+
+  <tr valign="top">
     <th align="right">Outline Drawing Number: </th>
     <td colspan="3" align="left">
       <%= @board_design_entry.outline_drawing_number %>

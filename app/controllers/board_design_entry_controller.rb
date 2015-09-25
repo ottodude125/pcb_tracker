@@ -972,6 +972,26 @@ class BoardDesignEntryController < ApplicationController
     render(:layout => false)
   end
 
+
+  ######################################################################
+  #
+  # process_backplane
+  #
+  # Description:
+  # This action updates the backplane div when the user selects a
+  # backplane radio button in an edit entry view.  
+  # 
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def process_backplane
+    @board_design_entry = BoardDesignEntry.find(params[:id])
+    @board_design_entry.backplane = params[:value] == "yes" ? 1 : 0
+    render(:layout => false)
+  end
+  
   
   ######################################################################
   #

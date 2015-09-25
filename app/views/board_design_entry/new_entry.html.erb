@@ -233,6 +233,48 @@ jQuery(function($) {
 
 <!-- ********************************************************** -->
   <tr>
+    <%  bkpln = @board_design_entry.backplane? %>
+    <td class="label" valign="top">Backplane: </td>
+    <td class="data" colspan="2" valign="top">
+        <table cellpadding="0" cellspacing="0" border="0">
+          <tr>
+            <td class="label" width="140">Yes: </td>
+            <td class="data" align="left">
+             <%= radio_button_tag('board_design_entry[backplane]', 1,
+               bkpln == true ? true:false,
+               :onclick => "$(\'backplane\').style.display = \'block';" ) %>
+            </td>                
+          </tr>
+          <tr>
+            <td class="label">No: </td>
+            <td class="data" align="left">
+              <%= radio_button_tag('board_design_entry[backplane]', 0, bkpln == true ? false:true,
+                :onclick => "$(\'backplane\').style.display = \'none';" ) %>
+            </td>
+          </tr>
+        </table>
+    </td>
+    <td class="data" colspan="4">
+   <div id="backplane" <%=  bkpln == true ? "style=display:'block'" :
+  "style=\"display: none;\""%> >
+      <table><tr>
+      <td class="label" width="200"
+        title="Identify Purchased Assembly Number">
+      Purchased Assembly Number:
+      </td>
+      <td class="data">
+      <%= text_field("board_design_entry",
+        "purchased_assembly_number",
+        "size" => 16) %>
+      </td>
+      </tr></table>
+   </div>
+    </td>
+  </tr>
+
+
+<!-- ********************************************************** -->
+  <tr>
     <td class="label" valign="top">ASIC/FPGA on Board:</td>
     <td class="data" colspan="2" valign="top">
         <table cellpadding="0" cellspacing="0" border="0">
