@@ -441,26 +441,6 @@ jQuery(function($) {
   </tr>
 
 <!-- ********************************************************** -->
-  <tr valign="top">
-    <td class="label" valign="top">Requested Start Date: </td>
-    <td class="data" colspan="6">
-      <%= date_select(:board_design_entry, 
-                      'requested_start_date',
-                      :start_year => Time.now.strftime("%Y").to_i,
-                      :order      => [:month, :day, :year]) %>
-    </td>
-  </tr>
-
-<!-- ********************************************************** -->
-  <tr valign="top">
-    <td class="label" valign="top">Requested Completion (FTP) Date: </td>
-    <td class="data" colspan="6">
-      <%= date_select(:board_design_entry, 
-                      'requested_completion_date',
-                      :start_year => Time.now.strftime("%Y").to_i,
-                      :order      => [:month, :day, :year]) %>
-    </td>
-  </tr>
   
   <tr>
     <th class="label">Differential Pairs:</th>
