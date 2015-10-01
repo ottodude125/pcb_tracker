@@ -1134,9 +1134,7 @@ class BoardDesignEntry < ActiveRecord::Base
     !self.product_type.blank? && 
     !self.project.blank? &&
     !self.design_directory.blank? &&
-    !self.incoming_directory.blank? &&
-    !self.requested_start_date.blank? &&
-    !self.requested_completion_date.blank?
+    !self.incoming_directory.blank?
   end
   
   ######################################################################
