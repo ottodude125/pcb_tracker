@@ -1876,8 +1876,15 @@ class Design < ActiveRecord::Base
     
     pnum = PartNum.get_design_pcb_part_number(self.id)
     if pnum 
-      directory_name = "pcb" + pnum.prefix + "_" +
-      pnum.number + "_" + pnum.dash + "_" + pnum.revision
+      # If std syntax x-123-00 then
+      if !pnum.pnum[/(^[a-zA-Z0-9]{1,3}-[a-zA-Z0-9]{3})/,1].nil?
+        directory_name = "pcb" + pnum.pnum.gsub(/-/, '_') + "_" + pnum.revision
+      # elseif ets syntax PCB1234G-R1
+      elsif !pnum.pnum[/(^[a-zA-Z0-9]{7})/,1].nil?
+        directory_name = pnum.pnum + "_" + pnum.revision
+      else
+        directory_name = pnum.pnum + "_" + pnum.revision
+      end
       return directory_name
     end
     

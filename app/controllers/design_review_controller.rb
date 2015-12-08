@@ -647,6 +647,9 @@ z
   #
   def change_part_numbers
     @design_review   = DesignReview.find(params[:id])
+    @part_nums_script = PartNum.get_all_pnums
+    @brd_part_nums_script = PartNum.get_all_pnums_for_design(@design_review.design_id)
+     
     if ! params['pnums'].blank?
       @rows = flash['rows']
     else
@@ -657,6 +660,7 @@ z
     (@rows.size+1..5).each do
       @rows << PartNum.new( :use => "pcba",  :revision => "a" )
     end
+     
     @heading = "#{@design_review.design.name} - Modify Part Numbers"
     @next_value    = "Update Part Numbers"
     @next_action   = { :action => 'update_part_numbers', :id => @design_review.id }
@@ -689,7 +693,7 @@ z
 
     pnums = []
     params[:rows].values.each do |row| 
-      if !row[:prefix].blank? || !row[:number].blank? || !row[:dash].blank?
+      if !row[:pnum].blank?
          pnums << PartNum.new(row)
       end
     end
@@ -702,8 +706,8 @@ z
     flash['rows'] = pnums  #to pass to "change_part_numbers"
     
     #check for a valid PCB part number
-    unless pcb && pcb.valid_pcb_part_number?
-      flash['notice'] = "A valid PCB part number like '123-456-78' must be specified"
+    unless pcb && pcb.valid_part_number?
+      flash['notice'] = "A valid PCB part number containing only letters, numbers or dashes must be specified"
       redirect_to( :action => 'change_part_numbers',
         :id => design_review.id,
         :pnums => 1 ) and return
@@ -713,7 +717,7 @@ z
     fail = 0
     flash['notice'] = ''
     pnums.each do | pnum |
-      unless pnum.valid_pcb_part_number?
+      unless pnum.valid_part_number?
           flash['notice'] += "Part number #{pnum.name_string} invalid<br>\n"
           fail = 1
       end

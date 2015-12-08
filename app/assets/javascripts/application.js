@@ -62,6 +62,97 @@ $(document).ready(function() {
 	         }
 	     );
 	  });
+
+	  $(".part_num_input:input").change(function() {
+		  var count, value;// number of times num appears on page, value of num just entered
+		  $(".part_number_error").empty();
+		  $(".part_number_error").hide();
+		  $(this).val($(this).val().toLocaleUpperCase());
+		  $(this).removeClass("highlight");
+		  count = 0;
+		  value = $(this).val();
+		  // count how many times the number appears on the page. If more than once its a duplicate
+		  $(".part_num_input").each(function() {
+		    if ($(this).val() === value) {
+		      return count += 1;
+		    }
+		  });
+		  // if num used more than once on board highlight cell and tell user
+		  if (count > 1) {
+		    $(this).addClass("highlight");
+		    $(".part_number_error").show();
+		    return $(".part_number_error").append(" ERROR: You have used " + value + " more than once on this page. ");
+		  }
+	  	  if ($.inArray(value, part_nums) > -1) {
+	        $(this).addClass("highlight");
+	        $(".part_number_error").show();
+	        $(".part_number_error").append(" ERROR: " + value + " has already been used as a Part # on another board.");
+	      }
+		});
+	  //############## MULTIPLE CHECKS ON PAGE SUBMIT  ###############
+	  // 1) PCB Number is set
+	  // 2) PCB number is unique
+	  // 3) PCB/PCBA number is not used more than once on this board
+	  $("#part_num_form_submit").click(function(event) {
+		  var duplicate_number, stop_submit;
+		  stop_submit = false;
+		  $(".part_number_error").empty();
+		  $(".part_number_error").hide();
+		  $(".pcb").removeClass("highlight");
+		  // 1) Check that a PCB Number has been created. If not highlight field, remove submit animation, and stop submit
+		  if ($(".pcb").val() === '') {
+		    $(".pcb").addClass("highlight");
+		    stop_submit = true;
+		    $(".part_number_error").show();
+		    $(".part_number_error").append(" ERROR: PCB Number cannot be empty. <br>");
+		  }
+		  
+		  // 2) Make sure PCB/PCBA number has not been used as a number on another board already 
+		  // 3) Make sure PCB/PCBA number is not used more than once on this board
+		  duplicate_number = false;
+		  $(".part_num_input:input").each(function() {
+		    var addedclass, count, value;
+		    value = $(this).val();
+		    if(value) {
+			    $(this).removeClass("highlight");
+			    addedclass = false;
+			    count = 0;
+			    value = $(this).val();
+			    // count how many times the number appears on the page. If more than once its a duplicate
+			    $(".part_num_input").each(function() {
+			      if ($(this).val() === value) {
+			        return count += 1;
+			      }
+			    });
+			    // if num used more than once on board highlight cell, stop submit
+			    if (count > 1) {
+			      $(this).addClass("highlight");
+			      $(".part_number_error").show();
+			      duplicate_number = true;
+			      stop_submit = true;
+			    }
+			    // check if the number was originally one of the ones assigned to this board.
+			    // If it was ignore it. The user is just going back to use that number
+			    if (!($.inArray(value, brd_part_nums) > -1)) {
+				    // check if the number is in the pcb array of used numbers passed in from the view. if it is 
+				    // then highlight the cell and stop submit because this number has already been used as a pcb         
+			    	if ($.inArray(value, part_nums) > -1) {
+				      $(this).addClass("highlight");
+				      $(".part_number_error").show();
+				      $(".part_number_error").append(" ERROR: " + value + " has already been used as a Part # on another board. <br>");
+				      return stop_submit = true;
+			    	}
+			    }
+		    }
+		  });
+		  if (duplicate_number) {
+		    $(".part_number_error").append(" ERROR: You have used a Part # more than once on this board. <br>");
+		  }
+		  // FINALLY: If anything above caused an error then stop submit and hide animation
+		  if (stop_submit) {
+		    return event.preventDefault();
+		  }
+		});
 });
 
 

@@ -7,8 +7,10 @@
 
 
 <SCRIPT type="text/javascript">
+	window.part_nums = <%= raw @part_nums_script.to_json %>;
+	window.brd_part_nums = <%= raw @brd_part_nums_script.to_json %>;
   /* This code makes the jump from the part number prefix to the
-  part number number.
+     part number number.
   */
   function doNext(el)
   {
@@ -23,22 +25,30 @@
       }
     }
   }
-
 </SCRIPT>
+
 <% flash['errors'] %>
 <hr class="div" />
 
 <%= form_tag( @next_action,{ :planning_review => @planning, :name => "part_number_entry"}) do %>
 
+	<table align="center">
+		<tr>
+		  <td colspan=4 class="part_number_error" >
+		    <%= "" %>
+		  </td>
+		</tr>		
+	</table>
   <% @tabindex = 0  %>
   <% row_num = 0 %>
   <table align="center" border="1" cellspacing="5">
-     <% @rows.each do | row | %>
+    <% @rows.each do | row | %>
       <%= render(:partial    => "shared/pn_row",
         :object   => row,
         :locals => {:row_num => row_num += 1 } ) %>
     <% end %>
   </table>
+	
   <p align="center"><input type="reset" name="Reset" value="Reset Entries"/></p>
   <table align="center" width="500" border="5">
     <tr>
@@ -80,7 +90,7 @@
                  onClick="parent.location='<%= url_for( @cancel_action ) %>'" />
       </td>
       <td align="right">
-          <input type="submit" class="form_submit" name="<%=@planning%>" value="<%=@next_value%>" />
+          <input type="submit" id="part_num_form_submit" class="form_submit" name="<%=@planning%>" value="<%=@next_value%>" />
       </td>
     </tr>
   </table>

@@ -31,7 +31,7 @@ PcbTracker::Application.configure do
       port:                 587,
       domain:               'gmail.com',
       user_name:            'ottodude125@gmail.com',
-      password:             'Gr0phic0l',
+      password:             'my1Apple',
       authentication:       'plain',
       enable_starttls_auto: true  }  
   end

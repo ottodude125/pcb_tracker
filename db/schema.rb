@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150925145732) do
+ActiveRecord::Schema.define(:version => 20151124173423) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :default => 0, :null => false
@@ -626,14 +626,15 @@ ActiveRecord::Schema.define(:version => 20150925145732) do
   end
 
   create_table "part_nums", :force => true do |t|
-    t.string  "prefix",                :limit => 3
-    t.string  "number",                :limit => 3
-    t.string  "dash",                  :limit => 2
+    t.string  "prefix_old",            :limit => 3
+    t.string  "number_old",            :limit => 3
+    t.string  "dash_old",              :limit => 2
     t.string  "revision",              :limit => 1
     t.string  "use",                   :limit => 5
     t.integer "board_design_entry_id"
     t.integer "design_id"
     t.string  "description",           :limit => 80
+    t.string  "pnum"
   end
 
   create_table "permissions", :force => true do |t|

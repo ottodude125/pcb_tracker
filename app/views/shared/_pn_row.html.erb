@@ -21,37 +21,15 @@
            onKeyUp="doNext(this)" />
      <% end %>
   </td>
-  <td class="data">
-    <INPUT TYPE="text"
-           name="rows[<%=row_num%>][prefix]"
-           size="3"
-           MAXLENGTH=3
-           TABINDEX=<%=@tabindex += 1%>
-           value="<%=pn_row.prefix%>"
-           onKeyUp="doNext(this)" />
-  </td>
-
-  <td class="data">-</td>
 
   <td class="data">
     <INPUT TYPE="text"
-           name="rows[<%=row_num%>][number]"
-           size="3"
-           MAXLENGTH="3"
+    			 class="<%= pn_row.use %> part_num_input"
+           name="rows[<%=row_num%>][pnum]"
+           size="30"
+           MAXLENGTH="15"
            TABINDEX=<%=@tabindex += 1%>
-           value="<%=pn_row.number%>"
-           onKeyUp="doNext(this)" />
-  </td>
-
-  <td class="data">-</td>
-
-  <td class="data">
-    <INPUT TYPE="text"
-           name="rows[<%=row_num%>][dash]"
-           size="2"
-           MAXLENGTH="2"
-           TABINDEX=<%=@tabindex += 1%>
-           value="<%=pn_row.dash%>"
+           value="<%=pn_row.pnum%>"
            onKeyUp="doNext(this)" />
   </td>
   <td class="data">-</td>
