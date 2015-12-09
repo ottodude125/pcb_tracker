@@ -613,7 +613,7 @@ class BoardDesignEntry < ActiveRecord::Base
   def pcb_number
     pnum=PartNum.get_bde_pcb_part_number(self.id)
     if pnum
-	pnum.name_string
+      pnum.name_string
     else
         ""
     end

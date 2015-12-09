@@ -31,7 +31,7 @@
 <hr class="div" />
 
 <%= form_tag( @next_action,{ :planning_review => @planning, :name => "part_number_entry"}) do %>
-
+	<p style="text-align:center;"><b>NOTE: Part Numbers may only contain leters, numbers, and dashes(-)</b></p>
 	<table align="center">
 		<tr>
 		  <td colspan=4 class="part_number_error" >
@@ -52,7 +52,7 @@
   <p align="center"><input type="reset" name="Reset" value="Reset Entries"/></p>
   <table align="center" width="500" border="5">
     <tr>
-      <th valign="top" class='teraheader'>NOTE</th>
+      <th valign="top" class='teraheader'>STD ONLY NOTES</th>
     </tr>
     <tr bgcolor="#cfcfcf">
       <td>

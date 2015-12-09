@@ -464,4 +464,25 @@ class PartNum < ActiveRecord::Base
     brd_pnums = PartNum.where(:design_id => design_id).pluck(:pnum)
   end
 
+  ######################################################################
+  #
+  # get_all_pnums_for_bde(design_id)
+  #
+  # Description:
+  # This method returns an array of part numbers from pnum column for a
+  # given board_design_entry_id
+  #
+  # Parameters:
+  # board_design_entry_id
+  #
+  # Return value:
+  # array of part_nums
+  #
+  ######################################################################
+  #
+  def self.get_all_pnums_for_bde(board_design_entry_id)
+    brd_pnums = PartNum.where(:board_design_entry_id => board_design_entry_id).pluck(:pnum)
+  end
+
+
 end
