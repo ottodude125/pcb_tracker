@@ -384,7 +384,10 @@ class ReportController < ApplicationController
     # for new quarter range we need to calculate/display
     offset_adjustment = 0 # adjustment to offset variable used below
     last_full_quarter = ((Date.today.beginning_of_quarter.month - 1) / 3)
-    cur_year = Date.today.strftime("%Y").to_i
+    # If start of new year set last quarter to 4
+    last_full_quarter = (last_full_quarter == 0) ? 4 : last_full_quarter
+    # If start of new year set cur_year to last year
+    cur_year = (last_full_quarter == 4) ? Date.today.prev_year.strftime("%Y").to_i : Date.today.strftime("%Y").to_i
     if params[:quarter_sel]
       param_year,param_quarter = params[:quarter_sel].split("Q")
       offset_adjustment = (cur_year - param_year.to_i) * 4 + last_full_quarter - param_quarter.to_i

@@ -13,7 +13,7 @@
 class PingMailer < ActionMailer::Base
   helper :time
   default  :from  => Pcbtr::SENDER
-  default  :bcc   => []
+  default  :bcc   => ["jonathan.katon@teradyne.com"]
 
   ######################################################################
   #
