@@ -297,14 +297,16 @@ class PartNum < ActiveRecord::Base
   #
   ######################################################################
   def name_string_with_description
-    "#{self.pnum} #{self.description}"
+    pcbadescription = self.description? ?   self.description : "(Description not set)"
+    "#{self.pnum} #{pcbadescription}"
   end
   #def name_string_with_description_OBS
   #  "#{self.prefix}-#{self.number}-#{self.dash} #{self.description}"
   #end
   
   def part_number_name_with_description
-    "#{self.pnum} #{self.description}"
+    pcbadescription = self.description? ?   self.description : "(Description not set)"
+    "#{self.pnum} #{pcbadescription}"
   end
   #def part_number_name_with_description_OBS
   #  "#{self.prefix}-#{self.number}-#{self.dash} #{self.description}"

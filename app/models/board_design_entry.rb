@@ -646,7 +646,7 @@ class BoardDesignEntry < ActiveRecord::Base
   # pcba_part_number
   #
   # Description:
-  # This method returns the pcba part number.
+  # This method returns all of the pcba part numbers and descriptions in a string.
   #
   ######################################################################
   #

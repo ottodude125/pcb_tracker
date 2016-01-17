@@ -106,13 +106,21 @@
     </td>
   </tr>
   
-  <tr valign="top">
-    <th align="right" width="25%">PCBA Part Number(s)/Description(s): </th>
-    <td width="25%" align="left" colspan="3">
-      <%= @board_design_entry.pcbas_string.html_safe %>
-    </td>
-  </tr>
-  
+  <%- @board_design_entry.part_nums.each do |pn| %>
+  	<% if pn.use.eql? "pcba" %>
+		  <tr valign="top">
+		    <th align="right" width="25%">PCBA Part Number/Description: </th>
+		    <td width="25%" align="left">
+		      <%= pn.name_string_with_description %>
+		    </td>
+		    <th align="right" width="25%">Revision: </th>
+		    <td width="25%" align="left">
+		      <%= pn.rev_string %>
+		    </td>
+		  </tr>  	
+  	<% end %>
+  <% end %>
+    
   <tr valign="top">
     <th align="right" width="25%">Originator: </th>
     <td width="25%" align="left">

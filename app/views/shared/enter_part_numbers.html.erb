@@ -31,7 +31,11 @@
 <hr class="div" />
 
 <%= form_tag( @next_action,{ :planning_review => @planning, :name => "part_number_entry"}) do %>
-	<p style="text-align:center;"><b>NOTE: Part Numbers may only contain leters, numbers, and dashes(-)</b></p>
+	<p style="text-align:center;"><b>
+		NOTE: Part numbers may only contain letters, numbers, and dashes(-)
+		<br>
+		Examples of acceptible syntax: 123-456-78, PCB1234, PCB1234G-R1
+		</b></p>
 	<table align="center">
 		<tr>
 		  <td colspan=4 class="part_number_error" >
