@@ -297,14 +297,16 @@ class PartNum < ActiveRecord::Base
   #
   ######################################################################
   def name_string_with_description
-    "#{self.pnum} #{self.description}"
+    pcbadescription = self.description? ?   self.description : "(Description not set)"
+    "#{self.pnum} #{pcbadescription}"
   end
   #def name_string_with_description_OBS
   #  "#{self.prefix}-#{self.number}-#{self.dash} #{self.description}"
   #end
   
   def part_number_name_with_description
-    "#{self.pnum} #{self.description}"
+    pcbadescription = self.description? ?   self.description : "(Description not set)"
+    "#{self.pnum} #{pcbadescription}"
   end
   #def part_number_name_with_description_OBS
   #  "#{self.prefix}-#{self.number}-#{self.dash} #{self.description}"
@@ -463,5 +465,26 @@ class PartNum < ActiveRecord::Base
   def self.get_all_pnums_for_design(design_id)
     brd_pnums = PartNum.where(:design_id => design_id).pluck(:pnum)
   end
+
+  ######################################################################
+  #
+  # get_all_pnums_for_bde(design_id)
+  #
+  # Description:
+  # This method returns an array of part numbers from pnum column for a
+  # given board_design_entry_id
+  #
+  # Parameters:
+  # board_design_entry_id
+  #
+  # Return value:
+  # array of part_nums
+  #
+  ######################################################################
+  #
+  def self.get_all_pnums_for_bde(board_design_entry_id)
+    brd_pnums = PartNum.where(:board_design_entry_id => board_design_entry_id).pluck(:pnum)
+  end
+
 
 end

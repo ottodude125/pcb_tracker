@@ -736,7 +736,8 @@ z
     design_pnum = PartNum.get_design_pcb_part_number(design_id) 
     
     pnums.each do | pnum |
-      db_pnum = pnum.get_part_number
+      db_pnum = PartNum.find(:first, 
+                              :conditions => "pnum='#{pnum.pnum}' AND revision='#{pnum.revision}'"  ) 
       if  ! db_pnum.blank?  && db_pnum.design_id != design_id 
           flash['notice'] += "Part number #{pnum.name_string} exists<br>\n"
           fail = 1
@@ -745,7 +746,7 @@ z
     if fail == 1      
       redirect_to( :action => 'change_part_numbers',
         :id => design_review.id,
-        :pnums => 1  ) and return
+        :pnums => pnums  ) and return
     end
 
     # get current numbers to add to comment
@@ -763,7 +764,7 @@ z
     fail = 0
     flash['notice'] = ''
     pnums.each do |pnum|
-      unless pnum[:prefix] == ""
+      unless pnum[:penum] == ""
         pnum.design_id = design_id
         pnum.board_design_entry_id = bde_id
         if ! pnum.save

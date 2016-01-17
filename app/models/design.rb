@@ -1873,17 +1873,16 @@ class Design < ActiveRecord::Base
   ######################################################################
   #
   def directory_name
-    
-    pnum = PartNum.get_design_pcb_part_number(self.id)
-    if pnum 
+    bde_pnum = PartNum.get_design_pcb_part_number(self.id)
+    if bde_pnum 
       # If std syntax x-123-00 then
-      if !pnum.pnum[/(^[a-zA-Z0-9]{1,3}-[a-zA-Z0-9]{3})/,1].nil?
-        directory_name = "pcb" + pnum.pnum.gsub(/-/, '_') + "_" + pnum.revision
+      if !bde_pnum.pnum[/(^[a-zA-Z0-9]{1,3}-[a-zA-Z0-9]{3})/,1].nil?
+        directory_name = "pcb" + bde_pnum.pnum.gsub(/-/, '_') + "_" + bde_pnum.revision
       # elseif ets syntax PCB1234G-R1
-      elsif !pnum.pnum[/(^[a-zA-Z0-9]{7})/,1].nil?
-        directory_name = pnum.pnum + "_" + pnum.revision
+      elsif !bde_pnum.pnum[/(^[a-zA-Z]{3}[0-9]{4}[a-zA-Z0-9\-]*$)/,1].nil?
+        directory_name = bde_pnum.pnum.gsub(/-/, '_').downcase
       else
-        directory_name = pnum.pnum + "_" + pnum.revision
+        directory_name = bde_pnum.pnum + "_" + bde_pnum.revision
       end
       return directory_name
     end
@@ -2071,7 +2070,7 @@ class Design < ActiveRecord::Base
         pcbas << "<br>" + pcba.name_string_with_description
       end
     }
-    pcbas
+    pcbas.html_safe
   end
 
   ######################################################################
@@ -2094,7 +2093,7 @@ class Design < ActiveRecord::Base
         pcbas << "<br>" + pcba.name_string
       end
     }
-    pcbas
+    pcbas.html_safe
   end
  ######################################################################
   #

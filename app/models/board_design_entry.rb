@@ -613,7 +613,7 @@ class BoardDesignEntry < ActiveRecord::Base
   def pcb_number
     pnum=PartNum.get_bde_pcb_part_number(self.id)
     if pnum
-	pnum.name_string
+      pnum.name_string
     else
         ""
     end
@@ -646,7 +646,7 @@ class BoardDesignEntry < ActiveRecord::Base
   # pcba_part_number
   #
   # Description:
-  # This method returns the pcba part number.
+  # This method returns all of the pcba part numbers and descriptions in a string.
   #
   ######################################################################
   #
