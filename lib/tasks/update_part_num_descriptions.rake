@@ -103,7 +103,8 @@ namespace :update_part_num do
       # Grab all the part nums to each design and update their descriptions and create comment on current design review
       part_nums.each do |pn|
         @numparts += 1
-        number = pn.prefix + "-" + pn.number + "-" + pn.dash 
+        #number = pn.prefix + "-" + pn.number + "-" + pn.dash
+        number = pn.pnum 
         oracle_descrip = OraclePartNum.find_by_number(number)
         #puts "'#{number}' '#{oracle_descrip.description ? oracle_descrip.description : "NULL" }'"
         number = number + " " + pn.use
