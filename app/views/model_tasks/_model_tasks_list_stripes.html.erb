@@ -1,0 +1,31 @@
+<!-- View:    Model Tasks                                         -->
+<!-- Purpose: Displays the line items on for the model tasks in   -->
+<!--          index view.                                       -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<tr align="center" class="<%= model_tasks_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+  	<%= link_to "#{model_tasks_list_stripes.request_number}", edit_model_task_path(model_tasks_list_stripes) %>
+  </td>
+  <td><%=h model_tasks_list_stripes.description %></td>
+  <td>
+    <%= model_tasks_list_stripes.created_at.format_dd_mon_yy('timestamp')  %>
+  </td>
+  <td>
+    <% if model_tasks_list_stripes.completed? %>
+      <%= model_tasks_list_stripes.completed_at.format_dd_mon_yy('timestamp')  %>
+    <% end %>
+  </td>
+  <td><%= model_tasks_list_stripes.state %></td>
+  <td>
+  	<% if model_admin %>
+	    <%= link_to('Delete', model_tasks_list_stripes,
+	                :confirm => "Do you really want to delete #{model_tasks_list_stripes.request_number}? This is NON reversible and ALL data will be permanently deleted!!!",
+	                :method  => :delete ) %>        	
+  	<% end %>
+  </td>
+</tr>
+

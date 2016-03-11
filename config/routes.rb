@@ -13,6 +13,18 @@
 PcbTracker::Application.routes.draw do
 
 
+  resources :model_types
+
+
+  resources :model_comments
+
+
+  resources :model_documents
+
+
+  resources :model_tasks
+
+
   resources :fab_quarterly_statuses
 
 

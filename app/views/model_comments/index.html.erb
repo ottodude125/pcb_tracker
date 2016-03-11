@@ -1,0 +1,21 @@
+<h1>Listing model_comments</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @model_comments.each do |model_comment| %>
+  <tr>
+    <td><%= link_to 'Show', model_comment %></td>
+    <td><%= link_to 'Edit', edit_model_comment_path(model_comment) %></td>
+    <td><%= link_to 'Destroy', model_comment, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Model comment', new_model_comment_path %>
