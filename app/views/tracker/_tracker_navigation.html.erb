@@ -98,7 +98,7 @@
             <% end %>
         <% end %> <!-- End !designer && !@reviewer && !@pcb_admin -->
    
-        <% if !@designer && !@reviewer && !@basic_user %>    
+        <!--% if !@designer && !@reviewer && !@basic_user %>    
 
             <!-- ############################################################ -->
             <!-- Active Eco Cad Tasks                                         -->
@@ -119,8 +119,31 @@
                     </td>
                 </tr>
             <% end %>
-        <% end %> <!-- End !designer && !@reviewer -->
+        <!--% end %> <!-- End !designer && !@reviewer -->
     
+
+        <!-- ############################################################ -->
+        <!-- Active Model Tasks                                         -->
+        <!-- ############################################################ -->
+        <% if @logged_in_user.is_a_role_member?('Modeler') || 
+        		@logged_in_user.is_a_role_member?('Modeler Admin') ||
+        		(@logged_in_user.is_an_lcr_designer? && ModelTask.find_open.size > 0) %>
+            <tr>
+                <th class="teraheader">
+                    CAE/CAD MODEL TASKING
+                </th>
+            </tr>
+            <% if @logged_in_user.is_an_lcr_designer? && ModelTask.find_open.size > 0 %>
+                <tr bgcolor="yellow">
+            <% else %>
+                <tr>
+            <% end %>
+                <td align="center">
+                    <%= link_to("Active Model Tasks", model_tasks_url) %>
+                </td>
+            </tr>
+        <% end %>
+
         
         <tr class="teraheader"><th>Reports</th></tr>
 

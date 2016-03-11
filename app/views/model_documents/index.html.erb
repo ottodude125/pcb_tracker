@@ -1,0 +1,21 @@
+<h1>Listing model_documents</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @model_documents.each do |model_document| %>
+  <tr>
+    <td><%= link_to 'Show', model_document %></td>
+    <td><%= link_to 'Edit', edit_model_document_path(model_document) %></td>
+    <td><%= link_to 'Destroy', model_document, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Model document', new_model_document_path %>

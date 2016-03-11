@@ -1,0 +1,30 @@
+<!-- View:    new                                         -->
+<!-- Purpose: Displays the new view to create a Model Task.      -->
+<!-- ********************************************************** -->
+<!-- $Id$   -->
+<!-- ********************************************************** -->
+
+<% @heading =  "New Model Task" %>
+
+<% model_admin = @logged_in_user.is_a_role_member?('Modeler Admin') %>
+<% modeler     = @logged_in_user.is_a_role_member?('Modeler') %>
+<% lcrdesigner = @logged_in_user && @logged_in_user.is_an_lcr_designer? %>
+
+<%= form_for(@model_task, :html => {:multipart => true} ) do |f| %>
+
+<%= render :partial => "view_task", 
+					 :locals=> { :f => f, :model_admin => model_admin, :modeler => modeler, :lcrdesigner => lcrdesigner } %>
+
+ <table align="center" width="880" border="0">
+   <tr><td colspan="4"><hr class="div" /></td></tr>
+    <tr>
+      <td align="left"   width="440"><%= f.submit "Create" %></td>  
+      <td align="right" width="440">
+        <%= link_to 'Return to Model Task List', model_tasks_path %>
+      </td>
+    </tr>
+    <tr><td colspan="4"><hr class="div" /></td></tr>
+  </table>
+
+<% end %>
+

@@ -1,0 +1,287 @@
+<!-- View:    view model  task                                    -->
+<!-- Purpose: Displays the Model task                             -->
+<!-- ********************************************************** -->
+<!-- $Id$   -->
+<!-- ********************************************************** -->
+
+	<%= f.hidden_field :user_id %>
+	
+  <table align="center" border="0">
+
+    <% unless @model_task.errors[:request_number].blank? %>
+      <tr>
+        <td bgcolor="yellow">&nbsp;</td>
+        <td>
+          <font color="red"><b><%= @model_task.errors[:request_number] %></b></font>
+        </td>
+      </tr>
+   <% end  %>
+
+    <tr>
+      <th class="teraheader" align="right" width="250">Request Number:&nbsp;</th>
+      <td width="600">
+        <% if model_admin %>
+          <%= f.text_field :request_number, :size => '12' %>
+        <% else %>
+          <%=h @model_task.request_number %>
+        <% end %>
+      </td>
+    </tr>
+
+    <% unless @model_task.errors[:description].blank? %>
+      <tr>
+        <td bgcolor="yellow">&nbsp;</td>
+        <td>
+          <font color="red"><b><%= @model_task.errors[:description] %></b></font>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <th class="teraheader" align="right" width="250">Description:&nbsp;</th>
+      <td width="600">
+        <% if model_admin %>
+          <%= f.text_field :description, :size => '60' %>
+        <% else %>
+          <%=h @model_task.description %>
+        <% end %>
+      </td>
+    </tr>
+
+    <% unless @model_task.errors[:mfg].blank? %>
+      <tr>
+        <td bgcolor="yellow">&nbsp;</td>
+        <td>
+          <font color="red"><b><%= @model_task.errors[:mfg] %></b></font>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <th class="teraheader" align="right" width="250">Manufacturer:&nbsp;</th>
+      <td width="600">
+        <% if model_admin %>
+          <%= f.text_field :mfg, :size => '60' %>
+        <% else %>
+          <%=h @model_task.mfg %>
+        <% end %>
+      </td>
+    </tr>
+
+    <% unless @model_task.errors[:mfg_num].blank? %>
+      <tr>
+        <td bgcolor="yellow">&nbsp;</td>
+        <td>
+          <font color="red"><b><%= @model_task.errors[:mfg_num] %></b></font>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <th class="teraheader" align="right" width="250">Manufacturer #:&nbsp;</th>
+      <td width="600">
+        <% if model_admin %>
+          <%= f.text_field :mfg_num, :size => '60' %>
+        <% else %>
+          <%=h @model_task.mfg_num %>
+        <% end %>
+      </td>
+    </tr>
+
+
+    <% unless @model_task.errors[:model_types].blank? %>
+      <tr>
+        <td bgcolor="yellow">&nbsp;</td>
+        <td>
+          <font color="red"><b><%= @model_task.errors[:model_types] %></b></font>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <th class="teraheader" align="right">Model Type:&nbsp;</th>
+      <td>
+        <% if model_admin %>
+          <table border="0" width="200px" cellpadding="0" cellspacing="0">
+          	<tr>
+            	<% @model_types.each do |mt| %>
+              	<td width="50%">
+                  <input type="checkbox" name="model_task[model_type_ids][]"
+                         value="<%= mt.id %>"
+                         <% if @model_task.model_types.include?(mt) || @model_task.new_record? %> checked="checked" <% end %> />
+                  <%= mt.name %>
+                </td>
+              <% end %>
+            </tr>
+          </table>
+        <% else %>
+          <%= @model_task.model_types.collect { |mt| mt.name }.join(', ') %>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <th class="teraheader" align="right">Started&nbsp;</th>
+      <td>
+      	<% if !@model_task.new_record? %>
+        	<%= @model_task.created_at.format_dd_mon_yy('timestamp') %>
+      	<% else %>
+      		Not Started
+      	<% end %>
+      </td>
+    </tr>
+
+    <% unless @model_task.errors[:cae_model].blank? %>
+      <tr>
+        <td bgcolor="yellow">&nbsp;</td>
+        <td>
+          <font color="red"><b><%= @model_task.errors[:cae_model] %></b></font>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <th class="teraheader" align="right" width="250">CAE Model(s):&nbsp;</th>
+      <td width="600">
+        <% if model_admin || modeler || lcrdesigner  %>
+          <%= f.text_field :cae_model, :size => '60' %>
+        <% else %>
+          <%=h @model_task.cae_model %>
+        <% end %>
+      </td>
+    </tr>
+
+    <% unless @model_task.errors[:cad_model].blank? %>
+      <tr>
+        <td bgcolor="yellow">&nbsp;</td>
+        <td>
+          <font color="red"><b><%= @model_task.errors[:cad_model] %></b></font>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <th class="teraheader" align="right" width="250">CAD Model(s):&nbsp;</th>
+      <td width="600">
+        <% if model_admin || modeler || lcrdesigner  %>
+          <%= f.text_field :cad_model, :size => '60' %>
+        <% else %>
+          <%=h @model_task.cad_model %>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <th class="teraheader" align="right">Completed:&nbsp;</th>
+      <td>
+        <table width="100%">
+          <tr>
+            <% if ((model_admin || modeler || lcrdesigner ) && !@model_task.closed?) %>
+              <td width="30">
+                <%= check_box("model_task", "completed")%>
+              </td>
+            <% elsif @model_task.closed? %>
+              <td width="30">&nbsp;</td>
+            <% end %>
+            <td>
+              <% if @model_task.completed? %>
+                <table width="100%">
+                  <tr>
+                    <th width="120" class="teraheader" align="right">Complete At:&nbsp;</th>
+                    <td>
+                      <%= @model_task.completed_at.format_dd_mon_yy('timestamp') %>
+                    </td>
+                  </tr>
+                </table>
+              <% else %>
+                <% if model_admin || modeler || lcrdesigner %>
+                  <b>Mark Task Complete</b>
+                <% else %>
+                  <b>No</b>
+                <% end %>
+              <% end %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+
+    <% if @model_task.completed? %>
+      <tr>
+        <th class="teraheader" align="right">Closed:&nbsp;</th>
+        <td>
+          <table width="100%">
+            <tr>
+              <% if model_admin %>
+                <td width="30">
+                  <%= check_box("model_task", "closed")%>
+                </td>
+              <% else %>
+                <td width="30">&nbsp;</td>
+              <% end %>
+              <td align="left">
+                <% if @model_task.closed? %>
+                  <table width="100%">
+                    <tr>
+                      <th width="120" class="teraheader" align="right">Closed At:&nbsp;</th>
+                      <td>
+                        <%= @model_task.closed_at.format_dd_mon_yy('timestamp') %>
+                      </td>
+                    </tr>
+                  </table>
+                <% else %>
+                  <% if model_admin %>
+                    <b>Mark Task Closed</b>
+                  <% else %>
+                    <b>No</b>
+                  <% end %>
+                <% end %>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    <% end %>
+    <tr>
+      <th class="teraheader" align="right" valign="top">Comment:&nbsp;</th>
+      <td><%= text_area("model_comment", "comment", :cols=>"60", :rows=>"5") %></td>
+    </tr>
+
+    <tr>
+      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
+      <td><%= file_field('model_attachment1', 'document') %></td>
+    </tr>
+    <tr>
+      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
+      <td><%= file_field('model_attachment2', 'document') %></td>
+    </tr>
+    <tr>
+      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
+      <td><%= file_field('model_attachment3', 'document') %></td>
+    </tr>
+    <tr>
+      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
+      <td><%= file_field('model_attachment4', 'document') %></td>
+    </tr>
+    <tr>
+      <th align="right" class="teraheader">Add an attachment:&nbsp;</th>
+      <td><%= file_field('model_attachment5', 'document') %></td>
+    </tr>
+  </table>
+
+<% unless @model_task.id.blank? %>
+  <table align="center" width="880" border="0">
+    <tr><td><hr class="div" /></td></tr>
+  <% if model_admin && false %>
+    <tr>
+           <td align="left" width="220">
+           <%= render( :partial => "shared/display_mail_lists",
+                       :locals  => { :model_task_id  => @model_task.id,
+                                     :url => url_for(:action => "change_cc_list",
+                                                    :controller => "model_tasks"  )
+                       }) %>
+      </td>
+    </tr>
+    <tr><td><hr class="div" /></td></tr>
+  <% end %>
+  </table>
+<% end %>

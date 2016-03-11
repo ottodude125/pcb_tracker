@@ -1,0 +1,17 @@
+Request Number: <%=h @model_task.request_number %>
+Description:		<%=h @model_task.description %>
+Manufacturer:		<%=h @model_task.mfg %>
+Manufacturer #:	<%=h @model_task.mfg_num %>
+Model Type(s):	<%= @model_task.model_types.collect { |mt| mt.name}.join(', ') %>
+CAE Model(s):		<%=h @model_task.cae_model %>
+CAD Model(s):		<%=h @model_task.cad_model %>
+
+Reference:  <%= Pcbtr::PCBTR_BASE_URL %>model_tasks/<%=  @model_task.id %>
+                        
+
+<% if @model_task.model_comments.size > 0 %>COMMENTS:<% @model_task.model_comments.each do |comment| %>
+=================================================================
+Entered by: <%= comment.user.name %> on <%= comment.created_at.format_dd_mm_yy_at_timestamp %>
+<%=  raw comment.comment %><% end %><% end %>
+=================================================================
+

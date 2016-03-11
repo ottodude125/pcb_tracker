@@ -29,11 +29,14 @@ class User < ActiveRecord::Base
   has_many :fab_issues
   has_many :eco_comments
   has_many :eco_documents
+  has_many :model_comments
+  has_many :model_documents
+  has_many :model_tasks
   has_many :oi_assignments
   has_many :oi_assignment_comments
   has_many :oi_assignment_reports
   has_many :oi_instructions
-
+  
   has_and_belongs_to_many :boards
   has_and_belongs_to_many :eco_tasks
   has_and_belongs_to_many :ipd_posts
