@@ -265,7 +265,7 @@ class ModelTasksController < ApplicationController
       end
     end
     
-    mod_comment_update += "#{attach_count} new Model Document attachment(s) added.\n" unless attach_count == 0
+    mod_comment_update += "\n#{attach_count} new Model Document attachment(s) added.\n" unless attach_count == 0
     
     model_admin = @logged_in_user.is_a_role_member?('Modeler Admin')
     modeler     = @logged_in_user.is_a_role_member?('Modeler')

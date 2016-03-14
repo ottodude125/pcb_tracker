@@ -40,7 +40,7 @@ class ModelTaskMailer < ActionMailer::Base
 
     @model_task = model_task
 
-    to_list  = (Role.add_role_members(['Modeler']) + ['ottodude125@gmail.com'] ).uniq 
+    to_list  = (Role.add_role_members(['Modeler'])  ).uniq 
     mg_list  = new_task ? Role.add_role_members(['Manager']).uniq : []
     cc_list  = (Role.add_role_members(['Modeler Admin']) +
                 mg_list -
@@ -48,11 +48,6 @@ class ModelTaskMailer < ActionMailer::Base
     
     subject    = "Model #{model_task.request_number}: #{subject}"
     
-    puts to_list
-    puts cc_list
-    
-    to_list = 'ottodude125@gmail.com'
-    cc_list = ''
     mail( :to      => to_list,
           :subject => subject,
           :cc      => cc_list
