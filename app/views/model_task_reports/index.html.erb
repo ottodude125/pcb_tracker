@@ -1,12 +1,12 @@
-<!-- View:    eco_task_reports                                  -->
-<!-- Purpose: Displays a list of eco_tasks for the index view.  -->
+<!-- View:    model_task_reports                                  -->
+<!-- Purpose: Displays a list of model_tasks for the index view.  -->
 <!-- ********************************************************** -->
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 
-<% @heading =  "ECO CAD Tasks" %>
+<% @heading =  "Model Tasks" %>
 
-<%= form_tag('', { :id => 'eco_task_report_form' }) do %>
+<%= form_tag('', { :id => 'model_task_report_form' }) do %>
 
   <table align="center"       border="0" 
          cellspacing="0"      cellpadding="0"
@@ -38,7 +38,7 @@
         &nbsp;
         <%= select_year(@start_date, 
                         :prefix     => 'startdate', 
-                        :start_year => 2008,
+                        :start_year => 2016,
                         :end_year   => Time.now.year)%>
       </td>
       <th width="10%" align="right" class="teraheader">End:&nbsp;</th>
@@ -46,7 +46,7 @@
         &nbsp;
         <%= select_month(@end_date, :prefix => 'enddate') %>
         &nbsp;
-         <%= select_year(@start_date, :prefix => 'enddate', :start_year => 2008, :end_year => Time.now.year)%>
+         <%= select_year(@start_date, :prefix => 'enddate', :start_year => 2016, :end_year => Time.now.year)%>
       </td>
       <td width="5%">&nbsp;</td>
     </tr>
@@ -58,13 +58,11 @@
           </tr>
           <tr class="teraheader">
             <th width="80" align="right">Field:&nbsp;</th>
-            <td width="130" align="right">ECO/REL Number:&nbsp;</td>
+            <td width="130" align="right">Request Number:&nbsp;</td>
             <td width="24"><%= radio_button('sort', 'field', 'number') %></td>
-            <td width="140" align="right">PCBA Part Number:&nbsp;</td>
-            <td width="24"><%= radio_button('sort', 'field', 'pcba_part_number') %></td>
             <td width="100" align="right">Start Date:&nbsp;</td>
-            <td width="24"><%= radio_button('sort', 'field', 'started_at') %></td>
-            <td width="100" align="right">Filing Date:&nbsp;</td>
+            <td width="24"><%= radio_button('sort', 'field', 'created_at') %></td>
+            <td width="100" align="right">Closed Date:&nbsp;</td>
             <td width="24"><%= radio_button('sort', 'field', 'closed_at') %></td>
             <td>&nbsp;</td>
           </tr>
@@ -82,19 +80,19 @@
     <tr><td colspan="6"><hr class="div" /></td></tr>
   </table>
 
-  <%#= observe_form( :eco_task_report_form,
-                    :update    => 'eco_tasks',
+  <%#= observe_form( :model_task_report_form,
+                    :update    => 'model_tasks',
                     :on => 'onClick',
                     :url       => { :action => 'reindex' },
-                    :submit    => 'eco_task_report_form') %>
+                    :submit    => 'model_task_report_form') %>
                     
 <script type="text/javascript">
 	jQuery(function($) {
-		$('#eco_task_report_form').change( function() {
+		$('#model_task_report_form').change( function() {
 			url = '<%= url_for( :action => 'reindex') %>';			
-			$.post(url, $('#eco_task_report_form').serialize() ,
+			$.post(url, $('#model_task_report_form').serialize() ,
 			function(data) {
-				$('#eco_tasks').empty().append(data);
+				$('#model_tasks').empty().append(data);
 			});
 		});
 	});
@@ -103,8 +101,8 @@
 <% end %>
 
 
-<div id="eco_tasks">
-  <%= render(:partial => 'eco_tasks_list') %>
+<div id="model_tasks">
+  <%= render(:partial => 'model_tasks_list') %>
 </div
 
 

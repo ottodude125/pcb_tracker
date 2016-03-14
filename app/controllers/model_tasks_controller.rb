@@ -19,12 +19,12 @@ class ModelTasksController < ApplicationController
   # GET /model_tasks/1
   # GET /model_tasks/1.json
   def show
-    @model_task = ModelTask.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @model_task }
-    end
+    #@model_task = ModelTask.find(params[:id])
+    redirect_to :action => :edit
+    #respond_to do |format|
+    #  format.html # show.html.erb
+    #  format.json { render json: @model_task }
+    #end
   end
 
   # GET /model_tasks/new

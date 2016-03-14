@@ -56,7 +56,27 @@ class ModelTask < ActiveRecord::Base
                :order => "#{order}")
   end
 
-
+  
+  # Provide a summary of the closed Model Tasks within the specified range.
+  #
+  # :call-seq:
+  #   model_task_summary() ->  {}}
+  #
+  # Returns a hash with the summary totals.
+  #
+  def self.model_task_summary(start_date, end_date)
+    summary = { :cae      => 0,
+                :cad      => 0 }
+              
+    self.find_closed(start_date, end_date).each do |task|
+      summary[:cae]    += 1 if task.cae?
+      summary[:cad]    += 1 if task.cad? 
+    end
+    
+    summary
+  end
+  
+  
   ##############################################################################
   #
   # Instance Methods
@@ -113,7 +133,7 @@ class ModelTask < ActiveRecord::Base
   # model type is attached to the model task.
   #
   def cae?
-    self.model_types.detect { |et| et.name == "CAE" } != nil
+    self.model_types.detect { |mt| mt.name == "CAE" } != nil
   end
 
   # Determine if the model task is for a CAD
@@ -125,7 +145,7 @@ class ModelTask < ActiveRecord::Base
   # model type is attached to the model task.
   #
   def cad?
-    self.model_types.detect { |et| et.name == "CAD" } != nil
+    self.model_types.detect { |mt| mt.name == "CAD" } != nil
   end
 
   
