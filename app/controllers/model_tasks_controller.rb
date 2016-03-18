@@ -155,8 +155,8 @@ class ModelTasksController < ApplicationController
         ModelTaskMailer::model_task_message(@model_task,
                             "[New Model Task #{@model_task.request_number} Created", true).deliver
           
-        redirect_to(model_tasks_url)
-        #format.html { redirect_to model_task_url, notice: 'Model task was successfully created.' }
+        
+        format.html { redirect_to model_tasks_url}
         format.json { render json: @model_task, status: :created, location: @model_task }
       else
         @model_types   = ModelType.find_active
