@@ -32,7 +32,9 @@ class EcoTaskMailer < ActionMailer::Base
   def eco_task_message(eco_task, subject)
     
     to_list  = (Role.lcr_designers.collect { |d| d.email }).uniq
-    cc_list  = (Role.add_role_members(['Manager', 'HCL Manager', 'ECO Admin']) +
+    mg_list  = ["james_light@notes.teradyne.com"]
+    cc_list  = (Role.add_role_members(['HCL Manager', 'ECO Admin']) +
+               mg_list + 
                eco_task.users.sort_by{ |u| u.last_name }.map(&:email) -
                to_list).uniq
     subject    = "ECO #{eco_task.number}: #{subject}"
@@ -67,7 +69,9 @@ class EcoTaskMailer < ActionMailer::Base
     if doc_control
       to_list = (doc_control.users.map(&:email)).uniq
     end
-    cc_list   = (Role.add_role_members(['Manager', 'HCL Manager', 'ECO Admin']) +
+    mg_list  = ["james_light@notes.teradyne.com"]
+    cc_list   = (Role.add_role_members(['HCL Manager', 'ECO Admin']) +
+                mg_list + 
                 (eco_task.users + Role.lcr_designers).map(&:email)).uniq
 
     subject    = "ECO #{eco_task.number} is complete"
