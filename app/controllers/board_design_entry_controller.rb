@@ -257,6 +257,8 @@ class BoardDesignEntryController < ApplicationController
   def get_part_number
     
     @planning = "bde"
+    @part_nums_script = PartNum.get_all_pnums
+    @brd_part_nums_script = []
     
     if params[:bde]
       @planning = "bde"
@@ -295,14 +297,16 @@ class BoardDesignEntryController < ApplicationController
   ######################################################################
   #
   def change_part_numbers
-
     @board_design_entry   = BoardDesignEntry.find(params[:id])
+    @part_nums_script = PartNum.get_all_pnums
+    @brd_part_nums_script = PartNum.get_all_pnums_for_bde(@board_design_entry.id)
+    
     if ! params['pnums'].blank?
       @rows = flash['rows']
     else
       @rows = PartNum.find(:all,
       :conditions => { :board_design_entry_id => @board_design_entry.id},
-      :order => "'use','prefix','number','dash'" )
+      :order => "'use','pnum'" )
     end
     #add more rows to make a total of 5
     (@rows.size+1..5).each do
@@ -333,13 +337,18 @@ class BoardDesignEntryController < ApplicationController
     board_design_entry  = BoardDesignEntry.find(params[:id])
 
     #create part number objects from form data
-    pnums = params[:rows].values.collect { |row| PartNum.new(row) }
+    pnums = []
+    params[:rows].values.each do |row| 
+      if !row[:pnum].blank?
+        pnums << PartNum.new(row)
+      end
+    end
     flash['rows'] = pnums
 
     #check for a valid PCB part number
     pcb  = pnums.detect { |pnum| pnum.use == 'pcb' }
-    unless pcb.valid_pcb_part_number?
-      flash['notice'] = "A valid PCB part number like '123-456-78' must be specified"
+    unless pcb && pcb.valid_part_number?
+      flash['notice'] = "A valid PCB part number containing only letters, numbers or dashes must be specified"
       redirect_to( :action => 'change_part_numbers',
         :id => board_design_entry_id,
         :pnums => pnums ) and return
@@ -354,7 +363,8 @@ class BoardDesignEntryController < ApplicationController
     bde_pnum = PartNum.get_bde_pcb_part_number(board_design_entry_id)
     
     pnums.each do | pnum |
-      db_pnum = pnum.get_part_number
+      db_pnum = PartNum.find(:first, 
+                              :conditions => "pnum='#{pnum.pnum}' AND revision='#{pnum.revision}'"  ) 
       if  ! db_pnum.blank?  && ! db_pnum.board_design_entry_id == board_design_entry_id
           flash['notice'] += "Part number #{pnum.name_string} exists #{db_pnum.board_design_entry_id}, #{board_design_entry_id}<br>\n"
           fail = 1
@@ -377,7 +387,7 @@ class BoardDesignEntryController < ApplicationController
     fail = 0
     flash['notice'] = ''
     pnums.each do |pnum|
-      unless pnum[:prefix] == ""
+      unless pnum[:penum] == ""
         pnum.board_design_entry_id = board_design_entry_id
         pnum.design_id = board_design_entry.design_id
         if ! pnum.save
@@ -504,15 +514,15 @@ class BoardDesignEntryController < ApplicationController
     #create part number objects from form data
     pnums = []
     params[:rows].values.each { |row| 
-      if !row[:prefix].blank? || !row[:number].blank? || !row[:dash].blank?
+      if !row[:pnum].blank?
          pnums << PartNum.new(row)
       end
     }
   
     #check for a valid PCB part number
     pcb  = pnums.detect { |pnum| pnum.use == 'pcb' }
-    unless pcb && pcb.valid_pcb_part_number?
-      flash['notice'] = "A valid PCB part number like '123-456-78' must be specified"
+    unless pcb && pcb.valid_part_number?
+      flash['notice'] = "A valid PCB part number containing only letters, numbers or dashes must be specified"
       
       if @planning == "planning"
         redirect_to( :action => 'get_part_number', :rows => params[:rows], :planning => "planning") and return
@@ -525,7 +535,7 @@ class BoardDesignEntryController < ApplicationController
     fail = 0
     flash['notice'] = ''
     pnums.each do | pnum |
-      unless pnum.valid_pcb_part_number?
+      unless pnum.valid_part_number?
           flash['notice'] += "Part number #{pnum.name_string} invalid<br>\n"
           fail = 1
       end
@@ -545,7 +555,7 @@ class BoardDesignEntryController < ApplicationController
     flash['notice'] = ''
    
     pnums.each do | pnum |
-      db_pnum = pnum.get_part_number
+      db_pnum = pnum.part_num_exists?
       if  ! db_pnum.blank?
           flash['notice'] += "Part number #{pnum.name_string} exists<br>\n"
           fail = 1

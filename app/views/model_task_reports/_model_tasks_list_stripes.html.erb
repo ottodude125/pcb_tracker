@@ -1,0 +1,40 @@
+<!-- View:    model_task_reports                                  -->
+<!-- Purpose: Displays line items in the model_tasks table for    -->
+<!--          the index and reindex views.                      -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<tr align="center" class="<%= model_tasks_list_stripes_counter.modulo(2).nonzero? ? "dk_gray" : "lt_gray" %>">
+  <td>
+    <% if @user %>
+      <%= link_to "#{model_tasks_list_stripes.request_number}", edit_model_task_path(model_tasks_list_stripes) %>
+    <% else %>
+      <%= link_to "#{model_tasks_list_stripes.request_number}", model_task_path(model_tasks_list_stripes) %>
+    <% end %>
+  </td>
+  <td>
+    <% if model_tasks_list_stripes.created_at != nil %>
+      <%= model_tasks_list_stripes.created_at.format_dd_mon_yy %>
+    <% else %>
+      Not Started
+    <% end %>
+  </td>
+  <td>
+    <% if model_tasks_list_stripes.completed_at %>
+      <%= model_tasks_list_stripes.completed_at.format_dd_mon_yy %>
+    <% else %>
+      &nbsp;
+    <% end %>
+  </td>
+  <td>
+    <% if model_tasks_list_stripes.closed_at %>
+      <%= model_tasks_list_stripes.closed_at.format_dd_mon_yy %>
+    <% else %>
+      &nbsp;
+    <% end %>
+  </td>
+  <td><%= model_tasks_list_stripes.cae?    ? "&bull;".html_safe : "&nbsp;".html_safe %></td>
+  <td><%= model_tasks_list_stripes.cad?    ? "&bull;".html_safe : "&nbsp;".html_safe %></td>
+</tr>
+

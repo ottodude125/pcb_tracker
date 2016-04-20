@@ -13,9 +13,6 @@
 PcbTracker::Application.routes.draw do
 
 
-  resources :fab_quarterly_statuses
-
-
   resources :board_design_entry do
     collection do
       get  'originator_list'
@@ -95,6 +92,18 @@ PcbTracker::Application.routes.draw do
   #resources :fab_deliverables
   #resources :fab_failure_modes
   resources :fab_issues
+
+  resources :fab_quarterly_statuses
+  
+  resources :model_comments
+
+  resources :model_documents
+
+  resources :model_tasks
+
+  resources :model_task_reports
+
+  resources :model_types
     
   resources :part_nums
 
@@ -104,12 +113,14 @@ PcbTracker::Application.routes.draw do
       #get 'reviewer_approval_time(.:format)'
       #get '/reviewer_workload'
       #post 'reviewer_approval_time(.:format)'
-      get 'user_review_history'
-      get 'reviewer_approval_time'
-      get 'reviewer_workload'
-      post 'reviewer_approval_time'
-      get 'summary_data'
+
       get 'fir_metrics'
+      get 'user_review_history'
+      get 'report_card_rollup'
+      get 'reviewer_approval_time'
+      post 'reviewer_approval_time'
+      get 'reviewer_workload'
+      get 'summary_data'
     end
   end
 

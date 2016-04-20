@@ -1,0 +1,34 @@
+<!-- View:    model_task_reports                                  -->
+<!-- Purpose: Displays table containing model_tasks for the index -->
+<!--          and reindex views.                                -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+<table align="center"       id="anyid"
+       border="3"           cellspacing="0" 
+       cellpadding="1">
+
+  <% if @model_tasks.size > 0 %>
+    <tr class="teraheader" valign="top">
+      <th width="80">Request<br />Number</th>
+      <th width="90">Date<br />Started</th>
+      <th width="90">Date<br />Completed</th>
+      <th width="90">Date<br />Filed</th>
+      <th width="40">CAE</th>
+      <th width="40">CAD</th>
+    </tr>
+
+    <%= render( :partial => "model_tasks_list_stripes", :collection => @model_tasks) %>
+      
+    <tr>
+      <th class="teraheader" colspan="4" align="right">Totals:&nbsp;</th>
+      <td align="center"><%= @task_summary[:cae] %></td>
+      <td align="center"><%= @task_summary[:cad] %></td>
+    </tr>
+    
+  <% else %>
+    <tr>
+      <td colspan="5" align="center">No records found</td>
+    </tr>
+  <% end %>
+</table>

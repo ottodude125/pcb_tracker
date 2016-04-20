@@ -60,6 +60,10 @@
       <% else %>
         <b>Not Set</b>
       <% end %>
+      <% if @design_review.design.design_center.pcb_path.eql? DesignCenter.buffalo_grove_archive.pcb_path %>
+      	(Requires Internet Explorer)
+      <% end %>
+      <br>
       (<b>Eng Dir: </b>
       <% if @brd_dsn_entry && @brd_dsn_entry.design_directory %>
         <%=  @brd_dsn_entry.design_directory.name %>

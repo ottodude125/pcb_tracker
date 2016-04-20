@@ -1,0 +1,21 @@
+<h1>Listing model_types</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @model_types.each do |model_type| %>
+  <tr>
+    <td><%= link_to 'Show', model_type %></td>
+    <td><%= link_to 'Edit', edit_model_type_path(model_type) %></td>
+    <td><%= link_to 'Destroy', model_type, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Model type', new_model_type_path %>

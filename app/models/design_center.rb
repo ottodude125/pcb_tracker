@@ -49,6 +49,10 @@ class DesignCenter < ActiveRecord::Base
   def self.get_all_active(sort = 'name ASC')
     self.find_all_by_active(1, :order => sort )
   end
+  
+  def self.buffalo_grove_archive
+    self.find_by_name("Buffalo Grove Archive")
+  end
 
 
   ##############################################################################

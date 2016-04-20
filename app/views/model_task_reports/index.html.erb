@@ -1,0 +1,131 @@
+<!-- View:    model_task_reports                                  -->
+<!-- Purpose: Displays a list of model_tasks for the index view.  -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading =  "Model Tasks" %>
+
+<%= form_tag('', { :id => 'model_task_report_form' }) do %>
+
+  <table align="center"       border="0" 
+         cellspacing="0"      cellpadding="0"
+         width="800">
+
+    <tr><td colspan="6"><hr class="div" /></td></tr>
+
+    <tr>
+      <td align="left" colspan="3">
+        <%= link_to 'PCB Design Tracker Home', :controller => 'tracker' %>
+      </td>
+      <td align="right" colspan="3">
+        <a href="http://boarddev.teradyne.com/">Board Development Home</a>
+      </td>
+    </tr>
+
+    <tr><td colspan="6"><hr class="div" /></td></tr>
+
+    <tr>
+      <th class="teraheader" colspan="6">Date Range (inclusive)</th>
+    </tr>
+
+      <tr class="teraheader">
+      <td width="5%">&nbsp;</td>
+      <th width="10%" align="right" class="teraheader">Start:&nbsp;</th>
+      <td width="35%" align="left">
+        &nbsp;
+        <%= select_month(@start_date, :prefix => 'startdate') %>
+        &nbsp;
+        <%= select_year(@start_date, 
+                        :prefix     => 'startdate', 
+                        :start_year => 2016,
+                        :end_year   => Time.now.year)%>
+      </td>
+      <th width="10%" align="right" class="teraheader">End:&nbsp;</th>
+      <td width="35%" align="left">
+        &nbsp;
+        <%= select_month(@end_date, :prefix => 'enddate') %>
+        &nbsp;
+         <%= select_year(@start_date, :prefix => 'enddate', :start_year => 2016, :end_year => Time.now.year)%>
+      </td>
+      <td width="5%">&nbsp;</td>
+    </tr>
+    <tr>
+      <td colspan="6">
+        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+          <tr>
+            <th class="teraheader" colspan="10">Sort</th>
+          </tr>
+          <tr class="teraheader">
+            <th width="80" align="right">Field:&nbsp;</th>
+            <td width="130" align="right">Request Number:&nbsp;</td>
+            <td width="24"><%= radio_button('sort', 'field', 'number') %></td>
+            <td width="100" align="right">Start Date:&nbsp;</td>
+            <td width="24"><%= radio_button('sort', 'field', 'created_at') %></td>
+            <td width="100" align="right">Closed Date:&nbsp;</td>
+            <td width="24"><%= radio_button('sort', 'field', 'closed_at') %></td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr class="teraheader">
+            <th align="right">Order:&nbsp;</th>
+            <td align="right">Ascending:&nbsp;</td>
+            <td><%= radio_button('sort', 'order', 'ASC') %></td>
+            <td align="right">Descending:&nbsp;</td>
+            <td><%= radio_button('sort', 'order', 'DESC') %></td>
+            <td colspan="5">&nbsp;</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr><td colspan="6"><hr class="div" /></td></tr>
+  </table>
+
+  <%#= observe_form( :model_task_report_form,
+                    :update    => 'model_tasks',
+                    :on => 'onClick',
+                    :url       => { :action => 'reindex' },
+                    :submit    => 'model_task_report_form') %>
+                    
+<script type="text/javascript">
+	jQuery(function($) {
+		$('#model_task_report_form').change( function() {
+			url = '<%= url_for( :action => 'reindex') %>';			
+			$.post(url, $('#model_task_report_form').serialize() ,
+			function(data) {
+				$('#model_tasks').empty().append(data);
+			});
+		});
+	});
+</script>	                      
+
+<% end %>
+
+
+<div id="model_tasks">
+  <%= render(:partial => 'model_tasks_list') %>
+</div
+
+
+<br />
+
+<table align="center"       border="0" 
+       cellspacing="0"      cellpadding="1"
+       width="800">
+  <tr><td colspan="3"><hr class="div" /></td></tr>
+  <tr>
+    <td align="left">
+      <%= link_to 'PCB Design Tracker Home', :controller => 'tracker' %>
+    </td>
+    <td align="center">
+      &nbsp;
+    </td>
+    <td align="right">
+      <a href="http://boarddev.teradyne.com/">Board Development Home</a>
+    </td>
+  </tr>
+  <tr><td colspan="3"><hr class="div" /></td></tr>
+</table>
+
+
+<%# debug @start_date %>
+<%# debug @end_date %>

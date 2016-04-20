@@ -1,0 +1,87 @@
+<!-- View:    index                                             -->
+<!-- Purpose: Displays a list of open model tasks               -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading =  "Open Model Tasks" %>
+
+<p align="center"><font size="-2">(Click on column headers to sort)</font></p>
+
+<% model_admin = @logged_in_user && @logged_in_user.is_a_role_member?('Modeler Admin') %>
+<% modeler     = @logged_in_user && @logged_in_user.is_a_role_member?('Modeler') %>
+<% lcrdesigner = @logged_in_user && @logged_in_user.is_an_lcr_designer? %>
+
+<table align="center"       class="sortable" 
+       id="anyid"           border="0" 
+       cellspacing="0"      cellpadding="2">
+
+  <% if @model_tasks.size > 0 %>
+    <tr class="teraheader" valign="top">
+      <th width="90">Request Number</th>
+      <th width="250">Description</th>
+      <th width="125">Started</th>
+      <th width="125">Completed</th>
+      <th width="100">State</th>
+      <th width="50"></th>
+    </tr>
+
+    <%= render( :partial => "model_tasks_list_stripes", 
+    						:collection => @model_tasks,
+    						:locals=> { :model_admin => model_admin, :modeler => modeler, :lcrdesigner => lcrdesigner }) %>
+  <% else %>
+    <p align="center">The List is Empty</p>
+  <% end %>
+                           
+</table>
+
+
+<div style="width:800px; margin:0 auto;">
+		NOTES: 
+		<ul>
+			<li>
+				All users can view details of a task, add comments, and view or attach files
+			</li>
+			<li>
+				Only Modeler Admin and Modelers can mark a task as Completed and edit CAE/CAD model names
+			</li>
+			<li>
+				Only Modeler Admin and Owner can delete an attachment
+			</li>
+			<li>
+				Only Modeler Admin can create/delete Model Tasks
+			</li>
+			<li>
+				Only Modeler Admin can edit Request Number, Description, MFG info, or mark task as Closed
+			</li>
+			<li>
+				Email notifications are sent to all Modelers, and Model Admins, and Hamp users when a new task is created or updated
+			</li>
+			<li>
+				Menu on home page only appears for Modeler Admin and Modelers. It also appears for Hamp users when there are active Tasks
+			</li>
+		</ul>
+</div>
+<br />
+
+<table align="center"       border="0" 
+       cellspacing="0"      cellpadding="1"
+       width="800">
+
+  <tr><td colspan="2"><hr class="div" /></td></tr>
+  <tr>
+    <% if model_admin %>
+      <td align="left">
+        <%= link_to 'New Model Task', new_model_task_path %>
+      </td>
+      <td align="right"><%= link_to 'Home', :controller => 'tracker' %></td>
+    <% else %>
+      <td align="center"><%= link_to 'Home', :controller => 'tracker' %></td>
+    <% end %>
+  </tr>
+
+  <tr><td colspan="2"><hr class="div" /></td></tr>
+                           
+</table>
+
+

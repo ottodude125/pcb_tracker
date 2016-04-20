@@ -1,0 +1,105 @@
+<!-- View:    model  task                                         -->
+<!-- Purpose: Displays the edit view for the Model Task.          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading =  "Model Task: Edit Request Number #{@model_task.request_number}" %>
+
+<% model_admin = @logged_in_user.is_a_role_member?('Modeler Admin') %>
+<% modeler     = @logged_in_user.is_a_role_member?('Modeler') %>
+<% lcrdesigner = @logged_in_user && @logged_in_user.is_an_lcr_designer? %>
+
+<%= form_for(@model_task, :html => {:multipart => true} ) do |f| %>
+
+    <table border="0" cellspacing="0" width="100%" align="center">
+      <tr>
+        <th class="teraheader" colspan="2">Task Information</th>
+      </tr>
+     </table>
+
+<%= render :partial => "view_task", 
+  :locals => { :f => f, :model_admin => model_admin, :modeler => modeler, :lcrdesigner => lcrdesigner } %>
+
+  <table align="center" width="880" border="0">
+    <tr>
+      <td align="left"   width="220"><%= f.submit "Update" %></td>
+      <td align="right"  width="220">
+        <%= link_to 'Return to List', session[:return_to] %>
+      </td>
+    </tr>
+    <tr><td colspan="4"><hr class="div" /></td></tr>
+  </table>
+<%  end %>
+
+
+  <br /><br />
+  <div id="comments">
+  
+  <table border="0" cellspacing="0" width="100%" align="center">
+    <tr>
+      <th class="teraheader" colspan="2">Attachments</th>
+    </tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr>
+      <td align="center">
+        <% if @model_task.attachments? %>
+          <table border="0">
+            <tr>
+              <th class="teraheader" width="300">Document</th>
+              <th class="teraheader" width="200">Attached On</th>
+              <th class="teraheader" width="300">Attached By</th>
+              <th class="teraheader" width="50"></th>
+              <% if model_admin %>
+                <th class="teraheader">&nbsp;</th>
+              <% end %>
+            </tr>
+            <% @model_task.attachments.each do |attachment| %>
+              <tr>
+                <td>
+                  <%= link_to(attachment.name,
+	                      :action => "get_attachment",
+                              :id     => attachment.id) %>
+                </td>
+                <td><%= attachment.created_at.format_dd_mon_yy('timestamp')  %>
+                </td>
+                <td><%=h attachment.user.name %></td>
+                <% if model_admin || (@logged_in_user.id == attachment.user_id) %>
+                  <td>
+                    <%= link_to('Delete', attachment,
+                                :confirm => "Do you really want to delete #{attachment.name}?",
+                                :method  => :delete ) %>      
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </table>
+        <% else %>
+          <b>No Attachments</b>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+
+  </div>
+
+  <br /><br />
+  
+  <% if @model_task.model_comments.size > 0 %>
+    <table border="0" cellspacing="0" width="100%" align="center">
+      <tr>
+        <th class="teraheader" colspan="2">Task Comments</th>
+      </tr>
+      <%= render( :partial    => "comment_list",
+                  :collection => @model_task.model_comments) %>
+    </table>
+  <% end %>
+  
+
+  <hr class="div" />
+
+<%# debug "model admin: #{model_admin}" %>
+<%# debug session[:return_to] %>
+<%# debug @logged_in_user.roles %>
+<%# debug @model_task.attachments? %>
+<%# debug @model_task.attachments %>

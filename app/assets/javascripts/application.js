@@ -62,6 +62,119 @@ $(document).ready(function() {
 	         }
 	     );
 	  });
+	  
+	  //############## MULTIPLE CHECKS ON PAGE SUBMIT  ###############
+	  // 1) PCB number is unique
+	  // 2) PCB/PCBA number is not used more than once on this board
+	  // 3) PCB/PCBA number meets syntax requirements 
+	  $(".part_num_input:input").change(function() {
+		  var count, value; // number of times num appears on page, value of num just entered
+		  $(".part_number_error").empty();
+		  $(".part_number_error").hide();
+		  $(this).val($(this).val().toLocaleUpperCase());
+		  $(this).removeClass("highlight");
+		  count = 0;
+		  error_found = false;
+		  error_msg = "";
+		  value = $(this).val();
+		  // count how many times the number appears on the page. If more than once its a duplicate
+		  $(".part_num_input").each(function() {
+		    if ($(this).val() === value) {
+		      return count += 1;
+		    }
+		  });
+		  // if num used more than once on board highlight cell and tell user
+		  if (count > 1) {
+			error_found = true;
+		    error_msg += " ERROR: You have used " + value + " more than once on this page.<br>";
+		  }
+		  // if num used on another board highlight cell and tell user
+	  	  if ($.inArray(value, part_nums) > -1) {
+	  		error_found = true;
+	        error_msg += " ERROR: " + value + " has already been used as a Part # on another board.<br>";
+	      }
+	  	  // if num syntax incorrect highlight cell and tell user
+		  if (!value.match(/^([0-9]{3}-[0-9]{3}-[0-9]{2}|[a-zA-Z]{3}[0-9]{4}[a-zA-Z0-9\-]*)$/)) {
+			error_found = true;
+		    error_msg += " ERROR: " + value + " does not follow required syntax.<br>";
+		  }
+		  if (error_found) {
+		    $(this).addClass("highlight");
+		    $(".part_number_error").show();
+		    $(".part_number_error").append(error_msg);
+		  }
+	  });
+	  
+	  
+	  //############## MULTIPLE CHECKS ON PAGE SUBMIT  ###############
+	  // 1) PCB Number is set
+	  // 2) PCB number is unique
+	  // 3) PCB/PCBA number is not used more than once on this board
+	  // 4) PCB/PCBA number meets syntax requirements 
+	  $("#part_num_form_submit").click(function(event) {
+		  error_found = false;
+		  error_msg = "";
+		  $(".part_number_error").empty();
+		  $(".part_number_error").hide();
+		  $(".pcb").removeClass("highlight");
+		  
+		  // 1) Check that a PCB Number has been created. If not highlight field, remove submit animation, and stop submit
+		  if ($(".pcb").val() === '') {
+		    $(".pcb").addClass("highlight");
+		    error_found = true;
+		    error_msg += " ERROR: PCB Number cannot be empty. <br>";
+		  }
+		  
+		  // 2) Make sure PCB/PCBA number has not been used as a number on another board already 
+		  // 3) Make sure PCB/PCBA number is not used more than once on this board
+		  // 4) PCB/PCBA number meets syntax requirements
+		  $(".part_num_input:input").each(function() {
+		    var count, value;
+		    value = $(this).val();
+		    if(value) {
+			    $(this).removeClass("highlight");
+			    addedclass = false;
+			    count = 0;
+			    value = $(this).val();
+			    // count how many times the number appears on the page. If more than once its a duplicate
+			    $(".part_num_input").each(function() {
+			      if ($(this).val() === value) {
+			        return count += 1;
+			      }
+			    });
+			    // if num used more than once on board highlight cell, stop submit
+			    if (count > 1) {
+			      error_found = true;
+			      error_msg += " ERROR: You have used a Part # more than once on this board. <br>";
+			      $(this).addClass("highlight");
+			    }
+			    // check if the number was originally one of the ones assigned to this board.
+			    // If it was ignore it. The user is just going back to use that number
+			    if (!($.inArray(value, brd_part_nums) > -1)) {
+				    // check if the number is in the pcb array of used numbers passed in from the view. if it is 
+				    // then highlight the cell and stop submit because this number has already been used as a pcb         
+			    	if ($.inArray(value, part_nums) > -1) {
+			    	  error_found = true;
+			          error_msg += " ERROR: " + value + " has already been used as a Part # on another board. <br>";
+			          $(this).addClass("highlight");
+			    	}
+			    }
+		  	  	// f num syntax incorrect highlight cell and tell user
+			    if (!value.match(/^([0-9]{3}-[0-9]{3}-[0-9]{2}|[a-zA-Z]{3}[0-9]{4}[a-zA-Z0-9\-]*)$/)) {
+			      error_found = true;
+			      error_msg += " ERROR: " + value + " does not follow required syntax.<br>";
+			      $(this).addClass("highlight");
+			    }
+		    }
+		  });
+		  // FINALLY: If anything above caused an error then stop submit and show error messages
+		  if (error_found) {
+			$(this).addClass("highlight");
+			$(".part_number_error").show();
+			$(".part_number_error").append(error_msg);
+			return event.preventDefault();
+		  }
+		});
 });
 
 

@@ -7,6 +7,9 @@ class PartNum < ActiveRecord::Base
 
   validates :description, :length => { :maximum => 80 }
 
+  scope :pnum_use, ->(type) { where("`use` = ?", "#{type}") }
+  scope :pnum_like, ->(unique_part_number) { where("`pnum` LIKE ?", "%#{unique_part_number}%") }
+
   ######################################################################
   #
   # part_num_exists?
@@ -43,19 +46,22 @@ class PartNum < ActiveRecord::Base
   ######################################################################
   #
   def self.get_designs(unique_part_number,type)
-
-    components = unique_part_number.split('-')
-    part_numbers = PartNum.find(:all, :conditions =>
-          "prefix='#{components[0]}' " +
-          "AND number='#{components[1]}' " +
-          "AND `use`='#{type}' "  )
-
-
+    part_numbers = PartNum.pnum_use(type).pnum_like(unique_part_number)
     designs = part_numbers.collect { |pn| pn.design }.reverse.uniq
     designs.delete_if { |d| !d }
     designs
-
   end
+  #def self.get_designs_OBS(unique_part_number,type)
+  #  components = unique_part_number.split('-')
+  #  part_numbers = PartNum.find(:all, :conditions =>
+  #        "prefix='#{components[0]}' " +
+  #        "AND number='#{components[1]}' " +
+  #        "AND `use`='#{type}' "  )
+  #  designs = part_numbers.collect { |pn| pn.design }.reverse.uniq
+  #  designs.delete_if { |d| !d }
+  #  designs
+  #end
+
 
   ######################################################################
   #
@@ -73,13 +79,19 @@ class PartNum < ActiveRecord::Base
   ######################################################################
   #
   def self.get_unique_part_numbers(type)
-
+    # SELECT DISTINCT LEFT(pnum, 8) FROM pcbtr3_development.part_nums;
     PartNum.find(:all,
       :conditions => "`use` = '#{type}' AND `design_id` IS NOT NULL ",
-      :select => "DISTINCT CONCAT(prefix,'-',number) AS number",
-      :order => 'number')
-
+      :select => "DISTINCT LEFT(pnum, 7) AS number",
+      :order => 'number')  
   end
+  #def self.get_unique_part_numbers_OBS(type)
+  #  PartNum.find(:all,
+  #    :conditions => "`use` = '#{type}' AND `design_id` IS NOT NULL ",
+  #    :select => "DISTINCT CONCAT(prefix,'-',number) AS number",
+  #    :order => 'number')
+  #end
+
 
   ######################################################################
   #
@@ -87,7 +99,7 @@ class PartNum < ActiveRecord::Base
   #
   # Description:
   # This method looks up the part number in the database given the
-  # components of the part number (prefix, number, and dash number)
+  # components of the part number (pnum, number, and revision)
   #
   # Parameters:
   # None
@@ -99,20 +111,30 @@ class PartNum < ActiveRecord::Base
   ######################################################################
 
   def self.get_part_number(pn)
-    conditions = "prefix='#{pn.prefix}'    AND " +
-      "number='#{pn.number}'    AND " +
-      "dash='#{pn.dash}' AND " +
+    conditions = "pnum='#{pn.pnum}'    AND " +
       "revision='#{pn.revision}'"
     PartNum.find(:first, :conditions => conditions )
   end
+  #def self.get_part_number_OBS(pn)
+  #  conditions = "prefix='#{pn.prefix}'    AND " +
+  #    "number='#{pn.number}'    AND " +
+  #    "dash='#{pn.dash}' AND " +
+  #    "revision='#{pn.revision}'"
+  #  PartNum.find(:first, :conditions => conditions )
+  #end
 
-def get_part_number
-    conditions = "prefix='#{self.prefix}'    AND " +
-      "number='#{self.number}'    AND " +
-      "dash='#{self.dash}' AND " +
+  def get_part_number
+    conditions = "pnum='#{self.pnum}'    AND " +
       "revision='#{self.revision}'"
     PartNum.find(:first, :conditions => conditions )
   end
+  #def get_part_number_OBS
+  #  conditions = "prefix='#{self.prefix}'    AND " +
+  #    "number='#{self.number}'    AND " +
+  #    "dash='#{self.dash}' AND " +
+  #    "revision='#{self.revision}'"
+  #  PartNum.find(:first, :conditions => conditions )
+  #end
 
   ###################
   # The various get_xxx_part_number functions test for a nil id
@@ -247,12 +269,18 @@ def get_part_number
   #
   ######################################################################
   def name_string
-    "#{self.prefix}-#{self.number}-#{self.dash}"
+    "#{self.pnum}"
   end
+  #def name_string_OBS
+  #  "#{self.prefix}-#{self.number}-#{self.dash}"
+  #end
   
   def part_number_name
-    "#{self.prefix}-#{self.number}-#{self.dash}"
+    "#{self.pnum}"
   end
+  #def part_number_name_OBS
+  #  "#{self.prefix}-#{self.number}-#{self.dash}"
+  #end
 
   ######################################################################
   #
@@ -269,12 +297,20 @@ def get_part_number
   #
   ######################################################################
   def name_string_with_description
-    "#{self.prefix}-#{self.number}-#{self.dash} #{self.description}"
+    pcbadescription = self.description? ?   self.description : "(Description not set)"
+    "#{self.pnum} #{pcbadescription}"
   end
+  #def name_string_with_description_OBS
+  #  "#{self.prefix}-#{self.number}-#{self.dash} #{self.description}"
+  #end
   
   def part_number_name_with_description
-    "#{self.prefix}-#{self.number}-#{self.dash} #{self.description}"
+    pcbadescription = self.description? ?   self.description : "(Description not set)"
+    "#{self.pnum} #{pcbadescription}"
   end
+  #def part_number_name_with_description_OBS
+  #  "#{self.prefix}-#{self.number}-#{self.dash} #{self.description}"
+  #end
 
   ######################################################################
   #
@@ -313,10 +349,31 @@ def get_part_number
   #
   ######################################################################
   #
-  def valid_pcb_part_number?
+  # Did a search and this method does not show up anywhere else in the code
+  def valid_pcb_part_number?_OBS
     self.prefix =~ /^\d\d\d$/ &&
       self.number =~ /^\d\d\d$/ &&
       self.dash   =~ /^[A-Z,a-z,0-9][A-Z,a-z,0-9]$/
+  end
+
+  ######################################################################
+  #
+  # valid_part_number?
+  #
+  # Description:
+  # This method indicates that the part number is valid.
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # TRUE if the part number is valid, FALSE otherwise.
+  #
+  ######################################################################
+  #
+  # Did a search and this method does not show up anywhere else in the code
+  def valid_part_number?
+    self.pnum =~ /^[a-zA-Z0-9\-]*$/
   end
 
   ######################################################################
@@ -331,13 +388,17 @@ def get_part_number
   # None
   #
   # Return value:
-  # prefix-number
+  # If Agile keep first 7 chars
+  # If std keep everything preceeding second dash
   #
   ######################################################################
   #
   def uniq_name
-    self.prefix + '-' + self.number
+    self.pnum.match(/(^[a-zA-Z0-9]{1,3}-[a-zA-Z0-9]{3}|^[a-zA-Z0-9]{7})/)
   end
+  #def uniq_name_OBS
+  #  self.prefix + '-' + self.number
+  #end
 
   ######################################################################
   #
@@ -366,4 +427,64 @@ def get_part_number
     }
     pcbas.sort_by { |p| p.name_string }
   end
+
+  ######################################################################
+  #
+  # get_all_pnums
+  #
+  # Description:
+  # This method returns an array of part numbers from pnum column
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # array of part_nums
+  #
+  ######################################################################
+  #
+  def self.get_all_pnums
+    pnums = PartNum.pluck(:pnum)
+  end
+
+  ######################################################################
+  #
+  # get_all_pnums_for_design(design_id)
+  #
+  # Description:
+  # This method returns an array of part numbers from pnum column for a given design_id
+  #
+  # Parameters:
+  # design_id
+  #
+  # Return value:
+  # array of part_nums
+  #
+  ######################################################################
+  #
+  def self.get_all_pnums_for_design(design_id)
+    brd_pnums = PartNum.where(:design_id => design_id).pluck(:pnum)
+  end
+
+  ######################################################################
+  #
+  # get_all_pnums_for_bde(design_id)
+  #
+  # Description:
+  # This method returns an array of part numbers from pnum column for a
+  # given board_design_entry_id
+  #
+  # Parameters:
+  # board_design_entry_id
+  #
+  # Return value:
+  # array of part_nums
+  #
+  ######################################################################
+  #
+  def self.get_all_pnums_for_bde(board_design_entry_id)
+    brd_pnums = PartNum.where(:board_design_entry_id => board_design_entry_id).pluck(:pnum)
+  end
+
+
 end

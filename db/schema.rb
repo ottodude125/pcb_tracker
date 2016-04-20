@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150925145732) do
+ActiveRecord::Schema.define(:version => 20160311192525) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :default => 0, :null => false
@@ -538,6 +538,57 @@ ActiveRecord::Schema.define(:version => 20150925145732) do
     t.integer "active", :limit => 1,  :default => 0,  :null => false
   end
 
+  create_table "model_comments", :force => true do |t|
+    t.integer  "model_task_id", :default => 0, :null => false
+    t.integer  "user_id",       :default => 0, :null => false
+    t.text     "comment"
+    t.datetime "created_at",                   :null => false
+    t.datetime "updated_at",                   :null => false
+  end
+
+  create_table "model_documents", :force => true do |t|
+    t.integer  "unpacked",      :limit => 2,          :default => 0,     :null => false
+    t.string   "name",          :limit => 100,        :default => "",    :null => false
+    t.string   "content_type",  :limit => 100,        :default => "",    :null => false
+    t.integer  "user_id",                             :default => 0,     :null => false
+    t.integer  "model_task_id",                       :default => 0,     :null => false
+    t.boolean  "specification",                       :default => false
+    t.binary   "data",          :limit => 2147483647,                    :null => false
+    t.datetime "created_at",                                             :null => false
+    t.datetime "updated_at",                                             :null => false
+  end
+
+  create_table "model_tasks", :force => true do |t|
+    t.string   "request_number",                    :null => false
+    t.text     "description"
+    t.string   "mfg"
+    t.string   "mfg_num"
+    t.text     "cae_model"
+    t.text     "cad_model"
+    t.boolean  "closed",         :default => false, :null => false
+    t.datetime "closed_at"
+    t.boolean  "completed",      :default => false, :null => false
+    t.datetime "completed_at"
+    t.integer  "user_id",                           :null => false
+    t.datetime "created_at",                        :null => false
+    t.datetime "updated_at",                        :null => false
+  end
+
+  create_table "model_tasks_model_types", :id => false, :force => true do |t|
+    t.integer "model_task_id", :null => false
+    t.integer "model_type_id", :null => false
+  end
+
+  add_index "model_tasks_model_types", ["model_task_id"], :name => "index_model_tasks_model_types_on_model_task_id"
+  add_index "model_tasks_model_types", ["model_type_id"], :name => "index_model_tasks_model_types_on_model_type_id"
+
+  create_table "model_types", :force => true do |t|
+    t.string   "name"
+    t.boolean  "active"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+  end
+
   create_table "oi_assignment_comments", :force => true do |t|
     t.integer  "oi_assignment_id", :default => 0, :null => false
     t.integer  "user_id",          :default => 0, :null => false
@@ -626,14 +677,15 @@ ActiveRecord::Schema.define(:version => 20150925145732) do
   end
 
   create_table "part_nums", :force => true do |t|
-    t.string  "prefix",                :limit => 3
-    t.string  "number",                :limit => 3
-    t.string  "dash",                  :limit => 2
+    t.string  "prefix_old",            :limit => 3
+    t.string  "number_old",            :limit => 3
+    t.string  "dash_old",              :limit => 2
     t.string  "revision",              :limit => 1
     t.string  "use",                   :limit => 5
     t.integer "board_design_entry_id"
     t.integer "design_id"
     t.string  "description",           :limit => 80
+    t.string  "pnum"
   end
 
   create_table "permissions", :force => true do |t|

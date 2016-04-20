@@ -1,0 +1,30 @@
+<!-- View:    model_task                                        -->
+<!-- Purpose: Displays the comments for a model task in the     -->
+<!--          show and edit views.                              -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<tr>
+  <td width="50%">
+    <font size="-2">
+      <b>Posted By:</b> <%= comment_list.user.name %>
+    </font>
+  </td>
+  <td width="50%">
+    <font size="-2">
+      <b>Date:</b> <%= comment_list.created_at.format_dd_mon_yy('timestamp') %>
+    </font>
+  </td>
+</tr>
+<tr>
+  <td colspan="2">
+    <table width="99%" border="2" cellpadding="1" cellspacing="2" align="center">
+      <tr>
+        <td>
+          <%= auto_link simple_format(h(comment_list.comment)) -%>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>

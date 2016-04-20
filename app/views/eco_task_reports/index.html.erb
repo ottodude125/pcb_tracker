@@ -91,7 +91,6 @@
 <script type="text/javascript">
 	jQuery(function($) {
 		$('#eco_task_report_form').change( function() {
-			alert("gotcha")
 			url = '<%= url_for( :action => 'reindex') %>';			
 			$.post(url, $('#eco_task_report_form').serialize() ,
 			function(data) {
