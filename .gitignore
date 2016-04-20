@@ -15,7 +15,7 @@
 /log/*.log
 /tmp/cache/
 /tmp/*
-
+/log
 
 *.swp
 .sass-cache
