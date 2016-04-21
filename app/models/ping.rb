@@ -59,6 +59,7 @@ class Ping < ActiveRecord::Base
     count = 0
     
     review_list.each do |userid, data|
+      next unless data[:user].active? # do not try to email inactive users
       PingMailer::ping_reviewer(data).deliver    
       #sleep(1)
     end
