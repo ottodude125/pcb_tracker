@@ -66,8 +66,8 @@ class TrackerMailer < ActionMailer::Base
 
     recipients = []
     recipients += designers.collect { |u| u.email}
-    recipients += User.where(:last_name => ["Kasting", "Light", "Michaels"]).collect { |u| u.email}
-    recipients << "dtg@teradyne.com"
+    #recipients += User.where(:last_name => ["Kasting", "Light", "Michaels"]).collect { |u| u.email}
+    #recipients << "dtg@teradyne.com"
     recipients << "jonathan.katon@teradyne.com"
     
     @part_numbers = part_numbers
