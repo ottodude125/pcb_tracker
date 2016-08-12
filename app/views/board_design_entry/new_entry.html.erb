@@ -59,7 +59,7 @@ jQuery(function($) {
     <td class="data"  width="150px"><%= user.name %></td>
     
     <td class="label">Division: </td>
-    <td class="data"  style="color:red; font-weight:bold;">
+    <td class="data" >
       <select id="board_design_entry_division_id"
               name="board_design_entry[division_id]">
       <option value="0"></option>
@@ -67,11 +67,14 @@ jQuery(function($) {
                                              "id",
                                              "name",
                                              user.division_id) %>
-      </select> &nbsp; &nbsp; required
+      </select> 
+      <div id="division_required" style="color:red; font-weight:bold;display:inline;" >
+        required
+      </div>
     </td>
 
     <td class="label">Location: </td>
-    <td class="data"  style="color:red; font-weight:bold;">
+    <td class="data" >
       <select id="board_design_entry_location_id"
               name="board_design_entry[location_id]">
       <option value="0"></option>
@@ -79,7 +82,10 @@ jQuery(function($) {
                                              "id",
                                              "name",
                                              user.location_id) %> 
-      </select> &nbsp; &nbsp; required
+      </select>
+      <div id="location_required" style="color:red; font-weight:bold;display:inline;" >
+        required
+      </div>
     </td>
   </tr>
 
@@ -93,8 +99,10 @@ jQuery(function($) {
         </td>
         <td class="data" colspan="6"  style="border-left:transparent;" >
           <%= text_field("part_num[#{pn.id}]", "description", :value => pn.description, "size" => 60, "maxlength" => 80, :placeholder => "Enter Temporary Description") %> 
-	  <span style="color:red; font=weight:bold;">required</span>
-	  <span style="font-weight:normal; font-size: 10px; ">(auto updated from teamcenter)</span>
+        <div id="pcb_desc_required" style="color:red; font-weight:bold;display:inline;" >
+          required
+        </div>
+        <span style="font-weight:normal; font-size: 10px; ">(auto updated from teamcenter)</span>
         </td>
       </tr>
     <% end %>
@@ -109,7 +117,9 @@ jQuery(function($) {
         </td>
         <td class="data" colspan="6" style="border-left:transparent;" >
           <%= text_field("part_num[#{pn.id}]", "description", :value => pn.description, "size" => 60, "maxlength" => 80, :placeholder => "Enter Temporary Description") %> 
-	  <span style="color:red; font=weight:bold;">required</span>
+          <div id="pcba_desc_required" style="color:red; font-weight:bold;display:inline;" >
+            required
+          </div>
           <span style="font-weight:normal; font-size: 10px; ">(auto updated from teamcenter)</span>
         </td>
       </tr>
@@ -119,38 +129,45 @@ jQuery(function($) {
 <!-- ********************************************************** -->
   <tr>
     <td class="label" valign="top">Platform: </td>
-    <td class="data" colspan="6" style="color:red; font-weight:bold;">
+    <td class="data" colspan="6" >
       <%= select("board_design_entry", 
                  "platform_id", 
                  @platform_list.collect { |p| [ p.name, p.id ] }, 
                  { :include_blank => true },
-                 "class" => 'wide_select' ) %> &nbsp; &nbsp; required
-           
+                 "class" => 'wide_select' ) %>
+      <div id="platform_required" style="color:red; font-weight:bold;display:inline;" >
+        required
+      </div>
     </td>
   </tr>
 
 <!-- ********************************************************** -->
   <tr>
     <td class="label" valign="top">Project: </td>
-    <td class="data" colspan="6" style="color:red; font-weight:bold;">
+    <td class="data" colspan="6" >
       <%= select("board_design_entry", 
                  "project_id", 
                  @project_list.collect { |p| [ p.name, p.id ] }, 
                  { :include_blank => true },
-                 "class" => 'wide_select' ) %> &nbsp; &nbsp; required
+                 "class" => 'wide_select' ) %> 
+      <div id="project_required" style="color:red; font-weight:bold;display:inline;" >
+        required
+      </div>
     </td>
   </tr>
 
 <!-- ********************************************************** -->
   <tr>
     <td class="label" valign="top">Product Type: </td>
-    <td class="data" colspan="6" style="color:red; font-weight:bold;">
+    <td class="data" colspan="6" >
       <%= select("board_design_entry", 
                  "product_type_id", 
                  @product_type_list.collect { |p| [ p.name, p.id ] }, 
                  { :include_blank => true },
-                 "class" => 'wide_select' ) %> &nbsp; &nbsp; required
-
+                 "class" => 'wide_select' ) %>
+      <div id="product_type_required" style="color:red; font-weight:bold;display:inline;" >
+        required
+      </div>
     </td>
   </tr>
   
@@ -194,39 +211,43 @@ jQuery(function($) {
     <%  mkfrm = @board_design_entry.make_from? %>
     <td class="label" valign="top">Make From: </td>
     <td class="data" colspan="2" valign="top">
-        <table cellpadding="0" cellspacing="0" border="0">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="label" width="140">Yes: </td>
+          <td class="data" align="left">
+           <%= radio_button_tag('board_design_entry[make_from]', 1,
+                                  mkfrm == true ? true:false,
+                                  :onclick => "$('#make_from').show();" ) %>
+          </td>                
+        </tr>
+        <tr>
+          <td class="label">No: </td>
+          <td class="data" align="left">
+            <%= radio_button_tag('board_design_entry[make_from]', 0, 
+                                  mkfrm == true ? false:true,
+                                  :onclick => "$('#make_from').hide();" ) %>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td class="data" colspan="4">
+      <div id="make_from" <%=  mkfrm == true ? "style=display:block;" : "style=display:none;" %> >
+        <table>
           <tr>
-            <td class="label" width="140">Yes: </td>
-            <td class="data" align="left">
-             <%= radio_button_tag('board_design_entry[make_from]', 1,
-               mkfrm == true ? true:false,
-               :onclick => "$(\'make_from\').style.display = \'block';" ) %>
-            </td>                
-          </tr>
-          <tr>
-            <td class="label">No: </td>
-            <td class="data" align="left">
-              <%= radio_button_tag('board_design_entry[make_from]', 0, mkfrm == true ? false:true,
-                :onclick => "$(\'make_from\').style.display = \'none';" ) %>
+            <td class="label" width="200" title="Identify the original PCB">
+              Original PCB Number:
+            </td>
+            <td class="data">
+              <%= text_field("board_design_entry",
+                              "original_pcb_number",
+                              "size" => 16) %>
+              <div id="orig_pcb_num_error" style="color:red; font-weight:bold;display:none;" >
+                You Have Selected Yes. Please Enter Original PCB Number Before Submitting Page
+              </div>
             </td>
           </tr>
         </table>
-    </td>
-    <td class="data" colspan="4">
-   <div id="make_from" <%=  mkfrm == true ? "style=display:'block'" :
-  "style=\"display: none;\""%> >
-      <table><tr>
-      <td class="label" width="200"
-        title="Identify the original PCB">
-      Original PCB Number:
-      </td>
-      <td class="data">
-      <%= text_field("board_design_entry",
-        "original_pcb_number",
-        "size" => 16) %>
-      </td>
-      </tr></table>
-   </div>
+      </div>
     </td>
   </tr>
 
@@ -236,42 +257,194 @@ jQuery(function($) {
     <%  bkpln = @board_design_entry.backplane? %>
     <td class="label" valign="top">Backplane: </td>
     <td class="data" colspan="2" valign="top">
-        <table cellpadding="0" cellspacing="0" border="0">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="label" width="140">Yes: </td>
+          <td class="data" align="left">
+            <%= radio_button_tag('board_design_entry[backplane]', 1,
+                                  bkpln == true ? true:false,
+                                  :onclick => "$('#backplane').show();" ) %>
+          </td>                
+        </tr>
+        <tr>
+          <td class="label">No: </td>
+          <td class="data" align="left">
+            <%= radio_button_tag('board_design_entry[backplane]', 0, 
+                                  bkpln == true ? false:true,
+                                  :onclick => "$('#backplane').hide();" ) %>
+          </td>
+        </tr>
+      </table>
+    </td>
+    
+    <td class="data" colspan="4">
+      <div id="backplane" <%=  bkpln == true ? "style=display:block;" : "style=display:none;" %> >
+        <table>
           <tr>
-            <td class="label" width="140">Yes: </td>
-            <td class="data" align="left">
-             <%= radio_button_tag('board_design_entry[backplane]', 1,
-               bkpln == true ? true:false,
-               :onclick => "$(\'backplane\').style.display = \'block';" ) %>
-            </td>                
-          </tr>
-          <tr>
-            <td class="label">No: </td>
-            <td class="data" align="left">
-              <%= radio_button_tag('board_design_entry[backplane]', 0, bkpln == true ? false:true,
-                :onclick => "$(\'backplane\').style.display = \'none';" ) %>
+            <td class="label" width="200" title="Identify Purchased Assembly Number">
+              Purchased Assembly Number:
+            </td>
+            <td class="data">
+              <%= text_field("board_design_entry",
+                              "purchased_assembly_number",
+                              "size" => 16) %>
+              <div id="purchased_assy_num_error" style="color:red; font-weight:bold;display:none;" >
+                You Have Selected Yes. Please Enter Purchased Assy Number Before Submitting Page
+              </div>
             </td>
           </tr>
         </table>
+      </div>
+      </td>
+  </tr>
+
+<!-- ********************************************************** -->
+  <tr>
+    <% exvol = @board_design_entry.exceed_voltage? %>
+    <td class="label" valign="top">>33V AC rms, 46.7 V pk, or 70V DC:</td>    
+    <td class="data" colspan="2" valign="top">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="label" width="140">Yes: </td>
+          <td class="data" align="left">
+            <%= radio_button_tag('board_design_entry[exceed_voltage]', 1,
+                                  exvol == true ? true:false,
+                                  :onclick => "$('#exceed_voltage_details').show();" ) %>
+           </td>
+        </tr>
+        <tr>
+          <td class="label">No: </td>
+          <td class="data" align="left">
+            <%= radio_button_tag('board_design_entry[exceed_voltage]', 0,
+                                  exvol == true ? false:true,
+                                  :onclick => "$('#exceed_voltage_details').hide();" ) %>
+          </td>
+        </tr>
+      </table>
     </td>
-    <td class="data" colspan="4">
-   <div id="backplane" <%=  bkpln == true ? "style=display:'block'" :
-  "style=\"display: none;\""%> >
-      <table><tr>
-      <td class="label" width="200"
-        title="Identify Purchased Assembly Number">
-      Purchased Assembly Number:
-      </td>
-      <td class="data">
-      <%= text_field("board_design_entry",
-        "purchased_assembly_number",
-        "size" => 16) %>
-      </td>
-      </tr></table>
-   </div>
+    
+    <td class="data" colspan="4" valign="top">
+      <div id="exceed_voltage_details" <%=  exvol == true ? "style=display:block;" : "style=display:none;" %> >
+        <table>
+          <tr>
+            <td class="label" width="200" title="Exceed Voltage Details">
+              Details:
+            </td>
+            <td class="data" >
+              <%= text_area("board_design_entry",
+                              "exceed_voltage_details",
+                              "rows" => 2, 
+                              "cols" => 90) %>
+              <div id="exceed_voltage_details_error" style="color:red; font-weight:bold;display:none;" >
+                You Have Selected Yes. Please Enter Description Before Submitting Page
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
     </td>
   </tr>
 
+<!-- ********************************************************** -->
+  <tr>
+    <% stksrc = @board_design_entry.stacked_resource? %>
+    <td class="label" valign="top">Stacking of Sources:</td>    
+    <td class="data" colspan="2" valign="top">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="label" width="140">Yes: </td>
+          <td class="data" align="left">
+            <%= radio_button_tag('board_design_entry[stacked_resource]', 1,
+                                  stksrc == true ? true:false,
+                                  :onclick => "$('#stacked_resource_details').show();" ) %>
+          </td>
+        </tr>
+        <tr>
+          <td class="label">No: </td>
+          <td class="data" align="left">
+            <%= radio_button_tag('board_design_entry[stacked_resource]', 0,
+                                  stksrc == true ? false:true,
+                                  :onclick => "$('#stacked_resource_details').hide();" ) %>
+          </td>
+        </tr>
+      </table>
+    </td>
+    
+    <td class="data" colspan="4" valign="top">
+      <div id="stacked_resource_details" <%=  stksrc == true ? "style=display:block;" : "style=display:none;" %> >
+        <table>
+          <tr>
+            <td class="label" width="200"
+                title="Stacked Resource Details">
+              Details:
+            </td>
+            <td class="data">
+              <%= text_area("board_design_entry",
+                              "stacked_resource_details",
+                              "rows" => 2, 
+                              "cols" => 90) %>
+              <div id="stacked_resource_details_error" style="color:red; font-weight:bold;display:none;" >
+                You Have Selected Yes. Please Enter Description Before Submitting Page
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="data" colspan="4" valign="top" >
+              Stacking of voltages, such as from series connection of multiple floating voltage sources, may require increased insulation for single fault considerations.
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+
+<!-- ********************************************************** -->
+  <tr>
+    <% excur = @board_design_entry.exceed_current? %>
+    <td class="label" valign="top">> 1 A:</td>    
+    <td class="data" colspan="2" valign="top">
+      <table cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td class="label" width="140">Yes: </td>
+          <td class="data" align="left">
+            <%= radio_button_tag('board_design_entry[exceed_current]', 1,
+                                  excur == true ? true:false,
+                                  :onclick => "$('#exceed_current_details').show();" ) %>
+          </td>
+        </tr>
+        <tr>
+          <td class="label">No: </td>
+          <td class="data" align="left">
+            <%= radio_button_tag('board_design_entry[exceed_current]', 0,
+                                  excur == true ? false:true,
+                                  :onclick => "$('#exceed_current_details').hide();" ) %>
+          </td>
+        </tr>
+      </table>
+  </td>
+    
+    <td class="data" colspan="4" valign="top">
+      <div id="exceed_current_details" <%=  excur == true ? "style=display:block;" : "style=display:none;" %> >
+        <table>
+          <tr>
+            <td class="label" width="200"
+                title="Current Details">
+              Details:
+            </td>
+            <td class="data">
+              <%= text_area("board_design_entry",
+                              "exceed_current_details",
+                              "rows" => 2, 
+                              "cols" => 90) %>
+              <div id="exceed_current_details_error" style="color:red; font-weight:bold;display:none;" >
+                You Have Selected Yes. Please Enter Description Before Submitting Page
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
 
 <!-- ********************************************************** -->
   <tr>
@@ -290,30 +463,6 @@ jQuery(function($) {
             <td class="data" align="left">
               <%= radio_button_tag('board_design_entry[asic_fpga]', '0',
               !@board_design_entry.asic_fpga ) %>
-            </td>
-          </tr>
-        </table>
-    </td>
-    <td class="data" colspan="4" valign="top">&nbsp;</td>
-  </tr>
-
-<!-- ********************************************************** -->
-  <tr>
-    <td class="label" valign="top">HiPot Testing Required: </td>
-    <td class="data" colspan="2" valign="top">
-        <table cellpadding="0" cellspacing="0" border="0">
-          <tr>
-            <td class="label" width="140">Yes: </td>
-            <td class="data" align="left">
-              <%= radio_button_tag('board_design_entry[hipot_testing_required]', '1',
-              @board_design_entry.hipot_testing_required == 1 ) %>
-            </td>
-          </tr>
-          <tr>
-            <td class="label">No: </td>
-            <td class="data" align="left">
-              <%= radio_button_tag('board_design_entry[hipot_testing_required]', '0',
-              @board_design_entry.hipot_testing_required == 0 ) %>
             </td>
           </tr>
         </table>
@@ -514,17 +663,17 @@ jQuery(function($) {
   <tr>
     <td align="left">
       <% if @user_action == 'updating' %>
-	      <% if @design_review_id %>
-	        <input type="button" value="Return"
-	               onClick="parent.location='<%= url_for( :controller => 'design_review', 
-	                                                      :action => 'review_attachments',
-	                                                      :id => @design_review_id ) %>'" />
-	      <% else %>        
-	      	<input type="button" class="form_return" value="Return"
-	               onClick="parent.location='<%= url_for( :action => 'view_entry', 
-	                                                      :id     => @board_design_entry.id,
-	                                                      :viewer => @viewer) %>'" />
-	      <% end %>
+        <% if @design_review_id %>
+          <input type="button" value="Return"
+                 onClick="parent.location='<%= url_for( :controller => 'design_review', 
+                                                        :action => 'review_attachments',
+                                                        :id => @design_review_id ) %>'" />
+        <% else %>        
+          <input type="button" class="form_return" value="Return"
+                 onClick="parent.location='<%= url_for( :action => 'view_entry', 
+                                                        :id     => @board_design_entry.id,
+                                                        :viewer => @viewer) %>'" />
+        <% end %>
      <% end %>
     </td>
     
@@ -535,9 +684,9 @@ jQuery(function($) {
     <% else %>
     <td align="right">     
       <% if @user_action == 'updating'%>
-        <input type="submit" class="form_submit" name="<%=@planning%>" value="Update Entry" />
+        <input type="submit" class="form_submit" id="bde_details_submit" name="<%=@planning%>" value="Update Entry" />
       <% elsif @user_action == 'adding' %>      
-        <input type="submit" class="form_submit" name="<%=@planning%>" value="Continue to Next Step ==>" />
+        <input type="submit" class="form_submit" id="bde_details_submit" name="<%=@planning%>" value="Continue to Next Step ==>" />
       <% end %>
     </td>
     <% end %>

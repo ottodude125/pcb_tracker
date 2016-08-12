@@ -206,6 +206,48 @@
       </td>
     <% end %>
   </tr>
+  
+  <tr valign="top">
+    <th align="right">>33V AC rms, 46.7 V pk, or 70V DC:: </th>
+    <td align="left">
+      <%= @board_design_entry.exceed_voltage? ? 'Yes' : 'No' %>
+    </td>
+  
+    <% if @board_design_entry.exceed_voltage? %>  
+      <th align="right">Voltage Details: </th>
+      <td align="left">
+        <%= @board_design_entry.exceed_voltage_details %>
+      </td>
+    <% end %>
+  </tr>
+  
+  <tr valign="top">
+    <th align="right">Stacking of Sources: </th>
+    <td align="left">
+      <%= @board_design_entry.stacked_resource? ? 'Yes' : 'No' %>
+    </td>
+  
+    <% if @board_design_entry.stacked_resource? %>  
+      <th align="right">Source Details: </th>
+      <td align="left">
+        <%= @board_design_entry.stacked_resource_details %>
+      </td>
+    <% end %>
+  </tr>
+  
+  <tr valign="top">
+    <th align="right">> 1 A: </th>
+    <td align="left">
+      <%= @board_design_entry.exceed_current? ? 'Yes' : 'No' %>
+    </td>
+  
+    <% if @board_design_entry.exceed_current? %>  
+      <th align="right">Current Details: </th>
+      <td align="left">
+        <%= @board_design_entry.exceed_current_details %>
+      </td>
+    <% end %>
+  </tr>
 
   <tr valign="top">
     <th align="right">Outline Drawing Number: </th>
