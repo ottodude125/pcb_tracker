@@ -380,6 +380,9 @@ class ReportController < ApplicationController
     # 5) Designs w/Clarification Issues
     # 5a) For each in 1a check if any clar issues and add to total
     
+    
+    ets_div_id = Division.find_by_name("ETS").id
+    
     # If user selected an alternate yr/quarter to view then calculate the adjusted offset
     # for new quarter range we need to calculate/display
     offset_adjustment = 0 # adjustment to offset variable used below
@@ -475,7 +478,11 @@ class ReportController < ApplicationController
       # Get unique design ids with ftp date in "offset" quarter that are marked fir_complete
       #ftps = FtpNotification.find(:all, :conditions => ["created_at > ? AND created_at < ?", begin_date, end_date] )
       ftps = FtpNotification.where("created_at > ? AND created_at < ?", begin_date, end_date).joins(:design).where(:designs => {:fir_complete => true})
-      designs = ftps.map(&:design_id).uniq            
+      designs = ftps.map(&:design_id).uniq
+      
+      # Remove ETS designs from metrics
+      designs.delete_if { |d| BoardDesignEntry.find_by_design_id(d).division_id == ets_div_id}
+     
       fir_quart["Designs FTPd"] = designs.count rescue 0
 
       
@@ -600,6 +607,9 @@ class ReportController < ApplicationController
         doctotal = 0
         clartotal = 0
         ftps.each do |ftp|
+          # Remove ETS designs from metrics
+          next if BoardDesignEntry.find_by_design_id(ftp.design_id).division_id == ets_div_id
+
           design = {}
           design[:doc_iss_pins] = "N/A"
           design[:clar_iss_pins] = "N/A"

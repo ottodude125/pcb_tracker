@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160311192525) do
+ActiveRecord::Schema.define(:version => 20160811163153) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :default => 0, :null => false
@@ -96,6 +96,12 @@ ActiveRecord::Schema.define(:version => 20160311192525) do
     t.boolean  "asic_fpga",                                     :default => false
     t.integer  "backplane",                      :limit => 1,   :default => 0,            :null => false
     t.string   "purchased_assembly_number",      :limit => 16,  :default => "",           :null => false
+    t.boolean  "exceed_voltage",                                :default => false,        :null => false
+    t.text     "exceed_voltage_details",                                                  :null => false
+    t.boolean  "stacked_resource",                              :default => false,        :null => false
+    t.text     "stacked_resource_details",                                                :null => false
+    t.boolean  "exceed_current",                                :default => false,        :null => false
+    t.text     "exceed_current_details",                                                  :null => false
   end
 
   add_index "board_design_entries", ["design_id"], :name => "design_id"
@@ -687,6 +693,13 @@ ActiveRecord::Schema.define(:version => 20160311192525) do
     t.string  "description",           :limit => 80
     t.string  "pnum"
   end
+
+  create_table "pdm_descriptions", :force => true do |t|
+    t.string "number",      :limit => 15
+    t.string "description", :limit => 80
+  end
+
+  add_index "pdm_descriptions", ["number"], :name => "number"
 
   create_table "permissions", :force => true do |t|
     t.string "name", :limit => 32, :default => "", :null => false
