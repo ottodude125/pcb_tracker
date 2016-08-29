@@ -3,54 +3,23 @@
 # Send out email summary
 # Create review comment for each number that has been updated
 
-namespace :update_part_num do
+namespace :update_part_num2 do
 
-  tmp_file="/hwnet/dtg_devel/cis_mrp/descript_oracle.csv"
+  tmp_file="/hwnet/dtg_devel/cis_mrp/descript_combined.csv"
 
-  desc "ALL: Update the part_nums data table from oracle_part_nums database table."
-  # requires a load of the oracle data file first.
-  task :descriptions => [ :environment, :make_csv_file, :load_database, :update_pnums ] do
+  desc "ALL: Update the part_nums data table from pdm_descriptions database table."
+  # requires a load of the description data file first.
+  task :descriptions => [ :environment, :load_database, :update_pnums ] do
     #nothing to do here
   end
 
-  desc "Create csv file MySQL 'load file'"
-  task :make_csv_file do 
-    file = '/hwnet/dtg_devel/cis_mrp/descript_oracle.txt'    
-    # partnum = first ten characters
-    # description = rest of line
-    File.open(tmp_file, 'w') { | out | 
-      #insert an update marker
-      out.write("'LOADED','#{Time.now}'\n")                                           
-      partnum = ""
-      File.readlines(file).each { |line|
-        begin
-          parts = line.unpack('a10a*')
-          partnum     = parts[0]
-          description = parts[1]
-          description = description.gsub("\n",'')
-          description = description.gsub(/'/,"''")
-          # next gsub preserves backslashes
-          description = description.gsub("\\",'\\\\\\\\')
-          begin
-            out.write("'#{partnum}','#{description}'\n")
-          rescue Exception => e
-            #puts e.message
-            #puts "Bad line: #{line}"
-            #puts ""
-          end
-          #puts line
-        end
-      }
-    }
-    #puts "All data processed"
-  end
   
-  desc "Load descriptions into the oracle_part_nums table using 'load file'"
+  desc "Load descriptions into the pdm_descriptions table using 'load file'"
   task :load_database => :environment do
     env = ActiveRecord::Base.configurations[Rails.env]
-    table  = "oracle_part_nums"
+    table  = "pdm_descriptions"
     begin        
-     #Update the oracle part nums table
+     # Update the pdm_descriptions table
       con = Mysql2::Client.new( :username => env['username'], 
                                 :password => env['password'], 
                                 :database => env['database'],
@@ -83,7 +52,7 @@ namespace :update_part_num do
  
   end # task: database_load_file
 
-  desc "Update the part number descriptions from the oracle_part_nums table."
+  desc "Update the part number descriptions from the pdm_descriptions table."
   task :update_pnums => [ :environment ] do
     #STDERR.puts "Updating descriptions"
     # vars to hold statistical info and part nums data that was updated for email
@@ -105,40 +74,45 @@ namespace :update_part_num do
         @numparts += 1
         #number = pn.prefix + "-" + pn.number + "-" + pn.dash
         number = pn.pnum 
-        oracle_descrip = OraclePartNum.find_by_number(number)
-        #puts "'#{number}' '#{oracle_descrip.description ? oracle_descrip.description : "NULL" }'"
+        #puts "'#{number}'"
+	pdm_descrip = PdmDescription.find_by_number(number)
+        #puts "'#{number}' '#{pdm_descrip.description ? pdm_descrip.description : "NULL" }'" unless pdm_descrip.nil?
         number = number + " " + pn.use
         
-        # if there is an oracle entry for this partnum and the current description does not match oracle description 
-        if oracle_descrip && ( pn.description.blank? || (pn.description.strip != oracle_descrip.description.strip) )
-          @numpartsup += 1
+        # if there is an pdm entry for this partnum and the current description does not match pdm description 
+        if pdm_descrip && ( pn.description.blank? || (pn.description.strip != pdm_descrip.description.strip) )
+          #puts "'#{number}' changed"
+	  @numpartsup += 1
           part_info = {}
           part_info[:old_descrip] = pn.description ? pn.description : "(Not set)"
           part_info[:number] = number
-          part_info[:new_descrip] = oracle_descrip.description.strip
+          part_info[:new_descrip] = pdm_descrip.description.strip
           part_info[:designer] = design.designer
           part_info[:design_review_id] = design.get_phase_design_review.id
-          pn.description = oracle_descrip.description.strip
+          pn.description = pdm_descrip.description.strip
           pn.save
           @updated_part_nums << part_info
           
           # Create review comment
           design_review = design.get_phase_design_review
           user_id = User.find_by_login("Anonymous").id
-          comment =  "Using teamcenter data the description for " + part_info[:number] + " was auto updated from " + part_info[:old_descrip] + " to " + part_info[:new_descrip]
+          comment =  "Using Teamcenter/Agile PDM data the description for " + part_info[:number] + " was auto updated from " + part_info[:old_descrip] + " to " + part_info[:new_descrip]
           drcomment = DesignReviewComment.new(:design_review_id => design_review.id, :user_id => user_id, :comment => comment)
           drcomment.save
           
           # Add the designer to list of designers to get email
           @designers << design.designer
-        end      
+	elsif pdm_descrip.nil?
+	  #puts "'#{number}' - Not Found in PDM Part Descriptions."
+	end
+
       end      
     end  # incomplete_designs.each
 
     # if there are part numbers that have been updated then send out email     
     if !@updated_part_nums.empty?
       TrackerMailer.part_num_update(@updated_part_nums, @designers, @numdes, @numparts, @numpartsup).deliver
-      #puts " There were #{@numdes} designs and #{@numparts} part numbers and #{@numpartsup} partnums were updated"
+      #puts " There were #{@numdes} designs, #{@numparts} part numbers and #{@numpartsup} partnums were updated."
     end
   end #task: descriptions
   
