@@ -3,7 +3,7 @@
 # Send out email summary
 # Create review comment for each number that has been updated
 
-namespace :update_part_num2 do
+namespace :update_part_num do
 
   tmp_file="/hwnet/dtg_devel/cis_mrp/descript_combined.csv"
 
