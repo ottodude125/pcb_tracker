@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160811163153) do
+ActiveRecord::Schema.define(:version => 20160915180119) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :default => 0, :null => false
@@ -391,6 +391,8 @@ ActiveRecord::Schema.define(:version => 20160811163153) do
     t.integer  "created_by",                       :default => 0,  :null => false
     t.datetime "created_on"
   end
+
+  add_index "documents", ["created_on"], :name => "index_documents_on_created_on"
 
   create_table "eco_comments", :force => true do |t|
     t.integer  "eco_task_id", :default => 0, :null => false

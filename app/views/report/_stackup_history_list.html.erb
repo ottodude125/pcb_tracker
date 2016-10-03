@@ -1,0 +1,27 @@
+<!-- View:    stackup_history_reports                                  -->
+<!-- Purpose: Displays table containing stackup history for the index -->
+<!--          and reindex views.                                -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<table align="center"       id="anyid"
+       border="3"           cellspacing="0" 
+       cellpadding="1">
+
+  <% if @stackup_history_hash.size > 0 %>
+	  <tr class="teraheader" valign="top">
+	    <th width="200">Design</th>
+	    <th width="200">Stackup</th>
+	    <th width="200">Created</th>
+	  </tr>    
+
+    <%= render( :partial => "stackup_history_list_stripes") %>
+      
+    
+  <% else %>
+    <tr>
+      <td colspan="5" align="center">No records found</td>
+    </tr>
+  <% end %>
+</table>

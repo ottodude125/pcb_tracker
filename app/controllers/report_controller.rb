@@ -232,6 +232,73 @@ class ReportController < ApplicationController
   end
   
   
+  def stackup_history
+    
+    # Display list
+    # PCB Number (link to design review?) | Stackup file (link to download file) | Stackup date
+    # 1) Get design
+    # 2) Get current stackup
+
+    @stackup_history_hash = {}
+    doc_type = DocumentType.find_by_name("Stackup")
+    @start_date = 1.years.ago
+    @end_date = Date.today
+    Design.find(:all).each do |design|     
+      drd = DesignReviewDocument.joins(:document).where("document_type_id = ? AND design_id = ? AND created_on > ?", doc_type.id, design.id, @start_date).order('created_on DESC').first      
+      next unless drd 
+      stackup_history = {}
+      stackup_history['file_name'] = drd.document.name
+      stackup_history['file_id']   = drd.document.id
+      stackup_history['created']   = drd.document.created_on
+      
+      pnum = PartNum.get_design_pcb_part_number(design.id).pnum
+      @stackup_history_hash[pnum] = stackup_history 
+    end
+
+    # Sort hash by doc created date
+    @stackup_history_hash = @stackup_history_hash.sort_by { |k, v| v['created']}.reverse
+
+  end
+
+  def stackup_history_reindex 
+    @start_date = Date.new(params[:startdate][:year].to_i, params[:startdate][:month].to_i, 1)
+    if params[:enddate][:month] == '12'
+      year = params[:enddate][:year].to_i + 1
+      @end_date = Date.new(year, 1, 1)
+    else
+      month = params[:enddate][:month].to_i + 1
+      @end_date = Date.new(params[:enddate][:year].to_i, month, 1)    
+    end
+    
+    if params[:sort]
+      order  = params[:sort][:field] ? params[:sort][:field] : 'created_on'
+      order += ' '
+      order += params[:sort][:order] ? params[:sort][:order] : 'DESC'
+    else
+      order = 'created_on DESC'
+    end
+
+    @stackup_history_hash = {}
+    doc_type = DocumentType.find_by_name("Stackup")
+    Design.find(:all).each do |design|              
+      drd = DesignReviewDocument.joins(:document).where("document_type_id = ? AND design_id = ? AND created_on BETWEEN ? AND ?", doc_type.id, design.id, @start_date, @end_date).order('created_on DESC').first      
+      next unless drd 
+      stackup_history = {}
+      stackup_history['file_name'] = drd.document.name
+      stackup_history['file_id']   = drd.document.id
+      stackup_history['created']   = drd.document.created_on
+      
+      pnum = PartNum.get_design_pcb_part_number(design.id).pnum
+      @stackup_history_hash[pnum] = stackup_history 
+    end
+    @stackup_history_hash = @stackup_history_hash.sort_by { |k, v| v['created']}.reverse
+    
+    render(:layout=>false)
+    
+  end
+
+
+
   def summary_data
     @board_design_entries = BoardDesignEntry.summary_data
     @design_reviews       = DesignReview.summary_data

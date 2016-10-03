@@ -1,0 +1,22 @@
+<!-- View:    stackup_history_reports                                  -->
+<!-- Purpose: Displays line items in the stackup_history table for    -->
+<!--          the index and reindex views.                      -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+
+
+
+
+  
+  <% @stackup_history_hash.each do |pnum, doc_data| %>    
+  	<tr>
+  	  <td align="center"><%= pnum %></td>
+	  <td align="center"><%= link_to(doc_data["file_name"], :controller => "design_review", :action => "get_attachment", :id => doc_data["file_id"]) %></td>
+      <td align="center"><%= doc_data["created"] %></td>
+  	</tr>
+
+  <% end %>
+

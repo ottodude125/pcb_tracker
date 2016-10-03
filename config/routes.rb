@@ -121,6 +121,7 @@ PcbTracker::Application.routes.draw do
       post 'reviewer_approval_time'
       get 'reviewer_workload'
       get 'summary_data'
+      get 'stackup_history'
     end
   end
 
