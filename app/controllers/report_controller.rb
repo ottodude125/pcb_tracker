@@ -727,11 +727,11 @@ class ReportController < ApplicationController
             design[:pins] = "N/A"
             design[:brd_type] = "Revision"
           elsif sched_brd != "Error"
-            design[:pins] = sched_brd.actual_ending_pin_count rescue "Error"
+            design[:pins] = sched_brd.actual_ending_pin_count.blank? ? 999999 : sched_brd.actual_ending_pin_count
             design[:brd_type] = "Production (New)"
-            design[:doc_iss_pins] = (docisscount*100.000/design[:pins]).round(3).to_s + "%"
-            design[:clar_iss_pins] = (clarisscount*100.000/design[:pins]).round(3).to_s + "%"
-            pintotal += design[:pins]
+	    design[:doc_iss_pins] = (docisscount*100.000/design[:pins]).round(3).to_s + "%"
+	    design[:clar_iss_pins] = (clarisscount*100.000/design[:pins]).round(3).to_s + "%"
+	    pintotal += design[:pins]
             doctotal += design[:num_doc_issues]
             clartotal += design[:num_clar_issues]
           else
