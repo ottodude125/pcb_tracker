@@ -160,11 +160,11 @@ module ApplicationHelper
   def design_center_path(design_review)
     #('http://boarddev.teradyne.com' + design_review.design.surfboards_path + '/public').gsub("//","/")
     dc_path = "" 
-    #if design_review.design.design_center.pcb_path.eql? DesignCenter.buffalo_grove_archive.pcb_path
-    #  dc_path = "file://orange.ter.teradyne.com/DepartmentalStorage/product_validation/engineering_services/pcb_layout/PCB_DESIGN_ARCHIVE/"
-    #else
+    if design_review.design.design_center.pcb_path.eql? DesignCenter.buffalo_grove_archive_non_cadence.pcb_path
+      dc_path = "file://orange.ter.teradyne.com/DepartmentalStorage/product_validation/engineering_services/pcb_layout/PCB_DESIGN_ARCHIVE/"
+    else
       dc_path = (design_review.design.surfboards_path + '/public/').gsub("//","/")
-    #end
+    end
     dc_path
   end
 

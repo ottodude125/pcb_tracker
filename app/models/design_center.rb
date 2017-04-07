@@ -50,8 +50,8 @@ class DesignCenter < ActiveRecord::Base
     self.find_all_by_active(1, :order => sort )
   end
   
-  def self.buffalo_grove_archive
-    self.find_by_name("Buffalo Grove Archive")
+  def self.buffalo_grove_archive_non_cadence
+    self.find_by_name('BuffaloGroveArchive(non-Cadence)')
   end
 
 

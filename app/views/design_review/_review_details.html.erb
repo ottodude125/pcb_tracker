@@ -60,6 +60,9 @@
       <% else %>
         <b>Not Set</b>
       <% end %>
+      <% if @design_review.design.design_center.pcb_path.eql? DesignCenter.buffalo_grove_archive_non_cadence.pcb_path %>
+        (Requires Internet Explorer)
+      <% end %>
       <br>
       (<b>Eng Dir: </b>
       <% if @brd_dsn_entry && @brd_dsn_entry.design_directory %>
