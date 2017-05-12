@@ -50,6 +50,7 @@ PcbTracker::Application.routes.draw do
       get  'initial_cc_list'
       get  'initial_attachments'
       get  'list'
+      get  'active_designs'
       get 'set_fir_complete'
     end
   end

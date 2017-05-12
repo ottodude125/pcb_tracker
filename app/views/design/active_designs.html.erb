@@ -1,0 +1,55 @@
+<!-- View:    design                                            -->
+<!-- Purpose: Displays a list of active designs to for users    -->
+<!--          to get a quick status on every design.          -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+<% @heading =  "Active Designs" %>
+
+<hr class="div" />
+
+<table align="center" border="1" cellspacing="2" cellpadding="2" >
+
+  <tr class="teraheader">
+    <th>PCBA Number</th>
+    <th>PCB Number</th>
+    <th>Name</th>
+    <th>Phase</th>
+    <th>Review Status</th>
+  </tr>
+
+  <% @active_designs.each do |design| %>
+    <% pcb_num = design.pcb_number %>
+    <% design_review = design.get_phase_design_review %>
+    <% pcbas = PartNum.get_design_pcba_part_numbers(design.id) %>
+    <% if pcbas.length > 0 %>
+      <% pcbas.each do |pcba| %>
+        <tr>
+          <td align="center"><%= pcba.name_string %></td>
+	  <td align="center"><%= pcb_num %></td>
+	  <td> &nbsp; <%= design.board.project.name + " / " + design.pcb_description %></td>
+	  <td align="center"><%= link_to(design.phase.name,
+				       {:controller => 'design_review',
+				        :action => :view,
+				        :id => design_review.id})  %></td>
+	  <td align="center"><%= design_review.review_status.name %></td>
+        </tr>
+      <% end %>
+    <% else %>
+        <tr>
+          <td align="center">"(no pcba number)"</td>
+	  <td align="center"><%= pcb_num %></td>
+	  <td> &nbsp; <%= design.board.project.name + " / " + design.pcb_description %></td>
+	  <td align="center"><%= link_to(design.phase.name,
+				       {:controller => 'design_review',
+				        :action => :view,
+				        :id => design_review.id})  %></td>
+	  <td align="center"><%= design_review.review_status.name %></td>
+    <% end %>
+  <% end %>
+	
+</table>
+
+
+

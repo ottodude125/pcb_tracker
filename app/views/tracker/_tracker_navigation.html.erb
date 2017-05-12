@@ -46,6 +46,19 @@
     
     
         <!-- ############################################################ -->
+        <!-- Active Designs                                                 -->
+        <!-- ############################################################ -->    
+        <tr>
+            <td align="center">
+                <%= link_to("Active Designs",
+                            { :controller => 'design', 
+                              :action => 'active_designs' },
+                              :title => 'View list of active designs and their status') %>
+            </td>
+        </tr>
+    
+    
+        <!-- ############################################################ -->
         <!-- PCB Engineering Entry Partial                                -->
         <!-- ############################################################ -->
         <%= render(:partial => 'pcb_engineering_entry') %>

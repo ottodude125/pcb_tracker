@@ -15,7 +15,8 @@
 class DesignController < ApplicationController
 
   before_filter(:verify_admin_role, 
-                :except => [:change_cc_list,
+                :except => [:active_designs,
+		  	    :change_cc_list,
                             :design_review_reviewers,
                             :pcb_mechanical_comments, 
                             :process_reviewer_modifications,
@@ -540,6 +541,37 @@ end
     end
     
     @active_designs = active_designs.sort_by { |d| d.directory_name }  
+    
+  end
+
+
+  ######################################################################
+  #
+  # active_designs
+  #
+  # Description:
+  # Provides a list active designs sorted by the part number. Method is 
+  # non admin so all users can have access to a view of current active designs
+  #
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def active_designs
+    
+    # Get all of the designs that are not complete.
+    active_designs = Design.find_all_active
+    
+    # Detect if any designs do not have a part number 
+    no_pn_ids = active_designs.find_all { |d| d.pcb_number == "" }.collect {|d| d.id}.join(",")
+    
+    if no_pn_ids.length > 0
+      #active_designs.delete_if { |d| d.pcb_number == "" }
+     flash['notice'] = "Active designs exist that have no associated part number - #{no_pn_ids}"
+    end
+    
+    @active_designs = active_designs.sort_by { |d| d.pcb_display }  
     
   end
 
