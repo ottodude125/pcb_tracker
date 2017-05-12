@@ -180,6 +180,40 @@ class Design < ActiveRecord::Base
 
   ######################################################################
   #
+  # is_user_involved?
+  #
+  # Description:
+  # Checks if user submitted PCB Engineering Entry, is listed as the  
+  # designer, or is listed as a reviewer on any of the design reviews
+  #
+  # Parameters:
+  # user -> default to logged in user
+  #
+  # Return value:
+  # true/false
+  #
+  ######################################################################
+  #
+  def is_user_involved?(user)
+    monkey = user
+    is_involved = false
+    
+    # Get design reviews for this design and check if user listed as reviewer on any of them
+    design_reviews = DesignReview.find_all_by_design_id(self.id)
+    dr_reviewer = design_reviews.to_ary.find_all { |dr| dr.is_reviewer?(user) }
+    
+    # Get PCB Engineering Entry (BDE) originator
+    bde_uid = BoardDesignEntry.find_by_design_id(self.id).user_id
+
+    # if user submitted bde, is a reviewer, or is a designer then return true
+    if (bde_uid == user.id) || (dr_reviewer.length > 0) || (self.designer_id == user.id)
+      is_involved = true
+    end
+    is_involved
+  end
+
+  ######################################################################
+  #
   # get_active_designs_for_auto_part_num_update
   #
   # Description:
