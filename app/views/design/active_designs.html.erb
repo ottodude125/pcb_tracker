@@ -63,9 +63,17 @@ Successive button clicks will toggle between these two views.
   <% end %>	
 </table>
 <br>
-<div align="center">
-  <input type="button" class="toggle_design_list" value="Display All Active Designs" >
-</div>
 
+<table border='0' align="center" width="800">
+  <tr>
+    <td align="left">
+      <input type="button" value="Home"
+        onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index') %>'" />
+    </td>
+    <td align="center">
+      <input type="button" class="toggle_design_list" value="Display All Active Designs" >
+    </td>
+  </tr>
+</table>
 
 
