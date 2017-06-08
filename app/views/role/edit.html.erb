@@ -9,7 +9,7 @@
       url = "<%= url_for(:action => "toggle_reviewer_selection", :controller => "role") -%>";
       url = "/pcbtr/role/toggle_reviewer_selection/";
       value = $("#role_reviewer").prop('checked');
-      $.post(url, {id: <%= @role.id -%>, value: value } ,function(data) {
+      $.post(url, {id: <%= @role.id.nil? ? 55 : @role.id -%>, value: value } ,function(data) {
         $("#reviewer").empty().append(data);
      });
     });
