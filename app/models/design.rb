@@ -29,10 +29,12 @@ class Design < ActiveRecord::Base
   has_many :oi_instructions
   #has_many :part_numbers
   has_many :part_nums
+  has_many :design_fab_houses
 
   has_one   :audit
   has_one   :board_design_entry
   has_one   :ftp_notification
+
   
   
   NOT_SET  = 'Not Set'

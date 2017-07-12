@@ -48,9 +48,9 @@
 	          <table cellpadding="0" cellspacing="0">
 	            
 	            <% if  @review_type.name != "Planning"%>
-	                <% if @my_review_results && !comment_only %>
+                  <% if @my_review_results && !comment_only %>
 	                  <%= render :partial => "reviewer_selections" %>
-	                <% else %>
+                  <% else %>
 	                  <% if  @design_review.posting_count == 0 &&
 	                         @design_review.is_reviewer?(@user) %>
 	                    <tr>
@@ -127,8 +127,14 @@
                          <% end %>
                        <%- "Only render fab_issue button if user has fab role" %>                       
 	                     <% if @logged_in_user.is_a_role_member?(@fir_role_name) %>
-	                     	<%= render :partial => "buttons_role_fab_issue" %>
-	                     <% end %>
+	                       <%= render :partial => "buttons_role_fab_issue" %>
+                       <% end %>
+                       
+                       <%- "Only render approve fab houses button if user has npp role and is assigned to review" %>                       
+                       <% if @is_npp_reviewer %>
+                        <%= render :partial => "buttons_approve_fab_houses" %>
+                       <% end %>
+
                      <% end %>
                   </table>
               </td>

@@ -65,13 +65,18 @@
 
 
 <tr>
-  <td>
-
+  <td>    
     <% if @design_review.in_review? && !@design_review.design.fir_complete? && @design_review.is_release_review? %>
       <b>
         Not accepting results until all FIRs have been completed.<br />
         Please submit comments to provide any additional feedback.
       </b>
+    
+    <!-- If in final rev active, use is npp reviewer, and they have not approved any fab houses then alert them and don't render table -->
+    <% elsif @design_review.in_review? && @design_review.is_final_review? && !@npp_has_approved_fab_houses && @is_npp_reviewer %>
+      <p style="font-weight: bold; color:red;">
+        As the New Product Planner, you must first approve at least one FAB House before you can submit your Review Status.
+      </p>
 
     <% elsif @design_review.in_review? %>
     

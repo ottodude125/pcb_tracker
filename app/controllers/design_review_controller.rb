@@ -17,6 +17,9 @@ class DesignReviewController < ApplicationController
   before_filter(:verify_manager_admin_privs,
     :only => [:process_admin_update])
 
+  before_filter(:verify_approve_fab_house_privs,
+    :only => [:approve_fab_houses, :process_approve_fab_houses])
+
 
   ######################################################################
   #
@@ -51,8 +54,9 @@ class DesignReviewController < ApplicationController
       :action     => 'view',
       :id         => params[:id]}
 
+    
     if params[:id]
-      
+      @is_npp_reviewer = false
       @fir_role_name = Role.get_fir_role.name
       @design_review  = DesignReview.find(params[:id])
       design_id = @design_review.design_id
@@ -60,8 +64,14 @@ class DesignReviewController < ApplicationController
         :conditions => "design_id='#{@design_review.design_id}'")
       @review_results = @design_review.review_results_by_role_name
 
+      # Has npp approved any fab houses
+      @npp_has_approved_fab_houses = DesignFabHouse.where(design_id: design_id, approved: true).count > 0
+
+      if @logged_in_user
+        @is_npp_reviewer = @design_review.design.is_role_reviewer?(Role.get_npp_role, @logged_in_user)
+      end
+
       if @logged_in_user && @logged_in_user.is_reviewer?
-        
         @my_review_results = []
         @review_results.each do |review_result|
           @my_review_results << review_result if review_result.reviewer_id == @logged_in_user.id
@@ -1851,10 +1861,49 @@ def update_fab_houses
   if params[:id]
     @design_review  = DesignReview.find(params[:id])
     @design_fab_houses = {}
-    @design_review.design.fab_houses.each { |dfh| @design_fab_houses[dfh.id] = dfh }
+    DesignFabHouse.where(design_id: @design_review.design_id).each { |dfh| @design_fab_houses[dfh.fab_house_id] = dfh }
+    
+    #@design_fab_houses2 = {}
+    #@design_review.design.fab_houses.each { |dfh| @design_fab_houses2[dfh.id] = dfh }
 
     @fab_houses = FabHouse.get_all_active
+    
 
+  else
+
+    flash['notice'] = "No ID was provided - unable to access the design review"
+    redirect_to(:controller => 'tracker', :action => 'index')
+  end
+
+end
+
+####################################################################
+#
+# approve_fab_houses
+#
+# Description:
+# Approves the fab houses associated with a design
+# Parameters from params
+# id - the design review
+#
+######################################################################
+#
+def approve_fab_houses
+
+  session[:return_to] = {:controller => 'design_review',
+    :action     => 'view',
+    :id         => params[:id]}
+
+  if params[:id]
+    @design_review  = DesignReview.find(params[:id])
+    @design_fab_houses = DesignFabHouse.where(design_id: @design_review.design_id)
+    
+    @all_no_response = true
+    @design_review.my_results(@logged_in_user).each do |r|
+      @all_no_response = false if (r.result != "No Response")
+    end    
+    #DesignFabHouse.where(design_id: @design_review.design_id).each { |dfh| @design_fab_houses[dfh.fab_house_id] = dfh }
+    
   else
 
     flash['notice'] = "No ID was provided - unable to access the design review"
@@ -2053,6 +2102,27 @@ def process_update_fab_houses
 
   redirect_to(:action => :view, :id => params[:design_review][:id])
 end
+
+######################################################################
+#
+# process_approve_fab_houses
+#
+# Description:
+#   Approves the FAB houses - called from admin button on review form
+# Parameters from params
+# id         - the review id
+# fab_houses - list of fab house from review
+#
+######################################################################
+#
+def process_approve_fab_houses
+
+  design_review = DesignReview.find(params[:design_review][:id])
+  fab_msg = post_fab_house_approvals(design_review, params["fab_house_ids"] )
+
+  redirect_to(:action => :view, :id => params[:design_review][:id])
+end
+
 ########################################################################
 ########################################################################
 private
@@ -2157,12 +2227,16 @@ def post_fab_house_updates(design_review, fab_house_list)
   removed = ''
 
   # get current fab houses in join design table
-  design_fab_houses = design_review.design.fab_houses
+  #design_fab_houses2 = design_review.design.fab_houses
+
+  # get current fab houses
+  design_fab_houses = []
+  DesignFabHouse.where(design_id: design_review.design_id).each { |dfh| design_fab_houses << FabHouse.find(dfh.fab_house_id) } 
 
   # check if there are any fab houses in the list. if there are then process them to update comment and join tables
   if fab_house_list != nil
     
-    # if list of fab houses passed in includes items not in join table then add them to added comment
+    # if list of fab houses passed in includes items not in the table then add them to added comment
     fab_house_list.each do |fbl|
       fab_house = FabHouse.find(fbl)
       if !design_fab_houses.include? fab_house
@@ -2171,6 +2245,7 @@ def post_fab_house_updates(design_review, fab_house_list)
         else
           added += ', ' + fab_house.name
         end
+        DesignFabHouse.create(design_id: design_review.design_id, fab_house_id: fbl)
       end
     end
 
@@ -2182,26 +2257,33 @@ def post_fab_house_updates(design_review, fab_house_list)
         else
           removed += ', ' + fb2.name
         end
+        # update the design fab houses table
+        dfh = DesignFabHouse.find_by_design_id_and_fab_house_id(design_review.design_id, fb2.id)
+        dfh.destroy
+        #dfh = DesignFabHouse.where(design_id: design_review.design_id, fab_house_id: fb2.id)
+        #DesignFabHouse.destroy(dfh[0].id)
       end
     end
-        
     # update the design and board fab houses join tables
-    design_review.design.fab_houses = FabHouse.find(fab_house_list) if fab_house_list
+    #design_review.design.fab_houses = FabHouse.find(fab_house_list) if fab_house_list
     design_review.design.board.fab_houses = FabHouse.find(fab_house_list) if fab_house_list 
-  
+
   # Otherwise the user has submitted a form with no vendors selected
   else
-    # Just add all items in the join table to the removed list
+    # Just add all items in the  table to the removed list
     design_fab_houses.each do |fab_house|
       if removed == ''
         removed = fab_house.name
       else
         removed += ', ' + fab_house.name
       end
+      # update the design fab houses table
+      dfh = DesignFabHouse.find_by_design_id_and_fab_house_id(design_review.design_id, fab_house.id)
+      dfh.destroy
     end
     
     # update the design and board fab houses join tables
-    design_review.design.fab_houses -= design_fab_houses
+    #design_review.design.fab_houses -= design_fab_houses
     design_review.design.board.fab_houses -= design_fab_houses
   end  
 
@@ -2222,6 +2304,115 @@ def post_fab_house_updates(design_review, fab_house_list)
 
 end
 
+
+######################################################################
+#
+# post_fab_house_approvals
+#
+# Description:
+# This method builds and stores the comment that is generated when
+# the fab houses are approved by the NPP
+#
+# Parameters:
+# design_review  - the designer review that is being modified
+# fab_house_list - the list of approved fab_houses 
+#
+# Return Value:
+# A boolean that indicates that a comment was generated when true.
+#
+######################################################################
+#
+def post_fab_house_approvals(design_review, fab_house_list)
+  dfh2 = DesignFabHouse.find_by_design_id_and_fab_house_id(design_review.design_id, 987)
+  comment_update = false
+
+  # Check to see if the reviewer is an SLM-Vendor reviewer.
+  # review_results[:fab_houses] will be non-nil.
+  added   = ''
+  removed = ''
+  
+  # get current fab houses in join design table
+  #design_fab_houses2 = design_review.design.fab_houses
+
+  # get list of current fab houses for this design
+  design_fab_houses = []
+  DesignFabHouse.where(design_id: design_review.design_id).each { |dfh| design_fab_houses << dfh.fab_house_id } 
+
+  #design_fab_hosues2 = DesignFabHouse.where(design_id: design_review.design_id)
+
+  # check if there are any fab houses in the list. if there are then process them to update comment and join tables
+  if fab_house_list != nil
+    
+    # if list of fab houses passed in includes items already approved then add them to added comment
+    fab_house_list.each do |fbl|
+      dfh = DesignFabHouse.find_by_design_id_and_fab_house_id(design_review.design_id, fbl)
+      
+      if !dfh.approved
+        if added == ''
+          added = dfh.fab_house.name
+        else
+          added += ', ' + dfh.fab_house.name
+        end
+        #dfh = DesignFabHouse.find_by_design_id_and_fab_house_id(design_review.design_id, fab_house.id)
+        #dfh.update(design_id: design_review.design_id, fab_house_id: fbl, approved: true)
+        dfh.update_attributes(approved: true)
+
+      end
+    end
+
+    # if join table includes items which are not in the fab house list passed in then add them to removed comment 
+    design_fab_houses.each do |fb2|
+      dfh = DesignFabHouse.find_by_design_id_and_fab_house_id(design_review.design_id, fb2)
+
+      if !(fab_house_list.include? fb2.to_s) && (dfh.approved)
+        if removed == ''
+          removed = dfh.fab_house.name
+        else
+          removed += ', ' + dfh.fab_house.name
+        end
+        # update the design fab houses table
+        #dfh = DesignFabHouse.find_by_design_id_and_fab_house_id(design_review.design_id, fb2.id)
+        #dfh.update(design_id: design_review.design_id, fab_house_id: fb2.id, approved: false)
+        dfh.update_attributes(approved: false)
+      end
+    end
+
+  # Otherwise the user has submitted a form with no vendors selected
+  else
+    # Just add all items in the  table to the removed list
+    design_fab_houses.each do |fab_house|
+      dfh = DesignFabHouse.find_by_design_id_and_fab_house_id(design_review.design_id, fab_house)
+      if dfh.approved        
+        if removed == ''
+          removed = dfh.fab_house.name
+        else
+          removed += ', ' + dfh.fab_house.name
+        end
+        # update the design fab houses table
+        #dfh = DesignFabHouse.find_by_design_id_and_fab_house_id(design_review.design_id, fab_house.id)
+        #dfh.update(design_id: design_review.design_id, fab_house_id: fab_house.id, approved: false)
+        dfh.update_attributes(approved: false)
+      end
+    end
+
+  end  
+
+  # parse together the comment to be posted
+  if added !=  '' || removed != ''
+    fab_msg = 'Updated approved the Fab Houses '
+
+    fab_msg += " - Added: #{added}"     if added   != ''
+    fab_msg += " - Removed: #{removed}" if removed != ''
+
+    dr_comment = DesignReviewComment.new(:comment          => fab_msg,
+      :user_id          => @logged_in_user.id,
+      :design_review_id => design_review.id).save
+    comment_update = true
+  end
+
+  comment_update
+
+end
 
 ######################################################################
 #

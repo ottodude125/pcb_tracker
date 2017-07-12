@@ -106,16 +106,34 @@
     <% end %>
   </tr>
   <tr valign="top">
-    <% if @design_review.design.fab_houses.size == 0 %>
+    <% design_fab_houses = DesignFabHouse.where(design_id: @design_review.design_id) %>
+
+    <% if design_fab_houses.size == 0 %>
       <td class="th1" colspan="2">No Fab House Selected</td>
     <% else %>
-      <% if @design_review.design.fab_houses.size == 1 %>
+      <% if design_fab_houses.size == 1 %>
         <td class="th1">Fab House:</td>
       <% else %>
         <td class="th1">Fab Houses:</td>
       <% end %>
       <td>
-          <%= raw @design_review.design.fab_houses.map { |f|  h f.name}.join('<br />') %>
+        <table border="0" rules="all" width="350px">
+          <tr>
+            <th>  SLM (Capable Vendors)  </th>
+            <th>  Planner (Actual Vendors)  </th>
+          </tr>
+          
+            <% design_fab_houses.each do |dfh| %>
+              <tr>
+                <td align="center"><%= dfh.fab_house.name %></td>
+                <% if dfh.approved %>
+                  <td align="center"><%= image_tag('check_mark.png') %></td>
+                <% else %>
+                  <td></td>
+                <% end %>
+              </tr>
+            <% end %>          
+        </table>
       </td>
     <% end %>
 

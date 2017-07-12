@@ -1,0 +1,17 @@
+<!-- View:    design_review                                     -->
+<!-- Purpose: Displays the button to approve fab houses. -->
+<!-- ********************************************************** -->
+<!-- $Id$ -->
+<!-- ********************************************************** -->
+
+
+<tr>
+  <td>
+    <input type="button" value="Approve FAB Houses (NPP)"
+           title="Use to approve the FAB houses assigned to a design"
+           onClick="parent.location='<%= url_for(:controller => 'design_review',
+                                                 :action     => 'approve_fab_houses',
+                                                 :id         => @design_review.id) %>'"
+           class="small_font_wide_button" />
+  </td>
+</tr>

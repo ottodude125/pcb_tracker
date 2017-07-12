@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20160915180119) do
+ActiveRecord::Schema.define(:version => 20170628181807) do
 
   create_table "audit_comments", :force => true do |t|
     t.integer  "design_check_id", :default => 0, :null => false
@@ -236,6 +236,22 @@ ActiveRecord::Schema.define(:version => 20160915180119) do
 
   add_index "checks", ["subsection_id"], :name => "subsection_id"
 
+  create_table "ckeditor_assets", :force => true do |t|
+    t.string   "data_file_name",                  :null => false
+    t.string   "data_content_type"
+    t.integer  "data_file_size"
+    t.integer  "assetable_id"
+    t.string   "assetable_type",    :limit => 30
+    t.string   "type",              :limit => 30
+    t.integer  "width"
+    t.integer  "height"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+  end
+
+  add_index "ckeditor_assets", ["assetable_type", "assetable_id"], :name => "idx_ckeditor_assetable"
+  add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], :name => "idx_ckeditor_assetable_type"
+
   create_table "design_centers", :force => true do |t|
     t.string  "name",     :limit => 32, :default => "", :null => false
     t.string  "pcb_path", :limit => 64, :default => "", :null => false
@@ -279,6 +295,17 @@ ActiveRecord::Schema.define(:version => 20160915180119) do
     t.string  "name",   :limit => 64, :default => "", :null => false
     t.integer "active", :limit => 1,  :default => 1,  :null => false
   end
+
+  create_table "design_fab_houses", :force => true do |t|
+    t.integer  "design_id",                       :null => false
+    t.integer  "fab_house_id",                    :null => false
+    t.boolean  "approved",     :default => false, :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+  end
+
+  add_index "design_fab_houses", ["design_id"], :name => "index_design_fab_houses_on_design_id"
+  add_index "design_fab_houses", ["fab_house_id"], :name => "index_design_fab_houses_on_fab_house_id"
 
   create_table "design_review_comments", :force => true do |t|
     t.integer  "design_review_id",              :default => 0, :null => false

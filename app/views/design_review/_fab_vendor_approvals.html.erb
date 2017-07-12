@@ -1,0 +1,31 @@
+
+
+
+<% @heading = 'Update Approved Fab Houses' %>
+
+<hr class="div" />
+
+<div id="approve_fab_houses_warning" style="margin-left:auto; margin-right:auto; text-align:center; color:red; font-weight:bold; width:400px; display:none;">It appears you are trying to unapprove all Fab Houses during Final Review. You must first change your Review Status on all Roles for this Design Review to "No Response" before you can proceed.</div>
+
+
+<table border="0" width="100%">
+  <tr>
+    <td>
+      <table align="center">
+        <% @design_fab_houses.each do |dfh| %>
+          <tr>
+            <td align="left" valign="top">
+              <%= check_box_tag "fab_house_ids[]", dfh.fab_house_id, dfh.approved %>
+            </td>
+            <td align="left">
+              <label for="fab_house_name"><%= dfh.fab_house.name -%></label>
+            </td>
+          </tr>
+        <% end %>      
+      </table>
+    </td>
+  </tr>
+</table>
+
+<hr class="div" />
+

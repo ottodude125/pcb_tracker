@@ -1,0 +1,38 @@
+<%#
+Approve the fab houses for a design
+%>
+
+
+
+<%= form_tag( { :action  => 'process_approve_fab_houses', },
+                :id => "approve_fab_houses_form" , 
+                :data => {:"inreview" => @design_review.in_review?, 
+                          :"isfinalreview" => @design_review.is_final_review?, 
+                          :"allnoresponse" => @all_no_response} ) do %>
+  
+  <%= hidden_field "design_review", "id" %>
+  <%= render :partial => "fab_vendor_approvals"%>
+
+
+
+
+  <table width="100%">
+    <tr>
+      <td align="left">
+        <input type="button" value="Return" onClick="parent.location='<%= url_for( :controller => 'design_review', :action => 'view', :id => @design_review.id ) %>'" />
+      </td>
+      
+      <td align="center">
+        <input type="submit" value="Update Approved Fab Houses"
+               title="Update Approved Fab Houses"
+               class="buttonPost" 
+               id="approveFabHousesButton"/>
+      </td>
+
+      <td align="right">
+        <input type="button" value="Home" onClick="parent.location='<%= url_for( :controller => 'tracker', :action => 'index' ) %>'" />
+      </td>
+    </tr>
+  </table>
+
+<% end %> 

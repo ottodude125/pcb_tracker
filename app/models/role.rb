@@ -61,6 +61,20 @@ class Role < ActiveRecord::Base
 
   ######################################################################
   #
+  # get_npp_role
+  #
+  # Description: This method returns the npp role 
+  #
+  # Return value: A role record
+  #
+  ######################################################################
+  #
+  def self.get_npp_role
+    self.find_by_name("Planning")
+  end 
+
+  ######################################################################
+  #
   # get_review_roles
   #
   # Description:

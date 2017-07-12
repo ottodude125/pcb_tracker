@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  design_id: 1
+  fab_house_id: 1
+  approved: false
+
+two:
+  design_id: 1
+  fab_house_id: 1
+  approved: false

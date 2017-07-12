@@ -155,6 +155,17 @@ class DesignReview < ActiveRecord::Base
     self.review_type_id == release_review.id
   end
 
+  # Checks if design review review type is "Final"
+  #
+  # :call-seq:
+  #   is_final_review?() -> [design_reviews]
+  #
+  #  Returns true or false if is "Final" review
+  #
+  def is_final_review?
+    final_review = ReviewType.get_final
+    self.review_type_id == final_review.id
+  end
 
   # Retrieve the roles that the user is a member of for the the review.
   #

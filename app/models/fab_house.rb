@@ -17,6 +17,8 @@ class FabHouse < ActiveRecord::Base
   has_and_belongs_to_many :boards
   has_and_belongs_to_many :designs
 
+  has_many :design_fab_houses
+
   validates_uniqueness_of :name
   validates_presence_of   :name
 

@@ -182,7 +182,37 @@ class ApplicationController < ActionController::Base
       redirect_to(:controller => 'tracker', :action => "index")
     end
   end
-  
+
+
+  ######################################################################
+  #
+  # verify_approve_fab_house_privs
+  #
+  # Description:
+  # Verifies that the user is either an administrator or a PCB manager.
+  #
+  # Return value:
+  # TRUE if the user is an admin or a PCB manager, false otherwise
+  #
+  # Additional Information:
+  # Set flash['notice'] if the user is not an admin or PCB Manager for the 
+  # message to be displayed.
+  #
+  ######################################################################
+  #
+  def verify_approve_fab_house_privs
+
+    begin
+      
+      unless @logged_in_user.is_a_role_member?(Role.get_npp_role.name)
+        flash['notice'] = 'Access to approve Fab Houses not allowed'
+        redirect_to(:controller => 'tracker', :action => "index")
+      end
+    rescue
+      flash['notice'] = 'Update not allowed - Must belong to New Product Planner group'
+      redirect_to(:controller => 'tracker', :action => "index")
+    end
+  end  
   
   ######################################################################
   #
