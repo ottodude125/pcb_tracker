@@ -138,5 +138,25 @@ class DocumentType < ActiveRecord::Base
   def self.get_pad_patterns_document_type
     self.find_by_name("Pad Patterns")
   end
+  
+  ######################################################################
+  #
+  # get_stackup_document_type
+  #
+  # Description:
+  # This method retrieves the Stackup document type
+  #
+  # Parameters:
+  # None
+  #
+  # Return value:
+  # A document type
+  #
+  ######################################################################
+  #
+  def self.get_stackup_document_type
+    self.find_by_name("Stackup")
+  end
+
         
 end

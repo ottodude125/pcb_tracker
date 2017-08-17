@@ -18,7 +18,8 @@ before_filter(:verify_admin_role,
               :except => [:board_design_search,
                           :design_information,
                           :search_options,
-                          :show_boards] )
+                          :show_boards,
+                          :get_stackup_attachment] )
   
 
   ######################################################################
@@ -228,5 +229,39 @@ before_filter(:verify_admin_role,
     @design_list.delete_if { |dl| dl == nil }  #map adds nil values
 #logger.debug "--after filter--"
 #logger.debug @design_list
+  end 
+
+  def get_stackup_attachment
+    
+    board = PartNum.find_by_pnum_and_revision(params[:pnum], params[:revision]).design.board
+
+    dr_documents = board.design_review_documents
+
+    doc_type_stackup = DocumentType.get_stackup_document_type
+    docs = dr_documents.collect { |d| d if d.document_type_id == doc_type_stackup.id }.compact
+    
+    dr_stackup_doc = nil
+    if docs.size > 0
+      dr_stackup_doc = docs.sort_by { |d| d.document.created_on }.pop
+    else
+      nil
+    end
+
+    @document = Document.find(dr_stackup_doc.document_id)
+    if @document.unpacked == 1
+      send_data(@document.data.lines.to_a.pack("H*"),
+        :filename    => @document.name,
+        :type        => @document.content_type,
+        :disposition => "inline")
+    else
+      send_data(@document.data,
+        :filename    => @document.name,
+        :type        => @document.content_type,
+        :disposition => "inline")
+    end
+
+
+
   end  
+   
 end
