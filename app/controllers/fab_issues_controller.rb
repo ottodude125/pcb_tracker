@@ -52,7 +52,12 @@ class FabIssuesController < ApplicationController
     @fab_failure_modes = FabFailureMode.order("name").find_all_by_active(true)
     fab_deliverables = FabDeliverable.order("parent_id DESC, id ASC").find_all_by_active(true)    
     @fab_deliverables = {"Other" => []}
-    @fab_houses = @design_review.design.fab_houses.order("name ASC")
+    
+    #@fab_houses = @design_review.design.fab_houses.order("name ASC")
+    design_fab_houses = DesignFabHouse.where( design_id: @design_review.design_id).pluck(:fab_house_id)
+    @fab_houses = FabHouse.order("name ASC").find(design_fab_houses)
+    
+
 
     fab_deliverables.each do |fd|     
       # A) if fd parent id not empty then check if its parent is already in hash
@@ -85,8 +90,10 @@ class FabIssuesController < ApplicationController
     @fab_failure_modes = FabFailureMode.order("name").find_all_by_active(true)
     fab_deliverables = FabDeliverable.order("parent_id DESC, id ASC").find_all_by_active(true)    
     @fab_deliverables = {"Other" => []}
-    @fab_houses = @design_review.design.fab_houses.order("name ASC")
-    
+    #@fab_houses = @design_review.design.fab_houses.order("name ASC")
+    design_fab_houses = DesignFabHouse.where( design_id: @design_review.design_id).pluck(:fab_house_id)
+    @fab_houses = FabHouse.order("name ASC").find(design_fab_houses)    
+
     fab_deliverables.each do |fd|     
       # A) if fd parent id not empty then check if its parent is already in hash
       # if not add it then add fd as first item in its array otherwise just add it
