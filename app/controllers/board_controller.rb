@@ -233,7 +233,13 @@ before_filter(:verify_admin_role,
 
   def get_stackup_attachment
     
-    board = PartNum.find_by_pnum_and_revision(params[:pnum], params[:revision]).design.board
+    pnum = params[:pnum].nil? ? "" : params[:pnum]
+    revision = params[:revision].nil? ? "" : params[:revision]
+
+    board = PartNum.find_by_pnum(pnum).design.board
+    if ( pnum =~ /[0-9]{3}-[0-9]{3}-[0-9]{2}/) 
+      board = PartNum.find_by_pnum_and_revision(pnum, revision).design.board
+    end
 
     dr_documents = board.design_review_documents
 
