@@ -798,7 +798,8 @@ class TrackerController < ApplicationController
     # Get all design_review_results with role_id = 31 (fir) and reviewer_id = @logged_in_user
     # 
 
-    @design_reviews_firs = get_active_reviews_firs_current_user_fir_role
+    #@design_reviews_firs = get_active_reviews_firs_current_user_fir_role
+    @design_reviews_firs = get_active_reviews_firs_all_user_fir_role
     @new_fab_issue = FabIssue.new
     @fab_failure_modes = FabFailureMode.order("name").find_all_by_active(true)
     fab_deliverables = FabDeliverable.order("parent_id DESC, id ASC").find_all_by_active(true)    
@@ -987,6 +988,50 @@ class TrackerController < ApplicationController
     end
     return design_reviews_firs    
   end
+
+  ######################################################################
+  #
+  # get_active_reviews_firs_all_user_fir_role
+  #
+  # Description:
+  # This method retrieves all of the active design reviews. 
+  # It then grabs all the FIRs for each of these designs
+  #
+  # Parameters from params
+  # None
+  #
+  ######################################################################
+  #
+  def get_active_reviews_firs_all_user_fir_role
+
+    design_reviews_firs = []
+    designs = Design.find(:all,
+                          :conditions => "phase_id!=#{Design::COMPLETE}",
+                          :include    => :design_reviews)
+    designs = designs.sort_by {|design| design.phase_id }
+    designs = designs.sort_by {|design| FtpNotification.find_by_design_id(design.id).created_at rescue Time.now }
+    
+    designs.each do |design|
+      next if design.phase_id == 0 
+      cur_design_review = design.design_reviews.detect { |dr| dr.review_type_id == design.phase_id }
+      
+      des_rev_fir = {}
+      des_rev_fir[:design_id] = design.id
+      des_rev_fir[:fir_complete] = design.fir_complete
+      des_rev_fir[:part_number] = design.pcb_display
+      des_rev_fir[:review_phase] = cur_design_review.review_type.name
+      des_rev_fir[:review_status] = cur_design_review.review_status.name
+      des_rev_fir[:ftp_date] = FtpNotification.find_by_design_id(design.id).created_at.strftime("%b %e, %Y") rescue "Unknown"
+      des_rev_fir[:design_review_id] = cur_design_review.id
+      des_rev_fir[:firs] = FabIssue.find(:all, :conditions => ["design_id=?", design.id])
+      des_rev_fir[:fab_houses] = design.fab_houses.order("name ASC")
+      design_reviews_firs << des_rev_fir                                                                  
+    end
+    return design_reviews_firs    
+  end
+
+
+
 
 private
 

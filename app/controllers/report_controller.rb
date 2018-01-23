@@ -545,10 +545,16 @@ class ReportController < ApplicationController
       # Get unique design ids with ftp date in "offset" quarter that are marked fir_complete
       #ftps = FtpNotification.find(:all, :conditions => ["created_at > ? AND created_at < ?", begin_date, end_date] )
       ftps = FtpNotification.where("created_at > ? AND created_at < ?", begin_date, end_date).joins(:design).where(:designs => {:fir_complete => true})
-      designs = ftps.map(&:design_id).uniq
       
-      # Remove ETS designs from metrics
-      designs.delete_if { |d| BoardDesignEntry.find_by_design_id(d).division_id == ets_div_id}
+      # Remove ETS division designs if their ftp date came before January 1, 2018
+      eagle_start_date = DateTime.new(2018, 01, 01, 0, 0, 0)
+      ftps.reject! do |f|       
+        if (begin_date < eagle_start_date) && ( BoardDesignEntry.find_by_design_id(f.design_id).division_id == ets_div_id )
+          true
+        end
+      end
+
+      designs = ftps.map(&:design_id).uniq      
      
       fir_quart["Designs FTPd"] = designs.count rescue 0
 
@@ -674,8 +680,6 @@ class ReportController < ApplicationController
         doctotal = 0
         clartotal = 0
         ftps.each do |ftp|
-          # Remove ETS designs from metrics
-          next if BoardDesignEntry.find_by_design_id(ftp.design_id).division_id == ets_div_id
 
           design = {}
           design[:doc_iss_pins] = "N/A"
