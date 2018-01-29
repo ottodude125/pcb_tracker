@@ -433,14 +433,14 @@ class ReportController < ApplicationController
 
     ##### Data to aquire for each quarter #####
     # 1) Documentation Issues/Pins
-    # 1a) Need get unique list of designs with ftp date within quarter with scheduler design_class != [P1 || P2] && design_process = standard
+    # 1a) Need get unique list of designs with final design review completed date within quarter with scheduler design_class != [P1 || P2] && design_process = standard
     # 1b) Need to sum pins for all designs 1a
     # 1c) Need to sum documentation issues for 1a
     # 1d) 1c/1b is solution
     # 2) Clarification Issues/Pins
     # 2a) Need to sum documentation issues for 1a
     # 2b) 2a/1b is solution
-    # 3) Designs FTPd
+    # 3) Final Design Reviews Completed
     # 3a) 1a.count is solution
     # 4) Designs w/Documentation Issues
     # 4a) For each in 1a check if any doc issues and add to total
@@ -516,7 +516,7 @@ class ReportController < ApplicationController
       fir_quart = {}
       fir_quart["Documentation Issues/Pins"] = -1
       fir_quart["Clarification Issues/Pins"] = -1      
-      fir_quart["Designs FTPd"] = -1
+      fir_quart["Designs Completed"] = -1
       fir_quart["Designs w/Documentation Issues"] = -1
       fir_quart["Designs w/Clarification Issues"] = -1
       fir_quart["Linear (Documentation Issues/Pins)"] = 0
@@ -542,24 +542,28 @@ class ReportController < ApplicationController
       @quarter_num = quarter
       @year = quart_date.beginning_of_quarter.strftime("%Y")
       
-      # Get unique design ids with ftp date in "offset" quarter that are marked fir_complete
-      #ftps = FtpNotification.find(:all, :conditions => ["created_at > ? AND created_at < ?", begin_date, end_date] )
-      ftps = FtpNotification.where("created_at > ? AND created_at < ?", begin_date, end_date).joins(:design).where(:designs => {:fir_complete => true})
       
-      # Remove ETS division designs if their ftp date came before January 1, 2018
+      # Get unique design ids with final design review completed date in "offset" quarter that are marked fir_complete
+      #ftps = FtpNotification.find(:all, :conditions => ["created_at > ? AND created_at < ?", begin_date, end_date] )
+      final_rev_type_id = ReviewType.get_final.id
+      cdrs  = DesignReview.where("completed_on >= ? AND completed_on <= ? AND review_type_id = ?", begin_date, end_date, final_rev_type_id).joins(:design).where(:designs => {:fir_complete => true})
+      #ftps = FtpNotification.where("created_at > ? AND created_at < ?", begin_date, end_date).joins(:design).where(:designs => {:fir_complete => true})
+      
+
+      # Remove ETS division designs if their final design review completed date came before January 1, 2018
       eagle_start_date = DateTime.new(2018, 01, 01, 0, 0, 0)
-      ftps.reject! do |f|       
-        if (begin_date < eagle_start_date) && ( BoardDesignEntry.find_by_design_id(f.design_id).division_id == ets_div_id )
+      cdrs.reject! do |cdr|       
+        if (begin_date < eagle_start_date) && ( BoardDesignEntry.find_by_design_id(cdr.design_id).division_id == ets_div_id )
           true
         end
       end
 
-      designs = ftps.map(&:design_id).uniq      
+      designs = cdrs.map(&:design_id).uniq      
      
-      fir_quart["Designs FTPd"] = designs.count rescue 0
+      fir_quart["Designs Completed"] = designs.count rescue 0
 
       
-      # Get all fir doc/clarification issues for ftp'd designs
+      # Get all fir doc/clarification issues for completed designs
       @doc_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", designs, true])
       @clr_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", designs, false])
             
@@ -592,7 +596,7 @@ class ReportController < ApplicationController
         end
       end
 
-      # Get sum of fir doc/clarification issues for ftp'd designs Non P1/P2 board classes w/ standard design process
+      # Get sum of fir doc/clarification issues for completed designs Non P1/P2 board classes w/ standard design process
       prod_doc_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", production_design_ids, true])
       prod_clr_firs = FabIssue.find(:all, :conditions => ["design_id IN (?) AND documentation_issue = ?", production_design_ids, false])      
       fir_quart["Documentation Issues/Pins"] = (prod_doc_firs.count/pincount).round(5) rescue 0
@@ -675,21 +679,21 @@ class ReportController < ApplicationController
         end
         
         # Build array of data for "Board Data" Table
-        @ftps = []
+        @cdrs = []
         pintotal = 0.0000001
         doctotal = 0
         clartotal = 0
-        ftps.each do |ftp|
+        cdrs.each do |cdr|
 
           design = {}
           design[:doc_iss_pins] = "N/A"
           design[:clar_iss_pins] = "N/A"
            
-          design[:part_num] = PartNum.get_design_pcb_part_number(ftp.design_id).name_string
-          design[:ftp_date] = ftp.created_at.format_dd_mon_yy
+          design[:part_num] = PartNum.get_design_pcb_part_number(cdr.design_id).name_string
+          design[:ftp_date] = FtpNotification.find_by_design_id(cdr.design_id).created_at.format_dd_mon_yy rescue "N/A"
           
           #issues = FabIssue.find_all_by_design_id(ftp.design_id).order("resolved_on DESC")
-          issues = FabIssue.find(:all, :conditions => ["design_id = ?", ftp.design_id], :order => "resolved_on")
+          issues = FabIssue.find(:all, :conditions => ["design_id = ?", cdr.design_id], :order => "resolved_on")
           isscount = issues.count
           if isscount > 0            
             design[:vend_iss_rcvd] = "Yes"
@@ -702,7 +706,7 @@ class ReportController < ApplicationController
           end
 
           #dociss = FabIssue.find_all_by_design_id_and_documentation_issue(ftp.design_id, true)
-          dociss = FabIssue.find(:all, :conditions => ["design_id = ? AND documentation_issue = ? ", ftp.design_id, true], :order => "clean_up_complete_on")
+          dociss = FabIssue.find(:all, :conditions => ["design_id = ? AND documentation_issue = ? ", cdr.design_id, true], :order => "clean_up_complete_on")
           docisscount = dociss.count
           design[:num_doc_issues] = docisscount
           if docisscount > 0
@@ -713,7 +717,7 @@ class ReportController < ApplicationController
             design[:date_cleanup_comp] = "N/A"
           end
           
-          clarisscount = FabIssue.find_all_by_design_id_and_documentation_issue(ftp.design_id, false).count
+          clarisscount = FabIssue.find_all_by_design_id_and_documentation_issue(cdr.design_id, false).count
           design[:num_clar_issues] = clarisscount
           
           sched_part = PcbSchedulerPartNum.find_by_number_and_pcba(design[:part_num]+"A", false)
@@ -744,7 +748,7 @@ class ReportController < ApplicationController
             design[:doc_iss_pins] = "Error"
             design[:clar_iss_pins] = "Error"           
           end
-          @ftps << design
+          @cdrs << design
         end
         @design_sum = {}
         @design_sum[:total] = "Total"

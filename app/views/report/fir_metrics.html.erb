@@ -51,10 +51,10 @@
 	<p>
 		NOTES: 
 		<ul>
-			<li>All sums are for FTP'd designs within stated quarter</li>
+			<li>All sums are for completed designs within stated quarter</li>
 			<li>Documentation Issues/Pins - Sum of documentation issues for Production(New) designs divided by pin count</li>
 			<li>Clarification Issues/Pins - Sum of clarification issues for Production(New) designs divided by pin count</li>
-			<li>Designs FTPd - Sum of designs FTP'd</li>
+			<li>Designs Completed - Sum of designs Completed</li>
 			<li>Designs w/Documentation Issues - Sum of designs that had at least one documentation issue</li>
 			<li>Designs w/Clarification Issues - Sum of designs that had at least one clarification issue</li>
 		</ul>
@@ -132,8 +132,8 @@
 					</tr>
 					<%- fir_quarterly_history = JSON.parse(@fir_quarterly_history) %>
 					<tr>
-						<td>Designs FTP'd (All Types Combined)</td>
-						<td><%= fir_quarterly_history.last["Designs FTPd"]  %></td>
+						<td>Designs Completed (All Types Combined)</td>
+						<td><%= fir_quarterly_history.last["Designs Completed"]  %></td>
 					</tr>
 					<tr>
 						<td>Designs with Documentation Issues</td>
@@ -235,21 +235,21 @@
 				</tr>
 		  </thead>
 		  <tbody>
-				<% @ftps.each do |ftp| %>
+				<% @cdrs.each do |cdr| %>
 				<tr>
-					<td><%= ftp[:part_num] %></td>
-					<td><%= ftp[:pins] %></td>
-					<td><%= ftp[:brd_type] %></td>
-					<td><%= ftp[:ftp_date] %></td>
-					<td><%= ftp[:vend_iss_rcvd] %></td>
-					<td><%= ftp[:date_vend_iss_rcvd] %></td>
-					<td><%= ftp[:date_vend_iss_closed] %></td>
-					<td><%= ftp[:cleanup_reqd] %></td>
-					<td><%= ftp[:date_cleanup_comp] %></td>
-					<td><%= ftp[:num_doc_issues] %></td>
-					<td><%= ftp[:doc_iss_pins] %></td>
-					<td><%= ftp[:num_clar_issues] %></td>
-					<td><%= ftp[:clar_iss_pins] %></td>
+					<td><%= cdr[:part_num] %></td>
+					<td><%= cdr[:pins] %></td>
+					<td><%= cdr[:brd_type] %></td>
+					<td><%= cdr[:ftp_date] %></td>
+					<td><%= cdr[:vend_iss_rcvd] %></td>
+					<td><%= cdr[:date_vend_iss_rcvd] %></td>
+					<td><%= cdr[:date_vend_iss_closed] %></td>
+					<td><%= cdr[:cleanup_reqd] %></td>
+					<td><%= cdr[:date_cleanup_comp] %></td>
+					<td><%= cdr[:num_doc_issues] %></td>
+					<td><%= cdr[:doc_iss_pins] %></td>
+					<td><%= cdr[:num_clar_issues] %></td>
+					<td><%= cdr[:clar_iss_pins] %></td>
 				</tr>
 				<% end %>
 			</tbody>
