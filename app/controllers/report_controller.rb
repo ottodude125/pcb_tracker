@@ -720,7 +720,13 @@ class ReportController < ApplicationController
           clarisscount = FabIssue.find_all_by_design_id_and_documentation_issue(cdr.design_id, false).count
           design[:num_clar_issues] = clarisscount
           
-          sched_part = PcbSchedulerPartNum.find_by_number_and_pcba(design[:part_num]+"A", false)
+          # If eagle part remove A since scheduler won't have it
+          num_pcba = design[:part_num] + "A"
+          if design[:part_num] =~ /.*[0-9]{4}.*/
+            num_pcba = design[:part_num]
+          end
+          sched_part = PcbSchedulerPartNum.find_by_number_and_pcba(num_pcba, false)
+          
           sched_brd = PcbSchedulerBoard.find(sched_part.board_id)  rescue "Error"
           sched_brd_class = PcbSchedulerBoardClass.find(sched_brd.board_class_id) rescue "Error"
           sched_brd_des_proc = PcbSchedulerDesignProcess.find(sched_brd.design_process_id) rescue "Error"
