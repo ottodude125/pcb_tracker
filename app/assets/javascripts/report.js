@@ -193,6 +193,101 @@ window.FirModeChart = function(fir_deliv, firchart) {
 	firchart.create(chartDiv);
 };
 
+window.ReportCardReworkChart = function(items, header, rework_chart) {
+	var chartDiv;
+	
+	var titles = rework_chart.getTitles();
+	var title = new cfx.TitleDockable();
+	title.setText(header);
+	titles.add(title);
+
+	rework_chart.getDataGrid().setVisible(true);
+	rework_chart.getDataGrid().setBackColorData("#00FF00");
+	rework_chart.getDataGrid().setBackColorDataAlternate("#FF0000");
+	rework_chart.getDataGrid().setInterlaced(cfx.Interlaced.Horizontal);
+	
+	rework_chart.getAxisY().getTitle().setText("Percentage of Rework");
+	rework_chart.getAxisY().getLabelsFormat().setFormat(cfx.AxisFormat.Percentage);
+	rework_chart.getAxisX().setLabelAngle(45);
+	
+	rework_chart.getSeries().getItem(0).setGallery(cfx.Gallery.Bar);
+	rework_chart.getSeries().getItem(1).setGallery(cfx.Gallery.Bar);
+	rework_chart.getSeries().getItem(2).setGallery(cfx.Gallery.Bar);
+	  
+	rework_chart.getAllSeries().setStackedStyle(cfx.Stacked.Normal);
+	
+	rework_chart.getSeries().getItem(0).setColor("#FFFF66");
+	rework_chart.getSeries().getItem(1).setColor("#00CCFF");
+	rework_chart.getSeries().getItem(2).setColor("#3CB371");
+	
+	rework_chart.setDataSource(items);
+	chartDiv = document.getElementById("rework_chart");
+	rework_chart.create(chartDiv);
+	
+};
+
+window.ReportCardCountChart = function(items, header, rp_count_chart) {
+	var chartDiv;
+	
+	var titles = rp_count_chart.getTitles();
+	var title = new cfx.TitleDockable();
+	title.setText(header);
+	titles.add(title);
+
+	rp_count_chart.getDataGrid().setVisible(true);
+	rp_count_chart.getDataGrid().setBackColorData("#00FF00");
+	rp_count_chart.getDataGrid().setBackColorDataAlternate("#FF0000");
+	rp_count_chart.getDataGrid().setInterlaced(cfx.Interlaced.Horizontal);
+
+	rp_count_chart.getAxisY().getTitle().setText("Completed Report Cards");
+	rp_count_chart.getAxisX().setLabelAngle(45);
+
+	rp_count_chart.getSeries().getItem(0).setColor("#FF69B4");
+	//rp_count_chart.getSeries().getItem(0).setColor("#FFFF66");
+	rp_count_chart.getSeries().getItem(1).setColor("#00CCFF");
+	rp_count_chart.getSeries().getItem(2).setColor("#3CB371");
+	
+	rp_count_chart.getSeries().getItem(0).setGallery(cfx.Gallery.Bar);
+	rp_count_chart.getSeries().getItem(1).setGallery(cfx.Gallery.Bar);
+	rp_count_chart.getSeries().getItem(2).setGallery(cfx.Gallery.Bar);
+	  
+	rp_count_chart.getAllSeries().setStackedStyle(cfx.Stacked.Normal);
+	
+
+	
+	rp_count_chart.setDataSource(items);
+	chartDiv = document.getElementById("count_chart");
+	rp_count_chart.create(chartDiv);
+	
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

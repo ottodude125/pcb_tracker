@@ -72,7 +72,7 @@ class ReportController < ApplicationController
   ######################################################################
   #
   def report_card_rollup
-
+    
     @lcr_designers = Role.lcr_designers
     
     @team_member_id   = params[:team_member]   ? params[:team_member][:id].to_i   : 0
@@ -94,8 +94,15 @@ class ReportController < ApplicationController
     team_member                  = team_member(@team_member_id)
     team_member_file_name        = team_member_file_name(team_member)
     
-    @ticks  = OiCategory.find(:all, :select => :label).map { |l| l.label }.join("|")
-    @labels = OiAssignment.complexity_list.map { |c| "{label:\'#{c[0]}\'}" }.join(",")
+    #@ticks  = OiCategory.find(:all, :select => :label).map { |l| l.label }.join("|")
+    #@labels = OiAssignment.complexity_list.map { |c| "{label:\'#{c[0]}\'}" }.join(",")
+    
+    if @end_date < @start_date
+      temp = @end_date
+      @end_date = @start_date
+      @start_date = temp
+    end
+    
     
     if @end_date >= @start_date
       
@@ -105,26 +112,29 @@ class ReportController < ApplicationController
       data = OiAssignmentReport.report_card_rollup(@team_member_id, 
                                                    @start_date,
                                                    @end_date)
-                                                           
+                                                      
+      @cnt_series = data[:counts]
+      @pct_series = data[:percents]
       report_cards = data[:report_cards]
-      percents = data[:percents]
-      @pct_series_vars = ""
-      @pct_series_list = []
-      percents.each_with_index do | pcts, i |
-      #create javascript code for the series
-        @pct_series_vars += "var pct#{i} = [" + pcts.join(",") + "];\n"
-        @pct_series_list.push("pct#{i}")
-      end
-      counts   = data[:counts]
-      @cnt_series_vars = ""
-      @cnt_series_list = []
-      counts.each_with_index do | cnts, i |
-      #create javascript code for the series
-        @cnt_series_vars += "var cnt#{i} = [" + cnts.join(",") + "];\n"
-        @cnt_series_list.push("cnt#{i}")
-      end
       
-      
+      #percents = data[:percents]      
+      #@pct_series_vars = ""
+      #@pct_series_list = []
+      #percents.each_with_index do | pcts, i |
+      #create javascript code for the series
+      #  @pct_series_vars += "var pct#{i} = [" + pcts.join(",") + "];\n"
+      #  @pct_series_list.push("pct#{i}")
+      #end
+      #counts   = data[:counts]
+      #@cnt_series_vars = ""
+      #@cnt_series_list = []
+      #@cnt_series = []
+      #counts.each_with_index do | cnts, i |
+      #create javascript code for the series
+      #  @cnt_series_vars += "var cnt#{i} = [" + cnts.join(",") + "];\n"
+      #  @cnt_series_list.push("cnt#{i}")
+      #end      
+            
       @total_report_cards = report_cards.size
       if @total_report_cards > 0
         @high_report_cards = report_cards.collect { |rc| rc if rc.oi_assignment.complexity_name == 'High' }

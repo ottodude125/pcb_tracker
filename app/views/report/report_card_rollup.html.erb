@@ -5,127 +5,11 @@
 <!-- $Id$ -->
 <!-- ********************************************************** -->
 <% content_for :rawheader do %>
-<!--[if lt IE 9]><%= javascript_include_tag "excanvas.min.js"%><![endif]-->
-<%= javascript_include_tag "jquery.jqplot.min.js" %>
-<%= javascript_include_tag "jqplot.barRenderer.min.js" %>
-<%= javascript_include_tag "jqplot.categoryAxisRenderer.min.js" %>
-<%= javascript_include_tag "jqplot.pointLabels.min.js" %>
-<%= stylesheet_link_tag    "jquery.jqplot.min.css" %>
+
 <% end %>
 
 <% content_for :header do %>
 $(document).ready(function(){
-	<%= @pct_series_vars%>
-	<%= @cnt_series_vars%>
-	colors = ['#FFFF66','#00CCFF','#3CB371']
-	//colors = ['#FDD84E','#6886B4','#72AE6E']
-    // Can specify a custom tick Array.
-    // Ticks should match up one for each y value (category) in the series.
-
-    var ticks = '<%=@ticks%>'.split("|"); //test
-     
-    var plot1 = $.jqplot('rework_chart', [<%= @pct_series_list.join(",")%>], {
-        // The "seriesDefaults" option is an options object that will
-        // be applied to all series in the chart.
-        seriesDefaults:{
-            renderer:$.jqplot.BarRenderer,
-            rendererOptions: {fillToZero: true},
-            pointLabels:{ show:true}
-        },
-        seriesColors: colors,
-        // Custom labels for the series are specified with the "label"
-        // option on the series option.  Here a series option object
-        // is specified for each series.
-        series:[ <%=@labels%> ],
-        // Show the legend and put it outside the grid, but inside the
-        // plot container, shrinking the grid to accomodate the legend.
-        // A value of "outside" would not shrink the grid and allow
-        // the legend to overflow the container.
-        legend: {
-            show: true,
-            placement: 'outsideGrid'
-        },
-        grid: {
-        	backgroundColor: "#555555"
-        },
-        axes: {
-            // Use a category axis on the x axis and use our custom ticks.
-            xaxis: {
-               renderer: $.jqplot.CategoryAxisRenderer,
-               ticks: ticks,
-               tickOptions: {textColor: 'black', showGridline: false },
-               label:  "Categories",
-               showLabel: true             
-             },
-            // Pad the y axis just a little so bars can get close to, but
-            // not touch, the grid boundaries.  1.2 is the default padding.
-            yaxis: {
-            	padMax: 1.05,
-                padMin: 1.0,
-                tickOptions: {formatString: '%d\%', textColor: 'black'},
-                label:  "Percentage of Rework",
-                showLabel: true                          
-           }
-        },
-        title: {
-        	text: ' <%=@range%> LCR Percent Rework - <%=@designer%>',
-        	show: true,
-            textColor: 'black'
-        }
-    });
-    var plot2 = $.jqplot('count_chart', [<%= @cnt_series_list.join(",")%>], {
-        // The "seriesDefaults" option is an options object that will
-        // be applied to all series in the chart.
-        seriesDefaults:{
-            renderer:$.jqplot.BarRenderer,
-            rendererOptions: {fillToZero: true},
-            pointLabels: {show: true, ypadding:0},
-        },
-        seriesColors: colors,
-        // Custom labels for the series are specified with the "label"
-        // option on the series option.  Here a series option object
-        // is specified for each series.
-        series:[ <%=@labels%> ],
-        // Show the legend and put it outside the grid, but inside the
-        // plot container, shrinking the grid to accomodate the legend.
-        // A value of "outside" would not shrink the grid and allow
-        // the legend to overflow the container.
-        legend: {
-            show: true,
-            placement: 'outsideGrid'
-        },
-        grid: {
-        	backgroundColor: "#555555"
-        },
-        axes: {
-            // Use a category axis on the x axis and use our custom ticks.
-            xaxis: {
-                renderer: $.jqplot.CategoryAxisRenderer,
-                ticks: ticks,
-                tickOptions: {textColor: 'black', showGridline: false },
-                label:  "Categories",
-                showLabel: true
-            },
-            // Pad the y axis just a little so bars can get close to, but
-            // not touch, the grid boundaries.  1.2 is the default padding.
-            yaxis: {
-             	padMax: 1.05,
-                padMin: 1.0,
-                tickOptions: {textColor: 'black'},
-                label:  "Completed Report Cards",
-                showLabel: true                          
-            }
-        },
-        title: {
-        	text: '<%=@range%> Completed Report Cards - <%=@designer%> ',
-        	show: true,
-            textColor: 'black'             
-        }
-
-    });
-    $('.jqplot-series-0').css('color', colors[0]);
-    $('.jqplot-series-1').css('color', colors[1]);
-    $('.jqplot-series-2').css('color', colors[2]);
     
 });
 <% end %>
@@ -134,6 +18,7 @@ $(document).ready(function(){
 
 <%= form_tag(:action => 'report_card_rollup') do -%>
 
+ 
 <table width="800" align="center" border="0">
   <tr>
     <td align="left">
@@ -202,9 +87,24 @@ $(document).ready(function(){
     <td>
  <% if @total_report_cards > 0 %>
   <div id='rework_chart' style='height:400px;width:800px;'></div>
+	
+	<script>
+	  title = ' <%=@range%> LCR Percent Rework - <%=@designer%> ';
+		pct_series = <%= raw @pct_series.to_json %>;
+    chart = new cfx.Chart();
+		document.ready = ReportCardReworkChart(pct_series, title, chart);
+	</script>
+	
   <hr class="div" width="820" />
 
   <div id='count_chart' style='height:400px;width:800px;'></div>
+
+	<script>
+	  title = '<%=@range%> Completed Report Cards - <%=@designer%> ';
+		cnt_series = <%= raw @cnt_series.to_json %>;
+    chart = new cfx.Chart();
+		document.ready = ReportCardCountChart(cnt_series, title, chart);
+	</script>
 
   <hr class="div" width="820" />
 <% else %>
@@ -293,6 +193,7 @@ $(document).ready(function(){
   </tr>
 </table>
 
+  
 <%# debug @lcr_designers %>
 <%# debug @total_report_cards.class %>
 <%# debug @high_report_cards %>

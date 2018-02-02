@@ -142,20 +142,39 @@ REPORT_CARD_SCORING_TABLE = [ [   0, '0% Rework' ],
       summary[:total][i] += report_card.score
     end
     
-    percent = []
-    count   = []
-    score_summary.each do |key,comp|
-      p_data = []
-      c_data = []
-      comp[:count].each_with_index do |value , i| 
-          total = comp[:total][i]
-          pct   = ( total == 0 ) ? 0 : 100*value/total
-          p_data.push(pct)
-        end
-      percent.push(p_data)
-      count.push(comp[:count])
+    percents = []
+    counts = []
+    (1..category_count).each do |cc|     
+      catlabel = OiCategory.find_by_id(cc).label
+      temp_pct = {"oicategory" => catlabel}
+      temp_cnt = {"oicategory" => catlabel}
+      score_summary.each do |name,data|
+        count = score_summary[name][:count][cc-1]
+        total = score_summary[name][:total][cc-1]
+        pct = ( total == 0 ) ? 0 : (100*count/total)/100.000
+        temp_cnt[name] = count
+        temp_pct[name] = pct
+      end
+      percents << temp_pct
+      counts << temp_cnt      
     end
-    {:report_cards => report_cards, :percents => percent,:counts => count}
+
+
+    
+    #percent = []
+    #count   = []
+    #score_summary.each do |key,comp|
+    #  p_data = []
+    #  c_data = []
+    #  comp[:count].each_with_index do |value , i| 
+    #      total = comp[:total][i]
+    #      pct   = ( total == 0 ) ? 0 : 100*value/total
+    #      p_data.push(pct)
+    #  end
+    #  percent.push(p_data)
+    #  count.push(comp[:count])
+    #end
+    {:report_cards => report_cards, :percents => percents,:counts => counts}
   end
   
   def self.report_card_rollup_orig(designer_id, 
